@@ -21,8 +21,6 @@ export const createDefaultState = (): StatusBarState => {
         title: 'Chat 1',
       },
     ],
-    statusBarItemsLeft: [],
-    statusBarItemsRight: [],
     uid: 0,
     warningCount: 0,
   }

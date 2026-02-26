@@ -18,18 +18,7 @@ test('applyRender should return commands when diffResult contains RenderItems', 
   const oldState: StatusBarState = createDefaultState()
   const newState: StatusBarState = {
     ...createDefaultState(),
-    statusBarItemsLeft: [
-      {
-        ariaLabel: 'Item 1',
-        command: 'command1',
-        elements: [
-          { type: 'icon', value: 'icon1' },
-          { type: 'text', value: 'Item 1' },
-        ],
-        name: 'item1',
-        tooltip: 'Tooltip 1',
-      },
-    ],
+    composerValue: 'hello',
     uid: 1,
   }
 
@@ -45,18 +34,7 @@ test('applyRender should return multiple commands when diffResult contains multi
   const oldState: StatusBarState = createDefaultState()
   const newState: StatusBarState = {
     ...createDefaultState(),
-    statusBarItemsLeft: [
-      {
-        ariaLabel: 'Item 1',
-        command: 'command1',
-        elements: [
-          { type: 'icon', value: 'icon1' },
-          { type: 'text', value: 'Item 1' },
-        ],
-        name: 'item1',
-        tooltip: 'Tooltip 1',
-      },
-    ],
+    composerValue: 'hello',
     uid: 2,
   }
 
