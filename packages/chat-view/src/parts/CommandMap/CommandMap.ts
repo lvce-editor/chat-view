@@ -27,6 +27,7 @@ export const commandMap = {
   'Chat.itemRightCreate': wrapCommand(ItemRightCreate.itemRightCreate),
   'Chat.itemRightUpdate': wrapCommand(ItemRightUpdate.itemRightUpdate),
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
+  'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.resize': wrapCommand(resize),
