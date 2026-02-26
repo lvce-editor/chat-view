@@ -10,6 +10,11 @@ test('getRenderer should return RenderItems.renderItems for RenderItems diff typ
   expect(renderer).toBe(RenderItems.renderItems)
 })
 
+test('getRenderer should return a renderer for RenderIncremental diff type', () => {
+  const renderer = GetRenderer.getRenderer(DiffType.RenderIncremental)
+  expect(typeof renderer).toBe('function')
+})
+
 test('getRenderer should throw error for unknown diff type', () => {
   expect(() => {
     GetRenderer.getRenderer(999)

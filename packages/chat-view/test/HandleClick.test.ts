@@ -44,3 +44,34 @@ test('handleClick should delete a session', async () => {
   expect(result.sessions[0].id).toBe('session-1')
   expect(result.selectedSessionId).toBe('session-1')
 })
+
+test('handleClick should ignore empty action name', async () => {
+  const state: StatusBarState = createDefaultState()
+  const result = await HandleClick.handleClick(state, '')
+  expect(result).toBe(state)
+})
+
+test('handleClick should ignore selecting unknown session', async () => {
+  const state: StatusBarState = createDefaultState()
+  const result = await HandleClick.handleClick(state, 'session:missing')
+  expect(result).toBe(state)
+})
+
+test('handleClick should create fallback session when deleting last session', async () => {
+  const state: StatusBarState = {
+    ...createDefaultState(),
+    nextSessionId: 2,
+    renamingSessionId: 'session-1',
+  }
+  const result = await HandleClick.handleClick(state, 'session-delete:session-1')
+  expect(result.sessions).toHaveLength(1)
+  expect(result.sessions[0].id).toBe('session-2')
+  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.renamingSessionId).toBe('')
+})
+
+test('handleClick should keep state for unknown action', async () => {
+  const state: StatusBarState = createDefaultState()
+  const result = await HandleClick.handleClick(state, 'unknown-action')
+  expect(result).toBe(state)
+})
