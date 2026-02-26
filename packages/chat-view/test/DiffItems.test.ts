@@ -37,7 +37,7 @@ test('isEqual should return false when sessions reference changes', () => {
 })
 
 test('isEqual should ignore uid when chat fields are equal', () => {
-  const {sessions} = createDefaultState()
+  const { sessions } = createDefaultState()
   const state1: StatusBarState = { ...createDefaultState(), sessions, uid: 1 }
   const state2: StatusBarState = { ...createDefaultState(), sessions, uid: 2 }
   expect(DiffItems.isEqual(state1, state2)).toBe(true)
