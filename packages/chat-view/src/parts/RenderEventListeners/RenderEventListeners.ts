@@ -8,5 +8,13 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleClick,
       params: ['handleClick', EventExpression.TargetName],
     },
+    {
+      name: DomEventListenersFunctions.HandleInput,
+      params: ['handleInput', EventExpression.TargetValue],
+    },
+    {
+      name: DomEventListenersFunctions.HandleKeyDown,
+      params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
+    },
   ]
 }
