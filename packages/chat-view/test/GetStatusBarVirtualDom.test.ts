@@ -21,7 +21,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeDefined()
   expect(sessionButton).toMatchObject({
-    role: 1,
+    role: 'button',
     type: VirtualDomElements.Button,
   })
 })
