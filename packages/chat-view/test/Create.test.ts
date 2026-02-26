@@ -13,6 +13,8 @@ test('create should store state with the given uid', () => {
   const oldStateTyped: StatusBarState = oldState
   expect(newStateTyped).toBeDefined()
   expect(newStateTyped.uid).toBe(uid)
+  expect(newStateTyped.sessions).toHaveLength(1)
+  expect(newStateTyped.selectedSessionId).toBe('session-1')
   expect(newStateTyped.statusBarItemsLeft).toEqual([])
   expect(newStateTyped.statusBarItemsRight).toEqual([])
   expect(oldStateTyped).toBeDefined()

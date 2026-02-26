@@ -2,6 +2,8 @@ import { terminate } from '@lvce-editor/viewlet-registry'
 import * as StatusBar from '../Create/Create.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
+import * as HandleInput from '../HandleInput/HandleInput.ts'
+import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as ItemLeftUpdate from '../ItemLeftUpdate/ItemLeftUpdate.ts'
 import * as ItemRightCreate from '../ItemRightCreate/ItemRightCreate.ts'
@@ -14,18 +16,20 @@ import { saveState } from '../SaveState/SaveState.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 
 export const commandMap = {
-  'StatusBar.create': StatusBar.create,
-  'StatusBar.diff2': diff2,
-  'StatusBar.getCommandIds': getCommandIds,
-  'StatusBar.handleClick': wrapCommand(HandleClick.handleClick),
-  'StatusBar.initialize': initialize,
-  'StatusBar.itemLeftUpdate': wrapCommand(ItemLeftUpdate.itemLeftUpdate),
-  'StatusBar.itemRightCreate': wrapCommand(ItemRightCreate.itemRightCreate),
-  'StatusBar.itemRightUpdate': wrapCommand(ItemRightUpdate.itemRightUpdate),
-  'StatusBar.loadContent': wrapCommand(LoadContent.loadContent),
-  'StatusBar.render2': render2,
-  'StatusBar.renderEventListeners': renderEventListeners,
-  'StatusBar.resize': wrapCommand(resize),
-  'StatusBar.saveState': wrapGetter(saveState),
-  'StatusBar.terminate': terminate,
+  'Chat.create': StatusBar.create,
+  'Chat.diff2': diff2,
+  'Chat.getCommandIds': getCommandIds,
+  'Chat.handleClick': wrapCommand(HandleClick.handleClick),
+  'Chat.handleInput': wrapCommand(HandleInput.handleInput),
+  'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
+  'Chat.initialize': initialize,
+  'Chat.itemLeftUpdate': wrapCommand(ItemLeftUpdate.itemLeftUpdate),
+  'Chat.itemRightCreate': wrapCommand(ItemRightCreate.itemRightCreate),
+  'Chat.itemRightUpdate': wrapCommand(ItemRightUpdate.itemRightUpdate),
+  'Chat.loadContent': wrapCommand(LoadContent.loadContent),
+  'Chat.render2': render2,
+  'Chat.renderEventListeners': renderEventListeners,
+  'Chat.resize': wrapCommand(resize),
+  'Chat.saveState': wrapGetter(saveState),
+  'Chat.terminate': terminate,
 }
