@@ -1,3 +1,3 @@
-# Status Bar Worker
+# Chat View Worker
 
-WebWorker for the status bar functionality in Lvce Editor.
+WebWorker for the chat view functionality in Lvce Editor.
