@@ -1,5 +1,3 @@
-import type { StatusBarItem } from '../StatusBarItem/StatusBarItem.ts'
-
 export interface ChatMessage {
   readonly id: string
   readonly role: 'user' | 'assistant'
@@ -26,8 +24,6 @@ export interface StatusBarState {
   readonly renamingSessionId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
-  readonly statusBarItemsLeft: readonly StatusBarItem[]
-  readonly statusBarItemsRight: readonly StatusBarItem[]
   readonly uid: number
   readonly warningCount: number
 }

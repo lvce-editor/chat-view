@@ -6,9 +6,6 @@ import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import { initialize } from '../Initialize/Initialize.ts'
-import * as ItemLeftUpdate from '../ItemLeftUpdate/ItemLeftUpdate.ts'
-import * as ItemRightCreate from '../ItemRightCreate/ItemRightCreate.ts'
-import * as ItemRightUpdate from '../ItemRightUpdate/ItemRightUpdate.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
@@ -25,9 +22,6 @@ export const commandMap = {
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.initialize': initialize,
-  'Chat.itemLeftUpdate': wrapCommand(ItemLeftUpdate.itemLeftUpdate),
-  'Chat.itemRightCreate': wrapCommand(ItemRightCreate.itemRightCreate),
-  'Chat.itemRightUpdate': wrapCommand(ItemRightUpdate.itemRightUpdate),
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.render2': render2,
