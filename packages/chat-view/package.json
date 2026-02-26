@@ -1,10 +1,10 @@
 {
-  "name": "@lvce-editor/chat-view-worker",
+  "name": "@lvce-editor/chat-view",
   "version": "0.0.0-dev",
-  "description": "Status Bar Worker",
+  "description": "Chat View Worker",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lvce-editor/chat-view-worker.git"
+    "url": "git+https://github.com/lvce-editor/chat-view.git"
   },
   "license": "MIT",
   "author": "Lvce Editor",

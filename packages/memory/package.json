@@ -1,5 +1,5 @@
 {
-  "name": "@lvce-editor/chat-view-worker-memory",
+  "name": "@lvce-editor/chat-view-memory",
   "version": "0.0.0-dev",
   "type": "module",
   "scripts": {

@@ -5,7 +5,7 @@ export const threshold = 480_000
 
 export const instantiations = 20_000
 
-export const instantiationsPath = join(root, 'packages', 'chat-view-worker')
+export const instantiationsPath = join(root, 'packages', 'chat-view')
 
 export const workerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
 
