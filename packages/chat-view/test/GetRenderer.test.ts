@@ -3,6 +3,7 @@ import type { StatusBarState } from '../src/parts/StatusBarState/StatusBarState.
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as DiffType from '../src/parts/DiffType/DiffType.ts'
 import * as GetRenderer from '../src/parts/GetRenderer/GetRenderer.ts'
+import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
 
 test('getRenderer should return RenderItems.renderItems for RenderItems diff type', () => {
@@ -13,6 +14,11 @@ test('getRenderer should return RenderItems.renderItems for RenderItems diff typ
 test('getRenderer should return a renderer for RenderIncremental diff type', () => {
   const renderer = GetRenderer.getRenderer(DiffType.RenderIncremental)
   expect(typeof renderer).toBe('function')
+})
+
+test('getRenderer should return RenderCss.renderCss for RenderCss diff type', () => {
+  const renderer = GetRenderer.getRenderer(DiffType.RenderCss)
+  expect(renderer).toBe(RenderCss.renderCss)
 })
 
 test('getRenderer should throw error for unknown diff type', () => {
@@ -52,10 +58,6 @@ test('getRenderer should throw error for other known diff types not implemented'
 
   expect(() => {
     GetRenderer.getRenderer(DiffType.RenderSelection)
-  }).toThrow('unknown renderer')
-
-  expect(() => {
-    GetRenderer.getRenderer(DiffType.RenderCss)
   }).toThrow('unknown renderer')
 })
 
