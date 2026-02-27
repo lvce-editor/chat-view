@@ -1,5 +1,6 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNode[] => {
@@ -13,6 +14,7 @@ export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNo
       childCount: 0,
       className: ClassNames.MultilineInputBox,
       name: 'composer',
+      onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.composePlaceholder,
       rows: 4,
       type: VirtualDomElements.TextArea,
