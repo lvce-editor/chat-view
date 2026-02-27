@@ -77,7 +77,7 @@ test('handleClick should keep state for unknown action', async () => {
 })
 
 test('handleClick should submit message when clicking send', async () => {
-  const state: StatusBarState = {
+  const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
   }
@@ -88,7 +88,7 @@ test('handleClick should submit message when clicking send', async () => {
 })
 
 test('handleClickSend should submit message', async () => {
-  const state: StatusBarState = {
+  const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
   }

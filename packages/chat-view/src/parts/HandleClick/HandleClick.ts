@@ -8,7 +8,7 @@ const RENAME_PREFIX = 'session-rename:'
 const DELETE_PREFIX = 'session-delete:'
 const SEND = 'send'
 
-export const handleClickSend = async (state: StatusBarState): Promise<StatusBarState> => {
+export const handleClickSend = async (state: ChatState): Promise<ChatState> => {
   return HandleKeyDown.handleKeyDown(state, 'Enter', false)
 }
 
