@@ -4,6 +4,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNode[] => {
+  const isSendDisabled = composerValue.trim() === ''
   return [
     {
       childCount: 2,
@@ -23,6 +24,7 @@ export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNo
     {
       childCount: 1,
       className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
+      disabled: isSendDisabled,
       name: 'send',
       role: AriaRoles.Button,
       title: Strings.sendMessage,
