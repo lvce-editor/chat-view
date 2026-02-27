@@ -2,11 +2,7 @@ import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-<<<<<<< HEAD
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
-=======
-import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
->>>>>>> origin/main
 
 export const getSessionDom = (session: ChatSession, _selectedSessionId: string): readonly VirtualDomNode[] => {
   const sessionClassName = ClassNames.ChatListItem

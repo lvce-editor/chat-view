@@ -3,6 +3,7 @@ import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
+export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
   readonly assetDir: string
