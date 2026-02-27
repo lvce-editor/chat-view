@@ -8,6 +8,7 @@ export const createDefaultState = (): ChatState => {
     composerValue: '',
     errorCount: 0,
     ignoreNextInput: false,
+    inputSource: 'script',
     initial: true,
     lastSubmittedSessionId: '',
     listItemHeight: 40,

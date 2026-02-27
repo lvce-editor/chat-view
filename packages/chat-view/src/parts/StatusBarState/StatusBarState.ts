@@ -11,6 +11,7 @@ export interface ChatState {
   readonly disposed?: boolean
   readonly errorCount: number
   readonly ignoreNextInput: boolean
+  readonly inputSource: 'user' | 'script'
   readonly initial: boolean
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
