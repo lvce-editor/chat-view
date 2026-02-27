@@ -14,20 +14,14 @@ export const getChatModeDetailVirtualDom = (
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-  const messagesNodes = getMessagesDom(messages)
   return [
     {
-      childCount: 2,
+      childCount: 3,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    {
-      childCount: Math.max(messagesNodes.length, 0),
-      className: ClassNames.ChatDetailsContent,
-      type: VirtualDomElements.Div,
-    },
-    ...messagesNodes,
+    ...getMessagesDom(messages),
     ...getChatSendAreaDom(composerValue),
   ]
 }

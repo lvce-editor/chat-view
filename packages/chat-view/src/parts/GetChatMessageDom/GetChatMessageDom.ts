@@ -24,24 +24,3 @@ export const getChatMessageDom = (message: ChatMessage): readonly VirtualDomNode
     text(message.text),
   ]
 }
-
-export const getMessagesDom = (messages: readonly ChatMessage[]): readonly VirtualDomNode[] => {
-  if (messages.length === 0) {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.ChatWelcomeMessage,
-        type: VirtualDomElements.Div,
-      },
-      text(Strings.startConversation),
-    ]
-  }
-  return [
-    {
-      childCount: messages.length,
-      className: ClassNames.ChatDetailsContent,
-      type: VirtualDomElements.Div,
-    },
-    ...messages.flatMap(getChatMessageDom),
-  ]
-}
