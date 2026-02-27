@@ -1,7 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { getChatDetailsDom } from './GetChatDetailsDom.ts'
+import { getChatDetailsDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 
 export const getChatContentDom = (
   viewMode: ChatViewMode,
