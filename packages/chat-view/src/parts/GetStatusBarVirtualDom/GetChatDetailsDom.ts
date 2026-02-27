@@ -1,6 +1,6 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as Strings from './GetStatusBarVirtualDomStrings.ts'
+import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 
 export const getChatDetailsDom = (
   selectedSessionTitle: string,

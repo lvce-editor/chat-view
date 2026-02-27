@@ -29,12 +29,14 @@ export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
       type: VirtualDomElements.Div,
     },
     ...items.flatMap((item) => {
+      const name = 'name' in item ? item.name : undefined
+      const onClick = 'onClick' in item ? item.onClick : undefined
       return [
         {
           childCount: 1,
           className: ClassNames.IconButton,
-          ...(item.name ? { name: item.name } : {}),
-          ...(item.onClick ? { onClick: item.onClick } : {}),
+          ...(name ? { name } : {}),
+          ...(onClick ? { onClick } : {}),
           role: AriaRoles.Button,
           tabIndex: 0,
           title: item.title,

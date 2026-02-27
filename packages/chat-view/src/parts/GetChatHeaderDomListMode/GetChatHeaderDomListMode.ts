@@ -1,9 +1,9 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
+import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 
-export const getChatHeaderDomListMode = (): readonly VirtualDomNode[] => {
+export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
