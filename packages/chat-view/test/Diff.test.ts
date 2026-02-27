@@ -46,3 +46,10 @@ test('diff should ignore uid when chat fields are equal', () => {
   const result = Diff.diff(oldState, newState)
   expect(result).toEqual([])
 })
+
+test('diff should return RenderCss when initial changes', () => {
+  const oldState: StatusBarState = { ...createDefaultState(), initial: true }
+  const newState: StatusBarState = { ...createDefaultState(), initial: false }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderCss])
+})
