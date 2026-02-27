@@ -1,5 +1,5 @@
-import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface SavedState {
   readonly composerValue: string

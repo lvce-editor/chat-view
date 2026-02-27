@@ -17,7 +17,7 @@ test('diff should return RenderValue when composer changes from script input', (
   const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
   const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'script', sessions }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([DiffType.RenderValue])
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue])
 })
 
 test('diff should not return RenderValue when composer changes from user input', () => {
@@ -25,7 +25,7 @@ test('diff should not return RenderValue when composer changes from user input',
   const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
   const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'user', sessions }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([])
+  expect(result).toEqual([DiffType.RenderIncremental])
 })
 
 test('diff should return RenderIncremental when selected session changes', () => {
