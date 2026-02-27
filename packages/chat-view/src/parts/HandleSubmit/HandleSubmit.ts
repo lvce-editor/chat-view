@@ -13,7 +13,6 @@ const getMockAiResponse = (userMessage: string): string => {
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const { composerValue, nextMessageId, selectedSessionId, sessions, viewMode } = state
   const userText = composerValue.trim()
-  console.log('submit', userText)
   if (!userText) {
     return state
   }

@@ -35,7 +35,8 @@ export const handleKeyDown = async (state: ChatState, key: string, shiftKey: boo
   if (state.renamingSessionId) {
     return submitRename(state)
   }
+  const hasInput = state.composerValue.trim().length > 0
   const hasSelectedSession = state.sessions.some((session) => session.id === state.selectedSessionId)
-  const submitState = state.viewMode === 'list' && hasSelectedSession ? { ...state, viewMode: 'detail' as const } : state
+  const submitState = state.viewMode === 'list' && hasInput && hasSelectedSession ? { ...state, viewMode: 'detail' as const } : state
   return HandleSubmit.handleSubmit(submitState)
 }
