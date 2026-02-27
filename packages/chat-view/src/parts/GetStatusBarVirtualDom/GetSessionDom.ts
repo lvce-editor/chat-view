@@ -19,20 +19,10 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
     },
     text(session.title),
     {
-      childCount: 2,
+      childCount: 1,
       className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      name: `session-rename:${session.id}`,
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: 'Rename chat session',
-      type: VirtualDomElements.Button,
-    },
-    text('✎'),
     {
       childCount: 1,
       className: ClassNames.IconButton,

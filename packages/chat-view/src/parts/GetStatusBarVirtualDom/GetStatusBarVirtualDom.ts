@@ -5,6 +5,7 @@ import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import type { ChatViewMode } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getChatDetailsDom } from './GetChatDetailsDom.ts'
 import { getMessagesDom } from './GetMessagesDom.ts'
 import { getSessionDom } from './GetSessionDom.ts'
 
@@ -48,7 +49,9 @@ export const getChatVirtualDom = (
   viewMode: ChatViewMode,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
+  const selectedSessionTitle = selectedSession?.title || 'Chat'
   const messages = viewMode === 'detail' ? dummyMessages : selectedSession ? selectedSession.messages : []
+  const showBackButton = viewMode === 'detail'
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const messagesNodes = getMessagesDom(messages)
   const contentNodes: readonly VirtualDomNode[] =
@@ -61,48 +64,7 @@ export const getChatVirtualDom = (
           },
           ...sessionNodes,
         ]
-      : [
-          {
-            childCount: 2,
-            className: ClassNames.ChatDetails,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: 1,
-            className: ClassNames.ChatDetailsContent,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: Math.max(messagesNodes.length, 0),
-            className: ClassNames.ListItems,
-            type: VirtualDomElements.Div,
-          },
-          ...messagesNodes,
-          {
-            childCount: 2,
-            className: ClassNames.ChatSendArea,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: 0,
-            className: ClassNames.MultilineInputBox,
-            name: 'composer',
-            placeholder: 'Type your message. Enter to send, Shift+Enter for newline.',
-            rows: 4,
-            type: VirtualDomElements.TextArea,
-            value: composerValue,
-          },
-          {
-            childCount: 1,
-            className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
-            name: 'send',
-            role: AriaRoles.Button,
-            tabIndex: 0,
-            title: 'Send message',
-            type: VirtualDomElements.Button,
-          },
-          text('Send'),
-        ]
+      : getChatDetailsDom(selectedSessionTitle, messagesNodes, composerValue)
   const dom: VirtualDomNode[] = [
     {
       childCount: 2,
@@ -117,12 +79,27 @@ export const getChatVirtualDom = (
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
-    },
-    text('Chats'),
+    ...(showBackButton
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.IconButton,
+            name: 'back',
+            role: AriaRoles.Button,
+            tabIndex: 0,
+            title: 'Back to chats',
+            type: VirtualDomElements.Button,
+          },
+          text('←'),
+        ]
+      : [
+          {
+            childCount: 1,
+            className: ClassNames.Label,
+            type: VirtualDomElements.Span,
+          },
+          text('Chats'),
+        ]),
     {
       childCount: 3,
       className: ClassNames.ChatActions,

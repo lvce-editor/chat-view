@@ -115,3 +115,29 @@ test('getStatusBarVirtualDom should render 5 dummy messages in detail mode', () 
   const messageNodes = result.filter((node) => node.className === ClassNames.Message)
   expect(messageNodes).toHaveLength(5)
 })
+
+test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
+  const titleNode = result.find((node) => node.text === 'Project Plan')
+  expect(titleNode).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should render back button in detail mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
+  const backButton = result.find((node) => node.name === 'back')
+  expect(backButton).toBeDefined()
+  expect(backButton).toMatchObject({
+    className: ClassNames.IconButton,
+    role: 'button',
+    title: 'Back to chats',
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getStatusBarVirtualDom should hide back button in list mode', () => {
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
+  const backButton = result.find((node) => node.name === 'back')
+  expect(backButton).toBeUndefined()
+})

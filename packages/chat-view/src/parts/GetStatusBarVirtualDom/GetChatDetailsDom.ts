@@ -1,13 +1,23 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
-export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], composerValue: string): readonly VirtualDomNode[] => {
+export const getChatDetailsDom = (
+  selectedSessionTitle: string,
+  messagesNodes: readonly VirtualDomNode[],
+  composerValue: string,
+): readonly VirtualDomNode[] => {
   return [
     {
-      childCount: 2,
+      childCount: 3,
       className: ClassNames.ChatDetails,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.Label,
+      type: VirtualDomElements.Span,
+    },
+    text(selectedSessionTitle),
     {
       childCount: Math.max(messagesNodes.length, 0),
       className: ClassNames.ChatDetailsContent,

@@ -99,3 +99,14 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.composerValue).toBe('')
 })
+
+test('handleClick should go back to list mode', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    renamingSessionId: 'session-1',
+    viewMode: 'detail',
+  }
+  const result = await HandleClick.handleClick(state, 'back')
+  expect(result.viewMode).toBe('list')
+  expect(result.renamingSessionId).toBe('')
+})
