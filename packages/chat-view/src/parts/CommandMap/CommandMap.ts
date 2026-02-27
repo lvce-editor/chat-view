@@ -12,6 +12,7 @@ import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
+import * as SetChatList from '../SetChatList/SetChatList.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 
 export const commandMap = {
@@ -30,5 +31,6 @@ export const commandMap = {
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
+  'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.terminate': terminate,
 }
