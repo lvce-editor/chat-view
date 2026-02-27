@@ -28,7 +28,7 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
     {
       childCount: 1,
       className: ClassNames.IconButton,
-      dataset: { id: session.id },
+      'data-id': session.id,
       name: 'SessionDelete',
       role: AriaRoles.Button,
       tabIndex: 0,
