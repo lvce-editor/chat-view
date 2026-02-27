@@ -25,7 +25,7 @@ export const getMessagesDom = (messages: readonly ChatMessage[]): readonly Virtu
         className: ClassNames.Label,
         type: VirtualDomElements.Strong,
       },
-      text(message.role === 'user' ? 'You' : 'Assistant'),
+      text(`${message.role === 'user' ? 'You' : 'Assistant'} · ${message.time}`),
       {
         childCount: 1,
         className: ClassNames.Markdown,

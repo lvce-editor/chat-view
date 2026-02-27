@@ -1,28 +1,16 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
-import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
+import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
+import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 
-const ensureSessions = (state: ChatState): readonly ChatSession[] => {
-  if (state.sessions.length > 0) {
-    return state.sessions
-  }
-  const id = `session-${state.nextSessionId}`
-  return [
-    {
-      id,
-      messages: [],
-      title: `Chat ${state.nextSessionId}`,
-    },
-  ]
-}
-
-export const loadContent = async (state: ChatState): Promise<ChatState> => {
-  const sessions = ensureSessions(state)
-  const selectedSessionId = sessions.some((session) => session.id === state.selectedSessionId) ? state.selectedSessionId : sessions[0].id
-  const viewMode = state.viewMode === 'detail' ? 'detail' : 'list'
+export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
+  const sessions = getSavedSessions(savedState) || state.sessions
+  const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
+  const selectedSessionId = sessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : sessions[0]?.id || ''
+  const viewMode = sessions.length === 0 ? 'list' : state.viewMode === 'detail' ? 'detail' : 'list'
   return {
     ...state,
     initial: false,
-    nextSessionId: state.sessions.length === 0 ? state.nextSessionId + 1 : state.nextSessionId,
+    nextSessionId: state.nextSessionId,
     selectedSessionId,
     sessions,
     viewMode,

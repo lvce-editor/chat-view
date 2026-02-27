@@ -7,7 +7,8 @@ test('handleClick should create a new session', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'create-session')
   expect(result.sessions).toHaveLength(2)
-  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.selectedSessionId).toBe(result.sessions[1].id)
+  expect(result.sessions[1].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
 })
 
 test('handleClick should select a session', async () => {
@@ -58,17 +59,19 @@ test('handleClick should ignore selecting unknown session', async () => {
   expect(result).toBe(state)
 })
 
-test('handleClick should create fallback session when deleting last session', async () => {
+test('handleClick should allow deleting last session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     nextSessionId: 2,
     renamingSessionId: 'session-1',
+    viewMode: 'detail',
   }
   const result = await HandleClick.handleClick(state, 'session-delete:session-1')
-  expect(result.sessions).toHaveLength(1)
-  expect(result.sessions[0].id).toBe('session-2')
-  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.sessions).toHaveLength(0)
+  expect(result.selectedSessionId).toBe('')
   expect(result.renamingSessionId).toBe('')
+  expect(result.viewMode).toBe('list')
+  expect(result.nextSessionId).toBe(2)
 })
 
 test('handleClick should keep state for unknown action', async () => {
@@ -97,4 +100,15 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages).toHaveLength(1)
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.composerValue).toBe('')
+})
+
+test('handleClick should go back to list mode', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    renamingSessionId: 'session-1',
+    viewMode: 'detail',
+  }
+  const result = await HandleClick.handleClick(state, 'back')
+  expect(result.viewMode).toBe('list')
+  expect(result.renamingSessionId).toBe('')
 })

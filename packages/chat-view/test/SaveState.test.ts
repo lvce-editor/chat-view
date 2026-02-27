@@ -9,6 +9,10 @@ test('saveState should persist chat sessions and composer value', () => {
     composerValue: 'draft',
     nextMessageId: 4,
     renamingSessionId: 'session-1',
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+    ],
   }
   const result = SaveState.saveState(state)
   expect(result.composerValue).toBe('draft')

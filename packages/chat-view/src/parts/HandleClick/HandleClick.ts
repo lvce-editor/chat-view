@@ -1,15 +1,17 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
-import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
+import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 
 const CREATE_SESSION = 'create-session'
 const SESSION_PREFIX = 'session:'
 const RENAME_PREFIX = 'session-rename:'
 const DELETE_PREFIX = 'session-delete:'
 const SEND = 'send'
+const BACK = 'back'
 
 export const handleClickSend = async (state: ChatState): Promise<ChatState> => {
-  return HandleKeyDown.handleKeyDown(state, 'Enter', false)
+  return HandleSubmit.handleSubmit(state)
 }
 
 const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: string): string => {
@@ -25,7 +27,7 @@ const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: s
 }
 
 const createSession = (state: ChatState): ChatState => {
-  const id = `session-${state.nextSessionId}`
+  const id = generateSessionId()
   const session: ChatSession = {
     id,
     messages: [],
@@ -72,18 +74,12 @@ const deleteSession = (state: ChatState, id: string): ChatState => {
     return state
   }
   if (filtered.length === 0) {
-    const fallbackId = `session-${state.nextSessionId}`
-    const fallback: ChatSession = {
-      id: fallbackId,
-      messages: [],
-      title: `Chat ${state.nextSessionId}`,
-    }
     return {
       ...state,
-      nextSessionId: state.nextSessionId + 1,
       renamingSessionId: '',
-      selectedSessionId: fallbackId,
-      sessions: [fallback],
+      selectedSessionId: '',
+      sessions: [],
+      viewMode: 'list',
     }
   }
   return {
@@ -115,6 +111,13 @@ export const handleClick = async (state: ChatState, name: string): Promise<ChatS
   }
   if (name === SEND) {
     return handleClickSend(state)
+  }
+  if (name === BACK) {
+    return {
+      ...state,
+      renamingSessionId: '',
+      viewMode: 'list',
+    }
   }
   return state
 }
