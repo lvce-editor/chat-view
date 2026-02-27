@@ -1,6 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getListIndex } from '../GetListIndex/GetListIndex.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
-import { getListIndex } from './GetListIndex/GetListIndex.ts'
 
 export const handleClickList = async (state: ChatState, eventX: number, eventY: number): Promise<ChatState> => {
   const { sessions } = state
