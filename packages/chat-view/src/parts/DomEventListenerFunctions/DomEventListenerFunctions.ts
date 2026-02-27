@@ -16,4 +16,4 @@ export const HandleClickNew = 15
 export const HandleClickBack = 16
 export const HandleClickList = 17
 export const HandleClickDelete = 18
-export const handleSubmit = 19
+export const HandleSubmit = 19

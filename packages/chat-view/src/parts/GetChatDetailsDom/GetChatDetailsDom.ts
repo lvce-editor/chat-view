@@ -26,7 +26,7 @@ export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNo
       className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       disabled: isSendDisabled,
       name: 'send',
-      onClick: DomEventListenerFunctions.handleSubmit,
+      onClick: DomEventListenerFunctions.HandleSubmit,
       role: AriaRoles.Button,
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,

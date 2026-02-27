@@ -50,7 +50,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
     },
     {
-      name: DomEventListenersFunctions.handleSubmit,
+      name: DomEventListenersFunctions.HandleSubmit,
       params: ['handleSubmit'],
     },
   ]

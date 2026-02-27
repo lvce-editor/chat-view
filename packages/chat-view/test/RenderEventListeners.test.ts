@@ -52,7 +52,7 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
     },
     {
-      name: DomEventListenersFunctions.handleSubmit,
+      name: DomEventListenersFunctions.HandleSubmit,
       params: ['handleSubmit'],
     },
   ])

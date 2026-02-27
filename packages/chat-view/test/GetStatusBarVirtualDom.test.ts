@@ -81,7 +81,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   expect(sendButton).toMatchObject({
     className: `${ClassNames.Button} ${ClassNames.ButtonPrimary}`,
     disabled: false,
-    onClick: DomEventListenerFunctions.handleSubmit,
+    onClick: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Button,
   })
 })
