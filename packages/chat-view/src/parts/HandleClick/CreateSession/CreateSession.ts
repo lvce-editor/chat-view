@@ -1,5 +1,5 @@
-import { generateSessionId } from '../../GenerateSessionId/GenerateSessionId.ts'
 import type { ChatSession, ChatState } from '../../StatusBarState/StatusBarState.ts'
+import { generateSessionId } from '../../GenerateSessionId/GenerateSessionId.ts'
 
 export const createSession = (state: ChatState): ChatState => {
   const id = generateSessionId()

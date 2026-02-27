@@ -8,6 +8,7 @@ test('handleClickNew should create and select a new session', async () => {
   const result = await handleClickNew(state)
 
   expect(result.sessions).toHaveLength(state.sessions.length + 1)
-  expect(result.selectedSessionId).toBe(result.sessions[result.sessions.length - 1].id)
-  expect(result.sessions[result.sessions.length - 1].title).toBe('Chat 2')
+  const newSession = result.sessions.at(-1)
+  expect(result.selectedSessionId).toBe(newSession?.id)
+  expect(newSession?.title).toBe('Chat 2')
 })
