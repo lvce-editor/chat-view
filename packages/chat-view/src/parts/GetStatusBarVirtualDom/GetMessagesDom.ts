@@ -7,7 +7,7 @@ export const getMessagesDom = (messages: readonly ChatMessage[]): readonly Virtu
     return [
       {
         childCount: 1,
-        className: ClassNames.WelcomeMessage,
+        className: ClassNames.ChatWelcomeMessage,
         type: VirtualDomElements.Div,
       },
       text('Start a conversation by typing below.'),
