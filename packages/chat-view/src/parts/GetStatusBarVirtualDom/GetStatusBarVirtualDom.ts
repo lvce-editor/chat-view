@@ -1,11 +1,40 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import { text } from '@lvce-editor/virtual-dom-worker'
+import type { ChatMessage } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import type { ChatViewMode } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getMessagesDom } from './GetMessagesDom.ts'
 import { getSessionDom } from './GetSessionDom.ts'
+
+const dummyMessages: readonly ChatMessage[] = [
+  {
+    id: 'dummy-1',
+    role: 'user',
+    text: 'Hello!',
+  },
+  {
+    id: 'dummy-2',
+    role: 'assistant',
+    text: 'Hi there, how can I help?',
+  },
+  {
+    id: 'dummy-3',
+    role: 'user',
+    text: 'Show me a quick summary.',
+  },
+  {
+    id: 'dummy-4',
+    role: 'assistant',
+    text: 'Sure—this is a placeholder summary for now.',
+  },
+  {
+    id: 'dummy-5',
+    role: 'assistant',
+    text: 'We can replace these with real messages next.',
+  },
+]
 
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
@@ -14,7 +43,7 @@ export const getChatVirtualDom = (
   viewMode: ChatViewMode,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const messages = selectedSession ? selectedSession.messages : []
+  const messages = viewMode === 'detail' ? dummyMessages : selectedSession ? selectedSession.messages : []
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const messagesNodes = getMessagesDom(messages)
   const contentNodes: readonly VirtualDomNode[] =
@@ -34,8 +63,13 @@ export const getChatVirtualDom = (
             type: VirtualDomElements.Div,
           },
           {
-            childCount: Math.max(messagesNodes.length, 0),
+            childCount: 1,
             className: ClassNames.ChatDetailsContent,
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: Math.max(messagesNodes.length, 0),
+            className: ClassNames.ListItems,
             type: VirtualDomElements.Div,
           },
           ...messagesNodes,
