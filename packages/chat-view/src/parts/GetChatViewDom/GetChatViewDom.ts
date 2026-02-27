@@ -8,9 +8,9 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatContentDom } from './GetChatContentDom.ts'
 import { getChatHeaderActionsDom } from './GetChatHeaderActionsDom.ts'
 import { getChatHeaderDom } from './GetChatHeaderDom.ts'
+import * as Strings from './GetChatViewDomStrings.ts'
 import { getMessagesDom } from './GetMessagesDom.ts'
 import { getSessionDom } from './GetSessionDom.ts'
-import * as Strings from './GetStatusBarVirtualDomStrings.ts'
 
 function getEmptyChatSessionsDom(sessionsLength: number): readonly VirtualDomNode[] {
   if (sessionsLength !== 0) {
