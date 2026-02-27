@@ -25,6 +25,7 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
+  'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),

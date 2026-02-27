@@ -108,3 +108,26 @@ test('handleClick should go back to list mode', async () => {
   expect(result.viewMode).toBe('list')
   expect(result.renamingSessionId).toBe('')
 })
+
+test('handleClickList should open detail for session index from y coordinate', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+      { id: 'session-3', messages: [], title: 'Chat 3' },
+    ],
+  }
+  const result = await HandleClick.handleClickList(state, 8, 81)
+  expect(result.selectedSessionId).toBe('session-3')
+  expect(result.viewMode).toBe('detail')
+})
+
+test('handleClickList should keep state when click index has no session', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+  }
+  const result = await HandleClick.handleClickList(state, 10, 120)
+  expect(result).toBe(state)
+})

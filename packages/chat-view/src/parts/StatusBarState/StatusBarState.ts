@@ -13,6 +13,7 @@ export interface ChatState {
   readonly ignoreNextInput: boolean
   readonly initial: boolean
   readonly lastSubmittedSessionId: string
+  readonly listItemHeight: number
   readonly nextMessageId: number
   readonly platform: number
   readonly renamingSessionId: string

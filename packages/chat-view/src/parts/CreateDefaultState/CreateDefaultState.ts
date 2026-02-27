@@ -10,6 +10,7 @@ export const createDefaultState = (): ChatState => {
     ignoreNextInput: false,
     initial: true,
     lastSubmittedSessionId: '',
+    listItemHeight: 40,
     nextMessageId: 1,
     platform: 0,
     renamingSessionId: '',

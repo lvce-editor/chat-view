@@ -15,6 +15,7 @@ test('create should store state with the given uid', () => {
   expect(newStateTyped.uid).toBe(uid)
   expect(newStateTyped.sessions).toHaveLength(1)
   expect(newStateTyped.selectedSessionId).toBe('session-1')
+  expect(newStateTyped.listItemHeight).toBe(40)
   expect(newStateTyped.viewMode).toBe('list')
   expect(oldStateTyped).toBeDefined()
   expect(oldStateTyped.uid).toBe(uid)
