@@ -1,9 +1,8 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
-
-export type ChatViewMode = 'list' | 'detail'
 
 export interface ChatState {
   readonly assetDir: string
@@ -14,7 +13,6 @@ export interface ChatState {
   readonly initial: boolean
   readonly lastSubmittedSessionId: string
   readonly nextMessageId: number
-  readonly nextSessionId: number
   readonly platform: number
   readonly renamingSessionId: string
   readonly selectedSessionId: string

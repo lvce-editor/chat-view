@@ -14,7 +14,6 @@ test('handleClick should create a new session', async () => {
 test('handleClick should select a session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 3,
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -35,7 +34,6 @@ test('handleClick should mark session for rename and prefill composer', async ()
 test('handleClick should delete a session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 3,
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -62,7 +60,6 @@ test('handleClick should ignore selecting unknown session', async () => {
 test('handleClick should allow deleting last session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 2,
     renamingSessionId: 'session-1',
     viewMode: 'detail',
   }
@@ -71,7 +68,6 @@ test('handleClick should allow deleting last session', async () => {
   expect(result.selectedSessionId).toBe('')
   expect(result.renamingSessionId).toBe('')
   expect(result.viewMode).toBe('list')
-  expect(result.nextSessionId).toBe(2)
 })
 
 test('handleClick should keep state for unknown action', async () => {

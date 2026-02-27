@@ -1,4 +1,5 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import * as Strings from '../GetStatusBarVirtualDom/GetStatusBarVirtualDomStrings.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultSessionId = 'session-1'
@@ -10,7 +11,6 @@ export const createDefaultState = (): ChatState => {
     initial: true,
     lastSubmittedSessionId: '',
     nextMessageId: 1,
-    nextSessionId: 2,
     platform: 0,
     renamingSessionId: '',
     selectedSessionId: defaultSessionId,
@@ -18,7 +18,7 @@ export const createDefaultState = (): ChatState => {
       {
         id: defaultSessionId,
         messages: [],
-        title: 'Chat 1',
+        title: Strings.defaultSessionTitle,
       },
     ],
     uid: 0,

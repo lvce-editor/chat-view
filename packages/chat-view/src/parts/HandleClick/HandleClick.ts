@@ -31,11 +31,10 @@ const createSession = (state: ChatState): ChatState => {
   const session: ChatSession = {
     id,
     messages: [],
-    title: `Chat ${state.nextSessionId}`,
+    title: `Chat ${state.sessions.length + 1}`,
   }
   return {
     ...state,
-    nextSessionId: state.nextSessionId + 1,
     renamingSessionId: '',
     selectedSessionId: id,
     sessions: [...state.sessions, session],

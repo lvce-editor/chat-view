@@ -1,5 +1,6 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as Strings from './GetStatusBarVirtualDomStrings.ts'
 
 export const getChatDetailsDom = (
   selectedSessionTitle: string,
@@ -33,7 +34,7 @@ export const getChatDetailsDom = (
       childCount: 0,
       className: ClassNames.MultilineInputBox,
       name: 'composer',
-      placeholder: 'Type your message. Enter to send, Shift+Enter for newline.',
+      placeholder: Strings.composePlaceholder,
       rows: 4,
       type: VirtualDomElements.TextArea,
       value: composerValue,
@@ -44,9 +45,9 @@ export const getChatDetailsDom = (
       name: 'send',
       role: AriaRoles.Button,
       tabIndex: 0,
-      title: 'Send message',
+      title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },
-    text('Send'),
+    text(Strings.send),
   ]
 }

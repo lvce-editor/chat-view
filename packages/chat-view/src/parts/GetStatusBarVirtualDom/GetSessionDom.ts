@@ -2,6 +2,7 @@ import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import * as Strings from './GetStatusBarVirtualDomStrings.ts'
 
 export const getSessionDom = (session: ChatSession, _selectedSessionId: string): readonly VirtualDomNode[] => {
   const sessionClassName = ClassNames.ChatListItem
@@ -31,7 +32,7 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
       name: `session-delete:${session.id}`,
       role: AriaRoles.Button,
       tabIndex: 0,
-      title: 'Delete chat session',
+      title: Strings.deleteChatSession,
       type: VirtualDomElements.Button,
     },
     text('🗑'),

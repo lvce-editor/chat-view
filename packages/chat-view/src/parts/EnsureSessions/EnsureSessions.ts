@@ -11,7 +11,7 @@ export const ensureSessions = (state: ChatState): readonly ChatSession[] => {
     {
       id,
       messages: [],
-      title: `Chat ${state.nextSessionId}`,
+      title: 'Chat 1',
     },
   ]
 }

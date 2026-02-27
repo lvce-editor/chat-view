@@ -1,6 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as Strings from './GetStatusBarVirtualDomStrings.ts'
 
 export const getMessagesDom = (messages: readonly ChatMessage[]): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
@@ -10,7 +11,7 @@ export const getMessagesDom = (messages: readonly ChatMessage[]): readonly Virtu
         className: ClassNames.ChatWelcomeMessage,
         type: VirtualDomElements.Div,
       },
-      text('Start a conversation by typing below.'),
+      text(Strings.startConversation),
     ]
   }
   return messages.flatMap((message) => {
@@ -25,7 +26,7 @@ export const getMessagesDom = (messages: readonly ChatMessage[]): readonly Virtu
         className: ClassNames.Label,
         type: VirtualDomElements.Strong,
       },
-      text(`${message.role === 'user' ? 'You' : 'Assistant'} · ${message.time}`),
+      text(`${message.role === 'user' ? Strings.you : Strings.assistant} · ${message.time}`),
       {
         childCount: 1,
         className: ClassNames.Markdown,

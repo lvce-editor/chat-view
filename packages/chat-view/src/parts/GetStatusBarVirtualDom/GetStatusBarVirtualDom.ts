@@ -1,46 +1,30 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import { text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
-import type { ChatViewMode } from '../StatusBarState/StatusBarState.ts'
+import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getChatDetailsDom } from './GetChatDetailsDom.ts'
+import { getChatContentDom } from './GetChatContentDom.ts'
+import { getChatHeaderActionsDom } from './GetChatHeaderActionsDom.ts'
+import { getChatHeaderDom } from './GetChatHeaderDom.ts'
 import { getMessagesDom } from './GetMessagesDom.ts'
 import { getSessionDom } from './GetSessionDom.ts'
+import * as Strings from './GetStatusBarVirtualDomStrings.ts'
 
-const dummyMessages: readonly ChatMessage[] = [
-  {
-    id: 'dummy-1',
-    role: 'user',
-    text: 'Hello!',
-    time: '09:00',
-  },
-  {
-    id: 'dummy-2',
-    role: 'assistant',
-    text: 'Hi there, how can I help?',
-    time: '09:01',
-  },
-  {
-    id: 'dummy-3',
-    role: 'user',
-    text: 'Show me a quick summary.',
-    time: '09:02',
-  },
-  {
-    id: 'dummy-4',
-    role: 'assistant',
-    text: 'Sure—this is a placeholder summary for now.',
-    time: '09:03',
-  },
-  {
-    id: 'dummy-5',
-    role: 'assistant',
-    text: 'We can replace these with real messages next.',
-    time: '09:04',
-  },
-]
+function getEmptyChatSessionsDom(sessionsLength: number): readonly VirtualDomNode[] {
+  if (sessionsLength !== 0) {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.Label,
+      type: VirtualDomElements.Div,
+    },
+    text(Strings.clickToOpenNewChat),
+  ]
+}
 
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
@@ -49,33 +33,21 @@ export const getChatVirtualDom = (
   viewMode: ChatViewMode,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedSessionTitle = selectedSession?.title || 'Chat'
-  const messages = viewMode === 'detail' ? dummyMessages : selectedSession ? selectedSession.messages : []
+  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle
+  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showBackButton = viewMode === 'detail'
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const messagesNodes = getMessagesDom(messages)
-  const emptyStateNodes: readonly VirtualDomNode[] =
-    sessions.length === 0
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.Label,
-            type: VirtualDomElements.Div,
-          },
-          text('Click the + button to open a new chat.'),
-        ]
-      : []
-  const contentNodes: readonly VirtualDomNode[] =
-    viewMode === 'list'
-      ? [
-          {
-            childCount: sessions.length === 0 ? 1 : sessions.length,
-            className: ClassNames.ChatList,
-            type: VirtualDomElements.Div,
-          },
-          ...(sessions.length === 0 ? emptyStateNodes : sessionNodes),
-        ]
-      : getChatDetailsDom(selectedSessionTitle, messagesNodes, composerValue)
+  const emptyStateNodes = getEmptyChatSessionsDom(sessions.length)
+  const contentNodes = getChatContentDom(
+    viewMode,
+    sessions.length,
+    emptyStateNodes,
+    sessionNodes,
+    selectedSessionTitle,
+    messagesNodes,
+    composerValue,
+  )
   const dom: VirtualDomNode[] = [
     {
       childCount: 2,
@@ -85,77 +57,8 @@ export const getChatVirtualDom = (
       onKeyDown: DomEventListenerFunctions.HandleKeyDown,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 2,
-      className: ClassNames.ChatHeader,
-      type: VirtualDomElements.Div,
-    },
-    ...(showBackButton
-      ? [
-          {
-            childCount: 2,
-            className: ClassNames.ChatName,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: 1,
-            className: ClassNames.IconButton,
-            name: 'back',
-            role: AriaRoles.Button,
-            tabIndex: 0,
-            title: 'Back to chats',
-            type: VirtualDomElements.Button,
-          },
-          text('←'),
-          {
-            childCount: 1,
-            className: ClassNames.Label,
-            type: VirtualDomElements.Span,
-          },
-          text(selectedSessionTitle),
-        ]
-      : [
-          {
-            childCount: 1,
-            className: ClassNames.Label,
-            type: VirtualDomElements.Span,
-          },
-          text('Chats'),
-        ]),
-    {
-      childCount: 3,
-      className: ClassNames.ChatActions,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      name: 'create-session',
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: 'New Chat',
-      type: VirtualDomElements.Button,
-    },
-    text('+'),
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      onClick: DomEventListenerFunctions.HandleClickSettings,
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: 'Settings',
-      type: VirtualDomElements.Button,
-    },
-    text('⚙'),
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      onClick: DomEventListenerFunctions.HandleClickClose,
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: 'Close Chat',
-      type: VirtualDomElements.Button,
-    },
+    ...getChatHeaderDom(showBackButton, selectedSessionTitle),
+    ...getChatHeaderActionsDom(),
     text('×'),
     ...contentNodes,
   ]
