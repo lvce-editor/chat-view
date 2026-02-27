@@ -109,3 +109,10 @@ test('getStatusBarVirtualDom should hide session list in detail mode', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeUndefined()
 })
+
+test('getStatusBarVirtualDom should render 5 dummy messages in detail mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
+  const messageNodes = result.filter((node) => node.className === ClassNames.Message)
+  expect(messageNodes).toHaveLength(5)
+})
