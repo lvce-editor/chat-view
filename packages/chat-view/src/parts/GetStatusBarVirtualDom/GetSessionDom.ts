@@ -3,7 +3,7 @@ import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getSessionDom = (session: ChatSession, _selectedSessionId: string): readonly VirtualDomNode[] => {
-  const sessionClassName = ClassNames.ChatList
+  const sessionClassName = ClassNames.ChatListItem
   return [
     {
       childCount: 2,
