@@ -38,6 +38,7 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   expect(composer).toBeDefined()
   expect(sendButton).toBeDefined()
   expect(sendButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`,
     disabled: true,
   })
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)

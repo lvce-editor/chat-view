@@ -5,6 +5,9 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
+  const sendButtonClassName = isSendDisabled
+    ? `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`
+    : `${ClassNames.Button} ${ClassNames.ButtonPrimary}`
   return [
     {
       childCount: 2,
@@ -23,7 +26,7 @@ export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNo
     },
     {
       childCount: 1,
-      className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
+      className: sendButtonClassName,
       disabled: isSendDisabled,
       name: 'send',
       onClick: DomEventListenerFunctions.HandleSubmit,
