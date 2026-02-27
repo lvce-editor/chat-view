@@ -5,8 +5,6 @@ import { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
 import { selectSession } from './SelectSession/SelectSession.ts'
 import { startRename } from './StartRename/StartRename.ts'
 
-export { handleClickSend }
-
 const CREATE_SESSION = 'create-session'
 const SESSION_PREFIX = 'session:'
 const RENAME_PREFIX = 'session-rename:'
@@ -45,3 +43,5 @@ export const handleClick = async (state: ChatState, name: string): Promise<ChatS
   }
   return state
 }
+
+export { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
