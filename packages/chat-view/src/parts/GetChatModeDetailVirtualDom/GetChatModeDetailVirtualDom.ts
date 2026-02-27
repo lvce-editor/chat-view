@@ -4,8 +4,7 @@ import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatContentDom } from '../GetChatViewDom/GetChatContentDom.ts'
-import { getChatHeaderActionsDom } from '../GetChatViewDom/GetChatHeaderActionsDom.ts'
-import { getChatHeaderDom } from '../GetChatViewDom/GetChatHeaderDom.ts'
+import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetChatViewDom/GetMessagesDom.ts'
 
@@ -28,8 +27,7 @@ export const getChatModeDetailVirtualDom = (
       onKeyDown: DomEventListenerFunctions.HandleKeyDown,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDom(true, selectedSessionTitle),
-    ...getChatHeaderActionsDom(),
+    ...getChatHeaderDomDetailMode(selectedSessionTitle),
     ...contentNodes,
   ]
 }
