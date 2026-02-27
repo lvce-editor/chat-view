@@ -16,6 +16,10 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickDelete,
+      params: ['handleClickDelete', 'event.target.dataset.id'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['handleClickClose'],
     },
@@ -46,6 +50,10 @@ test('renderEventListeners should return expected listeners', () => {
     {
       name: DomEventListenersFunctions.HandleKeyDown,
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
+    },
+    {
+      name: DomEventListenersFunctions.handleSubmit,
+      params: ['handleSubmit'],
     },
   ])
 })

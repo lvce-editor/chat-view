@@ -9,6 +9,7 @@ export const createDefaultState = (): ChatState => {
     errorCount: 0,
     focus: 'composer',
     focused: false,
+    height: 0,
     initial: true,
     inputSource: 'script',
     lastSubmittedSessionId: '',
@@ -27,5 +28,8 @@ export const createDefaultState = (): ChatState => {
     uid: 0,
     viewMode: 'list',
     warningCount: 0,
+    width: 0,
+    x: 0,
+    y: 0,
   }
 }

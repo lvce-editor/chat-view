@@ -31,6 +31,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       className: ClassNames.IconButton,
       'data-id': session.id,
       name: 'SessionDelete',
+      onClick: DomEventListenerFunctions.HandleClickDelete,
       role: AriaRoles.Button,
       tabIndex: 0,
       title: Strings.deleteChatSession,

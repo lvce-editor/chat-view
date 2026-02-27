@@ -14,6 +14,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickDelete,
+      params: ['handleClickDelete', 'event.target.dataset.id'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['handleClickClose'],
     },
@@ -44,6 +48,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     {
       name: DomEventListenersFunctions.HandleKeyDown,
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
+    },
+    {
+      name: DomEventListenersFunctions.handleSubmit,
+      params: ['handleSubmit'],
     },
   ]
 }

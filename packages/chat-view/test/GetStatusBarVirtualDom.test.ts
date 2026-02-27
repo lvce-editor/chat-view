@@ -60,6 +60,9 @@ test('getStatusBarVirtualDom should render session list entries', () => {
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     type: VirtualDomElements.Div,
   })
+  expect(deleteButton).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClickDelete,
+  })
 })
 
 test('getStatusBarVirtualDom should render composer textarea', () => {
@@ -78,6 +81,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   expect(sendButton).toMatchObject({
     className: `${ClassNames.Button} ${ClassNames.ButtonPrimary}`,
     disabled: false,
+    onClick: DomEventListenerFunctions.handleSubmit,
     type: VirtualDomElements.Button,
   })
 })

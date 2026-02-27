@@ -14,6 +14,7 @@ export interface ChatState {
   readonly errorCount: number
   readonly focus: ChatViewFocus
   readonly focused: boolean
+  readonly height: number
   readonly initial: boolean
   readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
@@ -26,4 +27,7 @@ export interface ChatState {
   readonly uid: number
   readonly viewMode: ChatViewMode
   readonly warningCount: number
+  readonly width: number
+  readonly x: number
+  readonly y: number
 }
