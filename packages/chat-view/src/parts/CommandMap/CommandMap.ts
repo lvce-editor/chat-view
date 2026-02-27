@@ -5,7 +5,6 @@ import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
-import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
@@ -26,9 +25,8 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
-  'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
-  'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
+  'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
