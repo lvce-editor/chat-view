@@ -1,4 +1,4 @@
-import type { ChatState } from '../../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { getListIndex } from './GetListIndex/GetListIndex.ts'
 
