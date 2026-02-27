@@ -1,9 +1,10 @@
-import type { ChatState } from '../../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../../ChatState/ChatState.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = (state: ChatState, id: string): ChatState => {
-  const filtered = state.sessions.filter((session) => session.id !== id)
-  if (filtered.length === state.sessions.length) {
+  const { renamingSessionId, sessions } = state
+  const filtered = sessions.filter((session) => session.id !== id)
+  if (filtered.length === sessions.length) {
     return state
   }
   if (filtered.length === 0) {
@@ -17,7 +18,7 @@ export const deleteSession = (state: ChatState, id: string): ChatState => {
   }
   return {
     ...state,
-    renamingSessionId: state.renamingSessionId === id ? '' : state.renamingSessionId,
+    renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: getNextSelectedSessionId(filtered, id),
     sessions: filtered,
   }

@@ -1,4 +1,4 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const createDefaultState = (): ChatState => {
@@ -7,9 +7,9 @@ export const createDefaultState = (): ChatState => {
     assetDir: '',
     composerValue: '',
     errorCount: 0,
-    focus: 'input',
+    focus: 'composer',
     focused: false,
-    ignoreNextInput: false,
+    height: 0,
     initial: true,
     inputSource: 'script',
     lastSubmittedSessionId: '',
@@ -28,5 +28,8 @@ export const createDefaultState = (): ChatState => {
     uid: 0,
     viewMode: 'list',
     warningCount: 0,
+    width: 0,
+    x: 0,
+    y: 0,
   }
 }

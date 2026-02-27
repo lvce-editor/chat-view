@@ -1,4 +1,4 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import * as DiffModules from '../DiffModules/DiffModules.ts'
 
 export const diff = (oldState: ChatState, newState: ChatState): readonly number[] => {

@@ -37,6 +37,10 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   const sendButton = result.find((node) => node.name === 'send')
   expect(composer).toBeDefined()
   expect(sendButton).toBeDefined()
+  expect(sendButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`,
+    disabled: true,
+  })
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
   expect(detailsNode).toBeUndefined()
 })
@@ -57,6 +61,9 @@ test('getStatusBarVirtualDom should render session list entries', () => {
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     type: VirtualDomElements.Div,
   })
+  expect(deleteButton).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClickDelete,
+  })
 })
 
 test('getStatusBarVirtualDom should render composer textarea', () => {
@@ -74,6 +81,8 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   })
   expect(sendButton).toMatchObject({
     className: `${ClassNames.Button} ${ClassNames.ButtonPrimary}`,
+    disabled: false,
+    onClick: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Button,
   })
 })

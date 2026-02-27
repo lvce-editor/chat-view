@@ -1,12 +1,9 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
+import * as FocusInput from '../FocusInput/FocusInput.ts'
 
 export const handleInputFocus = async (state: ChatState, name: string): Promise<ChatState> => {
   if (name === 'composer') {
-    return {
-      ...state,
-      focus: 'input',
-      focused: true,
-    }
+    return FocusInput.focusInput(state)
   }
   if (name === 'send') {
     return {

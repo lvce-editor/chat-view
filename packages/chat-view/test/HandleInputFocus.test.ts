@@ -7,7 +7,7 @@ test('handleInputFocus should set input focus for composer', async () => {
   const result = await HandleInputFocus.handleInputFocus(state, 'composer')
   expect(result).toEqual({
     ...state,
-    focus: 'input',
+    focus: 'composer',
     focused: true,
   })
 })

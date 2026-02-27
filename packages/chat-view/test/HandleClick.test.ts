@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
-import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 
@@ -77,6 +78,9 @@ test('handleClick should keep state for unknown action', async () => {
 })
 
 test('handleClick should submit message when clicking send', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
@@ -86,9 +90,13 @@ test('handleClick should submit message when clicking send', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
 test('handleClickSend should submit message', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
@@ -98,18 +106,23 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),
+    height: 400,
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
       { id: 'session-3', messages: [], title: 'Chat 3' },
     ],
+    width: 200,
+    x: 0,
+    y: 0,
   }
-  const result = await HandleClick.handleClickList(state, 8, 81)
+  const result = await HandleClick.handleClickList(state, 8, 121)
   expect(result.selectedSessionId).toBe('session-3')
   expect(result.viewMode).toBe('detail')
 })
@@ -117,8 +130,44 @@ test('handleClickList should open detail for session index from y coordinate', a
 test('handleClickList should keep state when click index has no session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
+    height: 120,
     sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+    width: 100,
+    x: 10,
+    y: 20,
   }
   const result = await HandleClick.handleClickList(state, 10, 120)
+  expect(result).toBe(state)
+})
+
+test('handleClickList should ignore clicks in header area', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    height: 300,
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+    ],
+    width: 300,
+    x: 100,
+    y: 200,
+  }
+  const result = await HandleClick.handleClickList(state, 120, 220)
+  expect(result).toBe(state)
+})
+
+test('handleClickList should ignore clicks outside chat bounds', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    height: 300,
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+    ],
+    width: 300,
+    x: 100,
+    y: 200,
+  }
+  const result = await HandleClick.handleClickList(state, 99, 250)
   expect(result).toBe(state)
 })

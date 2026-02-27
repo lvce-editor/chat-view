@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
 
@@ -83,4 +83,25 @@ test('loadContent should restore sessions from savedState and recover invalid se
   const result = await LoadContent.loadContent(state, savedState)
   expect(result.sessions).toEqual(savedState.sessions)
   expect(result.selectedSessionId).toBe('session-z')
+})
+
+test('loadContent should restore window bounds from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    height: 40,
+    width: 30,
+    x: 10,
+    y: 20,
+  }
+  const savedState = {
+    height: 140,
+    width: 130,
+    x: 110,
+    y: 120,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.x).toBe(110)
+  expect(result.y).toBe(120)
+  expect(result.width).toBe(130)
+  expect(result.height).toBe(140)
 })

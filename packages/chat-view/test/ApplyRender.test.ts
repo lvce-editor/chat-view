@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { ViewletCommand } from '@lvce-editor/constants'
-import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import * as ApplyRender from '../src/parts/ApplyRender/ApplyRender.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as DiffType from '../src/parts/DiffType/DiffType.ts'

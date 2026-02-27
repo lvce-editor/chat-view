@@ -1,5 +1,5 @@
 import { ViewletCommand } from '@lvce-editor/constants'
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 // TODO render things like scrollbar height,scrollbar offset, textarea height,
 // list height

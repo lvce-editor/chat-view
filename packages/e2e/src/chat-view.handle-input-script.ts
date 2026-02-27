@@ -9,6 +9,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Layout.showSecondarySideBar')
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
+  await Command.execute('Chat.reset')
 
   // act
   await Command.execute('Chat.handleInput', 'hello from script input', 'script')

@@ -1,4 +1,4 @@
-import type { ChatState } from '../../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../../ChatState/ChatState.ts'
 
 export const startRename = (state: ChatState, id: string): ChatState => {
   const session = state.sessions.find((item) => item.id === id)
