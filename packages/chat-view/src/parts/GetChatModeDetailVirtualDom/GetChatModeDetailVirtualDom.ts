@@ -20,9 +20,6 @@ export const getChatModeDetailVirtualDom = (
     {
       childCount: 2,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
-      onClick: DomEventListenerFunctions.HandleClick,
-      onInput: DomEventListenerFunctions.HandleInput,
-      onKeyDown: DomEventListenerFunctions.HandleKeyDown,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),

@@ -24,9 +24,6 @@ export const getChatModeListVirtualDom = (sessions: readonly ChatSession[], sele
     {
       childCount: 2,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
-      onClick: DomEventListenerFunctions.HandleClick,
-      onInput: DomEventListenerFunctions.HandleInput,
-      onKeyDown: DomEventListenerFunctions.HandleKeyDown,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(),
