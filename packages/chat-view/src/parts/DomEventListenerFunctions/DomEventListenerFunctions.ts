@@ -12,3 +12,4 @@ export const HandleClick = 11
 export const HandleKeyDown = 12
 export const HandleClickClose = 13
 export const HandleClickSettings = 14
+export const HandleClickNew = 15

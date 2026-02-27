@@ -9,15 +9,18 @@ export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
     {
       icon: '+',
       name: 'create-session',
+      onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat,
     },
     {
       icon: '⚙',
+      name: 'settings',
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings,
     },
     {
       icon: '×',
+      name: 'close-chat',
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat,
     },

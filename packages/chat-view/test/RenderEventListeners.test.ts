@@ -24,6 +24,10 @@ test('renderEventListeners should return contextmenu, click, input and keydown l
       params: ['handleClickSettings'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickNew,
+      params: ['handleClickNew'],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
     },

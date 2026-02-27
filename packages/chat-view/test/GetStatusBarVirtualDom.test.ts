@@ -98,6 +98,18 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
   })
 })
 
+test('getStatusBarVirtualDom should render new chat button in header actions', () => {
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
+  const newChatButton = result.find((node) => node.title === 'New Chat')
+  expect(newChatButton).toBeDefined()
+  expect(newChatButton).toMatchObject({
+    className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClickNew,
+    role: 'button',
+    type: VirtualDomElements.Button,
+  })
+})
+
 test('getStatusBarVirtualDom should render close button in header actions', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   const closeButton = result.find((node) => node.title === 'Close Chat')
