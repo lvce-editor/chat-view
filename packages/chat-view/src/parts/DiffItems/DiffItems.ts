@@ -1,6 +1,6 @@
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
-export const isEqual = (oldState: StatusBarState, newState: StatusBarState): boolean => {
+export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
     oldState.composerValue === newState.composerValue &&
     oldState.ignoreNextInput === newState.ignoreNextInput &&

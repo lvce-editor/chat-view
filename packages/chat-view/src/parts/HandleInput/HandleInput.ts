@@ -1,6 +1,6 @@
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
-export const handleInput = async (state: StatusBarState, value: string): Promise<StatusBarState> => {
+export const handleInput = async (state: ChatState, value: string): Promise<ChatState> => {
   if (state.ignoreNextInput) {
     return {
       ...state,

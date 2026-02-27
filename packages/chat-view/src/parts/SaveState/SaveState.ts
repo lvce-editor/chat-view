@@ -1,7 +1,7 @@
 import type { SavedState } from '../SavedState/SavedState.ts'
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
-export const saveState = (state: StatusBarState): SavedState => {
+export const saveState = (state: ChatState): SavedState => {
   const { composerValue, nextMessageId, nextSessionId, renamingSessionId, selectedSessionId, sessions } = state
   return {
     composerValue,

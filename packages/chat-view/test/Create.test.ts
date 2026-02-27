@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import type { StatusBarState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
 import * as Create from '../src/parts/Create/Create.ts'
 import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
@@ -8,9 +8,9 @@ test('create should store state with the given uid', () => {
   Create.create(uid, '', 0, 0, 0, 0, 0, '')
   const result = StatusBarStates.get(uid)
   const { newState } = result
-  const newStateTyped: StatusBarState = newState
+  const newStateTyped: ChatState = newState
   const { oldState } = result
-  const oldStateTyped: StatusBarState = oldState
+  const oldStateTyped: ChatState = oldState
   expect(newStateTyped).toBeDefined()
   expect(newStateTyped.uid).toBe(uid)
   expect(newStateTyped.sessions).toHaveLength(1)

@@ -1,6 +1,6 @@
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
-export const resize = (state: StatusBarState, dimensions: any): StatusBarState => {
+export const resize = (state: ChatState, dimensions: any): ChatState => {
   return {
     ...state,
     ...dimensions,

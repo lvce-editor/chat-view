@@ -1,19 +1,19 @@
 import { expect, test } from '@jest/globals'
 import { ViewletCommand } from '@lvce-editor/constants'
-import type { StatusBarState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
 
 test('renderItems should render empty dom while initial', () => {
-  const oldState: StatusBarState = createDefaultState()
-  const newState: StatusBarState = { ...createDefaultState(), initial: true, uid: 1 }
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), initial: true, uid: 1 }
   const result = RenderItems.renderItems(oldState, newState)
   expect(result).toEqual([ViewletCommand.SetDom2, 1, []])
 })
 
 test('renderItems should render chat dom when initialized', () => {
-  const oldState: StatusBarState = createDefaultState()
-  const newState: StatusBarState = {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
     initial: false,

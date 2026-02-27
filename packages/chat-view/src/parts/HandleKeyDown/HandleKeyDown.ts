@@ -1,6 +1,6 @@
-import type { ChatMessage, ChatSession, StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatMessage, ChatSession, ChatState } from '../StatusBarState/StatusBarState.ts'
 
-const submitRename = (state: StatusBarState): StatusBarState => {
+const submitRename = (state: ChatState): ChatState => {
   const { composerValue, renamingSessionId, sessions } = state
   const title = composerValue.trim()
   if (!renamingSessionId || !title) {
@@ -27,7 +27,7 @@ const submitRename = (state: StatusBarState): StatusBarState => {
   }
 }
 
-const submitMessage = (state: StatusBarState): StatusBarState => {
+const submitMessage = (state: ChatState): ChatState => {
   const { composerValue, nextMessageId, selectedSessionId, sessions } = state
   const text = composerValue.trim()
   if (!text) {
@@ -60,7 +60,7 @@ const submitMessage = (state: StatusBarState): StatusBarState => {
   }
 }
 
-export const handleKeyDown = async (state: StatusBarState, key: string, shiftKey: boolean): Promise<StatusBarState> => {
+export const handleKeyDown = async (state: ChatState, key: string, shiftKey: boolean): Promise<ChatState> => {
   if (key !== 'Enter' || shiftKey) {
     return state
   }

@@ -1,7 +1,7 @@
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 
-const ensureSessions = (state: StatusBarState): readonly ChatSession[] => {
+const ensureSessions = (state: ChatState): readonly ChatSession[] => {
   if (state.sessions.length > 0) {
     return state.sessions
   }
@@ -15,7 +15,7 @@ const ensureSessions = (state: StatusBarState): readonly ChatSession[] => {
   ]
 }
 
-export const loadContent = async (state: StatusBarState): Promise<StatusBarState> => {
+export const loadContent = async (state: ChatState): Promise<ChatState> => {
   const sessions = ensureSessions(state)
   const selectedSessionId = sessions.some((session) => session.id === state.selectedSessionId) ? state.selectedSessionId : sessions[0].id
   return {
