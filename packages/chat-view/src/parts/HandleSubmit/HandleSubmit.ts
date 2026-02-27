@@ -1,8 +1,8 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
-import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
+import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
