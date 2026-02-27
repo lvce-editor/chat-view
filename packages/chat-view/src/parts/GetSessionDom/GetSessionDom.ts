@@ -4,7 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getSessionDom = (session: ChatSession, _selectedSessionId: string): readonly VirtualDomNode[] => {
+export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] => {
   const sessionClassName = ClassNames.ChatListItem
   return [
     {

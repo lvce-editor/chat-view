@@ -1,8 +1,8 @@
 import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
-import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 
 export const getChatListDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
   if (sessions.length === 0) {
@@ -21,6 +21,6 @@ export const getChatListDom = (sessions: readonly ChatSession[], selectedSession
       className: ClassNames.ChatList,
       type: VirtualDomElements.Div,
     },
-    sessions.flatMap((session) => getSessionDom(session, selectedSessionId)),
+    ...sessions.flatMap(getSessionDom),
   ]
 }
