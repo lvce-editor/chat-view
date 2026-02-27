@@ -15,10 +15,3 @@ test('handleInput should mark script input source', async () => {
   expect(result.composerValue).toBe('hello')
   expect(result.inputSource).toBe('script')
 })
-
-test('handleInput should ignore one input after submit', async () => {
-  const state = { ...createDefaultState(), ignoreNextInput: true }
-  const result = await HandleInput.handleInput(state, '\n', 'user')
-  expect(result.composerValue).toBe('')
-  expect(result.ignoreNextInput).toBe(false)
-})

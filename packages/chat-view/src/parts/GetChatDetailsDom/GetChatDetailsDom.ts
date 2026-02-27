@@ -49,12 +49,7 @@ export const getChatDetailsDom = (
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-    {
-      childCount: Math.max(messagesNodes.length, 0),
-      className: ClassNames.ChatDetailsContent,
-      type: VirtualDomElements.Div,
-    },
-    ...messagesNodes,
+
     ...getChatSendAreaDom(composerValue),
   ]
 }

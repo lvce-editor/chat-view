@@ -9,6 +9,8 @@ test('handleKeyDown should submit on Enter', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
 })
 
 test('handleKeyDown should not submit on Shift+Enter', async () => {
@@ -35,7 +37,7 @@ test('handleKeyDown should not submit blank message', async () => {
   const state = { ...createDefaultState(), composerValue: '   ' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].messages).toHaveLength(0)
-  expect(result.ignoreNextInput).toBe(true)
+  expect(result).toBe(state)
 })
 
 test('handleKeyDown should ignore non-enter keys', async () => {

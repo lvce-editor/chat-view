@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatSession, ChatState } from '../StatusBarState/StatusBarState.ts'
+import * as FocusInput from '../FocusInput/FocusInput.ts'
 
 const delay = async (ms: number): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -12,10 +13,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const { composerValue, nextMessageId, selectedSessionId, sessions } = state
   const userText = composerValue.trim()
   if (!userText) {
-    return {
-      ...state,
-      ignoreNextInput: true,
-    }
+    return state
   }
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const userMessage: ChatMessage = {
@@ -44,13 +42,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       messages: [...session.messages, userMessage, assistantMessage],
     }
   })
-  return {
+  return FocusInput.focusInput({
     ...state,
     composerValue: '',
-    ignoreNextInput: true,
     inputSource: 'script',
     lastSubmittedSessionId: selectedSessionId,
     nextMessageId: nextMessageId + 2,
     sessions: updatedSessions,
-  }
+  })
 }

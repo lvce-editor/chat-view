@@ -62,3 +62,11 @@ test('diff should return RenderCss when initial changes', () => {
   const result = Diff.diff(oldState, newState)
   expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderCss])
 })
+
+test('diff should return RenderFocus when composer focus is requested', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = { ...createDefaultState(), sessions, focused: false, focus: 'composer' }
+  const newState: ChatState = { ...createDefaultState(), sessions, focused: true, focus: 'composer' }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderFocus])
+})

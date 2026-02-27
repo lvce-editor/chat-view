@@ -4,6 +4,7 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as DiffType from '../src/parts/DiffType/DiffType.ts'
 import * as GetRenderer from '../src/parts/GetRenderer/GetRenderer.ts'
 import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
+import * as RenderFocus from '../src/parts/RenderFocus/RenderFocus.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
 import * as RenderValue from '../src/parts/RenderValue/RenderValue.ts'
 
@@ -27,6 +28,11 @@ test('getRenderer should return RenderValue.renderValue for RenderValue diff typ
   expect(renderer).toBe(RenderValue.renderValue)
 })
 
+test('getRenderer should return RenderFocus.renderFocus for RenderFocus diff type', () => {
+  const renderer = GetRenderer.getRenderer(DiffType.RenderFocus)
+  expect(renderer).toBe(RenderFocus.renderFocus)
+})
+
 test('getRenderer should throw error for unknown diff type', () => {
   expect(() => {
     GetRenderer.getRenderer(999)
@@ -48,10 +54,6 @@ test('getRenderer should throw error for zero diff type', () => {
 test('getRenderer should throw error for other known diff types not implemented', () => {
   expect(() => {
     GetRenderer.getRenderer(DiffType.RenderEditingIndex)
-  }).toThrow('unknown renderer')
-
-  expect(() => {
-    GetRenderer.getRenderer(DiffType.RenderFocus)
   }).toThrow('unknown renderer')
 
   expect(() => {

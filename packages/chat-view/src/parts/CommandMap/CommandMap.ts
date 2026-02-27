@@ -8,6 +8,7 @@ import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
+import * as ClearInput from '../ClearInput/ClearInput.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
@@ -16,12 +17,14 @@ import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
+import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 
 export const commandMap = {
+  'Chat.clearInput': wrapCommand(ClearInput.clearInput),
   'Chat.create': StatusBar.create,
   'Chat.diff2': diff2,
   'Chat.getCommandIds': getCommandIds,
@@ -42,8 +45,10 @@ export const commandMap = {
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
+  'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.terminate': terminate,
 }
+
