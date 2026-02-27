@@ -1,10 +1,10 @@
 import { expect, test } from '@jest/globals'
-import type { StatusBarState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as SaveState from '../src/parts/SaveState/SaveState.ts'
 
 test('saveState should persist chat sessions and composer value', () => {
-  const state: StatusBarState = {
+  const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'draft',
     nextMessageId: 4,
