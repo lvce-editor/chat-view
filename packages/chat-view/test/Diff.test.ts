@@ -12,11 +12,20 @@ test('diff should return empty array when chat states are equal', () => {
   expect(result).toEqual([])
 })
 
-test('diff should return RenderIncremental when composer changes', () => {
-  const oldState: ChatState = { ...createDefaultState(), composerValue: '' }
-  const newState: ChatState = { ...createDefaultState(), composerValue: 'hello' }
+test('diff should return RenderValue when composer changes from script input', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
+  const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'script', sessions }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([DiffType.RenderIncremental])
+  expect(result).toEqual([DiffType.RenderValue])
+})
+
+test('diff should not return RenderValue when composer changes from user input', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
+  const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'user', sessions }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([])
 })
 
 test('diff should return RenderIncremental when selected session changes', () => {

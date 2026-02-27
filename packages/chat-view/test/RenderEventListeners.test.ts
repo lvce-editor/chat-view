@@ -3,12 +3,17 @@ import { EventExpression } from '@lvce-editor/constants'
 import * as DomEventListenersFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as RenderEventListeners from '../src/parts/RenderEventListeners/RenderEventListeners.ts'
 
-test('renderEventListeners should return click, input and keydown listeners', () => {
+test('renderEventListeners should return expected listeners', () => {
   const result = RenderEventListeners.renderEventListeners()
   expect(result).toEqual([
     {
+      name: DomEventListenersFunctions.HandleContextMenu,
+      params: ['handleChatListContextMenu', EventExpression.TargetName, EventExpression.ClientX, EventExpression.ClientY],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleClick,
-      params: ['handleClick', EventExpression.TargetName],
+      params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
       name: DomEventListenersFunctions.HandleClickClose,
@@ -19,8 +24,24 @@ test('renderEventListeners should return click, input and keydown listeners', ()
       params: ['handleClickSettings'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickNew,
+      params: ['handleClickNew'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickBack,
+      params: ['handleClickBack'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickList,
+      params: ['handleClickList', EventExpression.ClientX, EventExpression.ClientY],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
+    },
+    {
+      name: DomEventListenersFunctions.HandleFocus,
+      params: ['handleInputFocus', EventExpression.TargetName],
     },
     {
       name: DomEventListenersFunctions.HandleKeyDown,

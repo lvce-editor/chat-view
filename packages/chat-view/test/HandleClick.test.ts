@@ -7,13 +7,13 @@ test('handleClick should create a new session', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'create-session')
   expect(result.sessions).toHaveLength(2)
-  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.selectedSessionId).toBe(result.sessions[1].id)
+  expect(result.sessions[1].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
 })
 
 test('handleClick should select a session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 3,
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -21,6 +21,7 @@ test('handleClick should select a session', async () => {
   }
   const result = await HandleClick.handleClick(state, 'session:session-2')
   expect(result.selectedSessionId).toBe('session-2')
+  expect(result.viewMode).toBe('detail')
 })
 
 test('handleClick should mark session for rename and prefill composer', async () => {
@@ -33,13 +34,12 @@ test('handleClick should mark session for rename and prefill composer', async ()
 test('handleClick should delete a session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 3,
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
     ],
   }
-  const result = await HandleClick.handleClick(state, 'session-delete:session-2')
+  const result = await HandleClick.handleClick(state, 'SessionDelete', 'session-2')
   expect(result.sessions).toHaveLength(1)
   expect(result.sessions[0].id).toBe('session-1')
   expect(result.selectedSessionId).toBe('session-1')
@@ -57,17 +57,17 @@ test('handleClick should ignore selecting unknown session', async () => {
   expect(result).toBe(state)
 })
 
-test('handleClick should create fallback session when deleting last session', async () => {
+test('handleClick should allow deleting last session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 2,
     renamingSessionId: 'session-1',
+    viewMode: 'detail',
   }
-  const result = await HandleClick.handleClick(state, 'session-delete:session-1')
-  expect(result.sessions).toHaveLength(1)
-  expect(result.sessions[0].id).toBe('session-2')
-  expect(result.selectedSessionId).toBe('session-2')
+  const result = await HandleClick.handleClick(state, 'SessionDelete', 'session-1')
+  expect(result.sessions).toHaveLength(0)
+  expect(result.selectedSessionId).toBe('')
   expect(result.renamingSessionId).toBe('')
+  expect(result.viewMode).toBe('list')
 })
 
 test('handleClick should keep state for unknown action', async () => {
@@ -82,8 +82,9 @@ test('handleClick should submit message when clicking send', async () => {
     composerValue: 'hello',
   }
   const result = await HandleClick.handleClick(state, 'send')
-  expect(result.sessions[0].messages).toHaveLength(1)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
 })
 
@@ -93,7 +94,31 @@ test('handleClickSend should submit message', async () => {
     composerValue: 'hello',
   }
   const result = await HandleClick.handleClickSend(state)
-  expect(result.sessions[0].messages).toHaveLength(1)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
+})
+
+test('handleClickList should open detail for session index from y coordinate', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+      { id: 'session-3', messages: [], title: 'Chat 3' },
+    ],
+  }
+  const result = await HandleClick.handleClickList(state, 8, 81)
+  expect(result.selectedSessionId).toBe('session-3')
+  expect(result.viewMode).toBe('detail')
+})
+
+test('handleClickList should keep state when click index has no session', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+  }
+  const result = await HandleClick.handleClickList(state, 10, 120)
+  expect(result).toBe(state)
 })

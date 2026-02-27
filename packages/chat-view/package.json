@@ -43,6 +43,7 @@
     }
   },
   "dependencies": {
+    "@lvce-editor/i18n": "^2.1.0",
     "@lvce-editor/virtual-dom-worker": "^8.9.0"
   },
   "devDependencies": {

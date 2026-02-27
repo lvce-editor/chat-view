@@ -5,8 +5,9 @@ import * as HandleKeyDown from '../src/parts/HandleKeyDown/HandleKeyDown.ts'
 test('handleKeyDown should submit on Enter', async () => {
   const state = { ...createDefaultState(), composerValue: 'hello' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
-  expect(result.sessions[0].messages).toHaveLength(1)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
 })
 
