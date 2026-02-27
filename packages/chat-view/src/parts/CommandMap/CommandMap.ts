@@ -51,4 +51,3 @@ export const commandMap = {
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.terminate': terminate,
 }
-
