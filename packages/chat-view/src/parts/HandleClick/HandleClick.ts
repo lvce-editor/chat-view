@@ -1,4 +1,4 @@
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 
 const CREATE_SESSION = 'create-session'
@@ -18,7 +18,7 @@ const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: s
   return sessions[nextIndex].id
 }
 
-const createSession = (state: StatusBarState): StatusBarState => {
+const createSession = (state: ChatState): ChatState => {
   const id = `session-${state.nextSessionId}`
   const session: ChatSession = {
     id,
@@ -34,7 +34,7 @@ const createSession = (state: StatusBarState): StatusBarState => {
   }
 }
 
-const selectSession = (state: StatusBarState, id: string): StatusBarState => {
+const selectSession = (state: ChatState, id: string): ChatState => {
   const exists = state.sessions.some((session) => session.id === id)
   if (!exists) {
     return state
@@ -46,7 +46,7 @@ const selectSession = (state: StatusBarState, id: string): StatusBarState => {
   }
 }
 
-const startRename = (state: StatusBarState, id: string): StatusBarState => {
+const startRename = (state: ChatState, id: string): ChatState => {
   const session = state.sessions.find((item) => item.id === id)
   if (!session) {
     return state
@@ -59,7 +59,7 @@ const startRename = (state: StatusBarState, id: string): StatusBarState => {
   }
 }
 
-const deleteSession = (state: StatusBarState, id: string): StatusBarState => {
+const deleteSession = (state: ChatState, id: string): ChatState => {
   const filtered = state.sessions.filter((session) => session.id !== id)
   if (filtered.length === state.sessions.length) {
     return state
@@ -87,7 +87,7 @@ const deleteSession = (state: StatusBarState, id: string): StatusBarState => {
   }
 }
 
-export const handleClick = async (state: StatusBarState, name: string): Promise<StatusBarState> => {
+export const handleClick = async (state: ChatState, name: string): Promise<ChatState> => {
   if (!name) {
     return state
   }

@@ -1,16 +1,9 @@
-export interface ChatMessage {
-  readonly id: string
-  readonly role: 'user' | 'assistant'
-  readonly text: string
-}
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 
-export interface ChatSession {
-  readonly id: string
-  readonly messages: readonly ChatMessage[]
-  readonly title: string
-}
+export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+export type { ChatSession } from '../ChatSession/ChatSession.ts'
 
-export interface StatusBarState {
+export interface ChatState {
   readonly assetDir: string
   readonly composerValue: string
   readonly disposed?: boolean

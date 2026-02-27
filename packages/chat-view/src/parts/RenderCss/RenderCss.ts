@@ -1,5 +1,5 @@
 import { ViewletCommand } from '@lvce-editor/constants'
-import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
 const css = `.Chat {
   display: grid;
@@ -38,6 +38,6 @@ const css = `.Chat {
 }
 `
 
-export const renderCss = (oldState: StatusBarState, newState: StatusBarState): readonly [string, number, string] => {
+export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
   return [ViewletCommand.SetCss, newState.uid, css]
 }
