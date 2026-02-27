@@ -1,7 +1,7 @@
 import type { SavedState } from '../SavedState/SavedState.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
-export const getSavedSessions = (savedState: unknown) => {
+export const getSavedSessions = (savedState: unknown): SavedState['sessions'] | undefined => {
   if (!isObject(savedState)) {
     return undefined
   }
