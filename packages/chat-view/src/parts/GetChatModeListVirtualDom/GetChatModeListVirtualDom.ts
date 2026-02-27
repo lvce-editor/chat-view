@@ -6,9 +6,20 @@ import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHea
 import { getEmptyChatSessionsDom } from '../GetChatViewDom/GetEmptyChatSessionsDom.ts'
 import { getSessionDom } from '../GetChatViewDom/GetSessionDom.ts'
 
-export const getChatModeListVirtualDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
+export const getChatListDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const emptyStateNodes = getEmptyChatSessionsDom(sessions.length)
+  return [
+    {
+      childCount: sessions.length === 0 ? 1 : sessions.length,
+      className: ClassNames.ChatList,
+      type: VirtualDomElements.Div,
+    },
+    ...(sessions.length === 0 ? emptyStateNodes : sessionNodes),
+  ]
+}
+
+export const getChatModeListVirtualDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
@@ -19,11 +30,6 @@ export const getChatModeListVirtualDom = (sessions: readonly ChatSession[], sele
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(),
-    {
-      childCount: sessions.length === 0 ? 1 : sessions.length,
-      className: ClassNames.ChatList,
-      type: VirtualDomElements.Div,
-    },
-    ...(sessions.length === 0 ? emptyStateNodes : sessionNodes),
+    ...getChatListDom(sessions, selectedSessionId),
   ]
 }
