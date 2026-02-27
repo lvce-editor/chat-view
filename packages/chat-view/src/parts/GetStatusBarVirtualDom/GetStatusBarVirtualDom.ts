@@ -1,8 +1,8 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import { text } from '@lvce-editor/virtual-dom-worker'
+import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ChatMessage } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
-import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatContentDom } from './GetChatContentDom.ts'
@@ -39,15 +39,7 @@ export const getChatVirtualDom = (
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const messagesNodes = getMessagesDom(messages)
   const emptyStateNodes = getEmptyChatSessionsDom(sessions.length)
-  const contentNodes = getChatContentDom(
-    viewMode,
-    sessions.length,
-    emptyStateNodes,
-    sessionNodes,
-    selectedSessionTitle,
-    messagesNodes,
-    composerValue,
-  )
+  const contentNodes = getChatContentDom(viewMode, sessions.length, emptyStateNodes, sessionNodes, selectedSessionTitle, messagesNodes, composerValue)
   const dom: VirtualDomNode[] = [
     {
       childCount: 2,
