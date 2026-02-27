@@ -6,25 +6,12 @@ import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatContentDom } from './GetChatContentDom.ts'
+import { getEmptyChatSessionsDom } from './GetEmptyChatSessionsDom.ts'
 import { getChatHeaderActionsDom } from './GetChatHeaderActionsDom.ts'
 import { getChatHeaderDom } from './GetChatHeaderDom.ts'
 import * as Strings from './GetChatViewDomStrings.ts'
 import { getMessagesDom } from './GetMessagesDom.ts'
 import { getSessionDom } from './GetSessionDom.ts'
-
-function getEmptyChatSessionsDom(sessionsLength: number): readonly VirtualDomNode[] {
-  if (sessionsLength !== 0) {
-    return []
-  }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Div,
-    },
-    text(Strings.clickToOpenNewChat),
-  ]
-}
 
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
@@ -51,7 +38,6 @@ export const getChatVirtualDom = (
     },
     ...getChatHeaderDom(showBackButton, selectedSessionTitle),
     ...getChatHeaderActionsDom(),
-    text('×'),
     ...contentNodes,
   ]
   return dom

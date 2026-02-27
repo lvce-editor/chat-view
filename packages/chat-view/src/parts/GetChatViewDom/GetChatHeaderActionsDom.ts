@@ -39,5 +39,6 @@ export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
       title: Strings.closeChat,
       type: VirtualDomElements.Button,
     },
+    text('×'),
   ]
 }
