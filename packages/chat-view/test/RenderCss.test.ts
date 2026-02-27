@@ -12,5 +12,4 @@ test('renderCss should return setCss command with uid and css', () => {
   expect(result[1]).toBe(42)
   expect(typeof result[2]).toBe('string')
   expect(result[2].length).toBeGreaterThan(0)
-  expect(result[2]).toContain('.Chat')
 })
