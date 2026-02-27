@@ -2,6 +2,7 @@ import { terminate } from '@lvce-editor/viewlet-registry'
 import * as StatusBar from '../Create/Create.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
+import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
@@ -22,6 +23,7 @@ export const commandMap = {
   'Chat.diff2': diff2,
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
+  'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,

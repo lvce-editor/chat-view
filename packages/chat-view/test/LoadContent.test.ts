@@ -30,8 +30,8 @@ test('loadContent should keep sessions empty when sessions are empty', async () 
     nextSessionId: 5,
     selectedSessionId: '',
     sessions: [],
-    viewMode: 'detail',
     uid: 3,
+    viewMode: 'detail',
   }
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.sessions).toHaveLength(0)

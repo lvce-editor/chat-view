@@ -1,6 +1,7 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
 export const getSessionDom = (session: ChatSession, _selectedSessionId: string): readonly VirtualDomNode[] => {
   const sessionClassName = ClassNames.ChatListItem
@@ -12,8 +13,9 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
     },
     {
       childCount: 1,
-      className: ClassNames.Button,
+      className: ClassNames.ChatName,
       name: `session:${session.id}`,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       tabIndex: 0,
       type: VirtualDomElements.Div,
     },

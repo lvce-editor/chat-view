@@ -74,18 +74,12 @@ const deleteSession = (state: ChatState, id: string): ChatState => {
     return state
   }
   if (filtered.length === 0) {
-    const fallbackId = generateSessionId()
-    const fallback: ChatSession = {
-      id: fallbackId,
-      messages: [],
-      title: `Chat ${state.nextSessionId}`,
-    }
     return {
       ...state,
-      nextSessionId: state.nextSessionId + 1,
       renamingSessionId: '',
-      selectedSessionId: fallbackId,
-      sessions: [fallback],
+      selectedSessionId: '',
+      sessions: [],
+      viewMode: 'list',
     }
   }
   return {

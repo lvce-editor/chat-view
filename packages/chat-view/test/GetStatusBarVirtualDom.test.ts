@@ -26,10 +26,12 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
     type: VirtualDomElements.Div,
   })
   expect(result[11]).toMatchObject({
-    childCount: 0,
+    childCount: 1,
     className: ClassNames.ChatList,
     type: VirtualDomElements.Div,
   })
+  const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
+  expect(emptyStateMessage).toBeDefined()
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
   expect(detailsNode).toBeUndefined()
 })
@@ -43,6 +45,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeDefined()
   expect(sessionButton).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     type: VirtualDomElements.Div,
   })
 })
@@ -119,7 +122,10 @@ test('getStatusBarVirtualDom should render 5 dummy messages in detail mode', () 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
-  const titleNode = result.find((node) => node.text === 'Project Plan')
+  const backButtonIndex = result.findIndex((node) => node.name === 'back')
+  expect(backButtonIndex).toBeGreaterThan(-1)
+  const titleNode = result[backButtonIndex + 3]
+  expect(titleNode).toMatchObject({ text: 'Project Plan' })
   expect(titleNode).toBeDefined()
 })
 

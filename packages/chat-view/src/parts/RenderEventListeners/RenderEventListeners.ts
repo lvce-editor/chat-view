@@ -5,6 +5,11 @@ import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEve
 export const renderEventListeners = (): readonly DomEventListener[] => {
   return [
     {
+      name: DomEventListenersFunctions.HandleContextMenu,
+      params: ['handleChatListContextMenu', EventExpression.TargetName, EventExpression.ClientX, EventExpression.ClientY],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleClick,
       params: ['handleClick', EventExpression.TargetName],
     },

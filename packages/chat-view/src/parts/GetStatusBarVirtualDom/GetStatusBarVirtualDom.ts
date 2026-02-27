@@ -54,15 +54,26 @@ export const getChatVirtualDom = (
   const showBackButton = viewMode === 'detail'
   const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
   const messagesNodes = getMessagesDom(messages)
+  const emptyStateNodes: readonly VirtualDomNode[] =
+    sessions.length === 0
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.Label,
+            type: VirtualDomElements.Div,
+          },
+          text('Click the + button to open a new chat.'),
+        ]
+      : []
   const contentNodes: readonly VirtualDomNode[] =
     viewMode === 'list'
       ? [
           {
-            childCount: sessions.length,
+            childCount: sessions.length === 0 ? 1 : sessions.length,
             className: ClassNames.ChatList,
             type: VirtualDomElements.Div,
           },
-          ...sessionNodes,
+          ...(sessions.length === 0 ? emptyStateNodes : sessionNodes),
         ]
       : getChatDetailsDom(selectedSessionTitle, messagesNodes, composerValue)
   const dom: VirtualDomNode[] = [
@@ -82,6 +93,11 @@ export const getChatVirtualDom = (
     ...(showBackButton
       ? [
           {
+            childCount: 2,
+            className: ClassNames.ChatName,
+            type: VirtualDomElements.Div,
+          },
+          {
             childCount: 1,
             className: ClassNames.IconButton,
             name: 'back',
@@ -91,6 +107,12 @@ export const getChatVirtualDom = (
             type: VirtualDomElements.Button,
           },
           text('←'),
+          {
+            childCount: 1,
+            className: ClassNames.Label,
+            type: VirtualDomElements.Span,
+          },
+          text(selectedSessionTitle),
         ]
       : [
           {
