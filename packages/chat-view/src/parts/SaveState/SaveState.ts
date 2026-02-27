@@ -2,7 +2,7 @@ import type { SavedState } from '../SavedState/SavedState.ts'
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 
 export const saveState = (state: ChatState): SavedState => {
-  const { composerValue, nextMessageId, nextSessionId, renamingSessionId, selectedSessionId, sessions } = state
+  const { composerValue, nextMessageId, nextSessionId, renamingSessionId, selectedSessionId, sessions, viewMode } = state
   return {
     composerValue,
     nextMessageId,
@@ -10,5 +10,6 @@ export const saveState = (state: ChatState): SavedState => {
     renamingSessionId,
     selectedSessionId,
     sessions,
+    viewMode,
   }
 }

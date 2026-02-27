@@ -7,6 +7,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.initial === newState.initial &&
     oldState.renamingSessionId === newState.renamingSessionId &&
     oldState.selectedSessionId === newState.selectedSessionId &&
-    oldState.sessions === newState.sessions
+    oldState.sessions === newState.sessions &&
+    oldState.viewMode === newState.viewMode
   )
 }

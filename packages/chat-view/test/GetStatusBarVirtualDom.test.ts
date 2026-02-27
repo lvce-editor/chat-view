@@ -5,7 +5,7 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import * as GetStatusBarVirtualDom from '../src/parts/GetStatusBarVirtualDom/GetStatusBarVirtualDom.ts'
 
 test('getStatusBarVirtualDom should render root chat container', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   expect(result.length).toBeGreaterThan(0)
   expect(result[0]).toMatchObject({
     className: `${ClassNames.Viewlet} Chat`,
@@ -13,10 +13,10 @@ test('getStatusBarVirtualDom should render root chat container', () => {
   })
 })
 
-test('getStatusBarVirtualDom should structure chat sections as header, list and details', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
+test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 2,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -30,10 +30,8 @@ test('getStatusBarVirtualDom should structure chat sections as header, list and 
     className: ClassNames.ChatList,
     type: VirtualDomElements.Div,
   })
-  expect(result[12]).toMatchObject({
-    className: ClassNames.ChatDetails,
-    type: VirtualDomElements.Div,
-  })
+  const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
+  expect(detailsNode).toBeUndefined()
 })
 
 test('getStatusBarVirtualDom should render session list entries', () => {
@@ -41,10 +39,8 @@ test('getStatusBarVirtualDom should render session list entries', () => {
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '')
-  const sessionItem = result.find((node) => node.className === ClassNames.ChatListItem)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'list')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
-  expect(sessionItem).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(sessionButton).toMatchObject({
     role: 'button',
@@ -54,7 +50,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
 
 test('getStatusBarVirtualDom should render composer textarea', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', 'hello')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', 'hello', 'detail')
   const composer = result.find((node) => node.name === 'composer')
   const sendButton = result.find((node) => node.name === 'send')
   expect(composer).toBeDefined()
@@ -78,13 +74,13 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
   const messageNode = result.find((node) => node.className === ClassNames.Message)
   expect(messageNode).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render settings button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   const settingsButton = result.find((node) => node.title === 'Settings')
   expect(settingsButton).toBeDefined()
   expect(settingsButton).toMatchObject({
@@ -96,7 +92,7 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
 })
 
 test('getStatusBarVirtualDom should render close button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   const closeButton = result.find((node) => node.title === 'Close Chat')
   expect(closeButton).toBeDefined()
   expect(closeButton).toMatchObject({
@@ -105,4 +101,11 @@ test('getStatusBarVirtualDom should render close button in header actions', () =
     role: 'button',
     type: VirtualDomElements.Button,
   })
+})
+
+test('getStatusBarVirtualDom should hide session list in detail mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
+  const sessionButton = result.find((node) => node.name === 'session:session-1')
+  expect(sessionButton).toBeUndefined()
 })

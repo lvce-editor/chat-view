@@ -21,6 +21,7 @@ test('handleClick should select a session', async () => {
   }
   const result = await HandleClick.handleClick(state, 'session:session-2')
   expect(result.selectedSessionId).toBe('session-2')
+  expect(result.viewMode).toBe('detail')
 })
 
 test('handleClick should mark session for rename and prefill composer', async () => {

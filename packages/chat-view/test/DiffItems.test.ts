@@ -36,6 +36,12 @@ test('isEqual should return false when sessions reference changes', () => {
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
 
+test('isEqual should return false when viewMode changes', () => {
+  const state1: ChatState = { ...createDefaultState(), viewMode: 'list' }
+  const state2: ChatState = { ...createDefaultState(), viewMode: 'detail' }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
 test('isEqual should ignore uid when chat fields are equal', () => {
   const { sessions } = createDefaultState()
   const state1: ChatState = { ...createDefaultState(), sessions, uid: 1 }

@@ -3,6 +3,8 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
 
+export type ChatViewMode = 'list' | 'detail'
+
 export interface ChatState {
   readonly assetDir: string
   readonly composerValue: string
@@ -18,5 +20,6 @@ export interface ChatState {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly uid: number
+  readonly viewMode: ChatViewMode
   readonly warningCount: number
 }
