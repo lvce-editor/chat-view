@@ -6,12 +6,12 @@ const getFocusSelector = (focus: ChatViewFocus): string => {
     case 'composer':
     case 'input':
       return '[name="composer"]'
-    case 'send-button':
-      return '[name="send"]'
-    case 'list':
-      return '[name^="session:"]'
     case 'header':
       return '[name="create-session"]'
+    case 'list':
+      return '[name^="session:"]'
+    case 'send-button':
+      return '[name="send"]'
     default:
       return '[name="composer"]'
   }

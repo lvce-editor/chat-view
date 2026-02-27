@@ -10,12 +10,12 @@ export const getRenderer = (diffType: number): Renderer => {
   switch (diffType) {
     case DiffType.RenderCss:
       return RenderCss.renderCss
+    case DiffType.RenderFocus:
+      return RenderFocus.renderFocus
     case DiffType.RenderIncremental:
       return renderIncremental
     case DiffType.RenderItems:
       return RenderItems.renderItems
-    case DiffType.RenderFocus:
-      return RenderFocus.renderFocus
     case DiffType.RenderValue:
       return RenderValue.renderValue
     default:
