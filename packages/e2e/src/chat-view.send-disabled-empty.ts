@@ -10,8 +10,8 @@ export const test: Test = async ({ Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
   await expect(sendButton).toBeVisible()
-  await expect(sendButton).toBeDisabled()
+  await expect(sendButton).toHaveAttribute('disabled', '')
 
   await composer.type('hello')
-  await expect(sendButton).toBeEnabled()
+  await expect(sendButton).toHaveAttribute('disabled', null)
 }
