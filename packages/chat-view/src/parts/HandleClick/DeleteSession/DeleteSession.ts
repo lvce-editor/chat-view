@@ -1,4 +1,4 @@
-import type { ChatState } from '../../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../../ChatState/ChatState.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = (state: ChatState, id: string): ChatState => {

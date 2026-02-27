@@ -1,4 +1,4 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const clearInput = async (state: ChatState): Promise<ChatState> => {
   return {

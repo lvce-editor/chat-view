@@ -1,4 +1,4 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import * as GetRenderer from '../GetRenderer/GetRenderer.ts'
 
 export const applyRender = (oldState: ChatState, newState: ChatState, diffResult: readonly number[]): readonly any[] => {

@@ -1,4 +1,4 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { createDefaultState } from '../CreateDefaultState/CreateDefaultState.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 

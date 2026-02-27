@@ -1,6 +1,6 @@
 import { ViewletCommand } from '@lvce-editor/constants'
 import { diffTree } from '@lvce-editor/virtual-dom-worker'
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { renderItems } from '../RenderItems/RenderItems.ts'
 
 export const renderIncremental = (oldState: ChatState, newState: ChatState): any => {

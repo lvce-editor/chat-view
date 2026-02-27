@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatSession, ChatState } from '../StatusBarState/StatusBarState.ts'
+import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'

@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import type { ChatState } from '../src/parts/StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as FocusInput from '../src/parts/FocusInput/FocusInput.ts'
 
