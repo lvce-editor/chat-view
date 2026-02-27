@@ -1,5 +1,6 @@
 import { ViewletCommand } from '@lvce-editor/constants'
-import type { ChatState, ChatViewFocus } from '../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
+import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 
 const getFocusSelector = (focus: ChatViewFocus): string => {
   switch (focus) {

@@ -1,11 +1,11 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
+export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
-
-export type ChatViewFocus = 'header' | 'list' | 'composer' | 'input' | 'send-button'
 
 export interface ChatState {
   readonly assetDir: string

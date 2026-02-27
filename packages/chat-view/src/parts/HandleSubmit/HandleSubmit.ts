@@ -64,7 +64,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     })
   }
 
-  set(state.uid, optimisticState, optimisticState)
+  set(state.uid, state, optimisticState)
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 

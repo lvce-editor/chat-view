@@ -29,14 +29,15 @@ const submitRename = (state: ChatState): ChatState => {
 }
 
 export const handleKeyDown = async (state: ChatState, key: string, shiftKey: boolean): Promise<ChatState> => {
+  const { composerValue, renamingSessionId, selectedSessionId, sessions, viewMode } = state
   if (key !== 'Enter' || shiftKey) {
     return state
   }
-  if (state.renamingSessionId) {
+  if (renamingSessionId) {
     return submitRename(state)
   }
-  const hasInput = state.composerValue.trim().length > 0
-  const hasSelectedSession = state.sessions.some((session) => session.id === state.selectedSessionId)
-  const submitState = state.viewMode === 'list' && hasInput && hasSelectedSession ? { ...state, viewMode: 'detail' as const } : state
+  const hasInput = composerValue.trim().length > 0
+  const hasSelectedSession = sessions.some((session) => session.id === selectedSessionId)
+  const submitState = viewMode === 'list' && hasInput && hasSelectedSession ? { ...state, viewMode: 'detail' as const } : state
   return HandleSubmit.handleSubmit(submitState)
 }
