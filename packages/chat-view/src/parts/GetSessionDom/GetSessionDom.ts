@@ -14,7 +14,6 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
     },
     {
       childCount: 1,
-      className: ClassNames.ChatName,
       name: `session:${session.id}`,
       onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       tabIndex: 0,
@@ -29,7 +28,8 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
     {
       childCount: 1,
       className: ClassNames.IconButton,
-      name: `session-delete:${session.id}`,
+      dataset: { id: session.id },
+      name: 'SessionDelete',
       role: AriaRoles.Button,
       tabIndex: 0,
       title: Strings.deleteChatSession,

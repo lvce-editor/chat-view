@@ -13,7 +13,7 @@ test('renderEventListeners should return contextmenu, click, input and keydown l
     },
     {
       name: DomEventListenersFunctions.HandleClick,
-      params: ['handleClick', EventExpression.TargetName],
+      params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
       name: DomEventListenersFunctions.HandleClickClose,
@@ -26,6 +26,10 @@ test('renderEventListeners should return contextmenu, click, input and keydown l
     {
       name: DomEventListenersFunctions.HandleClickNew,
       params: ['handleClickNew'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickBack,
+      params: ['handleClickBack'],
     },
     {
       name: DomEventListenersFunctions.HandleInput,

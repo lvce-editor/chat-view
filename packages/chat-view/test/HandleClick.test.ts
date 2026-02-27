@@ -39,7 +39,7 @@ test('handleClick should delete a session', async () => {
       { id: 'session-2', messages: [], title: 'Chat 2' },
     ],
   }
-  const result = await HandleClick.handleClick(state, 'session-delete:session-2')
+  const result = await HandleClick.handleClick(state, 'SessionDelete', 'session-2')
   expect(result.sessions).toHaveLength(1)
   expect(result.sessions[0].id).toBe('session-1')
   expect(result.selectedSessionId).toBe('session-1')
@@ -63,7 +63,7 @@ test('handleClick should allow deleting last session', async () => {
     renamingSessionId: 'session-1',
     viewMode: 'detail',
   }
-  const result = await HandleClick.handleClick(state, 'session-delete:session-1')
+  const result = await HandleClick.handleClick(state, 'SessionDelete', 'session-1')
   expect(result.sessions).toHaveLength(0)
   expect(result.selectedSessionId).toBe('')
   expect(result.renamingSessionId).toBe('')
@@ -98,17 +98,6 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
-})
-
-test('handleClick should go back to list mode', async () => {
-  const state: ChatState = {
-    ...createDefaultState(),
-    renamingSessionId: 'session-1',
-    viewMode: 'detail',
-  }
-  const result = await HandleClick.handleClick(state, 'back')
-  expect(result.viewMode).toBe('list')
-  expect(result.renamingSessionId).toBe('')
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {

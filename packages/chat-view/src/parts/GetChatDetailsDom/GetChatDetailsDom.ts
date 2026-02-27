@@ -23,7 +23,6 @@ export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNo
       className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       name: 'send',
       role: AriaRoles.Button,
-      tabIndex: 0,
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },

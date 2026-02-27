@@ -44,7 +44,6 @@ export const getChatDetailsDom = (
       className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       name: 'send',
       role: AriaRoles.Button,
-      tabIndex: 0,
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },

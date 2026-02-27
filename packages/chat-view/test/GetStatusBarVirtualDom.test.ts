@@ -48,7 +48,9 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'list')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
+  const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   expect(sessionButton).toBeDefined()
+  expect(deleteButton).toBeDefined()
   expect(sessionButton).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     type: VirtualDomElements.Div,
@@ -153,6 +155,7 @@ test('getStatusBarVirtualDom should render back button in detail mode', () => {
   expect(backButton).toBeDefined()
   expect(backButton).toMatchObject({
     className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClickBack,
     role: 'button',
     title: 'Back to chats',
     type: VirtualDomElements.Button,

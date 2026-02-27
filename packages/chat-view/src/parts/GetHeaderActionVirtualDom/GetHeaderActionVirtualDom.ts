@@ -14,7 +14,6 @@ export const getHeaderActionVirtualDom = (item: {
       name: item.name,
       onClick: item.onClick,
       role: AriaRoles.Button,
-      tabIndex: 0,
       title: item.title,
       type: VirtualDomElements.Button,
     },

@@ -1,7 +1,6 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import { createSession } from './CreateSession/CreateSession.ts'
 import { deleteSession } from './DeleteSession/DeleteSession.ts'
-import { handleClickList } from './HandleClickList/HandleClickList.ts'
 import { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
 import { selectSession } from './SelectSession/SelectSession.ts'
 import { startRename } from './StartRename/StartRename.ts'
@@ -9,11 +8,10 @@ import { startRename } from './StartRename/StartRename.ts'
 const CREATE_SESSION = 'create-session'
 const SESSION_PREFIX = 'session:'
 const RENAME_PREFIX = 'session-rename:'
-const DELETE_PREFIX = 'session-delete:'
+const SESSION_DELETE = 'SessionDelete'
 const SEND = 'send'
-const BACK = 'back'
 
-export const handleClick = async (state: ChatState, name: string): Promise<ChatState> => {
+export const handleClick = async (state: ChatState, name: string, id = ''): Promise<ChatState> => {
   if (!name) {
     return state
   }
@@ -28,21 +26,15 @@ export const handleClick = async (state: ChatState, name: string): Promise<ChatS
     const id = name.slice(RENAME_PREFIX.length)
     return startRename(state, id)
   }
-  if (name.startsWith(DELETE_PREFIX)) {
-    const id = name.slice(DELETE_PREFIX.length)
+  if (name === SESSION_DELETE) {
     return deleteSession(state, id)
   }
   if (name === SEND) {
     return handleClickSend(state)
   }
-  if (name === BACK) {
-    return {
-      ...state,
-      renamingSessionId: '',
-      viewMode: 'list',
-    }
-  }
   return state
 }
-export { handleClickList }
+
 export { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
+
+export { handleClickList } from './HandleClickList/HandleClickList.ts'
