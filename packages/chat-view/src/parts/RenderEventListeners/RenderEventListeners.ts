@@ -30,8 +30,16 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickBack'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickList,
+      params: ['handleClickList', EventExpression.ClientX, EventExpression.ClientY],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
+    },
+    {
+      name: DomEventListenersFunctions.HandleFocus,
+      params: ['handleInputFocus', EventExpression.TargetName],
     },
     {
       name: DomEventListenersFunctions.HandleKeyDown,
