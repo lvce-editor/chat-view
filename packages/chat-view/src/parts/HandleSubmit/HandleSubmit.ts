@@ -1,16 +1,9 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
+import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
-
-const delay = async (ms: number): Promise<void> => {
-  await new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-const getMockAiResponse = (userMessage: string): string => {
-  return `Mock AI response: I received "${userMessage}".`
-}
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const { composerValue, nextMessageId, selectedSessionId, sessions, viewMode } = state
@@ -68,15 +61,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
-  await delay(800)
-
-  const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  const assistantMessage: ChatMessage = {
-    id: `message-${optimisticState.nextMessageId}`,
-    role: 'assistant',
-    text: getMockAiResponse(userText),
-    time: assistantTime,
-  }
+  const assistantMessage = await getAiResponse(userText, optimisticState.nextMessageId)
 
   const updatedSessions: readonly ChatSession[] = optimisticState.sessions.map((session) => {
     if (session.id !== optimisticState.selectedSessionId) {
