@@ -7,12 +7,5 @@ export const getEmptyChatSessionsDom = (sessionsLength: number): readonly Virtua
   if (sessionsLength !== 0) {
     return []
   }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Div,
-    },
-    text(Strings.clickToOpenNewChat),
-  ]
+  return []
 }

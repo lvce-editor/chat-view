@@ -1,18 +1,26 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
+import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { getEmptyChatSessionsDom } from '../GetEmptyChatSessionsDom/GetEmptyChatSessionsDom.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
+import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 
 export const getChatListDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
-  const sessionNodes = sessions.flatMap((session) => getSessionDom(session, selectedSessionId))
-  const emptyStateNodes = getEmptyChatSessionsDom(sessions.length)
+  if (sessions.length === 0) {
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.Label,
+        type: VirtualDomElements.Div,
+      },
+      text(Strings.clickToOpenNewChat),
+    ]
+  }
   return [
     {
-      childCount: sessions.length === 0 ? 1 : sessions.length,
+      childCount: sessions.length,
       className: ClassNames.ChatList,
       type: VirtualDomElements.Div,
     },
-    ...(sessions.length === 0 ? emptyStateNodes : sessionNodes),
+    sessions.flatMap((session) => getSessionDom(session, selectedSessionId)),
   ]
 }
