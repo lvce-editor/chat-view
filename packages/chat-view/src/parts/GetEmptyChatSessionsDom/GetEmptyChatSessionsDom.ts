@@ -1,11 +1,15 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import { text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getEmptyChatSessionsDom = (sessionsLength: number): readonly VirtualDomNode[] => {
-  if (sessionsLength !== 0) {
-    return []
-  }
-  return []
+export const getEmptyChatSessionsDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatList,
+      type: VirtualDomElements.Div,
+    },
+    { childCount: 1, className: ClassNames.Label, type: VirtualDomElements.Div },
+    text(Strings.clickToOpenNewChat),
+  ]
 }
