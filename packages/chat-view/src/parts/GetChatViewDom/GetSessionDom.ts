@@ -14,8 +14,6 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
     },
     {
       childCount: 1,
-      'data-id': session.id,
-      name: 'SessionDelete',
       name: `session:${session.id}`,
       onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       tabIndex: 0,
@@ -30,8 +28,10 @@ export const getSessionDom = (session: ChatSession, _selectedSessionId: string):
     {
       childCount: 1,
       className: ClassNames.IconButton,
-      name: `session-delete:${session.id}`,
+      dataset: { id: session.id },
+      name: 'SessionDelete',
       role: AriaRoles.Button,
+      tabIndex: 0,
       title: Strings.deleteChatSession,
       type: VirtualDomElements.Button,
     },

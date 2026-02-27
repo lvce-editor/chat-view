@@ -48,7 +48,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'list')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
-  const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
+  const deleteButton = result.find((node) => node.name === 'SessionDelete' && node.dataset?.id === 'session-1')
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
   expect(sessionButton).toMatchObject({
