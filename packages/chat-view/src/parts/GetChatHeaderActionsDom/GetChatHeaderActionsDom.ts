@@ -4,41 +4,44 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 
 export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
+  const items = [
+    {
+      icon: '+',
+      name: 'create-session',
+      title: Strings.newChat,
+    },
+    {
+      icon: '⚙',
+      onClick: DomEventListenerFunctions.HandleClickSettings,
+      title: Strings.settings,
+    },
+    {
+      icon: '×',
+      onClick: DomEventListenerFunctions.HandleClickClose,
+      title: Strings.closeChat,
+    },
+  ] as const
+
   return [
     {
-      childCount: 3,
+      childCount: items.length,
       className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      name: 'create-session',
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: Strings.newChat,
-      type: VirtualDomElements.Button,
-    },
-    text('+'),
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      onClick: DomEventListenerFunctions.HandleClickSettings,
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: Strings.settings,
-      type: VirtualDomElements.Button,
-    },
-    text('⚙'),
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      onClick: DomEventListenerFunctions.HandleClickClose,
-      role: AriaRoles.Button,
-      tabIndex: 0,
-      title: Strings.closeChat,
-      type: VirtualDomElements.Button,
-    },
-    text('×'),
+    ...items.flatMap((item) => {
+      return [
+        {
+          childCount: 1,
+          className: ClassNames.IconButton,
+          ...(item.name ? { name: item.name } : {}),
+          ...(item.onClick ? { onClick: item.onClick } : {}),
+          role: AriaRoles.Button,
+          tabIndex: 0,
+          title: item.title,
+          type: VirtualDomElements.Button,
+        },
+        text(item.icon),
+      ]
+    }),
   ]
 }
