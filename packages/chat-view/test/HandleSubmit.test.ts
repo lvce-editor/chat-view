@@ -1,8 +1,12 @@
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 
 test('handleSubmit should add a user message from composer value', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
   const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions[0].messages).toHaveLength(2)
@@ -13,9 +17,13 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should create a new session and switch to detail mode from list mode', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
   const state = { ...createDefaultState(), composerValue: 'first message', viewMode: 'list' as const }
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions).toHaveLength(state.sessions.length + 1)
@@ -32,6 +40,7 @@ test('handleSubmit should create a new session and switch to detail mode from li
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should ignore blank composer value', async () => {

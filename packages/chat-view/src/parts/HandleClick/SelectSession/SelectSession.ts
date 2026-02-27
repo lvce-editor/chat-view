@@ -1,4 +1,4 @@
-import type { ChatState } from '../../StatusBarState/StatusBarState.ts'
+import type { ChatState } from '../../ChatState/ChatState.ts'
 
 export const selectSession = (state: ChatState, id: string): ChatState => {
   const exists = state.sessions.some((session) => session.id === id)
