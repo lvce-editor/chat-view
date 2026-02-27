@@ -9,6 +9,7 @@ export const createDefaultState = (): ChatState => {
     errorCount: 0,
     focus: 'composer',
     focused: false,
+    headerHeight: 50,
     height: 0,
     initial: true,
     inputSource: 'script',
