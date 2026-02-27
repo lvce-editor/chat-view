@@ -68,6 +68,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   expect(sendButton).toBeDefined()
   expect(composer).toMatchObject({
     className: ClassNames.MultilineInputBox,
+    onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.TextArea,
     value: 'hello',
   })
