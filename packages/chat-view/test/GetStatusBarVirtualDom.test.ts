@@ -13,6 +13,29 @@ test('getStatusBarVirtualDom should render root chat container', () => {
   })
 })
 
+test('getStatusBarVirtualDom should structure chat sections as header, list and details', () => {
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
+  expect(result[0]).toMatchObject({
+    childCount: 3,
+    className: `${ClassNames.Viewlet} Chat`,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[1]).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatHeader,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[11]).toMatchObject({
+    childCount: 0,
+    className: ClassNames.ChatList,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[12]).toMatchObject({
+    className: ClassNames.ChatDetails,
+    type: VirtualDomElements.Div,
+  })
+})
+
 test('getStatusBarVirtualDom should render session list entries', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },
@@ -40,7 +63,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
     value: 'hello',
   })
   expect(sendButton).toMatchObject({
-    className: ClassNames.Button,
+    className: `${ClassNames.Button} ${ClassNames.ButtonPrimary}`,
     type: VirtualDomElements.Button,
   })
 })
