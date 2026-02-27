@@ -6,6 +6,7 @@ import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleC
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
+import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
@@ -30,6 +31,7 @@ export const commandMap = {
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
+  'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),

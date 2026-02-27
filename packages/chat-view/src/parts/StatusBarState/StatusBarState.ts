@@ -5,11 +5,15 @@ export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
+export type ChatViewFocus = 'header' | 'list' | 'input' | 'send-button'
+
 export interface ChatState {
   readonly assetDir: string
   readonly composerValue: string
   readonly disposed?: boolean
   readonly errorCount: number
+  readonly focus: ChatViewFocus
+  readonly focused: boolean
   readonly ignoreNextInput: boolean
   readonly initial: boolean
   readonly inputSource: 'user' | 'script'

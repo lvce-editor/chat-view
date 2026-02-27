@@ -7,6 +7,8 @@ export const createDefaultState = (): ChatState => {
     assetDir: '',
     composerValue: '',
     errorCount: 0,
+    focus: 'input',
+    focused: false,
     ignoreNextInput: false,
     initial: true,
     inputSource: 'script',
