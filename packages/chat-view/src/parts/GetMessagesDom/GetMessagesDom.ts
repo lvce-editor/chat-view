@@ -13,7 +13,7 @@ export const getChatMessageDom = (message: ChatMessage): readonly VirtualDomNode
     {
       childCount: 1,
       className: ClassNames.Label,
-      type: VirtualDomElements.Strong,
+      type: VirtualDomElements.Div,
     },
     text(`${message.role === 'user' ? Strings.you : Strings.assistant} · ${message.time}`),
     {
