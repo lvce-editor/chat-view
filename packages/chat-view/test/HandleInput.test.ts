@@ -4,13 +4,21 @@ import * as HandleInput from '../src/parts/HandleInput/HandleInput.ts'
 
 test('handleInput should update composer value', async () => {
   const state = createDefaultState()
-  const result = await HandleInput.handleInput(state, 'hello')
+  const result = await HandleInput.handleInput(state, 'hello', 'user')
   expect(result.composerValue).toBe('hello')
+  expect(result.inputSource).toBe('user')
+})
+
+test('handleInput should mark script input source', async () => {
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'hello', 'script')
+  expect(result.composerValue).toBe('hello')
+  expect(result.inputSource).toBe('script')
 })
 
 test('handleInput should ignore one input after submit', async () => {
   const state = { ...createDefaultState(), ignoreNextInput: true }
-  const result = await HandleInput.handleInput(state, '\n')
+  const result = await HandleInput.handleInput(state, '\n', 'user')
   expect(result.composerValue).toBe('')
   expect(result.ignoreNextInput).toBe(false)
 })

@@ -16,7 +16,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
 test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   expect(result[0]).toMatchObject({
-    childCount: 2,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -25,13 +25,18 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
     className: ClassNames.ChatHeader,
     type: VirtualDomElements.Div,
   })
-  expect(result[11]).toMatchObject({
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  expect(chatList).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatList,
     type: VirtualDomElements.Div,
   })
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
   expect(emptyStateMessage).toBeDefined()
+  const composer = result.find((node) => node.name === 'composer')
+  const sendButton = result.find((node) => node.name === 'send')
+  expect(composer).toBeDefined()
+  expect(sendButton).toBeDefined()
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
   expect(detailsNode).toBeUndefined()
 })
@@ -43,7 +48,11 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'list')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
+  const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
+  const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
   expect(sessionButton).toBeDefined()
+  expect(deleteButton).toBeDefined()
+  expect(sessionLabel).toBeDefined()
   expect(sessionButton).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
     type: VirtualDomElements.Div,
@@ -93,6 +102,18 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
   })
 })
 
+test('getStatusBarVirtualDom should render new chat button in header actions', () => {
+  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
+  const newChatButton = result.find((node) => node.title === 'New Chat')
+  expect(newChatButton).toBeDefined()
+  expect(newChatButton).toMatchObject({
+    className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClickNew,
+    role: 'button',
+    type: VirtualDomElements.Button,
+  })
+})
+
 test('getStatusBarVirtualDom should render close button in header actions', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   const closeButton = result.find((node) => node.title === 'Close Chat')
@@ -136,6 +157,7 @@ test('getStatusBarVirtualDom should render back button in detail mode', () => {
   expect(backButton).toBeDefined()
   expect(backButton).toMatchObject({
     className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClickBack,
     role: 'button',
     title: 'Back to chats',
     type: VirtualDomElements.Button,

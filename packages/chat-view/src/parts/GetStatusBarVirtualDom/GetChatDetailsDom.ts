@@ -1,6 +1,6 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const getChatDetailsDom = (
   selectedSessionTitle: string,
@@ -44,7 +44,6 @@ export const getChatDetailsDom = (
       className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       name: 'send',
       role: AriaRoles.Button,
-      tabIndex: 0,
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },

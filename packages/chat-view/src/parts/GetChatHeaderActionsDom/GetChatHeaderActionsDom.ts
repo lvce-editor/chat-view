@@ -1,22 +1,26 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 
 export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
   const items = [
     {
       icon: '+',
       name: 'create-session',
+      onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat,
     },
     {
       icon: '⚙',
+      name: 'settings',
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings,
     },
     {
       icon: '×',
+      name: 'close-chat',
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat,
     },
@@ -28,22 +32,6 @@ export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
       className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
-    ...items.flatMap((item) => {
-      const name = 'name' in item ? item.name : undefined
-      const onClick = 'onClick' in item ? item.onClick : undefined
-      return [
-        {
-          childCount: 1,
-          className: ClassNames.IconButton,
-          ...(name ? { name } : {}),
-          ...(onClick ? { onClick } : {}),
-          role: AriaRoles.Button,
-          tabIndex: 0,
-          title: item.title,
-          type: VirtualDomElements.Button,
-        },
-        text(item.icon),
-      ]
-    }),
+    ...items.flatMap(getHeaderActionVirtualDom),
   ]
 }

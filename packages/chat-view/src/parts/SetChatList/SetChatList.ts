@@ -1,5 +1,5 @@
 import type { ChatSession, ChatState } from '../StatusBarState/StatusBarState.ts'
-import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 const dummySessions: readonly ChatSession[] = [
   {

@@ -23,6 +23,7 @@ const submitRename = (state: ChatState): ChatState => {
     ...state,
     composerValue: '',
     ignoreNextInput: true,
+    inputSource: 'script',
     renamingSessionId: '',
     sessions: updatedSessions,
   }

@@ -11,7 +11,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleClick,
-      params: ['handleClick', EventExpression.TargetName],
+      params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
       name: DomEventListenersFunctions.HandleClickClose,
@@ -22,8 +22,24 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickSettings'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickNew,
+      params: ['handleClickNew'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickBack,
+      params: ['handleClickBack'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickList,
+      params: ['handleClickList', EventExpression.ClientX, EventExpression.ClientY],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
+    },
+    {
+      name: DomEventListenersFunctions.HandleFocus,
+      params: ['handleInputFocus', EventExpression.TargetName],
     },
     {
       name: DomEventListenersFunctions.HandleKeyDown,

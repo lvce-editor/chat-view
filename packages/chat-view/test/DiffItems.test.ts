@@ -15,10 +15,11 @@ test('isEqual should return true for equivalent chat state', () => {
   expect(DiffItems.isEqual(state1, state2)).toBe(true)
 })
 
-test('isEqual should return false when composer changes', () => {
-  const state1: ChatState = { ...createDefaultState(), composerValue: 'a' }
-  const state2: ChatState = { ...createDefaultState(), composerValue: 'b' }
-  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+test('isEqual should return true when only composer changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), composerValue: 'a', sessions }
+  const state2: ChatState = { ...createDefaultState(), composerValue: 'b', sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(true)
 })
 
 test('isEqual should return false when selectedSessionId changes', () => {

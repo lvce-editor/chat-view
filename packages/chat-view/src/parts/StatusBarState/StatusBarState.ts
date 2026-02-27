@@ -3,6 +3,7 @@ import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
+export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
   readonly assetDir: string
@@ -11,7 +12,9 @@ export interface ChatState {
   readonly errorCount: number
   readonly ignoreNextInput: boolean
   readonly initial: boolean
+  readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
+  readonly listItemHeight: number
   readonly nextMessageId: number
   readonly platform: number
   readonly renamingSessionId: string
