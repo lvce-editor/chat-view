@@ -1,5 +1,5 @@
-import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import type { SavedState } from '../SavedState/SavedState.ts'
+import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import { ensureSessions } from '../EnsureSessions/EnsureSessions.ts'
 
 const isObject = (value: unknown): value is Record<string, unknown> => {
@@ -10,7 +10,7 @@ const getSavedSessions = (savedState: unknown) => {
   if (!isObject(savedState)) {
     return undefined
   }
-  const sessions = (savedState as Partial<SavedState>).sessions
+  const {sessions} = (savedState as Partial<SavedState>)
   if (!Array.isArray(sessions)) {
     return undefined
   }
@@ -21,7 +21,7 @@ const getSavedSelectedSessionId = (savedState: unknown) => {
   if (!isObject(savedState)) {
     return undefined
   }
-  const selectedSessionId = (savedState as Partial<SavedState>).selectedSessionId
+  const {selectedSessionId} = (savedState as Partial<SavedState>)
   if (typeof selectedSessionId !== 'string') {
     return undefined
   }
