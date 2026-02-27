@@ -1,4 +1,4 @@
-import { cp, readFile } from 'node:fs/promises'
+import { cp, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from './root.js'
@@ -29,13 +29,13 @@ const workerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
 // @ts-ignore
 const remoteUrl = getRemoteUrl(workerPath)
 
-// const occurrence = `// const statusBarWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\`
-// const statusBarWorkerUrl = \`${remoteUrl}\``
-// const replacement = `const statusBarWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\``
-// if (!content.includes(occurrence)) {
-//   throw new Error('occurrence not found')
-// }
-// const newContent = content.replace(occurrence, replacement)
-// await writeFile(rendererWorkerPath, newContent)
+const occurrence = `// const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\`
+const chatViewWorkerUrl = \`${remoteUrl}\``
+const replacement = `const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\``
+if (!content.includes(occurrence)) {
+  throw new Error('occurrence not found')
+}
+const newContent = content.replace(occurrence, replacement)
+await writeFile(rendererWorkerPath, newContent)
 
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })
