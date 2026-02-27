@@ -1,10 +1,16 @@
 import type { StatusBarState } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
+import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 
 const CREATE_SESSION = 'create-session'
 const SESSION_PREFIX = 'session:'
 const RENAME_PREFIX = 'session-rename:'
 const DELETE_PREFIX = 'session-delete:'
+const SEND = 'send'
+
+export const handleClickSend = async (state: StatusBarState): Promise<StatusBarState> => {
+  return HandleKeyDown.handleKeyDown(state, 'Enter', false)
+}
 
 const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: string): string => {
   if (sessions.length === 0) {
@@ -105,6 +111,9 @@ export const handleClick = async (state: StatusBarState, name: string): Promise<
   if (name.startsWith(DELETE_PREFIX)) {
     const id = name.slice(DELETE_PREFIX.length)
     return deleteSession(state, id)
+  }
+  if (name === SEND) {
+    return handleClickSend(state)
   }
   return state
 }

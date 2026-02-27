@@ -9,6 +9,14 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName],
     },
     {
+      name: DomEventListenersFunctions.HandleClickClose,
+      params: ['handleClickClose'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickSettings,
+      params: ['handleClickSettings'],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
     },
