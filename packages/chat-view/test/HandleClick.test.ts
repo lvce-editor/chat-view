@@ -122,7 +122,7 @@ test('handleClickList should open detail for session index from y coordinate', a
     x: 0,
     y: 0,
   }
-  const result = await HandleClick.handleClickList(state, 8, 121)
+  const result = await HandleClick.handleClickList(state, 8, 131)
   expect(result.selectedSessionId).toBe('session-3')
   expect(result.viewMode).toBe('detail')
 })
