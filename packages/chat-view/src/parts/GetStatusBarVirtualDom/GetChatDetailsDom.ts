@@ -16,7 +16,7 @@ export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], comp
     ...messagesNodes,
     {
       childCount: 2,
-      className: ClassNames.ChatActions,
+      className: ClassNames.ChatSendArea,
       type: VirtualDomElements.Div,
     },
     {
@@ -30,7 +30,7 @@ export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], comp
     },
     {
       childCount: 1,
-      className: ClassNames.Button,
+      className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       name: 'send',
       role: AriaRoles.Button,
       tabIndex: 0,

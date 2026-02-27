@@ -26,16 +26,16 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 4,
-      className: ClassNames.ChatActions,
-      type: VirtualDomElements.Div,
-    },
-    {
       childCount: 1,
       className: ClassNames.Label,
       type: VirtualDomElements.Span,
     },
     text('Chats'),
+    {
+      childCount: 3,
+      className: ClassNames.ChatActions,
+      type: VirtualDomElements.Div,
+    },
     {
       childCount: 1,
       className: ClassNames.IconButton,
@@ -85,7 +85,7 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
     ...messagesNodes,
     {
       childCount: 2,
-      className: ClassNames.ChatActions,
+      className: ClassNames.ChatSendArea,
       type: VirtualDomElements.Div,
     },
     {
@@ -99,7 +99,7 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
     },
     {
       childCount: 1,
-      className: ClassNames.Button,
+      className: ClassNames.Button + ' ' + ClassNames.ButtonPrimary,
       name: 'send',
       role: AriaRoles.Button,
       tabIndex: 0,
