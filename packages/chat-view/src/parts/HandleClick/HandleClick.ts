@@ -1,5 +1,6 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
+import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 
 const CREATE_SESSION = 'create-session'
@@ -25,7 +26,7 @@ const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: s
 }
 
 const createSession = (state: ChatState): ChatState => {
-  const id = `session-${state.nextSessionId}`
+  const id = generateSessionId()
   const session: ChatSession = {
     id,
     messages: [],
@@ -72,7 +73,7 @@ const deleteSession = (state: ChatState, id: string): ChatState => {
     return state
   }
   if (filtered.length === 0) {
-    const fallbackId = `session-${state.nextSessionId}`
+    const fallbackId = generateSessionId()
     const fallback: ChatSession = {
       id: fallbackId,
       messages: [],

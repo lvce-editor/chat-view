@@ -34,9 +34,9 @@ test('loadContent should create fallback session when sessions are empty', async
   }
   const result = await LoadContent.loadContent(state)
   expect(result.sessions).toHaveLength(1)
-  expect(result.sessions[0].id).toBe('session-5')
+  expect(result.sessions[0].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
   expect(result.sessions[0].title).toBe('Chat 5')
-  expect(result.selectedSessionId).toBe('session-5')
+  expect(result.selectedSessionId).toBe(result.sessions[0].id)
   expect(result.nextSessionId).toBe(6)
 })
 
@@ -52,4 +52,37 @@ test('loadContent should recover selectedSessionId when it does not exist', asyn
   const result = await LoadContent.loadContent(state)
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.sessions).toHaveLength(2)
+})
+
+test('loadContent should restore chat list items from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+  }
+  const savedState = {
+    selectedSessionId: 'session-b',
+    sessions: [
+      { id: 'session-a', messages: [], title: 'Saved A' },
+      { id: 'session-b', messages: [], title: 'Saved B' },
+    ],
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.sessions).toEqual(savedState.sessions)
+  expect(result.selectedSessionId).toBe('session-b')
+})
+
+test('loadContent should restore sessions from savedState and recover invalid selected session', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+  }
+  const savedState = {
+    selectedSessionId: 'missing',
+    sessions: [{ id: 'session-z', messages: [], title: 'Saved Z' }],
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.sessions).toEqual(savedState.sessions)
+  expect(result.selectedSessionId).toBe('session-z')
 })

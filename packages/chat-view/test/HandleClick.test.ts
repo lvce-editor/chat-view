@@ -7,7 +7,8 @@ test('handleClick should create a new session', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'create-session')
   expect(result.sessions).toHaveLength(2)
-  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.selectedSessionId).toBe(result.sessions[1].id)
+  expect(result.sessions[1].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
 })
 
 test('handleClick should select a session', async () => {
@@ -66,8 +67,8 @@ test('handleClick should create fallback session when deleting last session', as
   }
   const result = await HandleClick.handleClick(state, 'session-delete:session-1')
   expect(result.sessions).toHaveLength(1)
-  expect(result.sessions[0].id).toBe('session-2')
-  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.sessions[0].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+  expect(result.selectedSessionId).toBe(result.sessions[0].id)
   expect(result.renamingSessionId).toBe('')
 })
 

@@ -30,6 +30,7 @@ const submitRename = (state: ChatState): ChatState => {
 const submitMessage = (state: ChatState): ChatState => {
   const { composerValue, nextMessageId, selectedSessionId, sessions } = state
   const text = composerValue.trim()
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   if (!text) {
     return {
       ...state,
@@ -44,6 +45,7 @@ const submitMessage = (state: ChatState): ChatState => {
       id: `message-${nextMessageId}`,
       role: 'user',
       text,
+      time,
     }
     return {
       ...session,

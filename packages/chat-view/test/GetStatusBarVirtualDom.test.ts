@@ -43,8 +43,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeDefined()
   expect(sessionButton).toMatchObject({
-    role: 'button',
-    type: VirtualDomElements.Button,
+    type: VirtualDomElements.Div,
   })
 })
 
@@ -70,7 +69,7 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
   const sessions = [
     {
       id: 'session-1',
-      messages: [{ id: 'm1', role: 'user' as const, text: 'Hi' }],
+      messages: [{ id: 'm1', role: 'user' as const, text: 'Hi', time: '10:30' }],
       title: 'Chat 1',
     },
   ]

@@ -13,26 +13,31 @@ const dummyMessages: readonly ChatMessage[] = [
     id: 'dummy-1',
     role: 'user',
     text: 'Hello!',
+    time: '09:00',
   },
   {
     id: 'dummy-2',
     role: 'assistant',
     text: 'Hi there, how can I help?',
+    time: '09:01',
   },
   {
     id: 'dummy-3',
     role: 'user',
     text: 'Show me a quick summary.',
+    time: '09:02',
   },
   {
     id: 'dummy-4',
     role: 'assistant',
     text: 'Sure—this is a placeholder summary for now.',
+    time: '09:03',
   },
   {
     id: 'dummy-5',
     role: 'assistant',
     text: 'We can replace these with real messages next.',
+    time: '09:04',
   },
 ]
 
