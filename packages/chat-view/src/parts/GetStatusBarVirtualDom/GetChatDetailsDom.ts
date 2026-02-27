@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], composerValue: string): readonly VirtualDomNode[] => {
@@ -15,7 +15,7 @@ export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], comp
     },
     ...messagesNodes,
     {
-      childCount: 1,
+      childCount: 2,
       className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
@@ -28,5 +28,15 @@ export const getChatDetailsDom = (messagesNodes: readonly VirtualDomNode[], comp
       type: VirtualDomElements.TextArea,
       value: composerValue,
     },
+    {
+      childCount: 1,
+      className: ClassNames.Button,
+      name: 'send',
+      role: AriaRoles.Button,
+      tabIndex: 0,
+      title: 'Send message',
+      type: VirtualDomElements.Button,
+    },
+    text('Send'),
   ]
 }

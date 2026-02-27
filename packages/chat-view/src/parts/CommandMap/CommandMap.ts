@@ -4,6 +4,7 @@ import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
+import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import { initialize } from '../Initialize/Initialize.ts'
@@ -21,6 +22,7 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
+  'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.initialize': initialize,
