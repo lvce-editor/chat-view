@@ -11,6 +11,10 @@ test('renderEventListeners should return click, input and keydown listeners', ()
       params: ['handleClick', EventExpression.TargetName],
     },
     {
+      name: DomEventListenersFunctions.HandleClickClose,
+      params: ['handleClickClose'],
+    },
+    {
       name: DomEventListenersFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetValue],
     },
