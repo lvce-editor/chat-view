@@ -4,7 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getSessionDom = (session: ChatSession, selectedSessionId: string): readonly VirtualDomNode[] => {
   const selected = session.id === selectedSessionId
-  const sessionClassName = selected ? `${ClassNames.List} ${ClassNames.TestActive}` : ClassNames.List
+  const sessionClassName = selected ? `${ClassNames.ChatList} ${ClassNames.TestActive}` : ClassNames.ChatList
   return [
     {
       childCount: 2,
@@ -22,7 +22,7 @@ export const getSessionDom = (session: ChatSession, selectedSessionId: string): 
     text(session.title),
     {
       childCount: 2,
-      className: ClassNames.Actions,
+      className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
     {

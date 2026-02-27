@@ -22,12 +22,12 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
     },
     {
       childCount: 2,
-      className: ClassNames.chatHeader,
+      className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
     {
       childCount: 2,
-      className: ClassNames.Actions,
+      className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
     {
@@ -48,7 +48,7 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
     text('+'),
     {
       childCount: sessions.length,
-      className: ClassNames.ListItems,
+      className: ClassNames.ChatList,
       type: VirtualDomElements.Div,
     },
     ...sessionNodes,
@@ -65,7 +65,7 @@ export const getChatVirtualDom = (sessions: readonly ChatSession[], selectedSess
     ...messagesNodes,
     {
       childCount: 1,
-      className: ClassNames.Actions,
+      className: ClassNames.ChatActions,
       type: VirtualDomElements.Div,
     },
     {
