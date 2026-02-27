@@ -4,6 +4,16 @@ import type { ChatSession } from '../StatusBarState/StatusBarState.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 
+const getChatModeUnsupportedVirtualDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      type: VirtualDomElements.Div,
+    },
+    text('Unknown view mode'),
+  ]
+}
+
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
@@ -16,12 +26,6 @@ export const getChatVirtualDom = (
     case 'list':
       return getChatModeListVirtualDom(sessions, selectedSessionId)
     default:
-      return [
-        {
-          childCount: 1,
-          type: VirtualDomElements.Div,
-        },
-        text('Unknown view mode'),
-      ]
+      return getChatModeUnsupportedVirtualDom()
   }
 }
