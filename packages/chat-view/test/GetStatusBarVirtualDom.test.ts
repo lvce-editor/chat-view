@@ -42,7 +42,9 @@ test('getStatusBarVirtualDom should render session list entries', () => {
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '')
+  const sessionItem = result.find((node) => node.className === ClassNames.ChatListItem)
   const sessionButton = result.find((node) => node.name === 'session:session-1')
+  expect(sessionItem).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(sessionButton).toMatchObject({
     role: 'button',
