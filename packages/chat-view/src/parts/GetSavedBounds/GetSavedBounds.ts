@@ -2,17 +2,17 @@ import type { SavedState } from '../SavedState/SavedState.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
 export interface SavedBounds {
+  readonly height: number
+  readonly width: number
   readonly x: number
   readonly y: number
-  readonly width: number
-  readonly height: number
 }
 
 export const getSavedBounds = (savedState: unknown): SavedBounds | undefined => {
   if (!isObject(savedState)) {
     return undefined
   }
-  const { x, y, width, height } = savedState as Partial<SavedState>
+  const { height, width, x, y } = savedState as Partial<SavedState>
   if (typeof x !== 'number') {
     return undefined
   }

@@ -10,8 +10,8 @@ test('resize should merge dimensions into state', () => {
     width: 100,
   }
   const result = Resize.resize(state, dimensions)
-  expect((result as any).width).toBe(100)
-  expect((result as any).height).toBe(50)
+  expect(result.width).toBe(100)
+  expect(result.height).toBe(50)
   expect(result.uid).toBe(1)
 })
 
@@ -25,7 +25,7 @@ test('resize should preserve existing state properties', () => {
     width: 200,
   }
   const result = Resize.resize(state, dimensions)
-  expect((result as any).width).toBe(200)
+  expect(result.width).toBe(200)
   expect(result.uid).toBe(5)
   expect(result.disposed).toBe(true)
 })
@@ -41,7 +41,7 @@ test('resize should overwrite existing properties in dimensions', () => {
   }
   const result = Resize.resize(state, dimensions)
   expect(result.uid).toBe(10)
-  expect((result as any).width).toBe(300)
+  expect(result.width).toBe(300)
 })
 
 test('resize should handle empty dimensions', () => {
@@ -61,8 +61,8 @@ test('resize should not mutate original state', () => {
   const originalUid = state.uid
   Resize.resize(state, dimensions)
   expect(state.uid).toBe(originalUid)
-  expect((state as any).width).toBeUndefined()
-  expect((state as any).height).toBeUndefined()
+  expect(state.width).toBe(0)
+  expect(state.height).toBe(0)
 })
 
 test('resize should handle multiple dimension properties', () => {
@@ -74,9 +74,9 @@ test('resize should handle multiple dimension properties', () => {
     y: 20,
   }
   const result = Resize.resize(state, dimensions)
-  expect((result as any).width).toBe(100)
-  expect((result as any).height).toBe(50)
-  expect((result as any).x).toBe(10)
-  expect((result as any).y).toBe(20)
+  expect(result.width).toBe(100)
+  expect(result.height).toBe(50)
+  expect(result.x).toBe(10)
+  expect(result.y).toBe(20)
   expect(result.uid).toBe(1)
 })
