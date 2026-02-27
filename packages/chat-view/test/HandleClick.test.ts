@@ -82,8 +82,9 @@ test('handleClick should submit message when clicking send', async () => {
     composerValue: 'hello',
   }
   const result = await HandleClick.handleClick(state, 'send')
-  expect(result.sessions[0].messages).toHaveLength(1)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
 })
 
@@ -93,8 +94,9 @@ test('handleClickSend should submit message', async () => {
     composerValue: 'hello',
   }
   const result = await HandleClick.handleClickSend(state)
-  expect(result.sessions[0].messages).toHaveLength(1)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
 })
 

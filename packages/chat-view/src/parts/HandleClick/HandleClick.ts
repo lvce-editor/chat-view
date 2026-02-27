@@ -1,6 +1,7 @@
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import { createSession } from './CreateSession/CreateSession.ts'
 import { deleteSession } from './DeleteSession/DeleteSession.ts'
+import { handleClickList } from './HandleClickList/HandleClickList.ts'
 import { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
 import { selectSession } from './SelectSession/SelectSession.ts'
 import { startRename } from './StartRename/StartRename.ts'
@@ -43,18 +44,5 @@ export const handleClick = async (state: ChatState, name: string): Promise<ChatS
   }
   return state
 }
-
-export const handleClickList = async (state: ChatState, x: number, y: number): Promise<ChatState> => {
-  if (x < 0 || y < 0) {
-    return state
-  }
-  const itemHeight = state.listItemHeight > 0 ? state.listItemHeight : 40
-  const index = Math.floor(y / itemHeight)
-  const session = state.sessions[index]
-  if (!session) {
-    return state
-  }
-  return selectSession(state, session.id)
-}
-
+export { handleClickList }
 export { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
