@@ -1,11 +1,11 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { ChatMessage, ChatSession } from '../StatusBarState/StatusBarState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import { getChatDetailsDom } from '../GetChatViewDom/GetChatDetailsDom.ts'
 import * as Strings from '../GetChatViewDom/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetChatViewDom/GetMessagesDom.ts'
-import type { ChatMessage, ChatSession } from '../StatusBarState/StatusBarState.ts'
 
 export const getChatModeDetailVirtualDom = (
   sessions: readonly ChatSession[],
@@ -19,7 +19,7 @@ export const getChatModeDetailVirtualDom = (
   return [
     {
       childCount: 2,
-      className: ClassNames.Viewlet + ' Chat',
+      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       onClick: DomEventListenerFunctions.HandleClick,
       onInput: DomEventListenerFunctions.HandleInput,
       onKeyDown: DomEventListenerFunctions.HandleKeyDown,
