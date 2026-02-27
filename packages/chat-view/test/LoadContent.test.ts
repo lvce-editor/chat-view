@@ -27,7 +27,6 @@ test('loadContent should preserve existing state properties', async () => {
 test('loadContent should keep sessions empty when sessions are empty', async () => {
   const state: ChatState = {
     ...createDefaultState(),
-    nextSessionId: 5,
     selectedSessionId: '',
     sessions: [],
     uid: 3,
@@ -36,7 +35,6 @@ test('loadContent should keep sessions empty when sessions are empty', async () 
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.sessions).toHaveLength(0)
   expect(result.selectedSessionId).toBe('')
-  expect(result.nextSessionId).toBe(5)
   expect(result.viewMode).toBe('list')
 })
 

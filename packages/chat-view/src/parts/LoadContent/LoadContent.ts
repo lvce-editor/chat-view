@@ -10,7 +10,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   return {
     ...state,
     initial: false,
-    nextSessionId: state.nextSessionId,
     selectedSessionId,
     sessions,
     viewMode,

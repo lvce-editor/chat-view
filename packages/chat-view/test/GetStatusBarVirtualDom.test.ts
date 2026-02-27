@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as GetStatusBarVirtualDom from '../src/parts/GetStatusBarVirtualDom/GetStatusBarVirtualDom.ts'
+import * as GetStatusBarVirtualDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 
 test('getStatusBarVirtualDom should render root chat container', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
@@ -112,11 +112,11 @@ test('getStatusBarVirtualDom should hide session list in detail mode', () => {
   expect(sessionButton).toBeUndefined()
 })
 
-test('getStatusBarVirtualDom should render 5 dummy messages in detail mode', () => {
-  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+test('getStatusBarVirtualDom should render selected session messages in detail mode', () => {
+  const sessions = [{ id: 'session-1', messages: [{ id: 'm1', role: 'user' as const, text: 'hello', time: '10:30' }], title: 'Chat 1' }]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail')
   const messageNodes = result.filter((node) => node.className === ClassNames.Message)
-  expect(messageNodes).toHaveLength(5)
+  expect(messageNodes).toHaveLength(1)
 })
 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
