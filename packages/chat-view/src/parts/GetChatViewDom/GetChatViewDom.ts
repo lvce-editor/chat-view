@@ -13,5 +13,7 @@ export const getChatVirtualDom = (
   if (viewMode === 'detail') {
     return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue)
   }
-  return getChatModeListVirtualDom(sessions, selectedSessionId)
+  else {
+    return getChatModeListVirtualDom(sessions, selectedSessionId)
+  }
 }
