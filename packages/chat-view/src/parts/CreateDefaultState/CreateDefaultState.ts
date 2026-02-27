@@ -22,6 +22,7 @@ export const createDefaultState = (): ChatState => {
       },
     ],
     uid: 0,
+    viewMode: 'list',
     warningCount: 0,
   }
 }

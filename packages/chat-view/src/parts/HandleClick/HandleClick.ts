@@ -49,6 +49,7 @@ const selectSession = (state: ChatState, id: string): ChatState => {
     ...state,
     renamingSessionId: '',
     selectedSessionId: id,
+    viewMode: 'detail',
   }
 }
 

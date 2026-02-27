@@ -16,4 +16,5 @@ test('saveState should persist chat sessions and composer value', () => {
   expect(result.sessions).toEqual(state.sessions)
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.renamingSessionId).toBe('session-1')
+  expect(result.viewMode).toBe('list')
 })
