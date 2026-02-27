@@ -16,7 +16,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
 test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', 'list')
   expect(result[0]).toMatchObject({
-    childCount: 2,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -25,13 +25,18 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
     className: ClassNames.ChatHeader,
     type: VirtualDomElements.Div,
   })
-  expect(result[11]).toMatchObject({
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  expect(chatList).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatList,
     type: VirtualDomElements.Div,
   })
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
   expect(emptyStateMessage).toBeDefined()
+  const composer = result.find((node) => node.name === 'composer')
+  const sendButton = result.find((node) => node.name === 'send')
+  expect(composer).toBeDefined()
+  expect(sendButton).toBeDefined()
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
   expect(detailsNode).toBeUndefined()
 })

@@ -2,29 +2,8 @@ import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatDetailsDom = (
-  selectedSessionTitle: string,
-  messagesNodes: readonly VirtualDomNode[],
-  composerValue: string,
-): readonly VirtualDomNode[] => {
+export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 3,
-      className: ClassNames.ChatDetails,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
-    },
-    text(selectedSessionTitle),
-    {
-      childCount: Math.max(messagesNodes.length, 0),
-      className: ClassNames.ChatDetailsContent,
-      type: VirtualDomElements.Div,
-    },
-    ...messagesNodes,
     {
       childCount: 2,
       className: ClassNames.ChatSendArea,
@@ -49,5 +28,32 @@ export const getChatDetailsDom = (
       type: VirtualDomElements.Button,
     },
     text(Strings.send),
+  ]
+}
+
+export const getChatDetailsDom = (
+  selectedSessionTitle: string,
+  messagesNodes: readonly VirtualDomNode[],
+  composerValue: string,
+): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 3,
+      className: ClassNames.ChatDetails,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.Label,
+      type: VirtualDomElements.Span,
+    },
+    text(selectedSessionTitle),
+    {
+      childCount: Math.max(messagesNodes.length, 0),
+      className: ClassNames.ChatDetailsContent,
+      type: VirtualDomElements.Div,
+    },
+    ...messagesNodes,
+    ...getChatSendAreaDom(composerValue),
   ]
 }

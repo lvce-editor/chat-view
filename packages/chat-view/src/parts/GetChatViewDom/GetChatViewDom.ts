@@ -15,7 +15,7 @@ export const getChatVirtualDom = (
     case 'detail':
       return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue)
     case 'list':
-      return getChatModeListVirtualDom(sessions, selectedSessionId)
+      return getChatModeListVirtualDom(sessions, selectedSessionId, composerValue)
     default:
       return getChatModeUnsupportedVirtualDom()
   }
