@@ -3,13 +3,32 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 
 test('handleSubmit should add a user message from composer value', async () => {
-  const state = { ...createDefaultState(), composerValue: 'hello' }
+  const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].role).toBe('user')
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.sessions[0].messages[1].text).toBe('Mock AI response: I received "hello".')
+  expect(result.composerValue).toBe('')
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
+})
+
+test('handleSubmit should create a new session and switch to detail mode from list mode', async () => {
+  const state = { ...createDefaultState(), composerValue: 'first message', viewMode: 'list' as const }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions).toHaveLength(state.sessions.length + 1)
+  const newSession = result.sessions.at(-1)
+  expect(newSession).toBeDefined()
+  expect(newSession?.id).toBe(result.selectedSessionId)
+  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
+  expect(result.viewMode).toBe('detail')
+  expect(newSession?.messages).toHaveLength(2)
+  expect(newSession?.messages[0].role).toBe('user')
+  expect(newSession?.messages[0].text).toBe('first message')
+  expect(newSession?.messages[1].role).toBe('assistant')
+  expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
