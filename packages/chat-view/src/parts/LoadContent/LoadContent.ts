@@ -1,32 +1,7 @@
-import type { SavedState } from '../SavedState/SavedState.ts'
 import type { ChatState } from '../StatusBarState/StatusBarState.ts'
 import { ensureSessions } from '../EnsureSessions/EnsureSessions.ts'
-
-const isObject = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === 'object' && value !== null
-}
-
-const getSavedSessions = (savedState: unknown) => {
-  if (!isObject(savedState)) {
-    return undefined
-  }
-  const {sessions} = (savedState as Partial<SavedState>)
-  if (!Array.isArray(sessions)) {
-    return undefined
-  }
-  return sessions
-}
-
-const getSavedSelectedSessionId = (savedState: unknown) => {
-  if (!isObject(savedState)) {
-    return undefined
-  }
-  const {selectedSessionId} = (savedState as Partial<SavedState>)
-  if (typeof selectedSessionId !== 'string') {
-    return undefined
-  }
-  return selectedSessionId
-}
+import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
+import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const sourceSessions = getSavedSessions(savedState) || state.sessions
