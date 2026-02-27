@@ -7,7 +7,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
   const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '')
   expect(result.length).toBeGreaterThan(0)
   expect(result[0]).toMatchObject({
-    className: ClassNames.Viewlet,
+    className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
 })
