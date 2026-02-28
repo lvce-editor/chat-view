@@ -23,8 +23,13 @@ export const getChatSendAreaDom = (composerValue: string, models: readonly ChatM
   })
   return [
     {
-      childCount: 2,
+      childCount: 1,
       className: ClassNames.ChatSendArea,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 2,
+      className: ClassNames.ChatSendAreaContent,
       type: VirtualDomElements.Div,
     },
     {
