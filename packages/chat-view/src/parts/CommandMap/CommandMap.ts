@@ -13,9 +13,11 @@ import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
+import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
@@ -29,6 +31,7 @@ export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
   'Chat.create': StatusBar.create,
   'Chat.diff2': diff2,
+  'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
@@ -46,6 +49,7 @@ export const commandMap = {
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
+  'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
