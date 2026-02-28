@@ -4,22 +4,6 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 // TODO render things like scrollbar height,scrollbar offset, textarea height,
 // list height
 const css = `
-.ChatSendArea {
-  flex-direction: column;
-  height: auto;
-}
-
-.ChatSendArea .MultilineInputBox {
-  width: 100%;
-  height: auto;
-}
-
-.ChatSendAreaBottom {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
 `
 
 export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
