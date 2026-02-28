@@ -12,7 +12,11 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   const sendButton = Locator('.Button[name="send"]')
   await expect(composer).toBeVisible()
   await expect(sendButton).toBeVisible()
+  await expect(sendButton).toHaveAttribute('disabled', '')
+
+  // act
+  await composer.type('hello')
 
   // assert
-  await expect(sendButton).toHaveAttribute('disabled', '')
+  await expect(sendButton).toHaveAttribute('disabled', null)
 }
