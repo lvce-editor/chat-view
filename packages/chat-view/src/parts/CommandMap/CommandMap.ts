@@ -13,6 +13,7 @@ import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
@@ -29,6 +30,7 @@ export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
   'Chat.create': StatusBar.create,
   'Chat.diff2': diff2,
+  'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
