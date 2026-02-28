@@ -1,8 +1,10 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+export type { ChatModel } from '../ChatModel/ChatModel.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
 export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
@@ -20,9 +22,11 @@ export interface ChatState {
   readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
+  readonly models: readonly ChatModel[]
   readonly nextMessageId: number
   readonly platform: number
   readonly renamingSessionId: string
+  readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly uid: number

@@ -1,5 +1,5 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage, ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatMessage, ChatModel, ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
@@ -10,6 +10,8 @@ export const getChatModeDetailVirtualDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
   composerValue: string,
+  models: readonly ChatModel[],
+  selectedModelId: string,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle
@@ -22,6 +24,6 @@ export const getChatModeDetailVirtualDom = (
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
     ...getMessagesDom(messages),
-    ...getChatSendAreaDom(composerValue),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId),
   ]
 }

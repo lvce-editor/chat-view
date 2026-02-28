@@ -1,19 +1,41 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatSendAreaDom = (composerValue: string): readonly VirtualDomNode[] => {
+export const getChatSendAreaDom = (composerValue: string, models: readonly ChatModel[], selectedModelId: string): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const sendButtonClassName = isSendDisabled
     ? `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`
     : `${ClassNames.Button} ${ClassNames.ButtonPrimary}`
+  const modelOptions = models.flatMap((model) => {
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.Option,
+        selected: model.id === selectedModelId,
+        type: VirtualDomElements.Option,
+        value: model.id,
+      },
+      text(model.name),
+    ]
+  })
   return [
     {
-      childCount: 2,
+      childCount: 3,
       className: ClassNames.ChatSendArea,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: models.length,
+      className: ClassNames.Select,
+      name: 'model',
+      onInput: DomEventListenerFunctions.HandleModelChange,
+      type: VirtualDomElements.Select,
+      value: selectedModelId,
+    },
+    ...modelOptions,
     {
       childCount: 0,
       className: ClassNames.MultilineInputBox,
@@ -42,6 +64,8 @@ export const getChatDetailsDom = (
   selectedSessionTitle: string,
   messagesNodes: readonly VirtualDomNode[],
   composerValue: string,
+  models: readonly ChatModel[],
+  selectedModelId: string,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -56,6 +80,6 @@ export const getChatDetailsDom = (
     },
     text(selectedSessionTitle),
 
-    ...getChatSendAreaDom(composerValue),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId),
   ]
 }
