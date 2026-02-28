@@ -1,0 +1,14 @@
+import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { SavedState } from '../SavedState/SavedState.ts'
+import { isObject } from '../IsObject/IsObject.ts'
+
+export const getSavedViewMode = (savedState: unknown): ChatViewMode | undefined => {
+  if (!isObject(savedState)) {
+    return undefined
+  }
+  const { viewMode } = savedState as Partial<SavedState>
+  if (viewMode !== 'list' && viewMode !== 'detail') {
+    return undefined
+  }
+  return viewMode
+}
