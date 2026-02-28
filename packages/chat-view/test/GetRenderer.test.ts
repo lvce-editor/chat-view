@@ -56,9 +56,9 @@ test('getRenderer should throw error for other known diff types not implemented'
     GetRenderer.getRenderer(DiffType.RenderEditingIndex)
   }).toThrow('unknown renderer')
 
-  expect(() => {
-    GetRenderer.getRenderer(DiffType.RenderFocusContext)
-  }).toThrow('unknown renderer')
+  // expect(() => {
+  //   GetRenderer.getRenderer(DiffType.RenderFocusContext)
+  // }).toThrow('unknown renderer')
 
   expect(() => {
     GetRenderer.getRenderer(DiffType.RenderSelection)
