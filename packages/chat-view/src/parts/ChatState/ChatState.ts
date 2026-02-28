@@ -1,7 +1,7 @@
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
-import type { ChatModel } from '../ChatModel/ChatModel.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatModel } from '../ChatModel/ChatModel.ts'
