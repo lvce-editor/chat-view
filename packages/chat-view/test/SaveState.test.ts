@@ -10,6 +10,7 @@ test('saveState should persist chat sessions and composer value', () => {
     height: 101,
     nextMessageId: 4,
     renamingSessionId: 'session-1',
+    selectedModelId: 'codex-5.3',
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -22,6 +23,7 @@ test('saveState should persist chat sessions and composer value', () => {
   expect(result.composerValue).toBe('draft')
   expect(result.nextMessageId).toBe(4)
   expect(result.sessions).toEqual(state.sessions)
+  expect(result.selectedModelId).toBe('codex-5.3')
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.renamingSessionId).toBe('session-1')
   expect(result.viewMode).toBe('list')

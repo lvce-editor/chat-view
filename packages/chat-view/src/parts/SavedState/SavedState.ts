@@ -6,6 +6,7 @@ export interface SavedState {
   readonly height: number
   readonly nextMessageId: number
   readonly renamingSessionId: string
+  readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly viewMode: ChatViewMode

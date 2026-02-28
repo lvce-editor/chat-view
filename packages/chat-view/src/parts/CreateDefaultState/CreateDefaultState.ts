@@ -3,6 +3,7 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultSessionId = 'session-1'
+  const defaultModelId = 'test'
   return {
     assetDir: '',
     composerValue: '',
@@ -15,9 +16,16 @@ export const createDefaultState = (): ChatState => {
     inputSource: 'script',
     lastSubmittedSessionId: '',
     listItemHeight: 40,
+    models: [
+      { id: defaultModelId, name: 'test' },
+      { id: 'codex-5.3', name: 'Codex 5.3' },
+      { id: 'claude-code', name: 'Claude Code' },
+      { id: 'claude-haiku', name: 'Claude Haiku' },
+    ],
     nextMessageId: 1,
     platform: 0,
     renamingSessionId: '',
+    selectedModelId: defaultModelId,
     selectedSessionId: defaultSessionId,
     sessions: [
       {

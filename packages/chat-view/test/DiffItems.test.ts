@@ -28,6 +28,12 @@ test('isEqual should return false when selectedSessionId changes', () => {
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
 
+test('isEqual should return false when selectedModelId changes', () => {
+  const state1: ChatState = createDefaultState()
+  const state2: ChatState = { ...createDefaultState(), selectedModelId: 'codex-5.3' }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
 test('isEqual should return false when sessions reference changes', () => {
   const state1: ChatState = createDefaultState()
   const state2: ChatState = {

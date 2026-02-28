@@ -1,5 +1,5 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
@@ -10,12 +10,14 @@ export const getChatVirtualDom = (
   selectedSessionId: string,
   composerValue: string,
   viewMode: ChatViewMode,
+  models: readonly ChatModel[],
+  selectedModelId: string,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
-      return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue)
+      return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId)
     case 'list':
-      return getChatModeListVirtualDom(sessions, selectedSessionId, composerValue)
+      return getChatModeListVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId)
     default:
       return getChatModeUnsupportedVirtualDom()
   }

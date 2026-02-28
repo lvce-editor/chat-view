@@ -13,6 +13,8 @@ test('create should store state with the given uid', () => {
   const oldStateTyped: ChatState = oldState
   expect(newStateTyped).toBeDefined()
   expect(newStateTyped.uid).toBe(uid)
+  expect(newStateTyped.models.length).toBeGreaterThan(0)
+  expect(newStateTyped.selectedModelId).toBe('test')
   expect(newStateTyped.sessions).toHaveLength(1)
   expect(newStateTyped.selectedSessionId).toBe('session-1')
   expect(newStateTyped.listItemHeight).toBe(40)

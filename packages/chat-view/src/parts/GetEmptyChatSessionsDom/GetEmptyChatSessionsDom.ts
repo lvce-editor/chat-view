@@ -6,7 +6,7 @@ export const getEmptyChatSessionsDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
-      className: ClassNames.ChatList,
+      className: ClassNames.ChatListEmpty,
       type: VirtualDomElements.Div,
     },
     { childCount: 1, className: ClassNames.Label, type: VirtualDomElements.Div },

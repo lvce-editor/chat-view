@@ -105,3 +105,15 @@ test('loadContent should restore window bounds from savedState', async () => {
   expect(result.width).toBe(130)
   expect(result.height).toBe(140)
 })
+
+test('loadContent should restore selectedModelId from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedModelId: 'test',
+  }
+  const savedState = {
+    selectedModelId: 'claude-code',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.selectedModelId).toBe('claude-code')
+})
