@@ -1,11 +1,15 @@
-import type { SavedState } from '../SavedState/SavedState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
-export const getSavedSessions = (savedState: unknown): SavedState['sessions'] | undefined => {
+interface LegacySavedState {
+  readonly sessions: readonly ChatSession[]
+}
+
+export const getSavedSessions = (savedState: unknown): readonly ChatSession[] | undefined => {
   if (!isObject(savedState)) {
     return undefined
   }
-  const { sessions } = savedState as Partial<SavedState>
+  const { sessions } = savedState as Partial<LegacySavedState>
   if (!Array.isArray(sessions)) {
     return undefined
   }

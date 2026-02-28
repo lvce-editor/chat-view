@@ -1,9 +1,14 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, test } from '@jest/globals'
+import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatMessage, ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as OpenMockSession from '../src/parts/OpenMockSession/OpenMockSession.ts'
 
-test('openMockSession should create a mock session and switch to detail mode', () => {
+beforeEach(() => {
+  resetChatSessionStorage()
+})
+
+test('openMockSession should create a mock session and switch to detail mode', async () => {
   const state: ChatState = createDefaultState()
   const mockChatMessages: readonly ChatMessage[] = [
     {
@@ -20,7 +25,7 @@ test('openMockSession should create a mock session and switch to detail mode', (
     },
   ]
 
-  const result = OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
 
   expect(result.viewMode).toBe('detail')
   expect(result.selectedSessionId).toBe('mock-session-1')
@@ -32,7 +37,7 @@ test('openMockSession should create a mock session and switch to detail mode', (
   })
 })
 
-test('openMockSession should replace messages for existing session', () => {
+test('openMockSession should replace messages for existing session', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     sessions: [
@@ -60,7 +65,7 @@ test('openMockSession should replace messages for existing session', () => {
     },
   ]
 
-  const result = OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
 
   expect(result.sessions).toHaveLength(1)
   expect(result.sessions[0].messages).toEqual(mockChatMessages)
@@ -69,8 +74,8 @@ test('openMockSession should replace messages for existing session', () => {
   expect(result.viewMode).toBe('detail')
 })
 
-test('openMockSession should return same state for empty mockSessionId', () => {
+test('openMockSession should return same state for empty mockSessionId', async () => {
   const state: ChatState = createDefaultState()
-  const result = OpenMockSession.openMockSession(state, '', [])
+  const result = await OpenMockSession.openMockSession(state, '', [])
   expect(result).toBe(state)
 })

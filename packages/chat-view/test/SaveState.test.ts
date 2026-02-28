@@ -3,7 +3,7 @@ import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as SaveState from '../src/parts/SaveState/SaveState.ts'
 
-test('saveState should persist chat sessions and composer value', () => {
+test('saveState should persist global state without session payloads', () => {
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'draft',
@@ -22,7 +22,7 @@ test('saveState should persist chat sessions and composer value', () => {
   const result = SaveState.saveState(state)
   expect(result.composerValue).toBe('draft')
   expect(result.nextMessageId).toBe(4)
-  expect(result.sessions).toEqual(state.sessions)
+  expect('sessions' in result).toBe(false)
   expect(result.selectedModelId).toBe('codex-5.3')
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.renamingSessionId).toBe('session-1')
