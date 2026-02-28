@@ -117,3 +117,40 @@ test('loadContent should restore selectedModelId from savedState', async () => {
   const result = await LoadContent.loadContent(state, savedState)
   expect(result.selectedModelId).toBe('claude-code')
 })
+
+test('loadContent should restore detail view from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    viewMode: 'list',
+  }
+  const savedState = {
+    viewMode: 'detail',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.viewMode).toBe('detail')
+})
+
+test('loadContent should restore selected detail session with messages from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+    viewMode: 'list',
+  }
+  const savedMessages = [
+    { id: 'message-1', role: 'user' as const, text: 'Hello', time: '10:00' },
+    { id: 'message-2', role: 'assistant' as const, text: 'Hi there', time: '10:01' },
+  ]
+  const savedState = {
+    selectedSessionId: 'session-b',
+    sessions: [
+      { id: 'session-a', messages: [], title: 'Saved A' },
+      { id: 'session-b', messages: savedMessages, title: 'Saved B' },
+    ],
+    viewMode: 'detail' as const,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.selectedSessionId).toBe('session-b')
+  expect(result.viewMode).toBe('detail')
+  expect(result.sessions).toEqual(savedState.sessions)
+})
