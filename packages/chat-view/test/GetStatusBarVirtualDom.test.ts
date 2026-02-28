@@ -25,10 +25,10 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
     className: ClassNames.ChatHeader,
     type: VirtualDomElements.Div,
   })
-  const chatList = result.find((node) => node.className === ClassNames.ChatList)
-  expect(chatList).toMatchObject({
+  const chatListEmpty = result.find((node) => node.className === ClassNames.ChatListEmpty)
+  expect(chatListEmpty).toMatchObject({
     childCount: 1,
-    className: ClassNames.ChatList,
+    className: ClassNames.ChatListEmpty,
     type: VirtualDomElements.Div,
   })
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
