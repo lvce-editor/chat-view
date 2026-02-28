@@ -1,4 +1,4 @@
-import type { ChatState } from '../../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const startRename = (state: ChatState, id: string): ChatState => {
   const { sessions } = state

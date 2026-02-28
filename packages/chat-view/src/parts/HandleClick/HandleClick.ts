@@ -1,9 +1,9 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { createSession } from './CreateSession/CreateSession.ts'
-import { deleteSession } from './DeleteSession/DeleteSession.ts'
-import { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
-import { selectSession } from './SelectSession/SelectSession.ts'
-import { startRename } from './StartRename/StartRename.ts'
+import { createSession } from '../CreateSession/CreateSession.ts'
+import { deleteSession } from '../DeleteSession/DeleteSession.ts'
+import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { selectSession } from '../SelectSession/SelectSession.ts'
+import { startRename } from '../StartRename/StartRename.ts'
 
 const CREATE_SESSION = 'create-session'
 const SESSION_PREFIX = 'session:'
@@ -35,6 +35,6 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   return state
 }
 
-export { handleClickSend } from './HandleClickSend/HandleClickSend.ts'
+export { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 
-export { handleClickList } from './HandleClickList/HandleClickList.ts'
+export { handleClickList } from '../HandleClickList/HandleClickList.ts'
