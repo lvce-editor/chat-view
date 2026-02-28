@@ -18,6 +18,7 @@ import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
+import { rerender } from '../Rerender/Rerender.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
@@ -47,6 +48,7 @@ export const commandMap = {
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
+  'Chat.rerender': wrapCommand(rerender),
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
