@@ -170,7 +170,7 @@ test('getStatusBarVirtualDom should render selected session messages in detail m
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail', models, 'test')
   const userMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   const assistantMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageAssistant))
-  const messageNodes = result.filter((node) => node.className?.includes(ClassNames.Message))
+  const messageNodes = result.filter((node) => node.className?.split(' ').includes(ClassNames.Message))
   expect(userMessageNode).toBeDefined()
   expect(assistantMessageNode).toBeDefined()
   expect(messageNodes).toHaveLength(2)
