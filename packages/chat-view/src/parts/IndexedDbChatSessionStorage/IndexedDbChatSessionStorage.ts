@@ -1,40 +1,9 @@
+import type { ChatSessionStorage } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 
 const LVCE_CHAT_SESSIONS_DB_NAME = 'lvce-chat-view-sessions'
 const LVCE_CHAT_SESSIONS_DB_VERSION = 1
 const LVCE_CHAT_SESSIONS_STORE = 'chat-sessions'
-
-export interface ChatSessionStorage {
-  clear(): Promise<void>
-  deleteSession(id: string): Promise<void>
-  getSession(id: string): Promise<ChatSession | undefined>
-  listSessions(): Promise<readonly ChatSession[]>
-  setSession(session: ChatSession): Promise<void>
-}
-
-class InMemoryChatSessionStorage implements ChatSessionStorage {
-  private readonly sessions = new Map<string, ChatSession>()
-
-  async clear(): Promise<void> {
-    this.sessions.clear()
-  }
-
-  async deleteSession(id: string): Promise<void> {
-    this.sessions.delete(id)
-  }
-
-  async getSession(id: string): Promise<ChatSession | undefined> {
-    return this.sessions.get(id)
-  }
-
-  async listSessions(): Promise<readonly ChatSession[]> {
-    return [...this.sessions.values()]
-  }
-
-  async setSession(session: ChatSession): Promise<void> {
-    this.sessions.set(session.id, session)
-  }
-}
 
 const toError = (error: unknown): Error => {
   if (error instanceof Error) {
@@ -83,7 +52,7 @@ const openSessionsDatabase = async (): Promise<IDBDatabase> => {
   return requestToPromise(() => request)
 }
 
-class IndexedDbChatSessionStorage implements ChatSessionStorage {
+export class IndexedDbChatSessionStorage implements ChatSessionStorage {
   private databasePromise: Promise<IDBDatabase> | undefined
 
   private async getDatabase(): Promise<IDBDatabase> {
@@ -135,58 +104,4 @@ class IndexedDbChatSessionStorage implements ChatSessionStorage {
     store.put(session)
     await transactionToPromise(createTransaction)
   }
-}
-
-const createDefaultStorage = (): Readonly<ChatSessionStorage> => {
-  if (typeof indexedDB === 'undefined') {
-    return new InMemoryChatSessionStorage()
-  }
-  return new IndexedDbChatSessionStorage()
-}
-
-let chatSessionStorage: Readonly<ChatSessionStorage> = createDefaultStorage()
-
-export const setChatSessionStorage = (storage: Readonly<ChatSessionStorage>): void => {
-  chatSessionStorage = storage
-}
-
-export const resetChatSessionStorage = (): void => {
-  chatSessionStorage = new InMemoryChatSessionStorage()
-}
-
-export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
-  const sessions = await chatSessionStorage.listSessions()
-  return sessions.map((session) => ({
-    id: session.id,
-    messages: [],
-    title: session.title,
-  }))
-}
-
-export const getChatSession = async (id: string): Promise<ChatSession | undefined> => {
-  const session = await chatSessionStorage.getSession(id)
-  if (!session) {
-    return undefined
-  }
-  return {
-    id: session.id,
-    messages: [...session.messages],
-    title: session.title,
-  }
-}
-
-export const saveChatSession = async (session: ChatSession): Promise<void> => {
-  await chatSessionStorage.setSession({
-    id: session.id,
-    messages: [...session.messages],
-    title: session.title,
-  })
-}
-
-export const deleteChatSession = async (id: string): Promise<void> => {
-  await chatSessionStorage.deleteSession(id)
-}
-
-export const clearChatSessions = async (): Promise<void> => {
-  await chatSessionStorage.clear()
 }
