@@ -109,7 +109,7 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
     },
   ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail', models, 'test')
-  const messageNode = result.find((node) => node.className === ClassNames.Message)
+  const messageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   expect(messageNode).toBeDefined()
 })
 
@@ -157,10 +157,23 @@ test('getStatusBarVirtualDom should hide session list in detail mode', () => {
 })
 
 test('getStatusBarVirtualDom should render selected session messages in detail mode', () => {
-  const sessions = [{ id: 'session-1', messages: [{ id: 'm1', role: 'user' as const, text: 'hello', time: '10:30' }], title: 'Chat 1' }]
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        { id: 'm1', role: 'user' as const, text: 'hello', time: '10:30' },
+        { id: 'm2', role: 'assistant' as const, text: 'hi', time: '10:31' },
+      ],
+      title: 'Chat 1',
+    },
+  ]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'detail', models, 'test')
-  const messageNodes = result.filter((node) => node.className === ClassNames.Message)
-  expect(messageNodes).toHaveLength(1)
+  const userMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
+  const assistantMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageAssistant))
+  const messageNodes = result.filter((node) => node.className?.includes(ClassNames.Message))
+  expect(userMessageNode).toBeDefined()
+  expect(assistantMessageNode).toBeDefined()
+  expect(messageNodes).toHaveLength(2)
 })
 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
