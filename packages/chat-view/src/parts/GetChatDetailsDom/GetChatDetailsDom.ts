@@ -23,8 +23,23 @@ export const getChatSendAreaDom = (composerValue: string, models: readonly ChatM
   })
   return [
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatSendArea,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 0,
+      className: ClassNames.MultilineInputBox,
+      name: 'composer',
+      onInput: DomEventListenerFunctions.HandleInput,
+      placeholder: Strings.composePlaceholder,
+      rows: 4,
+      type: VirtualDomElements.TextArea,
+      value: composerValue,
+    },
+    {
+      childCount: 2,
+      className: ClassNames.ChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
     {
@@ -36,16 +51,6 @@ export const getChatSendAreaDom = (composerValue: string, models: readonly ChatM
       value: selectedModelId,
     },
     ...modelOptions,
-    {
-      childCount: 0,
-      className: ClassNames.MultilineInputBox,
-      name: 'composer',
-      onInput: DomEventListenerFunctions.HandleInput,
-      placeholder: Strings.composePlaceholder,
-      rows: 4,
-      type: VirtualDomElements.TextArea,
-      value: composerValue,
-    },
     {
       childCount: 1,
       className: sendButtonClassName,

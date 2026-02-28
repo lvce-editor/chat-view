@@ -17,7 +17,7 @@ export const createDefaultState = (): ChatState => {
     lastSubmittedSessionId: '',
     listItemHeight: 40,
     models: [
-      { id: defaultModelId, name: 'Test' },
+      { id: defaultModelId, name: 'test' },
       { id: 'codex-5.3', name: 'Codex 5.3' },
       { id: 'claude-code', name: 'Claude Code' },
       { id: 'claude-haiku', name: 'Claude Haiku' },
