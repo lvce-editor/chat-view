@@ -16,7 +16,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
       name: `session:${session.id}`,
-      onContextMenu: DomEventListenerFunctions.HandleContextMenu,
+      onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       tabIndex: 0,
       type: VirtualDomElements.Div,
     },
