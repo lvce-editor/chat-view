@@ -7,8 +7,8 @@ test('renderEventListeners should return expected listeners', () => {
   const result = RenderEventListeners.renderEventListeners()
   expect(result).toEqual([
     {
-      name: DomEventListenersFunctions.HandleContextMenu,
-      params: ['handleChatListContextMenu', EventExpression.TargetName, EventExpression.ClientX, EventExpression.ClientY],
+      name: DomEventListenersFunctions.HandleListContextMenu,
+      params: ['handleChatListContextMenu', EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
     },
     {

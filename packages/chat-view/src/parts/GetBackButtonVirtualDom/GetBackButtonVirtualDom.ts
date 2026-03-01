@@ -3,7 +3,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatHeaderBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
+export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
