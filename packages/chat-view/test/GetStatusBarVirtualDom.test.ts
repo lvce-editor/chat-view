@@ -51,7 +51,7 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   })
   expect(sendButton).toBeDefined()
   expect(sendButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`,
+    className: `${ClassNames.IconButton} ${ClassNames.SendButtonDisabled}`,
     disabled: true,
   })
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
@@ -93,7 +93,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
     value: 'hello',
   })
   expect(sendButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonPrimary}`,
+    className: ClassNames.IconButton,
     disabled: false,
     onClick: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Button,
