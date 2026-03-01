@@ -7,19 +7,19 @@ import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeade
 export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
   const items = [
     {
-      icon: '+',
+      icon: 'MaskIcon MaskIconAdd',
       name: 'create-session',
       onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat,
     },
     {
-      icon: '⚙',
+      icon: 'MaskIcon MaskIconSettingsGear',
       name: 'settings',
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings,
     },
     {
-      icon: '×',
+      icon: 'MaskIcon MaskIconClose',
       name: 'close-chat',
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat,

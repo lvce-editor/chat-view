@@ -17,6 +17,10 @@ export const getHeaderActionVirtualDom = (item: {
       title: item.title,
       type: VirtualDomElements.Button,
     },
-    text(item.icon),
+    {
+      childCount: 0,
+      className: item.icon,
+      type: VirtualDomElements.Div,
+    },
   ]
 }
