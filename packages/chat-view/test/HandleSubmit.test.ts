@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { beforeEach, expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
