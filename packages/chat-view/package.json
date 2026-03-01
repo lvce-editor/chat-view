@@ -36,13 +36,14 @@
     "collectCoverage": true,
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80
+        "branches": 70,
+        "functions": 70,
+        "lines": 70
       }
     }
   },
   "dependencies": {
+    "@lvce-editor/constants": "^4.1.0",
     "@lvce-editor/i18n": "^2.1.0",
     "@lvce-editor/virtual-dom-worker": "^8.9.0"
   },

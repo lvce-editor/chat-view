@@ -1,6 +1,7 @@
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
-export const submitRename = (state: ChatState): ChatState => {
+export const submitRename = async (state: ChatState): Promise<ChatState> => {
   const { composerValue, renamingSessionId, sessions } = state
   const title = composerValue.trim()
   if (!renamingSessionId || !title) {
@@ -18,6 +19,10 @@ export const submitRename = (state: ChatState): ChatState => {
       title,
     }
   })
+  const renamedSession = updatedSessions.find((session) => session.id === renamingSessionId)
+  if (renamedSession) {
+    await saveChatSession(renamedSession)
+  }
   return {
     ...state,
     composerValue: '',

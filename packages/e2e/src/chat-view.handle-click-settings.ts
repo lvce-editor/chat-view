@@ -1,6 +1,8 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.new-chat'
+export const name = 'chat-view.handle-input-script'
+
+// export const skip = 1
 
 export const test: Test = async ({ Command, expect, Locator }) => {
   // arrange
@@ -10,10 +12,9 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.reset')
 
   // act
-  await Command.execute('Chat.handleClickNew')
+  await Command.execute('Chat.handleClickSettings')
 
   // assert
-  const title = Locator('.ChatListItemLabel')
-  await expect(title).toHaveText('Chat 1')
-  await expect(composer).toBeVisible()
+  const tab = Locator('.MainTab[title="app://settings.json"]')
+  await expect(tab).toBeVisible()
 }

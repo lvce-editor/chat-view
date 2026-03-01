@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
@@ -19,14 +20,28 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     time: userTime,
   }
 
+  let workingSessions = sessions
+  if (viewMode === 'detail') {
+    const loadedSession = await getChatSession(selectedSessionId)
+    if (loadedSession) {
+      workingSessions = sessions.map((session) => {
+        if (session.id !== selectedSessionId) {
+          return session
+        }
+        return loadedSession
+      })
+    }
+  }
+
   let optimisticState: ChatState
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
     const newSession: ChatSession = {
       id: newSessionId,
       messages: [userMessage],
-      title: `Chat ${sessions.length + 1}`,
+      title: `Chat ${workingSessions.length + 1}`,
     }
+    await saveChatSession(newSession)
     optimisticState = FocusInput.focusInput({
       ...state,
       composerValue: '',
@@ -34,11 +49,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       lastSubmittedSessionId: newSessionId,
       nextMessageId: nextMessageId + 1,
       selectedSessionId: newSessionId,
-      sessions: [...sessions, newSession],
+      sessions: [...workingSessions, newSession],
       viewMode: 'detail',
     })
   } else {
-    const updatedSessions: readonly ChatSession[] = sessions.map((session) => {
+    const updatedSessions: readonly ChatSession[] = workingSessions.map((session) => {
       if (session.id !== selectedSessionId) {
         return session
       }
@@ -47,6 +62,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         messages: [...session.messages, userMessage],
       }
     })
+    const selectedSession = updatedSessions.find((session) => session.id === selectedSessionId)
+    if (selectedSession) {
+      await saveChatSession(selectedSession)
+    }
     optimisticState = FocusInput.focusInput({
       ...state,
       composerValue: '',
@@ -72,6 +91,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       messages: [...session.messages, assistantMessage],
     }
   })
+  const selectedSession = updatedSessions.find((session) => session.id === optimisticState.selectedSessionId)
+  if (selectedSession) {
+    await saveChatSession(selectedSession)
+  }
   return FocusInput.focusInput({
     ...optimisticState,
     nextMessageId: optimisticState.nextMessageId + 1,
