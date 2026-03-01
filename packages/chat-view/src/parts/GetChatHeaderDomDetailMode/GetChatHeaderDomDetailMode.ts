@@ -1,7 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
-import { getChatHeaderBackButtonVirtualDom } from '../GetChatHeaderBackButtonVirtualDom/GetChatHeaderBackButtonVirtualDom.ts'
 
 export const getChatHeaderDomDetailMode = (selectedSessionTitle: string): readonly VirtualDomNode[] => {
   return [
@@ -15,7 +15,7 @@ export const getChatHeaderDomDetailMode = (selectedSessionTitle: string): readon
       className: ClassNames.ChatName,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderBackButtonVirtualDom(),
+    ...getBackButtonVirtualDom(),
     {
       childCount: 1,
       className: ClassNames.Label,
