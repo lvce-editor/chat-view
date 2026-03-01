@@ -12,12 +12,15 @@ export const getChatVirtualDom = (
   viewMode: ChatViewMode,
   models: readonly ChatModel[],
   selectedModelId: string,
+  usageOverviewEnabled: boolean,
+  tokensUsed: number,
+  tokensMax: number,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
-      return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId)
+      return getChatModeDetailVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax)
     case 'list':
-      return getChatModeListVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId)
+      return getChatModeListVirtualDom(sessions, selectedSessionId, composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax)
     default:
       return getChatModeUnsupportedVirtualDom()
   }

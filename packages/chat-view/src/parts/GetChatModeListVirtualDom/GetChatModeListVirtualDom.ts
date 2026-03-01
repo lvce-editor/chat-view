@@ -11,6 +11,9 @@ export const getChatModeListVirtualDom = (
   composerValue: string,
   models: readonly ChatModel[],
   selectedModelId: string,
+  usageOverviewEnabled: boolean,
+  tokensUsed: number,
+  tokensMax: number,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -20,6 +23,6 @@ export const getChatModeListVirtualDom = (
     },
     ...getChatHeaderListModeDom(),
     ...getChatListDom(sessions, selectedSessionId),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
   ]
 }

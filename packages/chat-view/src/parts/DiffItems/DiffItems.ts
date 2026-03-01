@@ -8,6 +8,9 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.selectedModelId === newState.selectedModelId &&
     oldState.selectedSessionId === newState.selectedSessionId &&
     oldState.sessions === newState.sessions &&
+    oldState.tokensMax === newState.tokensMax &&
+    oldState.tokensUsed === newState.tokensUsed &&
+    oldState.usageOverviewEnabled === newState.usageOverviewEnabled &&
     oldState.viewMode === newState.viewMode
   )
 }
