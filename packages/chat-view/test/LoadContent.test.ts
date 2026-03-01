@@ -1,4 +1,5 @@
 import { beforeEach, expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { resetChatSessionStorage, saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -189,4 +190,19 @@ test('loadContent should restore selected detail session with messages from save
   expect(result.selectedSessionId).toBe('session-b')
   expect(result.viewMode).toBe('detail')
   expect(result.sessions).toEqual(savedState.sessions)
+})
+
+test('loadContent should load openRouterApiKey from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openRouterApiKey') {
+        return 'or-key-123'
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.openRouterApiKey).toBe('or-key-123')
+  expect(mockRpc.invocations).toEqual([['Preferences.get', 'secrets.openRouterApiKey']])
 })

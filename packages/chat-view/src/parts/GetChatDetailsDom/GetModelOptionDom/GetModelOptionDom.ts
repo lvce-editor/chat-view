@@ -2,6 +2,13 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatModel } from '../../ChatModel/ChatModel.ts'
 import * as ClassNames from '../../ClassNames/ClassNames.ts'
 
+const getModelLabel = (model: ChatModel): string => {
+  if (model.provider === 'openRouter') {
+    return `${model.name} (OpenRouter)`
+  }
+  return model.name
+}
+
 export const getModelOptionDOm = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   return [
     {
@@ -11,6 +18,6 @@ export const getModelOptionDOm = (model: ChatModel, selectedModelId: string): re
       type: VirtualDomElements.Option,
       value: model.id,
     },
-    text(model.name),
+    text(getModelLabel(model)),
   ]
 }

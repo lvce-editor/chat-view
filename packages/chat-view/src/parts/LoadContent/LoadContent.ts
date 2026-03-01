@@ -6,6 +6,7 @@ import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSele
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
+import * as Preferences from '../Preferences/Preferences.ts'
 
 const toSummarySession = (session: ChatSession): ChatSession => {
   return {
@@ -35,6 +36,13 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedBounds = getSavedBounds(savedState)
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
+  let openRouterApiKey = ''
+  try {
+    const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
+    openRouterApiKey = typeof savedOpenRouterApiKey === 'string' ? savedOpenRouterApiKey : ''
+  } catch {
+    openRouterApiKey = ''
+  }
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -61,6 +69,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     ...state,
     ...savedBounds,
     initial: false,
+    openRouterApiKey,
     selectedModelId,
     selectedSessionId,
     sessions,
