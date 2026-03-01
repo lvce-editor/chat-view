@@ -16,6 +16,10 @@ export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNo
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },
-    text(Strings.send),
+    {
+      childCount: 0,
+      class: 'MaskIcon MaskIconSend',
+      type: VirtualDomElements.Div,
+    },
   ]
 }
