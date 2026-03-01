@@ -1,4 +1,4 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
@@ -16,6 +16,10 @@ export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNo
       title: Strings.sendMessage,
       type: VirtualDomElements.Button,
     },
-    text(Strings.send),
+    {
+      childCount: 0,
+      class: 'MaskIcon MaskIconSend',
+      type: VirtualDomElements.Div,
+    },
   ]
 }
