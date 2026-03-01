@@ -1,6 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
-import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
 import { IndexedDbChatSessionStorage } from '../IndexedDbChatSessionStorage/IndexedDbChatSessionStorage.ts'
+import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
 
 export interface ChatSessionStorage {
   clear(): Promise<void>
