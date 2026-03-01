@@ -1,7 +1,19 @@
 import { getTextContent } from './GetTextContent.ts'
 
-export const getOpenRouterAssistantText = async (userText: string, modelId: string, openRouterApiKey: string): Promise<string> => {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+const defaultOpenRouterApiBaseUrl = 'https://openrouter.ai/api/v1'
+
+const getOpenRouterApiEndpoint = (openRouterApiBaseUrl: string): string => {
+  const trimmedBaseUrl = (openRouterApiBaseUrl || defaultOpenRouterApiBaseUrl).replace(/\/+$/, '')
+  return `${trimmedBaseUrl}/chat/completions`
+}
+
+export const getOpenRouterAssistantText = async (
+  userText: string,
+  modelId: string,
+  openRouterApiKey: string,
+  openRouterApiBaseUrl: string,
+): Promise<string> => {
+  const response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
     body: JSON.stringify({
       messages: [{ content: userText, role: 'user' }],
       model: modelId,

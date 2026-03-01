@@ -7,7 +7,8 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const { composerValue, models, nextMessageId, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, selectedSessionId, sessions, viewMode } = state
+  const { composerValue, models, nextMessageId, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, selectedSessionId, sessions, viewMode } =
+    state
   const userText = composerValue.trim()
   if (!userText) {
     return state
