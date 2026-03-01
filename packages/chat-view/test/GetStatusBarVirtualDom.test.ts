@@ -71,7 +71,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   expect(deleteButton).toBeDefined()
   expect(sessionLabel).toBeDefined()
   expect(sessionButton).toMatchObject({
-    onContextMenu: DomEventListenerFunctions.HandleContextMenu,
+    onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
     type: VirtualDomElements.Div,
   })
   expect(deleteButton).toMatchObject({
