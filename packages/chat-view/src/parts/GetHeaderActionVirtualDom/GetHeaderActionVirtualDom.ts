@@ -1,4 +1,4 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getHeaderActionVirtualDom = (item: {
@@ -17,6 +17,10 @@ export const getHeaderActionVirtualDom = (item: {
       title: item.title,
       type: VirtualDomElements.Button,
     },
-    text(item.icon),
+    {
+      childCount: 0,
+      className: item.icon,
+      type: VirtualDomElements.Div,
+    },
   ]
 }
