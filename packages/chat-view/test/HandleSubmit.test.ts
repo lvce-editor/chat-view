@@ -1,7 +1,12 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
+
+beforeEach(() => {
+  resetChatSessionStorage()
+})
 
 test('handleSubmit should add a user message from composer value', async () => {
   using mockRpc = RendererWorker.registerMockRpc({

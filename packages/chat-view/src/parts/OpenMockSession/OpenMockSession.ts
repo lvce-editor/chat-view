@@ -1,6 +1,7 @@
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
-export const openMockSession = (state: ChatState, mockSessionId: string, mockChatMessages: readonly ChatMessage[]): ChatState => {
+export const openMockSession = async (state: ChatState, mockSessionId: string, mockChatMessages: readonly ChatMessage[]): Promise<ChatState> => {
   if (!mockSessionId) {
     return state
   }
@@ -24,6 +25,11 @@ export const openMockSession = (state: ChatState, mockSessionId: string, mockCha
           title: mockSessionId,
         },
       ]
+
+  const selectedSession = sessions.find((session) => session.id === mockSessionId)
+  if (selectedSession) {
+    await saveChatSession(selectedSession)
+  }
 
   return {
     ...state,
