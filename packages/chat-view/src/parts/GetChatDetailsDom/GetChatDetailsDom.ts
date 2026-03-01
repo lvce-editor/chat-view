@@ -4,11 +4,29 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatSendAreaDom = (composerValue: string, models: readonly ChatModel[], selectedModelId: string): readonly VirtualDomNode[] => {
+const clampToPercentage = (tokensUsed: number, tokensMax: number): number => {
+  if (tokensMax <= 0) {
+    return 0
+  }
+  const percentage = (tokensUsed / tokensMax) * 100
+  return Math.max(0, Math.min(100, percentage))
+}
+
+export const getChatSendAreaDom = (
+  composerValue: string,
+  models: readonly ChatModel[],
+  selectedModelId: string,
+  usageOverviewEnabled: boolean,
+  tokensUsed: number,
+  tokensMax: number,
+): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const sendButtonClassName = isSendDisabled
     ? `${ClassNames.Button} ${ClassNames.ButtonPrimary} ${ClassNames.ButtonDisabled}`
     : `${ClassNames.Button} ${ClassNames.ButtonPrimary}`
+  const usagePercent = clampToPercentage(tokensUsed, tokensMax)
+  const usageLabel = `${tokensUsed} / ${tokensMax}`
+  const usageTitle = `${tokensUsed} of ${tokensMax} tokens used (${Math.round(usagePercent)}%)`
   const modelOptions = models.flatMap((model) => {
     return [
       {
@@ -43,7 +61,7 @@ export const getChatSendAreaDom = (composerValue: string, models: readonly ChatM
       value: composerValue,
     },
     {
-      childCount: 2,
+      childCount: usageOverviewEnabled ? 3 : 2,
       className: ClassNames.ChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
@@ -56,6 +74,35 @@ export const getChatSendAreaDom = (composerValue: string, models: readonly ChatM
       value: selectedModelId,
     },
     ...modelOptions,
+    ...(usageOverviewEnabled
+      ? [
+          {
+            childCount: 3,
+            className: ClassNames.TokenUsageOverview,
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: 1,
+            className: ClassNames.TokenUsageRing,
+            style: `background: conic-gradient(var(--vscode-button-background) ${usagePercent}%, var(--vscode-editorWidget-border) 0);`,
+            title: usageTitle,
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: 0,
+            className: ClassNames.TokenUsageRingInner,
+            style: 'background: var(--vscode-editor-background);',
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: 1,
+            className: ClassNames.LabelDetail,
+            title: usageTitle,
+            type: VirtualDomElements.Span,
+          },
+          text(usageLabel),
+        ]
+      : []),
     {
       childCount: 1,
       className: sendButtonClassName,
@@ -76,6 +123,9 @@ export const getChatDetailsDom = (
   composerValue: string,
   models: readonly ChatModel[],
   selectedModelId: string,
+  usageOverviewEnabled: boolean,
+  tokensUsed: number,
+  tokensMax: number,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -90,6 +140,6 @@ export const getChatDetailsDom = (
     },
     text(selectedSessionTitle),
 
-    ...getChatSendAreaDom(composerValue, models, selectedModelId),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
   ]
 }

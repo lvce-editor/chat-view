@@ -29,7 +29,10 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly tokensMax: number
+  readonly tokensUsed: number
   readonly uid: number
+  readonly usageOverviewEnabled: boolean
   readonly viewMode: ChatViewMode
   readonly warningCount: number
   readonly width: number
