@@ -24,6 +24,7 @@ export interface ChatState {
   readonly listItemHeight: number
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
+  readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
   readonly platform: number
   readonly renamingSessionId: string
