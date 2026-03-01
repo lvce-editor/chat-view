@@ -7,7 +7,7 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const { composerValue, nextMessageId, selectedSessionId, sessions, viewMode } = state
+  const { composerValue, models, nextMessageId, openRouterApiKey, selectedModelId, selectedSessionId, sessions, viewMode } = state
   const userText = composerValue.trim()
   if (!userText) {
     return state
@@ -80,7 +80,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
-  const assistantMessage = await getAiResponse(userText, optimisticState.nextMessageId)
+  const assistantMessage = await getAiResponse(userText, optimisticState.nextMessageId, selectedModelId, models, openRouterApiKey)
 
   const updatedSessions: readonly ChatSession[] = optimisticState.sessions.map((session) => {
     if (session.id !== optimisticState.selectedSessionId) {

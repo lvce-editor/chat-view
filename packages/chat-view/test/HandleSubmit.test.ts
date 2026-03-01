@@ -54,3 +54,34 @@ test('handleSubmit should ignore blank composer value', async () => {
   expect(result.sessions[0].messages).toHaveLength(0)
   expect(result).toBe(state)
 })
+
+test('handleSubmit should use OpenRouter response for openRouter models', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({ choices: [{ message: { content: 'Real OpenRouter response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openrouter',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'claude-code',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('Real OpenRouter response')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
