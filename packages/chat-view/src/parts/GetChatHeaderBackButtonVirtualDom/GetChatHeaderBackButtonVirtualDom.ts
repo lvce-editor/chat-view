@@ -14,6 +14,10 @@ export const getChatHeaderBackButtonVirtualDom = (): readonly VirtualDomNode[] =
       title: Strings.backToChats,
       type: VirtualDomElements.Button,
     },
-    text('←'),
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconArrowLeft',
+      type: VirtualDomElements.Div,
+    },
   ]
 }
