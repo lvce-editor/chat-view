@@ -10,8 +10,8 @@ test('handleChatListContextMenu should invoke ContextMenu.show for session items
 
   const state = {
     ...createDefaultState(),
-    width: 300,
     height: 400,
+    width: 300,
   }
   await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
 
@@ -25,8 +25,8 @@ test('handleChatListContextMenu should ignore clicks outside list bounds', async
 
   const state = {
     ...createDefaultState(),
-    width: 300,
     height: 400,
+    width: 300,
   }
   await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 500)
 
