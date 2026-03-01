@@ -1,5 +1,5 @@
-import type { ChatSessionStorage } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatSessionStorage } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
 export class InMemoryChatSessionStorage implements ChatSessionStorage {
   private readonly sessions = new Map<string, ChatSession>()

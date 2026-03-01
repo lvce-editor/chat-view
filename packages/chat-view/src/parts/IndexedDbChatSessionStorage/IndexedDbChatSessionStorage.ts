@@ -1,5 +1,5 @@
-import type { ChatSessionStorage } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatSessionStorage } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
 const LVCE_CHAT_SESSIONS_DB_NAME = 'lvce-chat-view-sessions'
 const LVCE_CHAT_SESSIONS_DB_VERSION = 1

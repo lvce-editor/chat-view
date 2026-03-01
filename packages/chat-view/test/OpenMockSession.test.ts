@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatMessage, ChatState } from '../src/parts/ChatState/ChatState.ts'
+import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as OpenMockSession from '../src/parts/OpenMockSession/OpenMockSession.ts'
 
