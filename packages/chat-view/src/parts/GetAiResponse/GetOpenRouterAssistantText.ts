@@ -1,7 +1,7 @@
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
-import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 
 export interface GetOpenRouterAssistantTextSuccessResult {
   readonly text: string

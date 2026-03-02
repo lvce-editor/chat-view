@@ -1,8 +1,8 @@
 /* eslint-disable @cspell/spellchecker */
 
 import { expect, test } from '@jest/globals'
-import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 import { openRouterTooManyRequestsMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
