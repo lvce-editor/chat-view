@@ -1,13 +1,25 @@
-import { openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
+
+export interface GetOpenRouterAssistantTextSuccessResult {
+  readonly type: 'success'
+  readonly text: string
+}
+
+export interface GetOpenRouterAssistantTextErrorResult {
+  readonly type: 'error'
+  readonly details: 'request-failed' | 'too-many-requests' | 'http-error'
+  readonly statusCode?: number
+}
+
+export type GetOpenRouterAssistantTextResult = GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult
 
 export const getOpenRouterAssistantText = async (
   userText: string,
   modelId: string,
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
-): Promise<string> => {
+): Promise<GetOpenRouterAssistantTextResult> => {
   let response: Response
   try {
     response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
@@ -22,28 +34,67 @@ export const getOpenRouterAssistantText = async (
       method: 'POST',
     })
   } catch {
-    throw new Error(openRouterRequestFailedMessage)
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
   }
 
   if (!response.ok) {
-    throw new Error(`Failed to get OpenRouter response: ${response.status}`)
+    if (response.status === 429) {
+      return {
+        details: 'too-many-requests',
+        statusCode: 429,
+        type: 'error',
+      }
+    }
+    return {
+      details: 'http-error',
+      statusCode: response.status,
+      type: 'error',
+    }
   }
-  const parsed = (await response.json()) as unknown
+
+  let parsed: unknown
+  try {
+    parsed = (await response.json()) as unknown
+  } catch {
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
+  }
+
   if (!parsed || typeof parsed !== 'object') {
-    return ''
+    return {
+      text: '',
+      type: 'success',
+    }
   }
   const choices = Reflect.get(parsed, 'choices')
   if (!Array.isArray(choices)) {
-    return ''
+    return {
+      text: '',
+      type: 'success',
+    }
   }
   const firstChoice = choices[0]
   if (!firstChoice || typeof firstChoice !== 'object') {
-    return ''
+    return {
+      text: '',
+      type: 'success',
+    }
   }
   const message = Reflect.get(firstChoice, 'message')
   if (!message || typeof message !== 'object') {
-    return ''
+    return {
+      text: '',
+      type: 'success',
+    }
   }
   const content = Reflect.get(message, 'content')
-  return getTextContent(content)
+  return {
+    text: getTextContent(content),
+    type: 'success',
+  }
 }

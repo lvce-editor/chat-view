@@ -4,6 +4,8 @@ import {
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterRequestFailureReasons,
+  openRouterTooManyRequestsMessage,
+  openRouterTooManyRequestsReasons,
 } from '../chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
@@ -28,11 +30,32 @@ const getOpenRouterRequestFailedDom = (): readonly VirtualDomNode[] => {
   ]
 }
 
+const getOpenRouterTooManyRequestsDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: openRouterTooManyRequestsReasons.length,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    ...openRouterTooManyRequestsReasons.flatMap((reason) => {
+      return [
+        {
+          childCount: 1,
+          className: ClassNames.ChatOrderedListItem,
+          type: VirtualDomElements.Li,
+        },
+        text(reason),
+      ]
+    }),
+  ]
+}
+
 export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
-  const extraChildCount = isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage ? 2 : 1
+  const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text === openRouterTooManyRequestsMessage
+  const extraChildCount = isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage ? 2 : 1
   return [
     {
       childCount: 1,
@@ -52,5 +75,6 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
     text(message.text),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
+    ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
   ]
 }

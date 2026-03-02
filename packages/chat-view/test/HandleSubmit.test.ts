@@ -133,3 +133,34 @@ test('handleSubmit should not fall back to mock response for openRouter models w
     globalThis.fetch = originalFetch
   }
 })
+
+test('handleSubmit should show too many requests message for OpenRouter 429 responses', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      ok: false,
+      status: 429,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openrouter',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'openrouter/meta-llama/llama-3.3-70b-instruct:free',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
+    expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})

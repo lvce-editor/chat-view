@@ -2,8 +2,16 @@ export const openRouterApiKeyRequiredMessage = 'OpenRouter API key is not config
 
 export const openRouterRequestFailedMessage = 'OpenRouter request failed. Possible reasons:'
 
+export const openRouterTooManyRequestsMessage = 'OpenRouter rate limit reached (429). Please try again soon. Helpful tips:'
+
 export const openRouterRequestFailureReasons = [
   'ContentSecurityPolicyViolation: Check DevTools for details.',
   'OpenRouter server offline: Check DevTools for details.',
   'Check your internet connection.',
+] as const
+
+export const openRouterTooManyRequestsReasons = [
+  'Wait a short time and retry your request.',
+  'Reduce request frequency to avoid rate limits.',
+  'Use a different model if this one is saturated.',
 ] as const

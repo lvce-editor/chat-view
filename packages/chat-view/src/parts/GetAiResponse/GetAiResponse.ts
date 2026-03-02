@@ -1,9 +1,23 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import { openRouterApiKeyRequiredMessage, openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
+import {
+  openRouterApiKeyRequiredMessage,
+  openRouterRequestFailedMessage,
+  openRouterTooManyRequestsMessage,
+} from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
-import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
+import { type GetOpenRouterAssistantTextErrorResult, getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
+
+const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {
+  switch (errorResult.details) {
+    case 'too-many-requests':
+      return openRouterTooManyRequestsMessage
+    case 'http-error':
+    case 'request-failed':
+      return openRouterRequestFailedMessage
+  }
+}
 
 export const getAiResponse = async (
   userText: string,
@@ -17,14 +31,11 @@ export const getAiResponse = async (
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenRouterModel) {
     if (openRouterApiKey) {
-      try {
-        text = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
-      } catch (error) {
-        if (error instanceof Error && error.message) {
-          text = error.message
-        } else {
-          text = openRouterRequestFailedMessage
-        }
+      const result = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
+      if (result.type === 'success') {
+        text = result.text
+      } else {
+        text = getOpenRouterErrorMessage(result)
       }
     } else {
       text = openRouterApiKeyRequiredMessage
