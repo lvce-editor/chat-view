@@ -9,11 +9,44 @@ export interface GetOpenApiAssistantTextSuccessResult {
 
 export interface GetOpenApiAssistantTextErrorResult {
   readonly details: 'request-failed' | 'http-error'
+  readonly errorCode?: string
+  readonly errorMessage?: string
+  readonly errorType?: string
   readonly statusCode?: number
   readonly type: 'error'
 }
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
+
+const getOpenApiErrorDetails = async (
+  response: Response,
+): Promise<Pick<GetOpenApiAssistantTextErrorResult, 'errorCode' | 'errorMessage' | 'errorType'>> => {
+  let parsed: unknown
+  try {
+    parsed = (await response.json()) as unknown
+  } catch {
+    return {}
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return {}
+  }
+
+  const error = Reflect.get(parsed, 'error')
+  if (!error || typeof error !== 'object') {
+    return {}
+  }
+
+  const errorCode = Reflect.get(error, 'code')
+  const errorMessage = Reflect.get(error, 'message')
+  const errorType = Reflect.get(error, 'type')
+
+  return {
+    errorCode: typeof errorCode === 'string' ? errorCode : undefined,
+    errorMessage: typeof errorMessage === 'string' ? errorMessage : undefined,
+    errorType: typeof errorType === 'string' ? errorType : undefined,
+  }
+}
 
 export const getOpenApiAssistantText = async (
   messages: readonly ChatMessage[],
@@ -45,8 +78,12 @@ export const getOpenApiAssistantText = async (
   }
 
   if (!response.ok) {
+    const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
     return {
       details: 'http-error',
+      errorCode,
+      errorMessage,
+      errorType,
       statusCode: response.status,
       type: 'error',
     }
