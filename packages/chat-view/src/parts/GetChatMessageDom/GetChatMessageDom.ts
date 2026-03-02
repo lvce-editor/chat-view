@@ -1,6 +1,10 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
-import { openRouterApiKeyRequiredMessage, openRouterRequestFailedMessage, openRouterRequestFailureReasons } from '../chatViewStrings/chatViewStrings.ts'
+import {
+  openRouterApiKeyRequiredMessage,
+  openRouterRequestFailedMessage,
+  openRouterRequestFailureReasons,
+} from '../chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 

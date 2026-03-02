@@ -1,5 +1,5 @@
-import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
 
 export const getOpenRouterAssistantText = async (
