@@ -11,6 +11,9 @@ import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
 const getOpenRouterTooManyRequestsMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {
   const details: string[] = []
+  if (errorResult.rawMessage) {
+    details.push(errorResult.rawMessage)
+  }
   const { limitInfo } = errorResult
   if (limitInfo) {
     if (limitInfo.retryAfter) {

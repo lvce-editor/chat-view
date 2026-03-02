@@ -191,3 +191,53 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
     globalThis.fetch = originalFetch
   }
 })
+
+test('getOpenRouterAssistantText should include raw metadata message for 429', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (input: RequestInfo | URL) => {
+    const url = String(input)
+    if (url.endsWith('/chat/completions')) {
+      return {
+        json: async () => ({
+          error: {
+            code: 429,
+            message: 'Provider returned error',
+            metadata: {
+              raw: 'openai/gpt-oss-120b:free is temporarily rate-limited upstream. Please retry shortly.',
+            },
+          },
+        }),
+        ok: false,
+        status: 429,
+      } as Response
+    }
+    return {
+      ok: false,
+      status: 500,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+    )
+    expect(result).toEqual({
+      details: 'too-many-requests',
+      rawMessage: 'openai/gpt-oss-120b:free is temporarily rate-limited upstream. Please retry shortly.',
+      statusCode: 429,
+      type: 'error',
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})

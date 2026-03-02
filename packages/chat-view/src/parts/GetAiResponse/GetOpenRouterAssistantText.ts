@@ -17,11 +17,42 @@ export interface GetOpenRouterAssistantTextErrorResult {
     readonly usage?: number
     readonly usageDaily?: number
   }
+  readonly rawMessage?: string
   readonly statusCode?: number
   readonly type: 'error'
 }
 
 export type GetOpenRouterAssistantTextResult = GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult
+
+const getOpenRouterRaw429Message = async (response: Response): Promise<string | undefined> => {
+  let parsed: unknown
+  try {
+    parsed = (await response.json()) as unknown
+  } catch {
+    return undefined
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return undefined
+  }
+
+  const error = Reflect.get(parsed, 'error')
+  if (!error || typeof error !== 'object') {
+    return undefined
+  }
+
+  const metadata = Reflect.get(error, 'metadata')
+  if (!metadata || typeof metadata !== 'object') {
+    return undefined
+  }
+
+  const raw = Reflect.get(metadata, 'raw')
+  if (typeof raw !== 'string' || !raw) {
+    return undefined
+  }
+
+  return raw
+}
 
 const getOpenRouterLimitInfo = async (
   openRouterApiKey: string,
@@ -115,6 +146,7 @@ export const getOpenRouterAssistantText = async (
   if (!response.ok) {
     if (response.status === 429) {
       const retryAfter = response.headers?.get?.('retry-after') ?? null
+      const rawMessage = await getOpenRouterRaw429Message(response)
       const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
       return {
         details: 'too-many-requests',
@@ -125,6 +157,7 @@ export const getOpenRouterAssistantText = async (
                 retryAfter,
               }
             : undefined,
+        rawMessage,
         statusCode: 429,
         type: 'error',
       }
