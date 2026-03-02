@@ -1,12 +1,14 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import {
+  openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterRequestFailureReasons,
   openRouterTooManyRequestsMessage,
   openRouterTooManyRequestsReasons,
 } from '../chatViewStrings/chatViewStrings.ts'
+import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 
@@ -50,12 +52,16 @@ const getOpenRouterTooManyRequestsDom = (): readonly VirtualDomNode[] => {
   ]
 }
 
-export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
+export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string, openApiApiKeyInput = ''): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
+  const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
-  const extraChildCount = isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage ? 2 : 1
+  const extraChildCount =
+    isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
+      ? 2
+      : 1
   return [
     {
       childCount: 1,
@@ -73,6 +79,7 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
       type: VirtualDomElements.P,
     },
     text(message.text),
+    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),

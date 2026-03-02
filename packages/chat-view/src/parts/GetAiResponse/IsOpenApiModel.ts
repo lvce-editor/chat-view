@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import type { ChatModel } from '../ChatState/ChatState.ts'
 
 export const isOpenApiModel = (selectedModelId: string, models: readonly ChatModel[]): boolean => {
