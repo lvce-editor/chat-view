@@ -1,5 +1,5 @@
-import { openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
 import type { GetOpenRouterAssistantTextErrorResult } from './GetOpenRouterAssistantText.ts'
+import { openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getOpenRouterTooManyRequestsMessage } from './GetOpenRouterTooManyRequestsMessage.ts'
 
 export const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {
