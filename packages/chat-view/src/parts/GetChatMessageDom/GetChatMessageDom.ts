@@ -14,7 +14,7 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
       type: VirtualDomElements.Div,
     },
     {
-      childCount: isOpenRouterApiKeyMissingMessage ? 3 : 1,
+      childCount: isOpenRouterApiKeyMissingMessage ? 2 : 1,
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },

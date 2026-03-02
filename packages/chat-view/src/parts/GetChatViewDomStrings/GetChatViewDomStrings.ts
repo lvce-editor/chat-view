@@ -60,6 +60,10 @@ export const save = (): string => {
   return i18nString('Save')
 }
 
+export const getOpenRouterApiKey = (): string => {
+  return i18nString('Get API Key')
+}
+
 export const deleteChatSession = (): string => {
   return i18nString('Delete chat session')
 }
