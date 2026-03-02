@@ -1,18 +1,20 @@
 import type { ChatSession } from '../../ChatSession/ChatSession.ts'
 import type { GetDatabasePromise, SetDatabasePromise } from '../GetDatabase/GetDatabase.ts'
 import { getDatabase } from '../GetDatabase/GetDatabase.ts'
-import { LVCE_CHAT_SESSIONS_STORE } from '../IndexedDbChatSessionStorageConstants/IndexedDbChatSessionStorageConstants.ts'
 import { transactionToPromise } from '../TransactionToPromise/TransactionToPromise.ts'
 
 export const setSession = async (
   getDatabasePromise: GetDatabasePromise,
   setDatabasePromise: SetDatabasePromise,
+  databaseName: string,
+  databaseVersion: number,
+  storeName: string,
   session: ChatSession,
 ): Promise<void> => {
-  const database = await getDatabase(getDatabasePromise, setDatabasePromise)
-  const transaction = database.transaction(LVCE_CHAT_SESSIONS_STORE, 'readwrite')
+  const database = await getDatabase(getDatabasePromise, setDatabasePromise, databaseName, databaseVersion, storeName)
+  const transaction = database.transaction(storeName, 'readwrite')
   const createTransaction = (): IDBTransaction => transaction
-  const store = transaction.objectStore(LVCE_CHAT_SESSIONS_STORE)
+  const store = transaction.objectStore(storeName)
   store.put(session)
   await transactionToPromise(createTransaction)
 }
