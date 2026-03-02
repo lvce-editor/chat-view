@@ -4,6 +4,7 @@ import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessi
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
+import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
@@ -60,6 +61,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     await saveChatSession(newSession)
     optimisticState = FocusInput.focusInput({
       ...state,
+      composerHeight: getMinComposerHeightForState(state),
       composerValue: '',
       inputSource: 'script',
       lastSubmittedSessionId: newSessionId,
@@ -84,6 +86,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     }
     optimisticState = FocusInput.focusInput({
       ...state,
+      composerHeight: getMinComposerHeightForState(state),
       composerValue: '',
       inputSource: 'script',
       lastSubmittedSessionId: selectedSessionId,

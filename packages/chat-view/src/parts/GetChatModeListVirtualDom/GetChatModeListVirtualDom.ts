@@ -14,6 +14,10 @@ export const getChatModeListVirtualDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  composerHeight = 28,
+  composerFontSize = 13,
+  composerFontFamily = 'system-ui',
+  composerLineHeight = 20,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -23,6 +27,17 @@ export const getChatModeListVirtualDom = (
     },
     ...getChatHeaderListModeDom(),
     ...getChatListDom(sessions, selectedSessionId),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      composerHeight,
+      composerFontSize,
+      composerFontFamily,
+      composerLineHeight,
+    ),
   ]
 }

@@ -1,5 +1,6 @@
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 
 export const submitRename = async (state: ChatState): Promise<ChatState> => {
   const { composerValue, renamingSessionId, sessions } = state
@@ -25,6 +26,7 @@ export const submitRename = async (state: ChatState): Promise<ChatState> => {
   }
   return {
     ...state,
+    composerHeight: getMinComposerHeightForState(state),
     composerValue: '',
     inputSource: 'script',
     renamingSessionId: '',

@@ -4,6 +4,10 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
+    composerFontFamily,
+    composerFontSize,
+    composerHeight,
+    composerLineHeight,
     composerValue,
     initial,
     models,
@@ -33,8 +37,15 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     usageOverviewEnabled,
     tokensUsed,
     tokensMax,
+<<<<<<< Updated upstream
     openApiApiKeyInput,
     openRouterApiKeyState,
+=======
+    composerHeight,
+    composerFontSize,
+    composerFontFamily,
+    composerLineHeight,
+>>>>>>> Stashed changes
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

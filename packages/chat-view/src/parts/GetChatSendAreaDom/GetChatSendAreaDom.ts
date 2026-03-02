@@ -15,6 +15,10 @@ export const getChatSendAreaDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  composerHeight = 28,
+  composerFontSize = 13,
+  composerFontFamily = 'system-ui',
+  composerLineHeight = 20,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const modelOptions = models.flatMap((model) => getModelOptionDOm(model, selectedModelId))
@@ -36,7 +40,7 @@ export const getChatSendAreaDom = (
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.composePlaceholder(),
-      rows: 4,
+      style: `height:${composerHeight}px;font-size:${composerFontSize}px;font-family:${composerFontFamily};line-height:${composerLineHeight}px;`,
       type: VirtualDomElements.TextArea,
       value: composerValue,
     },
