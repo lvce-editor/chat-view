@@ -6,6 +6,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
   return {
     ...state,
     composerValue: '',
+    openRouterApiKey: '',
     selectedSessionId: '',
     sessions: [],
     viewMode: 'list',
