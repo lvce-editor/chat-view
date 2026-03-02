@@ -2,14 +2,14 @@ import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRo
 import { getTextContent } from './GetTextContent.ts'
 
 export interface GetOpenRouterAssistantTextSuccessResult {
-  readonly type: 'success'
   readonly text: string
+  readonly type: 'success'
 }
 
 export interface GetOpenRouterAssistantTextErrorResult {
-  readonly type: 'error'
   readonly details: 'request-failed' | 'too-many-requests' | 'http-error'
   readonly statusCode?: number
+  readonly type: 'error'
 }
 
 export type GetOpenRouterAssistantTextResult = GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult
