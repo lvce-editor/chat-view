@@ -11,6 +11,7 @@ export const getChatModeDetailVirtualDom = (
   selectedSessionId: string,
   composerValue: string,
   openRouterApiKeyInput: string,
+  openApiApiKeyInput: string,
   models: readonly ChatModel[],
   selectedModelId: string,
   usageOverviewEnabled: boolean,
@@ -27,7 +28,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput),
+    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput),
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
   ]
 }

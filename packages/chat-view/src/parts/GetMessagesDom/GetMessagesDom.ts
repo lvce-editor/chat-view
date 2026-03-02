@@ -15,7 +15,11 @@ export const getEmptyMessagesDom = (): readonly VirtualDomNode[] => {
   ]
 }
 
-export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string, openApiApiKeyInput = ''): readonly VirtualDomNode[] => {
+export const getMessagesDom = (
+  messages: readonly ChatMessage[],
+  openRouterApiKeyInput: string,
+  openApiApiKeyInput = '',
+): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     return getEmptyMessagesDom()
   }
