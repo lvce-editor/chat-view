@@ -102,21 +102,21 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
   const messages = selectedOptimisticSession?.messages ?? []
 
-  const assistantMessage = await getAiResponse(
-    userText,
-    messages,
-    optimisticState.nextMessageId,
-    selectedModelId,
-    models,
-    openApiApiKey,
-    openApiApiBaseUrl,
-    openRouterApiKey,
-    openRouterApiBaseUrl,
-    useMockApi,
-    mockApiCommandId,
+  const assistantMessage = await getAiResponse({
     assetDir,
+    messages,
+    mockApiCommandId,
+    models,
+    nextMessageId: optimisticState.nextMessageId,
+    openApiApiBaseUrl,
+    openApiApiKey,
+    openRouterApiBaseUrl,
+    openRouterApiKey,
     platform,
-  )
+    selectedModelId,
+    useMockApi,
+    userText,
+  })
 
   const updatedSessions: readonly ChatSession[] = optimisticState.sessions.map((session) => {
     if (session.id !== optimisticState.selectedSessionId) {
