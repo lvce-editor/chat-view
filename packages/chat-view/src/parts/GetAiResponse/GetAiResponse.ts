@@ -1,11 +1,11 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import {
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
 } from '../chatViewStrings/chatViewStrings.ts'
+import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
+import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { type GetOpenRouterAssistantTextErrorResult, getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
