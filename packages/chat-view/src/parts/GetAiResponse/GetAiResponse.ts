@@ -47,7 +47,7 @@ export const getAiResponse = async ({
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
     if (openApiApiKey) {
-      const result = await getOpenApiAssistantText(messages, getOpenApiModelId(selectedModelId), openApiApiKey, openApiApiBaseUrl)
+      const result = await getOpenApiAssistantText(messages, getOpenApiModelId(selectedModelId), openApiApiKey, openApiApiBaseUrl, assetDir, platform)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText
@@ -76,7 +76,7 @@ export const getAiResponse = async ({
         text = getOpenRouterErrorMessage(result)
       }
     } else if (openRouterApiKey) {
-      const result = await getOpenRouterAssistantText(messages, modelId, openRouterApiKey, openRouterApiBaseUrl)
+      const result = await getOpenRouterAssistantText(messages, modelId, openRouterApiKey, openRouterApiBaseUrl, assetDir, platform)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText
