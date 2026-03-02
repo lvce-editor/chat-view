@@ -6,5 +6,6 @@ export const isOpenApiModel = (selectedModelId: string, models: readonly ChatMod
   if (normalizedProvider === 'openapi' || normalizedProvider === 'openai' || normalizedProvider === 'open-ai') {
     return true
   }
-  return selectedModelId.toLowerCase().startsWith('openapi/')
+  const normalizedModelId = selectedModelId.toLowerCase()
+  return normalizedModelId.startsWith('openapi/') || normalizedModelId.startsWith('openai/')
 }

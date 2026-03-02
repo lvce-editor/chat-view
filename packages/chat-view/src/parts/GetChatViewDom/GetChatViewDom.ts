@@ -16,6 +16,7 @@ export const getChatVirtualDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  openApiApiKeyInput = '',
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
@@ -24,6 +25,7 @@ export const getChatVirtualDom = (
         selectedSessionId,
         composerValue,
         openRouterApiKeyInput,
+        openApiApiKeyInput,
         models,
         selectedModelId,
         usageOverviewEnabled,
