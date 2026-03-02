@@ -4,8 +4,14 @@ import {
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
 } from '../chatViewStrings/chatViewStrings.ts'
+import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
+import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
-import { type GetOpenRouterAssistantTextErrorResult, getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
+import {
+  type GetOpenRouterAssistantTextSuccessResult,
+  type GetOpenRouterAssistantTextErrorResult,
+  getOpenRouterAssistantText,
+} from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
@@ -52,6 +58,126 @@ const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorR
   }
 }
 
+const normalizeLimitInfo = (value: unknown): GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined => {
+  if (!value || typeof value !== 'object') {
+    return undefined
+  }
+  const limitRemaining = Reflect.get(value, 'limitRemaining')
+  const limitReset = Reflect.get(value, 'limitReset')
+  const retryAfter = Reflect.get(value, 'retryAfter')
+  const usage = Reflect.get(value, 'usage')
+  const usageDaily = Reflect.get(value, 'usageDaily')
+  const normalized: GetOpenRouterAssistantTextErrorResult['limitInfo'] = {
+    limitRemaining: typeof limitRemaining === 'number' || limitRemaining === null ? limitRemaining : undefined,
+    limitReset: typeof limitReset === 'string' || limitReset === null ? limitReset : undefined,
+    retryAfter: typeof retryAfter === 'string' || retryAfter === null ? retryAfter : undefined,
+    usage: typeof usage === 'number' ? usage : undefined,
+    usageDaily: typeof usageDaily === 'number' ? usageDaily : undefined,
+  }
+  const hasDetails =
+    normalized.limitRemaining !== undefined ||
+    normalized.limitReset !== undefined ||
+    normalized.retryAfter !== undefined ||
+    normalized.usage !== undefined ||
+    normalized.usageDaily !== undefined
+  return hasDetails ? normalized : undefined
+}
+
+const normalizeMockResult = (value: unknown): GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult => {
+  if (typeof value === 'string') {
+    return {
+      text: value,
+      type: 'success',
+    }
+  }
+  if (!value || typeof value !== 'object') {
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
+  }
+  const type = Reflect.get(value, 'type')
+  if (type === 'success') {
+    const text = Reflect.get(value, 'text')
+    if (typeof text === 'string') {
+      return {
+        text,
+        type: 'success',
+      }
+    }
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
+  }
+  if (type === 'error') {
+    const details = Reflect.get(value, 'details')
+    if (details === 'request-failed' || details === 'too-many-requests' || details === 'http-error') {
+      const rawMessage = Reflect.get(value, 'rawMessage')
+      const statusCode = Reflect.get(value, 'statusCode')
+      return {
+        details,
+        limitInfo: normalizeLimitInfo(Reflect.get(value, 'limitInfo')),
+        rawMessage: typeof rawMessage === 'string' ? rawMessage : undefined,
+        statusCode: typeof statusCode === 'number' ? statusCode : undefined,
+        type: 'error',
+      }
+    }
+  }
+  const text = Reflect.get(value, 'text')
+  if (typeof text === 'string') {
+    return {
+      text,
+      type: 'success',
+    }
+  }
+  return {
+    details: 'request-failed',
+    type: 'error',
+  }
+}
+
+const getMockOpenRouterAssistantText = async (
+  messages: readonly ChatMessage[],
+  modelId: string,
+  openRouterApiBaseUrl: string,
+  openRouterApiKey: string,
+  mockApiCommandId: string,
+  assetDir: string,
+  platform: number,
+): Promise<GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult> => {
+  if (!mockApiCommandId) {
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
+  }
+  try {
+    const result = await ExtensionHostShared.executeProvider({
+      assetDir,
+      event: `onCommand:${mockApiCommandId}`,
+      method: CommandExecute,
+      noProviderFoundMessage: 'No mock api command found',
+      params: [
+        mockApiCommandId,
+        {
+          messages,
+          modelId,
+          openRouterApiBaseUrl,
+          openRouterApiKey,
+        },
+      ],
+      platform,
+    })
+    return normalizeMockResult(result)
+  } catch {
+    return {
+      details: 'request-failed',
+      type: 'error',
+    }
+  }
+}
+
 export const getAiResponse = async (
   userText: string,
   messages: readonly ChatMessage[],
@@ -60,12 +186,33 @@ export const getAiResponse = async (
   models: readonly ChatModel[],
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
+  useMockApi: boolean,
+  mockApiCommandId: string,
+  assetDir: string,
+  platform: number,
 ): Promise<ChatMessage> => {
   let text = ''
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenRouterModel) {
-    if (openRouterApiKey) {
-      const result = await getOpenRouterAssistantText(messages, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
+    const modelId = getOpenRouterModelId(selectedModelId)
+    if (useMockApi) {
+      const result = await getMockOpenRouterAssistantText(
+        messages,
+        modelId,
+        openRouterApiBaseUrl,
+        openRouterApiKey,
+        mockApiCommandId,
+        assetDir,
+        platform,
+      )
+      if (result.type === 'success') {
+        const { text: assistantText } = result
+        text = assistantText
+      } else {
+        text = getOpenRouterErrorMessage(result)
+      }
+    } else if (openRouterApiKey) {
+      const result = await getOpenRouterAssistantText(messages, modelId, openRouterApiKey, openRouterApiBaseUrl)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText

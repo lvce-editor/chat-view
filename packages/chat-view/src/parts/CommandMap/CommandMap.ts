@@ -29,6 +29,7 @@ import { saveState } from '../SaveState/SaveState.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
+import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
@@ -64,4 +65,5 @@ export const commandMap = {
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.terminate': terminate,
+  'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),
 }

@@ -22,6 +22,7 @@ export interface ChatState {
   readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
+  readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
   readonly openRouterApiBaseUrl: string
@@ -37,6 +38,7 @@ export interface ChatState {
   readonly tokensUsed: number
   readonly uid: number
   readonly usageOverviewEnabled: boolean
+  readonly useMockApi: boolean
   readonly viewMode: ChatViewMode
   readonly warningCount: number
   readonly width: number

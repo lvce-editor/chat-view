@@ -7,8 +7,21 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const { composerValue, models, nextMessageId, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, selectedSessionId, sessions, viewMode } =
-    state
+  const {
+    assetDir,
+    composerValue,
+    mockApiCommandId,
+    models,
+    nextMessageId,
+    openRouterApiBaseUrl,
+    openRouterApiKey,
+    platform,
+    selectedModelId,
+    selectedSessionId,
+    sessions,
+    useMockApi,
+    viewMode,
+  } = state
   const userText = composerValue.trim()
   if (!userText) {
     return state
@@ -92,6 +105,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     models,
     openRouterApiKey,
     openRouterApiBaseUrl,
+    useMockApi,
+    mockApiCommandId,
+    assetDir,
+    platform,
   )
 
   const updatedSessions: readonly ChatSession[] = optimisticState.sessions.map((session) => {

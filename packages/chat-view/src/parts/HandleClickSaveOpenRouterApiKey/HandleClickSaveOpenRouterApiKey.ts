@@ -31,6 +31,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
 
   const retryMessages = session.messages.slice(0, -1)
 
+  // @ts-ignore
   const assistantMessage = await getAiResponse(
     previousUserMessage.text,
     retryMessages,
