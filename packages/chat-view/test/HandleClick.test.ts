@@ -128,6 +128,55 @@ test('handleClick should save openrouter api key to user settings', async () => 
   expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
 })
 
+test('handleClick should retry previous prompt after saving openrouter api key', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.update': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({ choices: [{ message: { content: 'Recovered OpenRouter response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state: ChatState = {
+      ...createDefaultState(),
+      nextMessageId: 3,
+      openRouterApiKeyInput: 'or-key-999',
+      selectedModelId: 'claude-code',
+      selectedSessionId: 'session-1',
+      sessions: [
+        {
+          id: 'session-1',
+          messages: [
+            { id: 'message-1', role: 'user', text: 'hello from openrouter', time: '10:31' },
+            {
+              id: 'message-2',
+              role: 'assistant',
+              text: 'OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.',
+              time: '10:32',
+            },
+          ],
+          title: 'Chat 1',
+        },
+      ],
+      viewMode: 'detail',
+    }
+    const result = await HandleClick.handleClick(state, 'save-openrouter-api-key')
+    expect(result.openRouterApiKey).toBe('or-key-999')
+    expect(result.nextMessageId).toBe(4)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('Recovered OpenRouter response')
+    expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleClick should open OpenRouter API keys settings', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Open.openExternal': async () => {},
