@@ -17,6 +17,7 @@ export const getChatVirtualDom = (
   tokensUsed: number,
   tokensMax: number,
   openApiApiKeyInput = '',
+  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
@@ -31,6 +32,7 @@ export const getChatVirtualDom = (
         usageOverviewEnabled,
         tokensUsed,
         tokensMax,
+        openRouterApiKeyState,
       )
     case 'list':
       return getChatModeListVirtualDom(

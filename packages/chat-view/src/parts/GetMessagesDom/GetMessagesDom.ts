@@ -7,6 +7,7 @@ export const getMessagesDom = (
   messages: readonly ChatMessage[],
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
+  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
 ): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     return GetEmptyMessagesDom.getEmptyMessagesDom()
@@ -17,6 +18,6 @@ export const getMessagesDom = (
       className: 'ChatMessages',
       type: VirtualDomElements.Div,
     },
-    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput)),
+    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState)),
   ]
 }
