@@ -1,10 +1,6 @@
 import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
 import { OnFileSystem } from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.ts'
-import {
-  FileSystemReadDirWithFileTypes,
-  FileSystemReadFile,
-  FileSystemWriteFile,
-} from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import { FileSystemReadDirWithFileTypes, FileSystemReadFile, FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 
 type ChatTool = {
   readonly type: 'function'
@@ -65,11 +61,7 @@ const parseToolArguments = (rawArguments: unknown): Record<string, unknown> => {
   }
 }
 
-const executeFileSystemCommand = async (
-  method: string,
-  params: readonly unknown[],
-  options: ExecuteToolOptions,
-): Promise<unknown> => {
+const executeFileSystemCommand = async (method: string, params: readonly unknown[], options: ExecuteToolOptions): Promise<unknown> => {
   return ExtensionHostShared.executeProvider({
     assetDir: options.assetDir,
     event: OnFileSystem,
