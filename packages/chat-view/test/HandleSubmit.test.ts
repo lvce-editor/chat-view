@@ -133,3 +133,87 @@ test('handleSubmit should not fall back to mock response for openRouter models w
     globalThis.fetch = originalFetch
   }
 })
+
+test('handleSubmit should show too many requests message for OpenRouter 429 responses', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      ok: false,
+      status: 429,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openrouter',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'openrouter/meta-llama/llama-3.3-70b-instruct:free',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
+    expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should include OpenRouter limit reset and usage details in 429 message when available', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (input: unknown) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    if (url.endsWith('/chat/completions')) {
+      return {
+        headers: {
+          get: (name: string) => (name === 'retry-after' ? '45' : null),
+        },
+        ok: false,
+        status: 429,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        data: {
+          limit_remaining: 3,
+          limit_reset: 'daily',
+          usage: 120,
+          usage_daily: 9,
+        },
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openrouter',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'openrouter/meta-llama/llama-3.3-70b-instruct:free',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toContain('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
+    expect(result.sessions[0].messages[1].text).toContain('Retry after: 45.')
+    expect(result.sessions[0].messages[1].text).toContain('Limit resets: daily.')
+    expect(result.sessions[0].messages[1].text).toContain('Credits remaining: 3.')
+    expect(result.sessions[0].messages[1].text).toContain('Credits used today (UTC): 9.')
+    expect(result.sessions[0].messages[1].text).toContain('Credits used (all time): 120.')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})

@@ -1,7 +1,11 @@
 /* eslint-disable @cspell/spellchecker */
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import { openRouterApiKeyRequiredMessage, openRouterRequestFailedMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import {
+  openRouterApiKeyRequiredMessage,
+  openRouterRequestFailedMessage,
+  openRouterTooManyRequestsMessage,
+} from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetStatusBarVirtualDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
@@ -224,6 +228,27 @@ test('getStatusBarVirtualDom should render OpenRouter request failure reasons as
   expect(cspReason).toBeDefined()
   expect(serverReason).toBeDefined()
   expect(internetReason).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should render OpenRouter too many requests reasons as ordered list', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: `${openRouterTooManyRequestsMessage} Limit resets: daily.`, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
+  const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
+  const waitReason = result.find((node) => node.text === 'Wait a short time and retry your request.')
+  const frequencyReason = result.find((node) => node.text === 'Reduce request frequency to avoid rate limits.')
+  const modelReason = result.find((node) => node.text === 'Use a different model if this one is saturated.')
+  expect(orderedList).toBeDefined()
+  expect(listItems).toHaveLength(3)
+  expect(waitReason).toBeDefined()
+  expect(frequencyReason).toBeDefined()
+  expect(modelReason).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
