@@ -25,7 +25,6 @@ export const getChatDetailsDom = (
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
   ]
 }

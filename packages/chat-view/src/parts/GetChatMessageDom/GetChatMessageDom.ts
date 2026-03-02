@@ -8,8 +8,8 @@ import {
   openRouterTooManyRequestsMessage,
   openRouterTooManyRequestsReasons,
 } from '../chatViewStrings/chatViewStrings.ts'
-import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 
 const getOpenRouterRequestFailedDom = (): readonly VirtualDomNode[] => {

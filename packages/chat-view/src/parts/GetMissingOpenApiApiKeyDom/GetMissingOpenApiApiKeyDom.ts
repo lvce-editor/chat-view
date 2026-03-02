@@ -5,11 +5,11 @@ import { OpenApiApiKeyInput, OpenOpenApiApiKeySettings, SaveOpenApiApiKey } from
 
 export const getMissingOpenApiApiKeyDom = (openApiApiKeyInput: string): readonly VirtualDomNode[] => {
   return getMissingApiKeyDom({
-    inputValue: openApiApiKeyInput,
+    getApiKeyText: Strings.getOpenApiApiKey(),
     inputName: OpenApiApiKeyInput,
+    inputValue: openApiApiKeyInput,
+    openSettingsButtonName: OpenOpenApiApiKeySettings,
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonName: SaveOpenApiApiKey,
-    openSettingsButtonName: OpenOpenApiApiKeySettings,
-    getApiKeyText: Strings.getOpenApiApiKey(),
   })
 }

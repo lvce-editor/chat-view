@@ -5,11 +5,11 @@ import { OpenOpenRouterApiKeySettings, OpenRouterApiKeyInput, SaveOpenRouterApiK
 
 export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   return getMissingApiKeyDom({
-    inputValue: openRouterApiKeyInput,
+    getApiKeyText: Strings.getOpenRouterApiKey(),
     inputName: OpenRouterApiKeyInput,
+    inputValue: openRouterApiKeyInput,
+    openSettingsButtonName: OpenOpenRouterApiKeySettings,
     placeholder: Strings.openRouterApiKeyPlaceholder(),
     saveButtonName: SaveOpenRouterApiKey,
-    openSettingsButtonName: OpenOpenRouterApiKeySettings,
-    getApiKeyText: Strings.getOpenRouterApiKey(),
   })
 }

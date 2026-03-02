@@ -218,7 +218,19 @@ test('getStatusBarVirtualDom should render OpenAPI api key input and save button
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'or-key-typed', 'detail', models, 'test', false, 0, 0, 'oa-key-typed')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    'or-key-typed',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    'oa-key-typed',
+  )
   const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
   const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-settings')

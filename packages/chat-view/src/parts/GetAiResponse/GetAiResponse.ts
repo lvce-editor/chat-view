@@ -16,8 +16,8 @@ import {
   type GetOpenRouterAssistantTextErrorResult,
   getOpenRouterAssistantText,
 } from './GetOpenRouterAssistantText.ts'
-import { isOpenApiModel } from './IsOpenApiModel.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
+import { isOpenApiModel } from './IsOpenApiModel.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
 const getOpenRouterTooManyRequestsMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {

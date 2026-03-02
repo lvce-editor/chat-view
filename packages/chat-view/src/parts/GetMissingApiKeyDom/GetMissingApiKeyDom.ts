@@ -2,23 +2,15 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
-
-export interface MissingApiKeyDomParams {
-  readonly inputValue: string
-  readonly inputName: string
-  readonly placeholder: string
-  readonly saveButtonName: string
-  readonly openSettingsButtonName: string
-  readonly getApiKeyText: string
-}
+import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams.ts'
 
 export const getMissingApiKeyDom = ({
-  inputValue,
+  getApiKeyText,
   inputName,
+  inputValue,
+  openSettingsButtonName,
   placeholder,
   saveButtonName,
-  openSettingsButtonName,
-  getApiKeyText,
 }: MissingApiKeyDomParams): readonly VirtualDomNode[] => {
   return [
     {
