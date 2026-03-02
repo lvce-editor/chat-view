@@ -37,15 +37,12 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     usageOverviewEnabled,
     tokensUsed,
     tokensMax,
-<<<<<<< Updated upstream
     openApiApiKeyInput,
     openRouterApiKeyState,
-=======
     composerHeight,
     composerFontSize,
     composerFontFamily,
     composerLineHeight,
->>>>>>> Stashed changes
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

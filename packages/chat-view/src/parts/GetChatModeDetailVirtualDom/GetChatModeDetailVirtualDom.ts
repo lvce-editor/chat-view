@@ -17,14 +17,11 @@ export const getChatModeDetailVirtualDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
-<<<<<<< Updated upstream
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-=======
   composerHeight = 28,
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
->>>>>>> Stashed changes
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -36,11 +33,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-<<<<<<< Updated upstream
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
-=======
-    ...getMessagesDom(messages, openRouterApiKeyInput),
     ...getChatSendAreaDom(
       composerValue,
       models,
@@ -53,6 +46,5 @@ export const getChatModeDetailVirtualDom = (
       composerFontFamily,
       composerLineHeight,
     ),
->>>>>>> Stashed changes
   ]
 }
