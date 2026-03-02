@@ -10,6 +10,6 @@ export const getEmptyChatSessionsDom = (): readonly VirtualDomNode[] => {
       type: VirtualDomElements.Div,
     },
     { childCount: 1, className: ClassNames.Label, type: VirtualDomElements.Div },
-    text(Strings.clickToOpenNewChat),
+    text(Strings.clickToOpenNewChat()),
   ]
 }

@@ -34,7 +34,7 @@ export const getChatSendAreaDom = (
       name: 'composer',
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
-      placeholder: Strings.composePlaceholder,
+      placeholder: Strings.composePlaceholder(),
       rows: 4,
       type: VirtualDomElements.TextArea,
       value: composerValue,

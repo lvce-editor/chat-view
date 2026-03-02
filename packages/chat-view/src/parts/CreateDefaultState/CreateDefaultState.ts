@@ -48,7 +48,7 @@ export const createDefaultState = (): ChatState => {
       {
         id: defaultSessionId,
         messages: [],
-        title: Strings.defaultSessionTitle,
+        title: Strings.defaultSessionTitle(),
       },
     ],
     tokensMax: 0,

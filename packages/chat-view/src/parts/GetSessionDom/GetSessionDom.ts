@@ -34,7 +34,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       onClick: DomEventListenerFunctions.HandleClickDelete,
       role: AriaRoles.Button,
       tabIndex: 0,
-      title: Strings.deleteChatSession,
+      title: Strings.deleteChatSession(),
       type: VirtualDomElements.Button,
     },
     text('🗑'),

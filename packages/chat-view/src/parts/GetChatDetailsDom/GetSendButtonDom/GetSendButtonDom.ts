@@ -13,7 +13,7 @@ export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNo
       name: 'send',
       onClick: DomEventListenerFunctions.HandleSubmit,
       role: AriaRoles.Button,
-      title: Strings.sendMessage,
+      title: Strings.sendMessage(),
       type: VirtualDomElements.Button,
     },
     {
