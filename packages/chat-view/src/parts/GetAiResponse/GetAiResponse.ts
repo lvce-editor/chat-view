@@ -51,6 +51,7 @@ const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorR
 
 export const getAiResponse = async (
   userText: string,
+  messages: readonly ChatMessage[],
   nextMessageId: number,
   selectedModelId: string,
   models: readonly ChatModel[],
@@ -61,7 +62,7 @@ export const getAiResponse = async (
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenRouterModel) {
     if (openRouterApiKey) {
-      const result = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
+      const result = await getOpenRouterAssistantText(messages, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText

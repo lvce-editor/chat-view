@@ -29,8 +29,11 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     return updatedState
   }
 
+  const retryMessages = session.messages.slice(0, -1)
+
   const assistantMessage = await getAiResponse(
     previousUserMessage.text,
+    retryMessages,
     updatedState.nextMessageId,
     updatedState.selectedModelId,
     updatedState.models,

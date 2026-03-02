@@ -16,7 +16,31 @@ test('getOpenRouterAssistantText should return success result when response is o
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getOpenRouterAssistantText('hello', 'openrouter/model', 'or-key-123', 'https://openrouter.ai/api/v1')
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-2',
+          role: 'assistant',
+          text: 'Hi! How can I help?',
+          time: '10:01',
+        },
+        {
+          id: 'message-3',
+          role: 'user',
+          text: 'Explain recursion.',
+          time: '10:02',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+    )
     expect(result).toEqual({
       text: 'hello from openrouter',
       type: 'success',
@@ -30,6 +54,16 @@ test('getOpenRouterAssistantText should return success result when response is o
       },
       method: 'POST',
     })
+    expect(fetchInvocation?.[1]).toMatchObject({
+      body: JSON.stringify({
+        messages: [
+          { content: 'hello', role: 'user' },
+          { content: 'Hi! How can I help?', role: 'assistant' },
+          { content: 'Explain recursion.', role: 'user' },
+        ],
+        model: 'openrouter/model',
+      }),
+    })
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -42,7 +76,19 @@ test('getOpenRouterAssistantText should return request-failed error result when 
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getOpenRouterAssistantText('hello', 'openrouter/model', 'or-key-123', 'https://openrouter.ai/api/v1')
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+    )
     expect(result).toEqual({
       details: 'request-failed',
       type: 'error',
@@ -62,7 +108,19 @@ test('getOpenRouterAssistantText should return too-many-requests error result fo
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getOpenRouterAssistantText('hello', 'openrouter/model', 'or-key-123', 'https://openrouter.ai/api/v1')
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+    )
     expect(result).toEqual({
       details: 'too-many-requests',
       statusCode: 429,
@@ -103,7 +161,19 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getOpenRouterAssistantText('hello', 'openrouter/model', 'or-key-123', 'https://openrouter.ai/api/v1')
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+    )
     expect(result).toEqual({
       details: 'too-many-requests',
       limitInfo: {

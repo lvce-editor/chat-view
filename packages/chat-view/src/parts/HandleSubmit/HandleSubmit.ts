@@ -81,8 +81,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
+  const selectedSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
+  const messages = selectedSession?.messages ?? []
+
   const assistantMessage = await getAiResponse(
     userText,
+    messages,
     optimisticState.nextMessageId,
     selectedModelId,
     models,

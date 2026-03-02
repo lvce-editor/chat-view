@@ -1,6 +1,7 @@
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 
 export interface GetOpenRouterAssistantTextSuccessResult {
   readonly text: string
@@ -83,7 +84,7 @@ const getOpenRouterLimitInfo = async (
 }
 
 export const getOpenRouterAssistantText = async (
-  userText: string,
+  messages: readonly ChatMessage[],
   modelId: string,
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
@@ -92,7 +93,10 @@ export const getOpenRouterAssistantText = async (
   try {
     response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
       body: JSON.stringify({
-        messages: [{ content: userText, role: 'user' }],
+        messages: messages.map((message) => ({
+          content: message.text,
+          role: message.role,
+        })),
         model: modelId,
       }),
       headers: {
