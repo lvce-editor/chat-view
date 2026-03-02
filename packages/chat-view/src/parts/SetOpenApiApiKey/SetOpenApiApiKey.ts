@@ -4,7 +4,7 @@ import * as Preferences from '../Preferences/Preferences.ts'
 export const setOpenApiApiKey = async (state: ChatState, openApiApiKey: string, persist = true): Promise<ChatState> => {
   if (persist) {
     await Preferences.update({
-      'secrets.openApiApiKey': openApiApiKey,
+      'secrets.openApiKey': openApiApiKey,
     })
   }
 

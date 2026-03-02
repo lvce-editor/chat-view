@@ -22,3 +22,10 @@ test('handleInput should update openRouterApiKeyInput when editing api key texta
   expect(result.openRouterApiKeyInput).toBe('or-key-abc')
   expect(result.composerValue).toBe('')
 })
+
+test('handleInput should update openApiApiKeyInput when editing openapi api key input', async () => {
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'open-api-api-key', 'oa-key-abc')
+  expect(result.openApiApiKeyInput).toBe('oa-key-abc')
+  expect(result.composerValue).toBe('')
+})

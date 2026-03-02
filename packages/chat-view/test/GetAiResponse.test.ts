@@ -2,7 +2,7 @@
 
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import { openRouterTooManyRequestsMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import { openApiApiKeyRequiredMessage, openRouterTooManyRequestsMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
@@ -44,6 +44,8 @@ test('getAiResponse should include OpenRouter raw 429 metadata message in assist
       2,
       'openrouter/model',
       [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
+      '',
+      'https://api.openai.com/v1',
       'or-key-123',
       'https://openrouter.ai/api/v1',
       false,
@@ -86,6 +88,8 @@ test('getAiResponse should use mock api command for OpenRouter models when enabl
     2,
     'openrouter/model',
     [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
+    '',
+    'https://api.openai.com/v1',
     '',
     'https://openrouter.ai/api/v1',
     true,
@@ -150,6 +154,8 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
     'openrouter/model',
     [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
     '',
+    'https://api.openai.com/v1',
+    '',
     'https://openrouter.ai/api/v1',
     true,
     'ChatE2e.mockApi',
@@ -182,4 +188,32 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
       },
     ],
   ])
+})
+
+test('getAiResponse should return OpenAI key required message for OpenAPI model when key is missing', async () => {
+  const result = await getAiResponse(
+    'hello',
+    [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    2,
+    'openapi/gpt-4o-mini',
+    [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+    '',
+    'https://api.openai.com/v1',
+    '',
+    'https://openrouter.ai/api/v1',
+    false,
+    '',
+    '',
+    0,
+  )
+
+  expect(result.role).toBe('assistant')
+  expect(result.text).toBe(openApiApiKeyRequiredMessage)
 })

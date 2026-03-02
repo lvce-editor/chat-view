@@ -165,6 +165,58 @@ test('handleSubmit should show too many requests message for OpenRouter 429 resp
   }
 })
 
+test('handleSubmit should use OpenAPI response for openApi models', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({ choices: [{ message: { content: 'Real OpenAI response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openapi',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('Real OpenAI response')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should not fall back to mock response for openApi models when api key is missing', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello from openapi',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+    openApiApiKey: '',
+    selectedModelId: 'openapi/gpt-4o-mini',
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions[0].messages).toHaveLength(2)
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
+  expect(result.sessions[0].messages[1].text).toBe('OpenAI API key is not configured. Enter your OpenAI API key below and click Save.')
+  expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
 test('handleSubmit should include OpenRouter limit reset and usage details in 429 message when available', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},

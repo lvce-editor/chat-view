@@ -36,8 +36,18 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedViewMode = getSavedViewMode(savedState)
   let openApiApiKey = ''
   try {
-    const savedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
-    openApiApiKey = typeof savedOpenApiApiKey === 'string' ? savedOpenApiApiKey : ''
+    const savedOpenApiKey = await Preferences.get('secrets.openApiKey')
+    if (typeof savedOpenApiKey === 'string' && savedOpenApiKey) {
+      openApiApiKey = savedOpenApiKey
+    } else {
+      const legacySavedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
+      if (typeof legacySavedOpenApiApiKey === 'string' && legacySavedOpenApiApiKey) {
+        openApiApiKey = legacySavedOpenApiApiKey
+      } else {
+        const legacySavedOpenAiApiKey = await Preferences.get('secrets.openAiApiKey')
+        openApiApiKey = typeof legacySavedOpenAiApiKey === 'string' ? legacySavedOpenAiApiKey : ''
+      }
+    }
   } catch {
     openApiApiKey = ''
   }
