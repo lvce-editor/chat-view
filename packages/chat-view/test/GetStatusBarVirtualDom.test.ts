@@ -218,7 +218,20 @@ test('getStatusBarVirtualDom should render disabled OpenRouter save button with 
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'or-key-typed', 'detail', models, 'test', false, 0, 0, '', 'saving')
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    'or-key-typed',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'saving',
+  )
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
   expect(saveButton).toMatchObject({
