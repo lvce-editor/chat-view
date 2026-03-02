@@ -1,10 +1,11 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
+import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import * as InputName from '../InputName/InputName.ts'
-import { SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
+import { OpenOpenRouterApiKeySettings, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 
@@ -31,6 +32,9 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (name === SaveOpenRouterApiKey) {
     return handleClickSaveOpenRouterApiKey(state)
+  }
+  if (name === OpenOpenRouterApiKeySettings) {
+    return handleClickOpenRouterApiKeySettings(state)
   }
   return state
 }
