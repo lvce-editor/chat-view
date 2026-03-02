@@ -1,9 +1,9 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
+import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
-import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+
 export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage

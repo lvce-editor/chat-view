@@ -3,10 +3,10 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
-import * as InputName from '../InputName/InputName.ts'
 import { getModelOptionDOm } from '../GetModelOptionDom/GetModelOptionDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatSendAreaDom = (
   composerValue: string,

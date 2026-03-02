@@ -1,10 +1,10 @@
 /* eslint-disable @cspell/spellchecker */
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { openRouterApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetStatusBarVirtualDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
-import { openRouterApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 
 const models = [
   { id: 'test', name: 'test' },

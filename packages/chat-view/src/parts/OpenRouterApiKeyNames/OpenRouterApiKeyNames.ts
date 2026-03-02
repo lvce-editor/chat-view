@@ -1,2 +1,3 @@
+/* eslint-disable @cspell/spellchecker */
 export const OpenRouterApiKeyInput = 'open-router-api-key'
 export const SaveOpenRouterApiKey = 'save-openrouter-api-key'

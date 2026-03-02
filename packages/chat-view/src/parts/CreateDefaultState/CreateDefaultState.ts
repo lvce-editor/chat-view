@@ -1,8 +1,9 @@
 /* eslint-disable @cspell/spellchecker */
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-const getDefaultModels = () => {
+const getDefaultModels = (): readonly ChatModel[] => {
   const defaultModelId = 'test'
   return [
     { id: defaultModelId, name: 'test', provider: 'test' },
