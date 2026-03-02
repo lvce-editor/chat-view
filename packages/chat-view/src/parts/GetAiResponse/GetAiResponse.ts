@@ -13,15 +13,19 @@ export const getAiResponse = async (
   openRouterApiBaseUrl: string,
 ): Promise<ChatMessage> => {
   let text = ''
-  const shouldUseOpenRouter = isOpenRouterModel(selectedModelId, models) && openRouterApiKey
-  if (shouldUseOpenRouter) {
-    try {
-      text = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
-    } catch {
-      text = ''
+  const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
+  if (usesOpenRouterModel) {
+    if (!openRouterApiKey) {
+      text = 'OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.'
+    } else {
+      try {
+        text = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
+      } catch {
+        text = 'OpenRouter request failed. Please check your API key, model availability, or network connection.'
+      }
     }
   }
-  if (!text) {
+  if (!text && !usesOpenRouterModel) {
     text = await getMockAiResponse(userText)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

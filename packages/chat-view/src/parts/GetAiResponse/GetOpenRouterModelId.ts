@@ -1,6 +1,8 @@
+/* eslint-disable @cspell/spellchecker */
 export const getOpenRouterModelId = (selectedModelId: string): string => {
-  if (selectedModelId.startsWith('openRouter/')) {
-    return selectedModelId.slice('openRouter/'.length)
+  const openRouterPrefix = 'openrouter/'
+  if (selectedModelId.toLowerCase().startsWith(openRouterPrefix)) {
+    return selectedModelId.slice(openRouterPrefix.length)
   }
   return selectedModelId
 }
