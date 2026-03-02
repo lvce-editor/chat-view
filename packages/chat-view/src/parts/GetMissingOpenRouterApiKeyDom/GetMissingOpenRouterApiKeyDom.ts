@@ -20,7 +20,7 @@ export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyInput: string): re
       value: openRouterApiKeyInput,
     },
     {
-      childCount: 4,
+      childCount: 2,
       className: ClassNames.Actions,
       type: VirtualDomElements.Div,
     },
