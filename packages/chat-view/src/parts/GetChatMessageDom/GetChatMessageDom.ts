@@ -12,13 +12,14 @@ const getOpenRouterRequestFailedDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: openRouterRequestFailureReasons.length,
-      className: ClassNames.Markdown,
+      className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
     ...openRouterRequestFailureReasons.flatMap((reason) => {
       return [
         {
           childCount: 1,
+          className: ClassNames.ChatOrderedListItem,
           type: VirtualDomElements.Li,
         },
         text(reason),
