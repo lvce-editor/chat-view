@@ -1,5 +1,7 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
 import {
+  openApiApiKeyRequiredMessage,
+  openApiRequestFailedMessage,
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
@@ -7,11 +9,14 @@ import {
 import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
 import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
+import { type GetOpenApiAssistantTextErrorResult, getOpenApiAssistantText } from './GetOpenApiAssistantText.ts'
+import { getOpenApiModelId } from './GetOpenApiModelId.ts'
 import {
   type GetOpenRouterAssistantTextSuccessResult,
   type GetOpenRouterAssistantTextErrorResult,
   getOpenRouterAssistantText,
 } from './GetOpenRouterAssistantText.ts'
+import { isOpenApiModel } from './IsOpenApiModel.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
@@ -55,6 +60,14 @@ const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorR
       return openRouterRequestFailedMessage
     case 'too-many-requests':
       return getOpenRouterTooManyRequestsMessage(errorResult)
+  }
+}
+
+const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {
+  switch (errorResult.details) {
+    case 'http-error':
+    case 'request-failed':
+      return openApiRequestFailedMessage
   }
 }
 
@@ -184,6 +197,8 @@ export const getAiResponse = async (
   nextMessageId: number,
   selectedModelId: string,
   models: readonly ChatModel[],
+  openApiApiKey: string,
+  openApiApiBaseUrl: string,
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
   useMockApi: boolean,
@@ -192,8 +207,21 @@ export const getAiResponse = async (
   platform: number,
 ): Promise<ChatMessage> => {
   let text = ''
+  const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (usesOpenRouterModel) {
+  if (usesOpenApiModel) {
+    if (openApiApiKey) {
+      const result = await getOpenApiAssistantText(messages, getOpenApiModelId(selectedModelId), openApiApiKey, openApiApiBaseUrl)
+      if (result.type === 'success') {
+        const { text: assistantText } = result
+        text = assistantText
+      } else {
+        text = getOpenApiErrorMessage(result)
+      }
+    } else {
+      text = openApiApiKeyRequiredMessage
+    }
+  } else if (usesOpenRouterModel) {
     const modelId = getOpenRouterModelId(selectedModelId)
     if (useMockApi) {
       const result = await getMockOpenRouterAssistantText(
@@ -223,7 +251,7 @@ export const getAiResponse = async (
       text = openRouterApiKeyRequiredMessage
     }
   }
-  if (!text && !usesOpenRouterModel) {
+  if (!text && !usesOpenApiModel && !usesOpenRouterModel) {
     text = await getMockAiResponse(userText)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

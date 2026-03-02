@@ -34,6 +34,13 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
+  let openApiApiKey = ''
+  try {
+    const savedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
+    openApiApiKey = typeof savedOpenApiApiKey === 'string' ? savedOpenApiApiKey : ''
+  } catch {
+    openApiApiKey = ''
+  }
   let openRouterApiKey = ''
   try {
     const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
@@ -66,6 +73,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   return {
     ...state,
     initial: false,
+    openApiApiKey,
+    openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
     selectedModelId,

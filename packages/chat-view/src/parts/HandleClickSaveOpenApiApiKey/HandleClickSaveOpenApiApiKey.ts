@@ -1,16 +1,16 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openApiApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
-import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
+import { setOpenApiApiKey } from '../SetOpenApiApiKey/SetOpenApiApiKey.ts'
 
-export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise<ChatState> => {
-  const { openRouterApiKeyInput } = state
-  const openRouterApiKey = openRouterApiKeyInput.trim()
-  if (!openRouterApiKey) {
+export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<ChatState> => {
+  const { openApiApiKeyInput } = state
+  const openApiApiKey = openApiApiKeyInput.trim()
+  if (!openApiApiKey) {
     return state
   }
-  const updatedState = await setOpenRouterApiKey(state, openRouterApiKey)
+  const updatedState = await setOpenApiApiKey(state, openApiApiKey)
 
   const session = updatedState.sessions.find((item) => item.id === updatedState.selectedSessionId)
   if (!session) {
@@ -18,9 +18,9 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   }
 
   const lastMessage = session.messages.at(-1)
-  const shouldRetryOpenRouter = lastMessage?.role === 'assistant' && lastMessage.text === openRouterApiKeyRequiredMessage
+  const shouldRetryOpenApi = lastMessage?.role === 'assistant' && lastMessage.text === openApiApiKeyRequiredMessage
 
-  if (!shouldRetryOpenRouter) {
+  if (!shouldRetryOpenApi) {
     return updatedState
   }
 
@@ -31,7 +31,6 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
 
   const retryMessages = session.messages.slice(0, -1)
 
-  // @ts-ignore
   const assistantMessage = await getAiResponse(
     previousUserMessage.text,
     retryMessages,
@@ -40,7 +39,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     updatedState.models,
     updatedState.openApiApiKey,
     updatedState.openApiApiBaseUrl,
-    openRouterApiKey,
+    updatedState.openRouterApiKey,
     updatedState.openRouterApiBaseUrl,
     updatedState.useMockApi,
     updatedState.mockApiCommandId,

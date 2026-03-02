@@ -25,6 +25,10 @@ export interface ChatState {
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
+  readonly openApiApiBaseUrl: string
+  readonly openApiApiKey: string
+  readonly openApiApiKeyInput: string
+  readonly openApiApiKeysSettingsUrl: string
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
   readonly openRouterApiKeyInput: string
