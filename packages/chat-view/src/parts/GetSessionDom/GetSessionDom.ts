@@ -3,6 +3,7 @@ import type { ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] => {
   const sessionClassName = ClassNames.ChatListItem
@@ -15,7 +16,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
     {
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
-      name: `session:${session.id}`,
+      name: InputName.getSessionInputName(session.id),
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       tabIndex: 0,
       type: VirtualDomElements.Div,
@@ -30,7 +31,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       childCount: 1,
       className: ClassNames.IconButton,
       'data-id': session.id,
-      name: 'SessionDelete',
+      name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
       role: AriaRoles.Button,
       tabIndex: 0,

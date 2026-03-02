@@ -14,29 +14,29 @@ const toError = (error: unknown): Error => {
 
 const requestToPromise = async <T>(createRequest: () => IDBRequest<T>): Promise<T> => {
   const request = createRequest()
-  return new Promise((resolve, reject) => {
-    request.addEventListener('success', () => {
-      resolve(request.result)
-    })
-    request.addEventListener('error', () => {
-      reject(toError(request.error))
-    })
+  const { promise, reject, resolve } = Promise.withResolvers<T>()
+  request.addEventListener('success', () => {
+    resolve(request.result)
   })
+  request.addEventListener('error', () => {
+    reject(toError(request.error))
+  })
+  return promise
 }
 
 const transactionToPromise = async (createTransaction: () => IDBTransaction): Promise<void> => {
   const transaction = createTransaction()
-  return new Promise((resolve, reject) => {
-    transaction.addEventListener('complete', () => {
-      resolve()
-    })
-    transaction.addEventListener('error', () => {
-      reject(toError(transaction.error))
-    })
-    transaction.addEventListener('abort', () => {
-      reject(toError(transaction.error))
-    })
+  const { promise, reject, resolve } = Promise.withResolvers<void>()
+  transaction.addEventListener('complete', () => {
+    resolve()
   })
+  transaction.addEventListener('error', () => {
+    reject(toError(transaction.error))
+  })
+  transaction.addEventListener('abort', () => {
+    reject(toError(transaction.error))
+  })
+  return promise
 }
 
 const openSessionsDatabase = async (): Promise<IDBDatabase> => {

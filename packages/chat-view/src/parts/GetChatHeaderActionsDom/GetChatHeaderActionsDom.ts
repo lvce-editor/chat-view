@@ -3,24 +3,25 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
   const items = [
     {
       icon: 'MaskIcon MaskIconAdd',
-      name: 'create-session',
+      name: InputName.CreateSession,
       onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat(),
     },
     {
       icon: 'MaskIcon MaskIconSettingsGear',
-      name: 'settings',
+      name: InputName.Settings,
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
     {
       icon: 'MaskIcon MaskIconClose',
-      name: 'close-chat',
+      name: InputName.CloseChat,
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat(),
     },

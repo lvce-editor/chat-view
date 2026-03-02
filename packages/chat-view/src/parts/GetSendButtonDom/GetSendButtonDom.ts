@@ -2,6 +2,7 @@ import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNode[] => {
   const sendButtonClassName = getSendButtonClassName(isSendDisabled)
@@ -10,7 +11,7 @@ export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNo
       childCount: 1,
       className: sendButtonClassName,
       disabled: isSendDisabled,
-      name: 'send',
+      name: InputName.Send,
       onClick: DomEventListenerFunctions.HandleSubmit,
       role: AriaRoles.Button,
       title: Strings.sendMessage(),
