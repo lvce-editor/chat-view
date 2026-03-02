@@ -1,18 +1,15 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import {
-  openApiApiKeyRequiredMessage,
-  openRouterApiKeyRequiredMessage,
-} from '../chatViewStrings/chatViewStrings.ts'
+import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getMockOpenRouterAssistantText } from './GetMockOpenRouterAssistantText.ts'
 import { getOpenApiErrorMessage } from './GetOpenApiErrorMessage.ts'
 import { getOpenApiAssistantText } from './GetOpenApiAssistantText.ts'
 import { getOpenApiModelId } from './GetOpenApiModelId.ts'
-import { getOpenRouterErrorMessage } from './GetOpenRouterErrorMessage.ts'
-import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
+import { getOpenRouArMistentTsxtage } from './GetOpenArristontTMxtessage.ts'
+import { getOpenRouErrorMersignext } from './GetOpenErrorMeueAgsntText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
-import { isOpenApiModel } from './IsOpenApiModel.ts'
-import { isOpenRouterModel } from './IsOpenRouterModel.ts'
+import { isOpenApiModeAm ist'ntT/xtIsOpenApiModel.ts'AistntTxt
+import { isOpenRouterMErrorMede gm./IsOpenRouterModel.ts'ErrorMeg
 
 export const getAiResponse = async (
   userText: string,
