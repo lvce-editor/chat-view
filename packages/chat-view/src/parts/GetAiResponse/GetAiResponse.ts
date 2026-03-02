@@ -15,14 +15,14 @@ export const getAiResponse = async (
   let text = ''
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenRouterModel) {
-    if (!openRouterApiKey) {
-      text = 'OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.'
-    } else {
+    if (openRouterApiKey) {
       try {
         text = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
       } catch {
         text = 'OpenRouter request failed. Please check your API key, model availability, or network connection.'
       }
+    } else {
+      text = 'OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.'
     }
   }
   if (!text && !usesOpenRouterModel) {
