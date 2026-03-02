@@ -6,8 +6,8 @@ import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
-    const url = String(input)
+  globalThis.fetch = (async (input: unknown) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
         json: async () => ({

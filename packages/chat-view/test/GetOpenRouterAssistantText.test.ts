@@ -134,9 +134,9 @@ test('getOpenRouterAssistantText should return too-many-requests error result fo
 test('getOpenRouterAssistantText should include limit info for 429 when auth key endpoint returns usage data', async () => {
   const originalFetch = globalThis.fetch
   let invocationCount = 0
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
+  globalThis.fetch = (async (input: unknown) => {
     invocationCount++
-    const url = String(input)
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
         headers: {
@@ -194,8 +194,8 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
 
 test('getOpenRouterAssistantText should include raw metadata message for 429', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
-    const url = String(input)
+  globalThis.fetch = (async (input: unknown) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
         json: async () => ({

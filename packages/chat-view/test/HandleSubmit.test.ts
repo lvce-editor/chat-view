@@ -170,8 +170,8 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
-    const url = String(input)
+  globalThis.fetch = (async (input: unknown) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
         headers: {
