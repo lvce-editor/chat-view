@@ -8,9 +8,9 @@ import { setSession } from './SetSession/SetSession.ts'
 
 interface State {
   readonly databaseName: string
+  databasePromise: Promise<IDBDatabase> | undefined
   readonly databaseVersion: number
   readonly storeName: string
-  databasePromise: Promise<IDBDatabase> | undefined
 }
 
 interface IndexedDbChatSessionStorageOptions {
@@ -25,9 +25,9 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
   constructor(options: IndexedDbChatSessionStorageOptions = {}) {
     this.state = {
       databaseName: options.databaseName || 'lvce-chat-view-sessions',
+      databasePromise: undefined,
       databaseVersion: options.databaseVersion || 1,
       storeName: options.storeName || 'chat-sessions',
-      databasePromise: undefined,
     }
   }
 
