@@ -39,6 +39,7 @@ export const createDefaultState = (): ChatState => {
     nextMessageId: 1,
     openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
     openRouterApiKey: '',
+    openRouterApiKeyInput: '',
     platform: 0,
     renamingSessionId: '',
     selectedModelId: defaultModelId,

@@ -52,3 +52,15 @@ test('get should handle different preference types', async () => {
     ['Preferences.get', 'object.key'],
   ])
 })
+
+test('update should persist settings', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.update': async () => {},
+  })
+  await Preferences.update({
+    'secrets.openRouterApiKey': 'or-key-123',
+  })
+  expect(mockRpc.invocations).toEqual([
+    ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-123' }],
+  ])
+})

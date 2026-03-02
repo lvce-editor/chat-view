@@ -70,6 +70,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     ...savedBounds,
     initial: false,
     openRouterApiKey,
+    openRouterApiKeyInput: openRouterApiKey,
     selectedModelId,
     selectedSessionId,
     sessions,

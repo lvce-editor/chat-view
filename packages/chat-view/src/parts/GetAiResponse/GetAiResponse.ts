@@ -3,6 +3,7 @@ import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
+import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
 
 export const getAiResponse = async (
   userText: string,
@@ -22,7 +23,7 @@ export const getAiResponse = async (
         text = 'OpenRouter request failed. Please check your API key, model availability, or network connection.'
       }
     } else {
-      text = 'OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.'
+      text = openRouterApiKeyRequiredMessage
     }
   }
   if (!text && !usesOpenRouterModel) {

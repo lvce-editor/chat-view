@@ -4,7 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getMessagesDom = (messages: readonly ChatMessage[]): readonly VirtualDomNode[] => {
+export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     return [
       {
@@ -21,6 +21,6 @@ export const getMessagesDom = (messages: readonly ChatMessage[]): readonly Virtu
       className: 'ChatMessages',
       type: VirtualDomElements.Div,
     },
-    ...messages.flatMap(GetChatMessageDom.getChatMessageDom),
+    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput)),
   ]
 }
