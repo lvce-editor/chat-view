@@ -1,11 +1,6 @@
+import { openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
-
-const defaultOpenRouterApiBaseUrl = 'https://openrouter.ai/api/v1'
-
-const getOpenRouterApiEndpoint = (openRouterApiBaseUrl: string): string => {
-  const trimmedBaseUrl = (openRouterApiBaseUrl || defaultOpenRouterApiBaseUrl).replace(/\/+$/, '')
-  return `${trimmedBaseUrl}/chat/completions`
-}
 
 export const getOpenRouterAssistantText = async (
   userText: string,
@@ -13,17 +8,23 @@ export const getOpenRouterAssistantText = async (
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
 ): Promise<string> => {
-  const response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
-    body: JSON.stringify({
-      messages: [{ content: userText, role: 'user' }],
-      model: modelId,
-    }),
-    headers: {
-      Authorization: `Bearer ${openRouterApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-  })
+  let response: Response
+  try {
+    response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
+      body: JSON.stringify({
+        messages: [{ content: userText, role: 'user' }],
+        model: modelId,
+      }),
+      headers: {
+        Authorization: `Bearer ${openRouterApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    })
+  } catch {
+    throw new Error(openRouterRequestFailedMessage)
+  }
+
   if (!response.ok) {
     throw new Error(`Failed to get OpenRouter response: ${response.status}`)
   }

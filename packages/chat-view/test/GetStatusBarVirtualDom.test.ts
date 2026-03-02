@@ -1,7 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import { openRouterApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import { openRouterApiKeyRequiredMessage, openRouterRequestFailedMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetStatusBarVirtualDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
@@ -203,6 +203,27 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
+})
+
+test('getStatusBarVirtualDom should render OpenRouter request failure reasons as ordered list', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: openRouterRequestFailedMessage, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
+  const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
+  const cspReason = result.find((node) => node.text === 'ContentSecurityPolicyViolation: Check DevTools for details.')
+  const serverReason = result.find((node) => node.text === 'OpenRouter server offline: Check DevTools for details.')
+  const internetReason = result.find((node) => node.text === 'Check your internet connection.')
+  expect(orderedList).toBeDefined()
+  expect(listItems).toHaveLength(3)
+  expect(cspReason).toBeDefined()
+  expect(serverReason).toBeDefined()
+  expect(internetReason).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {

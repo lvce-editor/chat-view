@@ -1,5 +1,5 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openRouterApiKeyRequiredMessage, openRouterRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
@@ -19,8 +19,12 @@ export const getAiResponse = async (
     if (openRouterApiKey) {
       try {
         text = await getOpenRouterAssistantText(userText, getOpenRouterModelId(selectedModelId), openRouterApiKey, openRouterApiBaseUrl)
-      } catch {
-        text = 'OpenRouter request failed. Please check your API key, model availability, or network connection.'
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          text = error.message
+        } else {
+          text = openRouterRequestFailedMessage
+        }
       }
     } else {
       text = openRouterApiKeyRequiredMessage
