@@ -2,51 +2,40 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
-import * as Preferences from '../Preferences/Preferences.ts'
+import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 
 export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise<ChatState> => {
-  const { models, nextMessageId, openRouterApiBaseUrl, openRouterApiKeyInput, selectedModelId, selectedSessionId, sessions } = state
+  const { openRouterApiKeyInput } = state
   const openRouterApiKey = openRouterApiKeyInput.trim()
   if (!openRouterApiKey) {
     return state
   }
-  await Preferences.update({
-    'secrets.openRouterApiKey': openRouterApiKey,
-  })
+  const updatedState = await setOpenRouterApiKey(state, openRouterApiKey)
 
-  const session = sessions.find((item) => item.id === selectedSessionId)
+  const session = updatedState.sessions.find((item) => item.id === updatedState.selectedSessionId)
   if (!session) {
-    return {
-      ...state,
-      openRouterApiKey,
-    }
+    return updatedState
   }
 
   const lastMessage = session.messages.at(-1)
   const shouldRetryOpenRouter = lastMessage?.role === 'assistant' && lastMessage.text === openRouterApiKeyRequiredMessage
 
   if (!shouldRetryOpenRouter) {
-    return {
-      ...state,
-      openRouterApiKey,
-    }
+    return updatedState
   }
 
   const previousUserMessage = session.messages.toReversed().find((item) => item.role === 'user')
   if (!previousUserMessage) {
-    return {
-      ...state,
-      openRouterApiKey,
-    }
+    return updatedState
   }
 
   const assistantMessage = await getAiResponse(
     previousUserMessage.text,
-    nextMessageId,
-    selectedModelId,
-    models,
+    updatedState.nextMessageId,
+    updatedState.selectedModelId,
+    updatedState.models,
     openRouterApiKey,
-    openRouterApiBaseUrl,
+    updatedState.openRouterApiBaseUrl,
   )
 
   const updatedSession = {
@@ -56,17 +45,16 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
 
   await saveChatSession(updatedSession)
 
-  const updatedSessions = sessions.map((item) => {
-    if (item.id !== selectedSessionId) {
+  const updatedSessions = updatedState.sessions.map((item) => {
+    if (item.id !== updatedState.selectedSessionId) {
       return item
     }
     return updatedSession
   })
 
   return {
-    ...state,
-    nextMessageId: nextMessageId + 1,
-    openRouterApiKey,
+    ...updatedState,
+    nextMessageId: updatedState.nextMessageId + 1,
     sessions: updatedSessions,
   }
 }
