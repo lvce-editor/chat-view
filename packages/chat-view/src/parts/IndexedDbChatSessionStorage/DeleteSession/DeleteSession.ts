@@ -1,6 +1,6 @@
-import { LVCE_CHAT_SESSIONS_STORE } from '../IndexedDbChatSessionStorageConstants/IndexedDbChatSessionStorageConstants.ts'
-import { getDatabase } from '../GetDatabase/GetDatabase.ts'
 import type { GetDatabasePromise, SetDatabasePromise } from '../GetDatabase/GetDatabase.ts'
+import { getDatabase } from '../GetDatabase/GetDatabase.ts'
+import { LVCE_CHAT_SESSIONS_STORE } from '../IndexedDbChatSessionStorageConstants/IndexedDbChatSessionStorageConstants.ts'
 import { transactionToPromise } from '../TransactionToPromise/TransactionToPromise.ts'
 
 export const deleteSession = async (getDatabasePromise: GetDatabasePromise, setDatabasePromise: SetDatabasePromise, id: string): Promise<void> => {
