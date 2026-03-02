@@ -1,4 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
+ 
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
