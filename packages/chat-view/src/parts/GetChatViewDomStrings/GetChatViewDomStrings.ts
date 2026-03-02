@@ -48,6 +48,10 @@ export const openRouterApiKeyPlaceholder = (): string => {
   return i18nString('Enter OpenRouter API key')
 }
 
+export const openApiApiKeyPlaceholder = (): string => {
+  return i18nString('Enter OpenAI API key')
+}
+
 export const sendMessage = (): string => {
   return i18nString('Send message')
 }
@@ -61,6 +65,10 @@ export const save = (): string => {
 }
 
 export const getOpenRouterApiKey = (): string => {
+  return i18nString('Get API Key')
+}
+
+export const getOpenApiApiKey = (): string => {
   return i18nString('Get API Key')
 }
 

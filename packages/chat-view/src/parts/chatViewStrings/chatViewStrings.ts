@@ -1,3 +1,7 @@
+export const openApiApiKeyRequiredMessage = 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.'
+
+export const openApiRequestFailedMessage = 'OpenAI request failed.'
+
 export const openRouterApiKeyRequiredMessage = 'OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.'
 
 export const openRouterRequestFailedMessage = 'OpenRouter request failed. Possible reasons:'

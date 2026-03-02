@@ -34,6 +34,23 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
+  let openApiApiKey = ''
+  try {
+    const savedOpenApiKey = await Preferences.get('secrets.openApiKey')
+    if (typeof savedOpenApiKey === 'string' && savedOpenApiKey) {
+      openApiApiKey = savedOpenApiKey
+    } else {
+      const legacySavedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
+      if (typeof legacySavedOpenApiApiKey === 'string' && legacySavedOpenApiApiKey) {
+        openApiApiKey = legacySavedOpenApiApiKey
+      } else {
+        const legacySavedOpenAiApiKey = await Preferences.get('secrets.openAiApiKey')
+        openApiApiKey = typeof legacySavedOpenAiApiKey === 'string' ? legacySavedOpenAiApiKey : ''
+      }
+    }
+  } catch {
+    openApiApiKey = ''
+  }
   let openRouterApiKey = ''
   try {
     const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
@@ -66,6 +83,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   return {
     ...state,
     initial: false,
+    openApiApiKey,
+    openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
     selectedModelId,

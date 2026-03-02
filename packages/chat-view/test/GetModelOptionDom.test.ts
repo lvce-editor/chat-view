@@ -40,3 +40,17 @@ test('getModelOptionDOm should keep non-openRouter model labels unchanged', () =
     text: 'test',
   })
 })
+
+test('getModelOptionDOm should append OpenAI to openApi model labels', () => {
+  const model = {
+    id: 'openapi/gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    provider: 'openApi' as const,
+  }
+
+  const result = GetModelOptionDom.getModelOptionDOm(model, '')
+
+  expect(result[1]).toMatchObject({
+    text: 'GPT-4o Mini (OpenAI)',
+  })
+})

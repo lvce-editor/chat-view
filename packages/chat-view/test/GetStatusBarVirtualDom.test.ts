@@ -2,6 +2,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
+  openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
@@ -204,6 +205,45 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getStatusBarVirtualDom should render OpenAPI api key input and save button for missing key message', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: openApiApiKeyRequiredMessage, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    'or-key-typed',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    'oa-key-typed',
+  )
+  const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
+  const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
+  const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-settings')
+  expect(apiKeyInput).toMatchObject({
+    onInput: DomEventListenerFunctions.HandleInput,
+    type: VirtualDomElements.Input,
+    value: 'oa-key-typed',
+  })
+  expect(saveButton).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(openApiButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })

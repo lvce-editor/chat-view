@@ -195,6 +195,9 @@ test('loadContent should restore selected detail session with messages from save
 test('loadContent should load openRouterApiKey from preferences', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
       if (key === 'secrets.openRouterApiKey') {
         return 'or-key-123'
       }
@@ -204,5 +207,31 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
   const state: ChatState = createDefaultState()
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.openRouterApiKey).toBe('or-key-123')
-  expect(mockRpc.invocations).toEqual([['Preferences.get', 'secrets.openRouterApiKey']])
+  expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+  ])
+})
+
+test('loadContent should load openApiApiKey from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openApiKey') {
+        return 'oa-key-123'
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.openApiApiKey).toBe('oa-key-123')
+  expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+  ])
 })

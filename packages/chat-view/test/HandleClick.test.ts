@@ -187,6 +187,79 @@ test('handleClick should open OpenRouter API keys settings', async () => {
   expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://openrouter.ai/settings/keys']])
 })
 
+test('handleClick should save openapi api key to user settings', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.update': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    openApiApiKeyInput: 'oa-key-999',
+  }
+  const result = await HandleClick.handleClick(state, 'save-openapi-api-key')
+  expect(result.openApiApiKey).toBe('oa-key-999')
+  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
+})
+
+test('handleClick should retry previous prompt after saving openapi api key', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.update': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({ choices: [{ message: { content: 'Recovered OpenAI response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state: ChatState = {
+      ...createDefaultState(),
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 3,
+      openApiApiKeyInput: 'oa-key-999',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      selectedSessionId: 'session-1',
+      sessions: [
+        {
+          id: 'session-1',
+          messages: [
+            { id: 'message-1', role: 'user', text: 'hello from openapi', time: '10:31' },
+            {
+              id: 'message-2',
+              role: 'assistant',
+              text: 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.',
+              time: '10:32',
+            },
+          ],
+          title: 'Chat 1',
+        },
+      ],
+      viewMode: 'detail',
+    }
+    const result = await HandleClick.handleClick(state, 'save-openapi-api-key')
+    expect(result.openApiApiKey).toBe('oa-key-999')
+    expect(result.nextMessageId).toBe(4)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('Recovered OpenAI response')
+    expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleClick should open OpenAPI API keys settings', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Open.openExternal': async () => {},
+  })
+  const state: ChatState = createDefaultState()
+  const result = await HandleClick.handleClick(state, 'open-openapi-api-key-settings')
+  expect(result).toBe(state)
+  expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://platform.openai.com/api-keys']])
+})
+
 test('handleClickList should open detail for session index from y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),

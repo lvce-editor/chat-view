@@ -1,23 +1,15 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
 
-export const getEmptyMessagesDom = (): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatWelcomeMessage,
-      type: VirtualDomElements.Div,
-    },
-    text(Strings.startConversation()),
-  ]
-}
-
-export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
+export const getMessagesDom = (
+  messages: readonly ChatMessage[],
+  openRouterApiKeyInput: string,
+  openApiApiKeyInput = '',
+): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
-    return getEmptyMessagesDom()
+    return GetEmptyMessagesDom.getEmptyMessagesDom()
   }
   return [
     {
@@ -25,6 +17,6 @@ export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKe
       className: 'ChatMessages',
       type: VirtualDomElements.Div,
     },
-    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput)),
+    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput)),
   ]
 }
