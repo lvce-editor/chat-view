@@ -7,6 +7,10 @@ import { OpenOpenRouterApiKeySettings, OpenRouterApiKeyInput, SaveOpenRouterApiK
 export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   return [
     {
+      childCount: 5,
+      type: VirtualDomElements.Div,
+    },
+    {
       childCount: 0,
       className: ClassNames.InputBox,
       name: OpenRouterApiKeyInput,
