@@ -2,34 +2,8 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
-
-const SAVE_OPEN_ROUTER_API_KEY = 'save-openrouter-api-key'
-
-const getMissingOpenRouterapiKeyDom = (openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 0,
-      className: ClassNames.MultilineInputBox,
-      name: 'open-router-api-key',
-      onInput: DomEventListenerFunctions.HandleInput,
-      placeholder: Strings.openRouterApiKeyPlaceholder,
-      rows: 2,
-      type: VirtualDomElements.TextArea,
-      value: openRouterApiKeyInput,
-    },
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
-      name: SAVE_OPEN_ROUTER_API_KEY,
-      onClick: DomEventListenerFunctions.HandleClick,
-      type: VirtualDomElements.Button,
-    },
-    text(Strings.save),
-  ]
-}
 
 export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
@@ -51,6 +25,6 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
       type: VirtualDomElements.P,
     },
     text(message.text),
-    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterapiKeyDom(openRouterApiKeyInput) : []),
+    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput) : []),
   ]
 }

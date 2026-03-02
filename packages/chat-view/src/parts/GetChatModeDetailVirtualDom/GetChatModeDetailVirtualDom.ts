@@ -18,7 +18,7 @@ export const getChatModeDetailVirtualDom = (
   tokensMax: number,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle
+  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   return [
     {

@@ -10,19 +10,19 @@ export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
       icon: 'MaskIcon MaskIconAdd',
       name: 'create-session',
       onClick: DomEventListenerFunctions.HandleClickNew,
-      title: Strings.newChat,
+      title: Strings.newChat(),
     },
     {
       icon: 'MaskIcon MaskIconSettingsGear',
       name: 'settings',
       onClick: DomEventListenerFunctions.HandleClickSettings,
-      title: Strings.settings,
+      title: Strings.settings(),
     },
     {
       icon: 'MaskIcon MaskIconClose',
       name: 'close-chat',
       onClick: DomEventListenerFunctions.HandleClickClose,
-      title: Strings.closeChat,
+      title: Strings.closeChat(),
     },
   ] as const
 

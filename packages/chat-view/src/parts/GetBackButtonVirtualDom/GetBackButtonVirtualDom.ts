@@ -11,7 +11,7 @@ export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
       name: 'back',
       onClick: DomEventListenerFunctions.HandleClickBack,
       role: AriaRoles.Button,
-      title: Strings.backToChats,
+      title: Strings.backToChats(),
       type: VirtualDomElements.Button,
     },
     {

@@ -5,17 +5,17 @@ const dummySessions: readonly ChatSession[] = [
   {
     id: 'session-a',
     messages: [],
-    title: Strings.dummyChatA,
+    title: Strings.dummyChatA(),
   },
   {
     id: 'session-b',
     messages: [],
-    title: Strings.dummyChatB,
+    title: Strings.dummyChatB(),
   },
   {
     id: 'session-c',
     messages: [],
-    title: Strings.dummyChatC,
+    title: Strings.dummyChatC(),
   },
 ]
 

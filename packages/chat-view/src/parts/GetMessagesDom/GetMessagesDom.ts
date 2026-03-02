@@ -12,7 +12,7 @@ export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKe
         className: ClassNames.ChatWelcomeMessage,
         type: VirtualDomElements.Div,
       },
-      text(Strings.startConversation),
+      text(Strings.startConversation()),
     ]
   }
   return [

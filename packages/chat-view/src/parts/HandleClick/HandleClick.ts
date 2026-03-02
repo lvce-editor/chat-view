@@ -4,6 +4,7 @@ import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 
@@ -12,7 +13,6 @@ const SESSION_PREFIX = 'session:'
 const RENAME_PREFIX = 'session-rename:'
 const SESSION_DELETE = 'SessionDelete'
 const SEND = 'send'
-const SAVE_OPEN_ROUTER_API_KEY = 'save-openrouter-api-key'
 
 export const handleClick = async (state: ChatState, name: string, id = ''): Promise<ChatState> => {
   if (!name) {
@@ -35,7 +35,7 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   if (name === SEND) {
     return handleClickSend(state)
   }
-  if (name === SAVE_OPEN_ROUTER_API_KEY) {
+  if (name === SaveOpenRouterApiKey) {
     return handleClickSaveOpenRouterApiKey(state)
   }
   return state
