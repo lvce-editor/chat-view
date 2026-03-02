@@ -1,4 +1,5 @@
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
+import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
 
 export interface GetOpenRouterAssistantTextSuccessResult {
@@ -8,11 +9,78 @@ export interface GetOpenRouterAssistantTextSuccessResult {
 
 export interface GetOpenRouterAssistantTextErrorResult {
   readonly details: 'request-failed' | 'too-many-requests' | 'http-error'
+  readonly limitInfo?: {
+    readonly limitRemaining?: number | null
+    readonly limitReset?: string | null
+    readonly retryAfter?: string | null
+    readonly usage?: number
+    readonly usageDaily?: number
+  }
   readonly statusCode?: number
   readonly type: 'error'
 }
 
 export type GetOpenRouterAssistantTextResult = GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult
+
+const getOpenRouterLimitInfo = async (
+  openRouterApiKey: string,
+  openRouterApiBaseUrl: string,
+): Promise<GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined> => {
+  let response: Response
+  try {
+    response = await fetch(getOpenRouterKeyEndpoint(openRouterApiBaseUrl), {
+      headers: {
+        Authorization: `Bearer ${openRouterApiKey}`,
+      },
+      method: 'GET',
+    })
+  } catch {
+    return undefined
+  }
+
+  if (!response.ok) {
+    return undefined
+  }
+
+  let parsed: unknown
+  try {
+    parsed = (await response.json()) as unknown
+  } catch {
+    return undefined
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return undefined
+  }
+
+  const data = Reflect.get(parsed, 'data')
+  if (!data || typeof data !== 'object') {
+    return undefined
+  }
+
+  const limitRemaining = Reflect.get(data, 'limit_remaining')
+  const limitReset = Reflect.get(data, 'limit_reset')
+  const usage = Reflect.get(data, 'usage')
+  const usageDaily = Reflect.get(data, 'usage_daily')
+  const normalizedLimitInfo: GetOpenRouterAssistantTextErrorResult['limitInfo'] = {
+    limitRemaining: typeof limitRemaining === 'number' || limitRemaining === null ? limitRemaining : undefined,
+    limitReset: typeof limitReset === 'string' || limitReset === null ? limitReset : undefined,
+    usage: typeof usage === 'number' ? usage : undefined,
+    usageDaily: typeof usageDaily === 'number' ? usageDaily : undefined,
+  }
+
+  const hasLimitInfo =
+    normalizedLimitInfo.limitRemaining !== undefined ||
+    normalizedLimitInfo.limitReset !== undefined ||
+    normalizedLimitInfo.usage !== undefined ||
+    normalizedLimitInfo.usageDaily !== undefined
+
+  if (!hasLimitInfo) {
+    return undefined
+  }
+
+  return normalizedLimitInfo
+}
 
 export const getOpenRouterAssistantText = async (
   userText: string,
@@ -42,8 +110,17 @@ export const getOpenRouterAssistantText = async (
 
   if (!response.ok) {
     if (response.status === 429) {
+      const retryAfter = response.headers?.get?.('retry-after') ?? null
+      const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
       return {
         details: 'too-many-requests',
+        limitInfo:
+          limitInfo || retryAfter
+            ? {
+                ...limitInfo,
+                retryAfter,
+              }
+            : undefined,
         statusCode: 429,
         type: 'error',
       }

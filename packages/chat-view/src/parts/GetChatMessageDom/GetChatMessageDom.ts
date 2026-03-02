@@ -54,7 +54,8 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
-  const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text === openRouterTooManyRequestsMessage
+  const isOpenRouterTooManyRequestsMessage =
+    message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
   const extraChildCount = isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage ? 2 : 1
   return [
     {

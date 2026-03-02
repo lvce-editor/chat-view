@@ -234,7 +234,7 @@ test('getStatusBarVirtualDom should render OpenRouter too many requests reasons 
   const sessions = [
     {
       id: 'session-1',
-      messages: [{ id: 'm1', role: 'assistant' as const, text: openRouterTooManyRequestsMessage, time: '10:31' }],
+      messages: [{ id: 'm1', role: 'assistant' as const, text: `${openRouterTooManyRequestsMessage} Limit resets: daily.`, time: '10:31' }],
       title: 'Chat 1',
     },
   ]

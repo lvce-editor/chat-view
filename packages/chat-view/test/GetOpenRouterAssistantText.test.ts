@@ -1,10 +1,12 @@
+/* eslint-disable @cspell/spellchecker */
+
 import { expect, test } from '@jest/globals'
 import { getOpenRouterAssistantText } from '../src/parts/GetAiResponse/GetOpenRouterAssistantText.ts'
 
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
-  let fetchInvocation: Parameters<typeof globalThis.fetch> | undefined
-  globalThis.fetch = (async (...args: Parameters<typeof globalThis.fetch>) => {
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocation = args
     return {
       json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
@@ -66,6 +68,55 @@ test('getOpenRouterAssistantText should return too-many-requests error result fo
       statusCode: 429,
       type: 'error',
     })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenRouterAssistantText should include limit info for 429 when auth key endpoint returns usage data', async () => {
+  const originalFetch = globalThis.fetch
+  let invocationCount = 0
+  globalThis.fetch = (async (input: RequestInfo | URL) => {
+    invocationCount++
+    const url = String(input)
+    if (url.endsWith('/chat/completions')) {
+      return {
+        headers: {
+          get: (name: string) => (name === 'retry-after' ? '30' : null),
+        },
+        ok: false,
+        status: 429,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        data: {
+          limit_remaining: 1.5,
+          limit_reset: 'daily',
+          usage: 12.25,
+          usage_daily: 0.75,
+        },
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText('hello', 'openrouter/model', 'or-key-123', 'https://openrouter.ai/api/v1')
+    expect(result).toEqual({
+      details: 'too-many-requests',
+      limitInfo: {
+        limitRemaining: 1.5,
+        limitReset: 'daily',
+        retryAfter: '30',
+        usage: 12.25,
+        usageDaily: 0.75,
+      },
+      statusCode: 429,
+      type: 'error',
+    })
+    expect(invocationCount).toBe(2)
   } finally {
     globalThis.fetch = originalFetch
   }
