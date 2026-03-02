@@ -8,12 +8,11 @@ export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyInput: string): re
   return [
     {
       childCount: 0,
-      className: ClassNames.MultilineInputBox,
+      className: ClassNames.InputBox,
       name: OpenRouterApiKeyInput,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.openRouterApiKeyPlaceholder(),
-      rows: 2,
-      type: VirtualDomElements.TextArea,
+      type: VirtualDomElements.Input,
       value: openRouterApiKeyInput,
     },
     {
