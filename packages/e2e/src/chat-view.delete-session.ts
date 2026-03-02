@@ -9,12 +9,11 @@ type SavedState = {
 }
 
 export const test: Test = async ({ Command, expect, Locator }) => {
+  // arrange
   await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Chat.reset')
-
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
-
   await Command.execute('Chat.handleInput', 'new session message', 'script')
   await Command.execute('Chat.handleSubmit')
 
