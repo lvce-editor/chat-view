@@ -18,6 +18,10 @@ export const getChatVirtualDom = (
   tokensMax: number,
   openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
+  composerHeight = 28,
+  composerFontSize = 13,
+  composerFontFamily = 'system-ui',
+  composerLineHeight = 20,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
@@ -33,6 +37,10 @@ export const getChatVirtualDom = (
         tokensUsed,
         tokensMax,
         openRouterApiKeyState,
+        composerHeight,
+        composerFontSize,
+        composerFontFamily,
+        composerLineHeight,
       )
     case 'list':
       return getChatModeListVirtualDom(
@@ -44,6 +52,10 @@ export const getChatVirtualDom = (
         usageOverviewEnabled,
         tokensUsed,
         tokensMax,
+        composerHeight,
+        composerFontSize,
+        composerFontFamily,
+        composerLineHeight,
       )
     default:
       return getChatModeUnsupportedVirtualDom()
