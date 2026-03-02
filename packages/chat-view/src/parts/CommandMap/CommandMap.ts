@@ -3,6 +3,7 @@ import * as ClearInput from '../ClearInput/ClearInput.ts'
 import * as StatusBar from '../Create/Create.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
+import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
@@ -35,6 +36,7 @@ export const commandMap = {
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
+  'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
