@@ -40,13 +40,7 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
   }
 
   async clear(): Promise<void> {
-    return clear(
-      this.getDatabasePromise,
-      this.setDatabasePromise,
-      this.state.databaseName,
-      this.state.databaseVersion,
-      this.state.storeName,
-    )
+    return clear(this.getDatabasePromise, this.setDatabasePromise, this.state.databaseName, this.state.databaseVersion, this.state.storeName)
   }
 
   async deleteSession(id: string): Promise<void> {
@@ -61,24 +55,11 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
   }
 
   async getSession(id: string): Promise<ChatSession | undefined> {
-    return getSession(
-      this.getDatabasePromise,
-      this.setDatabasePromise,
-      this.state.databaseName,
-      this.state.databaseVersion,
-      this.state.storeName,
-      id,
-    )
+    return getSession(this.getDatabasePromise, this.setDatabasePromise, this.state.databaseName, this.state.databaseVersion, this.state.storeName, id)
   }
 
   async listSessions(): Promise<readonly ChatSession[]> {
-    return listSessions(
-      this.getDatabasePromise,
-      this.setDatabasePromise,
-      this.state.databaseName,
-      this.state.databaseVersion,
-      this.state.storeName,
-    )
+    return listSessions(this.getDatabasePromise, this.setDatabasePromise, this.state.databaseName, this.state.databaseVersion, this.state.storeName)
   }
 
   async setSession(session: ChatSession): Promise<void> {
