@@ -42,7 +42,7 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
           },
           {
             childCount: 1,
-            className: ClassNames.Button,
+            className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
             name: SAVE_OPEN_ROUTER_API_KEY,
             onClick: DomEventListenerFunctions.HandleClick,
             type: VirtualDomElements.Button,
