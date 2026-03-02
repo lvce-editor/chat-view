@@ -32,8 +32,14 @@ const getDefaultModels = (): readonly ChatModel[] => {
 export const createDefaultState = (): ChatState => {
   const defaultSessionId = 'session-1'
   const defaultModelId = 'test'
+  const composerFontSize = 13
+  const composerLineHeight = 20
   return {
     assetDir: '',
+    composerFontFamily: 'system-ui',
+    composerFontSize,
+    composerHeight: composerLineHeight + 8,
+    composerLineHeight,
     composerValue: '',
     errorCount: 0,
     focus: 'composer',
