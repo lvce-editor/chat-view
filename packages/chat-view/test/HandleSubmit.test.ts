@@ -86,3 +86,52 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
     globalThis.fetch = originalFetch
   }
 })
+
+test('handleSubmit should not fall back to mock response for openRouter models when api key is missing', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello from openrouter',
+    openRouterApiKey: '',
+    selectedModelId: 'openRouter/meta-llama/llama-3.3-70b-instruct:free',
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions[0].messages).toHaveLength(2)
+  expect(result.sessions[0].messages[1].role).toBe('assistant')
+  expect(result.sessions[0].messages[1].text).toBe('OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.')
+  expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleSubmit should not fall back to mock response for openRouter models when request fails', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    throw new Error('network failure')
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openrouter',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'openrouter/meta-llama/llama-3.3-70b-instruct:free',
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe(
+      'OpenRouter request failed. Please check your API key, model availability, or network connection.',
+    )
+    expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
