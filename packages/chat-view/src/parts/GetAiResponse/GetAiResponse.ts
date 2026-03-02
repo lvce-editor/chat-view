@@ -1,5 +1,5 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
+import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'

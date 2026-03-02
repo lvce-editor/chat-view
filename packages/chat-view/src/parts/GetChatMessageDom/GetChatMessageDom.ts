@@ -3,7 +3,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
-import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
+import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 
 export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant

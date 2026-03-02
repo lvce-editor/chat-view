@@ -4,16 +4,20 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
+export const getEmptyMessagesDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatWelcomeMessage,
+      type: VirtualDomElements.Div,
+    },
+    text(Strings.startConversation()),
+  ]
+}
+
 export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.ChatWelcomeMessage,
-        type: VirtualDomElements.Div,
-      },
-      text(Strings.startConversation()),
-    ]
+    return getEmptyMessagesDom()
   }
   return [
     {

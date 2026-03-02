@@ -122,7 +122,7 @@ test('loadContent should load only selected session messages from async storage'
   expect(result.viewMode).toBe('detail')
 })
 
-test('loadContent should restore window bounds from savedState', async () => {
+test('loadContent should keep window bounds from current state', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     height: 40,
@@ -137,10 +137,10 @@ test('loadContent should restore window bounds from savedState', async () => {
     y: 120,
   }
   const result = await LoadContent.loadContent(state, savedState)
-  expect(result.x).toBe(110)
-  expect(result.y).toBe(120)
-  expect(result.width).toBe(130)
-  expect(result.height).toBe(140)
+  expect(result.x).toBe(10)
+  expect(result.y).toBe(20)
+  expect(result.width).toBe(30)
+  expect(result.height).toBe(40)
 })
 
 test('loadContent should restore selectedModelId from savedState', async () => {
