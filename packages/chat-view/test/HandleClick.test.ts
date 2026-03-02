@@ -130,12 +130,12 @@ test('handleClick should save openrouter api key to user settings', async () => 
 
 test('handleClick should open OpenRouter API keys settings', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
-    'Main.openUri': async () => {},
+    'Open.openExternal': async () => {},
   })
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'open-openrouter-api-key-settings')
   expect(result).toBe(state)
-  expect(mockRpc.invocations).toEqual([['Main.openUri', 'https://openrouter.ai/settings/keys']])
+  expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://openrouter.ai/settings/keys']])
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
