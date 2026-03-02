@@ -1,9 +1,9 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
+import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
-import { openRouterApiKeyRequiredMessage } from '../OpenRouterApiKeyRequiredMessage/OpenRouterApiKeyRequiredMessage.ts'
 
 export const getAiResponse = async (
   userText: string,

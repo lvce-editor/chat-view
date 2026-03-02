@@ -60,7 +60,5 @@ test('update should persist settings', async () => {
   await Preferences.update({
     'secrets.openRouterApiKey': 'or-key-123',
   })
-  expect(mockRpc.invocations).toEqual([
-    ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-123' }],
-  ])
+  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-123' }]])
 })

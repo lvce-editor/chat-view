@@ -124,9 +124,7 @@ test('handleClick should save openrouter api key to user settings', async () => 
   }
   const result = await HandleClick.handleClick(state, 'save-openrouter-api-key')
   expect(result.openRouterApiKey).toBe('or-key-999')
-  expect(mockRpc.invocations).toEqual([
-    ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }],
-  ])
+  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
