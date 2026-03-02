@@ -65,8 +65,6 @@ const getOpenRouterErrorMessage = (errorResult: GetOpenRouterAssistantTextErrorR
 
 const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {
   switch (errorResult.details) {
-    case 'request-failed':
-      return openApiRequestFailedMessage
     case 'http-error': {
       const errorMessage = errorResult.errorMessage?.trim()
       const hasErrorCode = typeof errorResult.errorCode === 'string' && errorResult.errorCode.length > 0
@@ -107,6 +105,8 @@ const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult)
       }
       return openApiRequestFailedMessage
     }
+    case 'request-failed':
+      return openApiRequestFailedMessage
   }
 }
 
