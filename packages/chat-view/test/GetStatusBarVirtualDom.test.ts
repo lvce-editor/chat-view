@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
