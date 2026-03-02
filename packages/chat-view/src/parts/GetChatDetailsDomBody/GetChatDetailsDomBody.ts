@@ -1,6 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel } from '../../ChatModel/ChatModel.ts'
-import * as ClassNames from '../../ClassNames/ClassNames.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatSendAreaDom/GetChatSendAreaDom.ts'
 
 export const getChatDetailsDom = (

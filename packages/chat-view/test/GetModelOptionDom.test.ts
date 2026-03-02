@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
-import * as GetModelOptionDom from '../src/parts/GetChatDetailsDom/GetModelOptionDom/GetModelOptionDom.ts'
+import * as GetModelOptionDom from '../src/parts/GetModelOptionDom/GetModelOptionDom.ts'
 
 test('getModelOptionDOm should append OpenRouter to openRouter model labels', () => {
   const model = {

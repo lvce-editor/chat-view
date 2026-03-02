@@ -79,3 +79,7 @@ export const dummyChatB = (): string => {
 export const dummyChatC = (): string => {
   return i18nString('Dummy Chat C')
 }
+
+export const unknownViewMode = (): string => {
+  return i18nString('Unknown view mode')
+}

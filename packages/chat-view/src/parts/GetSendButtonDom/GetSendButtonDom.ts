@@ -1,6 +1,6 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 
 export const getSendButtonDom = (isSendDisabled: boolean): readonly VirtualDomNode[] => {
