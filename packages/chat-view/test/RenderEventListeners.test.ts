@@ -41,7 +41,7 @@ test('renderEventListeners should return expected listeners', () => {
     },
     {
       name: DomEventListenersFunctions.HandleInput,
-      params: ['handleInput', EventExpression.TargetValue],
+      params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
     },
     {
       name: DomEventListenersFunctions.HandleModelChange,

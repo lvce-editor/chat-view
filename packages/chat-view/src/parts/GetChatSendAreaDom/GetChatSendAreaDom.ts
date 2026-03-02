@@ -1,11 +1,12 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel } from '../../ChatModel/ChatModel.ts'
-import * as ClassNames from '../../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getModelOptionDOm } from '../GetModelOptionDom/GetModelOptionDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatSendAreaDom = (
   composerValue: string,
@@ -31,10 +32,10 @@ export const getChatSendAreaDom = (
     {
       childCount: 0,
       className: ClassNames.MultilineInputBox,
-      name: 'composer',
+      name: InputName.Composer,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
-      placeholder: Strings.composePlaceholder,
+      placeholder: Strings.composePlaceholder(),
       rows: 4,
       type: VirtualDomElements.TextArea,
       value: composerValue,
@@ -47,7 +48,7 @@ export const getChatSendAreaDom = (
     {
       childCount: models.length,
       className: ClassNames.Select,
-      name: 'model',
+      name: InputName.Model,
       onInput: DomEventListenerFunctions.HandleModelChange,
       type: VirtualDomElements.Select,
       value: selectedModelId,

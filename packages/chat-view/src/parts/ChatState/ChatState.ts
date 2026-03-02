@@ -26,6 +26,7 @@ export interface ChatState {
   readonly nextMessageId: number
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
+  readonly openRouterApiKeyInput: string
   readonly platform: number
   readonly renamingSessionId: string
   readonly selectedModelId: string

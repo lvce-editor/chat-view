@@ -1,7 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession, listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getSavedBounds } from '../GetSavedBounds/GetSavedBounds.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
@@ -33,7 +32,6 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
 }
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
-  const savedBounds = getSavedBounds(savedState)
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   let openRouterApiKey = ''
@@ -67,9 +65,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode === 'detail' ? 'detail' : 'list'
   return {
     ...state,
-    ...savedBounds,
     initial: false,
     openRouterApiKey,
+    openRouterApiKeyInput: openRouterApiKey,
     selectedModelId,
     selectedSessionId,
     sessions,

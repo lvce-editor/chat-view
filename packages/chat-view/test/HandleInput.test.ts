@@ -4,14 +4,21 @@ import * as HandleInput from '../src/parts/HandleInput/HandleInput.ts'
 
 test('handleInput should update composer value', async () => {
   const state = createDefaultState()
-  const result = await HandleInput.handleInput(state, 'hello', 'user')
+  const result = await HandleInput.handleInput(state, 'composer', 'hello', 'user')
   expect(result.composerValue).toBe('hello')
   expect(result.inputSource).toBe('user')
 })
 
 test('handleInput should mark script input source', async () => {
   const state = createDefaultState()
-  const result = await HandleInput.handleInput(state, 'hello', 'script')
+  const result = await HandleInput.handleInput(state, 'composer', 'hello', 'script')
   expect(result.composerValue).toBe('hello')
   expect(result.inputSource).toBe('script')
+})
+
+test('handleInput should update openRouterApiKeyInput when editing api key textarea', async () => {
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'open-router-api-key', 'or-key-abc')
+  expect(result.openRouterApiKeyInput).toBe('or-key-abc')
+  expect(result.composerValue).toBe('')
 })

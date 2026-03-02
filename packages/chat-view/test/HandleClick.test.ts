@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import { beforeEach, expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
@@ -112,6 +113,19 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleClick should save openrouter api key to user settings', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.update': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    openRouterApiKeyInput: 'or-key-999',
+  }
+  const result = await HandleClick.handleClick(state, 'save-openrouter-api-key')
+  expect(result.openRouterApiKey).toBe('or-key-999')
+  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {

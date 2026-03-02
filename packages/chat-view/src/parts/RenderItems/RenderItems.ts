@@ -3,8 +3,20 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
-  const { composerValue, initial, models, selectedModelId, selectedSessionId, sessions, tokensMax, tokensUsed, uid, usageOverviewEnabled, viewMode } =
-    newState
+  const {
+    composerValue,
+    initial,
+    models,
+    openRouterApiKeyInput,
+    selectedModelId,
+    selectedSessionId,
+    sessions,
+    tokensMax,
+    tokensUsed,
+    uid,
+    usageOverviewEnabled,
+    viewMode,
+  } = newState
   if (initial) {
     return [ViewletCommand.SetDom2, uid, []]
   }
@@ -12,6 +24,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     sessions,
     selectedSessionId,
     composerValue,
+    openRouterApiKeyInput,
     viewMode,
     models,
     selectedModelId,

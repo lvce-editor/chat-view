@@ -2,16 +2,17 @@ import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
       className: ClassNames.IconButton,
-      name: 'back',
+      name: InputName.Back,
       onClick: DomEventListenerFunctions.HandleClickBack,
       role: AriaRoles.Button,
-      title: Strings.backToChats,
+      title: Strings.backToChats(),
       type: VirtualDomElements.Button,
     },
     {

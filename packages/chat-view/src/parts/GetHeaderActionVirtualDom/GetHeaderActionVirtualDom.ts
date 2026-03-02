@@ -1,10 +1,11 @@
 import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { InputName } from '../InputName/InputName.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getHeaderActionVirtualDom = (item: {
   readonly icon: string
   readonly title: string
-  readonly name: string
+  readonly name: InputName
   readonly onClick: number
 }): readonly VirtualDomNode[] => {
   return [

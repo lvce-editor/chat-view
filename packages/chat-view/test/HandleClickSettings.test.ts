@@ -1,6 +1,13 @@
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as HandleClickSettings from '../src/parts/HandleClickSettings/HandleClickSettings.ts'
 
-test.skip('handleClickSettings should resolve', async () => {
-  await expect(HandleClickSettings.handleClickSettings()).resolves.toBeUndefined()
+test('handleClickSettings should resolve', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.openUri': async () => {},
+  })
+
+  await HandleClickSettings.handleClickSettings()
+
+  expect(mockRpc.invocations).toEqual([['Main.openUri', 'app://settings.json']])
 })

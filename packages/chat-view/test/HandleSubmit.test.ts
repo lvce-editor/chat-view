@@ -101,7 +101,7 @@ test('handleSubmit should not fall back to mock response for openRouter models w
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.sessions[0].messages[1].text).toBe('OpenRouter API key is not configured. Please set secrets.openRouterApiKey in settings.')
+  expect(result.sessions[0].messages[1].text).toBe('OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.')
   expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })

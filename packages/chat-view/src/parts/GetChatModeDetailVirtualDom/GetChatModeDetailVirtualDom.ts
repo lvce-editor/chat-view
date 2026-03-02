@@ -10,6 +10,7 @@ export const getChatModeDetailVirtualDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
   composerValue: string,
+  openRouterApiKeyInput: string,
   models: readonly ChatModel[],
   selectedModelId: string,
   usageOverviewEnabled: boolean,
@@ -17,7 +18,7 @@ export const getChatModeDetailVirtualDom = (
   tokensMax: number,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle
+  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   return [
     {
@@ -26,7 +27,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages),
+    ...getMessagesDom(messages, openRouterApiKeyInput),
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
   ]
 }
