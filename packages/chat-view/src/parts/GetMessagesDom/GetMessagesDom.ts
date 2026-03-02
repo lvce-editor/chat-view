@@ -15,7 +15,7 @@ export const getEmptyMessagesDom = (): readonly VirtualDomNode[] => {
   ]
 }
 
-export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string): readonly VirtualDomNode[] => {
+export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKeyInput: string, openApiApiKeyInput = ''): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     return getEmptyMessagesDom()
   }
@@ -25,6 +25,6 @@ export const getMessagesDom = (messages: readonly ChatMessage[], openRouterApiKe
       className: 'ChatMessages',
       type: VirtualDomElements.Div,
     },
-    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput)),
+    ...messages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput)),
   ]
 }
