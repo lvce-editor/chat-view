@@ -1,6 +1,4 @@
-const defaultOpenRouterApiBaseUrl = 'https://openrouter.ai/api/v1'
-
 export const getOpenRouterKeyEndpoint = (openRouterApiBaseUrl: string): string => {
-  const trimmedBaseUrl = (openRouterApiBaseUrl || defaultOpenRouterApiBaseUrl).replace(/\/+$/, '')
+  const trimmedBaseUrl = openRouterApiBaseUrl.replace(/\/+$/, '')
   return `${trimmedBaseUrl}/auth/key`
 }
