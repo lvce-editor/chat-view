@@ -2,7 +2,11 @@
 
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import { openApiApiKeyRequiredMessage, openRouterTooManyRequestsMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import {
+  openApiApiKeyRequiredMessage,
+  openApiRequestFailedMessage,
+  openRouterTooManyRequestsMessage,
+} from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
@@ -216,4 +220,143 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
+})
+
+test('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        error: {
+          code: 'insufficient_quota',
+          message:
+            'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.',
+          param: null,
+          type: 'insufficient_quota',
+        },
+      }),
+      ok: false,
+      status: 429,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse(
+      'hello',
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      2,
+      'openapi/gpt-4o-mini',
+      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      'https://openrouter.ai/api/v1',
+      false,
+      '',
+      '',
+      0,
+    )
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toContain('OpenAI rate limit exceeded (429: insufficient_quota) [insufficient_quota].')
+    expect(result.text).toContain('You exceeded your current quota, please check your plan and billing details.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should include OpenAI http error details for non-429 responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        error: {
+          code: 'invalid_api_key',
+          message: 'Incorrect API key provided.',
+          type: 'invalid_request_error',
+        },
+      }),
+      ok: false,
+      status: 401,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse(
+      'hello',
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      2,
+      'openapi/gpt-4o-mini',
+      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      'https://openrouter.ai/api/v1',
+      false,
+      '',
+      '',
+      0,
+    )
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('OpenAI request failed (status 401): invalid_api_key [invalid_request_error]. Incorrect API key provided.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should fall back to generic OpenAI request failed message when no error payload is returned', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({}),
+      ok: false,
+      status: 500,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse(
+      'hello',
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      2,
+      'openapi/gpt-4o-mini',
+      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      'https://openrouter.ai/api/v1',
+      false,
+      '',
+      '',
+      0,
+    )
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('OpenAI request failed (status 500).')
+    expect(result.text).not.toBe(openApiRequestFailedMessage)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
