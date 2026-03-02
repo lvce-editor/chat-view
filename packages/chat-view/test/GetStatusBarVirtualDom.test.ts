@@ -210,6 +210,38 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
   })
 })
 
+test('getStatusBarVirtualDom should render disabled OpenRouter save button with Saving text while api key is saving', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: openRouterApiKeyRequiredMessage, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    'or-key-typed',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'saving',
+  )
+  const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
+  const savingText = result.find((node) => node.text === 'Saving...')
+  expect(saveButton).toMatchObject({
+    disabled: true,
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(savingText).toBeDefined()
+})
+
 test('getStatusBarVirtualDom should render OpenAPI api key input and save button for missing key message', () => {
   const sessions = [
     {

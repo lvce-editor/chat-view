@@ -52,7 +52,12 @@ const getOpenRouterTooManyRequestsDom = (): readonly VirtualDomNode[] => {
   ]
 }
 
-export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: string, openApiApiKeyInput = ''): readonly VirtualDomNode[] => {
+export const getChatMessageDom = (
+  message: ChatMessage,
+  openRouterApiKeyInput: string,
+  openApiApiKeyInput = '',
+  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
+): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
@@ -80,7 +85,7 @@ export const getChatMessageDom = (message: ChatMessage, openRouterApiKeyInput: s
     },
     text(message.text),
     ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
-    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput) : []),
+    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
   ]

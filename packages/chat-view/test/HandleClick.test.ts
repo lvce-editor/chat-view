@@ -117,6 +117,7 @@ test('handleClickSend should submit message', async () => {
 
 test('handleClick should save openrouter api key to user settings', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
   })
   const state: ChatState = {
@@ -125,11 +126,12 @@ test('handleClick should save openrouter api key to user settings', async () => 
   }
   const result = await HandleClick.handleClick(state, 'save-openrouter-api-key')
   expect(result.openRouterApiKey).toBe('or-key-999')
-  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
+  expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
 })
 
 test('handleClick should retry previous prompt after saving openrouter api key', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
   })
   const originalFetch = globalThis.fetch
@@ -171,7 +173,7 @@ test('handleClick should retry previous prompt after saving openrouter api key',
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('Recovered OpenRouter response')
-    expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
+    expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
   } finally {
     globalThis.fetch = originalFetch
   }

@@ -10,7 +10,9 @@ export const getMissingApiKeyDom = ({
   inputValue,
   openSettingsButtonName,
   placeholder,
+  saveButtonDisabled = false,
   saveButtonName,
+  saveButtonText = Strings.save(),
 }: MissingApiKeyDomParams): readonly VirtualDomNode[] => {
   return [
     {
@@ -34,11 +36,12 @@ export const getMissingApiKeyDom = ({
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
+      disabled: saveButtonDisabled,
       name: saveButtonName,
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
     },
-    text(Strings.save()),
+    text(saveButtonText),
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),

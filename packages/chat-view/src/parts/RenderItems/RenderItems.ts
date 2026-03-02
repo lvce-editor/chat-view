@@ -9,6 +9,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     models,
     openApiApiKeyInput,
     openRouterApiKeyInput,
+    openRouterApiKeyState,
     selectedModelId,
     selectedSessionId,
     sessions,
@@ -33,6 +34,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     tokensUsed,
     tokensMax,
     openApiApiKeyInput,
+    openRouterApiKeyState,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

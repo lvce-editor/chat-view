@@ -33,6 +33,7 @@ export interface ChatState {
   readonly openRouterApiKey: string
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeysSettingsUrl: string
+  readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly platform: number
   readonly renamingSessionId: string
   readonly selectedModelId: string
