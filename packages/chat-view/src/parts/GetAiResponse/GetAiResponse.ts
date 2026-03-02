@@ -5,25 +5,43 @@ import { getMockOpenRouterAssistantText } from './GetMockOpenRouterAssistantText
 import { getOpenApiAssistantText } from './GetOpenApiAssistantText.ts'
 import { getOpenApiErrorMessage } from './GetOpenApiErrorMessage.ts'
 import { getOpenApiModelId } from './GetOpenApiModelId.ts'
-import { getOpenRouArMistentTsxtage } from './GetOpenArristontTMxtessage.ts'
-import { getOpenRouErrorMersignext } from './GetOpenErrorMeueAgsntText.ts'
+import { getOpenRouterAssistantText } from './GetOpenRouterAssistantText.ts'
+import { getOpenRouterErrorMessage } from './GetOpenRouterErrorMessage.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
+import { isOpenApiModel } from './IsOpenApiModel.ts'
+import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
-export const getAiResponse = async (
-  userText: string,
-  messages: readonly ChatMessage[],
-  nextMessageId: number,
-  selectedModelId: string,
-  models: readonly ChatModel[],
-  openApiApiKey: string,
-  openApiApiBaseUrl: string,
-  openRouterApiKey: string,
-  openRouterApiBaseUrl: string,
-  useMockApi: boolean,
-  mockApiCommandId: string,
-  assetDir: string,
-  platform: number,
-): Promise<ChatMessage> => {
+type GetAiResponseOptions = {
+  readonly assetDir: string
+  readonly messages: readonly ChatMessage[]
+  readonly mockApiCommandId: string
+  readonly models: readonly ChatModel[]
+  readonly nextMessageId: number
+  readonly openApiApiBaseUrl: string
+  readonly openApiApiKey: string
+  readonly openRouterApiBaseUrl: string
+  readonly openRouterApiKey: string
+  readonly platform: number
+  readonly selectedModelId: string
+  readonly useMockApi: boolean
+  readonly userText: string
+}
+
+export const getAiResponse = async ({
+  assetDir,
+  messages,
+  mockApiCommandId,
+  models,
+  nextMessageId,
+  openApiApiBaseUrl,
+  openApiApiKey,
+  openRouterApiBaseUrl,
+  openRouterApiKey,
+  platform,
+  selectedModelId,
+  useMockApi,
+  userText,
+}: GetAiResponseOptions): Promise<ChatMessage> => {
   let text = ''
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)

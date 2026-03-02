@@ -31,21 +31,21 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
 
   const retryMessages = session.messages.slice(0, -1)
 
-  const assistantMessage = await getAiResponse(
-    previousUserMessage.text,
-    retryMessages,
-    updatedState.nextMessageId,
-    updatedState.selectedModelId,
-    updatedState.models,
-    updatedState.openApiApiKey,
-    updatedState.openApiApiBaseUrl,
-    updatedState.openRouterApiKey,
-    updatedState.openRouterApiBaseUrl,
-    updatedState.useMockApi,
-    updatedState.mockApiCommandId,
-    updatedState.assetDir,
-    updatedState.platform,
-  )
+  const assistantMessage = await getAiResponse({
+    assetDir: updatedState.assetDir,
+    messages: retryMessages,
+    mockApiCommandId: updatedState.mockApiCommandId,
+    models: updatedState.models,
+    nextMessageId: updatedState.nextMessageId,
+    openApiApiBaseUrl: updatedState.openApiApiBaseUrl,
+    openApiApiKey: updatedState.openApiApiKey,
+    openRouterApiBaseUrl: updatedState.openRouterApiBaseUrl,
+    openRouterApiKey: updatedState.openRouterApiKey,
+    platform: updatedState.platform,
+    selectedModelId: updatedState.selectedModelId,
+    useMockApi: updatedState.useMockApi,
+    userText: previousUserMessage.text,
+  })
 
   const updatedSession = {
     ...session,

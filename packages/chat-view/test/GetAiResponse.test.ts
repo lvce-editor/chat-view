@@ -35,9 +35,9 @@ test('getAiResponse should include OpenRouter raw 429 metadata message in assist
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getAiResponse(
-      'hello',
-      [
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
         {
           id: 'message-1',
           role: 'user',
@@ -45,18 +45,18 @@ test('getAiResponse should include OpenRouter raw 429 metadata message in assist
           time: '10:00',
         },
       ],
-      2,
-      'openrouter/model',
-      [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
-      '',
-      'https://api.openai.com/v1',
-      'or-key-123',
-      'https://openrouter.ai/api/v1',
-      false,
-      '',
-      '',
-      0,
-    )
+      mockApiCommandId: '',
+      models: [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: 'or-key-123',
+      platform: 0,
+      selectedModelId: 'openrouter/model',
+      useMockApi: false,
+      userText: 'hello',
+    })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toContain(openRouterTooManyRequestsMessage)
@@ -79,9 +79,9 @@ test('getAiResponse should use mock api command for OpenRouter models when enabl
     },
   })
 
-  const result = await getAiResponse(
-    'hello',
-    [
+  const result = await getAiResponse({
+    assetDir: '/tmp',
+    messages: [
       {
         id: 'message-1',
         role: 'user',
@@ -89,18 +89,18 @@ test('getAiResponse should use mock api command for OpenRouter models when enabl
         time: '10:00',
       },
     ],
-    2,
-    'openrouter/model',
-    [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
-    '',
-    'https://api.openai.com/v1',
-    '',
-    'https://openrouter.ai/api/v1',
-    true,
-    'ChatE2e.mockApi',
-    '/tmp',
-    3,
-  )
+    mockApiCommandId: 'ChatE2e.mockApi',
+    models: [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 3,
+    selectedModelId: 'openrouter/model',
+    useMockApi: true,
+    userText: 'hello',
+  })
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe('Mocked OpenRouter response from command')
@@ -144,9 +144,9 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
     },
   })
 
-  const result = await getAiResponse(
-    'hello',
-    [
+  const result = await getAiResponse({
+    assetDir: '/tmp',
+    messages: [
       {
         id: 'message-1',
         role: 'user',
@@ -154,18 +154,18 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
         time: '10:00',
       },
     ],
-    2,
-    'openrouter/model',
-    [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
-    '',
-    'https://api.openai.com/v1',
-    '',
-    'https://openrouter.ai/api/v1',
-    true,
-    'ChatE2e.mockApi',
-    '/tmp',
-    3,
-  )
+    mockApiCommandId: 'ChatE2e.mockApi',
+    models: [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 3,
+    selectedModelId: 'openrouter/model',
+    useMockApi: true,
+    userText: 'hello',
+  })
 
   expect(result.role).toBe('assistant')
   expect(result.text).toContain(openRouterTooManyRequestsMessage)
@@ -195,9 +195,9 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
 })
 
 test('getAiResponse should return OpenAI key required message for OpenAPI model when key is missing', async () => {
-  const result = await getAiResponse(
-    'hello',
-    [
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
       {
         id: 'message-1',
         role: 'user',
@@ -205,18 +205,18 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
         time: '10:00',
       },
     ],
-    2,
-    'openapi/gpt-4o-mini',
-    [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
-    '',
-    'https://api.openai.com/v1',
-    '',
-    'https://openrouter.ai/api/v1',
-    false,
-    '',
-    '',
-    0,
-  )
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4o-mini',
+    useMockApi: false,
+    userText: 'hello',
+  })
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
@@ -241,9 +241,9 @@ test('getAiResponse should include OpenAI 429 quota error message details in ass
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getAiResponse(
-      'hello',
-      [
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
         {
           id: 'message-1',
           role: 'user',
@@ -251,18 +251,18 @@ test('getAiResponse should include OpenAI 429 quota error message details in ass
           time: '10:00',
         },
       ],
-      2,
-      'openapi/gpt-4o-mini',
-      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
-      'oa-key-123',
-      'https://api.openai.com/v1',
-      '',
-      'https://openrouter.ai/api/v1',
-      false,
-      '',
-      '',
-      0,
-    )
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: 'oa-key-123',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      userText: 'hello',
+    })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toContain('OpenAI rate limit exceeded (429: insufficient_quota) [insufficient_quota].')
@@ -289,9 +289,9 @@ test('getAiResponse should include OpenAI http error details for non-429 respons
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getAiResponse(
-      'hello',
-      [
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
         {
           id: 'message-1',
           role: 'user',
@@ -299,18 +299,18 @@ test('getAiResponse should include OpenAI http error details for non-429 respons
           time: '10:00',
         },
       ],
-      2,
-      'openapi/gpt-4o-mini',
-      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
-      'oa-key-123',
-      'https://api.openai.com/v1',
-      '',
-      'https://openrouter.ai/api/v1',
-      false,
-      '',
-      '',
-      0,
-    )
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: 'oa-key-123',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      userText: 'hello',
+    })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('OpenAI request failed (status 401): invalid_api_key [invalid_request_error]. Incorrect API key provided.')
@@ -330,9 +330,9 @@ test('getAiResponse should fall back to generic OpenAI request failed message wh
   }) as typeof globalThis.fetch
 
   try {
-    const result = await getAiResponse(
-      'hello',
-      [
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
         {
           id: 'message-1',
           role: 'user',
@@ -340,18 +340,18 @@ test('getAiResponse should fall back to generic OpenAI request failed message wh
           time: '10:00',
         },
       ],
-      2,
-      'openapi/gpt-4o-mini',
-      [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
-      'oa-key-123',
-      'https://api.openai.com/v1',
-      '',
-      'https://openrouter.ai/api/v1',
-      false,
-      '',
-      '',
-      0,
-    )
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: 'oa-key-123',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      userText: 'hello',
+    })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('OpenAI request failed (status 500).')
