@@ -1,7 +1,15 @@
 /* eslint-disable @cspell/spellchecker */
 
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { getOpenRouterAssistantText } from '../src/parts/GetAiResponse/GetOpenRouterAssistantText.ts'
+
+const parseJsonRequestBody = (body: unknown): any => {
+  if (typeof body !== 'string') {
+    return {}
+  }
+  return JSON.parse(body)
+}
 
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
@@ -40,6 +48,8 @@ test('getOpenRouterAssistantText should return success result when response is o
       'openrouter/model',
       'or-key-123',
       'https://openrouter.ai/api/v1',
+      '',
+      0,
     )
     expect(result).toEqual({
       text: 'hello from openrouter',
@@ -54,16 +64,30 @@ test('getOpenRouterAssistantText should return success result when response is o
       },
       method: 'POST',
     })
-    expect(fetchInvocation?.[1]).toMatchObject({
-      body: JSON.stringify({
-        messages: [
-          { content: 'hello', role: 'user' },
-          { content: 'Hi! How can I help?', role: 'assistant' },
-          { content: 'Explain recursion.', role: 'user' },
-        ],
-        model: 'openrouter/model',
-      }),
-    })
+    const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
+    expect(payload.messages).toEqual([
+      { content: 'hello', role: 'user' },
+      { content: 'Hi! How can I help?', role: 'assistant' },
+      { content: 'Explain recursion.', role: 'user' },
+    ])
+    expect(payload.model).toBe('openrouter/model')
+    expect(payload.tool_choice).toBe('auto')
+    expect(payload.tools).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          function: expect.objectContaining({ name: 'read_file' }),
+          type: 'function',
+        }),
+        expect.objectContaining({
+          function: expect.objectContaining({ name: 'write_file' }),
+          type: 'function',
+        }),
+        expect.objectContaining({
+          function: expect.objectContaining({ name: 'list_files' }),
+          type: 'function',
+        }),
+      ]),
+    )
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -88,6 +112,8 @@ test('getOpenRouterAssistantText should return request-failed error result when 
       'openrouter/model',
       'or-key-123',
       'https://openrouter.ai/api/v1',
+      '',
+      0,
     )
     expect(result).toEqual({
       details: 'request-failed',
@@ -120,6 +146,8 @@ test('getOpenRouterAssistantText should return too-many-requests error result fo
       'openrouter/model',
       'or-key-123',
       'https://openrouter.ai/api/v1',
+      '',
+      0,
     )
     expect(result).toEqual({
       details: 'too-many-requests',
@@ -173,6 +201,8 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
       'openrouter/model',
       'or-key-123',
       'https://openrouter.ai/api/v1',
+      '',
+      0,
     )
     expect(result).toEqual({
       details: 'too-many-requests',
@@ -230,6 +260,8 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
       'openrouter/model',
       'or-key-123',
       'https://openrouter.ai/api/v1',
+      '',
+      0,
     )
     expect(result).toEqual({
       details: 'too-many-requests',
@@ -237,6 +269,149 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
       statusCode: 429,
       type: 'error',
     })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'ExtensionHostManagement.activateByEvent': async () => {},
+    'FileSystem.readFile': async (path: string) => {
+      expect(path).toBe('README.md')
+      return '# Workspace Readme'
+    },
+  })
+  const originalFetch = globalThis.fetch
+  let invocationCount = 0
+  globalThis.fetch = (async () => {
+    invocationCount++
+    if (invocationCount === 1) {
+      return {
+        json: async () => ({
+          choices: [
+            {
+              message: {
+                content: '',
+                role: 'assistant',
+                tool_calls: [
+                  {
+                    function: {
+                      arguments: JSON.stringify({ path: 'README.md' }),
+                      name: 'read_file',
+                    },
+                    id: 'tool-1',
+                    type: 'function',
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        choices: [{ message: { content: 'Loaded README successfully.' } }],
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'read README.md',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+      '/tmp',
+      3,
+    )
+    expect(result).toEqual({
+      text: 'Loaded README successfully.',
+      type: 'success',
+    })
+    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'README.md']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenRouterAssistantText should block tool paths outside workspace', async () => {
+  const originalFetch = globalThis.fetch
+  const requests: Array<{ readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> }> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const init = args[1] as RequestInit | undefined
+    requests.push((init ? parseJsonRequestBody(init.body) : {}) as { readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> })
+    if (requests.length === 1) {
+      return {
+        json: async () => ({
+          choices: [
+            {
+              message: {
+                content: '',
+                role: 'assistant',
+                tool_calls: [
+                  {
+                    function: {
+                      arguments: JSON.stringify({ path: '../secret.txt' }),
+                      name: 'read_file',
+                    },
+                    id: 'tool-1',
+                    type: 'function',
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        choices: [{ message: { content: 'Denied as expected.' } }],
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'read ../secret.txt',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+      '',
+      0,
+    )
+    expect(result).toEqual({
+      text: 'Denied as expected.',
+      type: 'success',
+    })
+    const secondRequestMessages = requests[1]?.messages ?? []
+    const toolResultMessage = secondRequestMessages.find((message) => message.role === 'tool')
+    const toolResultContent = typeof toolResultMessage?.content === 'string' ? toolResultMessage.content : ''
+    expect(toolResultContent).toContain('Access denied')
   } finally {
     globalThis.fetch = originalFetch
   }

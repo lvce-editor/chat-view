@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
@@ -119,96 +120,135 @@ export const getOpenRouterAssistantText = async (
   modelId: string,
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
+  assetDir: string,
+  platform: number,
 ): Promise<GetOpenRouterAssistantTextResult> => {
-  let response: Response
-  try {
-    response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
-      body: JSON.stringify({
-        messages: messages.map((message) => ({
-          content: message.text,
-          role: message.role,
-        })),
-        model: modelId,
-      }),
-      headers: {
-        Authorization: `Bearer ${openRouterApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    })
-  } catch {
-    return {
-      details: 'request-failed',
-      type: 'error',
-    }
-  }
-
-  if (!response.ok) {
-    if (response.status === 429) {
-      const retryAfter = response.headers?.get?.('retry-after') ?? null
-      const rawMessage = await getOpenRouterRaw429Message(response)
-      const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
+  const completionMessages: any[] = messages.map((message) => ({
+    content: message.text,
+    role: message.role,
+  }))
+  const tools = getBasicChatTools()
+  const maxToolIterations = 4
+  for (let i = 0; i <= maxToolIterations; i++) {
+    let response: Response
+    try {
+      response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
+        body: JSON.stringify({
+          messages: completionMessages,
+          model: modelId,
+          tool_choice: 'auto',
+          tools,
+        }),
+        headers: {
+          Authorization: `Bearer ${openRouterApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      })
+    } catch {
       return {
-        details: 'too-many-requests',
-        limitInfo:
-          limitInfo || retryAfter
-            ? {
-                ...limitInfo,
-                retryAfter,
-              }
-            : undefined,
-        rawMessage,
-        statusCode: 429,
+        details: 'request-failed',
         type: 'error',
       }
     }
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        const retryAfter = response.headers?.get?.('retry-after') ?? null
+        const rawMessage = await getOpenRouterRaw429Message(response)
+        const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
+        return {
+          details: 'too-many-requests',
+          limitInfo:
+            limitInfo || retryAfter
+              ? {
+                  ...limitInfo,
+                  retryAfter,
+                }
+              : undefined,
+          rawMessage,
+          statusCode: 429,
+          type: 'error',
+        }
+      }
+      return {
+        details: 'http-error',
+        statusCode: response.status,
+        type: 'error',
+      }
+    }
+
+    let parsed: unknown
+    try {
+      parsed = (await response.json()) as unknown
+    } catch {
+      return {
+        details: 'request-failed',
+        type: 'error',
+      }
+    }
+
+    if (!parsed || typeof parsed !== 'object') {
+      return {
+        text: '',
+        type: 'success',
+      }
+    }
+    const choices = Reflect.get(parsed, 'choices')
+    if (!Array.isArray(choices)) {
+      return {
+        text: '',
+        type: 'success',
+      }
+    }
+    const firstChoice = choices[0]
+    if (!firstChoice || typeof firstChoice !== 'object') {
+      return {
+        text: '',
+        type: 'success',
+      }
+    }
+    const message = Reflect.get(firstChoice, 'message')
+    if (!message || typeof message !== 'object') {
+      return {
+        text: '',
+        type: 'success',
+      }
+    }
+
+    const toolCalls = Reflect.get(message, 'tool_calls')
+    if (Array.isArray(toolCalls) && toolCalls.length > 0) {
+      completionMessages.push(message)
+      for (const toolCall of toolCalls) {
+        if (!toolCall || typeof toolCall !== 'object') {
+          continue
+        }
+        const id = Reflect.get(toolCall, 'id')
+        const toolFunction = Reflect.get(toolCall, 'function')
+        if (typeof id !== 'string' || !toolFunction || typeof toolFunction !== 'object') {
+          continue
+        }
+        const name = Reflect.get(toolFunction, 'name')
+        const rawArguments = Reflect.get(toolFunction, 'arguments')
+        const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
+        completionMessages.push({
+          content,
+          role: 'tool',
+          tool_call_id: id,
+        })
+      }
+      continue
+    }
+
+    const content = Reflect.get(message, 'content')
     return {
-      details: 'http-error',
-      statusCode: response.status,
-      type: 'error',
+      text: getTextContent(content),
+      type: 'success',
     }
   }
 
-  let parsed: unknown
-  try {
-    parsed = (await response.json()) as unknown
-  } catch {
-    return {
-      details: 'request-failed',
-      type: 'error',
-    }
-  }
-
-  if (!parsed || typeof parsed !== 'object') {
-    return {
-      text: '',
-      type: 'success',
-    }
-  }
-  const choices = Reflect.get(parsed, 'choices')
-  if (!Array.isArray(choices)) {
-    return {
-      text: '',
-      type: 'success',
-    }
-  }
-  const firstChoice = choices[0]
-  if (!firstChoice || typeof firstChoice !== 'object') {
-    return {
-      text: '',
-      type: 'success',
-    }
-  }
-  const message = Reflect.get(firstChoice, 'message')
-  if (!message || typeof message !== 'object') {
-    return {
-      text: '',
-      type: 'success',
-    }
-  }
-  const content = Reflect.get(message, 'content')
   return {
-    text: getTextContent(content),
-    type: 'success',
+    details: 'request-failed',
+    type: 'error',
   }
 }
