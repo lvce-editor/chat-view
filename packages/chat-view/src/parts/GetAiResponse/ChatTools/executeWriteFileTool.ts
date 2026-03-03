@@ -4,7 +4,7 @@ import { executeFileSystemCommand } from './executeFileSystemCommand.ts'
 import { isPathTraversalAttempt } from './isPathTraversalAttempt.ts'
 import { normalizeRelativePath } from './normalizeRelativePath.ts'
 
-export const executeWriteFileTool = async (args: Record<string, unknown>, options: ExecuteToolOptions): Promise<string> => {
+export const executeWriteFileTool = async (args: Readonly<Record<string, unknown>>, options: ExecuteToolOptions): Promise<string> => {
   const filePath = typeof args.path === 'string' ? args.path : ''
   const content = typeof args.content === 'string' ? args.content : ''
   if (!filePath || isPathTraversalAttempt(filePath)) {

@@ -1,8 +1,15 @@
 /* eslint-disable @cspell/spellchecker */
 
 import { expect, test } from '@jest/globals'
-import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { getOpenRouterAssistantText } from '../src/parts/GetAiResponse/GetOpenRouterAssistantText.ts'
+
+const parseJsonRequestBody = (body: unknown): any => {
+  if (typeof body !== 'string') {
+    return {}
+  }
+  return JSON.parse(body)
+}
 
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
@@ -57,7 +64,7 @@ test('getOpenRouterAssistantText should return success result when response is o
       },
       method: 'POST',
     })
-    const payload = JSON.parse(String((fetchInvocation?.[1] as RequestInit)?.body))
+    const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
     expect(payload.messages).toEqual([
       { content: 'hello', role: 'user' },
       { content: 'Hi! How can I help?', role: 'assistant' },
@@ -270,9 +277,7 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
 test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
-  })
-  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostFileSystem.readFile': async (_protocol: string, path: string) => {
+    'FileSystem.readFile': async (path: string) => {
       expect(path).toBe('README.md')
       return '# Workspace Readme'
     },
@@ -336,8 +341,9 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toContainEqual(['ExtensionHostManagement.activateByEvent', 'onFileSystem', '/tmp', 3])
-    expect(mockExtensionHostRpc.invocations).toEqual([['ExtensionHostFileSystem.readFile', 'file', 'README.md']])
+    expect(mockRendererRpc.invocations).toEqual([
+      ['FileSystem.readFile', 'README.md'],
+    ])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -345,9 +351,10 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
 
 test('getOpenRouterAssistantText should block tool paths outside workspace', async () => {
   const originalFetch = globalThis.fetch
-  const requests: any[] = []
-  globalThis.fetch = (async (_input: unknown, init?: RequestInit) => {
-    requests.push(init ? JSON.parse(String(init.body)) : {})
+  const requests: Array<{ readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> }> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const init = args[1] as RequestInit | undefined
+    requests.push((init ? parseJsonRequestBody(init.body) : {}) as { readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> })
     if (requests.length === 1) {
       return {
         json: async () => ({
@@ -403,9 +410,10 @@ test('getOpenRouterAssistantText should block tool paths outside workspace', asy
       text: 'Denied as expected.',
       type: 'success',
     })
-    const secondRequestMessages = requests[1].messages
-    const toolResultMessage = secondRequestMessages.find((message: any) => message.role === 'tool')
-    expect(toolResultMessage.content).toContain('Access denied')
+    const secondRequestMessages = requests[1]?.messages ?? []
+    const toolResultMessage = secondRequestMessages.find((message) => message.role === 'tool')
+    const toolResultContent = typeof toolResultMessage?.content === 'string' ? toolResultMessage.content : ''
+    expect(toolResultContent).toContain('Access denied')
   } finally {
     globalThis.fetch = originalFetch
   }

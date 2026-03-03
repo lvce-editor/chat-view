@@ -1,3 +1,4 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
 import { OnFileSystem } from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.ts'
 import { FileSystemReadDirWithFileTypes, FileSystemReadFile, FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
@@ -143,7 +144,7 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
     }
     const normalizedPath = normalizeRelativePath(filePath)
     try {
-      const content = await executeFileSystemCommand(FileSystemReadFile, ['file', normalizedPath], options)
+      const content = await RendererWorker.readFile(normalizedPath)
       return JSON.stringify({ content, path: normalizedPath })
     } catch (error) {
       return JSON.stringify({ error: String(error), path: normalizedPath })
@@ -172,7 +173,7 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
     }
     const normalizedPath = normalizeRelativePath(folderPath)
     try {
-      const entries = await executeFileSystemCommand(FileSystemReadDirWithFileTypes, ['file', normalizedPath], options)
+      const entries = await RendererWorker.invoke('FileSystem.readDirWithFileTypes', normalizedPath)
       return JSON.stringify({ entries, path: normalizedPath })
     } catch (error) {
       return JSON.stringify({ error: String(error), path: normalizedPath })
