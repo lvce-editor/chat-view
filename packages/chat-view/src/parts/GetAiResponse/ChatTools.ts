@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
 import { OnFileSystem } from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.ts'
-import { FileSystemReadDirWithFileTypes, FileSystemReadFile, FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import { FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 
 type ChatTool = {
   readonly type: 'function'
