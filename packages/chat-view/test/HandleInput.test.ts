@@ -16,6 +16,18 @@ test('handleInput should mark script input source', async () => {
   expect(result.inputSource).toBe('script')
 })
 
+test('handleInput should cap composer height based on maxComposerRows', async () => {
+  const state = {
+    ...createDefaultState(),
+    composerLineHeight: 20,
+    maxComposerRows: 3,
+    width: 400,
+  }
+  const value = new Array(100).fill('line').join('\n')
+  const result = await HandleInput.handleInput(state, 'composer', value, 'user')
+  expect(result.composerHeight).toBe(68)
+})
+
 test('handleInput should update openRouterApiKeyInput when editing api key textarea', async () => {
   const state = createDefaultState()
   const result = await HandleInput.handleInput(state, 'open-router-api-key', 'or-key-abc')

@@ -51,6 +51,7 @@ export const createDefaultState = (): ChatState => {
     inputSource: 'script',
     lastSubmittedSessionId: '',
     listItemHeight: 40,
+    maxComposerRows: 5,
     mockApiCommandId: '',
     models: getDefaultModels(),
     nextMessageId: 1,

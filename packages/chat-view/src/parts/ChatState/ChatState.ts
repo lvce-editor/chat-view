@@ -26,6 +26,7 @@ export interface ChatState {
   readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
+  readonly maxComposerRows: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number

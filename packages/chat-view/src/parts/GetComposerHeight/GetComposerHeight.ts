@@ -9,22 +9,27 @@ const getMinComposerHeight = (lineHeight: number): number => {
   return lineHeight + 8
 }
 
+const getMaxComposerHeight = (lineHeight: number, maxComposerRows: number): number => {
+  return lineHeight * Math.max(1, maxComposerRows) + 8
+}
+
 const estimateComposerHeight = (value: string, lineHeight: number): number => {
   const lineCount = value.split('\n').length
   return lineCount * lineHeight + 8
 }
 
 export const getComposerHeight = async (state: ChatState, value: string, width = state.width): Promise<number> => {
-  const { composerFontFamily, composerFontSize, composerLineHeight } = state
+  const { composerFontFamily, composerFontSize, composerLineHeight, maxComposerRows } = state
   const minimumHeight = getMinComposerHeight(composerLineHeight)
+  const maximumHeight = getMaxComposerHeight(composerLineHeight, maxComposerRows)
   const content = value || ' '
   const composerWidth = getComposerWidth(width)
   try {
     const measuredHeight = await measureTextBlockHeight(content, composerFontFamily, composerFontSize, composerLineHeight, composerWidth)
     const height = Math.ceil(measuredHeight) + 8
-    return Math.max(minimumHeight, height)
+    return Math.max(minimumHeight, Math.min(maximumHeight, height))
   } catch {
-    return Math.max(minimumHeight, estimateComposerHeight(value, composerLineHeight))
+    return Math.max(minimumHeight, Math.min(maximumHeight, estimateComposerHeight(value, composerLineHeight)))
   }
 }
 
