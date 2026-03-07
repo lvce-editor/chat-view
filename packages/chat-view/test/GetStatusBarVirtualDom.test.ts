@@ -1,4 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
+// cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
