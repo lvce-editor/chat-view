@@ -18,6 +18,7 @@ export const getChatModeListVirtualDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
+  chatListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -26,7 +27,7 @@ export const getChatModeListVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(),
-    ...getChatListDom(sessions, selectedSessionId),
+    ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       models,

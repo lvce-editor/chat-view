@@ -16,6 +16,7 @@ import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
+import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
@@ -40,6 +41,7 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
+  'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
@@ -50,6 +52,7 @@ export const commandMap = {
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
+  'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,

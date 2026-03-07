@@ -37,6 +37,7 @@ export const createDefaultState = (): ChatState => {
   const composerLineHeight = 20
   return {
     assetDir: '',
+    chatListScrollTop: 0,
     composerFontFamily: 'system-ui',
     composerFontSize,
     composerHeight: composerLineHeight + 8,
@@ -52,6 +53,7 @@ export const createDefaultState = (): ChatState => {
     lastSubmittedSessionId: '',
     listItemHeight: 40,
     maxComposerRows: 5,
+    messagesScrollTop: 0,
     mockApiCommandId: '',
     models: getDefaultModels(),
     nextMessageId: 1,

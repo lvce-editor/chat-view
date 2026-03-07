@@ -48,6 +48,14 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleModelChange', EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleChatListScroll,
+      params: ['handleChatListScroll', 'event.target.scrollTop'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleMessagesScroll,
+      params: ['handleMessagesScroll', 'event.target.scrollTop'],
+    },
+    {
       name: DomEventListenersFunctions.HandleFocus,
       params: ['handleInputFocus', EventExpression.TargetName],
     },
