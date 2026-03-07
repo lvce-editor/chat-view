@@ -1,31 +1,34 @@
 import * as Preferences from '../Preferences/Preferences.ts'
 
-export const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string }> => {
-  let openApiApiKey = ''
+const loadOpenApiApiKey = async (): Promise<string> => {
   try {
     const savedOpenApiKey = await Preferences.get('secrets.openApiKey')
     if (typeof savedOpenApiKey === 'string' && savedOpenApiKey) {
-      openApiApiKey = savedOpenApiKey
-    } else {
-      const legacySavedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
-      if (typeof legacySavedOpenApiApiKey === 'string' && legacySavedOpenApiApiKey) {
-        openApiApiKey = legacySavedOpenApiApiKey
-      } else {
-        const legacySavedOpenAiApiKey = await Preferences.get('secrets.openAiApiKey')
-        openApiApiKey = typeof legacySavedOpenAiApiKey === 'string' ? legacySavedOpenAiApiKey : ''
-      }
+      return savedOpenApiKey
     }
+    const legacySavedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
+    if (typeof legacySavedOpenApiApiKey === 'string' && legacySavedOpenApiApiKey) {
+      return legacySavedOpenApiApiKey
+    }
+    const legacySavedOpenAiApiKey = await Preferences.get('secrets.openAiApiKey')
+    return typeof legacySavedOpenAiApiKey === 'string' ? legacySavedOpenAiApiKey : ''
   } catch {
-    openApiApiKey = ''
+    return ''
   }
+}
 
-  let openRouterApiKey = ''
+const loadOpenRouterApiKey = async (): Promise<string> => {
   try {
     const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
-    openRouterApiKey = typeof savedOpenRouterApiKey === 'string' ? savedOpenRouterApiKey : ''
+    return typeof savedOpenRouterApiKey === 'string' ? savedOpenRouterApiKey : ''
   } catch {
-    openRouterApiKey = ''
+    return ''
   }
+}
+
+export const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string }> => {
+  const openApiApiKey = await loadOpenApiApiKey()
+  const openRouterApiKey = await loadOpenRouterApiKey()
 
   return {
     openApiApiKey,
