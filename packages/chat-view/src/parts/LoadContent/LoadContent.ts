@@ -1,10 +1,10 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession, listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
-import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
+import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
+import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
@@ -63,8 +63,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode === 'detail' ? 'detail' : 'list'
   return {
     ...state,
-    initial: false,
     chatListScrollTop,
+    initial: false,
     messagesScrollTop,
     openApiApiKey,
     openApiApiKeyInput: openApiApiKey,
