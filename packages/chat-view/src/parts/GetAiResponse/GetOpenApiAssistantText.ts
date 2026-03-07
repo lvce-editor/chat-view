@@ -1,5 +1,6 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
+import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from './GetOpenApiAssistantText/getOpenApiApiEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
 
@@ -234,6 +235,7 @@ export const getOpenApiAssistantText = async (
         headers: {
           Authorization: `Bearer ${openApiApiKey}`,
           'Content-Type': 'application/json',
+          ...getClientRequestIdHeader(),
         },
         method: 'POST',
       })
