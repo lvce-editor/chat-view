@@ -269,3 +269,53 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
     globalThis.fetch = originalFetch
   }
 })
+
+test('handleSubmit should update assistant message incrementally when streaming is enabled', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"choices":[{"delta":{"content":"Stream"}}]}\n\n',
+      'data: {"choices":[{"delta":{"content":"ing"}}]}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from streaming',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].role).toBe('assistant')
+    expect(result.sessions[0].messages[1].text).toBe('Streaming')
+    expect(result.sessions[0].messages[1].inProgress).toBe(false)
+    expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})

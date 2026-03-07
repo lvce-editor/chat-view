@@ -7,7 +7,7 @@ import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSaved
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
-import * as Preferences from '../Preferences/Preferences.ts'
+import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 
 const toSummarySession = (session: ChatSession): ChatSession => {
   return {
@@ -36,30 +36,7 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
-  let openApiApiKey = ''
-  try {
-    const savedOpenApiKey = await Preferences.get('secrets.openApiKey')
-    if (typeof savedOpenApiKey === 'string' && savedOpenApiKey) {
-      openApiApiKey = savedOpenApiKey
-    } else {
-      const legacySavedOpenApiApiKey = await Preferences.get('secrets.openApiApiKey')
-      if (typeof legacySavedOpenApiApiKey === 'string' && legacySavedOpenApiApiKey) {
-        openApiApiKey = legacySavedOpenApiApiKey
-      } else {
-        const legacySavedOpenAiApiKey = await Preferences.get('secrets.openAiApiKey')
-        openApiApiKey = typeof legacySavedOpenAiApiKey === 'string' ? legacySavedOpenAiApiKey : ''
-      }
-    }
-  } catch {
-    openApiApiKey = ''
-  }
-  let openRouterApiKey = ''
-  try {
-    const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
-    openRouterApiKey = typeof savedOpenRouterApiKey === 'string' ? savedOpenRouterApiKey : ''
-  } catch {
-    openRouterApiKey = ''
-  }
+  const { openApiApiKey, openRouterApiKey } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
