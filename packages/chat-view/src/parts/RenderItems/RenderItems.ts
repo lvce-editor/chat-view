@@ -4,6 +4,7 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
+    chatListScrollTop,
     composerFontFamily,
     composerFontSize,
     composerHeight,
@@ -11,6 +12,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerValue,
     initial,
     models,
+    messagesScrollTop,
     openApiApiKeyInput,
     openRouterApiKeyInput,
     openRouterApiKeyState,
@@ -43,6 +45,8 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerFontSize,
     composerFontFamily,
     composerLineHeight,
+    chatListScrollTop,
+    messagesScrollTop,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

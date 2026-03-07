@@ -167,6 +167,36 @@ test('loadContent should restore detail view from savedState', async () => {
   expect(result.viewMode).toBe('detail')
 })
 
+test('loadContent should restore scroll positions from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatListScrollTop: 1,
+    messagesScrollTop: 2,
+  }
+  const savedState = {
+    chatListScrollTop: 140,
+    messagesScrollTop: 260,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.chatListScrollTop).toBe(140)
+  expect(result.messagesScrollTop).toBe(260)
+})
+
+test('loadContent should ignore invalid saved scroll positions', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatListScrollTop: 33,
+    messagesScrollTop: 44,
+  }
+  const savedState = {
+    chatListScrollTop: 'bad',
+    messagesScrollTop: null,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.chatListScrollTop).toBe(33)
+  expect(result.messagesScrollTop).toBe(44)
+})
+
 test('loadContent should restore selected detail session with messages from savedState', async () => {
   const state: ChatState = {
     ...createDefaultState(),

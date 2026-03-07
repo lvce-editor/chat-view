@@ -6,8 +6,10 @@ import * as SaveState from '../src/parts/SaveState/SaveState.ts'
 test('saveState should persist global state without session payloads', () => {
   const state: ChatState = {
     ...createDefaultState(),
+    chatListScrollTop: 80,
     composerValue: 'draft',
     height: 101,
+    messagesScrollTop: 120,
     nextMessageId: 4,
     renamingSessionId: 'session-1',
     selectedModelId: 'codex-5.3',
@@ -31,4 +33,6 @@ test('saveState should persist global state without session payloads', () => {
   expect(result.y).toBe(22)
   expect(result.width).toBe(99)
   expect(result.height).toBe(101)
+  expect(result.chatListScrollTop).toBe(80)
+  expect(result.messagesScrollTop).toBe(120)
 })
