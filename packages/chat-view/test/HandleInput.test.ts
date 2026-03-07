@@ -23,7 +23,7 @@ test('handleInput should cap composer height based on maxComposerRows', async ()
     maxComposerRows: 3,
     width: 400,
   }
-  const value = Array.from({length: 100}).fill('line').join('\n')
+  const value = Array.from({ length: 100 }).fill('line').join('\n')
   const result = await HandleInput.handleInput(state, 'composer', value, 'user')
   expect(result.composerHeight).toBe(68)
 })
