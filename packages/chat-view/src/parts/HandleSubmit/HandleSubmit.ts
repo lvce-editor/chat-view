@@ -7,7 +7,11 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
-const appendMessageToSelectedSession = (sessions: readonly ChatSession[], selectedSessionId: string, message: ChatMessage): readonly ChatSession[] => {
+const appendMessageToSelectedSession = (
+  sessions: readonly ChatSession[],
+  selectedSessionId: string,
+  message: ChatMessage,
+): readonly ChatSession[] => {
   return sessions.map((session) => {
     if (session.id !== selectedSessionId) {
       return session

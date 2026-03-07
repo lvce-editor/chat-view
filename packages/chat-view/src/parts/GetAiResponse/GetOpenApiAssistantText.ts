@@ -54,10 +54,7 @@ const parseSseEvent = (eventChunk: string): readonly string[] => {
   return dataLines
 }
 
-const parseOpenApiStream = async (
-  response: Response,
-  onTextChunk?: (chunk: string) => Promise<void>,
-): Promise<GetOpenApiAssistantTextResult> => {
+const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: string) => Promise<void>): Promise<GetOpenApiAssistantTextResult> => {
   if (!response.body) {
     return {
       details: 'request-failed',
