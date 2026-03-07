@@ -1,4 +1,5 @@
-import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { GetAiResponseOptions } from './GetAiResponseOptions.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
 import { getMockOpenRouterAssistantText } from './GetMockOpenRouterAssistantText.ts'
@@ -10,22 +11,6 @@ import { getOpenRouterErrorMessage } from './GetOpenRouterErrorMessage.ts'
 import { getOpenRouterModelId } from './GetOpenRouterModelId.ts'
 import { isOpenApiModel } from './IsOpenApiModel.ts'
 import { isOpenRouterModel } from './IsOpenRouterModel.ts'
-
-type GetAiResponseOptions = {
-  readonly assetDir: string
-  readonly messages: readonly ChatMessage[]
-  readonly mockApiCommandId: string
-  readonly models: readonly ChatModel[]
-  readonly nextMessageId: number
-  readonly openApiApiBaseUrl: string
-  readonly openApiApiKey: string
-  readonly openRouterApiBaseUrl: string
-  readonly openRouterApiKey: string
-  readonly platform: number
-  readonly selectedModelId: string
-  readonly useMockApi: boolean
-  readonly userText: string
-}
 
 export const getAiResponse = async ({
   assetDir,
