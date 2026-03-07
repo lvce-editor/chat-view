@@ -91,7 +91,25 @@ test('getStatusBarVirtualDom should restore chat list scroll position', () => {
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 90)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    90,
+  )
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
     onScroll: DomEventListenerFunctions.HandleChatListScroll,
