@@ -374,7 +374,7 @@ test('getAiResponse should stream OpenAI chunks when enabled', async () => {
     return {
       body: {
         getReader: () => ({
-          read: async () => {
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
             if (index >= chunks.length) {
               return { done: true, value: undefined }
             }
