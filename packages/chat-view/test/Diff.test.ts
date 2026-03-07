@@ -76,8 +76,8 @@ test('diff should return RenderScrollTop when scroll positions change', () => {
   const oldState: ChatState = { ...createDefaultState(), sessions }
   const newState: ChatState = {
     ...createDefaultState(),
-    sessions,
     chatListScrollTop: 10,
+    sessions,
   }
   const result = Diff.diff(oldState, newState)
   expect(result).toEqual([DiffType.RenderScrollTop])
