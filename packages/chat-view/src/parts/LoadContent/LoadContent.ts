@@ -3,6 +3,8 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession, listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
+import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
+import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
@@ -75,6 +77,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   }
   const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
   const preferredModelId = savedSelectedModelId || state.selectedModelId
+  const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
+  const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const selectedSessionId = sessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : sessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
@@ -83,6 +87,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   return {
     ...state,
     initial: false,
+    chatListScrollTop,
+    messagesScrollTop,
     openApiApiKey,
     openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,

@@ -37,6 +37,7 @@ export const createDefaultState = (): ChatState => {
   const composerLineHeight = 20
   return {
     assetDir: '',
+    chatListScrollTop: 0,
     composerFontFamily: 'system-ui',
     composerFontSize,
     composerHeight: composerLineHeight + 8,
@@ -54,6 +55,7 @@ export const createDefaultState = (): ChatState => {
     maxComposerRows: 5,
     mockApiCommandId: '',
     models: getDefaultModels(),
+    messagesScrollTop: 0,
     nextMessageId: 1,
     openApiApiBaseUrl: 'https://api.openai.com/v1',
     openApiApiKey: '',

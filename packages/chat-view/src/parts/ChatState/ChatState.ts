@@ -11,6 +11,7 @@ export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
   readonly assetDir: string
+  readonly chatListScrollTop: number
   readonly composerFontFamily: string
   readonly composerFontSize: number
   readonly composerHeight: number
@@ -29,6 +30,7 @@ export interface ChatState {
   readonly maxComposerRows: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
+  readonly messagesScrollTop: number
   readonly nextMessageId: number
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string

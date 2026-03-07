@@ -18,3 +18,5 @@ export const HandleClickList = 17
 export const HandleClickDelete = 18
 export const HandleSubmit = 19
 export const HandleModelChange = 20
+export const HandleChatListScroll = 21
+export const HandleMessagesScroll = 22
