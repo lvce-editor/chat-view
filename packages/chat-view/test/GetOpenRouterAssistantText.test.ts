@@ -1,5 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
-
+// cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { getOpenRouterAssistantText } from '../src/parts/GetAiResponse/GetOpenRouterAssistantText.ts'

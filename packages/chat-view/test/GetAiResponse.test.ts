@@ -1,5 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
-
+// cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import {

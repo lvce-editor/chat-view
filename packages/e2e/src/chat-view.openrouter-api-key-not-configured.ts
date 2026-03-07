@@ -1,4 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
+// cspell:ignore openrouter
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openrouter-api-key-not-configured'

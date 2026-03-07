@@ -1,4 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
+// cspell:ignore openrouter
 import { beforeEach, expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
