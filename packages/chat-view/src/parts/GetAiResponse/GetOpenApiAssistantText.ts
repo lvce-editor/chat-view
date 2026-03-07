@@ -208,9 +208,9 @@ export const getOpenApiAssistantText = async (
   openApiApiBaseUrl: string,
   assetDir: string,
   platform: number,
-  options: GetOpenApiAssistantTextOptions = { stream: false },
+  options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
-  const { onTextChunk, stream } = options
+  const { onTextChunk, stream } = options ?? { stream: false }
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,

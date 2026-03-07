@@ -285,7 +285,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
     return {
       body: {
         getReader: () => ({
-          read: async () => {
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
             if (index >= chunks.length) {
               return { done: true, value: undefined }
             }
