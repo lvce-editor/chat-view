@@ -44,6 +44,7 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly streamingEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number
