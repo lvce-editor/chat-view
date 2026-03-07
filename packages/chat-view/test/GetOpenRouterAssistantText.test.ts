@@ -10,6 +10,13 @@ const parseJsonRequestBody = (body: unknown): any => {
   return JSON.parse(body)
 }
 
+const getRequestIdFromInit = (init: unknown): string | undefined => {
+  const requestInit = init as RequestInit | undefined
+  const headers = requestInit?.headers as Record<string, unknown> | undefined
+  const value = headers?.['x-client-request-id']
+  return typeof value === 'string' ? value : undefined
+}
+
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
@@ -60,9 +67,12 @@ test('getOpenRouterAssistantText should return success result when response is o
       headers: {
         Authorization: 'Bearer or-key-123',
         'Content-Type': 'application/json',
+        'x-client-request-id': expect.any(String),
       },
       method: 'POST',
     })
+    const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
     expect(payload.messages).toEqual([
       { content: 'hello', role: 'user' },
@@ -161,8 +171,15 @@ test('getOpenRouterAssistantText should return too-many-requests error result fo
 test('getOpenRouterAssistantText should include limit info for 429 when auth key endpoint returns usage data', async () => {
   const originalFetch = globalThis.fetch
   let invocationCount = 0
-  globalThis.fetch = (async (input: unknown) => {
+  const requestIds: string[] = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const input = args[0]
+    const init = args[1] as RequestInit | undefined
     invocationCount++
+    const requestId = getRequestIdFromInit(init)
+    if (requestId) {
+      requestIds.push(requestId)
+    }
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
@@ -216,6 +233,8 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
       type: 'error',
     })
     expect(invocationCount).toBe(2)
+    expect(requestIds).toHaveLength(2)
+    expect(requestIds[0]).not.toBe(requestIds[1])
   } finally {
     globalThis.fetch = originalFetch
   }
