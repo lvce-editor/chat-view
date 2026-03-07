@@ -31,9 +31,7 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
   })
 }
 
-export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
-  const savedSelectedModelId = getSavedSelectedModelId(savedState)
-  const savedViewMode = getSavedViewMode(savedState)
+const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string }> => {
   let openApiApiKey = ''
   try {
     const savedOpenApiKey = await Preferences.get('secrets.openApiKey')
@@ -51,6 +49,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   } catch {
     openApiApiKey = ''
   }
+
   let openRouterApiKey = ''
   try {
     const savedOpenRouterApiKey = await Preferences.get('secrets.openRouterApiKey')
@@ -58,6 +57,17 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   } catch {
     openRouterApiKey = ''
   }
+
+  return {
+    openApiApiKey,
+    openRouterApiKey,
+  }
+}
+
+export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
+  const savedSelectedModelId = getSavedSelectedModelId(savedState)
+  const savedViewMode = getSavedViewMode(savedState)
+  const { openApiApiKey, openRouterApiKey } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
