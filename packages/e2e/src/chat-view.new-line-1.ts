@@ -13,5 +13,6 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.enterNewLine')
 
   // assert
-  // TODO verify height
+  const input = Locator('.Chat .MultilineInputBox')
+  await expect(input).toHaveCSS('height', '78px')
 }
