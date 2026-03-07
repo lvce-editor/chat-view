@@ -3,14 +3,14 @@ import { ViewletCommand } from '@lvce-editor/constants'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as RenderScrollTop from '../src/parts/RenderScrollTop/RenderScrollTop.ts'
 
-test('renderScrollTop should return empty array when no scroll values change', () => {
+test('renderScrollTop should return SetProperty command', () => {
   const oldState = createDefaultState()
   const newState = createDefaultState()
   const result = RenderScrollTop.renderScrollTop(oldState, newState)
-  expect(result).toEqual([])
+  expect(result).toEqual([ViewletCommand.SetProperty, 0, '.ChatMessages', 'scrollTop', 0])
 })
 
-test('renderScrollTop should return patches command when chat list scroll changes', () => {
+test('renderScrollTop should target current uid', () => {
   const oldState = {
     ...createDefaultState(),
     sessions: [
@@ -25,13 +25,13 @@ test('renderScrollTop should return patches command when chat list scroll change
     chatListScrollTop: 90,
   }
   const result = RenderScrollTop.renderScrollTop(oldState, newState)
-  expect(result[0]).toBe(ViewletCommand.SetPatches)
+  expect(result[0]).toBe(ViewletCommand.SetProperty)
   expect(result[1]).toBe(1)
-  expect(Array.isArray(result[2])).toBe(true)
-  expect(result[2].length).toBeGreaterThan(0)
+  expect(result[2]).toBe('.ChatMessages')
+  expect(result[3]).toBe('scrollTop')
 })
 
-test('renderScrollTop should return patches command when messages scroll changes', () => {
+test('renderScrollTop should use messagesScrollTop value', () => {
   const oldState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -50,8 +50,9 @@ test('renderScrollTop should return patches command when messages scroll changes
     messagesScrollTop: 180,
   }
   const result = RenderScrollTop.renderScrollTop(oldState, newState)
-  expect(result[0]).toBe(ViewletCommand.SetPatches)
+  expect(result[0]).toBe(ViewletCommand.SetProperty)
   expect(result[1]).toBe(2)
-  expect(Array.isArray(result[2])).toBe(true)
-  expect(result[2].length).toBeGreaterThan(0)
+  expect(result[2]).toBe('.ChatMessages')
+  expect(result[3]).toBe('scrollTop')
+  expect(result[4]).toBe(180)
 })
