@@ -74,6 +74,7 @@ export const createDefaultState = (): ChatState => {
         title: Strings.defaultSessionTitle(),
       },
     ],
+    streamingEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     uid: 0,

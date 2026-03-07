@@ -18,12 +18,14 @@ export const getAiResponse = async ({
   mockApiCommandId,
   models,
   nextMessageId,
+  onTextChunk,
   openApiApiBaseUrl,
   openApiApiKey,
   openRouterApiBaseUrl,
   openRouterApiKey,
   platform,
   selectedModelId,
+  streamingEnabled = false,
   useMockApi,
   userText,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
@@ -32,7 +34,10 @@ export const getAiResponse = async ({
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
     if (openApiApiKey) {
-      const result = await getOpenApiAssistantText(messages, getOpenApiModelId(selectedModelId), openApiApiKey, openApiApiBaseUrl, assetDir, platform)
+      const result = await getOpenApiAssistantText(messages, getOpenApiModelId(selectedModelId), openApiApiKey, openApiApiBaseUrl, assetDir, platform, {
+        onTextChunk,
+        stream: streamingEnabled,
+      })
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText

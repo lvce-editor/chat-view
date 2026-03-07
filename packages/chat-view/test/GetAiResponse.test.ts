@@ -359,3 +359,69 @@ test('getAiResponse should fall back to generic OpenAI request failed message wh
     globalThis.fetch = originalFetch
   }
 })
+
+test('getAiResponse should stream OpenAI chunks when enabled', async () => {
+  const originalFetch = globalThis.fetch
+  let requestedUrl = ''
+  globalThis.fetch = (async (input: unknown) => {
+    requestedUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    const chunks = [
+      'data: {"choices":[{"delta":{"content":"Hello"}}]}\n\n',
+      'data: {"choices":[{"delta":{"content":" world"}}]}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async () => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const streamedChunks: string[] = []
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      onTextChunk: async (chunk: string) => {
+        streamedChunks.push(chunk)
+      },
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: 'oa-key-123',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(requestedUrl).toBe('https://api.openai.com/v1/chat/completions?stream=true')
+    expect(streamedChunks).toEqual(['Hello', ' world'])
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('Hello world')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
