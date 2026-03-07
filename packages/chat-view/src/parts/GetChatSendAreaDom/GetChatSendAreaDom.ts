@@ -40,7 +40,7 @@ export const getChatSendAreaDom = (
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.composePlaceholder(),
-      style: `height:${composerHeight}px;font-size:${composerFontSize}px;font-family:${composerFontFamily};line-height:${composerLineHeight}px;`,
+      // style: `height:${composerHeight}px;font-size:${composerFontSize}px;font-family:${composerFontFamily};line-height:${composerLineHeight}px;`,
       type: VirtualDomElements.TextArea,
       value: composerValue,
     },

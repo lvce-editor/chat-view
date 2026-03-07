@@ -3,9 +3,15 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 
 // TODO render things like scrollbar height,scrollbar offset, textarea height,
 // list height
-const css = `
-`
+
+const getCss = (composerHeight: number): string => {
+  return `:root {
+  --ChatInputBoxHeight: ${composerHeight}px;
+}`
+}
 
 export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
-  return [ViewletCommand.SetCss, newState.uid, css]
+  const { composerHeight, uid } = newState
+  const css = getCss(composerHeight)
+  return [ViewletCommand.SetCss, uid, css]
 }
