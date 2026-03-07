@@ -1,5 +1,6 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
+import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
 import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
 import { getTextContent } from './GetTextContent.ts'
@@ -64,6 +65,7 @@ const getOpenRouterLimitInfo = async (
     response = await fetch(getOpenRouterKeyEndpoint(openRouterApiBaseUrl), {
       headers: {
         Authorization: `Bearer ${openRouterApiKey}`,
+        ...getClientRequestIdHeader(),
       },
       method: 'GET',
     })
@@ -142,6 +144,7 @@ export const getOpenRouterAssistantText = async (
         headers: {
           Authorization: `Bearer ${openRouterApiKey}`,
           'Content-Type': 'application/json',
+          ...getClientRequestIdHeader(),
         },
         method: 'POST',
       })
