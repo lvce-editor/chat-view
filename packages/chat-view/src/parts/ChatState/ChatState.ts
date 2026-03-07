@@ -28,9 +28,9 @@ export interface ChatState {
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
   readonly maxComposerRows: number
+  readonly messagesScrollTop: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
-  readonly messagesScrollTop: number
   readonly nextMessageId: number
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string
