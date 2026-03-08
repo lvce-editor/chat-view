@@ -3,7 +3,7 @@ import { babel } from '@rollup/plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { join } from 'path'
 import { rollup } from 'rollup'
-import { root } from './root.js'
+import { root } from './root.ts'
 
 const getOptions = (input, outputFile, external = []) => {
   return {

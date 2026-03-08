@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { readdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { root } from './root.js'
+import { root } from './root.ts'
 
 const getPackageLocations = () => {
   const packageLocations = []
@@ -21,7 +21,7 @@ const locations = [
   '.github/workflows/pr.yml',
   '.github/workflows/ci.yml',
   '.github/workflows/release.yml',
-  'packages/build/src/computeNodeModulesCacheKey.js',
+  'packages/build/src/computeNodeModulesCacheKey.ts',
   'packages/server/src/postinstall.js',
 ]
 
