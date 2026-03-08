@@ -1,11 +1,12 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleJs, bundleNetworkWorkerJs } from './bundleJs.js'
+import { bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.js'
 import { root } from './root.js'
 
 const dist = join(root, '.tmp', 'dist')
 const networkWorkerDist = join(root, '.tmp', 'dist-chat-network-worker')
+const toolWorkerDist = join(root, '.tmp', 'dist-chat-tool-worker')
 
 const readJson = async (path) => {
   const content = await readFile(path, 'utf8')
@@ -52,11 +53,14 @@ const getVersion = async () => {
 
 await rm(dist, { recursive: true, force: true })
 await rm(networkWorkerDist, { recursive: true, force: true })
+await rm(toolWorkerDist, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
 await mkdir(networkWorkerDist, { recursive: true })
+await mkdir(toolWorkerDist, { recursive: true })
 
 await bundleJs()
 await bundleNetworkWorkerJs()
+await bundleToolWorkerJs()
 
 const version = await getVersion()
 
@@ -94,3 +98,20 @@ networkWorkerPackageJson.main = 'dist/chatNetworkWorkerMain.js'
 await writeJson(join(networkWorkerDist, 'package.json'), networkWorkerPackageJson)
 await cp(join(root, 'README.md'), join(networkWorkerDist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(networkWorkerDist, 'LICENSE'))
+
+const toolWorkerPackageJson = await readJson(join(root, 'packages', 'chat-tool-worker', 'package.json'))
+
+delete toolWorkerPackageJson.scripts
+delete toolWorkerPackageJson.dependencies
+delete toolWorkerPackageJson.devDependencies
+delete toolWorkerPackageJson.prettier
+delete toolWorkerPackageJson.jest
+delete toolWorkerPackageJson.xo
+delete toolWorkerPackageJson.directories
+delete toolWorkerPackageJson.nodemonConfig
+toolWorkerPackageJson.version = version
+toolWorkerPackageJson.main = 'dist/chatToolWorkerMain.js'
+
+await writeJson(join(toolWorkerDist, 'package.json'), toolWorkerPackageJson)
+await cp(join(root, 'README.md'), join(toolWorkerDist, 'README.md'))
+await cp(join(root, 'LICENSE'), join(toolWorkerDist, 'LICENSE'))
