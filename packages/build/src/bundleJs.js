@@ -40,7 +40,10 @@ const bundle = async (options) => {
 }
 
 export const bundleJs = async () => {
-  const options = getOptions(join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'), join(root, '.tmp/dist/dist/chatViewWorkerMain.js'), ['ws', 'electron'])
+  const options = getOptions(join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'), join(root, '.tmp/dist/dist/chatViewWorkerMain.js'), [
+    'ws',
+    'electron',
+  ])
   await bundle(options)
 }
 
@@ -48,7 +51,7 @@ export const bundleNetworkWorkerJs = async () => {
   const options = getOptions(
     join(root, 'packages/chat-network-worker/src/chatNetworkWorkerMain.ts'),
     join(root, '.tmp/dist-chat-network-worker/dist/chatNetworkWorkerMain.js'),
-    ['@lvce-editor/rpc', 'ws', 'electron']
+    ['@lvce-editor/rpc', 'ws', 'electron'],
   )
   await bundle(options)
 }
