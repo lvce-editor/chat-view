@@ -1,8 +1,8 @@
-import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
-import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
-import { getOpenApiApiEndpoint } from './GetOpenApiAssistantText/getOpenApiApiEndpoint.ts'
-import { getTextContent } from './GetTextContent.ts'
+import type { ChatMessage } from '../../ChatMessage/ChatMessage.ts'
+import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getOpenApiApiEndpoint } from './GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
+import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export interface GetOpenApiAssistantTextSuccessResult {
   readonly text: string

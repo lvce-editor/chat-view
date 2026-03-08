@@ -1,8 +1,11 @@
-import type { ChatMessage } from '../ChatState/ChatState.ts'
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
-import { type GetOpenRouterAssistantTextErrorResult, type GetOpenRouterAssistantTextSuccessResult } from './GetOpenRouterAssistantText.ts'
-import { normalizeMockResult } from './NormalizeMockResult.ts'
+import type { ChatMessage } from '../../ChatState/ChatState.ts'
+import * as ExtensionHostShared from '../../ExtensionHost/ExtensionHostShared.ts'
+import { CommandExecute } from '../../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import {
+  type GetOpenRouterAssistantTextErrorResult,
+  type GetOpenRouterAssistantTextSuccessResult,
+} from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
+import { normalizeMockResult } from '../NormalizeMockResult/NormalizeMockResult.ts'
 
 export const getMockOpenRouterAssistantText = async (
   messages: readonly ChatMessage[],
