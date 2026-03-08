@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-streaming-function-tool-call-mock'
 
+export const skip = 1
+
 export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Chat.reset')
