@@ -61,3 +61,36 @@ test('renderItems should show plural count when multiple events are visible', ()
   const eventCountText = dom.find((node) => node.text === '2 events')
   expect(eventCountText).toBeDefined()
 })
+
+test('renderItems should use numeric eventId starting at 1 per session', () => {
+  const oldState: ChatDebugViewState = createDefaultState()
+  const newState: ChatDebugViewState = {
+    ...createDefaultState(),
+    events: [
+      {
+        eventId: 42,
+        sessionId: 'session-1',
+        timestamp: 'a',
+        type: 'request',
+      },
+      {
+        eventId: 99,
+        sessionId: 'session-1',
+        timestamp: 'b',
+        type: 'response',
+      },
+    ],
+    sessionId: 'session-1',
+    uid: 3,
+  }
+
+  const result = RenderItems.renderItems(oldState, newState)
+
+  const dom = result[2] as readonly { readonly text?: string }[]
+  const eventIdKeys = dom.filter((node) => node.text === '"eventId"')
+  expect(eventIdKeys).toHaveLength(2)
+  expect(dom.some((node) => node.text === '1')).toBe(true)
+  expect(dom.some((node) => node.text === '2')).toBe(true)
+  expect(dom.some((node) => node.text === '42')).toBe(false)
+  expect(dom.some((node) => node.text === '99')).toBe(false)
+})
