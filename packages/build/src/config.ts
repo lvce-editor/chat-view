@@ -1,9 +1,9 @@
 import { join } from 'node:path'
-import { root } from './root.js'
+import { root } from './root.ts'
 
 export const threshold = 500_000
 
-export const instantiations = 20_000
+export const instantiations = 200_000
 
 export const instantiationsPath = join(root, 'packages', 'chat-view')
 
