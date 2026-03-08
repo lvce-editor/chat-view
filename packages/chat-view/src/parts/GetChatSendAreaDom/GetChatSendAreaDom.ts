@@ -2,8 +2,8 @@ import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-do
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
-import { getModelOptionDOm } from '../GetModelOptionDom/GetModelOptionDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -21,7 +21,6 @@ export const getChatSendAreaDom = (
   composerLineHeight = 20,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-  const modelOptions = models.flatMap((model) => getModelOptionDOm(model, selectedModelId))
   return [
     {
       childCount: 1,
@@ -48,15 +47,7 @@ export const getChatSendAreaDom = (
       className: ClassNames.ChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: models.length,
-      className: ClassNames.Select,
-      name: InputName.Model,
-      onInput: DomEventListenerFunctions.HandleModelChange,
-      type: VirtualDomElements.Select,
-      value: selectedModelId,
-    },
-    ...modelOptions,
+    ...getChatSelectVirtualDom(models, selectedModelId),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...getSendButtonDom(isSendDisabled),
   ]
