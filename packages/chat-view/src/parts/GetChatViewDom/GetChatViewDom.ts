@@ -16,14 +16,14 @@ export const getChatVirtualDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
-  openApiApiKeyInput = '',
-  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
-  chatListScrollTop = 0,
-  messagesScrollTop = 0,
+  openApiApiKeyInput: string,
+  openRouterApiKeyState: 'idle' | 'saving',
+  composerHeight: number,
+  composerFontSize: number,
+  composerFontFamily: string,
+  composerLineHeight: number,
+  chatListScrollTop: number,
+  messagesScrollTop: number,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
