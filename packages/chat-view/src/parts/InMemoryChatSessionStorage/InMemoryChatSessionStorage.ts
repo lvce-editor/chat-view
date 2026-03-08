@@ -10,14 +10,20 @@ const isSameMessage = (a: Readonly<ChatSession['messages'][number]>, b: Readonly
   return a.id === b.id && a.inProgress === b.inProgress && a.role === b.role && a.text === b.text && a.time === b.time
 }
 
-const canAppendMessages = (previousMessages: readonly ChatSession['messages'][number][], nextMessages: readonly ChatSession['messages'][number][]): boolean => {
+const canAppendMessages = (
+  previousMessages: readonly ChatSession['messages'][number][],
+  nextMessages: readonly ChatSession['messages'][number][],
+): boolean => {
   if (nextMessages.length < previousMessages.length) {
     return false
   }
   return previousMessages.every((message, index) => isSameMessage(message, nextMessages[index]))
 }
 
-const canUpdateMessages = (previousMessages: readonly ChatSession['messages'][number][], nextMessages: readonly ChatSession['messages'][number][]): boolean => {
+const canUpdateMessages = (
+  previousMessages: readonly ChatSession['messages'][number][],
+  nextMessages: readonly ChatSession['messages'][number][],
+): boolean => {
   if (previousMessages.length !== nextMessages.length) {
     return false
   }

@@ -1,5 +1,11 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import { deleteChatSession, getChatSession, getChatViewEvents, resetChatSessionStorage, saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import {
+  deleteChatSession,
+  getChatSession,
+  getChatViewEvents,
+  resetChatSessionStorage,
+  saveChatSession,
+} from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 
 beforeEach(() => {
   resetChatSessionStorage()
@@ -23,13 +29,13 @@ test('saveChatSession should append session creation and message events', async 
   expect(events[1]).toMatchObject({
     sessionId: 'session-1',
     type: 'chat-message-added',
-  })
+  })inProgress: true, 
 })
 
 test('saveChatSession should append message update events for changed message text', async () => {
   await saveChatSession({
     id: 'session-1',
-    messages: [{ id: 'message-1', role: 'assistant', text: 'hel', time: '10:00', inProgress: true }],
+    messages: [{ id: 'message-1', inProgress: false, role: 'assistant', text: 'hel', time: '10:00', n
     title: 'Chat 1',
   })
 
@@ -44,7 +50,7 @@ test('saveChatSession should append message update events for changed message te
   expect(events.at(-1)).toMatchObject({
     inProgress: false,
     messageId: 'message-1',
-    sessionId: 'session-1',
+    sessionId: 'session-1',, inProgress: false
     text: 'hello',
     type: 'chat-message-updated',
   })

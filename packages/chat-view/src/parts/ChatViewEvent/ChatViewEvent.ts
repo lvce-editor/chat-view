@@ -6,8 +6,8 @@ interface ChatViewEventBase {
 }
 
 export interface ChatSessionCreatedEvent extends ChatViewEventBase {
-  readonly type: 'chat-session-created'
   readonly title: string
+  readonly type: 'chat-session-created'
 }
 
 export interface ChatSessionDeletedEvent extends ChatViewEventBase {
@@ -15,26 +15,26 @@ export interface ChatSessionDeletedEvent extends ChatViewEventBase {
 }
 
 export interface ChatSessionTitleUpdatedEvent extends ChatViewEventBase {
-  readonly type: 'chat-session-title-updated'
   readonly title: string
+  readonly type: 'chat-session-title-updated'
 }
 
 export interface ChatMessageAddedEvent extends ChatViewEventBase {
-  readonly type: 'chat-message-added'
   readonly message: ChatMessage
+  readonly type: 'chat-message-added'
 }
 
 export interface ChatMessageUpdatedEvent extends ChatViewEventBase {
-  readonly type: 'chat-message-updated'
   readonly inProgress: boolean | undefined
   readonly messageId: string
   readonly text: string
   readonly time: string
+  readonly type: 'chat-message-updated'
 }
 
 export interface ChatSessionMessagesReplacedEvent extends ChatViewEventBase {
-  readonly type: 'chat-session-messages-replaced'
   readonly messages: readonly ChatMessage[]
+  readonly type: 'chat-session-messages-replaced'
 }
 
 export interface HandleInputEvent extends ChatViewEventBase {
@@ -48,9 +48,9 @@ export interface HandleSubmitEvent extends ChatViewEventBase {
 }
 
 export interface HandleResponseChunkEvent extends ChatViewEventBase {
-  readonly type: 'handle-response-chunk'
   readonly content: string
   readonly messageId: string
+  readonly type: 'handle-response-chunk'
 }
 
 export type ChatViewEvent =
