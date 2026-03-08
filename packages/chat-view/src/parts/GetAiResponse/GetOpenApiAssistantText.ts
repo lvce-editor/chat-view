@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
 import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
@@ -92,16 +91,16 @@ const parseSseEvent = (eventChunk: string): readonly string[] => {
 }
 
 const updateToolCallAccumulator = (
-  accumulator: ReadonlyMap<number, StreamingToolCall>,
+  accumulator: Readonly<Record<number, StreamingToolCall>>,
   chunk: readonly unknown[],
 ):
   | {
-      readonly nextAccumulator: ReadonlyMap<number, StreamingToolCall>
+      readonly nextAccumulator: Readonly<Record<number, StreamingToolCall>>
       readonly toolCalls: readonly StreamingToolCall[]
     }
   | undefined => {
   let changed = false
-  const nextAccumulator = new Map(accumulator)
+  const nextAccumulator: Record<number, StreamingToolCall> = { ...accumulator }
   for (const item of chunk) {
     if (!item || typeof item !== 'object') {
       continue
@@ -110,7 +109,7 @@ const updateToolCallAccumulator = (
     if (typeof index !== 'number') {
       continue
     }
-    const current = nextAccumulator.get(index) || { arguments: '', name: '' }
+    const current = nextAccumulator[index] || { arguments: '', name: '' }
     const id = Reflect.get(item, 'id')
     const toolFunction = Reflect.get(item, 'function')
     let { name } = current
@@ -131,16 +130,16 @@ const updateToolCallAccumulator = (
       name,
     }
     if (JSON.stringify(next) !== JSON.stringify(current)) {
-      nextAccumulator.set(index, next)
+      nextAccumulator[index] = next
       changed = true
     }
   }
   if (!changed) {
     return undefined
   }
-  const toolCalls = [...nextAccumulator.entries()]
-    .toSorted((a: readonly [number, StreamingToolCall], b: readonly [number, StreamingToolCall]) => a[0] - b[0])
-    .map((entry: readonly [number, StreamingToolCall]) => entry[1])
+  const toolCalls = Object.entries(nextAccumulator)
+    .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+    .map((entry: readonly [string, StreamingToolCall]) => entry[1])
     .filter((toolCall) => !!toolCall.name)
   return {
     nextAccumulator,
@@ -166,7 +165,7 @@ const parseOpenApiStream = async (
   let remainder = ''
   let text = ''
   let done = false
-  let toolCallAccumulator: ReadonlyMap<number, StreamingToolCall> = new Map<number, StreamingToolCall>()
+  let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
 
   while (!done) {
     const { done: streamDone, value } = await reader.read()
