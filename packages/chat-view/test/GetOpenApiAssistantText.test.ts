@@ -64,7 +64,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
     const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
     expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestBody.include_obfuscation).toBeUndefined()
+    expect(requestBody.include_obfuscation).toBe(false)
   } finally {
     globalThis.fetch = originalFetch
   }
