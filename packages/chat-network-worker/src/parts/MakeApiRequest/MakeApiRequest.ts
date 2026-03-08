@@ -1,8 +1,8 @@
-import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
-import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
-import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
 import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptions.ts'
 import type { ApiRequestResult } from './ApiRequestResult.ts'
+import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
+import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
+import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
 import { parseResponseJson } from './ParseResponseJson.ts'
 
 export const makeApiRequest = async (options: Readonly<MakeApiRequestOptions>): Promise<ApiRequestResult> => {

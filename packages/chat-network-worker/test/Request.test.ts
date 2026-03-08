@@ -106,12 +106,7 @@ test('makeStreamingApiRequest should parse server side events', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
-      body: getReadableStream([
-        'data: {"id":"1"}\n\n',
-        'event: ping\n',
-        'data: plain text\n\n',
-        'data: [DONE]\n\n',
-      ]),
+      body: getReadableStream(['data: {"id":"1"}\n\n', 'event: ping\n', 'data: plain text\n\n', 'data: [DONE]\n\n']),
       headers: new Headers({
         'content-type': 'text/event-stream',
       }),

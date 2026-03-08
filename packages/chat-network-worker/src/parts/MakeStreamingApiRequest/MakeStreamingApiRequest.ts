@@ -5,9 +5,7 @@ import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptio
 import { parseSseFromReader } from './ParseSseFromReader.ts'
 import type { StreamingApiRequestResult } from './StreamingApiRequestResult.ts'
 
-export const makeStreamingApiRequest = async (
-  options: Readonly<MakeApiRequestOptions>,
-): Promise<StreamingApiRequestResult> => {
+export const makeStreamingApiRequest = async (options: Readonly<MakeApiRequestOptions>): Promise<StreamingApiRequestResult> => {
   let response: Response
   try {
     response = await fetch(options.url, getRequestInit(options))
