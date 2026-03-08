@@ -53,13 +53,14 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     return state
   }
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const userMessageId = crypto.randomUUID()
   const userMessage: ChatMessage = {
-    id: `message-${nextMessageId}`,
+    id: userMessageId,
     role: 'user',
     text: userText,
     time: userTime,
   }
-  const assistantMessageId = `message-${nextMessageId + 1}`
+  const assistantMessageId = crypto.randomUUID()
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const inProgressAssistantMessage: ChatMessage = {
     id: assistantMessageId,
@@ -153,6 +154,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const assistantMessage = await getAiResponse({
     assetDir,
+    messageId: assistantMessageId,
     messages,
     mockApiCommandId,
     models,

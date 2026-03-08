@@ -2,6 +2,7 @@ import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
 
 export interface GetAiResponseOptions {
   readonly assetDir: string
+  readonly messageId?: string
   readonly messages: readonly ChatMessage[]
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
