@@ -1,9 +1,9 @@
-import { getStreamChunkText } from '../GetStreamChunkText/GetStreamChunkText.ts'
-import { parseSseEvent } from '../ParseSseEvent/ParseSseEvent.ts'
 import type {
   GetOpenApiAssistantTextResult,
   StreamingToolCall,
 } from '../GetOpenApiAssistantTextTypes/GetOpenApiAssistantTextTypes.ts'
+import { getStreamChunkText } from '../GetStreamChunkText/GetStreamChunkText.ts'
+import { parseSseEvent } from '../ParseSseEvent/ParseSseEvent.ts'
 import { updateToolCallAccumulator } from '../UpdateToolCallAccumulator/UpdateToolCallAccumulator.ts'
 
 export const parseOpenApiStream = async (

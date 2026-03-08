@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { GetOpenApiAssistantTextOptions, GetOpenApiAssistantTextResult } from './GetOpenApiAssistantTextTypes/GetOpenApiAssistantTextTypes.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
@@ -8,7 +9,6 @@ import { getOpenApiErrorDetails } from './GetOpenApiErrorDetails/GetOpenApiError
 import { getResponseFunctionCalls } from './GetResponseFunctionCalls/GetResponseFunctionCalls.ts'
 import { getResponseOutputText } from './GetResponseOutputText/GetResponseOutputText.ts'
 import { parseOpenApiStream } from './ParseOpenApiStream/ParseOpenApiStream.ts'
-import type { GetOpenApiAssistantTextOptions, GetOpenApiAssistantTextResult } from './GetOpenApiAssistantTextTypes/GetOpenApiAssistantTextTypes.ts'
 export type {
   GetOpenApiAssistantTextErrorResult,
   GetOpenApiAssistantTextOptions,
