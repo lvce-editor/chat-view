@@ -5,6 +5,7 @@ export interface GetAiResponseOptions {
   readonly assetDir: string
   readonly messageId?: string
   readonly messages: readonly ChatMessage[]
+  readonly mockAiResponseDelay?: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number

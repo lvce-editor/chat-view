@@ -361,7 +361,7 @@ test('handleSubmit should store parsed data events and stream finished marker fo
     }
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
-    const dataEvents = events.filter((event) => event.type === 'data-event')
+    const dataEvents = events.filter((event) => event.type === 'sse-response-part')
     const finishedEvent = events.find((event) => event.type === 'event-stream-finished')
 
     expect(dataEvents).toHaveLength(2)

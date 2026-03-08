@@ -3,9 +3,10 @@ import { babel } from '@rollup/plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { join } from 'path'
 import { rollup } from 'rollup'
-import { root } from './root.js'
+import type { RollupOptions } from 'rollup'
+import { root } from './root.ts'
 
-const getOptions = (input, outputFile, external = []) => {
+const getOptions = (input: string, outputFile: string, external: string[] = []): RollupOptions => {
   return {
     input,
     preserveEntrySignatures: 'strict',
@@ -33,7 +34,7 @@ const getOptions = (input, outputFile, external = []) => {
   }
 }
 
-const bundle = async (options) => {
+const bundle = async (options: RollupOptions) => {
   const input = await rollup(options)
   // @ts-ignore
   await input.write(options.output)

@@ -2,8 +2,16 @@ import type { MakeApiRequestOptions } from './MakeApiRequestOptions.ts'
 
 export const getRequestInit = (options: Readonly<MakeApiRequestOptions>): RequestInit => {
   return {
-    body: options.postBody === undefined ? undefined : JSON.stringify(options.postBody),
-    headers: options.headers,
+    ...(options.postBody === undefined
+      ? {}
+      : {
+          body: JSON.stringify(options.postBody),
+        }),
+    ...(options.headers
+      ? {
+          headers: options.headers,
+        }
+      : {}),
     method: options.method,
   }
 }

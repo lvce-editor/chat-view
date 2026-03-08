@@ -1,7 +1,7 @@
 import { execa } from 'execa'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import { root } from './root.js'
+import { root } from './root.ts'
 
 const esbuild = join(root, 'packages', 'build', 'node_modules', '.bin', 'esbuild')
 

@@ -126,7 +126,15 @@ const updateToolCallAccumulator = (
     }
     const next: StreamingToolCall = {
       arguments: args,
-      id: typeof id === 'string' ? id : current.id,
+      ...(typeof id === 'string'
+        ? {
+            id,
+          }
+        : current.id
+          ? {
+              id: current.id,
+            }
+          : {}),
       name,
     }
     if (JSON.stringify(next) !== JSON.stringify(current)) {
@@ -326,9 +334,21 @@ const getOpenApiErrorDetails = async (
   const errorType = Reflect.get(error, 'type')
 
   return {
-    errorCode: typeof errorCode === 'string' ? errorCode : undefined,
-    errorMessage: typeof errorMessage === 'string' ? errorMessage : undefined,
-    errorType: typeof errorType === 'string' ? errorType : undefined,
+    ...(typeof errorCode === 'string'
+      ? {
+          errorCode,
+        }
+      : {}),
+    ...(typeof errorMessage === 'string'
+      ? {
+          errorMessage,
+        }
+      : {}),
+    ...(typeof errorType === 'string'
+      ? {
+          errorType,
+        }
+      : {}),
   }
 }
 
@@ -371,9 +391,21 @@ export const getOpenApiAssistantText = async (
       const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
       return {
         details: 'http-error',
-        errorCode,
-        errorMessage,
-        errorType,
+        ...(errorCode
+          ? {
+              errorCode,
+            }
+          : {}),
+        ...(errorMessage
+          ? {
+              errorMessage,
+            }
+          : {}),
+        ...(errorType
+          ? {
+              errorType,
+            }
+          : {}),
         statusCode: response.status,
         type: 'error',
       }

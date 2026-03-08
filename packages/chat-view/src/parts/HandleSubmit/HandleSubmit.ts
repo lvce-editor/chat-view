@@ -33,6 +33,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     assetDir,
     composerValue,
+    mockAiResponseDelay,
     mockApiCommandId,
     models,
     nextMessageId,
@@ -157,6 +158,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     assetDir,
     messageId: assistantMessageId,
     messages,
+    mockAiResponseDelay,
     mockApiCommandId,
     models,
     nextMessageId: optimisticState.nextMessageId,
@@ -164,7 +166,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       await appendChatViewEvent({
         sessionId: optimisticState.selectedSessionId,
         timestamp: new Date().toISOString(),
-        type: 'data-event',
+        type: 'sse-response-part',
         value,
       })
     },
@@ -176,7 +178,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         value: '[DONE]',
       })
     },
-    onTextChunk: handleTextChunkFunctionRef,
+    ...(handleTextChunkFunctionRef
+      ? {
+          onTextChunk: handleTextChunkFunctionRef,
+        }
+      : {}),
     onToolCallsChunk: async (toolCalls): Promise<void> => {
       handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
     },

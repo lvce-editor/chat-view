@@ -33,11 +33,24 @@ export const normalizeMockResult = (value: unknown): GetOpenRouterAssistantTextS
     if (details === 'request-failed' || details === 'too-many-requests' || details === 'http-error') {
       const rawMessage = Reflect.get(value, 'rawMessage')
       const statusCode = Reflect.get(value, 'statusCode')
+      const limitInfo = normalizeLimitInfo(Reflect.get(value, 'limitInfo'))
       return {
         details,
-        limitInfo: normalizeLimitInfo(Reflect.get(value, 'limitInfo')),
-        rawMessage: typeof rawMessage === 'string' ? rawMessage : undefined,
-        statusCode: typeof statusCode === 'number' ? statusCode : undefined,
+        ...(limitInfo
+          ? {
+              limitInfo,
+            }
+          : {}),
+        ...(typeof rawMessage === 'string'
+          ? {
+              rawMessage,
+            }
+          : {}),
+        ...(typeof statusCode === 'number'
+          ? {
+              statusCode,
+            }
+          : {}),
         type: 'error',
       }
     }

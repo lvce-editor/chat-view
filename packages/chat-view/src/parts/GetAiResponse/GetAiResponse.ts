@@ -17,6 +17,7 @@ export const getAiResponse = async ({
   assetDir,
   messageId,
   messages,
+  mockAiResponseDelay = 800,
   mockApiCommandId,
   models,
   onDataEvent,
@@ -56,10 +57,26 @@ export const getAiResponse = async ({
         platform,
         {
           includeObfuscation: passIncludeObfuscation,
-          onDataEvent,
-          onEventStreamFinished,
-          onTextChunk,
-          onToolCallsChunk,
+          ...(onDataEvent
+            ? {
+                onDataEvent,
+              }
+            : {}),
+          ...(onEventStreamFinished
+            ? {
+                onEventStreamFinished,
+              }
+            : {}),
+          ...(onTextChunk
+            ? {
+                onTextChunk,
+              }
+            : {}),
+          ...(onToolCallsChunk
+            ? {
+                onToolCallsChunk,
+              }
+            : {}),
           stream: streamingEnabled,
         },
       )
@@ -103,7 +120,7 @@ export const getAiResponse = async ({
     }
   }
   if (!text && !usesOpenApiModel && !usesOpenRouterModel) {
-    text = await getMockAiResponse(userText)
+    text = await getMockAiResponse(userText, mockAiResponseDelay)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   return {

@@ -17,7 +17,26 @@ const models = [
 ] as const
 
 test('getStatusBarVirtualDom should render root chat container', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   expect(result.length).toBeGreaterThan(0)
   expect(result[0]).toMatchObject({
     className: `${ClassNames.Viewlet} Chat`,
@@ -26,7 +45,26 @@ test('getStatusBarVirtualDom should render root chat container', () => {
 })
 
 test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   expect(result[0]).toMatchObject({
     childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
@@ -70,7 +108,26 @@ test('getStatusBarVirtualDom should render session list entries', () => {
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
@@ -109,6 +166,7 @@ test('getStatusBarVirtualDom should restore chat list scroll position', () => {
     'system-ui',
     20,
     90,
+    0,
   )
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
@@ -119,7 +177,26 @@ test('getStatusBarVirtualDom should restore chat list scroll position', () => {
 
 test('getStatusBarVirtualDom should render composer textarea', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', 'hello', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    'hello',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const composer = result.find((node) => node.name === 'composer')
   const sendButton = result.find((node) => node.name === 'send')
   expect(composer).toBeDefined()
@@ -146,7 +223,26 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const messageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   expect(messageNode).toBeDefined()
 })
@@ -187,7 +283,26 @@ test('getStatusBarVirtualDom should restore messages scroll position', () => {
 })
 
 test('getStatusBarVirtualDom should render settings button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const settingsButton = result.find((node) => node.title === 'Settings')
   expect(settingsButton).toBeDefined()
   expect(settingsButton).toMatchObject({
@@ -199,7 +314,26 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
 })
 
 test('getStatusBarVirtualDom should render new chat button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const newChatButton = result.find((node) => node.title === 'New Chat')
   expect(newChatButton).toBeDefined()
   expect(newChatButton).toMatchObject({
@@ -211,7 +345,26 @@ test('getStatusBarVirtualDom should render new chat button in header actions', (
 })
 
 test('getStatusBarVirtualDom should render debug button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const debugButton = result.find((node) => node.title === 'Debug')
   expect(debugButton).toBeDefined()
   expect(debugButton).toMatchObject({
@@ -223,7 +376,26 @@ test('getStatusBarVirtualDom should render debug button in header actions', () =
 })
 
 test('getStatusBarVirtualDom should render close button in header actions', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const closeButton = result.find((node) => node.title === 'Close Chat')
   expect(closeButton).toBeDefined()
   expect(closeButton).toMatchObject({
@@ -236,7 +408,26 @@ test('getStatusBarVirtualDom should render close button in header actions', () =
 
 test('getStatusBarVirtualDom should hide session list in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeUndefined()
 })
@@ -252,7 +443,26 @@ test('getStatusBarVirtualDom should render selected session messages in detail m
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const userMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   const assistantMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageAssistant))
   const messageNodes = result.filter((node) => node.className?.split(' ').includes(ClassNames.Message))
@@ -284,7 +494,26 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     },
   ]
 
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const toolCallLine = result.find((node) => node.text === 'read_file "index.html"')
   expect(toolCallLine).toBeDefined()
 })
@@ -297,7 +526,26 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', 'or-key-typed', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    'or-key-typed',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const apiKeyInput = result.find((node) => node.name === 'open-router-api-key')
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const openRouterButton = result.find((node) => node.name === 'open-openrouter-api-key-settings')
@@ -337,6 +585,12 @@ test('getStatusBarVirtualDom should render disabled OpenRouter save button with 
     0,
     '',
     'saving',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
   )
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
@@ -368,6 +622,13 @@ test('getStatusBarVirtualDom should render OpenAPI api key input and save button
     0,
     0,
     'oa-key-typed',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
   )
   const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
@@ -395,7 +656,26 @@ test('getStatusBarVirtualDom should render OpenRouter request failure reasons as
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const cspReason = result.find((node) => node.text === 'ContentSecurityPolicyViolation: Check DevTools for details.')
@@ -416,7 +696,26 @@ test('getStatusBarVirtualDom should render OpenRouter too many requests reasons 
       title: 'Chat 1',
     },
   ]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const waitReason = result.find((node) => node.text === 'Wait a short time and retry your request.')
@@ -453,7 +752,26 @@ test('getStatusBarVirtualDom should render ordered list from assistant message t
     },
   ]
 
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const readFileReason = result.find(
@@ -475,7 +793,26 @@ test('getStatusBarVirtualDom should render ordered list from assistant message t
 
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const backButtonIndex = result.findIndex((node) => node.name === 'back')
   expect(backButtonIndex).toBeGreaterThan(-1)
   const titleNode = result[backButtonIndex + 3]
@@ -485,7 +822,26 @@ test('getStatusBarVirtualDom should render selected chat title in detail mode', 
 
 test('getStatusBarVirtualDom should render back button in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeDefined()
   expect(backButton).toMatchObject({
@@ -498,21 +854,78 @@ test('getStatusBarVirtualDom should render back button in detail mode', () => {
 })
 
 test('getStatusBarVirtualDom should hide back button in list mode', () => {
-  const result = GetStatusBarVirtualDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeUndefined()
 })
 
 test('getStatusBarVirtualDom should not render token usage overview when disabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 100, 1000)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    100,
+    1000,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const usageRing = result.find((node) => node.className === ClassNames.TokenUsageRing)
   expect(usageRing).toBeUndefined()
 })
 
 test('getStatusBarVirtualDom should render token usage overview when enabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', true, 100, 1000)
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    true,
+    100,
+    1000,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
   const usageContainer = result.find((node) => node.className === ClassNames.TokenUsageOverview)
   const usageRing = result.find((node) => node.className === ClassNames.TokenUsageRing)
   const usageText = result.find((node) => node.text === '100 / 1000')

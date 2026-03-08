@@ -9,6 +9,7 @@ import { renderEventListeners } from '../RenderEventListeners/RenderEventListene
 import * as Rerender from '../Rerender/Rerender.ts'
 import * as Resize from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
+import * as SetEvents from '../SetEvents/SetEvents.ts'
 import * as SetSessionId from '../SetSessionId/SetSessionId.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../State/ChatDebugViewStates.ts'
 
@@ -25,6 +26,7 @@ export const commandMap = {
   'ChatDebug.rerender': wrapCommand(Rerender.rerender),
   'ChatDebug.resize': wrapCommand(Resize.resize),
   'ChatDebug.saveState': wrapGetter(saveState),
+  'ChatDebug.setEvents': wrapCommand(SetEvents.setEvents),
   'ChatDebug.setSessionId': wrapCommand(SetSessionId.setSessionId),
   'ChatDebug.terminate': terminate,
 }

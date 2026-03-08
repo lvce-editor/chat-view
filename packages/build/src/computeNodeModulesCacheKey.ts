@@ -2,10 +2,10 @@ import { createHash } from 'node:crypto'
 import { readdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { root } from './root.js'
+import { root } from './root.ts'
 
 const getPackageLocations = () => {
-  const packageLocations = []
+  const packageLocations: string[] = []
   const packagesFolder = join(root, 'packages')
   const dirents = readdirSync(packagesFolder)
   for (const dirent of dirents) {
@@ -21,7 +21,7 @@ const locations = [
   '.github/workflows/pr.yml',
   '.github/workflows/ci.yml',
   '.github/workflows/release.yml',
-  'packages/build/src/computeNodeModulesCacheKey.js',
+  'packages/build/src/computeNodeModulesCacheKey.ts',
   'packages/server/src/postinstall.js',
 ]
 
@@ -32,15 +32,15 @@ for (const dirent of dirents) {
   locations.push(`packages/${dirent}/package-lock.json`)
 }
 
-const getAbsolutePath = (relativePath) => {
+const getAbsolutePath = (relativePath: string) => {
   return join(root, relativePath)
 }
 
-const getContent = (absolutePath) => {
+const getContent = (absolutePath: string) => {
   return readFile(absolutePath, 'utf8')
 }
 
-export const computeHash = (contents) => {
+export const computeHash = (contents: string | readonly string[]) => {
   const hash = createHash('sha1')
   if (Array.isArray(contents)) {
     for (const content of contents) {
@@ -52,7 +52,7 @@ export const computeHash = (contents) => {
   return hash.digest('hex')
 }
 
-const computeCacheKey = async (locations) => {
+const computeCacheKey = async (locations: readonly string[]) => {
   const absolutePaths = locations.map(getAbsolutePath)
   const contents = await Promise.all(absolutePaths.map(getContent))
   const hash = computeHash(contents)
