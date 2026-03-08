@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import { makeApiRequest, type NetworkApiRequestErrorResult } from './ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
 import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
 import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
@@ -26,10 +27,10 @@ export interface GetOpenRouterAssistantTextErrorResult {
 
 export type GetOpenRouterAssistantTextResult = GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult
 
-const getOpenRouterRaw429Message = async (response: Response): Promise<string | undefined> => {
+const getOpenRouterRaw429Message = (errorResult: Readonly<NetworkApiRequestErrorResult>): string | undefined => {
   let parsed: unknown
   try {
-    parsed = (await response.json()) as unknown
+    parsed = JSON.parse(errorResult.response) as unknown
   } catch {
     return undefined
   }
@@ -60,29 +61,25 @@ const getOpenRouterLimitInfo = async (
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
 ): Promise<GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined> => {
-  let response: Response
+  let response
   try {
-    response = await fetch(getOpenRouterKeyEndpoint(openRouterApiBaseUrl), {
+    response = await makeApiRequest({
       headers: {
         Authorization: `Bearer ${openRouterApiKey}`,
         ...getClientRequestIdHeader(),
       },
       method: 'GET',
+      url: getOpenRouterKeyEndpoint(openRouterApiBaseUrl),
     })
   } catch {
     return undefined
   }
 
-  if (!response.ok) {
+  if (response.type === 'error') {
     return undefined
   }
 
-  let parsed: unknown
-  try {
-    parsed = (await response.json()) as unknown
-  } catch {
-    return undefined
-  }
+  const parsed = response.body
 
   if (!parsed || typeof parsed !== 'object') {
     return undefined
@@ -132,21 +129,22 @@ export const getOpenRouterAssistantText = async (
   const tools = getBasicChatTools()
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
-    let response: Response
+    let response
     try {
-      response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
-        body: JSON.stringify({
-          messages: completionMessages,
-          model: modelId,
-          tool_choice: 'auto',
-          tools,
-        }),
+      response = await makeApiRequest({
         headers: {
           Authorization: `Bearer ${openRouterApiKey}`,
           'Content-Type': 'application/json',
           ...getClientRequestIdHeader(),
         },
         method: 'POST',
+        postBody: {
+          messages: completionMessages,
+          model: modelId,
+          tool_choice: 'auto',
+          tools,
+        },
+        url: getOpenRouterApiEndpoint(openRouterApiBaseUrl),
       })
     } catch {
       return {
@@ -155,10 +153,10 @@ export const getOpenRouterAssistantText = async (
       }
     }
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        const retryAfter = response.headers?.get?.('retry-after') ?? null
-        const rawMessage = await getOpenRouterRaw429Message(response)
+    if (response.type === 'error') {
+      if (response.statusCode === 429) {
+        const retryAfter = response.headers['retry-after'] ?? null
+        const rawMessage = getOpenRouterRaw429Message(response)
         const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
         return {
           details: 'too-many-requests',
@@ -176,20 +174,12 @@ export const getOpenRouterAssistantText = async (
       }
       return {
         details: 'http-error',
-        statusCode: response.status,
+        statusCode: response.statusCode,
         type: 'error',
       }
     }
 
-    let parsed: unknown
-    try {
-      parsed = (await response.json()) as unknown
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
-      }
-    }
+    const parsed = response.body
 
     if (!parsed || typeof parsed !== 'object') {
       return {

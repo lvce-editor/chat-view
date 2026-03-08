@@ -1,110 +1,101 @@
 import { expect, test } from '@jest/globals'
+import { ChatNetworkWorker } from '@lvce-editor/rpc-registry'
 import { getOpenApiAssistantText } from '../src/parts/GetAiResponse/GetOpenApiAssistantText.ts'
 
-const getRequestIdFromInit = (init: unknown): string | undefined => {
-  const requestInit = init as RequestInit | undefined
-  const headers = requestInit?.headers as Record<string, unknown> | undefined
+const getRequestIdFromOptions = (options: unknown): string | undefined => {
+  const requestOptions = options as { readonly headers?: Readonly<Record<string, unknown>> } | undefined
+  const headers = requestOptions?.headers
   const value = headers?.['x-client-request-id']
   return typeof value === 'string' ? value : undefined
 }
 
-const getRequestBodyFromInit = (init: unknown): Record<string, unknown> => {
-  const requestInit = init as RequestInit | undefined
-  const body = requestInit?.body
-  if (typeof body !== 'string') {
+const getRequestBodyFromOptions = (options: unknown): Record<string, unknown> => {
+  const requestOptions = options as { readonly postBody?: unknown } | undefined
+  if (!requestOptions?.postBody || typeof requestOptions.postBody !== 'object') {
     return {}
   }
-  return JSON.parse(body) as Record<string, unknown>
+  return requestOptions.postBody as Record<string, unknown>
 }
 
 test('getOpenApiAssistantText should include x-client-request-id header', async () => {
-  const originalFetch = globalThis.fetch
-  let fetchInvocation: readonly unknown[] | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
-    fetchInvocation = args
-    return {
-      json: async () => ({ choices: [{ message: { content: 'hello from openai' } }] }),
-      ok: true,
-      status: 200,
-    } as Response
-  }) as typeof globalThis.fetch
-
-  try {
-    const result = await getOpenApiAssistantText(
-      [
-        {
-          id: 'message-1',
-          role: 'user',
-          text: 'hello',
-          time: '10:00',
-        },
-      ],
-      'openai/gpt-4o-mini',
-      'oa-key-123',
-      'https://api.openai.com/v1',
-      '',
-      0,
-    )
-
-    expect(result).toEqual({
-      text: 'hello from openai',
+  using mockChatNetworkRpc = ChatNetworkWorker.registerMockRpc({
+    'ChatNetwork.makeApiRequest': async () => ({
+      body: { choices: [{ message: { content: 'hello from openai' } }] },
+      headers: {},
+      statusCode: 200,
       type: 'success',
     })
+  })
 
-    expect(fetchInvocation?.[0]).toBe('https://api.openai.com/v1/chat/completions')
-    expect(fetchInvocation?.[1]).toMatchObject({
-      headers: {
-        Authorization: 'Bearer oa-key-123',
-        'Content-Type': 'application/json',
-        'x-client-request-id': expect.any(String),
+  const result = await getOpenApiAssistantText(
+    [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
       },
-      method: 'POST',
-    })
+    ],
+    'openai/gpt-4o-mini',
+    'oa-key-123',
+    'https://api.openai.com/v1',
+    '',
+    0,
+  )
 
-    const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestBody.include_obfuscation).toBeUndefined()
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+  expect(result).toEqual({
+    text: 'hello from openai',
+    type: 'success',
+  })
+
+  expect(mockChatNetworkRpc.invocations).toHaveLength(1)
+  expect(mockChatNetworkRpc.invocations[0]?.[0]).toBe('ChatNetwork.makeApiRequest')
+  expect(mockChatNetworkRpc.invocations[0]?.[1]).toMatchObject({
+    headers: {
+      Authorization: 'Bearer oa-key-123',
+      'Content-Type': 'application/json',
+      'x-client-request-id': expect.any(String),
+    },
+    method: 'POST',
+    url: 'https://api.openai.com/v1/chat/completions',
+  })
+
+  const options = mockChatNetworkRpc.invocations[0]?.[1]
+  const requestId = getRequestIdFromOptions(options)
+  expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+  const requestBody = getRequestBodyFromOptions(options)
+  expect(requestBody.include_obfuscation).toBeUndefined()
 })
 
 test('getOpenApiAssistantText should include include_obfuscation when enabled', async () => {
-  const originalFetch = globalThis.fetch
-  let fetchInvocation: readonly unknown[] | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
-    fetchInvocation = args
-    return {
-      json: async () => ({ choices: [{ message: { content: 'hello from openai' } }] }),
-      ok: true,
-      status: 200,
-    } as Response
-  }) as typeof globalThis.fetch
+  using mockChatNetworkRpc = ChatNetworkWorker.registerMockRpc({
+    'ChatNetwork.makeApiRequest': async () => ({
+      body: { choices: [{ message: { content: 'hello from openai' } }] },
+      headers: {},
+      statusCode: 200,
+      type: 'success',
+    }),
+  })
 
-  try {
-    await getOpenApiAssistantText(
-      [
-        {
-          id: 'message-1',
-          role: 'user',
-          text: 'hello',
-          time: '10:00',
-        },
-      ],
-      'openai/gpt-4o-mini',
-      'oa-key-123',
-      'https://api.openai.com/v1',
-      '',
-      0,
+  await getOpenApiAssistantText(
+    [
       {
-        includeObfuscation: true,
-        stream: false,
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
       },
-    )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestBody.include_obfuscation).toBe(true)
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+    ],
+    'openai/gpt-4o-mini',
+    'oa-key-123',
+    'https://api.openai.com/v1',
+    '',
+    0,
+    {
+      includeObfuscation: true,
+      stream: false,
+    },
+  )
+  const requestBody = getRequestBodyFromOptions(mockChatNetworkRpc.invocations[0]?.[1])
+  expect(requestBody.include_obfuscation).toBe(true)
 })
