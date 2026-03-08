@@ -387,12 +387,7 @@ const parseOpenApiStream = async (
       const delta = Reflect.get(parsed, 'delta')
       const rawArguments = Reflect.get(parsed, 'arguments')
       const next: StreamingToolCall = {
-        arguments:
-          typeof rawArguments === 'string'
-            ? rawArguments
-            : typeof delta === 'string'
-              ? `${current.arguments}${delta}`
-              : current.arguments,
+        arguments: typeof rawArguments === 'string' ? rawArguments : typeof delta === 'string' ? `${current.arguments}${delta}` : current.arguments,
         ...(typeof callId === 'string'
           ? {
               id: callId,
