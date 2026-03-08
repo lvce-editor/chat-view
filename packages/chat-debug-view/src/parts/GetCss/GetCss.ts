@@ -33,6 +33,32 @@ export const getCss = (): string => {
 
 .ChatDebugViewEvents {
   overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4)) transparent;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground, rgba(100, 100, 100, 0.7));
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb:active {
+  background: var(--vscode-scrollbarSlider-activeBackground, rgba(191, 191, 191, 0.4));
 }
 
 .ChatDebugViewEvent {
