@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import type { ChatDebugViewState } from '../src/parts/State/ChatDebugViewState.ts'
 import * as Create from '../src/parts/Create/Create.ts'
 import * as ChatDebugViewStates from '../src/parts/State/ChatDebugViewStates.ts'
 
