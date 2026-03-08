@@ -12,6 +12,9 @@ export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 export interface ChatState {
   readonly assetDir: string
   readonly chatListScrollTop: number
+  readonly chatMessageFontFamily: string
+  readonly chatMessageFontSize: number
+  readonly chatMessageLineHeight: number
   readonly composerFontFamily: string
   readonly composerFontSize: number
   readonly composerHeight: number
