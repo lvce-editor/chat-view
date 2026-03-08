@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -11,7 +11,6 @@ import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMis
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
-import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
