@@ -26,6 +26,31 @@ interface GetOpenApiAssistantTextOptions {
   readonly stream: boolean
 }
 
+const getOpenAiParams = (
+  completionMessages: readonly any[],
+  modelId: string,
+  stream: boolean,
+  includeObfuscation: boolean,
+  tools: readonly unknown[],
+): object => {
+  return {
+    messages: completionMessages,
+    model: modelId,
+    ...(stream
+      ? {
+          stream: true,
+        }
+      : {}),
+    ...(includeObfuscation
+      ? {
+          include_obfuscation: true,
+        }
+      : {}),
+    tool_choice: 'auto',
+    tools,
+  }
+}
+
 const getStreamChunkText = (content: unknown): string => {
   if (typeof content === 'string') {
     return content
@@ -222,22 +247,7 @@ export const getOpenApiAssistantText = async (
     let response: Response
     try {
       response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl, stream), {
-        body: JSON.stringify({
-          messages: completionMessages,
-          model: modelId,
-          ...(stream
-            ? {
-                stream: true,
-              }
-            : {}),
-          ...(includeObfuscation
-            ? {
-                include_obfuscation: true,
-              }
-            : {}),
-          tool_choice: 'auto',
-          tools,
-        }),
+        body: JSON.stringify(getOpenAiParams(completionMessages, modelId, stream, includeObfuscation, tools)),
         headers: {
           Authorization: `Bearer ${openApiApiKey}`,
           'Content-Type': 'application/json',
