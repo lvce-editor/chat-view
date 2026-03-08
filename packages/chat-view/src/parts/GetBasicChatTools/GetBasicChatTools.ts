@@ -1,4 +1,4 @@
-import type { ChatTool } from './types.ts'
+import type { ChatTool } from '../Types/Types.ts'
 
 export const getBasicChatTools = (): readonly ChatTool[] => {
   return [

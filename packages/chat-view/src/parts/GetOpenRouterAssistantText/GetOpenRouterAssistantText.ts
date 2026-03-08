@@ -1,9 +1,9 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
-import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
-import { getOpenRouterApiEndpoint } from './GetOpenRouterAssistantText/getOpenRouterApiEndpoint.ts'
-import { getOpenRouterKeyEndpoint } from './GetOpenRouterAssistantText/getOpenRouterKeyEndpoint.ts'
-import { getTextContent } from './GetTextContent.ts'
+import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getOpenRouterApiEndpoint } from '../GetOpenRouterApiEndpoint/GetOpenRouterApiEndpoint.ts'
+import { getOpenRouterKeyEndpoint } from '../GetOpenRouterKeyEndpoint/GetOpenRouterKeyEndpoint.ts'
+import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export interface GetOpenRouterAssistantTextSuccessResult {
   readonly text: string

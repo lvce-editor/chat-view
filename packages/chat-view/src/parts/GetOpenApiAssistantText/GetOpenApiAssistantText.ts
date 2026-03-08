@@ -1,7 +1,7 @@
-import type { ChatMessage } from '../../ChatMessage/ChatMessage.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
-import { getOpenApiApiEndpoint } from './GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
+import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export interface GetOpenApiAssistantTextSuccessResult {

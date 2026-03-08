@@ -1,4 +1,4 @@
-import type { GetOpenRouterAssistantTextErrorResult } from './GetOpenRouterAssistantText.ts'
+import type { GetOpenRouterAssistantTextErrorResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 import { openRouterTooManyRequestsMessage } from '../chatViewStrings/chatViewStrings.ts'
 
 export const getOpenRouterTooManyRequestsMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {

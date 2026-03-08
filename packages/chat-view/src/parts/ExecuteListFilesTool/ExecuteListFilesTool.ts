@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ExecuteToolOptions } from './types.ts'
-import { isPathTraversalAttempt } from './isPathTraversalAttempt.ts'
-import { normalizeRelativePath } from './normalizeRelativePath.ts'
+import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
+import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
 export const executeListFilesTool = async (args: Readonly<Record<string, unknown>>, _options: ExecuteToolOptions): Promise<string> => {
   const folderPath = typeof args.path === 'string' && args.path ? args.path : '.'

@@ -1,4 +1,4 @@
-import { type GetOpenRouterAssistantTextErrorResult, type GetOpenRouterAssistantTextSuccessResult } from './GetOpenRouterAssistantText.ts'
+import { type GetOpenRouterAssistantTextErrorResult, type GetOpenRouterAssistantTextSuccessResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 import { normalizeLimitInfo } from './NormalizeLimitInfo.ts'
 
 export const normalizeMockResult = (value: unknown): GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult => {

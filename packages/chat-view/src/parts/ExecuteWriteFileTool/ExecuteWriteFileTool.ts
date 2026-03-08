@@ -1,8 +1,8 @@
-import type { ExecuteToolOptions } from './types.ts'
-import { FileSystemWriteFile } from '../../ExtensionHostCommandType/ExtensionHostCommandType.ts'
-import { executeFileSystemCommand } from './executeFileSystemCommand.ts'
-import { isPathTraversalAttempt } from './isPathTraversalAttempt.ts'
-import { normalizeRelativePath } from './normalizeRelativePath.ts'
+import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import { executeFileSystemCommand } from '../ExecuteFileSystemCommand/ExecuteFileSystemCommand.ts'
+import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
+import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
 export const executeWriteFileTool = async (args: Readonly<Record<string, unknown>>, options: ExecuteToolOptions): Promise<string> => {
   const filePath = typeof args.path === 'string' ? args.path : ''

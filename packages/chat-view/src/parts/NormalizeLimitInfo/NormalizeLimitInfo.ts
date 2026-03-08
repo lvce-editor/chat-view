@@ -1,4 +1,4 @@
-import type { GetOpenRouterAssistantTextErrorResult } from './GetOpenRouterAssistantText.ts'
+import type { GetOpenRouterAssistantTextErrorResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 
 export const normalizeLimitInfo = (value: unknown): GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined => {
   if (!value || typeof value !== 'object') {

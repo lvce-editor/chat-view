@@ -1,6 +1,6 @@
-import type { ChatMessage } from '../../ChatState/ChatState.ts'
-import * as ExtensionHostShared from '../../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import type { ChatMessage } from '../ChatState/ChatState.ts'
+import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
+import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import {
   type GetOpenRouterAssistantTextErrorResult,
   type GetOpenRouterAssistantTextSuccessResult,

@@ -1,5 +1,5 @@
 import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
-import * as MockOpenApiStream from '../../MockOpenApiStream/MockOpenApiStream.ts'
+import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 export const getMockOpenApiAssistantText = async (
   stream: boolean,
