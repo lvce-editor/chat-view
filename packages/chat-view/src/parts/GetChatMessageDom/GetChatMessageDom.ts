@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+=======
+import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+>>>>>>> origin/main
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -11,9 +15,33 @@ import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMis
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
+<<<<<<< HEAD
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
+=======
+import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
+import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
+
+const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[] => {
+  if (message.role !== 'assistant' || !message.toolCalls || message.toolCalls.length === 0) {
+    return []
+  }
+  return message.toolCalls.flatMap((toolCall) => {
+    const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
+    const label = `${toolCall.name} ${argumentPreview}`
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.Markdown,
+        type: VirtualDomElements.P,
+      },
+      text(label),
+    ]
+  })
+}
+
+>>>>>>> origin/main
 export const getChatMessageDom = (
   message: ChatMessage,
   openRouterApiKeyInput: string,
