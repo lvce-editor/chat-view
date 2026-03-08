@@ -5,6 +5,7 @@ export const setSessionId = async (state: ChatDebugViewState, sessionId: string)
   const events = await listChatViewEvents(sessionId, state.databaseName, state.dataBaseVersion, state.eventStoreName, state.sessionIdIndexName)
   return {
     ...state,
+    errorMessage: '',
     events,
     initial: false,
     sessionId,

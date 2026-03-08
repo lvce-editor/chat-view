@@ -18,10 +18,27 @@ const getEventNode = (event: ChatViewEvent): readonly VirtualDomNode[] => {
 
 export const getChatDebugViewDom = (
   sessionId: string,
+  errorMessage: string,
   filterValue: string,
   showInputEvents: boolean,
   events: readonly ChatViewEvent[],
 ): readonly VirtualDomNode[] => {
+  if (errorMessage) {
+    return [
+      {
+        childCount: 1,
+        className: 'ChatDebugView',
+        type: VirtualDomElements.Div,
+      },
+      {
+        childCount: 1,
+        className: 'ChatDebugViewError',
+        type: VirtualDomElements.Div,
+      },
+      text(errorMessage),
+    ]
+  }
+
   const eventNodes = events.flatMap(getEventNode)
   return [
     {
@@ -72,10 +89,10 @@ export const getChatDebugViewDom = (
       ? [
           {
             childCount: 1,
-            className: 'ChatDebugViewEmpty',
+            className: errorMessage ? 'ChatDebugViewError' : 'ChatDebugViewEmpty',
             type: VirtualDomElements.Div,
           },
-          text('No events'),
+          text(errorMessage || 'No events'),
         ]
       : eventNodes),
   ]

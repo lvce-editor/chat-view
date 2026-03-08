@@ -6,6 +6,7 @@ export const diff = (oldState: ChatDebugViewState, newState: ChatDebugViewState)
     return [DiffType.RenderCss, DiffType.RenderItems]
   }
   if (
+    oldState.errorMessage !== newState.errorMessage ||
     oldState.events !== newState.events ||
     oldState.filterValue !== newState.filterValue ||
     oldState.sessionId !== newState.sessionId ||
