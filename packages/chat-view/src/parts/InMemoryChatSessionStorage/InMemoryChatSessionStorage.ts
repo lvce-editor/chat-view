@@ -7,7 +7,14 @@ const now = (): string => {
 }
 
 const isSameMessage = (a: Readonly<ChatSession['messages'][number]>, b: Readonly<ChatSession['messages'][number]>): boolean => {
-  return a.id === b.id && a.inProgress === b.inProgress && a.role === b.role && a.text === b.text && a.time === b.time
+  return (
+    a.id === b.id &&
+    a.inProgress === b.inProgress &&
+    a.role === b.role &&
+    a.text === b.text &&
+    a.time === b.time &&
+    JSON.stringify(a.toolCalls || []) === JSON.stringify(b.toolCalls || [])
+  )
 }
 
 const canAppendMessages = (
@@ -88,6 +95,7 @@ const getMutationEvents = (previous: ChatSession | undefined, next: ChatSession)
           text: nextMessage.text,
           time: nextMessage.time,
           timestamp,
+          toolCalls: nextMessage.toolCalls,
           type: 'chat-message-updated',
         })
       }
@@ -138,6 +146,7 @@ const replaySession = (id: string, title: string | undefined, events: readonly C
           inProgress: event.inProgress,
           text: event.text,
           time: event.time,
+          toolCalls: event.toolCalls,
         }
       })
       continue

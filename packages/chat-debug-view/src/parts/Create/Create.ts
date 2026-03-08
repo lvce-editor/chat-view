@@ -1,3 +1,4 @@
+import type { ChatDebugViewState } from '../State/ChatDebugViewState.ts'
 import * as ChatDebugViewStates from '../State/ChatDebugViewStates.ts'
 import { createDefaultState } from '../State/CreateDefaultState.ts'
 
@@ -10,13 +11,21 @@ export const create = (
   platform: number,
   assetDir: string,
   sessionId = '',
+  databaseName = 'lvce-chat-view-sessions',
+  dataBaseVersion = 2,
+  eventStoreName = 'chat-view-events',
+  sessionIdIndexName = 'sessionId',
 ): void => {
-  const state = {
+  const state: ChatDebugViewState = {
     ...createDefaultState(),
     assetDir,
+    databaseName,
+    dataBaseVersion,
+    eventStoreName,
     height,
     platform,
     sessionId,
+    sessionIdIndexName,
     uid,
     width,
     x,

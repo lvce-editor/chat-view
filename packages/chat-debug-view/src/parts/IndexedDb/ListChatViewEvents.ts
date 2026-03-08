@@ -2,13 +2,8 @@
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { requestToPromise } from './RequestToPromise.ts'
 
-const databaseName = 'lvce-chat-view-sessions'
-const databaseVersion = 2
-const eventStoreName = 'chat-view-events'
-const sessionIdIndexName = 'sessionId'
-
-const openDatabase = async (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(databaseName, databaseVersion)
+const openDatabase = async (databaseName: string, dataBaseVersion: number): Promise<IDBDatabase> => {
+  const request = indexedDB.open(databaseName, dataBaseVersion)
   return requestToPromise(() => request)
 }
 
@@ -17,21 +12,35 @@ const getAllEvents = async (store: Readonly<IDBObjectStore>): Promise<readonly C
   return all as readonly ChatViewEvent[]
 }
 
-const getEventsBySessionId = async (store: Readonly<IDBObjectStore>, sessionId: string): Promise<readonly ChatViewEvent[]> => {
+const filterEventsBySessionId = (events: readonly ChatViewEvent[], sessionId: string): readonly ChatViewEvent[] => {
+  return events.filter((event) => event.sessionId === sessionId)
+}
+
+const getEventsBySessionId = async (
+  store: Readonly<IDBObjectStore>,
+  sessionId: string,
+  sessionIdIndexName: string,
+): Promise<readonly ChatViewEvent[]> => {
   if (store.indexNames.contains(sessionIdIndexName)) {
     const index = store.index(sessionIdIndexName)
     const events = await requestToPromise(() => index.getAll(IDBKeyRange.only(sessionId)))
-    return events as readonly ChatViewEvent[]
+    return filterEventsBySessionId(events as readonly ChatViewEvent[], sessionId)
   }
   const all = await getAllEvents(store)
-  return all.filter((event) => event.sessionId === sessionId)
+  return filterEventsBySessionId(all, sessionId)
 }
 
-export const listChatViewEvents = async (sessionId: string): Promise<readonly ChatViewEvent[]> => {
+export const listChatViewEvents = async (
+  sessionId: string,
+  databaseName: string,
+  dataBaseVersion: number,
+  eventStoreName: string,
+  sessionIdIndexName: string,
+): Promise<readonly ChatViewEvent[]> => {
   if (typeof indexedDB === 'undefined') {
     return []
   }
-  const database = await openDatabase()
+  const database = await openDatabase(databaseName, dataBaseVersion)
   try {
     if (!database.objectStoreNames.contains(eventStoreName)) {
       return []
@@ -39,9 +48,9 @@ export const listChatViewEvents = async (sessionId: string): Promise<readonly Ch
     const transaction = database.transaction(eventStoreName, 'readonly')
     const store = transaction.objectStore(eventStoreName)
     if (!sessionId) {
-      return getAllEvents(store)
+      return []
     }
-    return getEventsBySessionId(store, sessionId)
+    return getEventsBySessionId(store, sessionId, sessionIdIndexName)
   } finally {
     database.close()
   }

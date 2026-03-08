@@ -1,20 +1,27 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getJsonTokenNodes } from '../GetJsonTokenNodes/GetJsonTokenNodes.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const getEventNode = (event: ChatViewEvent): readonly VirtualDomNode[] => {
+  const tokenNodes = getJsonTokenNodes(event)
   return [
     {
-      childCount: 1,
+      childCount: tokenNodes.length / 2,
       className: 'ChatDebugViewEvent',
       type: VirtualDomElements.Pre,
     },
-    text(JSON.stringify(event, null, 2)),
+    ...tokenNodes,
   ]
 }
 
-export const getChatDebugViewDom = (sessionId: string, filterValue: string, events: readonly ChatViewEvent[]): readonly VirtualDomNode[] => {
+export const getChatDebugViewDom = (
+  sessionId: string,
+  filterValue: string,
+  showInputEvents: boolean,
+  events: readonly ChatViewEvent[],
+): readonly VirtualDomNode[] => {
   const eventNodes = events.flatMap(getEventNode)
   return [
     {
@@ -23,7 +30,7 @@ export const getChatDebugViewDom = (sessionId: string, filterValue: string, even
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 1,
+      childCount: 2,
       className: 'ChatDebugViewTop',
       type: VirtualDomElements.Div,
     },
@@ -37,11 +44,25 @@ export const getChatDebugViewDom = (sessionId: string, filterValue: string, even
       value: filterValue,
     },
     {
+      childCount: 2,
+      className: 'ChatDebugViewToggle',
+      type: VirtualDomElements.Div,
+    },
+    {
+      checked: showInputEvents,
+      childCount: 0,
+      inputType: 'checkbox',
+      name: InputName.ShowInputEvents,
+      onChange: DomEventListenerFunctions.HandleInput,
+      type: VirtualDomElements.Input,
+    },
+    text('Show input events'),
+    {
       childCount: 1,
       className: 'ChatDebugViewSession',
       type: VirtualDomElements.Div,
     },
-    text(`sessionId: ${sessionId || '(all)'}`),
+    text(`sessionId: ${sessionId || '(none)'}`),
     {
       childCount: eventNodes.length === 0 ? 1 : eventNodes.length,
       className: 'ChatDebugViewEvents',

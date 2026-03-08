@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
+import type { StreamingToolCall } from './GetOpenApiAssistantText.ts'
 
 export interface GetAiResponseOptions {
   readonly assetDir: string
@@ -7,7 +8,10 @@ export interface GetAiResponseOptions {
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
+  readonly onDataEvent?: (value: unknown) => Promise<void>
+  readonly onEventStreamFinished?: () => Promise<void>
   readonly onTextChunk?: (chunk: string) => Promise<void>
+  readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string
   readonly openRouterApiBaseUrl: string

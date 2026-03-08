@@ -29,6 +29,7 @@ export interface ChatMessageUpdatedEvent extends ChatViewEventBase {
   readonly messageId: string
   readonly text: string
   readonly time: string
+  readonly toolCalls?: ChatMessage['toolCalls']
   readonly type: 'chat-message-updated'
 }
 
@@ -53,6 +54,16 @@ export interface HandleResponseChunkEvent extends ChatViewEventBase {
   readonly type: 'handle-response-chunk'
 }
 
+export interface DataEvent extends ChatViewEventBase {
+  readonly type: 'data-event'
+  readonly value: unknown
+}
+
+export interface EventStreamFinishedEvent extends ChatViewEventBase {
+  readonly type: 'event-stream-finished'
+  readonly value: '[DONE]'
+}
+
 export type ChatViewEvent =
   | ChatSessionCreatedEvent
   | ChatSessionDeletedEvent
@@ -63,3 +74,5 @@ export type ChatViewEvent =
   | HandleInputEvent
   | HandleSubmitEvent
   | HandleResponseChunkEvent
+  | DataEvent
+  | EventStreamFinishedEvent

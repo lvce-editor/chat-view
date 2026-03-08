@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { StreamingToolCall } from '../GetAiResponse/GetOpenApiAssistantText.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -29,6 +30,31 @@ export const updateMessageTextInSelectedSession = (
           ...message,
           inProgress,
           text,
+        }
+      }),
+    }
+  })
+}
+
+export const updateMessageToolCallsInSelectedSession = (
+  sessions: readonly ChatSession[],
+  selectedSessionId: string,
+  messageId: string,
+  toolCalls: readonly StreamingToolCall[],
+): readonly ChatSession[] => {
+  return sessions.map((session) => {
+    if (session.id !== selectedSessionId) {
+      return session
+    }
+    return {
+      ...session,
+      messages: session.messages.map((message) => {
+        if (message.id !== messageId) {
+          return message
+        }
+        return {
+          ...message,
+          toolCalls,
         }
       }),
     }
@@ -71,6 +97,47 @@ export const handleTextChunkFunction = async (
     assistantMessageId,
     updatedText,
     true,
+  )
+  const nextState = {
+    ...handleTextChunkState.latestState,
+    sessions: updatedSessions,
+  }
+  set(uid, handleTextChunkState.previousState, nextState)
+  // @ts-ignore
+  await RendererWorker.invoke('Chat.rerender')
+  return {
+    latestState: nextState,
+    previousState: nextState,
+  }
+}
+
+export const handleToolCallsChunkFunction = async (
+  uid: number,
+  assistantMessageId: string,
+  toolCalls: readonly StreamingToolCall[],
+  handleTextChunkState: Readonly<HandleTextChunkState>,
+): Promise<HandleTextChunkState> => {
+  const selectedSession = handleTextChunkState.latestState.sessions.find(
+    (session) => session.id === handleTextChunkState.latestState.selectedSessionId,
+  )
+  if (!selectedSession) {
+    return {
+      latestState: handleTextChunkState.latestState,
+      previousState: handleTextChunkState.previousState,
+    }
+  }
+  const assistantMessage = selectedSession.messages.find((message) => message.id === assistantMessageId)
+  if (!assistantMessage) {
+    return {
+      latestState: handleTextChunkState.latestState,
+      previousState: handleTextChunkState.previousState,
+    }
+  }
+  const updatedSessions = updateMessageToolCallsInSelectedSession(
+    handleTextChunkState.latestState.sessions,
+    handleTextChunkState.latestState.selectedSessionId,
+    assistantMessageId,
+    toolCalls,
   )
   const nextState = {
     ...handleTextChunkState.latestState,

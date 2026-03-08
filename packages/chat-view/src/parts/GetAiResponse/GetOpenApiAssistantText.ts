@@ -20,9 +20,18 @@ export interface GetOpenApiAssistantTextErrorResult {
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
+export interface StreamingToolCall {
+  readonly arguments: string
+  readonly id?: string
+  readonly name: string
+}
+
 interface GetOpenApiAssistantTextOptions {
   readonly includeObfuscation?: boolean
+  readonly onDataEvent?: (value: unknown) => Promise<void>
+  readonly onEventStreamFinished?: () => Promise<void>
   readonly onTextChunk?: (chunk: string) => Promise<void>
+  readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly stream: boolean
 }
 
@@ -81,7 +90,70 @@ const parseSseEvent = (eventChunk: string): readonly string[] => {
   return dataLines
 }
 
-const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: string) => Promise<void>): Promise<GetOpenApiAssistantTextResult> => {
+const updateToolCallAccumulator = (
+  accumulator: Readonly<Record<number, StreamingToolCall>>,
+  chunk: readonly unknown[],
+):
+  | {
+      readonly nextAccumulator: Readonly<Record<number, StreamingToolCall>>
+      readonly toolCalls: readonly StreamingToolCall[]
+    }
+  | undefined => {
+  let changed = false
+  const nextAccumulator: Record<number, StreamingToolCall> = { ...accumulator }
+  for (const item of chunk) {
+    if (!item || typeof item !== 'object') {
+      continue
+    }
+    const index = Reflect.get(item, 'index')
+    if (typeof index !== 'number') {
+      continue
+    }
+    const current = nextAccumulator[index] || { arguments: '', name: '' }
+    const id = Reflect.get(item, 'id')
+    const toolFunction = Reflect.get(item, 'function')
+    let { name } = current
+    let args = current.arguments
+    if (toolFunction && typeof toolFunction === 'object') {
+      const deltaName = Reflect.get(toolFunction, 'name')
+      const deltaArguments = Reflect.get(toolFunction, 'arguments')
+      if (typeof deltaName === 'string' && deltaName) {
+        name = deltaName
+      }
+      if (typeof deltaArguments === 'string') {
+        args += deltaArguments
+      }
+    }
+    const next: StreamingToolCall = {
+      arguments: args,
+      id: typeof id === 'string' ? id : current.id,
+      name,
+    }
+    if (JSON.stringify(next) !== JSON.stringify(current)) {
+      nextAccumulator[index] = next
+      changed = true
+    }
+  }
+  if (!changed) {
+    return undefined
+  }
+  const toolCalls = Object.entries(nextAccumulator)
+    .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+    .map((entry: readonly [string, StreamingToolCall]) => entry[1])
+    .filter((toolCall) => !!toolCall.name)
+  return {
+    nextAccumulator,
+    toolCalls,
+  }
+}
+
+const parseOpenApiStream = async (
+  response: Response,
+  onTextChunk?: (chunk: string) => Promise<void>,
+  onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>,
+  onDataEvent?: (value: unknown) => Promise<void>,
+  onEventStreamFinished?: () => Promise<void>,
+): Promise<GetOpenApiAssistantTextResult> => {
   if (!response.body) {
     return {
       details: 'request-failed',
@@ -93,6 +165,7 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
   let remainder = ''
   let text = ''
   let done = false
+  let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
 
   while (!done) {
     const { done: streamDone, value } = await reader.read()
@@ -115,6 +188,9 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
       }
       for (const line of dataLines) {
         if (line === '[DONE]') {
+          if (onEventStreamFinished) {
+            await onEventStreamFinished()
+          }
           done = true
           break
         }
@@ -127,6 +203,9 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
         if (!parsed || typeof parsed !== 'object') {
           continue
         }
+        if (onDataEvent) {
+          await onDataEvent(parsed)
+        }
         const choices = Reflect.get(parsed, 'choices')
         if (!Array.isArray(choices)) {
           continue
@@ -138,6 +217,16 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
         const delta = Reflect.get(firstChoice, 'delta')
         if (!delta || typeof delta !== 'object') {
           continue
+        }
+        const toolCalls = Reflect.get(delta, 'tool_calls')
+        const updatedToolCallResult = Array.isArray(toolCalls)
+          ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
+          : undefined
+        if (updatedToolCallResult) {
+          toolCallAccumulator = updatedToolCallResult.nextAccumulator
+        }
+        if (updatedToolCallResult && onToolCallsChunk) {
+          await onToolCallsChunk(updatedToolCallResult.toolCalls)
         }
         const content = Reflect.get(delta, 'content')
         const chunkText = getStreamChunkText(content)
@@ -156,6 +245,9 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
     const dataLines = parseSseEvent(remainder)
     for (const line of dataLines) {
       if (line === '[DONE]') {
+        if (onEventStreamFinished) {
+          await onEventStreamFinished()
+        }
         continue
       }
       let parsed: unknown
@@ -166,6 +258,9 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
       }
       if (!parsed || typeof parsed !== 'object') {
         continue
+      }
+      if (onDataEvent) {
+        await onDataEvent(parsed)
       }
       const choices = Reflect.get(parsed, 'choices')
       if (!Array.isArray(choices)) {
@@ -178,6 +273,16 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
       const delta = Reflect.get(firstChoice, 'delta')
       if (!delta || typeof delta !== 'object') {
         continue
+      }
+      const toolCalls = Reflect.get(delta, 'tool_calls')
+      const updatedToolCallResult = Array.isArray(toolCalls)
+        ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
+        : undefined
+      if (updatedToolCallResult) {
+        toolCallAccumulator = updatedToolCallResult.nextAccumulator
+      }
+      if (updatedToolCallResult && onToolCallsChunk) {
+        await onToolCallsChunk(updatedToolCallResult.toolCalls)
       }
       const content = Reflect.get(delta, 'content')
       const chunkText = getStreamChunkText(content)
@@ -236,7 +341,7 @@ export const getOpenApiAssistantText = async (
   platform: number,
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
-  const { includeObfuscation = false, onTextChunk, stream } = options ?? { stream: false }
+  const { includeObfuscation = false, onDataEvent, onEventStreamFinished, onTextChunk, onToolCallsChunk, stream } = options ?? { stream: false }
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
@@ -275,7 +380,7 @@ export const getOpenApiAssistantText = async (
     }
 
     if (stream) {
-      return parseOpenApiStream(response, onTextChunk)
+      return parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
     }
 
     let parsed: unknown
