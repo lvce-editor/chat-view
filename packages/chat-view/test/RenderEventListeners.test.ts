@@ -32,6 +32,10 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleClickNew'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickSessionDebug,
+      params: ['handleClickSessionDebug'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickBack,
       params: ['handleClickBack'],
     },

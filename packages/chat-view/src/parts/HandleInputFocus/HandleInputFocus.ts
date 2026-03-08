@@ -20,7 +20,13 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focused: true,
     }
   }
-  if (name === InputName.CreateSession || name === InputName.Settings || name === InputName.CloseChat || name === InputName.Back) {
+  if (
+    name === InputName.CreateSession ||
+    name === InputName.SessionDebug ||
+    name === InputName.Settings ||
+    name === InputName.CloseChat ||
+    name === InputName.Back
+  ) {
     return {
       ...state,
       focus: 'header',
