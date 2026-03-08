@@ -34,6 +34,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
   const assistantMessage = await getAiResponse({
     assetDir: updatedState.assetDir,
     messages: retryMessages,
+    mockAiResponseDelay: updatedState.mockAiResponseDelay,
     mockApiCommandId: updatedState.mockApiCommandId,
     models: updatedState.models,
     nextMessageId: updatedState.nextMessageId,

@@ -33,6 +33,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     assetDir,
     composerValue,
+    mockAiResponseDelay,
     mockApiCommandId,
     models,
     nextMessageId,
@@ -157,6 +158,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     assetDir,
     messageId: assistantMessageId,
     messages,
+    mockAiResponseDelay,
     mockApiCommandId,
     models,
     nextMessageId: optimisticState.nextMessageId,
