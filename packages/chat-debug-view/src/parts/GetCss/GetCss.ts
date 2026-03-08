@@ -31,6 +31,11 @@ export const getCss = (): string => {
   opacity: 0.8;
 }
 
+.ChatDebugViewEventCount {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
 .ChatDebugViewEvents {
   overflow: auto;
   scrollbar-width: thin;
