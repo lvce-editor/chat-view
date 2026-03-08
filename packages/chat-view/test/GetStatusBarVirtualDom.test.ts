@@ -463,7 +463,8 @@ test('getStatusBarVirtualDom should render ordered list from assistant message t
     (node) => node.text === 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
   )
   const listFilesReason = result.find(
-    (node) => node.text === 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+    (node) =>
+      node.text === 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
   )
   expect(orderedList).toBeDefined()
   expect(listItems).toHaveLength(3)
