@@ -11,7 +11,6 @@ export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
   readonly assetDir: string
-  readonly uri: string
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
@@ -55,6 +54,7 @@ export interface ChatState {
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number
+  readonly uri: string
   readonly usageOverviewEnabled: boolean
   readonly useMockApi: boolean
   readonly viewMode: ChatViewMode

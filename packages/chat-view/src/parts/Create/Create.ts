@@ -6,10 +6,10 @@ export const create = (uid: number, uri: string, x: number, y: number, width: nu
   const state: ChatState = {
     ...createDefaultState(),
     assetDir,
-    uri,
     height,
     platform,
     uid,
+    uri,
     width,
     x,
     y,
