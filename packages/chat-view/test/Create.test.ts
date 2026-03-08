@@ -5,8 +5,7 @@ import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.t
 
 test('create should store state with the given uid', () => {
   const uid = 123
-  const uri = 'file:///workspace/example.txt'
-  Create.create(uid, uri, 10, 20, 300, 400, 0, '')
+  Create.create(uid, 10, 20, 300, 400, 0, '')
   const result = StatusBarStates.get(uid)
   const { newState } = result
   const newStateTyped: ChatState = newState
@@ -14,7 +13,6 @@ test('create should store state with the given uid', () => {
   const oldStateTyped: ChatState = oldState
   expect(newStateTyped).toBeDefined()
   expect(newStateTyped.uid).toBe(uid)
-  expect(newStateTyped.uri).toBe(uri)
   expect(newStateTyped.models.length).toBeGreaterThan(0)
   expect(newStateTyped.models).toContainEqual({ id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi' })
   expect(newStateTyped.selectedModelId).toBe('test')
