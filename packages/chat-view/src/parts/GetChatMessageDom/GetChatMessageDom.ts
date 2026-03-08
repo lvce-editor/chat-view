@@ -33,7 +33,6 @@ export const getChatMessageDom = (
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
       ? 1
       : 0
-
   const childCount = messageDom.length + extraChildCount + toolCallsDomCount
   return [
     {
