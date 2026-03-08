@@ -1,10 +1,11 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleJs } from './bundleJs.js'
+import { bundleJs, bundleNetworkWorkerJs } from './bundleJs.js'
 import { root } from './root.js'
 
 const dist = join(root, '.tmp', 'dist')
+const networkWorkerDist = join(root, '.tmp', 'dist-chat-network-worker')
 
 const readJson = async (path) => {
   const content = await readFile(path, 'utf8')
@@ -50,9 +51,12 @@ const getVersion = async () => {
 }
 
 await rm(dist, { recursive: true, force: true })
+await rm(networkWorkerDist, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
+await mkdir(networkWorkerDist, { recursive: true })
 
 await bundleJs()
+await bundleNetworkWorkerJs()
 
 const version = await getVersion()
 
@@ -72,3 +76,25 @@ await writeJson(join(dist, 'package.json'), packageJson)
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+
+const networkWorkerPackageJson = await readJson(join(root, 'packages', 'chat-network-worker', 'package.json'))
+const rpcVersion = networkWorkerPackageJson.dependencies?.['@lvce-editor/rpc'] || networkWorkerPackageJson.devDependencies?.['@lvce-editor/rpc']
+
+delete networkWorkerPackageJson.scripts
+delete networkWorkerPackageJson.devDependencies
+delete networkWorkerPackageJson.prettier
+delete networkWorkerPackageJson.jest
+delete networkWorkerPackageJson.xo
+delete networkWorkerPackageJson.directories
+delete networkWorkerPackageJson.nodemonConfig
+networkWorkerPackageJson.version = version
+networkWorkerPackageJson.main = 'dist/chatNetworkWorkerMain.js'
+if (rpcVersion) {
+  networkWorkerPackageJson.dependencies = {
+    '@lvce-editor/rpc': rpcVersion,
+  }
+}
+
+await writeJson(join(networkWorkerDist, 'package.json'), networkWorkerPackageJson)
+await cp(join(root, 'README.md'), join(networkWorkerDist, 'README.md'))
+await cp(join(root, 'LICENSE'), join(networkWorkerDist, 'LICENSE'))
