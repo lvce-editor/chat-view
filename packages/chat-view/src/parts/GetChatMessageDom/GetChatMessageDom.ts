@@ -28,10 +28,11 @@ export const getChatMessageDom = (
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
+  const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageIntermediate.length + 1 + toolCallsDom.length
-      : messageIntermediate.length + toolCallsDom.length
+      ? messageIntermediate.length + 1 + toolCallsChildCount
+      : messageIntermediate.length + toolCallsChildCount
   return [
     {
       childCount: 1,
