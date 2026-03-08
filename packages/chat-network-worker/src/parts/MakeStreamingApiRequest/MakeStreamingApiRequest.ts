@@ -1,9 +1,9 @@
-import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
-import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
-import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
 import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptions.ts'
-import { parseSseFromReader } from './ParseSseFromReader.ts'
 import type { StreamingApiRequestResult } from './StreamingApiRequestResult.ts'
+import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
+import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
+import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
+import { parseSseFromReader } from './ParseSseFromReader.ts'
 
 export const makeStreamingApiRequest = async (options: Readonly<MakeApiRequestOptions>): Promise<StreamingApiRequestResult> => {
   let response: Response
