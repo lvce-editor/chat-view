@@ -5,6 +5,11 @@ export const getMockOpenApiAssistantText = async (
   stream: boolean,
   onTextChunk?: (chunk: string) => Promise<void>,
 ): Promise<GetOpenApiAssistantTextResult> => {
+  const error = MockOpenApiStream.takeErrorResponse()
+  if (error) {
+    return error
+  }
+
   let text = ''
   while (true) {
     const chunk = await MockOpenApiStream.readNextChunk()

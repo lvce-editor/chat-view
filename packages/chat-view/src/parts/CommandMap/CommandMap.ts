@@ -22,6 +22,7 @@ import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
+import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
@@ -65,6 +66,7 @@ export const commandMap = {
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
+  'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
