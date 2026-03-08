@@ -406,8 +406,9 @@ test('getAiResponse should stream OpenAI chunks when enabled', async () => {
   globalThis.fetch = (async (input: unknown) => {
     requestedUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     const chunks = [
-      'data: {"choices":[{"delta":{"content":"Hello"}}]}\n\n',
-      'data: {"choices":[{"delta":{"content":" world"}}]}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"Hello"}\n\n',
+      'data: {"type":"response.output_text.delta","delta":" world"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
       'data: [DONE]\n\n',
     ]
     let index = 0
@@ -457,7 +458,7 @@ test('getAiResponse should stream OpenAI chunks when enabled', async () => {
       userText: 'hello',
     })
 
-    expect(requestedUrl).toBe('https://api.openai.com/v1/chat/completions?stream=true')
+    expect(requestedUrl).toBe('https://api.openai.com/v1/responses')
     expect(streamedChunks).toEqual(['Hello', ' world'])
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('Hello world')

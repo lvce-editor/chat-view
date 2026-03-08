@@ -1,0 +1,49 @@
+import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import { openApiRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
+
+export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {
+  switch (errorResult.details) {
+    case 'http-error': {
+      const errorMessage = errorResult.errorMessage?.trim()
+      const hasErrorCode = typeof errorResult.errorCode === 'string' && errorResult.errorCode.length > 0
+      const hasErrorType = typeof errorResult.errorType === 'string' && errorResult.errorType.length > 0
+
+      if (errorResult.statusCode === 429) {
+        let prefix = 'OpenAI rate limit exceeded (429)'
+        if (hasErrorCode) {
+          prefix = `OpenAI rate limit exceeded (429: ${errorResult.errorCode})`
+        }
+        if (hasErrorType) {
+          prefix += ` [${errorResult.errorType}]`
+        }
+        prefix += '.'
+        if (!errorMessage) {
+          return prefix
+        }
+        return `${prefix} ${errorMessage}`
+      }
+
+      if (typeof errorResult.statusCode === 'number') {
+        let prefix = `OpenAI request failed (status ${errorResult.statusCode})`
+        if (hasErrorCode) {
+          prefix += `: ${errorResult.errorCode}`
+        }
+        if (hasErrorType) {
+          prefix += ` [${errorResult.errorType}]`
+        }
+        prefix += '.'
+        if (!errorMessage) {
+          return prefix
+        }
+        return `${prefix} ${errorMessage}`
+      }
+
+      if (errorMessage) {
+        return `OpenAI request failed. ${errorMessage}`
+      }
+      return openApiRequestFailedMessage
+    }
+    case 'request-failed':
+      return openApiRequestFailedMessage
+  }
+}

@@ -48,12 +48,6 @@ export interface HandleSubmitEvent extends ChatViewEventBase {
   readonly value: string
 }
 
-export interface HandleResponseChunkEvent extends ChatViewEventBase {
-  readonly content: string
-  readonly messageId: string
-  readonly type: 'handle-response-chunk'
-}
-
 export interface DataEvent extends ChatViewEventBase {
   readonly type: 'sse-response-part'
   readonly value: unknown
@@ -73,6 +67,5 @@ export type ChatViewEvent =
   | ChatSessionMessagesReplacedEvent
   | HandleInputEvent
   | HandleSubmitEvent
-  | HandleResponseChunkEvent
   | DataEvent
   | EventStreamFinishedEvent
