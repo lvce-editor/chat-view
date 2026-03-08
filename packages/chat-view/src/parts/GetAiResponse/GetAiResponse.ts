@@ -2,6 +2,7 @@ import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from './GetAiResponseOptions.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getMockAiResponse } from './GetMockAiResponse.ts'
+import { getMockOpenApiAssistantText } from './GetMockOpenApiAssistantText.ts'
 import { getMockOpenRouterAssistantText } from './GetMockOpenRouterAssistantText.ts'
 import { getOpenApiAssistantText } from './GetOpenApiAssistantText.ts'
 import { getOpenApiErrorMessage } from './GetOpenApiErrorMessage.ts'
@@ -23,6 +24,7 @@ export const getAiResponse = async ({
   openApiApiKey,
   openRouterApiBaseUrl,
   openRouterApiKey,
+  passIncludeObfuscation = false,
   platform,
   selectedModelId,
   streamingEnabled = false,
@@ -33,7 +35,15 @@ export const getAiResponse = async ({
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
-    if (openApiApiKey) {
+    if (useMockApi) {
+      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk)
+      if (result.type === 'success') {
+        const { text: assistantText } = result
+        text = assistantText
+      } else {
+        text = getOpenApiErrorMessage(result)
+      }
+    } else if (openApiApiKey) {
       const result = await getOpenApiAssistantText(
         messages,
         getOpenApiModelId(selectedModelId),
@@ -42,6 +52,7 @@ export const getAiResponse = async ({
         assetDir,
         platform,
         {
+          includeObfuscation: passIncludeObfuscation,
           onTextChunk,
           stream: streamingEnabled,
         },

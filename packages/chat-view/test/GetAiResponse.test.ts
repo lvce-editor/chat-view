@@ -7,6 +7,7 @@ import {
   openRouterTooManyRequestsMessage,
 } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
+import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
@@ -219,6 +220,45 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
+})
+
+test('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
+  MockOpenApiStream.reset()
+  MockOpenApiStream.pushChunk('Hel')
+  MockOpenApiStream.pushChunk('lo')
+  MockOpenApiStream.finish()
+  const chunks: string[] = []
+
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    onTextChunk: async (chunk: string) => {
+      chunks.push(chunk)
+    },
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    streamingEnabled: true,
+    useMockApi: true,
+    userText: 'hello',
+  })
+
+  expect(result.role).toBe('assistant')
+  expect(result.text).toBe('Hello')
+  expect(chunks).toEqual(['Hel', 'lo'])
 })
 
 test('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
