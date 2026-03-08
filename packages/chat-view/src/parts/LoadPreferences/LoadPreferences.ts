@@ -26,12 +26,23 @@ const loadOpenRouterApiKey = async (): Promise<string> => {
   }
 }
 
-export const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string }> => {
+const loadStreamingEnabled = async (): Promise<boolean> => {
+  try {
+    const savedStreamingEnabled = await Preferences.get('chatView.streamingEnabled')
+    return typeof savedStreamingEnabled === 'boolean' ? savedStreamingEnabled : false
+  } catch {
+    return false
+  }
+}
+
+export const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string; streamingEnabled: boolean }> => {
   const openApiApiKey = await loadOpenApiApiKey()
   const openRouterApiKey = await loadOpenRouterApiKey()
+  const streamingEnabled = await loadStreamingEnabled()
 
   return {
     openApiApiKey,
     openRouterApiKey,
+    streamingEnabled,
   }
 }
