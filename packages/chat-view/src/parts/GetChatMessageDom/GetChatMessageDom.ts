@@ -31,8 +31,10 @@ export const getChatMessageDom = (
   const toolCallsDomCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageDom.length + 1 + toolCallsDomCount
-      : messageDom.length + toolCallsDomCount
+      ? 1
+      : 0
+
+  const childCount = messageDom.length + extraChildCount + toolCallsDomCount
   return [
     {
       childCount: 1,
@@ -40,7 +42,7 @@ export const getChatMessageDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: extraChildCount,
+      childCount,
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
