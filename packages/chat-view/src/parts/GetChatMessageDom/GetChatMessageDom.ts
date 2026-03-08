@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -11,8 +11,26 @@ import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMis
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
-import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
+import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
 import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
+
+const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[] => {
+  if (message.role !== 'assistant' || !message.toolCalls || message.toolCalls.length === 0) {
+    return []
+  }
+  return message.toolCalls.flatMap((toolCall) => {
+    const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
+    const label = `${toolCall.name} ${argumentPreview}`
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.Markdown,
+        type: VirtualDomElements.P,
+      },
+      text(label),
+    ]
+  })
+}
 
 export const getChatMessageDom = (
   message: ChatMessage,
@@ -28,12 +46,10 @@ export const getChatMessageDom = (
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
-  const toolCallsDomCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? 1
-      : 0
-  const childCount = messageDom.length + extraChildCount + toolCallsDomCount
+      ? messageIntermediate.length + 1 + toolCallsDom.length
+      : messageIntermediate.length + toolCallsDom.length
   return [
     {
       childCount: 1,
@@ -41,7 +57,7 @@ export const getChatMessageDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount,
+      childCount: extraChildCount,
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
