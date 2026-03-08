@@ -32,6 +32,7 @@ export interface ChatState {
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly messagesScrollTop: number
+  readonly mockAiResponseDelay: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number

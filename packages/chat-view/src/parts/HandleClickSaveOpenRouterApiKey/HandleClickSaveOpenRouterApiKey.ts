@@ -48,6 +48,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   const assistantMessage = await getAiResponse({
     assetDir: updatedState.assetDir,
     messages: retryMessages,
+    mockAiResponseDelay: updatedState.mockAiResponseDelay,
     mockApiCommandId: updatedState.mockApiCommandId,
     models: updatedState.models,
     nextMessageId: updatedState.nextMessageId,

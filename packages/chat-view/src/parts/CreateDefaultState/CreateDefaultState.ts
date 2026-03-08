@@ -59,6 +59,7 @@ export const createDefaultState = (): ChatState => {
     listItemHeight: 40,
     maxComposerRows: 5,
     messagesScrollTop: 0,
+    mockAiResponseDelay: 800,
     mockApiCommandId: '',
     models: getDefaultModels(),
     nextMessageId: 1,
