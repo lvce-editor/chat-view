@@ -1,5 +1,5 @@
 import { type GetOpenRouterAssistantTextErrorResult, type GetOpenRouterAssistantTextSuccessResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
-import { normalizeLimitInfo } from './NormalizeLimitInfo.ts'
+import { normalizeLimitInfo } from '../NormalizeLimitInfo/NormalizeLimitInfo.ts'
 
 export const normalizeMockResult = (value: unknown): GetOpenRouterAssistantTextSuccessResult | GetOpenRouterAssistantTextErrorResult => {
   if (typeof value === 'string') {
