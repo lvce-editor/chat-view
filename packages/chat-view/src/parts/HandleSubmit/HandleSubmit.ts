@@ -156,7 +156,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     userText,
   })
 
-  const latestState = handleTextChunkState.latestState
+  const { latestState } = handleTextChunkState
   const updatedSessions = streamingEnabled
     ? updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
     : appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)

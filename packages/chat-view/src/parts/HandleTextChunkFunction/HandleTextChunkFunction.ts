@@ -40,7 +40,9 @@ export const handleTextChunkFunction = async (
   chunk: string,
   handleTextChunkState: HandleTextChunkState,
 ): Promise<void> => {
-  const selectedSession = handleTextChunkState.latestState.sessions.find((session) => session.id === handleTextChunkState.latestState.selectedSessionId)
+  const selectedSession = handleTextChunkState.latestState.sessions.find(
+    (session) => session.id === handleTextChunkState.latestState.selectedSessionId,
+  )
   if (!selectedSession) {
     return
   }
