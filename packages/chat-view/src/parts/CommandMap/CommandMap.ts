@@ -29,6 +29,7 @@ import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
+import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
@@ -67,6 +68,7 @@ export const commandMap = {
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
+  'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),
 }
