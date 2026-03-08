@@ -243,6 +243,7 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
     ['Preferences.get', 'secrets.openAiApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
   ])
 })
 
@@ -265,6 +266,7 @@ test('loadContent should load openApiApiKey from preferences', async () => {
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
   ])
 })
 
@@ -292,5 +294,34 @@ test('loadContent should load streamingEnabled from preferences', async () => {
     ['Preferences.get', 'secrets.openAiApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+  ])
+})
+
+test('loadContent should load passIncludeObfuscation from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      if (key === 'chatView.passIncludeObfuscation') {
+        return true
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.passIncludeObfuscation).toBe(true)
+  expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
   ])
 })

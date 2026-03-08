@@ -66,6 +66,7 @@ export const createDefaultState = (): ChatState => {
     openRouterApiKeyInput: '',
     openRouterApiKeysSettingsUrl: 'https://openrouter.ai/settings/keys',
     openRouterApiKeyState: 'idle',
+    passIncludeObfuscation: false,
     platform: 0,
     renamingSessionId: '',
     selectedModelId: defaultModelId,

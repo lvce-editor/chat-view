@@ -35,14 +35,30 @@ const loadStreamingEnabled = async (): Promise<boolean> => {
   }
 }
 
-export const loadPreferences = async (): Promise<{ openApiApiKey: string; openRouterApiKey: string; streamingEnabled: boolean }> => {
+const loadPassIncludeObfuscation = async (): Promise<boolean> => {
+  try {
+    const savedPassIncludeObfuscation = await Preferences.get('chatView.passIncludeObfuscation')
+    return typeof savedPassIncludeObfuscation === 'boolean' ? savedPassIncludeObfuscation : false
+  } catch {
+    return false
+  }
+}
+
+export const loadPreferences = async (): Promise<{
+  openApiApiKey: string
+  openRouterApiKey: string
+  streamingEnabled: boolean
+  passIncludeObfuscation: boolean
+}> => {
   const openApiApiKey = await loadOpenApiApiKey()
   const openRouterApiKey = await loadOpenRouterApiKey()
   const streamingEnabled = await loadStreamingEnabled()
+  const passIncludeObfuscation = await loadPassIncludeObfuscation()
 
   return {
     openApiApiKey,
     openRouterApiKey,
+    passIncludeObfuscation,
     streamingEnabled,
   }
 }

@@ -36,7 +36,7 @@ const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], sel
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
-  const { openApiApiKey, openRouterApiKey, streamingEnabled } = await loadPreferences()
+  const { openApiApiKey, openRouterApiKey, passIncludeObfuscation, streamingEnabled } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -70,6 +70,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
+    passIncludeObfuscation,
     selectedModelId,
     selectedSessionId,
     sessions,
