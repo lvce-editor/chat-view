@@ -9,6 +9,7 @@ export const createDefaultState = (): ChatDebugViewState => {
     initial: true,
     platform: 0,
     sessionId: '',
+    showInputEvents: true,
     uid: 0,
     width: 0,
     x: 0,

@@ -6,6 +6,7 @@ import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import {
+  handleToolCallsChunkFunction,
   handleTextChunkFunction,
   type HandleTextChunkState,
   updateMessageTextInSelectedSession,
@@ -159,7 +160,26 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     mockApiCommandId,
     models,
     nextMessageId: optimisticState.nextMessageId,
+    onDataEvent: async (value: unknown): Promise<void> => {
+      await appendChatViewEvent({
+        sessionId: optimisticState.selectedSessionId,
+        timestamp: new Date().toISOString(),
+        type: 'data-event',
+        value,
+      })
+    },
+    onEventStreamFinished: async (): Promise<void> => {
+      await appendChatViewEvent({
+        sessionId: optimisticState.selectedSessionId,
+        timestamp: new Date().toISOString(),
+        type: 'event-stream-finished',
+        value: '[DONE]',
+      })
+    },
     onTextChunk: handleTextChunkFunctionRef,
+    onToolCallsChunk: async (toolCalls): Promise<void> => {
+      handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
+    },
     openApiApiBaseUrl,
     openApiApiKey,
     openRouterApiBaseUrl,

@@ -19,7 +19,10 @@ export const getAiResponse = async ({
   messages,
   mockApiCommandId,
   models,
+  onDataEvent,
+  onEventStreamFinished,
   onTextChunk,
+  onToolCallsChunk,
   openApiApiBaseUrl,
   openApiApiKey,
   openRouterApiBaseUrl,
@@ -53,7 +56,10 @@ export const getAiResponse = async ({
         platform,
         {
           includeObfuscation: passIncludeObfuscation,
+          onDataEvent,
+          onEventStreamFinished,
           onTextChunk,
+          onToolCallsChunk,
           stream: streamingEnabled,
         },
       )

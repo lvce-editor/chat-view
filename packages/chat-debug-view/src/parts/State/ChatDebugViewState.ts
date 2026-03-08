@@ -8,6 +8,7 @@ export interface ChatDebugViewState {
   readonly initial: boolean
   readonly platform: number
   readonly sessionId: string
+  readonly showInputEvents: boolean
   readonly uid: number
   readonly width: number
   readonly x: number

@@ -11,10 +11,19 @@ export const getCss = (): string => {
 
 .ChatDebugViewTop {
   display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .ChatDebugViewTop .InputBox {
-  width: 100%;
+  flex: 1;
+}
+
+.ChatDebugViewToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .ChatDebugViewSession {
@@ -40,6 +49,26 @@ export const getCss = (): string => {
 
 .ChatDebugViewEmpty {
   opacity: 0.8;
+}
+
+.TokenText {
+  color: var(--vscode-editor-foreground, inherit);
+}
+
+.TokenKey {
+  color: var(--vscode-symbolIcon-propertyForeground, var(--vscode-editor-foreground, inherit));
+}
+
+.TokenString {
+  color: var(--vscode-debugTokenExpression-string, var(--vscode-charts-green, #89d185));
+}
+
+.TokenNumeric {
+  color: var(--vscode-debugTokenExpression-number, var(--vscode-charts-blue, #75beff));
+}
+
+.TokenBoolean {
+  color: var(--vscode-debugTokenExpression-boolean, var(--vscode-charts-yellow, #dcdcaa));
 }
 `
 }

@@ -261,6 +261,34 @@ test('getStatusBarVirtualDom should render selected session messages in detail m
   expect(messageNodes).toHaveLength(2)
 })
 
+test('getStatusBarVirtualDom should render assistant tool call lines', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: '{"path":"index.html"}',
+              id: 'call_1',
+              name: 'read_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const toolCallLine = result.find((node) => node.text === 'read_file "index.html"')
+  expect(toolCallLine).toBeDefined()
+})
+
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
   const sessions = [
     {

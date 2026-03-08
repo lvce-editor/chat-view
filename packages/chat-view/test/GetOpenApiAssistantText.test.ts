@@ -108,3 +108,80 @@ test('getOpenApiAssistantText should include include_obfuscation when enabled', 
     globalThis.fetch = originalFetch
   }
 })
+
+test('getOpenApiAssistantText should emit data events, tool call chunks, and stream finished callbacks', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"read_file","arguments":""}}]}}]}\n\n',
+      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\\"path\\":\\"index.html\\"}"}}]}}]}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const dataEvents: unknown[] = []
+  const toolCallsChunks: unknown[] = []
+  let finishedCount = 0
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'read index.html',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        onDataEvent: async (value: unknown) => {
+          dataEvents.push(value)
+        },
+        onEventStreamFinished: async () => {
+          finishedCount += 1
+        },
+        onToolCallsChunk: async (toolCalls) => {
+          toolCallsChunks.push(toolCalls)
+        },
+        stream: true,
+      },
+    )
+
+    expect(result).toEqual({
+      text: '',
+      type: 'success',
+    })
+    expect(dataEvents).toHaveLength(2)
+    expect(finishedCount).toBe(1)
+    expect(toolCallsChunks.at(-1)).toEqual([
+      {
+        arguments: '{"path":"index.html"}',
+        id: 'call_1',
+        name: 'read_file',
+      },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})

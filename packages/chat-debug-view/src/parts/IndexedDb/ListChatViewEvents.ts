@@ -17,14 +17,18 @@ const getAllEvents = async (store: Readonly<IDBObjectStore>): Promise<readonly C
   return all as readonly ChatViewEvent[]
 }
 
+const filterEventsBySessionId = (events: readonly ChatViewEvent[], sessionId: string): readonly ChatViewEvent[] => {
+  return events.filter((event) => event.sessionId === sessionId)
+}
+
 const getEventsBySessionId = async (store: Readonly<IDBObjectStore>, sessionId: string): Promise<readonly ChatViewEvent[]> => {
   if (store.indexNames.contains(sessionIdIndexName)) {
     const index = store.index(sessionIdIndexName)
     const events = await requestToPromise(() => index.getAll(IDBKeyRange.only(sessionId)))
-    return events as readonly ChatViewEvent[]
+    return filterEventsBySessionId(events as readonly ChatViewEvent[], sessionId)
   }
   const all = await getAllEvents(store)
-  return all.filter((event) => event.sessionId === sessionId)
+  return filterEventsBySessionId(all, sessionId)
 }
 
 export const listChatViewEvents = async (sessionId: string): Promise<readonly ChatViewEvent[]> => {
@@ -39,7 +43,7 @@ export const listChatViewEvents = async (sessionId: string): Promise<readonly Ch
     const transaction = database.transaction(eventStoreName, 'readonly')
     const store = transaction.objectStore(eventStoreName)
     if (!sessionId) {
-      return getAllEvents(store)
+      return []
     }
     return getEventsBySessionId(store, sessionId)
   } finally {
