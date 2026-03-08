@@ -15,10 +15,10 @@ import { isOpenRouterModel } from './IsOpenRouterModel.ts'
 
 export const getAiResponse = async ({
   assetDir,
+  messageId,
   messages,
   mockApiCommandId,
   models,
-  nextMessageId,
   onTextChunk,
   openApiApiBaseUrl,
   openApiApiKey,
@@ -101,7 +101,7 @@ export const getAiResponse = async ({
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   return {
-    id: `message-${nextMessageId}`,
+    id: messageId || crypto.randomUUID(),
     role: 'assistant',
     text,
     time: assistantTime,
