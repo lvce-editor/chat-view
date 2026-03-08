@@ -90,11 +90,17 @@ const parseSseEvent = (eventChunk: string): readonly string[] => {
   return dataLines
 }
 
-const updateToolCallAccumulator = (accumulator: Map<number, StreamingToolCall>, chunk: unknown): readonly StreamingToolCall[] | undefined => {
-  if (!Array.isArray(chunk)) {
-    return undefined
-  }
+const updateToolCallAccumulator = (
+  accumulator: ReadonlyMap<number, StreamingToolCall>,
+  chunk: readonly unknown[],
+):
+  | {
+      readonly nextAccumulator: ReadonlyMap<number, StreamingToolCall>
+      readonly toolCalls: readonly StreamingToolCall[]
+    }
+  | undefined => {
   let changed = false
+  const nextAccumulator = new Map(accumulator)
   for (const item of chunk) {
     if (!item || typeof item !== 'object') {
       continue
@@ -103,7 +109,7 @@ const updateToolCallAccumulator = (accumulator: Map<number, StreamingToolCall>, 
     if (typeof index !== 'number') {
       continue
     }
-    const current = accumulator.get(index) || { arguments: '', name: '' }
+    const current = nextAccumulator.get(index) || { arguments: '', name: '' }
     const id = Reflect.get(item, 'id')
     const toolFunction = Reflect.get(item, 'function')
     let { name } = current
@@ -124,17 +130,21 @@ const updateToolCallAccumulator = (accumulator: Map<number, StreamingToolCall>, 
       name,
     }
     if (JSON.stringify(next) !== JSON.stringify(current)) {
-      accumulator.set(index, next)
+      nextAccumulator.set(index, next)
       changed = true
     }
   }
   if (!changed) {
     return undefined
   }
-  return [...accumulator.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map((entry) => entry[1])
+  const toolCalls = [...nextAccumulator.entries()]
+    .toSorted((a: readonly [number, StreamingToolCall], b: readonly [number, StreamingToolCall]) => a[0] - b[0])
+    .map((entry: readonly [number, StreamingToolCall]) => entry[1])
     .filter((toolCall) => !!toolCall.name)
+  return {
+    nextAccumulator,
+    toolCalls,
+  }
 }
 
 const parseOpenApiStream = async (
@@ -155,7 +165,7 @@ const parseOpenApiStream = async (
   let remainder = ''
   let text = ''
   let done = false
-  const toolCallAccumulator = new Map<number, StreamingToolCall>()
+  let toolCallAccumulator: ReadonlyMap<number, StreamingToolCall> = new Map<number, StreamingToolCall>()
 
   while (!done) {
     const { done: streamDone, value } = await reader.read()
@@ -209,9 +219,14 @@ const parseOpenApiStream = async (
           continue
         }
         const toolCalls = Reflect.get(delta, 'tool_calls')
-        const updatedToolCalls = updateToolCallAccumulator(toolCallAccumulator, toolCalls)
-        if (updatedToolCalls && onToolCallsChunk) {
-          await onToolCallsChunk(updatedToolCalls)
+        const updatedToolCallResult = Array.isArray(toolCalls)
+          ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
+          : undefined
+        if (updatedToolCallResult) {
+          toolCallAccumulator = updatedToolCallResult.nextAccumulator
+        }
+        if (updatedToolCallResult && onToolCallsChunk) {
+          await onToolCallsChunk(updatedToolCallResult.toolCalls)
         }
         const content = Reflect.get(delta, 'content')
         const chunkText = getStreamChunkText(content)
@@ -260,9 +275,14 @@ const parseOpenApiStream = async (
         continue
       }
       const toolCalls = Reflect.get(delta, 'tool_calls')
-      const updatedToolCalls = updateToolCallAccumulator(toolCallAccumulator, toolCalls)
-      if (updatedToolCalls && onToolCallsChunk) {
-        await onToolCallsChunk(updatedToolCalls)
+      const updatedToolCallResult = Array.isArray(toolCalls)
+        ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
+        : undefined
+      if (updatedToolCallResult) {
+        toolCallAccumulator = updatedToolCallResult.nextAccumulator
+      }
+      if (updatedToolCallResult && onToolCallsChunk) {
+        await onToolCallsChunk(updatedToolCallResult.toolCalls)
       }
       const content = Reflect.get(delta, 'content')
       const chunkText = getStreamChunkText(content)
