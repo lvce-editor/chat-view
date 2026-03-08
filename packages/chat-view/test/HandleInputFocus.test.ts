@@ -41,6 +41,16 @@ test('handleInputFocus should set header focus for header action', async () => {
   })
 })
 
+test('handleInputFocus should set header focus for session debug action', async () => {
+  const state = createDefaultState()
+  const result = await HandleInputFocus.handleInputFocus(state, 'session-debug')
+  expect(result).toEqual({
+    ...state,
+    focus: 'header',
+    focused: true,
+  })
+})
+
 test('handleInputFocus should set send button focus for send', async () => {
   const state = createDefaultState()
   const result = await HandleInputFocus.handleInputFocus(state, 'send')

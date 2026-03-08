@@ -8,6 +8,12 @@ import * as InputName from '../InputName/InputName.ts'
 export const getChatHeaderActionsDom = (): readonly VirtualDomNode[] => {
   const items = [
     {
+      icon: 'MaskIcon MaskIconDebugPause',
+      name: InputName.SessionDebug,
+      onClick: DomEventListenerFunctions.HandleClickSessionDebug,
+      title: Strings.debug(),
+    },
+    {
       icon: 'MaskIcon MaskIconAdd',
       name: InputName.CreateSession,
       onClick: DomEventListenerFunctions.HandleClickNew,
