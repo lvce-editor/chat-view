@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as CommandMap from '../src/parts/CommandMap/CommandMap.ts'
 
 test('commandMap should expose all expected chat debug commands', () => {
-  const commandIds = Object.keys(CommandMap.commandMap).sort()
+  const commandIds = Object.keys(CommandMap.commandMap).toSorted()
   expect(commandIds).toEqual([
     'ChatDebug.create',
     'ChatDebug.diff2',
