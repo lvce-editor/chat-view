@@ -2,13 +2,8 @@ import type { ChatDebugViewState } from '../State/ChatDebugViewState.ts'
 import { listChatViewEvents } from '../IndexedDb/ListChatViewEvents.ts'
 
 export const loadContent = async (state: ChatDebugViewState): Promise<ChatDebugViewState> => {
-  const events = await listChatViewEvents(
-    state.sessionId,
-    state.databaseName,
-    state.dataBaseVersion,
-    state.eventStoreName,
-    state.sessionIdIndexName,
-  )
+  const { databaseName, dataBaseVersion, eventStoreName, sessionId, sessionIdIndexName } = state
+  const events = await listChatViewEvents(sessionId, databaseName, dataBaseVersion, eventStoreName, sessionIdIndexName)
   return {
     ...state,
     events,

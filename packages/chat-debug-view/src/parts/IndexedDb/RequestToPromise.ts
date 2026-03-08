@@ -1,6 +1,6 @@
 export const requestToPromise = async <T>(createRequest: () => IDBRequest<T>): Promise<T> => {
   const request = createRequest()
-  const { promise, reject, resolve } = Promise.withResolvers<T>()
+  const { promise, resolve, reject } = Promise.withResolvers<T>()
   request.addEventListener('success', () => {
     resolve(request.result)
   })
