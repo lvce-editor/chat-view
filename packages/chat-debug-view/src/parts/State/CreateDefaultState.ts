@@ -3,6 +3,7 @@ import type { ChatDebugViewState } from './ChatDebugViewState.ts'
 export const createDefaultState = (): ChatDebugViewState => {
   return {
     assetDir: '',
+    uri: '',
     databaseName: 'lvce-chat-view-sessions',
     dataBaseVersion: 2,
     events: [],
