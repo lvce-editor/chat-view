@@ -1,5 +1,5 @@
-import { type Rpc, LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
+import { ChatNetworkWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const send = (port: MessagePort): Promise<void> => {
   return RendererWorker.invokeAndTransfer(
@@ -8,10 +8,10 @@ const send = (port: MessagePort): Promise<void> => {
     'HandleMessagePort.handleMessagePort',
   )
 }
-export const initializeChatNetworkWorker = async (): Promise<Rpc> => {
+export const initializeChatNetworkWorker = async (): Promise<void> => {
   const rpc = await LazyTransferMessagePortRpcParent.create({
     commandMap: {},
     send,
   })
-  return rpc
+  ChatNetworkWorker.set(rpc)
 }
