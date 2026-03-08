@@ -176,7 +176,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         value: '[DONE]',
       })
     },
-    onTextChunk: handleTextChunkFunctionRef,
+    ...(handleTextChunkFunctionRef
+      ? {
+          onTextChunk: handleTextChunkFunctionRef,
+        }
+      : {}),
     onToolCallsChunk: async (toolCalls): Promise<void> => {
       handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
     },

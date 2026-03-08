@@ -3,7 +3,7 @@ import { root } from './root.js'
 
 export const threshold = 500_000
 
-export const instantiations = 20_000
+export const instantiations = 200_000
 
 export const instantiationsPath = join(root, 'packages', 'chat-view')
 

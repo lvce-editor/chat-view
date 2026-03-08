@@ -56,10 +56,26 @@ export const getAiResponse = async ({
         platform,
         {
           includeObfuscation: passIncludeObfuscation,
-          onDataEvent,
-          onEventStreamFinished,
-          onTextChunk,
-          onToolCallsChunk,
+          ...(onDataEvent
+            ? {
+                onDataEvent,
+              }
+            : {}),
+          ...(onEventStreamFinished
+            ? {
+                onEventStreamFinished,
+              }
+            : {}),
+          ...(onTextChunk
+            ? {
+                onTextChunk,
+              }
+            : {}),
+          ...(onToolCallsChunk
+            ? {
+                onToolCallsChunk,
+              }
+            : {}),
           stream: streamingEnabled,
         },
       )
