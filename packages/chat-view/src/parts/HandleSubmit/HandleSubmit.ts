@@ -125,7 +125,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
-  const handleTextChunkState: HandleTextChunkState = {
+  let handleTextChunkState: HandleTextChunkState = {
     latestState: optimisticState,
     previousState: optimisticState,
   }
@@ -134,7 +134,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const handleTextChunkFunctionRef = streamingEnabled
     ? async (chunk: string): Promise<void> => {
-        await handleTextChunkFunction(state.uid, assistantMessageId, chunk, handleTextChunkState)
+        handleTextChunkState = await handleTextChunkFunction(state.uid, assistantMessageId, chunk, handleTextChunkState)
       }
     : undefined
 
