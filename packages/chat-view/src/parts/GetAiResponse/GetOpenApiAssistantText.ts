@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
 import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
