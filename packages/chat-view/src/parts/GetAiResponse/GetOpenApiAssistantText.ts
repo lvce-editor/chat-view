@@ -21,6 +21,7 @@ export interface GetOpenApiAssistantTextErrorResult {
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
 interface GetOpenApiAssistantTextOptions {
+  readonly includeObfuscation?: boolean
   readonly onTextChunk?: (chunk: string) => Promise<void>
   readonly stream: boolean
 }
@@ -210,7 +211,7 @@ export const getOpenApiAssistantText = async (
   platform: number,
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
-  const { onTextChunk, stream } = options ?? { stream: false }
+  const { includeObfuscation = false, onTextChunk, stream } = options ?? { stream: false }
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
@@ -227,6 +228,11 @@ export const getOpenApiAssistantText = async (
           ...(stream
             ? {
                 stream: true,
+              }
+            : {}),
+          ...(includeObfuscation
+            ? {
+                include_obfuscation: true,
               }
             : {}),
           tool_choice: 'auto',
