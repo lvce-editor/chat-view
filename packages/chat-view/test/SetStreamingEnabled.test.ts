@@ -10,9 +10,12 @@ test('setStreamingEnabled should set streamingEnabled to true', () => {
 
 test('setStreamingEnabled should set streamingEnabled to false', () => {
   const state = CreateDefaultState.createDefaultState()
-  const result = SetStreamingEnabled.setStreamingEnabled({
-    ...state,
-    streamingEnabled: true,
-  }, false)
+  const result = SetStreamingEnabled.setStreamingEnabled(
+    {
+      ...state,
+      streamingEnabled: true,
+    },
+    false,
+  )
   expect(result.streamingEnabled).toBe(false)
 })
