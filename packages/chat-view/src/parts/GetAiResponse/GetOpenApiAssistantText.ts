@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import { makeApiRequest, makeStreamingApiRequest, type NetworkApiRequestErrorResult } from './ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from './ChatTools.ts'
 import { getClientRequestIdHeader } from './GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from './GetOpenApiAssistantText/getOpenApiApiEndpoint.ts'
@@ -69,125 +70,39 @@ const getStreamChunkText = (content: unknown): string => {
     .join('')
 }
 
-const parseSseEvent = (eventChunk: string): readonly string[] => {
-  const lines = eventChunk.split('\n')
-  const dataLines: string[] = []
-  for (const line of lines) {
-    if (!line.startsWith('data:')) {
+const parseOpenApiStream = async (
+  events: readonly unknown[],
+  onTextChunk?: (chunk: string) => Promise<void>,
+): Promise<GetOpenApiAssistantTextResult> => {
+  let text = ''
+
+  for (const event of events) {
+    if (event === '[DONE]') {
       continue
     }
-    dataLines.push(line.slice(5).trimStart())
-  }
-  return dataLines
-}
-
-const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: string) => Promise<void>): Promise<GetOpenApiAssistantTextResult> => {
-  if (!response.body) {
-    return {
-      details: 'request-failed',
-      type: 'error',
+    if (!event || typeof event !== 'object') {
+      continue
     }
-  }
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder()
-  let remainder = ''
-  let text = ''
-  let done = false
-
-  while (!done) {
-    const { done: streamDone, value } = await reader.read()
-    if (streamDone) {
-      done = true
-    } else if (value) {
-      remainder += decoder.decode(value, { stream: true })
+    const choices = Reflect.get(event, 'choices')
+    if (!Array.isArray(choices)) {
+      continue
     }
-
-    while (true) {
-      const separatorIndex = remainder.indexOf('\n\n')
-      if (separatorIndex === -1) {
-        break
-      }
-      const rawEvent = remainder.slice(0, separatorIndex)
-      remainder = remainder.slice(separatorIndex + 2)
-      const dataLines = parseSseEvent(rawEvent)
-      if (dataLines.length === 0) {
-        continue
-      }
-      for (const line of dataLines) {
-        if (line === '[DONE]') {
-          done = true
-          break
-        }
-        let parsed: unknown
-        try {
-          parsed = JSON.parse(line) as unknown
-        } catch {
-          continue
-        }
-        if (!parsed || typeof parsed !== 'object') {
-          continue
-        }
-        const choices = Reflect.get(parsed, 'choices')
-        if (!Array.isArray(choices)) {
-          continue
-        }
-        const firstChoice = choices[0]
-        if (!firstChoice || typeof firstChoice !== 'object') {
-          continue
-        }
-        const delta = Reflect.get(firstChoice, 'delta')
-        if (!delta || typeof delta !== 'object') {
-          continue
-        }
-        const content = Reflect.get(delta, 'content')
-        const chunkText = getStreamChunkText(content)
-        if (!chunkText) {
-          continue
-        }
-        text += chunkText
-        if (onTextChunk) {
-          await onTextChunk(chunkText)
-        }
-      }
+    const firstChoice = choices[0]
+    if (!firstChoice || typeof firstChoice !== 'object') {
+      continue
     }
-  }
-
-  if (remainder) {
-    const dataLines = parseSseEvent(remainder)
-    for (const line of dataLines) {
-      if (line === '[DONE]') {
-        continue
-      }
-      let parsed: unknown
-      try {
-        parsed = JSON.parse(line) as unknown
-      } catch {
-        continue
-      }
-      if (!parsed || typeof parsed !== 'object') {
-        continue
-      }
-      const choices = Reflect.get(parsed, 'choices')
-      if (!Array.isArray(choices)) {
-        continue
-      }
-      const firstChoice = choices[0]
-      if (!firstChoice || typeof firstChoice !== 'object') {
-        continue
-      }
-      const delta = Reflect.get(firstChoice, 'delta')
-      if (!delta || typeof delta !== 'object') {
-        continue
-      }
-      const content = Reflect.get(delta, 'content')
-      const chunkText = getStreamChunkText(content)
-      if (!chunkText) {
-        continue
-      }
-      text += chunkText
-      if (onTextChunk) {
-        await onTextChunk(chunkText)
-      }
+    const delta = Reflect.get(firstChoice, 'delta')
+    if (!delta || typeof delta !== 'object') {
+      continue
+    }
+    const content = Reflect.get(delta, 'content')
+    const chunkText = getStreamChunkText(content)
+    if (!chunkText) {
+      continue
+    }
+    text += chunkText
+    if (onTextChunk) {
+      await onTextChunk(chunkText)
     }
   }
 
@@ -197,12 +112,12 @@ const parseOpenApiStream = async (response: Response, onTextChunk?: (chunk: stri
   }
 }
 
-const getOpenApiErrorDetails = async (
-  response: Response,
-): Promise<Pick<GetOpenApiAssistantTextErrorResult, 'errorCode' | 'errorMessage' | 'errorType'>> => {
+const getOpenApiErrorDetails = (
+  errorResult: Readonly<NetworkApiRequestErrorResult>,
+): Pick<GetOpenApiAssistantTextErrorResult, 'errorCode' | 'errorMessage' | 'errorType'> => {
   let parsed: unknown
   try {
-    parsed = (await response.json()) as unknown
+    parsed = JSON.parse(errorResult.response) as unknown
   } catch {
     return {}
   }
@@ -244,16 +159,52 @@ export const getOpenApiAssistantText = async (
   const tools = getBasicChatTools()
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
-    let response: Response
+    if (stream) {
+      let result
+      try {
+        result = await makeStreamingApiRequest({
+          headers: {
+            Authorization: `Bearer ${openApiApiKey}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+          postBody: getOpenAiParams(completionMessages, modelId, stream, includeObfuscation, tools),
+          url: getOpenApiApiEndpoint(openApiApiBaseUrl, stream),
+        })
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
+      }
+
+      if (result.type === 'error') {
+        const { errorCode, errorMessage, errorType } = getOpenApiErrorDetails(result)
+        return {
+          details: 'http-error',
+          errorCode,
+          errorMessage,
+          errorType,
+          statusCode: result.statusCode,
+          type: 'error',
+        }
+      }
+
+      return parseOpenApiStream(result.body, onTextChunk)
+    }
+
+    let result
     try {
-      response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl, stream), {
-        body: JSON.stringify(getOpenAiParams(completionMessages, modelId, stream, includeObfuscation, tools)),
+      result = await makeApiRequest({
         headers: {
           Authorization: `Bearer ${openApiApiKey}`,
           'Content-Type': 'application/json',
           ...getClientRequestIdHeader(),
         },
         method: 'POST',
+        postBody: getOpenAiParams(completionMessages, modelId, stream, includeObfuscation, tools),
+        url: getOpenApiApiEndpoint(openApiApiBaseUrl, stream),
       })
     } catch {
       return {
@@ -262,31 +213,19 @@ export const getOpenApiAssistantText = async (
       }
     }
 
-    if (!response.ok) {
-      const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
+    if (result.type === 'error') {
+      const { errorCode, errorMessage, errorType } = getOpenApiErrorDetails(result)
       return {
         details: 'http-error',
         errorCode,
         errorMessage,
         errorType,
-        statusCode: response.status,
+        statusCode: result.statusCode,
         type: 'error',
       }
     }
 
-    if (stream) {
-      return parseOpenApiStream(response, onTextChunk)
-    }
-
-    let parsed: unknown
-    try {
-      parsed = (await response.json()) as unknown
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
-      }
-    }
+    const parsed = result.body
 
     if (!parsed || typeof parsed !== 'object') {
       return {
