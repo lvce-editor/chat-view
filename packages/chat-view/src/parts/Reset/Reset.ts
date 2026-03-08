@@ -9,8 +9,10 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     composerHeight: getMinComposerHeightForState(state),
     composerValue: '',
     openRouterApiKey: '',
+    selectedModelId: 'test',
     selectedSessionId: '',
     sessions: [],
+    streamingEnabled: false,
     viewMode: 'list',
   }
 }
