@@ -38,17 +38,23 @@ export const handleTextChunkFunction = async (
   uid: number,
   assistantMessageId: string,
   chunk: string,
-  handleTextChunkState: HandleTextChunkState,
-): Promise<void> => {
+  handleTextChunkState: Readonly<HandleTextChunkState>,
+): Promise<HandleTextChunkState> => {
   const selectedSession = handleTextChunkState.latestState.sessions.find(
     (session) => session.id === handleTextChunkState.latestState.selectedSessionId,
   )
   if (!selectedSession) {
-    return
+    return {
+      latestState: handleTextChunkState.latestState,
+      previousState: handleTextChunkState.previousState,
+    }
   }
   const assistantMessage = selectedSession.messages.find((message) => message.id === assistantMessageId)
   if (!assistantMessage) {
-    return
+    return {
+      latestState: handleTextChunkState.latestState,
+      previousState: handleTextChunkState.previousState,
+    }
   }
   const updatedText = assistantMessage.text + chunk
   const updatedSessions = updateMessageTextInSelectedSession(
@@ -63,8 +69,10 @@ export const handleTextChunkFunction = async (
     sessions: updatedSessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)
-  handleTextChunkState.previousState = nextState
-  handleTextChunkState.latestState = nextState
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
+  return {
+    latestState: nextState,
+    previousState: nextState,
+  }
 }
