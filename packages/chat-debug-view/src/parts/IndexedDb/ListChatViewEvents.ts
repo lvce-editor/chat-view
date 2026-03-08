@@ -11,12 +11,12 @@ const openDatabase = async (): Promise<IDBDatabase> => {
   return requestToPromise(() => request)
 }
 
-const getAllEvents = async (store: IDBObjectStore): Promise<readonly ChatViewEvent[]> => {
+const getAllEvents = async (store: Readonly<IDBObjectStore>): Promise<readonly ChatViewEvent[]> => {
   const all = await requestToPromise(() => store.getAll())
   return all as readonly ChatViewEvent[]
 }
 
-const getEventsBySessionId = async (store: IDBObjectStore, sessionId: string): Promise<readonly ChatViewEvent[]> => {
+const getEventsBySessionId = async (store: Readonly<IDBObjectStore>, sessionId: string): Promise<readonly ChatViewEvent[]> => {
   if (store.indexNames.contains(sessionIdIndexName)) {
     const index = store.index(sessionIdIndexName)
     const events = await requestToPromise(() => index.getAll(IDBKeyRange.only(sessionId)))
