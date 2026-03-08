@@ -78,8 +78,8 @@ const getOpenAiParams = (
   previousResponseId?: string,
 ): object => {
   return {
-    input,
     include_obfuscation: includeObfuscation,
+    input,
     model: modelId,
     ...(stream
       ? {
