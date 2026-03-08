@@ -119,7 +119,8 @@ export const getMockOpenApiAssistantText = async (
       const name = Reflect.get(parsed, 'name')
       const callId = Reflect.get(parsed, 'call_id')
       const next: StreamingToolCall = {
-        arguments: typeof argumentsValue === 'string' ? argumentsValue : typeof delta === 'string' ? `${current.arguments}${delta}` : current.arguments,
+        arguments:
+          typeof argumentsValue === 'string' ? argumentsValue : typeof delta === 'string' ? `${current.arguments}${delta}` : current.arguments,
         ...(typeof callId === 'string'
           ? {
               id: callId,
