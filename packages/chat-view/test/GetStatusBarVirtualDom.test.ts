@@ -11,9 +11,6 @@ import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetStatusBarVirtualDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 
-// `GetToolCallsDom` currently resolves `text(...)` as a global helper.
-;(globalThis as any).text = text
-
 const models = [
   { id: 'test', name: 'test' },
   { id: 'codex-5.3', name: 'Codex 5.3' },
