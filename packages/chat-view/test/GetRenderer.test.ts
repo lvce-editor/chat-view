@@ -6,6 +6,7 @@ import * as GetRenderer from '../src/parts/GetRenderer/GetRenderer.ts'
 import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 import * as RenderFocus from '../src/parts/RenderFocus/RenderFocus.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
+import * as RenderScrollTop from '../src/parts/RenderScrollTop/RenderScrollTop.ts'
 import * as RenderValue from '../src/parts/RenderValue/RenderValue.ts'
 
 test('getRenderer should return RenderItems.renderItems for RenderItems diff type', () => {
@@ -31,6 +32,11 @@ test('getRenderer should return RenderValue.renderValue for RenderValue diff typ
 test('getRenderer should return RenderFocus.renderFocus for RenderFocus diff type', () => {
   const renderer = GetRenderer.getRenderer(DiffType.RenderFocus)
   expect(renderer).toBe(RenderFocus.renderFocus)
+})
+
+test('getRenderer should return RenderScrollTop.renderScrollTop for RenderScrollTop diff type', () => {
+  const renderer = GetRenderer.getRenderer(DiffType.RenderScrollTop)
+  expect(renderer).toBe(RenderScrollTop.renderScrollTop)
 })
 
 test('getRenderer should throw error for unknown diff type', () => {

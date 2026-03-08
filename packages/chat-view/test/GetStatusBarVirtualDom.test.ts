@@ -86,6 +86,37 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   })
 })
 
+test('getStatusBarVirtualDom should restore chat list scroll position', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    90,
+  )
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  expect(chatList).toMatchObject({
+    onScroll: DomEventListenerFunctions.HandleChatListScroll,
+    scrollTop: 90,
+  })
+})
+
 test('getStatusBarVirtualDom should render composer textarea', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', 'hello', '', 'detail', models, 'test', false, 0, 0)
@@ -118,6 +149,41 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
   const messageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   expect(messageNode).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should restore messages scroll position', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'user' as const, text: 'Hi', time: '10:30' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    180,
+  )
+  const messages = result.find((node) => node.className === 'ChatMessages')
+  expect(messages).toMatchObject({
+    onScroll: DomEventListenerFunctions.HandleMessagesScroll,
+    scrollTop: 180,
+  })
 })
 
 test('getStatusBarVirtualDom should render settings button in header actions', () => {

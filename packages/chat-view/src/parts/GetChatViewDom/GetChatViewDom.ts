@@ -22,6 +22,8 @@ export const getChatVirtualDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
+  chatListScrollTop = 0,
+  messagesScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
@@ -41,6 +43,7 @@ export const getChatVirtualDom = (
         composerFontSize,
         composerFontFamily,
         composerLineHeight,
+        messagesScrollTop,
       )
     case 'list':
       return getChatModeListVirtualDom(
@@ -56,6 +59,7 @@ export const getChatVirtualDom = (
         composerFontSize,
         composerFontFamily,
         composerLineHeight,
+        chatListScrollTop,
       )
     default:
       return getChatModeUnsupportedVirtualDom()

@@ -5,7 +5,28 @@ import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
+import {
+  handleTextChunkFunction,
+  type HandleTextChunkState,
+  updateMessageTextInSelectedSession,
+} from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+
+const appendMessageToSelectedSession = (
+  sessions: readonly ChatSession[],
+  selectedSessionId: string,
+  message: ChatMessage,
+): readonly ChatSession[] => {
+  return sessions.map((session) => {
+    if (session.id !== selectedSessionId) {
+      return session
+    }
+    return {
+      ...session,
+      messages: [...session.messages, message],
+    }
+  })
+}
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
@@ -18,10 +39,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     openApiApiKey,
     openRouterApiBaseUrl,
     openRouterApiKey,
+    passIncludeObfuscation,
     platform,
     selectedModelId,
     selectedSessionId,
     sessions,
+    streamingEnabled,
     useMockApi,
     viewMode,
   } = state
@@ -35,6 +58,15 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     role: 'user',
     text: userText,
     time: userTime,
+  }
+  const assistantMessageId = `message-${nextMessageId + 1}`
+  const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const inProgressAssistantMessage: ChatMessage = {
+    id: assistantMessageId,
+    inProgress: true,
+    role: 'assistant',
+    text: '',
+    time: assistantTime,
   }
 
   let workingSessions = sessions
@@ -55,7 +87,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     const newSessionId = generateSessionId()
     const newSession: ChatSession = {
       id: newSessionId,
-      messages: [userMessage],
+      messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
       title: `Chat ${workingSessions.length + 1}`,
     }
     await saveChatSession(newSession)
@@ -71,15 +103,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       viewMode: 'detail',
     })
   } else {
-    const updatedSessions: readonly ChatSession[] = workingSessions.map((session) => {
-      if (session.id !== selectedSessionId) {
-        return session
-      }
-      return {
-        ...session,
-        messages: [...session.messages, userMessage],
-      }
-    })
+    const updatedWithUser = appendMessageToSelectedSession(workingSessions, selectedSessionId, userMessage)
+    const updatedSessions = streamingEnabled
+      ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)
+      : updatedWithUser
     const selectedSession = updatedSessions.find((session) => session.id === selectedSessionId)
     if (selectedSession) {
       await saveChatSession(selectedSession)
@@ -99,8 +126,18 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
+  let handleTextChunkState: HandleTextChunkState = {
+    latestState: optimisticState,
+    previousState: optimisticState,
+  }
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
-  const messages = selectedOptimisticSession?.messages ?? []
+  const messages = (selectedOptimisticSession?.messages ?? []).filter((message) => !message.inProgress)
+
+  const handleTextChunkFunctionRef = streamingEnabled
+    ? async (chunk: string): Promise<void> => {
+        handleTextChunkState = await handleTextChunkFunction(state.uid, assistantMessageId, chunk, handleTextChunkState)
+      }
+    : undefined
 
   const assistantMessage = await getAiResponse({
     assetDir,
@@ -108,32 +145,30 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     mockApiCommandId,
     models,
     nextMessageId: optimisticState.nextMessageId,
+    onTextChunk: handleTextChunkFunctionRef,
     openApiApiBaseUrl,
     openApiApiKey,
     openRouterApiBaseUrl,
     openRouterApiKey,
+    passIncludeObfuscation,
     platform,
     selectedModelId,
+    streamingEnabled,
     useMockApi,
     userText,
   })
 
-  const updatedSessions: readonly ChatSession[] = optimisticState.sessions.map((session) => {
-    if (session.id !== optimisticState.selectedSessionId) {
-      return session
-    }
-    return {
-      ...session,
-      messages: [...session.messages, assistantMessage],
-    }
-  })
-  const selectedSession = updatedSessions.find((session) => session.id === optimisticState.selectedSessionId)
+  const { latestState } = handleTextChunkState
+  const updatedSessions = streamingEnabled
+    ? updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
+    : appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
+  const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
   if (selectedSession) {
     await saveChatSession(selectedSession)
   }
   return FocusInput.focusInput({
-    ...optimisticState,
-    nextMessageId: optimisticState.nextMessageId + 1,
+    ...latestState,
+    nextMessageId: latestState.nextMessageId + 1,
     sessions: updatedSessions,
   })
 }

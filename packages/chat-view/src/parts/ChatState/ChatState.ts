@@ -11,6 +11,10 @@ export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
   readonly assetDir: string
+  readonly chatListScrollTop: number
+  readonly chatMessageFontFamily: string
+  readonly chatMessageFontSize: number
+  readonly chatMessageLineHeight: number
   readonly composerFontFamily: string
   readonly composerFontSize: number
   readonly composerHeight: number
@@ -26,6 +30,8 @@ export interface ChatState {
   readonly inputSource: 'user' | 'script'
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
+  readonly maxComposerRows: number
+  readonly messagesScrollTop: number
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
@@ -38,11 +44,13 @@ export interface ChatState {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeysSettingsUrl: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
+  readonly passIncludeObfuscation: boolean
   readonly platform: number
   readonly renamingSessionId: string
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly streamingEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number

@@ -22,6 +22,7 @@ export const getChatModeDetailVirtualDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
+  messagesScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -33,7 +34,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState),
+    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       models,

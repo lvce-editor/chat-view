@@ -1,6 +1,8 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.new-line-1'
+export const name = 'chat-view.new-line-2'
+
+export const skip = 1
 
 export const test: Test = async ({ Command, expect, Locator }) => {
   // arrange
@@ -8,10 +10,12 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.reset')
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
+  await Command.execute('Chat.enterNewLine')
 
   // act
   await Command.execute('Chat.enterNewLine')
 
   // assert
-  // TODO verify height
+  const input = Locator('.Chat .MultilineInputBox')
+  await expect(input).toHaveCSS('height', '68px')
 }

@@ -33,10 +33,16 @@ const getDefaultModels = (): readonly ChatModel[] => {
 export const createDefaultState = (): ChatState => {
   const defaultSessionId = 'session-1'
   const defaultModelId = 'test'
+  const chatMessageFontSize = 13
+  const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
   return {
     assetDir: '',
+    chatListScrollTop: 0,
+    chatMessageFontFamily: 'system-ui',
+    chatMessageFontSize,
+    chatMessageLineHeight,
     composerFontFamily: 'system-ui',
     composerFontSize,
     composerHeight: composerLineHeight + 8,
@@ -51,6 +57,8 @@ export const createDefaultState = (): ChatState => {
     inputSource: 'script',
     lastSubmittedSessionId: '',
     listItemHeight: 40,
+    maxComposerRows: 5,
+    messagesScrollTop: 0,
     mockApiCommandId: '',
     models: getDefaultModels(),
     nextMessageId: 1,
@@ -63,6 +71,7 @@ export const createDefaultState = (): ChatState => {
     openRouterApiKeyInput: '',
     openRouterApiKeysSettingsUrl: 'https://openrouter.ai/settings/keys',
     openRouterApiKeyState: 'idle',
+    passIncludeObfuscation: false,
     platform: 0,
     renamingSessionId: '',
     selectedModelId: defaultModelId,
@@ -74,6 +83,7 @@ export const createDefaultState = (): ChatState => {
         title: Strings.defaultSessionTitle(),
       },
     ],
+    streamingEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     uid: 0,

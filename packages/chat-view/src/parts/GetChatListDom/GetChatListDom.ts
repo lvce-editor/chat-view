@@ -5,7 +5,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getEmptyChatSessionsDom } from '../GetEmptyChatSessionsDom/GetEmptyChatSessionsDom.ts'
 import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
 
-export const getChatListDom = (sessions: readonly ChatSession[], selectedSessionId: string): readonly VirtualDomNode[] => {
+export const getChatListDom = (sessions: readonly ChatSession[], selectedSessionId: string, chatListScrollTop = 0): readonly VirtualDomNode[] => {
   if (sessions.length === 0) {
     return getEmptyChatSessionsDom()
   }
@@ -14,6 +14,8 @@ export const getChatListDom = (sessions: readonly ChatSession[], selectedSession
       childCount: sessions.length,
       className: ClassNames.ChatList,
       onClick: DomEventListenerFunctions.HandleClickList,
+      onScroll: DomEventListenerFunctions.HandleChatListScroll,
+      scrollTop: chatListScrollTop,
       type: VirtualDomElements.Div,
     },
     ...sessions.flatMap(getSessionDom),
