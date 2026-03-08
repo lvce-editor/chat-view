@@ -45,6 +45,7 @@ export const getCss = (): string => {
   word-break: break-word;
   font-family: var(--vscode-editor-font-family, monospace);
   font-size: 12px;
+  user-select: text;
 }
 
 .ChatDebugViewEmpty {
