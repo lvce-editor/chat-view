@@ -54,7 +54,6 @@ export interface ChatState {
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number
-  readonly uri: string
   readonly usageOverviewEnabled: boolean
   readonly useMockApi: boolean
   readonly viewMode: ChatViewMode
