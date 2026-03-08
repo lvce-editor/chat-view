@@ -429,6 +429,50 @@ test('getStatusBarVirtualDom should render OpenRouter too many requests reasons 
   expect(modelReason).toBeDefined()
 })
 
+test('getStatusBarVirtualDom should render ordered list from assistant message text', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: [
+            'I have access to the following tools:',
+            '',
+            '1. functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder.',
+            '2. functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
+            '3. functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+            '',
+            'I can also use these tools in parallel when appropriate.',
+          ].join('\n'),
+          time: '10:31',
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
+  const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
+  const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
+  const readFileReason = result.find(
+    (node) => node.text === 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder.',
+  )
+  const writeFileReason = result.find(
+    (node) => node.text === 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
+  )
+  const listFilesReason = result.find(
+    (node) =>
+      node.text === 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+  )
+  expect(orderedList).toBeDefined()
+  expect(listItems).toHaveLength(3)
+  expect(readFileReason).toBeDefined()
+  expect(writeFileReason).toBeDefined()
+  expect(listFilesReason).toBeDefined()
+})
+
 test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
   const result = GetStatusBarVirtualDom.getChatVirtualDom(sessions, 'session-1', '', '', 'detail', models, 'test', false, 0, 0)
