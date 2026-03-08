@@ -15,7 +15,7 @@ export const parseChatDebugUri = (uri: string): string => {
   } catch {
     throw new Error('Invalid URI encoding')
   }
-  if (!sessionId || /[\/?#]/.test(sessionId)) {
+  if (!sessionId || /[/?#]/.test(sessionId)) {
     throw new Error('Invalid session id')
   }
   return sessionId
