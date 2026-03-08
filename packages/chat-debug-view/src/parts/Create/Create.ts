@@ -4,6 +4,7 @@ import { createDefaultState } from '../State/CreateDefaultState.ts'
 
 export const create = (
   uid: number,
+  uri: string,
   x: number,
   y: number,
   width: number,
@@ -27,6 +28,7 @@ export const create = (
     sessionId,
     sessionIdIndexName,
     uid,
+    uri,
     width,
     x,
     y,
