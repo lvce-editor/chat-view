@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
-import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
@@ -85,6 +85,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   let optimisticState: ChatState
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
+    await appendChatViewEvent({
+      sessionId: newSessionId,
+      timestamp: new Date().toISOString(),
+      type: 'handle-submit',
+      value: userText,
+    })
     const newSession: ChatSession = {
       id: newSessionId,
       messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
@@ -103,6 +109,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       viewMode: 'detail',
     })
   } else {
+    await appendChatViewEvent({
+      sessionId: selectedSessionId,
+      timestamp: new Date().toISOString(),
+      type: 'handle-submit',
+      value: userText,
+    })
     const updatedWithUser = appendMessageToSelectedSession(workingSessions, selectedSessionId, userMessage)
     const updatedSessions = streamingEnabled
       ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)

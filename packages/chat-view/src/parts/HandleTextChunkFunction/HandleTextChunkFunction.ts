@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export interface HandleTextChunkState {
@@ -56,6 +57,13 @@ export const handleTextChunkFunction = async (
       previousState: handleTextChunkState.previousState,
     }
   }
+  await appendChatViewEvent({
+    content: chunk,
+    messageId: assistantMessageId,
+    sessionId: handleTextChunkState.latestState.selectedSessionId,
+    timestamp: new Date().toISOString(),
+    type: 'handle-response-chunk',
+  })
   const updatedText = assistantMessage.text + chunk
   const updatedSessions = updateMessageTextInSelectedSession(
     handleTextChunkState.latestState.sessions,

@@ -1,10 +1,13 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { IndexedDbChatSessionStorage } from '../IndexedDbChatSessionStorage/IndexedDbChatSessionStorage.ts'
 import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
 
 export interface ChatSessionStorage {
+  appendEvent(event: ChatViewEvent): Promise<void>
   clear(): Promise<void>
   deleteSession(id: string): Promise<void>
+  getEvents(sessionId?: string): Promise<readonly ChatViewEvent[]>
   getSession(id: string): Promise<ChatSession | undefined>
   listSessions(): Promise<readonly ChatSession[]>
   setSession(session: ChatSession): Promise<void>
@@ -62,4 +65,12 @@ export const deleteChatSession = async (id: string): Promise<void> => {
 
 export const clearChatSessions = async (): Promise<void> => {
   await chatSessionStorage.clear()
+}
+
+export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
+  await chatSessionStorage.appendEvent(event)
+}
+
+export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {
+  return chatSessionStorage.getEvents(sessionId)
 }
