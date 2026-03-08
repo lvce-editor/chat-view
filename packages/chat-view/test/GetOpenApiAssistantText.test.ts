@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { getOpenApiAssistantText } from '../src/parts/GetAiResponse/GetOpenApiAssistantText.ts'
+import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
 const getRequestIdFromInit = (init: unknown): string | undefined => {
   const requestInit = init as RequestInit | undefined
