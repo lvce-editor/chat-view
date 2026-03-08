@@ -11,6 +11,7 @@ export interface GetAiResponseOptions {
   readonly openApiApiKey: string
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
+  readonly passIncludeObfuscation?: boolean
   readonly platform: number
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
