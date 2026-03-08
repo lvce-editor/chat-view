@@ -63,6 +63,7 @@ const version = await getVersion()
 const packageJson = await readJson(join(root, 'packages', 'chat-view', 'package.json'))
 
 delete packageJson.scripts
+delete packageJson.dependencies
 delete packageJson.devDependencies
 delete packageJson.prettier
 delete packageJson.jest
@@ -78,9 +79,9 @@ await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
 
 const networkWorkerPackageJson = await readJson(join(root, 'packages', 'chat-network-worker', 'package.json'))
-const rpcVersion = networkWorkerPackageJson.dependencies?.['@lvce-editor/rpc'] || networkWorkerPackageJson.devDependencies?.['@lvce-editor/rpc']
 
 delete networkWorkerPackageJson.scripts
+delete networkWorkerPackageJson.dependencies
 delete networkWorkerPackageJson.devDependencies
 delete networkWorkerPackageJson.prettier
 delete networkWorkerPackageJson.jest
@@ -89,11 +90,6 @@ delete networkWorkerPackageJson.directories
 delete networkWorkerPackageJson.nodemonConfig
 networkWorkerPackageJson.version = version
 networkWorkerPackageJson.main = 'dist/chatNetworkWorkerMain.js'
-if (rpcVersion) {
-  networkWorkerPackageJson.dependencies = {
-    '@lvce-editor/rpc': rpcVersion,
-  }
-}
 
 await writeJson(join(networkWorkerDist, 'package.json'), networkWorkerPackageJson)
 await cp(join(root, 'README.md'), join(networkWorkerDist, 'README.md'))
