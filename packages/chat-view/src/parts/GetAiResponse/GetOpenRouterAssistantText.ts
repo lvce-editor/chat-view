@@ -97,11 +97,27 @@ const getOpenRouterLimitInfo = async (
   const limitReset = Reflect.get(data, 'limit_reset')
   const usage = Reflect.get(data, 'usage')
   const usageDaily = Reflect.get(data, 'usage_daily')
-  const normalizedLimitInfo: GetOpenRouterAssistantTextErrorResult['limitInfo'] = {
-    limitRemaining: typeof limitRemaining === 'number' || limitRemaining === null ? limitRemaining : undefined,
-    limitReset: typeof limitReset === 'string' || limitReset === null ? limitReset : undefined,
-    usage: typeof usage === 'number' ? usage : undefined,
-    usageDaily: typeof usageDaily === 'number' ? usageDaily : undefined,
+  const normalizedLimitInfo = {
+    ...(typeof limitRemaining === 'number' || limitRemaining === null
+      ? {
+          limitRemaining,
+        }
+      : {}),
+    ...(typeof limitReset === 'string' || limitReset === null
+      ? {
+          limitReset,
+        }
+      : {}),
+    ...(typeof usage === 'number'
+      ? {
+          usage,
+        }
+      : {}),
+    ...(typeof usageDaily === 'number'
+      ? {
+          usageDaily,
+        }
+      : {}),
   }
 
   const hasLimitInfo =
@@ -162,14 +178,23 @@ export const getOpenRouterAssistantText = async (
         const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
         return {
           details: 'too-many-requests',
-          limitInfo:
-            limitInfo || retryAfter
-              ? {
+          ...(limitInfo || retryAfter
+            ? {
+                limitInfo: {
                   ...limitInfo,
-                  retryAfter,
-                }
-              : undefined,
-          rawMessage,
+                  ...(retryAfter
+                    ? {
+                        retryAfter,
+                      }
+                    : {}),
+                },
+              }
+            : {}),
+          ...(rawMessage
+            ? {
+                rawMessage,
+              }
+            : {}),
           statusCode: 429,
           type: 'error',
         }

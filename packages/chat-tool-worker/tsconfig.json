@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "webworker", "dom", "dom.iterable"],
+    "lib": ["esnext", "webworker", "webworker.iterable"],
     "checkJs": true,
     "target": "esnext",
-    "types": [],
+    "types": ["node"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,
