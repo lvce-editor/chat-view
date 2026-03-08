@@ -5,37 +5,50 @@ import { join } from 'path'
 import { rollup } from 'rollup'
 import { root } from './root.js'
 
-/**
- * @type {import('rollup').RollupOptions}
- */
-const options = {
-  input: join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'),
-  preserveEntrySignatures: 'strict',
-  treeshake: {
-    propertyReadSideEffects: false,
-  },
-  output: {
-    file: join(root, '.tmp/dist/dist/chatViewWorkerMain.js'),
-    format: 'es',
-    freeze: false,
-    generatedCode: {
-      constBindings: true,
-      objectShorthand: true,
+const getOptions = (input, outputFile, external = []) => {
+  return {
+    input,
+    preserveEntrySignatures: 'strict',
+    treeshake: {
+      propertyReadSideEffects: false,
     },
-  },
-  external: ['ws', 'electron'],
-  plugins: [
-    babel({
-      babelHelpers: 'bundled',
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      presets: [pluginTypeScript],
-    }),
-    nodeResolve(),
-  ],
+    output: {
+      file: outputFile,
+      format: 'es',
+      freeze: false,
+      generatedCode: {
+        constBindings: true,
+        objectShorthand: true,
+      },
+    },
+    external,
+    plugins: [
+      babel({
+        babelHelpers: 'bundled',
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        presets: [pluginTypeScript],
+      }),
+      nodeResolve(),
+    ],
+  }
 }
 
-export const bundleJs = async () => {
+const bundle = async (options) => {
   const input = await rollup(options)
   // @ts-ignore
   await input.write(options.output)
+}
+
+export const bundleJs = async () => {
+  const options = getOptions(join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'), join(root, '.tmp/dist/dist/chatViewWorkerMain.js'), ['ws', 'electron'])
+  await bundle(options)
+}
+
+export const bundleNetworkWorkerJs = async () => {
+  const options = getOptions(
+    join(root, 'packages/chat-network-worker/src/chatNetworkWorkerMain.ts'),
+    join(root, '.tmp/dist-chat-network-worker/dist/chatNetworkWorkerMain.js'),
+    ['@lvce-editor/rpc', 'ws', 'electron']
+  )
+  await bundle(options)
 }
