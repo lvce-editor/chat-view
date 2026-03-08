@@ -23,7 +23,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocation = args
     return {
-      json: async () => ({ choices: [{ message: { content: 'hello from openai' } }] }),
+      json: async () => ({ output_text: 'hello from openai' }),
       ok: true,
       status: 200,
     } as Response
@@ -51,7 +51,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
       type: 'success',
     })
 
-    expect(fetchInvocation?.[0]).toBe('https://api.openai.com/v1/chat/completions')
+    expect(fetchInvocation?.[0]).toBe('https://api.openai.com/v1/responses')
     expect(fetchInvocation?.[1]).toMatchObject({
       headers: {
         Authorization: 'Bearer oa-key-123',
@@ -76,7 +76,7 @@ test('getOpenApiAssistantText should include include_obfuscation when enabled', 
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocation = args
     return {
-      json: async () => ({ choices: [{ message: { content: 'hello from openai' } }] }),
+      json: async () => ({ output_text: 'hello from openai' }),
       ok: true,
       status: 200,
     } as Response
@@ -113,8 +113,9 @@ test('getOpenApiAssistantText should emit data events, tool call chunks, and str
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     const chunks = [
-      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"read_file","arguments":""}}]}}]}\n\n',
-      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\\"path\\":\\"index.html\\"}"}}]}}]}\n\n',
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"path\\":\\"index.html\\"}"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
       'data: [DONE]\n\n',
     ]
     let index = 0
@@ -172,7 +173,7 @@ test('getOpenApiAssistantText should emit data events, tool call chunks, and str
       text: '',
       type: 'success',
     })
-    expect(dataEvents).toHaveLength(2)
+    expect(dataEvents).toHaveLength(3)
     expect(finishedCount).toBe(1)
     expect(toolCallsChunks.at(-1)).toEqual([
       {

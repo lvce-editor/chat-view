@@ -277,8 +277,9 @@ test('handleSubmit should update assistant message incrementally when streaming 
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     const chunks = [
-      'data: {"choices":[{"delta":{"content":"Stream"}}]}\n\n',
-      'data: {"choices":[{"delta":{"content":"ing"}}]}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"Stream"}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"ing"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
       'data: [DONE]\n\n',
     ]
     let index = 0
@@ -327,8 +328,9 @@ test('handleSubmit should store parsed data events and stream finished marker fo
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     const chunks = [
-      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"read_file","arguments":""}}]}}]}\n\n',
-      'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\\"path\\":\\"index.html\\"}"}}]}}]}\n\n',
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"path\\":\\"index.html\\"}"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
       'data: [DONE]\n\n',
     ]
     let index = 0
@@ -364,7 +366,7 @@ test('handleSubmit should store parsed data events and stream finished marker fo
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
     const finishedEvent = events.find((event) => event.type === 'event-stream-finished')
 
-    expect(dataEvents).toHaveLength(2)
+    expect(dataEvents).toHaveLength(3)
     expect(finishedEvent).toMatchObject({
       type: 'event-stream-finished',
       value: '[DONE]',

@@ -35,15 +35,50 @@ interface GetOpenApiAssistantTextOptions {
   readonly stream: boolean
 }
 
+const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
+  return tools.map((tool) => {
+    if (!tool || typeof tool !== 'object') {
+      return tool
+    }
+    const type = Reflect.get(tool, 'type')
+    const toolFunction = Reflect.get(tool, 'function')
+    if (type !== 'function' || !toolFunction || typeof toolFunction !== 'object') {
+      return tool
+    }
+    const name = Reflect.get(toolFunction, 'name')
+    const description = Reflect.get(toolFunction, 'description')
+    const parameters = Reflect.get(toolFunction, 'parameters')
+    return {
+      ...(typeof description === 'string'
+        ? {
+            description,
+          }
+        : {}),
+      ...(typeof name === 'string'
+        ? {
+            name,
+          }
+        : {}),
+      ...(parameters && typeof parameters === 'object'
+        ? {
+            parameters,
+          }
+        : {}),
+      type: 'function',
+    }
+  })
+}
+
 const getOpenAiParams = (
-  completionMessages: readonly any[],
+  input: readonly unknown[],
   modelId: string,
   stream: boolean,
   includeObfuscation: boolean,
   tools: readonly unknown[],
+  previousResponseId?: string,
 ): object => {
   return {
-    messages: completionMessages,
+    input,
     model: modelId,
     ...(stream
       ? {
@@ -55,8 +90,13 @@ const getOpenAiParams = (
           include_obfuscation: true,
         }
       : {}),
+    ...(previousResponseId
+      ? {
+          previous_response_id: previousResponseId,
+        }
+      : {}),
     tool_choice: 'auto',
-    tools,
+    tools: getOpenAiTools(tools),
   }
 }
 
@@ -76,6 +116,86 @@ const getStreamChunkText = (content: unknown): string => {
       return typeof text === 'string' ? text : ''
     })
     .join('')
+}
+
+interface ResponseFunctionCall {
+  readonly arguments: string
+  readonly callId: string
+  readonly name: string
+}
+
+const getResponseOutputText = (parsed: unknown): string => {
+  if (!parsed || typeof parsed !== 'object') {
+    return ''
+  }
+
+  const outputText = Reflect.get(parsed, 'output_text')
+  if (typeof outputText === 'string') {
+    return outputText
+  }
+
+  const output = Reflect.get(parsed, 'output')
+  if (!Array.isArray(output)) {
+    return ''
+  }
+
+  const chunks: string[] = []
+  for (const outputItem of output) {
+    if (!outputItem || typeof outputItem !== 'object') {
+      continue
+    }
+    const itemType = Reflect.get(outputItem, 'type')
+    if (itemType !== 'message') {
+      continue
+    }
+    const content = Reflect.get(outputItem, 'content')
+    if (!Array.isArray(content)) {
+      continue
+    }
+    for (const part of content) {
+      if (!part || typeof part !== 'object') {
+        continue
+      }
+      const partType = Reflect.get(part, 'type')
+      const text = Reflect.get(part, 'text')
+      if ((partType === 'output_text' || partType === 'text') && typeof text === 'string') {
+        chunks.push(text)
+      }
+    }
+  }
+  return chunks.join('')
+}
+
+const getResponseFunctionCalls = (parsed: unknown): readonly ResponseFunctionCall[] => {
+  if (!parsed || typeof parsed !== 'object') {
+    return []
+  }
+  const output = Reflect.get(parsed, 'output')
+  if (!Array.isArray(output)) {
+    return []
+  }
+  const calls: ResponseFunctionCall[] = []
+  for (const outputItem of output) {
+    if (!outputItem || typeof outputItem !== 'object') {
+      continue
+    }
+    const itemType = Reflect.get(outputItem, 'type')
+    if (itemType !== 'function_call') {
+      continue
+    }
+    const callId = Reflect.get(outputItem, 'call_id')
+    const name = Reflect.get(outputItem, 'name')
+    const rawArguments = Reflect.get(outputItem, 'arguments')
+    if (typeof callId !== 'string' || typeof name !== 'string') {
+      continue
+    }
+    calls.push({
+      arguments: typeof rawArguments === 'string' ? rawArguments : '',
+      callId,
+      name,
+    })
+  }
+  return calls
 }
 
 const parseSseEvent = (eventChunk: string): readonly string[] => {
@@ -173,7 +293,157 @@ const parseOpenApiStream = async (
   let remainder = ''
   let text = ''
   let done = false
+  let finishedNotified = false
   let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
+
+  const notifyFinished = async (): Promise<void> => {
+    if (finishedNotified) {
+      return
+    }
+    finishedNotified = true
+    if (onEventStreamFinished) {
+      await onEventStreamFinished()
+    }
+  }
+
+  const emitToolCallAccumulator = async (): Promise<void> => {
+    if (!onToolCallsChunk) {
+      return
+    }
+    const toolCalls = Object.entries(toolCallAccumulator)
+      .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+      .map((entry: readonly [string, StreamingToolCall]) => entry[1])
+      .filter((toolCall) => !!toolCall.name)
+    if (toolCalls.length === 0) {
+      return
+    }
+    await onToolCallsChunk(toolCalls)
+  }
+
+  const handleParsedStreamEvent = async (parsed: unknown): Promise<void> => {
+    if (onDataEvent) {
+      await onDataEvent(parsed)
+    }
+    if (!parsed || typeof parsed !== 'object') {
+      return
+    }
+
+    const eventType = Reflect.get(parsed, 'type')
+    if (eventType === 'response.completed') {
+      await notifyFinished()
+      return
+    }
+
+    if (eventType === 'response.output_text.delta') {
+      const delta = Reflect.get(parsed, 'delta')
+      if (typeof delta !== 'string' || !delta) {
+        return
+      }
+      text += delta
+      if (onTextChunk) {
+        await onTextChunk(delta)
+      }
+      return
+    }
+
+    if (eventType === 'response.output_item.added') {
+      const outputIndex = Reflect.get(parsed, 'output_index')
+      const item = Reflect.get(parsed, 'item')
+      if (typeof outputIndex !== 'number' || !item || typeof item !== 'object') {
+        return
+      }
+      const itemType = Reflect.get(item, 'type')
+      if (itemType !== 'function_call') {
+        return
+      }
+      const callId = Reflect.get(item, 'call_id')
+      const name = Reflect.get(item, 'name')
+      const rawArguments = Reflect.get(item, 'arguments')
+      const next: StreamingToolCall = {
+        arguments: typeof rawArguments === 'string' ? rawArguments : '',
+        ...(typeof callId === 'string'
+          ? {
+              id: callId,
+            }
+          : {}),
+        name: typeof name === 'string' ? name : '',
+      }
+      toolCallAccumulator = {
+        ...toolCallAccumulator,
+        [outputIndex]: next,
+      }
+      await emitToolCallAccumulator()
+      return
+    }
+
+    if (eventType === 'response.function_call_arguments.delta' || eventType === 'response.function_call_arguments.done') {
+      const outputIndex = Reflect.get(parsed, 'output_index')
+      if (typeof outputIndex !== 'number') {
+        return
+      }
+      const current = toolCallAccumulator[outputIndex] || { arguments: '', name: '' }
+      const name = Reflect.get(parsed, 'name')
+      const callId = Reflect.get(parsed, 'call_id')
+      const delta = Reflect.get(parsed, 'delta')
+      const rawArguments = Reflect.get(parsed, 'arguments')
+      const next: StreamingToolCall = {
+        arguments:
+          typeof rawArguments === 'string'
+            ? rawArguments
+            : typeof delta === 'string'
+              ? `${current.arguments}${delta}`
+              : current.arguments,
+        ...(typeof callId === 'string'
+          ? {
+              id: callId,
+            }
+          : current.id
+            ? {
+                id: current.id,
+              }
+            : {}),
+        name: typeof name === 'string' && name ? name : current.name,
+      }
+      toolCallAccumulator = {
+        ...toolCallAccumulator,
+        [outputIndex]: next,
+      }
+      await emitToolCallAccumulator()
+      return
+    }
+
+    const choices = Reflect.get(parsed, 'choices')
+    if (!Array.isArray(choices)) {
+      return
+    }
+    const firstChoice = choices[0]
+    if (!firstChoice || typeof firstChoice !== 'object') {
+      return
+    }
+    const delta = Reflect.get(firstChoice, 'delta')
+    if (!delta || typeof delta !== 'object') {
+      return
+    }
+    const toolCalls = Reflect.get(delta, 'tool_calls')
+    const updatedToolCallResult = Array.isArray(toolCalls)
+      ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
+      : undefined
+    if (updatedToolCallResult) {
+      toolCallAccumulator = updatedToolCallResult.nextAccumulator
+    }
+    if (updatedToolCallResult && onToolCallsChunk) {
+      await onToolCallsChunk(updatedToolCallResult.toolCalls)
+    }
+    const content = Reflect.get(delta, 'content')
+    const chunkText = getStreamChunkText(content)
+    if (!chunkText) {
+      return
+    }
+    text += chunkText
+    if (onTextChunk) {
+      await onTextChunk(chunkText)
+    }
+  }
 
   while (!done) {
     const { done: streamDone, value } = await reader.read()
@@ -196,9 +466,7 @@ const parseOpenApiStream = async (
       }
       for (const line of dataLines) {
         if (line === '[DONE]') {
-          if (onEventStreamFinished) {
-            await onEventStreamFinished()
-          }
+          await notifyFinished()
           done = true
           break
         }
@@ -208,43 +476,7 @@ const parseOpenApiStream = async (
         } catch {
           continue
         }
-        if (!parsed || typeof parsed !== 'object') {
-          continue
-        }
-        if (onDataEvent) {
-          await onDataEvent(parsed)
-        }
-        const choices = Reflect.get(parsed, 'choices')
-        if (!Array.isArray(choices)) {
-          continue
-        }
-        const firstChoice = choices[0]
-        if (!firstChoice || typeof firstChoice !== 'object') {
-          continue
-        }
-        const delta = Reflect.get(firstChoice, 'delta')
-        if (!delta || typeof delta !== 'object') {
-          continue
-        }
-        const toolCalls = Reflect.get(delta, 'tool_calls')
-        const updatedToolCallResult = Array.isArray(toolCalls)
-          ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
-          : undefined
-        if (updatedToolCallResult) {
-          toolCallAccumulator = updatedToolCallResult.nextAccumulator
-        }
-        if (updatedToolCallResult && onToolCallsChunk) {
-          await onToolCallsChunk(updatedToolCallResult.toolCalls)
-        }
-        const content = Reflect.get(delta, 'content')
-        const chunkText = getStreamChunkText(content)
-        if (!chunkText) {
-          continue
-        }
-        text += chunkText
-        if (onTextChunk) {
-          await onTextChunk(chunkText)
-        }
+        await handleParsedStreamEvent(parsed)
       }
     }
   }
@@ -253,9 +485,7 @@ const parseOpenApiStream = async (
     const dataLines = parseSseEvent(remainder)
     for (const line of dataLines) {
       if (line === '[DONE]') {
-        if (onEventStreamFinished) {
-          await onEventStreamFinished()
-        }
+        await notifyFinished()
         continue
       }
       let parsed: unknown
@@ -264,45 +494,11 @@ const parseOpenApiStream = async (
       } catch {
         continue
       }
-      if (!parsed || typeof parsed !== 'object') {
-        continue
-      }
-      if (onDataEvent) {
-        await onDataEvent(parsed)
-      }
-      const choices = Reflect.get(parsed, 'choices')
-      if (!Array.isArray(choices)) {
-        continue
-      }
-      const firstChoice = choices[0]
-      if (!firstChoice || typeof firstChoice !== 'object') {
-        continue
-      }
-      const delta = Reflect.get(firstChoice, 'delta')
-      if (!delta || typeof delta !== 'object') {
-        continue
-      }
-      const toolCalls = Reflect.get(delta, 'tool_calls')
-      const updatedToolCallResult = Array.isArray(toolCalls)
-        ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
-        : undefined
-      if (updatedToolCallResult) {
-        toolCallAccumulator = updatedToolCallResult.nextAccumulator
-      }
-      if (updatedToolCallResult && onToolCallsChunk) {
-        await onToolCallsChunk(updatedToolCallResult.toolCalls)
-      }
-      const content = Reflect.get(delta, 'content')
-      const chunkText = getStreamChunkText(content)
-      if (!chunkText) {
-        continue
-      }
-      text += chunkText
-      if (onTextChunk) {
-        await onTextChunk(chunkText)
-      }
+      await handleParsedStreamEvent(parsed)
     }
   }
+
+  await notifyFinished()
 
   return {
     text,
@@ -362,17 +558,18 @@ export const getOpenApiAssistantText = async (
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
   const { includeObfuscation = false, onDataEvent, onEventStreamFinished, onTextChunk, onToolCallsChunk, stream } = options ?? { stream: false }
-  const completionMessages: any[] = messages.map((message) => ({
+  const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
   }))
   const tools = getBasicChatTools()
   const maxToolIterations = 4
+  let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
     let response: Response
     try {
-      response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl, stream), {
-        body: JSON.stringify(getOpenAiParams(completionMessages, modelId, stream, includeObfuscation, tools)),
+      response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
+        body: JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, previousResponseId)),
         headers: {
           Authorization: `Bearer ${openApiApiKey}`,
           'Content-Type': 'application/json',
@@ -432,57 +629,81 @@ export const getOpenApiAssistantText = async (
       }
     }
 
-    const choices = Reflect.get(parsed, 'choices')
-    if (!Array.isArray(choices)) {
-      return {
-        text: '',
-        type: 'success',
-      }
+    const parsedResponseId = Reflect.get(parsed, 'id')
+    if (typeof parsedResponseId === 'string' && parsedResponseId) {
+      previousResponseId = parsedResponseId
     }
 
-    const firstChoice = choices[0]
-    if (!firstChoice || typeof firstChoice !== 'object') {
-      return {
-        text: '',
-        type: 'success',
-      }
-    }
-
-    const message = Reflect.get(firstChoice, 'message')
-    if (!message || typeof message !== 'object') {
-      return {
-        text: '',
-        type: 'success',
-      }
-    }
-
-    const toolCalls = Reflect.get(message, 'tool_calls')
-    if (Array.isArray(toolCalls) && toolCalls.length > 0) {
-      completionMessages.push(message)
-      for (const toolCall of toolCalls) {
-        if (!toolCall || typeof toolCall !== 'object') {
-          continue
-        }
-        const id = Reflect.get(toolCall, 'id')
-        const toolFunction = Reflect.get(toolCall, 'function')
-        if (typeof id !== 'string' || !toolFunction || typeof toolFunction !== 'object') {
-          continue
-        }
-        const name = Reflect.get(toolFunction, 'name')
-        const rawArguments = Reflect.get(toolFunction, 'arguments')
-        const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
-        completionMessages.push({
-          content,
-          role: 'tool',
-          tool_call_id: id,
+    const responseFunctionCalls = getResponseFunctionCalls(parsed)
+    if (responseFunctionCalls.length > 0) {
+      openAiInput.length = 0
+      for (const toolCall of responseFunctionCalls) {
+        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+        openAiInput.push({
+          call_id: toolCall.callId,
+          output: content,
+          type: 'function_call_output',
         })
       }
       continue
     }
 
-    const content = Reflect.get(message, 'content')
+    const outputText = getResponseOutputText(parsed)
+    if (outputText) {
+      return {
+        text: outputText,
+        type: 'success',
+      }
+    }
+
+    const choices = Reflect.get(parsed, 'choices')
+    if (Array.isArray(choices)) {
+      const firstChoice = choices[0]
+      if (!firstChoice || typeof firstChoice !== 'object') {
+        return {
+          text: '',
+          type: 'success',
+        }
+      }
+      const message = Reflect.get(firstChoice, 'message')
+      if (!message || typeof message !== 'object') {
+        return {
+          text: '',
+          type: 'success',
+        }
+      }
+      const toolCalls = Reflect.get(message, 'tool_calls')
+      if (Array.isArray(toolCalls) && toolCalls.length > 0) {
+        openAiInput.length = 0
+        for (const toolCall of toolCalls) {
+          if (!toolCall || typeof toolCall !== 'object') {
+            continue
+          }
+          const id = Reflect.get(toolCall, 'id')
+          const toolFunction = Reflect.get(toolCall, 'function')
+          if (typeof id !== 'string' || !toolFunction || typeof toolFunction !== 'object') {
+            continue
+          }
+          const name = Reflect.get(toolFunction, 'name')
+          const rawArguments = Reflect.get(toolFunction, 'arguments')
+          const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
+          openAiInput.push({
+            call_id: id,
+            output: content,
+            type: 'function_call_output',
+          })
+        }
+        continue
+      }
+      const content = Reflect.get(message, 'content')
+      return {
+        text: getTextContent(content),
+        type: 'success',
+      }
+    }
+
     return {
-      text: getTextContent(content),
+      text: '',
       type: 'success',
     }
   }
