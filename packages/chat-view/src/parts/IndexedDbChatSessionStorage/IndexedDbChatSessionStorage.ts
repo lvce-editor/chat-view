@@ -21,12 +21,18 @@ interface IndexedDbChatSessionStorageOptions {
 
 interface SessionSummary {
   readonly id: string
-  readonly title: string
   readonly messages?: readonly ChatSession['messages'][number][]
+  readonly title: string
 }
 
-interface StoredChatViewEvent extends ChatViewEvent {
+type StoredChatViewEvent = ChatViewEvent & {
   readonly eventId?: number
+}
+
+const toChatViewEvent = (event: StoredChatViewEvent): ChatViewEvent => {
+  const { eventId, ...chatViewEvent } = event
+  void eventId
+  return chatViewEvent as ChatViewEvent
 }
 
 const now = (): string => {
@@ -139,8 +145,9 @@ const replaySession = (id: string, summary: SessionSummary | undefined, events: 
       continue
     }
     if (event.type === 'chat-session-created') {
+      const { title: eventTitle } = event
       deleted = false
-      title = event.title
+      title = eventTitle
       continue
     }
     if (event.type === 'chat-session-deleted') {
@@ -148,7 +155,8 @@ const replaySession = (id: string, summary: SessionSummary | undefined, events: 
       continue
     }
     if (event.type === 'chat-session-title-updated') {
-      title = event.title
+      const { title: eventTitle } = event
+      title = eventTitle
       continue
     }
     if (event.type === 'chat-message-added') {
@@ -208,14 +216,8 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
           keyPath: 'id',
         })
       }
-      if (!database.objectStoreNames.contains(this.state.eventStoreName)) {
-        const eventStore = database.createObjectStore(this.state.eventStoreName, {
-          autoIncrement: true,
-          keyPath: 'eventId',
-        })
-        eventStore.createIndex('sessionId', 'sessionId', { unique: false })
-      } else {
-        const transaction = request.transaction
+      if (database.objectStoreNames.contains(this.state.eventStoreName)) {
+        const { transaction } = request
         if (!transaction) {
           return
         }
@@ -223,6 +225,12 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
         if (!eventStore.indexNames.contains('sessionId')) {
           eventStore.createIndex('sessionId', 'sessionId', { unique: false })
         }
+      } else {
+        const eventStore = database.createObjectStore(this.state.eventStoreName, {
+          autoIncrement: true,
+          keyPath: 'eventId',
+        })
+        eventStore.createIndex('sessionId', 'sessionId', { unique: false })
       }
     })
     const databasePromise = requestToPromise(() => request)
@@ -252,7 +260,7 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
     const store = transaction.objectStore(this.state.eventStoreName)
     const index = store.index('sessionId')
     const events = await requestToPromise(() => index.getAll(IDBKeyRange.only(sessionId)))
-    return (events as readonly StoredChatViewEvent[]).map(({ eventId, ...event }) => event)
+    return (events as readonly StoredChatViewEvent[]).map(toChatViewEvent)
   }
 
   private listEventsInternal = async (): Promise<readonly ChatViewEvent[]> => {
@@ -260,7 +268,7 @@ export class IndexedDbChatSessionStorage implements ChatSessionStorage {
     const transaction = database.transaction(this.state.eventStoreName, 'readonly')
     const store = transaction.objectStore(this.state.eventStoreName)
     const events = await requestToPromise(() => store.getAll())
-    return (events as readonly StoredChatViewEvent[]).map(({ eventId, ...event }) => event)
+    return (events as readonly StoredChatViewEvent[]).map(toChatViewEvent)
   }
 
   private appendEvents = async (events: readonly ChatViewEvent[]): Promise<void> => {
