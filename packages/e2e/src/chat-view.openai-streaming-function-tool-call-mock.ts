@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-streaming-function-tool-call-mock'
 
-export const skip = 1
+// export const skip = 1
 
 export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Layout.showSecondarySideBar')
@@ -144,7 +144,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.handleInput', 'composer', 'whats the contents of index html', 'script')
   await Command.execute('Chat.handleSubmit')
 
-  const messages = Locator('.ChatDetailsContent .Message')
+  const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toContainText('whats the contents of index html')
   await expect(messages.nth(1)).toContainText('read_file "index.html"')
