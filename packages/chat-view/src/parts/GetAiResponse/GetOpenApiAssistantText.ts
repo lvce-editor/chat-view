@@ -109,7 +109,7 @@ const updateToolCallAccumulator = (
     const current = accumulator.get(index) || { arguments: '', name: '' }
     const id = Reflect.get(item, 'id')
     const toolFunction = Reflect.get(item, 'function')
-    let name = current.name
+    let {name} = current
     let args = current.arguments
     if (toolFunction && typeof toolFunction === 'object') {
       const deltaName = Reflect.get(toolFunction, 'name')

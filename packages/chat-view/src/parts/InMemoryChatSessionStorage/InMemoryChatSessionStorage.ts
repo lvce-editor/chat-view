@@ -94,8 +94,8 @@ const getMutationEvents = (previous: ChatSession | undefined, next: ChatSession)
           sessionId: next.id,
           text: nextMessage.text,
           time: nextMessage.time,
-          toolCalls: nextMessage.toolCalls,
           timestamp,
+          toolCalls: nextMessage.toolCalls,
           type: 'chat-message-updated',
         })
       }
