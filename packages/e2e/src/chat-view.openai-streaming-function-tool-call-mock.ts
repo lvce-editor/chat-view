@@ -38,7 +38,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     {
       item: {
         arguments: '',
-        call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
+        call_id: 'call_01',
         id: 'fc_01',
         name: 'read_file',
         status: 'in_progress',
@@ -100,7 +100,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     {
       item: {
         arguments: '{"path":"index.html"}',
-        call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
+        call_id: 'call_01',
         id: 'fc_01',
         name: 'read_file',
         status: 'completed',
@@ -119,7 +119,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
         output: [
           {
             arguments: '{"path":"index.html"}',
-            call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
+            call_id: 'call_01',
             id: 'fc_01',
             name: 'read_file',
             status: 'completed',
