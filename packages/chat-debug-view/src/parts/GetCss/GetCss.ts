@@ -51,6 +51,11 @@ export const getCss = (): string => {
   opacity: 0.8;
 }
 
+.ChatDebugViewError {
+  color: var(--vscode-errorForeground, #f14c4c);
+  white-space: normal;
+}
+
 .TokenText {
   color: var(--vscode-editor-foreground, inherit);
 }

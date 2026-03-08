@@ -5,6 +5,7 @@ export const refresh = async (state: ChatDebugViewState): Promise<ChatDebugViewS
   const events = await listChatViewEvents(state.sessionId, state.databaseName, state.dataBaseVersion, state.eventStoreName, state.sessionIdIndexName)
   return {
     ...state,
+    errorMessage: '',
     events,
     initial: false,
   }

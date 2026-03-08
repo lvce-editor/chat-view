@@ -4,6 +4,7 @@ export interface ChatDebugViewState {
   readonly assetDir: string
   readonly databaseName: string
   readonly dataBaseVersion: number
+  readonly errorMessage: string
   readonly events: readonly ChatViewEvent[]
   readonly eventStoreName: string
   readonly filterValue: string
