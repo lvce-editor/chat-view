@@ -37,12 +37,7 @@ const tasks = [
 const main = async () => {
   for (const task of tasks) {
     await mkdir(join(root, task.outputDir), { recursive: true })
-    const args = [
-      ...commonArgs,
-      ...task.external.map((item) => `--external:${item}`),
-      task.input,
-      `--outfile=${task.outputFile}`,
-    ]
+    const args = [...commonArgs, ...task.external.map((item) => `--external:${item}`), task.input, `--outfile=${task.outputFile}`]
     execa(esbuild, args, {
       cwd: root,
       stdio: 'inherit',
