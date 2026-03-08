@@ -30,7 +30,6 @@ const getEventsBySessionId = async (
   return filterEventsBySessionId(all, sessionId)
 }
 
-export const listChatViewEvents = async (sessionId: string): Promise<readonly ChatViewEvent[]> => {
 export const listChatViewEvents = async (
   sessionId: string,
   databaseName: string,
