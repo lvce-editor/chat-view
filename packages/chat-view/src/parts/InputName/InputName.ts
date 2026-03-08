@@ -6,6 +6,7 @@ export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
 export const CreateSession = 'create-session'
+export const SessionDebug = 'session-debug'
 export const Settings = 'settings'
 export const CloseChat = 'close-chat'
 export const SessionDelete = 'SessionDelete'
@@ -20,6 +21,7 @@ export type InputName =
   | typeof Back
   | typeof Model
   | typeof CreateSession
+  | typeof SessionDebug
   | typeof Settings
   | typeof CloseChat
   | typeof SessionDelete

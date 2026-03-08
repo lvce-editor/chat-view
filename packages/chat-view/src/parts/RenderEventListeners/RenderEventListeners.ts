@@ -30,6 +30,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickNew'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickSessionDebug,
+      params: ['handleClickSessionDebug'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickBack,
       params: ['handleClickBack'],
     },
