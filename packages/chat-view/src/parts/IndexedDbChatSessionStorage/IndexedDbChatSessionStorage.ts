@@ -178,18 +178,18 @@ const replaySession = (id: string, summary: SessionSummary | undefined, events: 
         }
         return {
           ...message,
-          ...(event.inProgress !== undefined
-            ? {
+          ...(event.inProgress === undefined
+            ? {}
+            : {
                 inProgress: event.inProgress,
-              }
-            : {}),
+              }),
           text: event.text,
           time: event.time,
-          ...(event.toolCalls !== undefined
-            ? {
+          ...(event.toolCalls === undefined
+            ? {}
+            : {
                 toolCalls: event.toolCalls,
-              }
-            : {}),
+              }),
         }
       })
       continue
