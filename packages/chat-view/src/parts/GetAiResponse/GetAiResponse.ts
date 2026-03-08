@@ -40,7 +40,7 @@ export const getAiResponse = async ({
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
     if (useMockApi) {
-      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk)
+      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText
