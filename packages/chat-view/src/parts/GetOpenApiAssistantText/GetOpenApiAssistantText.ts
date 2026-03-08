@@ -83,13 +83,13 @@ const getOpenAiParams = (
     ...(stream
       ? {
           stream: true,
-          ...(!includeObfuscation
-            ? {
+          ...(includeObfuscation
+            ? {}
+            : {
                 stream_options: {
                   include_obfuscation: false,
                 },
-              }
-            : {}),
+              }),
         }
       : {}),
     ...(previousResponseId
