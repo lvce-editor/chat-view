@@ -2,7 +2,6 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const getListIndex = (state: ChatState, eventX: number, eventY: number): number => {
   const { headerHeight, height, listItemHeight, width, x, y } = state
-  console.log({ height, listItemHeight, width, x, y })
   if (eventX < x || eventY < y) {
     return -1
   }
