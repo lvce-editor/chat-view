@@ -64,13 +64,56 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
     const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
     expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestBody.include_obfuscation).toBe(false)
+    expect(requestBody.include_obfuscation).toBeUndefined()
+    expect(requestBody.stream_options).toBeUndefined()
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
-test('getOpenApiAssistantText should include include_obfuscation when enabled', async () => {
+test('getOpenApiAssistantText should include include_obfuscation in stream_options when streaming and includeObfuscation is false', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'hello from openai' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        includeObfuscation: false,
+        stream: true,
+      },
+    )
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestBody.include_obfuscation).toBeUndefined()
+    expect(requestBody.stream_options).toEqual({
+      include_obfuscation: false,
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenApiAssistantText should not include include_obfuscation when includeObfuscation is true', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
   globalThis.fetch = (async (...args: readonly unknown[]) => {
@@ -99,11 +142,12 @@ test('getOpenApiAssistantText should include include_obfuscation when enabled', 
       0,
       {
         includeObfuscation: true,
-        stream: false,
+        stream: true,
       },
     )
     const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestBody.include_obfuscation).toBe(true)
+    expect(requestBody.include_obfuscation).toBeUndefined()
+    expect(requestBody.stream_options).toBeUndefined()
   } finally {
     globalThis.fetch = originalFetch
   }
