@@ -1,6 +1,6 @@
 import type { ToolCallResponse } from './types.ts'
 
-export const getToolSuccessResponse = (toolCallId: string, result: Record<string, unknown>): ToolCallResponse => {
+export const getToolSuccessResponse = (toolCallId: string, result: Readonly<Record<string, unknown>>): ToolCallResponse => {
   return {
     content: JSON.stringify({
       result,

@@ -1,7 +1,7 @@
 import type { VerifyToolArgumentsResult } from './types.ts'
 import * as ToolArgumentSchemas from './ToolArgumentSchemas.ts'
 
-export const verifyToolCallArguments = (name: string, args: Record<string, unknown>): VerifyToolArgumentsResult => {
+export const verifyToolCallArguments = (name: string, args: Readonly<Record<string, unknown>>): VerifyToolArgumentsResult => {
   const schema = ToolArgumentSchemas.toolArgumentSchemas[name]
   if (!schema) {
     return {
