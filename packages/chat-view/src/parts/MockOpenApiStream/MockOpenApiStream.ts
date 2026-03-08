@@ -36,7 +36,7 @@ export const readNextChunk = async (): Promise<string | undefined> => {
   if (finished) {
     return undefined
   }
-  return new Promise((resolve) => {
-    waiters.push(resolve)
-  })
+  const { promise, resolve } = Promise.withResolvers<string | undefined>()
+  waiters.push(resolve)
+  return promise
 }
