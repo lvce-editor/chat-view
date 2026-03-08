@@ -1,6 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getChatSession, listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
@@ -8,6 +8,7 @@ import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSaved
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
+import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
 
 const toSummarySession = (session: ChatSession): ChatSession => {
   return {
@@ -15,22 +16,6 @@ const toSummarySession = (session: ChatSession): ChatSession => {
     messages: [],
     title: session.title,
   }
-}
-
-const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], selectedSessionId: string): Promise<readonly ChatSession[]> => {
-  if (!selectedSessionId) {
-    return sessions
-  }
-  const loadedSession = await getChatSession(selectedSessionId)
-  if (!loadedSession) {
-    return sessions
-  }
-  return sessions.map((session) => {
-    if (session.id !== selectedSessionId) {
-      return session
-    }
-    return loadedSession
-  })
 }
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
