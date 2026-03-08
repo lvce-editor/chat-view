@@ -1,7 +1,7 @@
-import { makeApiRequest } from '../MakeApiRequest/MakeApiRequest.ts'
-import { makeStreamingApiRequest } from '../MakeStreamingApiRequest/MakeStreamingApiRequest.ts'
+import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
+import * as NetworkCommandMap from './NetworkCommandMap.ts'
 
 export const commandMap = {
-  'ChatNetwork.makeApiRequest': makeApiRequest,
-  'ChatNetwork.makeStreamingApiRequest': makeStreamingApiRequest,
+  ...NetworkCommandMap.networkCommandMap,
+  'HandleMessagePort.handleMessagePort': handleMessagePort,
 }
