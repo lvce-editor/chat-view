@@ -14,7 +14,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     {
       response: {
         created_at: 1,
-        id: 'resp_069caeeab667c6270069adef235be8819781d32c936ce85fe1',
+        id: 'resp_01',
         model: 'gpt-4.1-mini-2025-04-14',
         object: 'response',
         output: [],
@@ -26,7 +26,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     {
       response: {
         created_at: 1,
-        id: 'resp_069caeeab667c6270069adef235be8819781d32c936ce85fe1',
+        id: 'resp_01',
         model: 'gpt-4.1-mini-2025-04-14',
         object: 'response',
         output: [],
@@ -39,7 +39,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
       item: {
         arguments: '',
         call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
-        id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+        id: 'fc_01',
         name: 'read_file',
         status: 'in_progress',
         type: 'function_call',
@@ -50,49 +50,49 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     },
     {
       delta: '{"',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 3,
       type: 'response.function_call_arguments.delta',
     },
     {
       delta: 'path',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 4,
       type: 'response.function_call_arguments.delta',
     },
     {
       delta: '":"',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 5,
       type: 'response.function_call_arguments.delta',
     },
     {
       delta: 'index',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 6,
       type: 'response.function_call_arguments.delta',
     },
     {
       delta: '.html',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 7,
       type: 'response.function_call_arguments.delta',
     },
     {
       delta: '"}',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 8,
       type: 'response.function_call_arguments.delta',
     },
     {
       arguments: '{"path":"index.html"}',
-      item_id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+      item_id: 'fc_01',
       output_index: 0,
       sequence_number: 9,
       type: 'response.function_call_arguments.done',
@@ -101,7 +101,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
       item: {
         arguments: '{"path":"index.html"}',
         call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
-        id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+        id: 'fc_01',
         name: 'read_file',
         status: 'completed',
         type: 'function_call',
@@ -113,14 +113,14 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     {
       response: {
         created_at: 1,
-        id: 'resp_069caeeab667c6270069adef235be8819781d32c936ce85fe1',
+        id: 'resp_01',
         model: 'gpt-4.1-mini-2025-04-14',
         object: 'response',
         output: [
           {
             arguments: '{"path":"index.html"}',
             call_id: 'call_hTsImEnE2J15oHE1JfFMUdQP',
-            id: 'fc_069caeeab667c6270069adef240bb08197b5d1c77023543d54',
+            id: 'fc_01',
             name: 'read_file',
             status: 'completed',
             type: 'function_call',
