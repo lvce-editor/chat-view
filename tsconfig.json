@@ -9,6 +9,9 @@
       "path": "./packages/chat-network-worker"
     },
     {
+      "path": "./packages/chat-tool-worker"
+    },
+    {
       "path": "./packages/build"
     },
     {
