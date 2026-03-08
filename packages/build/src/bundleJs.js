@@ -51,6 +51,7 @@ export const bundleDebugViewJs = async () => {
   const options = getOptions(
     join(root, 'packages/chat-debug-view/src/chatDebugViewWorkerMain.ts'),
     join(root, '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js'),
+    ['ws', 'electron'],
   )
   await bundle(options)
 }
