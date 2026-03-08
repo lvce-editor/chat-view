@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
-import type { StreamingToolCall } from '../GetAiResponse/GetOpenApiAssistantText.ts'
+import type { StreamingToolCall } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 

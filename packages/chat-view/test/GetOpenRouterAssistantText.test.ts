@@ -1,7 +1,7 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { getOpenRouterAssistantText } from '../src/parts/GetAiResponse/GetOpenRouterAssistantText.ts'
+import { getOpenRouterAssistantText } from '../src/parts/GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 
 const parseJsonRequestBody = (body: unknown): any => {
   if (typeof body !== 'string') {
