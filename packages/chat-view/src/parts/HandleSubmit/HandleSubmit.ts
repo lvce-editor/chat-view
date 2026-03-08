@@ -164,7 +164,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       await appendChatViewEvent({
         sessionId: optimisticState.selectedSessionId,
         timestamp: new Date().toISOString(),
-        type: 'data-event',
+        type: 'sse-response-part',
         value,
       })
     },

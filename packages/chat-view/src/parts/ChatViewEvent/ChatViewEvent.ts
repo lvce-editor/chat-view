@@ -55,7 +55,7 @@ export interface HandleResponseChunkEvent extends ChatViewEventBase {
 }
 
 export interface DataEvent extends ChatViewEventBase {
-  readonly type: 'data-event'
+  readonly type: 'sse-response-part'
   readonly value: unknown
 }
 
