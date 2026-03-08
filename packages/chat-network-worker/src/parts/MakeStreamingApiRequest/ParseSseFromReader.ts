@@ -2,12 +2,12 @@ import { getSseDataLines } from './GetSseDataLines.ts'
 import { parseSseData } from './ParseSseData.ts'
 import { splitSseEvents } from './SplitSseEvents.ts'
 
-export const parseSseFromReader = async (response: Readonly<Response>): Promise<readonly unknown[]> => {
-  if (!response.body) {
+export const parseSseFromReader = async (responseBody: Readonly<ReadableStream<Uint8Array>> | null): Promise<readonly unknown[]> => {
+  if (!responseBody) {
     return []
   }
 
-  const reader = response.body.getReader()
+  const reader = responseBody.getReader()
   const decoder = new TextDecoder()
   let remainder = ''
   const events: unknown[] = []

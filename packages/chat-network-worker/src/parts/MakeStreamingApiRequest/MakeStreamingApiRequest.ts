@@ -24,7 +24,7 @@ export const makeStreamingApiRequest = async (options: Readonly<MakeApiRequestOp
     }
   }
 
-  const body = await parseSseFromReader(response)
+  const body = await parseSseFromReader(response.body)
   return {
     body,
     headers,
