@@ -11,6 +11,7 @@ import {
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
+import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!rawArguments.trim()) {
@@ -108,11 +109,13 @@ export const getChatMessageDom = (
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
+  const messageIntermediate = parseMessageContent(message.text)
+  const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? 2 + toolCallsDom.length
-      : 1 + toolCallsDom.length
+      ? messageIntermediate.length + 1 + toolCallsDom.length
+      : messageIntermediate.length + toolCallsDom.length
   return [
     {
       childCount: 1,
@@ -124,12 +127,7 @@ export const getChatMessageDom = (
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.Markdown,
-      type: VirtualDomElements.P,
-    },
-    text(message.text),
+    ...messageDom,
     ...toolCallsDom,
     ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
