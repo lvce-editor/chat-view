@@ -24,8 +24,8 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     },
     {
       sessionId: 'e2e-session-filter',
-      timestamp: '2026-03-08T00:00:02.000Z',
       target: 'Gamma button',
+      timestamp: '2026-03-08T00:00:02.000Z',
       type: 'handle-click',
     },
   ]
