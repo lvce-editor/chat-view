@@ -40,9 +40,10 @@ export const getChatDebugViewDom = (
   }
 
   const eventNodes = events.flatMap(getEventNode)
+  const eventCountText = `${events.length} event${events.length === 1 ? '' : 's'}`
   return [
     {
-      childCount: 3,
+      childCount: 4,
       className: 'ChatDebugView',
       type: VirtualDomElements.Div,
     },
@@ -74,6 +75,12 @@ export const getChatDebugViewDom = (
       type: VirtualDomElements.Input,
     },
     text('Show input events'),
+    {
+      childCount: 1,
+      className: 'ChatDebugViewEventCount',
+      type: VirtualDomElements.Div,
+    },
+    text(eventCountText),
     {
       childCount: 1,
       className: 'ChatDebugViewSession',
