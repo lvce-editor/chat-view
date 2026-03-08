@@ -1,10 +1,11 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.js'
+import { bundleDebugViewJs, bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.js'
 import { root } from './root.js'
 
 const dist = join(root, '.tmp', 'dist')
+const debugViewDist = join(root, '.tmp', 'dist-chat-debug-view')
 const networkWorkerDist = join(root, '.tmp', 'dist-chat-network-worker')
 const toolWorkerDist = join(root, '.tmp', 'dist-chat-tool-worker')
 
@@ -52,13 +53,16 @@ const getVersion = async () => {
 }
 
 await rm(dist, { recursive: true, force: true })
+await rm(debugViewDist, { recursive: true, force: true })
 await rm(networkWorkerDist, { recursive: true, force: true })
 await rm(toolWorkerDist, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
+await mkdir(debugViewDist, { recursive: true })
 await mkdir(networkWorkerDist, { recursive: true })
 await mkdir(toolWorkerDist, { recursive: true })
 
 await bundleJs()
+await bundleDebugViewJs()
 await bundleNetworkWorkerJs()
 await bundleToolWorkerJs()
 
@@ -81,6 +85,23 @@ await writeJson(join(dist, 'package.json'), packageJson)
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+
+const debugViewPackageJson = await readJson(join(root, 'packages', 'chat-debug-view', 'package.json'))
+
+delete debugViewPackageJson.scripts
+delete debugViewPackageJson.dependencies
+delete debugViewPackageJson.devDependencies
+delete debugViewPackageJson.prettier
+delete debugViewPackageJson.jest
+delete debugViewPackageJson.xo
+delete debugViewPackageJson.directories
+delete debugViewPackageJson.nodemonConfig
+debugViewPackageJson.version = version
+debugViewPackageJson.main = 'dist/chatDebugViewWorkerMain.js'
+
+await writeJson(join(debugViewDist, 'package.json'), debugViewPackageJson)
+await cp(join(root, 'README.md'), join(debugViewDist, 'README.md'))
+await cp(join(root, 'LICENSE'), join(debugViewDist, 'LICENSE'))
 
 const networkWorkerPackageJson = await readJson(join(root, 'packages', 'chat-network-worker', 'package.json'))
 

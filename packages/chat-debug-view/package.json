@@ -1,0 +1,22 @@
+{
+  "name": "@lvce-editor/chat-debug-view",
+  "version": "0.0.0-dev",
+  "description": "Chat Debug View Worker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lvce-editor/chat-view.git"
+  },
+  "license": "MIT",
+  "author": "Lvce Editor",
+  "type": "module",
+  "main": "src/chatDebugViewWorkerMain.ts",
+  "scripts": {
+    "test": "echo \"No tests for chat-debug-view yet\""
+  },
+  "dependencies": {
+    "@lvce-editor/constants": "^5.0.0",
+    "@lvce-editor/rpc": "^6.4.0",
+    "@lvce-editor/viewlet-registry": "^4.1.0",
+    "@lvce-editor/virtual-dom-worker": "^8.9.0"
+  }
+}
