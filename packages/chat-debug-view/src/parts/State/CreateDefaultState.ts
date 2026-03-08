@@ -5,6 +5,7 @@ export const createDefaultState = (): ChatDebugViewState => {
     assetDir: '',
     databaseName: 'lvce-chat-view-sessions',
     dataBaseVersion: 2,
+    errorMessage: '',
     events: [],
     eventStoreName: 'chat-view-events',
     filterValue: '',
