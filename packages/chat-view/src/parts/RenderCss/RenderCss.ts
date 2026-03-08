@@ -6,7 +6,7 @@ import { getCss } from '../GetCss/GetCss.ts'
 // list height
 
 export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
-  const { composerHeight, uid } = newState
-  const css = getCss(composerHeight)
+  const { composerHeight, listItemHeight, uid } = newState
+  const css = getCss(composerHeight, listItemHeight)
   return [ViewletCommand.SetCss, uid, css]
 }

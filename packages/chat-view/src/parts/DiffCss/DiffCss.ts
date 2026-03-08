@@ -6,6 +6,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerHeight === newState.composerHeight &&
     oldState.composerLineHeight === newState.composerLineHeight &&
     oldState.composerFontFamily === newState.composerFontFamily &&
-    oldState.composerFontSize === newState.composerFontSize
+    oldState.composerFontSize === newState.composerFontSize &&
+    oldState.listItemHeight === newState.listItemHeight
   )
 }
