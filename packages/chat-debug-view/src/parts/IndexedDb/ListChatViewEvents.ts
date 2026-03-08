@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { requestToPromise } from './RequestToPromise.ts'
 
