@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-api-error-mock'
 
-export const skip = 1
-
 export const test: Test = async ({ Command, expect, Locator }) => {
   // arrange
   await Command.execute('Layout.showSecondarySideBar')
@@ -25,7 +23,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.handleSubmit')
 
   // assert
-  const messages = Locator('.ChatDetailsContent .Message')
+  const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(1)).toContainText('OpenAI request failed (status 400): unknown_parameter [invalid_request_error].')
   await expect(messages.nth(1)).toContainText("Unknown parameter: 'include_obfuscation'.")
