@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenApiApiKeyInput } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
@@ -19,6 +20,14 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   }
   if (name !== InputName.Composer) {
     return state
+  }
+  if (state.selectedSessionId) {
+    await appendChatViewEvent({
+      sessionId: state.selectedSessionId,
+      timestamp: new Date().toISOString(),
+      type: 'handle-input',
+      value,
+    })
   }
   const composerHeight = await getComposerHeight(state, value)
   return {
