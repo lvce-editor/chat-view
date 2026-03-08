@@ -4,16 +4,16 @@ import * as GetFilteredEvents from '../src/parts/GetFilteredEvents/GetFilteredEv
 
 const events: readonly ChatViewEvent[] = [
   {
+    name: 'filter',
     sessionId: 'session-1',
     timestamp: '2026-01-01T10:00:00.000Z',
     type: 'handle-input',
-    name: 'filter',
   },
   {
+    path: '/chat',
     sessionId: 'session-1',
     timestamp: '2026-01-01T10:01:00.000Z',
     type: 'request',
-    path: '/chat',
   },
 ]
 

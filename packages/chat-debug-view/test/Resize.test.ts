@@ -5,10 +5,10 @@ import { createDefaultState } from '../src/parts/State/CreateDefaultState.ts'
 test('resize should merge provided dimensions into state', () => {
   const state = createDefaultState()
   const result = Resize.resize(state, {
+    height: 400,
+    width: 300,
     x: 10,
     y: 20,
-    width: 300,
-    height: 400,
   })
 
   expect(result.x).toBe(10)
