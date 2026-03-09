@@ -14,12 +14,6 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   const fileName = getFileNameFromUri(target.title)
   const toolNameLabel = `${toolCall.name} `
   const statusLabel = getToolCallStatusLabel(toolCall)
-  const clickableProps = target.clickableUri
-    ? {
-        'data-uri': target.clickableUri,
-        onClick: DomEventListenerFunctions.HandleClickReadFile,
-      }
-    : {}
   const fileNameClickableProps = target.clickableUri
     ? {
         'data-uri': target.clickableUri,
@@ -30,23 +24,21 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     {
       childCount: statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
-      ...clickableProps,
       title: target.title,
       type: VirtualDomElements.Li,
     },
     {
       childCount: 0,
       className: ClassNames.FileIcon,
-      ...clickableProps,
       type: VirtualDomElements.Div,
     },
+    text(toolNameLabel),
     {
       childCount: 1,
       className: ClassNames.ChatToolCallReadFileLink,
       ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
-    text(toolNameLabel),
     text(fileName),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
