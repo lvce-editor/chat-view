@@ -1,5 +1,5 @@
 import type { ExecuteToolOptions } from '../Types/Types.ts'
-import { executegetWorkspaceUriTool } from '../ExecutegetWorkspaceUriTool/ExecutegetWorkspaceUriTool.ts'
+import { executeGetWorkspaceUriTool } from '../ExecuteGetWorkspaceUriTool/ExecuteGetWorkspaceUriTool.ts'
 import { executeListFilesTool } from '../ExecuteListFilesTool/ExecuteListFilesTool.ts'
 import { executeReadFileTool } from '../ExecuteReadFileTool/ExecuteReadFileTool.ts'
 import { executeWriteFileTool } from '../ExecuteWriteFileTool/ExecuteWriteFileTool.ts'
@@ -20,7 +20,7 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
   }
 
   if (name === 'getWorkspaceUri') {
-    return executegetWorkspaceUriTool(args, options)
+    return executeGetWorkspaceUriTool(args, options)
   }
 
   return JSON.stringify({ error: `Unknown tool: ${name}` })
