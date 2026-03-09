@@ -468,10 +468,7 @@ test('getStatusBarVirtualDom should render assistant read_file path as clickable
     0,
   )
   const fileNameLinkNode = result.find(
-    (node) =>
-      node.type === VirtualDomElements.Span &&
-      node.className === ClassNames.ChatToolCallReadFileLink &&
-      node['data-uri'] === path,
+    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === path,
   )
 
   expect(fileNameLinkNode).toMatchObject({
