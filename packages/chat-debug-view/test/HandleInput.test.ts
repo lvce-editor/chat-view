@@ -15,6 +15,18 @@ test('handleInput should set showInputEvents to true for on value', () => {
   expect(result.showInputEvents).toBe(true)
 })
 
+test('handleInput should set showEventStreamFinishedEvents to true for on value', () => {
+  const state = createDefaultState()
+  const result = HandleInput.handleInput(state, InputName.ShowEventStreamFinishedEvents, '', 'on')
+  expect(result.showEventStreamFinishedEvents).toBe(true)
+})
+
+test('handleInput should set showEventStreamFinishedEvents to false for unchecked value', () => {
+  const state = createDefaultState()
+  const result = HandleInput.handleInput(state, InputName.ShowEventStreamFinishedEvents, '', false)
+  expect(result.showEventStreamFinishedEvents).toBe(false)
+})
+
 test('handleInput should set showInputEvents to false for unchecked value', () => {
   const state = createDefaultState()
   const result = HandleInput.handleInput(state, InputName.ShowInputEvents, '', false)

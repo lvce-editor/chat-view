@@ -9,6 +9,12 @@ export const handleInput = (state: ChatDebugViewState, name: string, value: stri
       filterValue: value,
     }
   }
+  if (name === InputName.ShowEventStreamFinishedEvents) {
+    return {
+      ...state,
+      showEventStreamFinishedEvents: GetBoolean.getBoolean(checked),
+    }
+  }
   if (name === InputName.ShowInputEvents) {
     return {
       ...state,
