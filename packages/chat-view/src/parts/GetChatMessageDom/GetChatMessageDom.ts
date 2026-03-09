@@ -8,6 +8,7 @@ import {
 } from '../chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
+import { getOpenApiInvalidApiKeyDom } from '../GetOpenApiInvalidApiKeyDom/GetOpenApiInvalidApiKeyDom.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
@@ -25,6 +26,7 @@ export const getChatMessageDom = (
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
+  const isOpenApiInvalidApiKeyMessage = message.role === 'assistant' && message.text.includes('invalid API key')
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
@@ -50,5 +52,6 @@ export const getChatMessageDom = (
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
+    ...(isOpenApiInvalidApiKeyMessage ? getOpenApiInvalidApiKeyDom() : []),
   ]
 }
