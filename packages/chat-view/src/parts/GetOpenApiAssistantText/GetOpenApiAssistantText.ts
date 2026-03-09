@@ -560,9 +560,7 @@ const parseOpenApiStream = async (
   }
 
   const responseFunctionCalls =
-    completedResponseFunctionCalls.length > 0
-      ? completedResponseFunctionCalls
-      : getResponseFunctionCallsFromStreamingAccumulator(toolCallAccumulator)
+    completedResponseFunctionCalls.length > 0 ? completedResponseFunctionCalls : getResponseFunctionCallsFromStreamingAccumulator(toolCallAccumulator)
   return {
     ...(responseId
       ? {
