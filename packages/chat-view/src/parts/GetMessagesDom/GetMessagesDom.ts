@@ -1,9 +1,9 @@
 import { type VirtualDomNode, VirtualDomElements, mergeClassNames } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 
 export const getMessagesDom = (
