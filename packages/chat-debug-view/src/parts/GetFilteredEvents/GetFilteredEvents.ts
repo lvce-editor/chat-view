@@ -1,10 +1,6 @@
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 
-const getVisibleEvents = (
-  events: readonly ChatViewEvent[],
-  showInputEvents: boolean,
-  showResponsePartEvents: boolean,
-): readonly ChatViewEvent[] => {
+const getVisibleEvents = (events: readonly ChatViewEvent[], showInputEvents: boolean, showResponsePartEvents: boolean): readonly ChatViewEvent[] => {
   return events.filter((event) => {
     if (!showInputEvents && event.type === 'handle-input') {
       return false

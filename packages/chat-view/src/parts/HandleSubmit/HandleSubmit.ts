@@ -71,9 +71,7 @@ const isStreamingFunctionCallEvent = (parsed: unknown): boolean => {
 }
 
 const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-response-part' => {
-  return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed'
-    ? 'sse-response-completed'
-    : 'sse-response-part'
+  return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed' ? 'sse-response-completed' : 'sse-response-part'
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
