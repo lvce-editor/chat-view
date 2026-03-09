@@ -93,7 +93,7 @@ export const createDefaultState = (): ChatState => {
     useMockApi: false,
     viewMode: 'list',
     warningCount: 0,
-    webSearchEnabled: false,
+    webSearchEnabled: true,
     width: 0,
     x: 0,
     y: 0,
