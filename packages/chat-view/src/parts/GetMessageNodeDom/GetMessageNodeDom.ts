@@ -3,6 +3,17 @@ import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseM
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
+const getOrderedListItemDom = (item: MessageIntermediateNode['items'][number]): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: item.children.length,
+      className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
+    },
+    ...item.children.flatMap(getInlineNodeDom),
+  ]
+}
+
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
@@ -20,15 +31,6 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
-    ...node.items.flatMap((item) => {
-      return [
-        {
-          childCount: item.children.length,
-          className: ClassNames.ChatOrderedListItem,
-          type: VirtualDomElements.Li,
-        },
-        ...item.children.flatMap(getInlineNodeDom),
-      ]
-    }),
+    ...node.items.flatMap(getOrderedListItemDom),
   ]
 }
