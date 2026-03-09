@@ -14,25 +14,20 @@ interface HtmlElementNode {
 
 type HtmlNode = HtmlElementNode | HtmlTextNode
 
+type ReadonlyHtmlElementNode = {
+  readonly attributes: Readonly<Record<string, string>>
+  readonly children: readonly ReadonlyHtmlNode[]
+  readonly tagName: string
+  readonly type: 'element'
+}
+
+type ReadonlyHtmlNode = ReadonlyHtmlElementNode | HtmlTextNode
+
 const maxHtmlLength = 40_000
 const tokenRegex = /<!--[\s\S]*?-->|<\/?[a-zA-Z][\w:-]*(?:\s[^<>]*?)?>|[^<]+/g
 const attributeRegex = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g
 
-const inlineTags = new Set([
-  'a',
-  'abbr',
-  'b',
-  'code',
-  'em',
-  'i',
-  'label',
-  'small',
-  'span',
-  'strong',
-  'sub',
-  'sup',
-  'u',
-])
+const inlineTags = new Set(['a', 'abbr', 'b', 'code', 'em', 'i', 'label', 'small', 'span', 'strong', 'sub', 'sup', 'u'])
 
 const voidElements = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'])
 
@@ -227,14 +222,14 @@ const getElementType = (tagName: string): number => {
       return VirtualDomElements.Nav
     case 'ol':
       return VirtualDomElements.Ol
+    case 'option':
+      return VirtualDomElements.Option
     case 'p':
       return VirtualDomElements.P
     case 'pre':
       return VirtualDomElements.Pre
     case 'section':
       return VirtualDomElements.Section
-    case 'option':
-      return VirtualDomElements.Option
     case 'select':
       return VirtualDomElements.Select
     case 'span':
@@ -247,14 +242,14 @@ const getElementType = (tagName: string): number => {
       return VirtualDomElements.TBody
     case 'td':
       return VirtualDomElements.Td
+    case 'textarea':
+      return VirtualDomElements.TextArea
     case 'tfoot':
       return VirtualDomElements.Tfoot
     case 'th':
       return VirtualDomElements.Th
     case 'thead':
       return VirtualDomElements.THead
-    case 'textarea':
-      return VirtualDomElements.TextArea
     case 'tr':
       return VirtualDomElements.Tr
     case 'ul':
@@ -268,7 +263,7 @@ const normalizeUrl = (url: string): string => {
   return url.toLowerCase().startsWith('javascript:') ? '#' : url
 }
 
-const getElementAttributes = (node: Readonly<HtmlElementNode>): Record<string, unknown> => {
+const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unknown> => {
   const attributes: Record<string, unknown> = {}
   const className = node.attributes.class || node.attributes.classname
   if (className) {
@@ -316,7 +311,7 @@ const getElementAttributes = (node: Readonly<HtmlElementNode>): Record<string, u
   return attributes
 }
 
-const toVirtualDom = (node: Readonly<HtmlNode>): readonly VirtualDomNode[] => {
+const toVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [text(node.value)]
   }
@@ -336,7 +331,9 @@ export const parseHtmlToVirtualDom = (value: string): readonly VirtualDomNode[] 
   return parseHtml(value).flatMap(toVirtualDom)
 }
 
-export const parseHtmlToVirtualDomWithRootCount = (value: string): { readonly rootChildCount: number; readonly virtualDom: readonly VirtualDomNode[] } => {
+export const parseHtmlToVirtualDomWithRootCount = (
+  value: string,
+): { readonly rootChildCount: number; readonly virtualDom: readonly VirtualDomNode[] } => {
   const rootNodes = parseHtml(value)
   return {
     rootChildCount: rootNodes.length,
