@@ -239,6 +239,7 @@ test('getStatusBarVirtualDom should restore messages scroll position', () => {
   )
   const messages = result.find((node) => node.className === 'ChatMessages')
   expect(messages).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
     onScroll: DomEventListenerFunctions.HandleMessagesScroll,
     scrollTop: 180,
   })
@@ -403,6 +404,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   )
   const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
   const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
+  const toolPrefixNode = result.find((node) => node.text === 'read_file ')
   const fileNameNode = result.find((node) => node.text === 'index.html')
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
@@ -414,6 +416,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     type: VirtualDomElements.Li,
   })
   expect(fileIconNode).toBeDefined()
+  expect(toolPrefixNode).toBeDefined()
   expect(fileNameNode).toBeDefined()
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
@@ -478,6 +481,105 @@ test('getStatusBarVirtualDom should render assistant read_file path as clickable
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     type: VirtualDomElements.Span,
   })
+})
+
+test('getStatusBarVirtualDom should render read_file not-found status', () => {
+  const path = 'src/missing.html'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"path":"${path}"}`,
+              id: 'call_1',
+              name: 'read_file',
+              status: 'not-found' as const,
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const statusNode = result.find((node) => node.text === ' (not-found)')
+  expect(statusNode).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should render read_file error status with short message', () => {
+  const path = 'src/index.html'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"path":"${path}"}`,
+              errorMessage: 'permission denied',
+              id: 'call_1',
+              name: 'read_file',
+              status: 'error' as const,
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const statusNode = result.find((node) => node.text === ' (error: permission denied)')
+  expect(statusNode).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {

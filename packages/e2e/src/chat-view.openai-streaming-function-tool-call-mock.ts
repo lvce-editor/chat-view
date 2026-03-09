@@ -150,5 +150,5 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toHaveText('whats the contents of index html')
-  await expect(messages.nth(1)).toHaveText('toolsindex.html')
+  await expect(messages.nth(1)).toHaveText('toolsread_file index.html')
 }

@@ -399,8 +399,10 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
     expect(toolCallsChunks.at(-1)).toEqual([
       {
         arguments: '{"path":"index.html"}',
+        errorMessage: 'Unknown tool: invalid_tool',
         id: 'call_1',
         name: 'invalid_tool',
+        status: 'error',
       },
     ])
   } finally {
