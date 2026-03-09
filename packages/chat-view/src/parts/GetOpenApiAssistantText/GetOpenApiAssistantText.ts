@@ -685,19 +685,6 @@ export const getOpenApiAssistantText = async (
         previousResponseId = streamResult.responseId
       }
 
-      if (streamResult.responseFunctionCalls.length > 0) {
-        openAiInput.length = 0
-        for (const toolCall of streamResult.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
-          openAiInput.push({
-            call_id: toolCall.callId,
-            output: content,
-            type: 'function_call_output',
-          })
-        }
-        continue
-      }
-
       if (onEventStreamFinished) {
         await onEventStreamFinished()
       }

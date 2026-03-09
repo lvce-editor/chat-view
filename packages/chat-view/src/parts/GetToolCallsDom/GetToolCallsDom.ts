@@ -1,6 +1,7 @@
 import { VirtualDomElements } from '@lvce-editor/constants'
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallDom } from '../GetToolCallDom/GetToolCallDom.ts'
 
 export const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[] => {
@@ -11,8 +12,8 @@ export const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[]
   return [
     {
       childCount: message.toolCalls.length,
-      className: 'ToolCallsContainer',
-      type: VirtualDomElements.Div,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
     },
     ...message.toolCalls.flatMap(getToolCallDom),
   ]

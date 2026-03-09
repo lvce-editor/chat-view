@@ -32,11 +32,11 @@ export const getToolCallDom = (toolCall: { readonly name: string; readonly argum
       return [
         {
           childCount: 2,
-          className: ClassNames.Markdown,
+          className: ClassNames.ChatOrderedListItem,
           'data-uri': uri,
           onClick: DomEventListenerFunctions.HandleClickReadFile,
           title: uri,
-          type: VirtualDomElements.P,
+          type: VirtualDomElements.Li,
         },
         {
           childCount: 0,
@@ -59,8 +59,8 @@ export const getToolCallDom = (toolCall: { readonly name: string; readonly argum
   return [
     {
       childCount: 1,
-      className: ClassNames.Markdown,
-      type: VirtualDomElements.P,
+      className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
     },
     text(label),
   ]

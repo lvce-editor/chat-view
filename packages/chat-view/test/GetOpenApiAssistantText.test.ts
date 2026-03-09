@@ -153,7 +153,7 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
   }
 })
 
-test('getOpenApiAssistantText should execute streaming tool calls and continue with previous_response_id', async () => {
+test('getOpenApiAssistantText should expose streaming tool calls without automatic follow-up requests', async () => {
   const originalFetch = globalThis.fetch
   const fetchInvocations: readonly unknown[][] = []
   let requestCount = 0
@@ -225,20 +225,11 @@ test('getOpenApiAssistantText should execute streaming tool calls and continue w
     )
 
     expect(result).toEqual({
-      text: 'done',
+      text: '',
       type: 'success',
     })
-    expect(fetchInvocations).toHaveLength(2)
-    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
-    expect(secondRequestBody.previous_response_id).toBe('resp_1')
-    expect(secondRequestBody.input).toEqual([
-      {
-        call_id: 'call_1',
-        output: '{"error":"Unknown tool: invalid_tool"}',
-        type: 'function_call_output',
-      },
-    ])
-    expect(dataEvents).toHaveLength(6)
+    expect(fetchInvocations).toHaveLength(1)
+    expect(dataEvents).toHaveLength(3)
     expect(finishedCount).toBe(1)
     expect(toolCallsChunks.at(-1)).toEqual([
       {

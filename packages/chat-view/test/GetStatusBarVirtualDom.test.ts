@@ -515,13 +515,16 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     0,
     0,
   )
+  const toolCallsList = result.find((node) => node.type === VirtualDomElements.Ol)
   const toolCallLine = result.find((node) => node.title === uri)
   const fileIcon = result.find((node) => node.className === ClassNames.FileIcon)
   const fileName = result.find((node) => node.text === 'index.html')
+  expect(toolCallsList).toBeDefined()
   expect(toolCallLine).toMatchObject({
     'data-uri': uri,
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     title: uri,
+    type: VirtualDomElements.Li,
   })
   expect(fileIcon).toMatchObject({
     className: ClassNames.FileIcon,
