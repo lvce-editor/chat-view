@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { toFileUri } from './toFileUri'
+import { toFileUri } from '../ToFileUri/ToFileUri.ts'
 
 export const getWorkspaceUri = async (): Promise<string> => {
   const methodNames = ['Workspace.getWorkspaceUri', 'Workspace.getUri', 'Workspace.getPath']
