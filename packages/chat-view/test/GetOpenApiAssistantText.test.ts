@@ -71,6 +71,82 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
   }
 })
 
+test('getOpenApiAssistantText should send follow-up request when streaming function-call argument events use item_id', async () => {
+  const originalFetch = globalThis.fetch
+  const fetchInvocations: Array<readonly unknown[]> = []
+  let requestCount = 0
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocations.push(args)
+    requestCount += 1
+    const firstResponseChunks = [
+      'data: {"type":"response.output_item.added","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"invalid_tool","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","item_id":"fc_1","delta":"{\\"path\\":\\"index.html\\"}"}\n\n',
+      'data: {"type":"response.output_item.done","item_id":"fc_1","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"invalid_tool","arguments":"{\\"path\\":\\"index.html\\"}"}}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_item_id","output":[]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    const secondResponseChunks = [
+      'data: {"type":"response.output_text.delta","delta":"ok"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_item_id_2","output":[]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    const chunks = requestCount === 1 ? firstResponseChunks : secondResponseChunks
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'read index.html',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: true,
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'ok',
+      type: 'success',
+    })
+    expect(fetchInvocations).toHaveLength(2)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    expect(secondRequestBody.previous_response_id).toBe('resp_item_id')
+    expect(secondRequestBody.input).toEqual([
+      {
+        call_id: 'call_1',
+        output: '{"error":"Unknown tool: invalid_tool"}',
+        type: 'function_call_output',
+      },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
 test('getOpenApiAssistantText should include include_obfuscation in stream_options when streaming and includeObfuscation is false', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
@@ -153,7 +229,87 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
   }
 })
 
-test('getOpenApiAssistantText should expose streaming tool calls without automatic follow-up requests', async () => {
+test('getOpenApiAssistantText should include web_search tool when webSearchEnabled is true', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'hello from openai' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: false,
+        webSearchEnabled: true,
+      },
+    )
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const tools = Array.isArray(requestBody.tools) ? requestBody.tools : []
+    expect(tools).toContainEqual({ type: 'web_search' })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenApiAssistantText should not include web_search tool when webSearchEnabled is false', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'hello from openai' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: false,
+        webSearchEnabled: false,
+      },
+    )
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const tools = Array.isArray(requestBody.tools) ? requestBody.tools : []
+    expect(tools).not.toContainEqual({ type: 'web_search' })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenApiAssistantText should execute streaming tool calls and send automatic follow-up requests', async () => {
   const originalFetch = globalThis.fetch
   const fetchInvocations: Array<readonly unknown[]> = []
   let requestCount = 0
@@ -225,11 +381,20 @@ test('getOpenApiAssistantText should expose streaming tool calls without automat
     )
 
     expect(result).toEqual({
-      text: '',
+      text: 'done',
       type: 'success',
     })
-    expect(fetchInvocations).toHaveLength(1)
-    expect(dataEvents).toHaveLength(3)
+    expect(fetchInvocations).toHaveLength(2)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    expect(secondRequestBody.previous_response_id).toBe('resp_1')
+    expect(secondRequestBody.input).toEqual([
+      {
+        call_id: 'call_1',
+        output: '{"error":"Unknown tool: invalid_tool"}',
+        type: 'function_call_output',
+      },
+    ])
+    expect(dataEvents).toHaveLength(6)
     expect(finishedCount).toBe(1)
     expect(toolCallsChunks.at(-1)).toEqual([
       {

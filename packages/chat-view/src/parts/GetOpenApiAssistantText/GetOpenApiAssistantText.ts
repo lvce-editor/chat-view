@@ -33,6 +33,7 @@ interface GetOpenApiAssistantTextOptions {
   readonly onTextChunk?: (chunk: string) => Promise<void>
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly stream: boolean
+  readonly webSearchEnabled?: boolean
 }
 
 const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
@@ -75,8 +76,10 @@ const getOpenAiParams = (
   stream: boolean,
   includeObfuscation: boolean,
   tools: readonly unknown[],
+  webSearchEnabled: boolean,
   previousResponseId?: string,
 ): object => {
+  const openAiTools = getOpenAiTools(tools)
   return {
     input,
     model: modelId,
@@ -98,7 +101,7 @@ const getOpenAiParams = (
         }
       : {}),
     tool_choice: 'auto',
-    tools: getOpenAiTools(tools),
+    tools: webSearchEnabled ? [...openAiTools, { type: 'web_search' }] : openAiTools,
   }
 }
 
@@ -278,10 +281,10 @@ const updateToolCallAccumulator = (
 }
 
 const getResponseFunctionCallsFromStreamingAccumulator = (
-  toolCallAccumulator: Readonly<Record<number, StreamingToolCall>>,
+  toolCallAccumulator: Readonly<Record<string, StreamingToolCall>>,
 ): readonly ResponseFunctionCall[] => {
   return Object.entries(toolCallAccumulator)
-    .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+    .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => a[0].localeCompare(b[0]))
     .map((entry: readonly [string, StreamingToolCall]) => entry[1])
     .filter((toolCall) => typeof toolCall.id === 'string' && !!toolCall.id && !!toolCall.name)
     .map((toolCall) => ({
@@ -300,6 +303,24 @@ type ParseOpenApiStreamSuccessResult = {
 
 type ParseOpenApiStreamResult = ParseOpenApiStreamSuccessResult | GetOpenApiAssistantTextErrorResult
 
+const getStreamingToolCallKey = (value: unknown): string | undefined => {
+  if (!value || typeof value !== 'object') {
+    return undefined
+  }
+  const outputIndex = Reflect.get(value, 'output_index')
+  if (typeof outputIndex === 'number') {
+    return String(outputIndex)
+  }
+  if (typeof outputIndex === 'string' && outputIndex) {
+    return outputIndex
+  }
+  const itemId = Reflect.get(value, 'item_id')
+  if (typeof itemId === 'string' && itemId) {
+    return itemId
+  }
+  return undefined
+}
+
 const parseOpenApiStream = async (
   response: Response,
   onTextChunk?: (chunk: string) => Promise<void>,
@@ -317,7 +338,7 @@ const parseOpenApiStream = async (
   let remainder = ''
   let text = ''
   let done = false
-  let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
+  let toolCallAccumulator: Readonly<Record<string, StreamingToolCall>> = {}
   let responseId: string | undefined
   let completedResponseFunctionCalls: readonly ResponseFunctionCall[] = []
 
@@ -326,7 +347,7 @@ const parseOpenApiStream = async (
       return
     }
     const toolCalls = Object.entries(toolCallAccumulator)
-      .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+      .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => a[0].localeCompare(b[0]))
       .map((entry: readonly [string, StreamingToolCall]) => entry[1])
       .filter((toolCall) => !!toolCall.name)
     if (toolCalls.length === 0) {
@@ -381,9 +402,9 @@ const parseOpenApiStream = async (
     }
 
     if (eventType === 'response.output_item.added') {
-      const outputIndex = Reflect.get(parsed, 'output_index')
+      const toolCallKey = getStreamingToolCallKey(parsed)
       const item = Reflect.get(parsed, 'item')
-      if (typeof outputIndex !== 'number' || !item || typeof item !== 'object') {
+      if (!toolCallKey || !item || typeof item !== 'object') {
         return
       }
       const itemType = Reflect.get(item, 'type')
@@ -404,16 +425,16 @@ const parseOpenApiStream = async (
       }
       toolCallAccumulator = {
         ...toolCallAccumulator,
-        [outputIndex]: next,
+        [toolCallKey]: next,
       }
       await emitToolCallAccumulator()
       return
     }
 
     if (eventType === 'response.output_item.done') {
-      const outputIndex = Reflect.get(parsed, 'output_index')
+      const toolCallKey = getStreamingToolCallKey(parsed)
       const item = Reflect.get(parsed, 'item')
-      if (typeof outputIndex !== 'number' || !item || typeof item !== 'object') {
+      if (!toolCallKey || !item || typeof item !== 'object') {
         return
       }
       const itemType = Reflect.get(item, 'type')
@@ -423,10 +444,10 @@ const parseOpenApiStream = async (
       const callId = Reflect.get(item, 'call_id')
       const name = Reflect.get(item, 'name')
       const rawArguments = Reflect.get(item, 'arguments')
-      const current = toolCallAccumulator[outputIndex] || { arguments: '', name: '' }
+      const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: '' }
       toolCallAccumulator = {
         ...toolCallAccumulator,
-        [outputIndex]: {
+        [toolCallKey]: {
           arguments: typeof rawArguments === 'string' ? rawArguments : current.arguments,
           ...(typeof callId === 'string'
             ? {
@@ -445,11 +466,11 @@ const parseOpenApiStream = async (
     }
 
     if (eventType === 'response.function_call_arguments.delta' || eventType === 'response.function_call_arguments.done') {
-      const outputIndex = Reflect.get(parsed, 'output_index')
-      if (typeof outputIndex !== 'number') {
+      const toolCallKey = getStreamingToolCallKey(parsed)
+      if (!toolCallKey) {
         return
       }
-      const current = toolCallAccumulator[outputIndex] || { arguments: '', name: '' }
+      const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: '' }
       const name = Reflect.get(parsed, 'name')
       const callId = Reflect.get(parsed, 'call_id')
       const delta = Reflect.get(parsed, 'delta')
@@ -469,7 +490,7 @@ const parseOpenApiStream = async (
       }
       toolCallAccumulator = {
         ...toolCallAccumulator,
-        [outputIndex]: next,
+        [toolCallKey]: next,
       }
       await emitToolCallAccumulator()
       return
@@ -624,7 +645,15 @@ export const getOpenApiAssistantText = async (
   platform: number,
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
-  const { includeObfuscation = false, onDataEvent, onEventStreamFinished, onTextChunk, onToolCallsChunk, stream } = options ?? { stream: false }
+  const {
+    includeObfuscation = false,
+    onDataEvent,
+    onEventStreamFinished,
+    onTextChunk,
+    onToolCallsChunk,
+    stream,
+    webSearchEnabled = false,
+  } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
@@ -636,7 +665,7 @@ export const getOpenApiAssistantText = async (
     let response: Response
     try {
       response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
-        body: JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, previousResponseId)),
+        body: JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)),
         headers: {
           Authorization: `Bearer ${openApiApiKey}`,
           'Content-Type': 'application/json',
@@ -683,6 +712,19 @@ export const getOpenApiAssistantText = async (
 
       if (streamResult.responseId) {
         previousResponseId = streamResult.responseId
+      }
+
+      if (streamResult.responseFunctionCalls.length > 0) {
+        openAiInput.length = 0
+        for (const toolCall of streamResult.responseFunctionCalls) {
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          openAiInput.push({
+            call_id: toolCall.callId,
+            output: content,
+            type: 'function_call_output',
+          })
+        }
+        continue
       }
 
       if (onEventStreamFinished) {
