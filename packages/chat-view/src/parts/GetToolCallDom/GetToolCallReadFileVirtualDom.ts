@@ -16,6 +16,12 @@ export const getToolCallReadFileVirtualDom = (toolCall: { readonly name: string;
         onClick: DomEventListenerFunctions.HandleClickReadFile,
       }
     : {}
+  const fileNameClickableProps = target.clickableUri
+    ? {
+        'data-uri': target.clickableUri,
+        onClick: DomEventListenerFunctions.HandleClickReadFile,
+      }
+    : {}
   return [
     {
       childCount: 2,
@@ -32,7 +38,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: { readonly name: string;
     },
     {
       childCount: 1,
-      ...clickableProps,
+      ...fileNameClickableProps,
       style: 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
       type: VirtualDomElements.Span,
     },
