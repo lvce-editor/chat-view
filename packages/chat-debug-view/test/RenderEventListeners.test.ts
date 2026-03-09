@@ -16,10 +16,5 @@ test('renderEventListeners should register checkbox input with checked param', (
   const checkboxListener = listeners.find((listener) => listener.name === DomEventListenerFunctions.HandleInput)
 
   expect(checkboxListener).toBeDefined()
-  expect(checkboxListener?.params).toEqual([
-    'handleInput',
-    EventExpression.TargetName,
-    EventExpression.TargetValue,
-    EventExpression.TargetChecked,
-  ])
+  expect(checkboxListener?.params).toEqual(['handleInput', EventExpression.TargetName, EventExpression.TargetValue, EventExpression.TargetChecked])
 })
