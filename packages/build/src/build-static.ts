@@ -28,7 +28,13 @@ const content = await readFile(rendererWorkerPath, 'utf8')
 const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
 const chatDebugViewWorkerPath = join(root, '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js')
 
-const replaceRemoteUrlWithAssetUrl = (currentContent: string, variableName: string, packageName: string, workerMainName: string, localPath: string) => {
+const replaceRemoteUrlWithAssetUrl = (
+  currentContent: string,
+  variableName: string,
+  packageName: string,
+  workerMainName: string,
+  localPath: string,
+) => {
   // @ts-ignore
   const remoteUrl = getRemoteUrl(localPath)
   const occurrence = `// const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\`
@@ -41,13 +47,7 @@ const ${variableName} = \`${remoteUrl}\``
 }
 
 let newContent = content
-newContent = replaceRemoteUrlWithAssetUrl(
-  newContent,
-  'chatViewWorkerUrl',
-  'chat-view',
-  'chatViewWorkerMain.js',
-  chatViewWorkerPath,
-)
+newContent = replaceRemoteUrlWithAssetUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
 newContent = replaceRemoteUrlWithAssetUrl(
   newContent,
   'chatDebugViewWorkerUrl',
