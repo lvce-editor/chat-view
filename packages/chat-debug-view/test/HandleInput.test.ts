@@ -21,6 +21,18 @@ test('handleInput should set showInputEvents to false for unchecked value', () =
   expect(result.showInputEvents).toBe(false)
 })
 
+test('handleInput should set showResponsePartEvents to true for on value', () => {
+  const state = createDefaultState()
+  const result = HandleInput.handleInput(state, InputName.ShowResponsePartEvents, '', 'on')
+  expect(result.showResponsePartEvents).toBe(true)
+})
+
+test('handleInput should set showResponsePartEvents to false for unchecked value', () => {
+  const state = createDefaultState()
+  const result = HandleInput.handleInput(state, InputName.ShowResponsePartEvents, '', false)
+  expect(result.showResponsePartEvents).toBe(false)
+})
+
 test('handleInput should keep state for unknown input name', () => {
   const state = createDefaultState()
   const result = HandleInput.handleInput(state, 'unknown', 'value', false)

@@ -21,6 +21,7 @@ export const getChatDebugViewDom = (
   errorMessage: string,
   filterValue: string,
   showInputEvents: boolean,
+  showResponsePartEvents: boolean,
   events: readonly ChatViewEvent[],
 ): readonly VirtualDomNode[] => {
   if (errorMessage) {
@@ -62,7 +63,7 @@ export const getChatDebugViewDom = (
       value: filterValue,
     },
     {
-      childCount: 2,
+      childCount: 4,
       className: 'ChatDebugViewToggle',
       type: VirtualDomElements.Div,
     },
@@ -75,6 +76,15 @@ export const getChatDebugViewDom = (
       type: VirtualDomElements.Input,
     },
     text('Show input events'),
+    {
+      checked: showResponsePartEvents,
+      childCount: 0,
+      inputType: 'checkbox',
+      name: InputName.ShowResponsePartEvents,
+      onChange: DomEventListenerFunctions.HandleInput,
+      type: VirtualDomElements.Input,
+    },
+    text('Show response part events'),
     {
       childCount: 1,
       className: 'ChatDebugViewEventCount',

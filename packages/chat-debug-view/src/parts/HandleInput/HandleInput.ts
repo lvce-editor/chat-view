@@ -15,5 +15,11 @@ export const handleInput = (state: ChatDebugViewState, name: string, value: stri
       showInputEvents: GetBoolean.getBoolean(checked),
     }
   }
+  if (name === InputName.ShowResponsePartEvents) {
+    return {
+      ...state,
+      showResponsePartEvents: GetBoolean.getBoolean(checked),
+    }
+  }
   return state
 }
