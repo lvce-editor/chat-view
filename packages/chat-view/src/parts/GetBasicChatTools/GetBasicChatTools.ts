@@ -4,17 +4,17 @@ export const getBasicChatTools = (): readonly ChatTool[] => {
   return [
     {
       function: {
-        description: 'Read UTF-8 text content from a file inside the currently open workspace folder.',
+        description: 'Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
         name: 'read_file',
         parameters: {
           additionalProperties: false,
           properties: {
-            path: {
-              description: 'Relative file path within the workspace (for example: src/index.ts).',
+            uri: {
+              description: 'Absolute file URI within the workspace (for example: file:///workspace/src/index.ts).',
               type: 'string',
             },
           },
-          required: ['path'],
+          required: ['uri'],
           type: 'object',
         },
       },
@@ -54,6 +54,18 @@ export const getBasicChatTools = (): readonly ChatTool[] => {
               type: 'string',
             },
           },
+          type: 'object',
+        },
+      },
+      type: 'function',
+    },
+    {
+      function: {
+        description: 'Get the URI of the currently open workspace folder.',
+        name: 'getWorkspaceUri',
+        parameters: {
+          additionalProperties: false,
+          properties: {},
           type: 'object',
         },
       },

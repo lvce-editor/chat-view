@@ -3,12 +3,12 @@ import { verifyToolCallArguments } from '../src/parts/HandleToolCall/VerifyToolC
 
 test('verifyToolCallArguments should accept valid read_file args', () => {
   const result = verifyToolCallArguments('read_file', {
-    path: 'src/index.ts',
+    uri: 'file:///workspace/src/index.ts',
   })
   expect(result).toEqual({
     type: 'success',
     value: {
-      path: 'src/index.ts',
+      uri: 'file:///workspace/src/index.ts',
     },
   })
 })
@@ -17,6 +17,24 @@ test('verifyToolCallArguments should reject unknown tools', () => {
   const result = verifyToolCallArguments('unknown_tool', {})
   expect(result).toEqual({
     message: 'Unknown tool: unknown_tool',
+    type: 'error',
+  })
+})
+
+test('verifyToolCallArguments should accept valid getWorkspaceUri args', () => {
+  const result = verifyToolCallArguments('getWorkspaceUri', {})
+  expect(result).toEqual({
+    type: 'success',
+    value: {},
+  })
+})
+
+test('verifyToolCallArguments should reject unexpected getWorkspaceUri args', () => {
+  const result = verifyToolCallArguments('getWorkspaceUri', {
+    path: '.',
+  })
+  expect(result).toEqual({
+    message: 'Unexpected argument: path',
     type: 'error',
   })
 })
@@ -33,10 +51,10 @@ test('verifyToolCallArguments should reject missing required args', () => {
 
 test('verifyToolCallArguments should reject invalid arg type', () => {
   const result = verifyToolCallArguments('read_file', {
-    path: 123,
+    uri: 123,
   })
   expect(result).toEqual({
-    message: 'Invalid argument type for path: expected string',
+    message: 'Invalid argument type for uri: expected string',
     type: 'error',
   })
 })
