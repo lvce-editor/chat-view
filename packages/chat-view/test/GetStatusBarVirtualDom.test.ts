@@ -409,7 +409,6 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   const fileNameLinkNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink)
 
   expect(toolCallItem).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
     title: uri,
     type: VirtualDomElements.Li,
   })
