@@ -1,13 +1,13 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
-import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
-import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
-import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import type { GetOpenApiAssistantTextOptions } from '../GetOpenApiAssistantTextOptions/GetOpenApiAssistantTextOptions.ts'
 import type { GetOpenApiAssistantTextSuccessResult } from '../GetOpenApiAssistantTextSuccessResult/GetOpenApiAssistantTextSuccessResult.ts'
 import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
+import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
