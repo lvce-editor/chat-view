@@ -107,5 +107,14 @@ export const getCss = (): string => {
 .TokenBoolean {
   color: var(--vscode-debugTokenExpression-boolean, var(--vscode-charts-yellow, #dcdcaa));
 }
+
+.ChatOrderedList{
+  margin:0;
+}
+
+.ChatOrderedListItem{
+  margin:0;
+  padding:0;
+}
 `
 }
