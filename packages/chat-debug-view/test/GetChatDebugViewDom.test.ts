@@ -10,5 +10,6 @@ test('getChatDebugViewDom should wire filter input to filter input listener', ()
   const filterInput = dom.find((node) => node.name === 'filter')
 
   expect(filterInput).toBeDefined()
+  // @ts-ignore
   expect(filterInput.onInput).toBe(DomEventListenerFunctions.HandleFilterInput)
 })
