@@ -372,29 +372,23 @@ test('handleSubmit should suppress streaming function call data events by defaul
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
     const finishedEvent = events.find((event) => event.type === 'event-stream-finished')
 
-<<<<<<< HEAD
-    expect(dataEvents).toHaveLength(3)
-    expect(dataEvents[0]).toMatchObject({
-      type: 'sse-response-part',
-=======
-    expect(dataEvents).toHaveLength(0)
-    expect(responseCompletedEvents).toHaveLength(1)
+    expect(dataEvents).toHaveLength(1)
+    expect(responseCompletedEvents).toHaveLength(2)
     expect(responseCompletedEvents[0]).toMatchObject({
       type: 'sse-response-completed',
->>>>>>> origin/main
       value: {
         type: 'response.completed',
       },
     })
-    expect(dataEvents[1]).toMatchObject({
+    expect(dataEvents[0]).toMatchObject({
       type: 'sse-response-part',
       value: {
         delta: 'Done',
         type: 'response.output_text.delta',
       },
     })
-    expect(dataEvents[2]).toMatchObject({
-      type: 'sse-response-part',
+    expect(responseCompletedEvents[1]).toMatchObject({
+      type: 'sse-response-completed',
       value: {
         type: 'response.completed',
       },
@@ -467,12 +461,8 @@ test('handleSubmit should emit streaming function call data events when enabled'
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
-<<<<<<< HEAD
-    expect(dataEvents).toHaveLength(5)
-=======
-    expect(dataEvents).toHaveLength(2)
-    expect(responseCompletedEvents).toHaveLength(1)
->>>>>>> origin/main
+  expect(dataEvents).toHaveLength(3)
+  expect(responseCompletedEvents).toHaveLength(2)
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
   } finally {
     globalThis.fetch = originalFetch
