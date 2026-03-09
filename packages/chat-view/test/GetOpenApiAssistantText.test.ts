@@ -73,7 +73,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
 
 test('getOpenApiAssistantText should send follow-up request when streaming function-call argument events use item_id', async () => {
   const originalFetch = globalThis.fetch
-  const fetchInvocations: readonly unknown[][] = []
+  const fetchInvocations: Array<readonly unknown[]> = []
   let requestCount = 0
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocations.push(args)
