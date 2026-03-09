@@ -16,6 +16,10 @@ const getVisibleEvents = (
     if (!showEventStreamFinishedEvents && event.type === 'event-stream-finished') {
       return false
     }
+    // hide session creation events by default — not useful in the debug view
+    if (event.type === 'chat-session-created') {
+      return false
+    }
     return true
   })
 }
