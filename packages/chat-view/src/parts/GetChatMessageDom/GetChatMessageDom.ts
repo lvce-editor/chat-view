@@ -13,7 +13,7 @@ import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
-import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent..ts'
+import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 export const getChatMessageDom = (
   message: ChatMessage,
