@@ -34,13 +34,14 @@ export const getAiResponse = async ({
   streamingEnabled = false,
   useMockApi,
   userText,
+  webSearchEnabled = false,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   let text = ''
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
     if (useMockApi) {
-      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk)
+      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText
@@ -78,6 +79,7 @@ export const getAiResponse = async ({
               }
             : {}),
           stream: streamingEnabled,
+          webSearchEnabled,
         },
       )
       if (result.type === 'success') {

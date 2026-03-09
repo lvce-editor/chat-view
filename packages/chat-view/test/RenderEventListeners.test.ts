@@ -16,6 +16,10 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickReadFile,
+      params: ['handleClickReadFile', 'event.target.dataset.uri'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickDelete,
       params: ['handleClickDelete', 'event.target.dataset.id'],
     },
@@ -58,6 +62,11 @@ test('renderEventListeners should return expected listeners', () => {
     {
       name: DomEventListenersFunctions.HandleMessagesScroll,
       params: ['handleMessagesScroll', 'event.target.scrollTop'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleMessagesContextMenu,
+      params: ['handleMessagesContextMenu'],
+      preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleFocus,

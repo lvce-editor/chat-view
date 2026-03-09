@@ -20,7 +20,9 @@ export const getChatDebugViewDom = (
   sessionId: string,
   errorMessage: string,
   filterValue: string,
+  showEventStreamFinishedEvents: boolean,
   showInputEvents: boolean,
+  showResponsePartEvents: boolean,
   events: readonly ChatViewEvent[],
 ): readonly VirtualDomNode[] => {
   if (errorMessage) {
@@ -56,16 +58,25 @@ export const getChatDebugViewDom = (
       childCount: 0,
       className: 'InputBox',
       name: InputName.Filter,
-      onInput: DomEventListenerFunctions.HandleInput,
+      onInput: DomEventListenerFunctions.HandleFilterInput,
       placeholder: 'Filter events',
       type: VirtualDomElements.Input,
       value: filterValue,
     },
     {
-      childCount: 2,
+      childCount: 6,
       className: 'ChatDebugViewToggle',
       type: VirtualDomElements.Div,
     },
+    {
+      checked: showEventStreamFinishedEvents,
+      childCount: 0,
+      inputType: 'checkbox',
+      name: InputName.ShowEventStreamFinishedEvents,
+      onChange: DomEventListenerFunctions.HandleInput,
+      type: VirtualDomElements.Input,
+    },
+    text('Show event stream finished events'),
     {
       checked: showInputEvents,
       childCount: 0,
@@ -75,6 +86,15 @@ export const getChatDebugViewDom = (
       type: VirtualDomElements.Input,
     },
     text('Show input events'),
+    {
+      checked: showResponsePartEvents,
+      childCount: 0,
+      inputType: 'checkbox',
+      name: InputName.ShowResponsePartEvents,
+      onChange: DomEventListenerFunctions.HandleInput,
+      type: VirtualDomElements.Input,
+    },
+    text('Show response part events'),
     {
       childCount: 1,
       className: 'ChatDebugViewEventCount',

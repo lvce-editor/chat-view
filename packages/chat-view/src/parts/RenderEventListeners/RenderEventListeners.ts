@@ -14,6 +14,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickReadFile,
+      params: ['handleClickReadFile', 'event.target.dataset.uri'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickDelete,
       params: ['handleClickDelete', 'event.target.dataset.id'],
     },
@@ -56,6 +60,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     {
       name: DomEventListenersFunctions.HandleMessagesScroll,
       params: ['handleMessagesScroll', 'event.target.scrollTop'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleMessagesContextMenu,
+      params: ['handleMessagesContextMenu'],
+      preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleFocus,

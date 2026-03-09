@@ -1,0 +1,23 @@
+import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import * as HandleClickReadFile from '../src/parts/HandleClickReadFile/HandleClickReadFile.ts'
+
+test('handleClickReadFile should open uri', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.openUri': async () => {},
+  })
+
+  await HandleClickReadFile.handleClickReadFile('file:///workspace/src/main.ts')
+
+  expect(mockRpc.invocations).toEqual([['Main.openUri', 'file:///workspace/src/main.ts']])
+})
+
+test('handleClickReadFile should do nothing for empty uri', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.openUri': async () => {},
+  })
+
+  await HandleClickReadFile.handleClickReadFile('')
+
+  expect(mockRpc.invocations).toEqual([])
+})

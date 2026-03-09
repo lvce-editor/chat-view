@@ -26,15 +26,25 @@ const rendererWorkerMainPath = join(serverStaticPath, commitHash, 'packages', 'r
 
 const content = await readFile(rendererWorkerMainPath, 'utf-8')
 
-const statusBarWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
+const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
+const chatDebugViewWorkerPath = join(root, '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js')
 
-const remoteUrl = getRemoteUrl(statusBarWorkerPath)
-if (!content.includes('// const chatViewWorkerUrl = ')) {
+const replaceWorkerUrl = (currentContent, variableName, packageName, workerMainName, localPath) => {
+  const remoteUrl = getRemoteUrl(localPath)
+  const occurrence = `const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\``
+  const replacement = `// const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\`
+const ${variableName} = \`${remoteUrl}\``
+  if (!currentContent.includes(occurrence)) {
+    return currentContent
+  }
+  return currentContent.replace(occurrence, replacement)
+}
+
+let newContent = content
+newContent = replaceWorkerUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
+newContent = replaceWorkerUrl(newContent, 'chatDebugViewWorkerUrl', 'chat-debug-view', 'chatDebugViewWorkerMain.js', chatDebugViewWorkerPath)
+
+if (newContent !== content) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
-  const occurrence = `const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\``
-  const replacement = `// const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\`
-const chatViewWorkerUrl = \`${remoteUrl}\``
-
-  const newContent = content.replace(occurrence, replacement)
   await writeFile(rendererWorkerMainPath, newContent)
 }

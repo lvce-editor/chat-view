@@ -21,3 +21,5 @@ export const HandleModelChange = 20
 export const HandleChatListScroll = 21
 export const HandleMessagesScroll = 22
 export const HandleClickSessionDebug = 23
+export const HandleClickReadFile = 24
+export const HandleMessagesContextMenu = 25

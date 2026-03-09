@@ -10,11 +10,13 @@ import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
+import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
@@ -33,6 +35,7 @@ import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
+import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
@@ -54,11 +57,13 @@ export const commandMap = {
   'Chat.handleClickDelete': wrapCommand(HandleClickDelete.handleClickDelete),
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
+  'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
+  'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
@@ -77,6 +82,7 @@ export const commandMap = {
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
+  'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.terminate': terminate,

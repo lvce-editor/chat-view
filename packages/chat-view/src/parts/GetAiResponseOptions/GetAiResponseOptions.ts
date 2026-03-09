@@ -23,4 +23,5 @@ export interface GetAiResponseOptions {
   readonly streamingEnabled?: boolean
   readonly useMockApi: boolean
   readonly userText: string
+  readonly webSearchEnabled?: boolean
 }

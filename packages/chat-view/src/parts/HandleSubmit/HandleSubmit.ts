@@ -29,10 +29,56 @@ const appendMessageToSelectedSession = (
   })
 }
 
+const hasLegacyStreamingToolCalls = (parsed: unknown): boolean => {
+  if (!parsed || typeof parsed !== 'object') {
+    return false
+  }
+  const choices = Reflect.get(parsed, 'choices')
+  if (!Array.isArray(choices) || choices.length === 0) {
+    return false
+  }
+  const firstChoice = choices[0]
+  if (!firstChoice || typeof firstChoice !== 'object') {
+    return false
+  }
+  const delta = Reflect.get(firstChoice, 'delta')
+  if (!delta || typeof delta !== 'object') {
+    return false
+  }
+  const toolCalls = Reflect.get(delta, 'tool_calls')
+  return Array.isArray(toolCalls) && toolCalls.length > 0
+}
+
+const isStreamingFunctionCallEvent = (parsed: unknown): boolean => {
+  if (hasLegacyStreamingToolCalls(parsed)) {
+    return true
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return false
+  }
+  const type = Reflect.get(parsed, 'type')
+  if (type === 'response.function_call_arguments.delta' || type === 'response.function_call_arguments.done') {
+    return true
+  }
+  if (type !== 'response.output_item.added' && type !== 'response.output_item.done') {
+    return false
+  }
+  const item = Reflect.get(parsed, 'item')
+  if (!item || typeof item !== 'object') {
+    return false
+  }
+  return Reflect.get(item, 'type') === 'function_call'
+}
+
+const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-response-part' => {
+  return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed' ? 'sse-response-completed' : 'sse-response-part'
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     assetDir,
     composerValue,
+    emitStreamingFunctionCallEvents,
     mockAiResponseDelay,
     mockApiCommandId,
     models,
@@ -49,6 +95,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled,
     useMockApi,
     viewMode,
+    webSearchEnabled,
   } = state
   const userText = composerValue.trim()
   if (!userText) {
@@ -163,10 +210,14 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     models,
     nextMessageId: optimisticState.nextMessageId,
     onDataEvent: async (value: unknown): Promise<void> => {
+      if (!emitStreamingFunctionCallEvents && isStreamingFunctionCallEvent(value)) {
+        return
+      }
+      const sseEventType = getSseEventType(value)
       await appendChatViewEvent({
         sessionId: optimisticState.selectedSessionId,
         timestamp: new Date().toISOString(),
-        type: 'sse-response-part',
+        type: sseEventType,
         value,
       })
     },
@@ -196,6 +247,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled,
     useMockApi,
     userText,
+    webSearchEnabled,
   })
 
   const { latestState } = handleTextChunkState

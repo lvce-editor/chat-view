@@ -18,6 +18,7 @@ export const getMessagesDom = (
     {
       childCount: messages.length,
       className: 'ChatMessages',
+      onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
       onScroll: DomEventListenerFunctions.HandleMessagesScroll,
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,

@@ -21,6 +21,7 @@ export interface ChatState {
   readonly composerLineHeight: number
   readonly composerValue: string
   readonly disposed?: boolean
+  readonly emitStreamingFunctionCallEvents: boolean
   readonly errorCount: number
   readonly focus: ChatViewFocus
   readonly focused: boolean
@@ -59,6 +60,7 @@ export interface ChatState {
   readonly useMockApi: boolean
   readonly viewMode: ChatViewMode
   readonly warningCount: number
+  readonly webSearchEnabled: boolean
   readonly width: number
   readonly x: number
   readonly y: number

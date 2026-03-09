@@ -10,7 +10,9 @@ export const diff = (oldState: ChatDebugViewState, newState: ChatDebugViewState)
     oldState.events !== newState.events ||
     oldState.filterValue !== newState.filterValue ||
     oldState.sessionId !== newState.sessionId ||
+    oldState.showEventStreamFinishedEvents !== newState.showEventStreamFinishedEvents ||
     oldState.showInputEvents !== newState.showInputEvents ||
+    oldState.showResponsePartEvents !== newState.showResponsePartEvents ||
     oldState.uid !== newState.uid
   ) {
     return [DiffType.RenderItems]

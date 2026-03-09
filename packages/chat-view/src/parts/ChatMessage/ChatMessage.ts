@@ -1,7 +1,11 @@
+export type ChatToolCallStatus = 'error' | 'not-found' | 'success'
+
 export interface ChatToolCall {
   readonly arguments: string
+  readonly errorMessage?: string
   readonly id?: string
   readonly name: string
+  readonly status?: ChatToolCallStatus
 }
 
 export interface ChatMessage {

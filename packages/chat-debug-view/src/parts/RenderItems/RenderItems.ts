@@ -15,7 +15,21 @@ const withSessionEventIds = (events: readonly ChatViewEvent[]): readonly ChatVie
 
 export const renderItems = (oldState: ChatDebugViewState, newState: ChatDebugViewState): readonly [string, number, readonly unknown[]] => {
   const eventsWithIds = withSessionEventIds(newState.events)
-  const filteredEvents = getFilteredEvents(eventsWithIds, newState.filterValue, newState.showInputEvents)
-  const dom = getChatDebugViewDom(newState.sessionId, newState.errorMessage, newState.filterValue, newState.showInputEvents, filteredEvents)
+  const filteredEvents = getFilteredEvents(
+    eventsWithIds,
+    newState.filterValue,
+    newState.showInputEvents,
+    newState.showResponsePartEvents,
+    newState.showEventStreamFinishedEvents,
+  )
+  const dom = getChatDebugViewDom(
+    newState.sessionId,
+    newState.errorMessage,
+    newState.filterValue,
+    newState.showEventStreamFinishedEvents,
+    newState.showInputEvents,
+    newState.showResponsePartEvents,
+    filteredEvents,
+  )
   return [ViewletCommand.SetDom2, newState.uid, dom]
 }
