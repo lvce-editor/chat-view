@@ -3,7 +3,7 @@ import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import { getToolCallDom } from '../src/parts/GetToolCallDom/GetToolCallDom.ts'
 
-test('getToolCallDom should render render_html tool calls as iframe previews', () => {
+test('getToolCallDom should render render_html tool calls as native virtual dom previews', () => {
   const result = getToolCallDom({
     arguments: JSON.stringify({
       css: '.card { color: red; }',
@@ -14,7 +14,7 @@ test('getToolCallDom should render render_html tool calls as iframe previews', (
     status: 'success',
   })
 
-  expect(result).toHaveLength(4)
+  expect(result).toHaveLength(7)
   expect(result[0]).toEqual({
     childCount: 2,
     className: ClassNames.ChatOrderedListItem,
@@ -28,12 +28,22 @@ test('getToolCallDom should render render_html tool calls as iframe previews', (
   expect(result[2]).toMatchObject({
     text: 'render_html: Paris Weather',
   })
-  expect(result[3]).toMatchObject({
-    className: ClassNames.ChatToolCallRenderHtmlFrame,
-    loading: 'lazy',
-    sandbox: '',
-    srcdoc: expect.stringContaining('<div class="card">Sunny</div>'),
-    title: 'Paris Weather',
-    type: VirtualDomElements.Iframe,
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallRenderHtmlContent,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallRenderHtmlBody,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[5]).toEqual({
+    childCount: 1,
+    className: 'card',
+    type: VirtualDomElements.Div,
+  })
+  expect(result[6]).toMatchObject({
+    text: 'Sunny',
   })
 })

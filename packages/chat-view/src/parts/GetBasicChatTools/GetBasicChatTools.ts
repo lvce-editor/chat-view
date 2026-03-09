@@ -86,7 +86,7 @@ const getRenderHtmlTool = (): ChatTool => {
   return {
     function: {
       description:
-        'Render custom HTML and CSS as a sandboxed visual preview in the chat tool call list. Use this for structured cards, tables, and small dashboards.',
+        'Render custom HTML and optional CSS directly in the chat tool call list using native chat UI rendering. Use this for structured cards, tables, and small dashboards.',
       name: 'render_html',
       parameters: {
         additionalProperties: false,

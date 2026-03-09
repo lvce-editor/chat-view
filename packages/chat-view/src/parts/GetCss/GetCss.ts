@@ -4,8 +4,9 @@ export const getCss = (
   chatMessageFontSize: number,
   chatMessageLineHeight: number,
   chatMessageFontFamily: string,
+  renderHtmlCss: string,
 ): string => {
-  return `:root {
+  const baseCss = `:root {
   --ChatInputBoxHeight: ${composerHeight}px;
   --ChatListItemHeight: ${listItemHeight}px;
   --ChatMessageFontSize: ${chatMessageFontSize}px;
@@ -47,12 +48,20 @@ export const getCss = (
   font-size: 12px;
 }
 
-.ChatToolCallRenderHtmlFrame {
-  width: 100%;
-  min-height: 180px;
+.ChatToolCallRenderHtmlContent {
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 6px;
   background: var(--vscode-editor-background);
+  overflow: hidden;
+}
+
+.ChatToolCallRenderHtmlBody {
+  min-height: 180px;
+  padding: 12px;
+}
+
+.ChatToolCallRenderHtmlBody * {
+  box-sizing: border-box;
 }
 
 .ChatMessageLink {
@@ -60,4 +69,13 @@ export const getCss = (
   text-decoration: underline;
   cursor: pointer;
 }`
+
+  if (!renderHtmlCss.trim()) {
+    return baseCss
+  }
+
+  return `${baseCss}
+
+/* render_html tool css */
+${renderHtmlCss}`
 }
