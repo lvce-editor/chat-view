@@ -1,6 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import * as ClassNames from '../../ClassNames/ClassNames.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes.ts'
+import * as ClassNames from '../../ClassNames/ClassNames.ts'
 
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
