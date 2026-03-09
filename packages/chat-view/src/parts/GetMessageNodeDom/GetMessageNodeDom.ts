@@ -11,6 +11,7 @@ const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNod
       childCount: 1,
       className: ClassNames.ChatMessageLink,
       href: inlineNode.href,
+      rel: 'noopener noreferrrer',
       target: '_blank',
       title: inlineNode.href,
       type: VirtualDomElements.A,

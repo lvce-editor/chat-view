@@ -31,6 +31,7 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
     childCount: 1,
     className: ClassNames.ChatMessageLink,
     href: 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
+    rel: 'noopener noreferrrer',
     target: '_blank',
     title:
       'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
