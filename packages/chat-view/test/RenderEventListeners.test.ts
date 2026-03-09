@@ -20,10 +20,6 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleClickReadFile', 'event.target.dataset.uri'],
     },
     {
-      name: DomEventListenersFunctions.HandleClickLink,
-      params: ['handleClickLink', 'event.target.dataset.href'],
-    },
-    {
       name: DomEventListenersFunctions.HandleClickDelete,
       params: ['handleClickDelete', 'event.target.dataset.id'],
     },
