@@ -155,7 +155,7 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
 
 test('getOpenApiAssistantText should expose streaming tool calls without automatic follow-up requests', async () => {
   const originalFetch = globalThis.fetch
-  const fetchInvocations: readonly unknown[][] = []
+  const fetchInvocations: Array<readonly unknown[]> = []
   let requestCount = 0
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocations.push(args)
