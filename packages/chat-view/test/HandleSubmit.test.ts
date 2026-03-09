@@ -336,11 +336,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
             'data: {"type":"response.completed"}\n\n',
             'data: [DONE]\n\n',
           ]
-        : [
-            'data: {"type":"response.output_text.delta","delta":"Done"}\n\n',
-            'data: {"type":"response.completed"}\n\n',
-            'data: [DONE]\n\n',
-          ]
+        : ['data: {"type":"response.output_text.delta","delta":"Done"}\n\n', 'data: {"type":"response.completed"}\n\n', 'data: [DONE]\n\n']
     requestIndex++
     let index = 0
     return {
@@ -427,11 +423,7 @@ test('handleSubmit should emit streaming function call data events when enabled'
             'data: {"type":"response.completed"}\n\n',
             'data: [DONE]\n\n',
           ]
-        : [
-            'data: {"type":"response.output_text.delta","delta":"Done"}\n\n',
-            'data: {"type":"response.completed"}\n\n',
-            'data: [DONE]\n\n',
-          ]
+        : ['data: {"type":"response.output_text.delta","delta":"Done"}\n\n', 'data: {"type":"response.completed"}\n\n', 'data: [DONE]\n\n']
     requestIndex++
     let index = 0
     return {
