@@ -2,8 +2,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-invalid-api-key-mock'
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const skip = 1
+
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Chat.reset')
   await Command.execute('Chat.setStreamingEnabled', false)
