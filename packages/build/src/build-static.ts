@@ -25,17 +25,40 @@ export const getRemoteUrl = (path: string): string => {
 
 // @ts-ignore
 const content = await readFile(rendererWorkerPath, 'utf8')
-const workerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
-// @ts-ignore
-const remoteUrl = getRemoteUrl(workerPath)
+const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
+const chatDebugViewWorkerPath = join(root, '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js')
 
-const occurrence = `// const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\`
-const chatViewWorkerUrl = \`${remoteUrl}\``
-const replacement = `const chatViewWorkerUrl = \`\${assetDir}/packages/chat-view/dist/chatViewWorkerMain.js\``
-if (!content.includes(occurrence)) {
+const replaceRemoteUrlWithAssetUrl = (currentContent: string, variableName: string, packageName: string, workerMainName: string, localPath: string) => {
+  // @ts-ignore
+  const remoteUrl = getRemoteUrl(localPath)
+  const occurrence = `// const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\`
+const ${variableName} = \`${remoteUrl}\``
+  const replacement = `const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\``
+  if (!currentContent.includes(occurrence)) {
+    return currentContent
+  }
+  return currentContent.replace(occurrence, replacement)
+}
+
+let newContent = content
+newContent = replaceRemoteUrlWithAssetUrl(
+  newContent,
+  'chatViewWorkerUrl',
+  'chat-view',
+  'chatViewWorkerMain.js',
+  chatViewWorkerPath,
+)
+newContent = replaceRemoteUrlWithAssetUrl(
+  newContent,
+  'chatDebugViewWorkerUrl',
+  'chat-debug-view',
+  'chatDebugViewWorkerMain.js',
+  chatDebugViewWorkerPath,
+)
+
+if (newContent === content) {
   throw new Error('occurrence not found')
 }
-const newContent = content.replace(occurrence, replacement)
 await writeFile(rendererWorkerPath, newContent)
 
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })
