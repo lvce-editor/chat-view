@@ -1,4 +1,4 @@
-import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes.ts'
+import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 
