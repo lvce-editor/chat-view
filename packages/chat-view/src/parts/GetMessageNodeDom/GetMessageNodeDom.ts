@@ -1,24 +1,7 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import type { MessageInlineNode, MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-
-const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNode[] => {
-  if (inlineNode.type === 'text') {
-    return [text(inlineNode.text)]
-  }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatMessageLink,
-      href: inlineNode.href,
-      rel: 'noopener noreferrer',
-      target: '_blank',
-      title: inlineNode.href,
-      type: VirtualDomElements.A,
-    },
-    text(inlineNode.text),
-  ]
-}
+import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
