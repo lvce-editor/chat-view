@@ -5,6 +5,10 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 export const renderEventListeners = (): readonly DomEventListener[] => {
   return [
     {
+      name: DomEventListenerFunctions.HandleFilterInput,
+      params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
+    },
+    {
       name: DomEventListenerFunctions.HandleInput,
       params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue, EventExpression.TargetChecked],
     },
