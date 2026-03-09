@@ -32,6 +32,9 @@ cd packages/e2e                                     && updateDependencies && cd 
 cd packages/memory                                  && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
 cd packages/chat-view                       && updateDependencies && cd ../.. &&
+cd packages/chat-debug-view                       && updateDependencies && cd ../.. &&
+cd packages/chat-tool-worker                       && updateDependencies && cd ../.. &&
+cd packages/chat-network-worker                       && updateDependencies && cd ../.. &&
 
 echo "Great Success!"
 
