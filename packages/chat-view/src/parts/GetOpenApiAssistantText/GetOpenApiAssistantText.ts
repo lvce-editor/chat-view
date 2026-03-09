@@ -645,8 +645,15 @@ export const getOpenApiAssistantText = async (
   platform: number,
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
-  const { includeObfuscation = false, onDataEvent, onEventStreamFinished, onTextChunk, onToolCallsChunk, stream, webSearchEnabled = false } =
-    options ?? { stream: false }
+  const {
+    includeObfuscation = false,
+    onDataEvent,
+    onEventStreamFinished,
+    onTextChunk,
+    onToolCallsChunk,
+    stream,
+    webSearchEnabled = false,
+  } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
