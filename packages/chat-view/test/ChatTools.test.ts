@@ -58,15 +58,16 @@ test('executeChatTool should execute list_files tool', async () => {
     ],
   })
 
-  const result = await executeChatTool('list_files', JSON.stringify({ path: '.' }), options)
+  const uri = 'file:///workspace'
+  const result = await executeChatTool('list_files', JSON.stringify({ uri }), options)
 
-  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readDirWithFileTypes', '.']])
+  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readDirWithFileTypes', uri]])
   expect(JSON.parse(result)).toEqual({
     entries: [
       [1, 'src'],
       [2, 'README.md'],
     ],
-    path: '.',
+    uri,
   })
 })
 

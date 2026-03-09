@@ -1,18 +1,19 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
-import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
-import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
+
+const isAbsoluteUri = (value: string): boolean => {
+  return /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value)
+}
 
 export const executeListFilesTool = async (args: Readonly<Record<string, unknown>>, _options: ExecuteToolOptions): Promise<string> => {
-  const folderPath = typeof args.path === 'string' && args.path ? args.path : '.'
-  if (isPathTraversalAttempt(folderPath)) {
-    return JSON.stringify({ error: 'Access denied: path must be relative and stay within the open workspace folder.' })
+  const uri = typeof args.uri === 'string' ? args.uri : ''
+  if (!uri || !isAbsoluteUri(uri)) {
+    return JSON.stringify({ error: 'Invalid argument: uri must be an absolute URI.' })
   }
-  const normalizedPath = normalizeRelativePath(folderPath)
   try {
-    const entries = await RendererWorker.invoke('FileSystem.readDirWithFileTypes', normalizedPath)
-    return JSON.stringify({ entries, path: normalizedPath })
+    const entries = await RendererWorker.invoke('FileSystem.readDirWithFileTypes', uri)
+    return JSON.stringify({ entries, uri })
   } catch (error) {
-    return JSON.stringify({ error: String(error), path: normalizedPath })
+    return JSON.stringify({ error: String(error), uri })
   }
 }
