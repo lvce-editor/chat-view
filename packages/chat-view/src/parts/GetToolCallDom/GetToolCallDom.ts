@@ -2,24 +2,20 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
+import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallReadFileVirtualDom } from './GetToolCallReadFileVirtualDom.ts'
-
-const getToolCallStatusLabel = (toolCall: ChatToolCall): string => {
-  if (toolCall.status === 'not-found') {
-    return ' (not-found)'
-  }
-  if (toolCall.status === 'error') {
-    if (toolCall.errorMessage) {
-      return ` (error: ${toolCall.errorMessage})`
-    }
-    return ' (error)'
-  }
-  return ''
-}
+import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
 
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'read_file') {
     const virtualDom = getToolCallReadFileVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'render_html') {
+    const virtualDom = getToolCallRenderHtmlVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }

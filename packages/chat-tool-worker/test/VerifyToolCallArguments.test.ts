@@ -68,3 +68,19 @@ test('verifyToolCallArguments should reject unexpected args', () => {
     type: 'error',
   })
 })
+
+test('verifyToolCallArguments should accept valid render_html args', () => {
+  const result = verifyToolCallArguments('render_html', {
+    css: '.card { color: blue; }',
+    html: '<div class="card">Cloudy</div>',
+    title: 'Weather',
+  })
+  expect(result).toEqual({
+    type: 'success',
+    value: {
+      css: '.card { color: blue; }',
+      html: '<div class="card">Cloudy</div>',
+      title: 'Weather',
+    },
+  })
+})
