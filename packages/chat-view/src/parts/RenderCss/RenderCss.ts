@@ -7,7 +7,7 @@ import { getRenderHtmlCss } from '../GetRenderHtmlCss/GetRenderHtmlCss.ts'
 // list height
 
 export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
-  const { chatMessageFontFamily, chatMessageFontSize, chatMessageLineHeight, composerHeight, listItemHeight, sessions, selectedSessionId, uid } = newState
+  const { chatMessageFontFamily, chatMessageFontSize, chatMessageLineHeight, composerHeight, listItemHeight, selectedSessionId, sessions, uid } = newState
   const renderHtmlCss = getRenderHtmlCss(sessions, selectedSessionId)
   const css = getCss(composerHeight, listItemHeight, chatMessageFontSize, chatMessageLineHeight, chatMessageFontFamily, renderHtmlCss)
   return [ViewletCommand.SetCss, uid, css]

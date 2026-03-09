@@ -25,5 +25,5 @@ export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessi
     }
   }
 
-  return Array.from(cssRules).join('\n\n')
+  return [...cssRules].join('\n\n')
 }

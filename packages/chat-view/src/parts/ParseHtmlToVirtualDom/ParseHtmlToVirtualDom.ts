@@ -48,12 +48,12 @@ const sanitizeHtml = (value: string): string => {
 
 const decodeEntities = (value: string): string => {
   return value
-    .replaceAll(/&nbsp;/g, ' ')
-    .replaceAll(/&quot;/g, '"')
-    .replaceAll(/&#39;/g, "'")
-    .replaceAll(/&lt;/g, '<')
-    .replaceAll(/&gt;/g, '>')
-    .replaceAll(/&amp;/g, '&')
+    .replaceAll('&nbsp;', ' ')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&amp;', '&')
 }
 
 const parseAttributes = (token: string): Record<string, string> => {
@@ -163,35 +163,112 @@ const getElementType = (tagName: string): number => {
   switch (tagName) {
     case 'a':
       return VirtualDomElements.A
+    case 'abbr':
+      return VirtualDomElements.Abbr
+    case 'article':
+      return VirtualDomElements.Article
+    case 'aside':
+      return VirtualDomElements.Aside
+    case 'audio':
+      return VirtualDomElements.Audio
+    case 'br':
+      return VirtualDomElements.Br
     case 'button':
       return VirtualDomElements.Button
+    case 'code':
+      return VirtualDomElements.Code
+    case 'col':
+      return VirtualDomElements.Col
+    case 'colgroup':
+      return VirtualDomElements.ColGroup
+    case 'dd':
+      return VirtualDomElements.Dd
+    case 'dl':
+      return VirtualDomElements.Dl
+    case 'dt':
+      return VirtualDomElements.Dt
+    case 'em':
+      return VirtualDomElements.Em
+    case 'figcaption':
+      return VirtualDomElements.Figcaption
+    case 'figure':
+      return VirtualDomElements.Figure
+    case 'footer':
+      return VirtualDomElements.Footer
+    case 'h1':
+      return VirtualDomElements.H1
+    case 'h2':
+      return VirtualDomElements.H2
+    case 'h3':
+      return VirtualDomElements.H3
+    case 'h4':
+      return VirtualDomElements.H4
+    case 'h5':
+      return VirtualDomElements.H5
+    case 'h6':
+      return VirtualDomElements.H6
+    case 'header':
+      return VirtualDomElements.Header
+    case 'hr':
+      return VirtualDomElements.Hr
+    case 'i':
+      return VirtualDomElements.I
+    case 'img':
+      return VirtualDomElements.Img
     case 'input':
       return VirtualDomElements.Input
+    case 'label':
+      return VirtualDomElements.Label
     case 'li':
       return VirtualDomElements.Li
+    case 'main':
+      return VirtualDomElements.Main
+    case 'nav':
+      return VirtualDomElements.Nav
     case 'ol':
-    case 'ul':
       return VirtualDomElements.Ol
-    case 'option':
-      return VirtualDomElements.Option
     case 'p':
       return VirtualDomElements.P
+    case 'pre':
+      return VirtualDomElements.Pre
+    case 'section':
+      return VirtualDomElements.Section
+    case 'option':
+      return VirtualDomElements.Option
     case 'select':
       return VirtualDomElements.Select
     case 'span':
       return VirtualDomElements.Span
+    case 'strong':
+      return VirtualDomElements.Strong
+    case 'table':
+      return VirtualDomElements.Table
+    case 'tbody':
+      return VirtualDomElements.TBody
+    case 'td':
+      return VirtualDomElements.Td
+    case 'tfoot':
+      return VirtualDomElements.Tfoot
+    case 'th':
+      return VirtualDomElements.Th
+    case 'thead':
+      return VirtualDomElements.THead
     case 'textarea':
       return VirtualDomElements.TextArea
+    case 'tr':
+      return VirtualDomElements.Tr
+    case 'ul':
+      return VirtualDomElements.Ul
     default:
       return inlineTags.has(tagName) ? VirtualDomElements.Span : VirtualDomElements.Div
   }
 }
 
-const normalizeHref = (href: string): string => {
-  return href.toLowerCase().startsWith('javascript:') ? '#' : href
+const normalizeUrl = (url: string): string => {
+  return url.toLowerCase().startsWith('javascript:') ? '#' : url
 }
 
-const getElementAttributes = (node: HtmlElementNode): Record<string, unknown> => {
+const getElementAttributes = (node: Readonly<HtmlElementNode>): Record<string, unknown> => {
   const attributes: Record<string, unknown> = {}
   const className = node.attributes.class || node.attributes.classname
   if (className) {
@@ -216,7 +293,10 @@ const getElementAttributes = (node: HtmlElementNode): Record<string, unknown> =>
     attributes.value = node.attributes.value
   }
   if (node.attributes.href) {
-    attributes.href = normalizeHref(node.attributes.href)
+    attributes.href = normalizeUrl(node.attributes.href)
+  }
+  if (node.attributes.src) {
+    attributes.src = normalizeUrl(node.attributes.src)
   }
   if (node.attributes.target) {
     attributes.target = node.attributes.target
@@ -236,7 +316,7 @@ const getElementAttributes = (node: HtmlElementNode): Record<string, unknown> =>
   return attributes
 }
 
-const toVirtualDom = (node: HtmlNode): readonly VirtualDomNode[] => {
+const toVirtualDom = (node: Readonly<HtmlNode>): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [text(node.value)]
   }

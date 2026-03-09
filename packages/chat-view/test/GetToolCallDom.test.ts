@@ -47,3 +47,22 @@ test('getToolCallDom should render render_html tool calls as native virtual dom 
     text: 'Sunny',
   })
 })
+
+test('getToolCallDom should include img src from render_html tool calls', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      css: '',
+      html: '<img src="https://example.com/pic.png" />',
+      title: 'Image Preview',
+    }),
+    name: 'render_html',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(6)
+  expect(result[5]).toEqual({
+    childCount: 0,
+    src: 'https://example.com/pic.png',
+    type: VirtualDomElements.Img,
+  })
+})
