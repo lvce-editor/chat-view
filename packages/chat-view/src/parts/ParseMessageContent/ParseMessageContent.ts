@@ -1,12 +1,61 @@
-import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import type { MessageInlineNode, MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
+const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
+
+const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
+  const matches = value.matchAll(markdownLinkRegex)
+  const nodes: MessageInlineNode[] = []
+  let lastIndex = 0
+
+  for (const match of matches) {
+    const fullMatch = match[0]
+    const linkText = match[1]
+    const href = match[2]
+    const index = match.index ?? 0
+    if (index > lastIndex) {
+      nodes.push({
+        text: value.slice(lastIndex, index),
+        type: 'text',
+      })
+    }
+    nodes.push({
+      href,
+      text: linkText,
+      type: 'link',
+    })
+    lastIndex = index + fullMatch.length
+  }
+
+  if (lastIndex < value.length) {
+    nodes.push({
+      text: value.slice(lastIndex),
+      type: 'text',
+    })
+  }
+
+  if (nodes.length === 0) {
+    return [
+      {
+        text: value,
+        type: 'text',
+      },
+    ]
+  }
+
+  return nodes
+}
 
 export const parseMessageContent = (rawMessage: string): readonly MessageIntermediateNode[] => {
   if (rawMessage === '') {
     return [
       {
-        text: '',
+        children: [
+          {
+            text: '',
+            type: 'text',
+          },
+        ],
         type: 'text',
       },
     ]
@@ -22,7 +71,7 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
       return
     }
     nodes.push({
-      text: paragraphLines.join('\n'),
+      children: parseInlineNodes(paragraphLines.join('\n')),
       type: 'text',
     })
     paragraphLines = []
@@ -50,7 +99,7 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     if (match) {
       flushParagraph()
       listItems.push({
-        text: match[1],
+        children: parseInlineNodes(match[1]),
         type: 'list-item',
       })
       continue
@@ -66,7 +115,12 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
   return nodes.length === 0
     ? [
         {
-          text: '',
+          children: [
+            {
+              text: '',
+              type: 'text',
+            },
+          ],
           type: 'text',
         },
       ]

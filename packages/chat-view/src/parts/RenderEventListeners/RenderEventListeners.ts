@@ -18,6 +18,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickReadFile', 'event.target.dataset.uri'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickLink,
+      params: ['handleClickLink', 'event.target.dataset.href'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickDelete,
       params: ['handleClickDelete', 'event.target.dataset.id'],
     },

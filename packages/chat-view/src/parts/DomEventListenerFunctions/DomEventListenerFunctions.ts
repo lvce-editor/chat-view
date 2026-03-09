@@ -23,3 +23,4 @@ export const HandleMessagesScroll = 22
 export const HandleClickSessionDebug = 23
 export const HandleClickReadFile = 24
 export const HandleMessagesContextMenu = 25
+export const HandleClickLink = 26
