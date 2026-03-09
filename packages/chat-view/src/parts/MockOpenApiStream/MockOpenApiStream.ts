@@ -1,4 +1,4 @@
-import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 
 let queue: string[] = []
 let waiters: Array<(chunk: string | undefined) => void> = []
