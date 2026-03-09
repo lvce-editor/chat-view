@@ -16,7 +16,7 @@ export const getMessagesDom = (
   if (messages.length === 0) {
     return GetEmptyMessagesDom.getEmptyMessagesDom()
   }
-  const totalChildCount = messages.reduce((acc, m) => acc + 1 + ((m.toolCalls && m.toolCalls.length > 0) ? m.toolCalls.length : 0), 0)
+  const totalChildCount = messages.reduce((acc, m) => acc + 1 + (m.toolCalls && m.toolCalls.length > 0 ? m.toolCalls.length : 0), 0)
 
   return [
     {

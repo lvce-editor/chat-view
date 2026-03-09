@@ -20,5 +20,8 @@ export const toRelativeWorkspacePath = (workspaceUri: string, fileUri: string): 
   if (!relativePath) {
     return undefined
   }
-  return relativePath.split(/[\\/]/).filter((segment) => segment && segment !== '.').join('/')
+  return relativePath
+    .split(/[\\/]/)
+    .filter((segment) => segment && segment !== '.')
+    .join('/')
 }

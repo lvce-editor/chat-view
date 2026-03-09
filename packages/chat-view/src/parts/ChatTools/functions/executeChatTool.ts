@@ -10,11 +10,7 @@ import { FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCo
 import { normalizeRelativePath } from './normalizeRelativePath'
 import { isPathTraversalAttempt } from './isPathTraversalAttempt'
 
-export const executeChatTool = async (
-  name: string,
-  rawArguments: unknown,
-  options: ExecuteToolOptions,
-): Promise<string> => {
+export const executeChatTool = async (name: string, rawArguments: unknown, options: ExecuteToolOptions): Promise<string> => {
   const args = parseToolArguments(rawArguments)
   if (name === 'get_current_workspace_uri') {
     try {

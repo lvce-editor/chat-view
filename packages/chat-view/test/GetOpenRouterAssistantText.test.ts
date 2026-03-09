@@ -366,10 +366,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toEqual([
-      ['Workspace.getWorkspaceUri'],
-      ['FileSystem.readFile', 'README.md'],
-    ])
+    expect(mockRendererRpc.invocations).toEqual([['Workspace.getWorkspaceUri'], ['FileSystem.readFile', 'README.md']])
   } finally {
     globalThis.fetch = originalFetch
   }
