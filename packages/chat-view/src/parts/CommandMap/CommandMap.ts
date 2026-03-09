@@ -33,6 +33,7 @@ import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
+import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
@@ -77,6 +78,7 @@ export const commandMap = {
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
+  'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.terminate': terminate,

@@ -48,6 +48,7 @@ export const createDefaultState = (): ChatState => {
     composerHeight: composerLineHeight + 8,
     composerLineHeight,
     composerValue: '',
+    emitStreamingFunctionCallEvents: false,
     errorCount: 0,
     focus: 'composer',
     focused: false,

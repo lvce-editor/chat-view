@@ -21,6 +21,7 @@ export interface ChatState {
   readonly composerLineHeight: number
   readonly composerValue: string
   readonly disposed?: boolean
+  readonly emitStreamingFunctionCallEvents: boolean
   readonly errorCount: number
   readonly focus: ChatViewFocus
   readonly focused: boolean

@@ -321,7 +321,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
   }
 })
 
-test('handleSubmit should store parsed data events and stream finished marker for streaming responses', async () => {
+test('handleSubmit should suppress streaming function call data events by default', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -366,7 +366,13 @@ test('handleSubmit should store parsed data events and stream finished marker fo
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
     const finishedEvent = events.find((event) => event.type === 'event-stream-finished')
 
-    expect(dataEvents).toHaveLength(3)
+    expect(dataEvents).toHaveLength(1)
+    expect(dataEvents[0]).toMatchObject({
+      type: 'sse-response-part',
+      value: {
+        type: 'response.completed',
+      },
+    })
     expect(finishedEvent).toMatchObject({
       type: 'event-stream-finished',
       value: '[DONE]',
@@ -378,6 +384,58 @@ test('handleSubmit should store parsed data events and stream finished marker fo
         name: 'read_file',
       },
     ])
+    expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should emit streaming function call data events when enabled', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"path\\":\\"index.html\\"}"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'read index.html',
+      emitStreamingFunctionCallEvents: true,
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      viewMode: 'detail' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    const events = await getChatViewEvents(result.selectedSessionId)
+    const dataEvents = events.filter((event) => event.type === 'sse-response-part')
+
+    expect(dataEvents).toHaveLength(3)
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
   } finally {
     globalThis.fetch = originalFetch
