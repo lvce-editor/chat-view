@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
-import { text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
