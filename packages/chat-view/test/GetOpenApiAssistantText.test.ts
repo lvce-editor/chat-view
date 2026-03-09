@@ -153,15 +153,26 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
   }
 })
 
-test('getOpenApiAssistantText should emit data events, tool call chunks, and stream finished callbacks', async () => {
+test('getOpenApiAssistantText should execute streaming tool calls and continue with previous_response_id', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
-    const chunks = [
-      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+  const fetchInvocations: readonly unknown[][] = []
+  let requestCount = 0
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocations.push(args)
+    requestCount += 1
+    const firstResponseChunks = [
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"invalid_tool","arguments":""}}\n\n',
       'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"path\\":\\"index.html\\"}"}\n\n',
-      'data: {"type":"response.completed"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_1","output":[{"type":"function_call","call_id":"call_1","name":"invalid_tool","arguments":"{\\"path\\":\\"index.html\\"}"}]}}\n\n',
       'data: [DONE]\n\n',
     ]
+    const secondResponseChunks = [
+      'data: {"type":"response.created","response":{"id":"resp_2"}}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"done"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_2","output":[]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    const chunks = requestCount === 1 ? firstResponseChunks : secondResponseChunks
     let index = 0
     return {
       body: {
@@ -214,16 +225,26 @@ test('getOpenApiAssistantText should emit data events, tool call chunks, and str
     )
 
     expect(result).toEqual({
-      text: '',
+      text: 'done',
       type: 'success',
     })
-    expect(dataEvents).toHaveLength(3)
+    expect(fetchInvocations).toHaveLength(2)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    expect(secondRequestBody.previous_response_id).toBe('resp_1')
+    expect(secondRequestBody.input).toEqual([
+      {
+        call_id: 'call_1',
+        output: '{"error":"Unknown tool: invalid_tool"}',
+        type: 'function_call_output',
+      },
+    ])
+    expect(dataEvents).toHaveLength(6)
     expect(finishedCount).toBe(1)
     expect(toolCallsChunks.at(-1)).toEqual([
       {
         arguments: '{"path":"index.html"}',
         id: 'call_1',
-        name: 'read_file',
+        name: 'invalid_tool',
       },
     ])
   } finally {

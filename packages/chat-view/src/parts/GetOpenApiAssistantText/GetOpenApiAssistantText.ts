@@ -277,13 +277,35 @@ const updateToolCallAccumulator = (
   }
 }
 
+const getResponseFunctionCallsFromStreamingAccumulator = (
+  toolCallAccumulator: Readonly<Record<number, StreamingToolCall>>,
+): readonly ResponseFunctionCall[] => {
+  return Object.entries(toolCallAccumulator)
+    .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => Number(a[0]) - Number(b[0]))
+    .map((entry: readonly [string, StreamingToolCall]) => entry[1])
+    .filter((toolCall) => typeof toolCall.id === 'string' && !!toolCall.id && !!toolCall.name)
+    .map((toolCall) => ({
+      arguments: toolCall.arguments,
+      callId: toolCall.id as string,
+      name: toolCall.name,
+    }))
+}
+
+type ParseOpenApiStreamSuccessResult = {
+  readonly responseFunctionCalls: readonly ResponseFunctionCall[]
+  readonly responseId?: string
+  readonly text: string
+  readonly type: 'success'
+}
+
+type ParseOpenApiStreamResult = ParseOpenApiStreamSuccessResult | GetOpenApiAssistantTextErrorResult
+
 const parseOpenApiStream = async (
   response: Response,
   onTextChunk?: (chunk: string) => Promise<void>,
   onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>,
   onDataEvent?: (value: unknown) => Promise<void>,
-  onEventStreamFinished?: () => Promise<void>,
-): Promise<GetOpenApiAssistantTextResult> => {
+): Promise<ParseOpenApiStreamResult> => {
   if (!response.body) {
     return {
       details: 'request-failed',
@@ -295,18 +317,9 @@ const parseOpenApiStream = async (
   let remainder = ''
   let text = ''
   let done = false
-  let finishedNotified = false
   let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
-
-  const notifyFinished = async (): Promise<void> => {
-    if (finishedNotified) {
-      return
-    }
-    finishedNotified = true
-    if (onEventStreamFinished) {
-      await onEventStreamFinished()
-    }
-  }
+  let responseId: string | undefined
+  let completedResponseFunctionCalls: readonly ResponseFunctionCall[] = []
 
   const emitToolCallAccumulator = async (): Promise<void> => {
     if (!onToolCallsChunk) {
@@ -332,7 +345,26 @@ const parseOpenApiStream = async (
 
     const eventType = Reflect.get(parsed, 'type')
     if (eventType === 'response.completed') {
-      await notifyFinished()
+      const response = Reflect.get(parsed, 'response')
+      if (response && typeof response === 'object') {
+        const parsedResponseId = Reflect.get(response, 'id')
+        if (typeof parsedResponseId === 'string' && parsedResponseId) {
+          responseId = parsedResponseId
+        }
+        completedResponseFunctionCalls = getResponseFunctionCalls(response)
+      }
+      return
+    }
+
+    if (eventType === 'response.created' || eventType === 'response.in_progress') {
+      const response = Reflect.get(parsed, 'response')
+      if (!response || typeof response !== 'object') {
+        return
+      }
+      const parsedResponseId = Reflect.get(response, 'id')
+      if (typeof parsedResponseId === 'string' && parsedResponseId) {
+        responseId = parsedResponseId
+      }
       return
     }
 
@@ -373,6 +405,40 @@ const parseOpenApiStream = async (
       toolCallAccumulator = {
         ...toolCallAccumulator,
         [outputIndex]: next,
+      }
+      await emitToolCallAccumulator()
+      return
+    }
+
+    if (eventType === 'response.output_item.done') {
+      const outputIndex = Reflect.get(parsed, 'output_index')
+      const item = Reflect.get(parsed, 'item')
+      if (typeof outputIndex !== 'number' || !item || typeof item !== 'object') {
+        return
+      }
+      const itemType = Reflect.get(item, 'type')
+      if (itemType !== 'function_call') {
+        return
+      }
+      const callId = Reflect.get(item, 'call_id')
+      const name = Reflect.get(item, 'name')
+      const rawArguments = Reflect.get(item, 'arguments')
+      const current = toolCallAccumulator[outputIndex] || { arguments: '', name: '' }
+      toolCallAccumulator = {
+        ...toolCallAccumulator,
+        [outputIndex]: {
+          arguments: typeof rawArguments === 'string' ? rawArguments : current.arguments,
+          ...(typeof callId === 'string'
+            ? {
+                id: callId,
+              }
+            : current.id
+              ? {
+                  id: current.id,
+                }
+              : {}),
+          name: typeof name === 'string' && name ? name : current.name,
+        },
       }
       await emitToolCallAccumulator()
       return
@@ -463,7 +529,6 @@ const parseOpenApiStream = async (
       }
       for (const line of dataLines) {
         if (line === '[DONE]') {
-          await notifyFinished()
           done = true
           break
         }
@@ -482,7 +547,6 @@ const parseOpenApiStream = async (
     const dataLines = parseSseEvent(remainder)
     for (const line of dataLines) {
       if (line === '[DONE]') {
-        await notifyFinished()
         continue
       }
       let parsed: unknown
@@ -495,9 +559,17 @@ const parseOpenApiStream = async (
     }
   }
 
-  await notifyFinished()
-
+  const responseFunctionCalls =
+    completedResponseFunctionCalls.length > 0
+      ? completedResponseFunctionCalls
+      : getResponseFunctionCallsFromStreamingAccumulator(toolCallAccumulator)
   return {
+    ...(responseId
+      ? {
+          responseId,
+        }
+      : {}),
+    responseFunctionCalls,
     text,
     type: 'success',
   }
@@ -606,7 +678,36 @@ export const getOpenApiAssistantText = async (
     }
 
     if (stream) {
-      return parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
+      const streamResult = await parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent)
+      if (streamResult.type !== 'success') {
+        return streamResult
+      }
+
+      if (streamResult.responseId) {
+        previousResponseId = streamResult.responseId
+      }
+
+      if (streamResult.responseFunctionCalls.length > 0) {
+        openAiInput.length = 0
+        for (const toolCall of streamResult.responseFunctionCalls) {
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          openAiInput.push({
+            call_id: toolCall.callId,
+            output: content,
+            type: 'function_call_output',
+          })
+        }
+        continue
+      }
+
+      if (onEventStreamFinished) {
+        await onEventStreamFinished()
+      }
+
+      return {
+        text: streamResult.text,
+        type: 'success',
+      }
     }
 
     let parsed: unknown
