@@ -524,8 +524,8 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     title: uri,
   })
   expect(fileIcon).toMatchObject({
-    'data-uri': uri,
     className: ClassNames.FileIcon,
+    'data-uri': uri,
   })
   expect(fileName).toBeDefined()
 })
