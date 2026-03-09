@@ -6,7 +6,7 @@ import { getWorkspaceUri } from './getWorkspaceUri'
 import { toRelativeWorkspacePath } from './toRelativeWorkspacePath'
 import { parseToolArguments } from './parseToolArguments'
 import { executeFileSystemCommand } from './executeFileSystemCommand'
-import { FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import { FileSystemWriteFile } from '../../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import { normalizeRelativePath } from './normalizeRelativePath'
 import { isPathTraversalAttempt } from './isPathTraversalAttempt'
 
