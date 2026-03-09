@@ -4,6 +4,7 @@ import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSes
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
+import { requestInProgress } from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import {
   handleToolCallsChunkFunction,
@@ -115,7 +116,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     id: assistantMessageId,
     inProgress: true,
     role: 'assistant',
-    text: '',
+    text: requestInProgress(),
     time: assistantTime,
   }
 

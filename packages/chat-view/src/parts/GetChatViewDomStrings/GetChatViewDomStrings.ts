@@ -64,6 +64,10 @@ export const send = (): string => {
   return i18nString('Send')
 }
 
+export const requestInProgress = (): string => {
+  return i18nString('Request sent. Waiting for response...')
+}
+
 export const save = (): string => {
   return i18nString('Save')
 }
