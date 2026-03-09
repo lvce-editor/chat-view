@@ -528,8 +528,8 @@ test('getStatusBarVirtualDom should render read_file not-found status', () => {
     0,
     0,
   )
-  const fileNameNode = result.find((node) => node.text === 'read_file missing.html (not-found)')
-  expect(fileNameNode).toBeDefined()
+  const statusNode = result.find((node) => node.text === ' (not-found)')
+  expect(statusNode).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render read_file error status with short message', () => {
@@ -578,8 +578,8 @@ test('getStatusBarVirtualDom should render read_file error status with short mes
     0,
     0,
   )
-  const fileNameNode = result.find((node) => node.text === 'read_file index.html (error: permission denied)')
-  expect(fileNameNode).toBeDefined()
+  const statusNode = result.find((node) => node.text === ' (error: permission denied)')
+  expect(statusNode).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {

@@ -775,7 +775,11 @@ export const getOpenApiAssistantText = async (
               : {}),
             id: toolCall.callId,
             name: toolCall.name,
-            status: executionStatus.status,
+            ...(executionStatus.status
+              ? {
+                  status: executionStatus.status,
+                }
+              : {}),
           })
           openAiInput.push({
             call_id: toolCall.callId,
@@ -837,7 +841,11 @@ export const getOpenApiAssistantText = async (
             : {}),
           id: toolCall.callId,
           name: toolCall.name,
-          status: executionStatus.status,
+          ...(executionStatus.status
+            ? {
+                status: executionStatus.status,
+              }
+            : {}),
         })
         openAiInput.push({
           call_id: toolCall.callId,
@@ -902,7 +910,11 @@ export const getOpenApiAssistantText = async (
                 : {}),
               id,
               name,
-              status: executionStatus.status,
+              ...(executionStatus.status
+                ? {
+                    status: executionStatus.status,
+                  }
+                : {}),
             })
           }
           openAiInput.push({

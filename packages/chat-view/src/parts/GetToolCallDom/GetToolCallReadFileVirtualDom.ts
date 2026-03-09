@@ -60,10 +60,6 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     },
     text(toolNameLabel),
     text(fileName),
-    ...(statusLabel
-      ? [
-          text(statusLabel),
-        ]
-      : []),
+    ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }
