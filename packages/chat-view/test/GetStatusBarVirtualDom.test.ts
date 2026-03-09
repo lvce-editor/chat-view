@@ -415,7 +415,69 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   })
   expect(fileIconNode).toBeDefined()
   expect(fileNameNode).toBeDefined()
-  expect(fileNameLinkNode).toBeDefined()
+  expect(fileNameLinkNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    type: VirtualDomElements.Span,
+  })
+})
+
+test('getStatusBarVirtualDom should render assistant read_file path as clickable filename', () => {
+  const path = 'src/index.html'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"path":"${path}"}`,
+              id: 'call_1',
+              name: 'read_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const fileNameLinkNode = result.find(
+    (node) =>
+      node.type === VirtualDomElements.Span &&
+      node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;' &&
+      node['data-uri'] === path,
+  )
+
+  expect(fileNameLinkNode).toMatchObject({
+    'data-uri': path,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    type: VirtualDomElements.Span,
+  })
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
