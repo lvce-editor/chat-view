@@ -4,19 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getFileNameFromUri } from './GetFileNameFromUri.ts'
 import { getReadFileTarget } from './GetReadFileTarget.ts'
-
-const getToolCallStatusLabel = (toolCall: ChatToolCall): string => {
-  if (toolCall.status === 'not-found') {
-    return ' (not-found)'
-  }
-  if (toolCall.status === 'error') {
-    if (toolCall.errorMessage) {
-      return ` (error: ${toolCall.errorMessage})`
-    }
-    return ' (error)'
-  }
-  return ''
-}
+import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
 
 export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)
@@ -54,8 +42,8 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     },
     {
       childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
       ...fileNameClickableProps,
-      style: 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
       type: VirtualDomElements.Span,
     },
     text(toolNameLabel),
