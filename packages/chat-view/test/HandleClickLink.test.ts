@@ -7,7 +7,9 @@ test('handleClickLink should open external href', async () => {
     'Open.openExternal': async () => {},
   })
 
-  await HandleClickLink.handleClickLink('https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai')
+  await HandleClickLink.handleClickLink(
+    'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
+  )
 
   expect(mockRpc.invocations).toEqual([
     [

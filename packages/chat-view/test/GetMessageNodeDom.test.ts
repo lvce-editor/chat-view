@@ -13,7 +13,7 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
       },
       {
         href: 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
-        text: 'metcheck.com',
+        text: 'source',
         type: 'link',
       },
     ],
@@ -29,14 +29,16 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
     text: 'Source: ',
   })
   expect(result[2]).toEqual({
-    'data-href': 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
     childCount: 1,
     className: ClassNames.ChatMessageLink,
+    'data-href':
+      'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
     onClick: DomEventListenerFunctions.HandleClickLink,
-    title: 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
+    title:
+      'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
     type: VirtualDomElements.Span,
   })
   expect(result[3]).toMatchObject({
-    text: 'metcheck.com',
+    text: 'source',
   })
 })
