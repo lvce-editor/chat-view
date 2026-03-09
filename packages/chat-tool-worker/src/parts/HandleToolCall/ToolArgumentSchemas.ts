@@ -1,6 +1,11 @@
 import type { ToolArgumentSchema } from './types.ts'
 
 export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> = {
+  getworkspaceuri: {
+    additionalProperties: false,
+    properties: {},
+    required: [],
+  },
   list_files: {
     additionalProperties: false,
     properties: {
@@ -11,9 +16,9 @@ export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> =
   read_file: {
     additionalProperties: false,
     properties: {
-      path: 'string',
+      uri: 'string',
     },
-    required: ['path'],
+    required: ['uri'],
   },
   write_file: {
     additionalProperties: false,

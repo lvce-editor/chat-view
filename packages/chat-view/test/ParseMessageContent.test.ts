@@ -5,7 +5,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
   const rawMessage = [
     'I have access to the following tools:',
     '',
-    '1. functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder.',
+    '1. functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
     '2. functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
     '3. functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
     '',
@@ -22,7 +22,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
     {
       items: [
         {
-          text: 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder.',
+          text: 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
           type: 'list-item',
         },
         {
