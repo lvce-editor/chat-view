@@ -403,7 +403,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   )
   const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
   const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
-  const fileNameNode = result.find((node) => node.text === 'index.html')
+  const fileNameNode = result.find((node) => node.text === 'read_file index.html')
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
   )

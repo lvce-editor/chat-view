@@ -10,6 +10,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: { readonly name: string;
     return []
   }
   const fileName = getFileNameFromUri(target.title)
+  const toolNameLabel = `${toolCall.name} `
   const clickableProps = target.clickableUri
     ? {
         'data-uri': target.clickableUri,
@@ -24,7 +25,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: { readonly name: string;
     : {}
   return [
     {
-      childCount: 2,
+      childCount: 3,
       className: ClassNames.ChatOrderedListItem,
       ...clickableProps,
       title: target.title,
@@ -42,6 +43,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: { readonly name: string;
       style: 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
       type: VirtualDomElements.Span,
     },
+    text(toolNameLabel),
     text(fileName),
   ]
 }
