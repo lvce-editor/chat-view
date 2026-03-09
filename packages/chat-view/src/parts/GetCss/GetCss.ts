@@ -39,5 +39,11 @@ export const getCss = (
 .ChatToolCallReadFileLink {
   color: var(--vscode-textLink-foreground);
   text-decoration: underline;
+}
+
+.ChatMessageLink {
+  color: #4d94ff;
+  text-decoration: underline;
+  cursor: pointer;
 }`
 }
