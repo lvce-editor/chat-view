@@ -11,7 +11,6 @@ import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMis
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
-import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 export const getChatMessageDom = (
@@ -27,12 +26,10 @@ export const getChatMessageDom = (
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
-  const toolCallsDom = getToolCallsDom(message)
-  const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageIntermediate.length + 1 + toolCallsChildCount
-      : messageIntermediate.length + toolCallsChildCount
+      ? messageIntermediate.length + 1
+      : messageIntermediate.length
   return [
     {
       childCount: 1,
@@ -44,7 +41,6 @@ export const getChatMessageDom = (
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
-    ...toolCallsDom,
     ...messageDom,
     ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),

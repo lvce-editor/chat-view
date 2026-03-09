@@ -84,6 +84,10 @@ test('getOpenRouterAssistantText should return success result when response is o
     expect(payload.tools).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          function: expect.objectContaining({ name: 'get_current_workspace_uri' }),
+          type: 'function',
+        }),
+        expect.objectContaining({
           function: expect.objectContaining({ name: 'read_file' }),
           type: 'function',
         }),
@@ -295,6 +299,9 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
 test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
+    'Workspace.getWorkspaceUri': async () => {
+      return 'file:///workspace'
+    },
     'FileSystem.readFile': async (path: string) => {
       expect(path).toBe('README.md')
       return '# Workspace Readme'
@@ -315,7 +322,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
                 tool_calls: [
                   {
                     function: {
-                      arguments: JSON.stringify({ path: 'README.md' }),
+                      arguments: JSON.stringify({ uri: 'file:///workspace/README.md' }),
                       name: 'read_file',
                     },
                     id: 'tool-1',
@@ -359,13 +366,22 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'README.md']])
+    expect(mockRendererRpc.invocations).toEqual([
+      ['Workspace.getWorkspaceUri'],
+      ['FileSystem.readFile', 'README.md'],
+    ])
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
 test('getOpenRouterAssistantText should block tool paths outside workspace', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'ExtensionHostManagement.activateByEvent': async () => {},
+    'Workspace.getWorkspaceUri': async () => {
+      return 'file:///workspace'
+    },
+  })
   const originalFetch = globalThis.fetch
   const requests: Array<{ readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> }> = []
   globalThis.fetch = (async (...args: readonly unknown[]) => {
@@ -382,7 +398,7 @@ test('getOpenRouterAssistantText should block tool paths outside workspace', asy
                 tool_calls: [
                   {
                     function: {
-                      arguments: JSON.stringify({ path: '../secret.txt' }),
+                      arguments: JSON.stringify({ uri: 'file:///outside/secret.txt' }),
                       name: 'read_file',
                     },
                     id: 'tool-1',

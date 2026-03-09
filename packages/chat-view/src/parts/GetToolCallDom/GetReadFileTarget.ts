@@ -16,7 +16,7 @@ export const getReadFileTarget = (rawArguments: string): { readonly title: strin
   if (!title) {
     return undefined
   }
-  // `read_file` tool calls usually provide a relative `path`; pass it through so UI clicks can open the file.
+  // `read_file` tool calls should provide an absolute `uri`; keep `path` as a fallback for older sessions.
   const clickableUri = uriValue || pathValue
   return {
     clickableUri,
