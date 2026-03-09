@@ -7,12 +7,13 @@ import {
   openRouterTooManyRequestsMessage,
 } from '../chatViewStrings/chatViewStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getMessageContentDom } from '../GetMessageContentDom/GetMessageContentDom.ts'
 import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
-import { getMessageContentDom, parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
+import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 export const getChatMessageDom = (
   message: ChatMessage,
