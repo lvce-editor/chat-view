@@ -524,10 +524,61 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     title: uri,
   })
   expect(fileIcon).toMatchObject({
-    className: ClassNames.FileIcon,
     'data-uri': uri,
+    className: ClassNames.FileIcon,
   })
   expect(fileName).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should keep tool calls above assistant response text', () => {
+  const uri = 'file:///workspace/index.html'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: 'I have opened the file.',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"uri":"${uri}"}`,
+              id: 'call_1',
+              name: 'read_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetStatusBarVirtualDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const toolCallLineIndex = result.findIndex((node) => node.title === uri)
+  const assistantTextIndex = result.findIndex((node) => node.text === 'I have opened the file.')
+  expect(toolCallLineIndex).toBeGreaterThan(-1)
+  expect(assistantTextIndex).toBeGreaterThan(-1)
+  expect(toolCallLineIndex).toBeLessThan(assistantTextIndex)
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
