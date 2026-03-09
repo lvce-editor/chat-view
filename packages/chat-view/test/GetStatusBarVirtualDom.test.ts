@@ -472,6 +472,7 @@ test('getStatusBarVirtualDom should render selected session messages in detail m
 })
 
 test('getStatusBarVirtualDom should render assistant tool call lines', () => {
+  const uri = 'file:///workspace/index.html'
   const sessions = [
     {
       id: 'session-1',
@@ -483,7 +484,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
           time: '10:31',
           toolCalls: [
             {
-              arguments: '{"path":"index.html"}',
+              arguments: `{"uri":"${uri}"}`,
               id: 'call_1',
               name: 'read_file',
             },
@@ -514,8 +515,19 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     0,
     0,
   )
-  const toolCallLine = result.find((node) => node.text === 'read_file "index.html"')
-  expect(toolCallLine).toBeDefined()
+  const toolCallLine = result.find((node) => node.title === uri)
+  const fileIcon = result.find((node) => node.className === ClassNames.FileIcon)
+  const fileName = result.find((node) => node.text === 'index.html')
+  expect(toolCallLine).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    title: uri,
+  })
+  expect(fileIcon).toMatchObject({
+    'data-uri': uri,
+    className: ClassNames.FileIcon,
+  })
+  expect(fileName).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
