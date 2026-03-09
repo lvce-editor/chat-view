@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
-import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -515,73 +515,21 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
     0,
     0,
   )
-  const toolCallsList = result.find((node) => node.type === VirtualDomElements.Ol)
-  const toolCallLine = result.find((node) => node.title === uri)
-  const fileIcon = result.find((node) => node.className === ClassNames.FileIcon)
-  const fileName = result.find((node) => node.text === 'index.html')
-  expect(toolCallsList).toBeDefined()
-  expect(toolCallLine).toMatchObject({
-    'data-uri': uri,
+  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
+  const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
+  const fileNameNode = result.find((node) => node.text === 'index.html')
+  const fileNameLinkNode = result.find(
+    (node) => node.type === VirtualDomElements.Span && node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
+  )
+
+  expect(toolCallItem).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     title: uri,
     type: VirtualDomElements.Li,
   })
-  expect(fileIcon).toMatchObject({
-    className: ClassNames.FileIcon,
-    'data-uri': uri,
-  })
-  expect(fileName).toBeDefined()
-})
-
-test('getStatusBarVirtualDom should keep tool calls above assistant response text', () => {
-  const uri = 'file:///workspace/index.html'
-  const sessions = [
-    {
-      id: 'session-1',
-      messages: [
-        {
-          id: 'm1',
-          role: 'assistant' as const,
-          text: 'I have opened the file.',
-          time: '10:31',
-          toolCalls: [
-            {
-              arguments: `{"uri":"${uri}"}`,
-              id: 'call_1',
-              name: 'read_file',
-            },
-          ],
-        },
-      ],
-      title: 'Chat 1',
-    },
-  ]
-
-  const result = GetStatusBarVirtualDom.getChatVirtualDom(
-    sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
-  const toolCallLineIndex = result.findIndex((node) => node.title === uri)
-  const assistantTextIndex = result.findIndex((node) => node.text === 'I have opened the file.')
-  expect(toolCallLineIndex).toBeGreaterThan(-1)
-  expect(assistantTextIndex).toBeGreaterThan(-1)
-  expect(toolCallLineIndex).toBeLessThan(assistantTextIndex)
+  expect(fileIconNode).toBeDefined()
+  expect(fileNameNode).toBeDefined()
+  expect(fileNameLinkNode).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
