@@ -9,6 +9,7 @@ import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
+import * as HandleClickLink from '../HandleClickLink/HandleClickLink.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
@@ -55,6 +56,7 @@ export const commandMap = {
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickDelete': wrapCommand(HandleClickDelete.handleClickDelete),
+  'Chat.handleClickLink': HandleClickLink.handleClickLink,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
