@@ -297,7 +297,7 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
 })
 
 test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
-  using mockRendererRpc = RendererWorker.registerMockRpc({
+  const mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
     'Workspace.getWorkspaceUri': async () => {
       return 'file:///workspace'
@@ -373,7 +373,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
 })
 
 test('getOpenRouterAssistantText should block tool paths outside workspace', async () => {
-  using mockRendererRpc = RendererWorker.registerMockRpc({
+  RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
     'Workspace.getWorkspaceUri': async () => {
       return 'file:///workspace'
