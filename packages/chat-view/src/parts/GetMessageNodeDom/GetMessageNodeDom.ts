@@ -1,9 +1,9 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
-const getOrderedListItemDom = (item: MessageIntermediateNode['items'][number]): readonly VirtualDomNode[] => {
+const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
   return [
     {
       childCount: item.children.length,
