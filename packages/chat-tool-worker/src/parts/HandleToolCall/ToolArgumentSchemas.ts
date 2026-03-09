@@ -20,14 +20,6 @@ export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> =
     },
     required: ['uri'],
   },
-  write_file: {
-    additionalProperties: false,
-    properties: {
-      content: 'string',
-      path: 'string',
-    },
-    required: ['path', 'content'],
-  },
   render_html: {
     additionalProperties: false,
     properties: {
@@ -36,5 +28,13 @@ export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> =
       title: 'string',
     },
     required: ['html'],
+  },
+  write_file: {
+    additionalProperties: false,
+    properties: {
+      content: 'string',
+      path: 'string',
+    },
+    required: ['path', 'content'],
   },
 }

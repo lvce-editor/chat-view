@@ -2,8 +2,8 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
-import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallReadFileVirtualDom } from './GetToolCallReadFileVirtualDom.ts'
+import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
 
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
