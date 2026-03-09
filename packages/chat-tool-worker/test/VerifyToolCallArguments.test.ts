@@ -21,16 +21,16 @@ test('verifyToolCallArguments should reject unknown tools', () => {
   })
 })
 
-test('verifyToolCallArguments should accept valid getworkspaceuri args', () => {
-  const result = verifyToolCallArguments('getworkspaceuri', {})
+test('verifyToolCallArguments should accept valid getWorkspaceUri args', () => {
+  const result = verifyToolCallArguments('getWorkspaceUri', {})
   expect(result).toEqual({
     type: 'success',
     value: {},
   })
 })
 
-test('verifyToolCallArguments should reject unexpected getworkspaceuri args', () => {
-  const result = verifyToolCallArguments('getworkspaceuri', {
+test('verifyToolCallArguments should reject unexpected getWorkspaceUri args', () => {
+  const result = verifyToolCallArguments('getWorkspaceUri', {
     path: '.',
   })
   expect(result).toEqual({

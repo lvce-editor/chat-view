@@ -62,7 +62,7 @@ export const getBasicChatTools = (): readonly ChatTool[] => {
     {
       function: {
         description: 'Get the URI of the currently open workspace folder.',
-        name: 'getworkspaceuri',
+        name: 'getWorkspaceUri',
         parameters: {
           additionalProperties: false,
           properties: {},

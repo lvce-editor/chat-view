@@ -1,7 +1,7 @@
 import type { ToolArgumentSchema } from './types.ts'
 
 export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> = {
-  getworkspaceuri: {
+  getWorkspaceUri: {
     additionalProperties: false,
     properties: {},
     required: [],

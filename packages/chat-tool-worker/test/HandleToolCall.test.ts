@@ -28,10 +28,10 @@ test('handleToolCall should return validation error response', async () => {
   })
 })
 
-test('handleToolCall should support getworkspaceuri without arguments', async () => {
-  const result = await handleToolCall('tool-4', 'getworkspaceuri', '{}')
+test('handleToolCall should support getWorkspaceUri without arguments', async () => {
+  const result = await handleToolCall('tool-4', 'getWorkspaceUri', '{}')
   expect(result).toEqual({
-    content: '{"result":{"arguments":{},"name":"getworkspaceuri"},"type":"success"}',
+    content: '{"result":{"arguments":{},"name":"getWorkspaceUri"},"type":"success"}',
     role: 'tool',
     tool_call_id: 'tool-4',
   })

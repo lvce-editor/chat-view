@@ -833,9 +833,7 @@ test('getStatusBarVirtualDom should render ordered list from assistant message t
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const readFileReason = result.find(
-    (node) =>
-      node.text ===
-      'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
+    (node) => node.text === 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
   )
   const writeFileReason = result.find(
     (node) => node.text === 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',

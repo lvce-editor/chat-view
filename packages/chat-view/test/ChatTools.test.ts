@@ -14,7 +14,7 @@ test('getBasicChatTools should return read, write, list and workspace uri tool d
 
   const names = tools.map((tool) => tool.function.name)
 
-  expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getworkspaceuri'])
+  expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri'])
 })
 
 test('executeChatTool should execute read_file tool', async () => {
@@ -70,12 +70,12 @@ test('executeChatTool should execute list_files tool', async () => {
   })
 })
 
-test('executeChatTool should execute getworkspaceuri tool', async () => {
+test('executeChatTool should execute getWorkspaceUri tool', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Workspace.getPath': async () => '/workspace/project',
   })
 
-  const result = await executeChatTool('getworkspaceuri', JSON.stringify({}), options)
+  const result = await executeChatTool('getWorkspaceUri', JSON.stringify({}), options)
 
   expect(mockRendererRpc.invocations).toEqual([['Workspace.getPath']])
   expect(JSON.parse(result)).toEqual({
