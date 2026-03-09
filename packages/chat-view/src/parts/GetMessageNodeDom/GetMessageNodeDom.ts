@@ -1,21 +1,16 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import type { MessageInlineNode, MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
-const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNode[] => {
-  if (inlineNode.type === 'text') {
-    return [text(inlineNode.text)]
-  }
+const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
   return [
     {
-      childCount: 1,
-      className: ClassNames.ChatMessageLink,
-      href: inlineNode.href,
-      target: '_blank',
-      title: inlineNode.href,
-      type: VirtualDomElements.A,
+      childCount: item.children.length,
+      className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
     },
-    text(inlineNode.text),
+    ...item.children.flatMap(getInlineNodeDom),
   ]
 }
 
@@ -36,15 +31,6 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
-    ...node.items.flatMap((item) => {
-      return [
-        {
-          childCount: item.children.length,
-          className: ClassNames.ChatOrderedListItem,
-          type: VirtualDomElements.Li,
-        },
-        ...item.children.flatMap(getInlineNodeDom),
-      ]
-    }),
+    ...node.items.flatMap(getOrderedListItemDom),
   ]
 }
