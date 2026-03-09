@@ -31,7 +31,10 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   const first = messages.nth(0)
   await expect(first).toHaveText('hello from e2e')
   const secondMessage = messages.nth(1)
-  await expect(secondMessage).toHaveText(
-    `OpenAI request failed (status 401): invalid_api_key [invalid_request_error]. Incorrect API key provided: bad-sk-p************************************************************************************************************************************************************gBMA. You can find your API key at https://platform.openai.com/account/api-keys.`,
-  )
+  await expect(secondMessage).toHaveText(`OpenAI request failed (status 401): Invalid API key. Please verify your OpenAI API key in Chat settings.`)
+
+  // TODO
+  // Expect a Settings button to be present so users can open settings.json
+  // const settingsButton = Locator('.ChatMessages .Message [name="open-openapi-api-key-settings"]')
+  // await expect(settingsButton).toBeVisible()
 }

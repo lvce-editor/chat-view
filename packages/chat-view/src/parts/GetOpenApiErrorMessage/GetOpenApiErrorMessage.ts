@@ -8,6 +8,12 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
       const hasErrorCode = typeof errorResult.errorCode === 'string' && errorResult.errorCode.length > 0
       const hasErrorType = typeof errorResult.errorType === 'string' && errorResult.errorType.length > 0
 
+      // Provide a concise, user-friendly message when OpenAI reports an invalid API key.
+      if (errorResult.errorCode === 'invalid_api_key') {
+        const status = typeof errorResult.statusCode === 'number' ? errorResult.statusCode : 401
+        return `OpenAI request failed (status ${status}): Invalid API key. Please verify your OpenAI API key in Chat settings.`
+      }
+
       if (errorResult.statusCode === 429) {
         let prefix = 'OpenAI rate limit exceeded (429)'
         if (hasErrorCode) {
