@@ -369,11 +369,19 @@ test('handleSubmit should suppress streaming function call data events by defaul
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
+    const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
     const finishedEvent = events.find((event) => event.type === 'event-stream-finished')
 
+<<<<<<< HEAD
     expect(dataEvents).toHaveLength(3)
     expect(dataEvents[0]).toMatchObject({
       type: 'sse-response-part',
+=======
+    expect(dataEvents).toHaveLength(0)
+    expect(responseCompletedEvents).toHaveLength(1)
+    expect(responseCompletedEvents[0]).toMatchObject({
+      type: 'sse-response-completed',
+>>>>>>> origin/main
       value: {
         type: 'response.completed',
       },
@@ -457,8 +465,14 @@ test('handleSubmit should emit streaming function call data events when enabled'
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
+    const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
+<<<<<<< HEAD
     expect(dataEvents).toHaveLength(5)
+=======
+    expect(dataEvents).toHaveLength(2)
+    expect(responseCompletedEvents).toHaveLength(1)
+>>>>>>> origin/main
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
   } finally {
     globalThis.fetch = originalFetch
