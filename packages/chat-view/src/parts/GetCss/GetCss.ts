@@ -41,6 +41,20 @@ export const getCss = (
   text-decoration: underline;
 }
 
+.ChatToolCallRenderHtmlLabel {
+  margin-bottom: 6px;
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+
+.ChatToolCallRenderHtmlFrame {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 6px;
+  background: var(--vscode-editor-background);
+}
+
 .ChatMessageLink {
   color: #4d94ff;
   text-decoration: underline;

@@ -20,6 +20,15 @@ export const toolArgumentSchemas: Readonly<Record<string, ToolArgumentSchema>> =
     },
     required: ['uri'],
   },
+  render_html: {
+    additionalProperties: false,
+    properties: {
+      css: 'string',
+      html: 'string',
+      title: 'string',
+    },
+    required: ['html'],
+  },
   write_file: {
     additionalProperties: false,
     properties: {

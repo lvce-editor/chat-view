@@ -82,6 +82,36 @@ const getGetWorkspaceUriTool = (): ChatTool => {
   }
 }
 
+const getRenderHtmlTool = (): ChatTool => {
+  return {
+    function: {
+      description:
+        'Render custom HTML and CSS as a sandboxed visual preview in the chat tool call list. Use this for structured cards, tables, and small dashboards.',
+      name: 'render_html',
+      parameters: {
+        additionalProperties: false,
+        properties: {
+          css: {
+            description: 'Optional CSS string applied inside the preview document.',
+            type: 'string',
+          },
+          html: {
+            description: 'HTML string to render in the preview document.',
+            type: 'string',
+          },
+          title: {
+            description: 'Optional short title for the preview.',
+            type: 'string',
+          },
+        },
+        required: ['html'],
+        type: 'object',
+      },
+    },
+    type: 'function',
+  }
+}
+
 export const getBasicChatTools = (): readonly ChatTool[] => {
-  return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool()]
+  return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
 }

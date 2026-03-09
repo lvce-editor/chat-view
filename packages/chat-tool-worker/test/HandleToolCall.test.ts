@@ -36,3 +36,12 @@ test('handleToolCall should support getWorkspaceUri without arguments', async ()
     tool_call_id: 'tool-4',
   })
 })
+
+test('handleToolCall should support render_html', async () => {
+  const result = await handleToolCall('tool-5', 'render_html', '{"html":"<div>Sunny</div>","css":"div{color:orange}","title":"Weather"}')
+  expect(result).toEqual({
+    content: '{"result":{"arguments":{"html":"<div>Sunny</div>","css":"div{color:orange}","title":"Weather"},"name":"render_html"},"type":"success"}',
+    role: 'tool',
+    tool_call_id: 'tool-5',
+  })
+})
