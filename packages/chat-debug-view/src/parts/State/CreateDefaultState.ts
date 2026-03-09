@@ -14,6 +14,7 @@ export const createDefaultState = (): ChatDebugViewState => {
     platform: 0,
     sessionId: '',
     sessionIdIndexName: 'sessionId',
+    showEventStreamFinishedEvents: false,
     showInputEvents: false,
     showResponsePartEvents: false,
     uid: 0,
