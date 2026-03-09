@@ -1,4 +1,4 @@
-export type { ChatTool, ExecuteToolOptions } from '../Types/Types'
+export type { ChatTool, ExecuteToolOptions } from '../Types/Types.ts'
 
-export { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools'
-export { executeChatTool } from '../ExecuteChatTool/ExecuteChatTool'
+export { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
+export { executeChatTool } from '../ExecuteChatTool/ExecuteChatTool.ts'
