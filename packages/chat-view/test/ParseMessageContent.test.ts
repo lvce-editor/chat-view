@@ -86,9 +86,9 @@ test('parseMessageContent should return a text node for empty messages', () => {
 
 test('parseMessageContent should parse markdown links in paragraphs and lists', () => {
   const rawMessage = [
-    'Forecast source: [metcheck.com](https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai)',
+    'Forecast source: [source one](https://example.com/forecast?location=paris)',
     '',
-    '1. Climate normals: [weather2visit.com](https://www.weather2visit.com/europe/france/paris-march.htm?utm_source=openai)',
+    '1. Climate normals: [source two](https://example.org/climate/paris-march)',
   ].join('\n')
 
   const result = ParseMessageContent.parseMessageContent(rawMessage)
@@ -101,8 +101,8 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
           type: 'text',
         },
         {
-          href: 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
-          text: 'metcheck.com',
+          href: 'https://example.com/forecast?location=paris',
+          text: 'source one',
           type: 'link',
         },
       ],
@@ -117,8 +117,8 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
               type: 'text',
             },
             {
-              href: 'https://www.weather2visit.com/europe/france/paris-march.htm?utm_source=openai',
-              text: 'weather2visit.com',
+              href: 'https://example.org/climate/paris-march',
+              text: 'source two',
               type: 'link',
             },
           ],
