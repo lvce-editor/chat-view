@@ -1,5 +1,5 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import type { StreamingToolCall } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {
   readonly assetDir: string

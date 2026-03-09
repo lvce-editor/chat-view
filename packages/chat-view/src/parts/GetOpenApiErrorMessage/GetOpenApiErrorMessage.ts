@@ -1,4 +1,4 @@
-import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import { openApiRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
 
 export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {

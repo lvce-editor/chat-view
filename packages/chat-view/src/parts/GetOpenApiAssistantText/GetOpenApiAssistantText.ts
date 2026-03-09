@@ -1,43 +1,15 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import type { ChatToolCallStatus } from '../ChatMessage/ChatMessage.ts'
+import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
+import type { GetOpenApiAssistantTextOptions } from '../GetOpenApiAssistantTextOptions/GetOpenApiAssistantTextOptions.ts'
+import type { GetOpenApiAssistantTextSuccessResult } from '../GetOpenApiAssistantTextSuccessResult/GetOpenApiAssistantTextSuccessResult.ts'
+import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
+import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
-export interface GetOpenApiAssistantTextSuccessResult {
-  readonly text: string
-  readonly type: 'success'
-}
-
-export interface GetOpenApiAssistantTextErrorResult {
-  readonly details: 'request-failed' | 'http-error'
-  readonly errorCode?: string
-  readonly errorMessage?: string
-  readonly errorType?: string
-  readonly statusCode?: number
-  readonly type: 'error'
-}
-
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
-
-export interface StreamingToolCall {
-  readonly arguments: string
-  readonly errorMessage?: string
-  readonly id?: string
-  readonly name: string
-  readonly status?: ChatToolCallStatus
-}
-
-interface GetOpenApiAssistantTextOptions {
-  readonly includeObfuscation?: boolean
-  readonly onDataEvent?: (value: unknown) => Promise<void>
-  readonly onEventStreamFinished?: () => Promise<void>
-  readonly onTextChunk?: (chunk: string) => Promise<void>
-  readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
-  readonly stream: boolean
-  readonly webSearchEnabled?: boolean
-}
 
 const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
   return tools.map((tool) => {
@@ -124,12 +96,6 @@ const getStreamChunkText = (content: unknown): string => {
       return typeof text === 'string' ? text : ''
     })
     .join('')
-}
-
-interface ResponseFunctionCall {
-  readonly arguments: string
-  readonly callId: string
-  readonly name: string
 }
 
 const getShortToolErrorMessage = (error: string): string => {

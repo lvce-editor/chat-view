@@ -1,5 +1,5 @@
 import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
-import type { StreamingToolCall } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 const parseSseDataLines = (eventChunk: string): readonly string[] => {
