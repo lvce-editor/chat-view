@@ -9,7 +9,6 @@ import {
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMissingOpenApiApiKeyDom.ts'
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
-import { getOpenApiInvalidApiKeyDom } from '../GetOpenApiInvalidApiKeyDom/GetOpenApiInvalidApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
@@ -26,7 +25,6 @@ export const getChatMessageDom = (
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
-  const isOpenApiInvalidApiKeyMessage = message.role === 'assistant' && message.text.toLowerCase().includes('invalid api key')
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
@@ -52,6 +50,5 @@ export const getChatMessageDom = (
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
-    ...(isOpenApiInvalidApiKeyMessage ? getOpenApiInvalidApiKeyDom() : []),
   ]
 }
