@@ -110,9 +110,16 @@ export const getCss = (): string => {
 
 .ChatOrderedList{
   margin:0;
+  padding:0;
+  padding-left:10px;
 }
 
 .ChatOrderedListItem{
+  margin:0;
+  padding:0;
+}
+
+.ChatToolCalls{
   margin:0;
   padding:0;
 }
