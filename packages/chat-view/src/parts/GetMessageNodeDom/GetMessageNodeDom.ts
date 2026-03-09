@@ -1,7 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineNode, MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
 const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNode[] => {
   if (inlineNode.type === 'text') {
@@ -11,10 +10,10 @@ const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNod
     {
       childCount: 1,
       className: ClassNames.ChatMessageLink,
-      'data-href': inlineNode.href,
-      onClick: DomEventListenerFunctions.HandleClickLink,
+      href: inlineNode.href,
+      target: '_blank',
       title: inlineNode.href,
-      type: VirtualDomElements.Span,
+      type: VirtualDomElements.A,
     },
     text(inlineNode.text),
   ]

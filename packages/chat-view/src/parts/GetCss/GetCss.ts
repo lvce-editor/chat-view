@@ -42,7 +42,7 @@ export const getCss = (
 }
 
 .ChatMessageLink {
-  color: var(--vscode-textLink-foreground);
+  color: #4d94ff;
   text-decoration: underline;
   cursor: pointer;
 }`

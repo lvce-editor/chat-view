@@ -16,28 +16,53 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
 
   expect(result).toEqual([
     {
-      text: 'I have access to the following tools:',
+      children: [
+        {
+          text: 'I have access to the following tools:',
+          type: 'text',
+        },
+      ],
       type: 'text',
     },
     {
       items: [
         {
-          text: 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
+          children: [
+            {
+              text: 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
+              type: 'text',
+            },
+          ],
           type: 'list-item',
         },
         {
-          text: 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
+          children: [
+            {
+              text: 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.',
+              type: 'text',
+            },
+          ],
           type: 'list-item',
         },
         {
-          text: 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+          children: [
+            {
+              text: 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+              type: 'text',
+            },
+          ],
           type: 'list-item',
         },
       ],
       type: 'list',
     },
     {
-      text: 'I can also use these tools in parallel when appropriate.',
+      children: [
+        {
+          text: 'I can also use these tools in parallel when appropriate.',
+          type: 'text',
+        },
+      ],
       type: 'text',
     },
   ])
@@ -48,8 +73,59 @@ test('parseMessageContent should return a text node for empty messages', () => {
 
   expect(result).toEqual([
     {
-      text: '',
+      children: [
+        {
+          text: '',
+          type: 'text',
+        },
+      ],
       type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown links in paragraphs and lists', () => {
+  const rawMessage = [
+    'Forecast source: [metcheck.com](https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai)',
+    '',
+    '1. Climate normals: [weather2visit.com](https://www.weather2visit.com/europe/france/paris-march.htm?utm_source=openai)',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Forecast source: ',
+          type: 'text',
+        },
+        {
+          href: 'https://www.metcheck.com/WEATHER/dayforecast.asp?dateFor=10%2F03%2F2026&lat=48.853410&location=Paris&locationID=654747&lon=2.348800&utm_source=openai',
+          text: 'metcheck.com',
+          type: 'link',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Climate normals: ',
+              type: 'text',
+            },
+            {
+              href: 'https://www.weather2visit.com/europe/france/paris-march.htm?utm_source=openai',
+              text: 'weather2visit.com',
+              type: 'link',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'list',
     },
   ])
 })
