@@ -6,10 +6,35 @@ import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 
 test('renderCss should return setCss command with uid and css', () => {
   const oldState: ChatState = createDefaultState()
-  const newState: ChatState = { ...createDefaultState(), uid: 42 }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [
+          {
+            id: '1',
+            role: 'assistant',
+            text: '',
+            time: '',
+            toolCalls: [
+              {
+                arguments: JSON.stringify({ css: '.card{color:green;}', html: '<div class="card">ok</div>' }),
+                name: 'render_html',
+              },
+            ],
+          },
+        ],
+        title: 'Session 1',
+      },
+    ],
+    uid: 42,
+  }
   const result = RenderCss.renderCss(oldState, newState)
   expect(result[0]).toBe(ViewletCommand.SetCss)
   expect(result[1]).toBe(42)
   expect(typeof result[2]).toBe('string')
   expect(result[2].length).toBeGreaterThan(0)
+  expect(result[2]).toContain('.card{color:green;}')
 })
