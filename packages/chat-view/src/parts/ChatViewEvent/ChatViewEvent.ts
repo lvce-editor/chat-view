@@ -53,6 +53,11 @@ export interface DataEvent extends ChatViewEventBase {
   readonly value: unknown
 }
 
+export interface ResponseCompletedEvent extends ChatViewEventBase {
+  readonly type: 'sse-response-completed'
+  readonly value: unknown
+}
+
 export interface EventStreamFinishedEvent extends ChatViewEventBase {
   readonly type: 'event-stream-finished'
   readonly value: '[DONE]'
@@ -68,4 +73,5 @@ export type ChatViewEvent =
   | HandleInputEvent
   | HandleSubmitEvent
   | DataEvent
+  | ResponseCompletedEvent
   | EventStreamFinishedEvent

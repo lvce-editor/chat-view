@@ -70,6 +70,12 @@ const isStreamingFunctionCallEvent = (parsed: unknown): boolean => {
   return Reflect.get(item, 'type') === 'function_call'
 }
 
+const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-response-part' => {
+  return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed'
+    ? 'sse-response-completed'
+    : 'sse-response-part'
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     assetDir,
@@ -208,10 +214,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       if (!emitStreamingFunctionCallEvents && isStreamingFunctionCallEvent(value)) {
         return
       }
+      const sseEventType = getSseEventType(value)
       await appendChatViewEvent({
         sessionId: optimisticState.selectedSessionId,
         timestamp: new Date().toISOString(),
-        type: 'sse-response-part',
+        type: sseEventType,
         value,
       })
     },
