@@ -59,8 +59,8 @@ export interface ChatState {
   readonly usageOverviewEnabled: boolean
   readonly useMockApi: boolean
   readonly viewMode: ChatViewMode
-  readonly webSearchEnabled: boolean
   readonly warningCount: number
+  readonly webSearchEnabled: boolean
   readonly width: number
   readonly x: number
   readonly y: number
