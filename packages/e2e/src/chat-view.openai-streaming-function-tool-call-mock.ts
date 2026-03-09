@@ -4,7 +4,9 @@ export const name = 'chat-view.openai-streaming-function-tool-call-mock'
 
 // export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Chat.reset')
   await Command.execute('Chat.setStreamingEnabled', true)
@@ -146,6 +148,6 @@ export const test: Test = async ({ Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toContainText('whats the contents of index html')
-  await expect(messages.nth(1)).toContainText('read_file "index.html"')
+  await expect(messages.nth(0)).toHaveText('whats the contents of index html')
+  await expect(messages.nth(1)).toHaveText('index.html')
 }

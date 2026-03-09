@@ -13,6 +13,7 @@ export interface ChatDebugViewState {
   readonly platform: number
   readonly sessionId: string
   readonly sessionIdIndexName: string
+  readonly showEventStreamFinishedEvents: boolean
   readonly showInputEvents: boolean
   readonly showResponsePartEvents: boolean
   readonly uid: number

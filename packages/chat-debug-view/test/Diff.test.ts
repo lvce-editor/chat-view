@@ -33,6 +33,16 @@ test('diff should return RenderItems when showResponsePartEvents changes', () =>
   expect(result).toEqual([DiffType.RenderItems])
 })
 
+test('diff should return RenderItems when showEventStreamFinishedEvents changes', () => {
+  const oldState = createDefaultState()
+  const newState = {
+    ...oldState,
+    showEventStreamFinishedEvents: true,
+  }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderItems])
+})
+
 test('diff should return empty array when no observed properties change', () => {
   const oldState = createDefaultState()
   const newState = {
