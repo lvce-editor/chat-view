@@ -20,5 +20,3 @@ export const getOpenApiInvalidApiKeyDom = (): readonly VirtualDomNode[] => {
     text('Settings'),
   ]
 }
-
-export default getOpenApiInvalidApiKeyDom
