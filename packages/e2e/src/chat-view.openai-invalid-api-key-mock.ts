@@ -2,10 +2,10 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-invalid-api-key-mock'
 
-export const skip = 1
-
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Command.execute('Layout.showSecondarySideBar')
   await Command.execute('Chat.reset')
   await Command.execute('Chat.setStreamingEnabled', false)
@@ -26,9 +26,12 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.handleSubmit')
 
   // assert
-  const messages = Locator('.ChatDetailsContent .Message')
+  const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request failed (status 401): invalid_api_key [invalid_request_error].')
-  await expect(messages.nth(1)).toContainText('Incorrect API key provided')
-  await expect(messages.nth(1)).toContainText('https://platform.openai.com/account/api-keys')
+  const first = messages.nth(0)
+  await expect(first).toHaveText('hello from e2e')
+  const secondMessage = messages.nth(1)
+  await expect(secondMessage).toHaveText(
+    `OpenAI request failed (status 401): invalid_api_key [invalid_request_error]. Incorrect API key provided: bad-sk-p************************************************************************************************************************************************************gBMA. You can find your API key at https://platform.openai.com/account/api-keys.`,
+  )
 }
