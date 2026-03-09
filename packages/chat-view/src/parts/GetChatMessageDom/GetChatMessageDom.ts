@@ -26,8 +26,7 @@ export const getChatMessageDom = (
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
-  const isOpenApiInvalidApiKeyMessage =
-    message.role === 'assistant' && message.text.toLowerCase().includes('invalid api key')
+  const isOpenApiInvalidApiKeyMessage = message.role === 'assistant' && message.text.toLowerCase().includes('invalid api key')
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
