@@ -461,8 +461,8 @@ test('handleSubmit should emit streaming function call data events when enabled'
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
-  expect(dataEvents).toHaveLength(3)
-  expect(responseCompletedEvents).toHaveLength(2)
+    expect(dataEvents).toHaveLength(3)
+    expect(responseCompletedEvents).toHaveLength(2)
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
   } finally {
     globalThis.fetch = originalFetch
