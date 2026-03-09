@@ -34,5 +34,10 @@ export const getCss = (
   line-height: 14px;
   text-transform: lowercase;
   letter-spacing: 0.02em;
+}
+
+.ChatToolCallReadFileLink {
+  color: var(--vscode-textLink-foreground);
+  text-decoration: underline;
 }`
 }

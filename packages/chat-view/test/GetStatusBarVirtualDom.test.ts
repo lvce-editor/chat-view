@@ -406,9 +406,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
   const toolPrefixNode = result.find((node) => node.text === 'read_file ')
   const fileNameNode = result.find((node) => node.text === 'index.html')
-  const fileNameLinkNode = result.find(
-    (node) => node.type === VirtualDomElements.Span && node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;',
-  )
+  const fileNameLinkNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink)
 
   expect(toolCallItem).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickReadFile,
@@ -470,10 +468,7 @@ test('getStatusBarVirtualDom should render assistant read_file path as clickable
     0,
   )
   const fileNameLinkNode = result.find(
-    (node) =>
-      node.type === VirtualDomElements.Span &&
-      node.style === 'color: var(--vscode-textLink-foreground); text-decoration: underline;' &&
-      node['data-uri'] === path,
+    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === path,
   )
 
   expect(fileNameLinkNode).toMatchObject({
