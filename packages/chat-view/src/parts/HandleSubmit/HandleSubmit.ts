@@ -91,6 +91,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled,
     useMockApi,
     viewMode,
+    webSearchEnabled,
   } = state
   const userText = composerValue.trim()
   if (!userText) {
@@ -241,6 +242,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled,
     useMockApi,
     userText,
+    webSearchEnabled,
   })
 
   const { latestState } = handleTextChunkState

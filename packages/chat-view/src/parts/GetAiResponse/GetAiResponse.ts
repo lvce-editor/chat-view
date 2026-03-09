@@ -34,6 +34,7 @@ export const getAiResponse = async ({
   streamingEnabled = false,
   useMockApi,
   userText,
+  webSearchEnabled = false,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   let text = ''
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
@@ -78,6 +79,7 @@ export const getAiResponse = async ({
               }
             : {}),
           stream: streamingEnabled,
+          webSearchEnabled,
         },
       )
       if (result.type === 'success') {
