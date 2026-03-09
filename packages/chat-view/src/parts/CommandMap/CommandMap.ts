@@ -16,6 +16,7 @@ import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
@@ -63,6 +64,7 @@ export const commandMap = {
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
+  'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,

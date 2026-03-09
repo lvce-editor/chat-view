@@ -402,6 +402,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
         arguments: '{"path":"index.html"}',
         id: 'call_1',
         name: 'read_file',
+        status: 'not-found',
       },
     ])
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)

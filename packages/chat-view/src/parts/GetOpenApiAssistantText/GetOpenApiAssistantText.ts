@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatToolCallStatus } from '../ChatMessage/ChatMessage.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
@@ -22,8 +23,10 @@ export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult
 
 export interface StreamingToolCall {
   readonly arguments: string
+  readonly errorMessage?: string
   readonly id?: string
   readonly name: string
+  readonly status?: ChatToolCallStatus
 }
 
 interface GetOpenApiAssistantTextOptions {
@@ -127,6 +130,49 @@ interface ResponseFunctionCall {
   readonly arguments: string
   readonly callId: string
   readonly name: string
+}
+
+const getShortToolErrorMessage = (error: string): string => {
+  const trimmed = error.trim().replace(/^Error:\s*/, '')
+  const firstLine = trimmed.split('\n')[0]
+  if (firstLine.length <= 80) {
+    return firstLine
+  }
+  return `${firstLine.slice(0, 77)}...`
+}
+
+const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'status'> => {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(content) as unknown
+  } catch {
+    return {
+      errorMessage: 'Invalid tool output',
+      status: 'error',
+    }
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return {
+      errorMessage: 'Invalid tool output',
+      status: 'error',
+    }
+  }
+  const rawError = Reflect.get(parsed, 'error')
+  if (typeof rawError !== 'string' || !rawError.trim()) {
+    return {
+      status: 'success',
+    }
+  }
+  const errorMessage = getShortToolErrorMessage(rawError)
+  if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
+    return {
+      status: 'not-found',
+    }
+  }
+  return {
+    errorMessage,
+    status: 'error',
+  }
 }
 
 const getResponseOutputText = (parsed: unknown): string => {
@@ -716,13 +762,29 @@ export const getOpenApiAssistantText = async (
 
       if (streamResult.responseFunctionCalls.length > 0) {
         openAiInput.length = 0
+        const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of streamResult.responseFunctionCalls) {
           const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          const executionStatus = getToolCallExecutionStatus(content)
+          executedToolCalls.push({
+            arguments: toolCall.arguments,
+            ...(executionStatus.errorMessage
+              ? {
+                  errorMessage: executionStatus.errorMessage,
+                }
+              : {}),
+            id: toolCall.callId,
+            name: toolCall.name,
+            status: executionStatus.status,
+          })
           openAiInput.push({
             call_id: toolCall.callId,
             output: content,
             type: 'function_call_output',
           })
+        }
+        if (onToolCallsChunk && executedToolCalls.length > 0) {
+          await onToolCallsChunk(executedToolCalls)
         }
         continue
       }
@@ -762,13 +824,29 @@ export const getOpenApiAssistantText = async (
     const responseFunctionCalls = getResponseFunctionCalls(parsed)
     if (responseFunctionCalls.length > 0) {
       openAiInput.length = 0
+      const executedToolCalls: StreamingToolCall[] = []
       for (const toolCall of responseFunctionCalls) {
         const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+        const executionStatus = getToolCallExecutionStatus(content)
+        executedToolCalls.push({
+          arguments: toolCall.arguments,
+          ...(executionStatus.errorMessage
+            ? {
+                errorMessage: executionStatus.errorMessage,
+              }
+            : {}),
+          id: toolCall.callId,
+          name: toolCall.name,
+          status: executionStatus.status,
+        })
         openAiInput.push({
           call_id: toolCall.callId,
           output: content,
           type: 'function_call_output',
         })
+      }
+      if (onToolCallsChunk && executedToolCalls.length > 0) {
+        await onToolCallsChunk(executedToolCalls)
       }
       continue
     }
@@ -800,6 +878,7 @@ export const getOpenApiAssistantText = async (
       const toolCalls = Reflect.get(message, 'tool_calls')
       if (Array.isArray(toolCalls) && toolCalls.length > 0) {
         openAiInput.length = 0
+        const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of toolCalls) {
           if (!toolCall || typeof toolCall !== 'object') {
             continue
@@ -812,11 +891,28 @@ export const getOpenApiAssistantText = async (
           const name = Reflect.get(toolFunction, 'name')
           const rawArguments = Reflect.get(toolFunction, 'arguments')
           const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
+          if (typeof name === 'string') {
+            const executionStatus = getToolCallExecutionStatus(content)
+            executedToolCalls.push({
+              arguments: typeof rawArguments === 'string' ? rawArguments : '',
+              ...(executionStatus.errorMessage
+                ? {
+                    errorMessage: executionStatus.errorMessage,
+                  }
+                : {}),
+              id,
+              name,
+              status: executionStatus.status,
+            })
+          }
           openAiInput.push({
             call_id: id,
             output: content,
             type: 'function_call_output',
           })
+        }
+        if (onToolCallsChunk && executedToolCalls.length > 0) {
+          await onToolCallsChunk(executedToolCalls)
         }
         continue
       }
