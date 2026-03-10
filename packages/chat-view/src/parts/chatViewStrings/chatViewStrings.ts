@@ -2,6 +2,8 @@ export const openApiApiKeyRequiredMessage = 'OpenAI API key is not configured. E
 
 export const openApiRequestFailedMessage = 'OpenAI request failed.'
 
+export const openApiRequestFailedOfflineMessage = 'OpenAI request failed because you are offline. Please check your internet connection.'
+
 export const openRouterApiKeyRequiredMessage = 'OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.'
 
 export const openRouterRequestFailedMessage = 'OpenRouter request failed. Possible reasons:'

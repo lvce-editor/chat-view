@@ -1,5 +1,12 @@
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
-import { openApiRequestFailedMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../chatViewStrings/chatViewStrings.ts'
+
+const isOffline = (): boolean => {
+  if (!globalThis.navigator) {
+    return false
+  }
+  return globalThis.navigator.onLine === false
+}
 
 export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {
   switch (errorResult.details) {
@@ -11,7 +18,7 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
       // Provide a concise, user-friendly message when OpenAI reports an invalid API key.
       if (errorResult.errorCode === 'invalid_api_key') {
         const status = typeof errorResult.statusCode === 'number' ? errorResult.statusCode : 401
-        return `OpenAI request failed (status ${status}): Invalid API key. Please verify your OpenAI API key in Chat settings.`
+        return `OpenAI request failed (Status ${status}): Invalid API key. Please verify your OpenAI API key in Chat Settings.`
       }
 
       if (errorResult.statusCode === 429) {
@@ -50,6 +57,9 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
       return openApiRequestFailedMessage
     }
     case 'request-failed':
+      if (isOffline()) {
+        return openApiRequestFailedOfflineMessage
+      }
       return openApiRequestFailedMessage
   }
 }
