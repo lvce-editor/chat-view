@@ -3,6 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-message-with-markdown-table'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+  // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -11,7 +12,6 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.mockOpenApiStreamReset')
-
   const sseResponseParts = [
     {
       eventId: 121,
@@ -40,10 +40,12 @@ Would you like me to add or change anything?`,
   }
   await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
   await Command.execute('Chat.mockOpenApiStreamFinish')
-
   await Chat.handleInput('whats jsonrpc')
+
+  // act
   await Chat.handleSubmit()
 
+  // assert
   const messages = Locator('.ChatMessages .Message')
   const table = Locator('.ChatMessages .Message .MarkdownTable')
   await expect(messages).toHaveCount(2)
