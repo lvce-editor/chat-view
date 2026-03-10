@@ -81,7 +81,12 @@ const isDefaultSessionTitle = (title: string): boolean => {
 }
 
 const sanitizeGeneratedTitle = (value: string): string => {
-  return value.replace(/^title:\s*/i, '').replace(/^['"`\s]+|['"`\s]+$/g, '').replace(/\s+/g, ' ').trim().slice(0, 80)
+  return value
+    .replace(/^title:\s*/i, '')
+    .replace(/^['"`\s]+|['"`\s]+$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 80)
 }
 
 const updateSessionTitle = (sessions: readonly ChatSession[], selectedSessionId: string, title: string): readonly ChatSession[] => {
@@ -96,11 +101,7 @@ const updateSessionTitle = (sessions: readonly ChatSession[], selectedSessionId:
   })
 }
 
-const getAiSessionTitle = async (
-  state: ChatState,
-  userText: string,
-  assistantText: string,
-): Promise<string> => {
+const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
   const { models, openApiApiBaseUrl, openApiApiKey, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, useMockApi } = state
   if (useMockApi) {
     return ''

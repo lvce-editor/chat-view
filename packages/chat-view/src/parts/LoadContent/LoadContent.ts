@@ -21,8 +21,14 @@ const toSummarySession = (session: ChatSession): ChatSession => {
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
-  const { aiSessionTitleGenerationEnabled, emitStreamingFunctionCallEvents, openApiApiKey, openRouterApiKey, passIncludeObfuscation, streamingEnabled } =
-    await loadPreferences()
+  const {
+    aiSessionTitleGenerationEnabled,
+    emitStreamingFunctionCallEvents,
+    openApiApiKey,
+    openRouterApiKey,
+    passIncludeObfuscation,
+    streamingEnabled,
+  } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
