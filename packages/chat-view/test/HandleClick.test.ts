@@ -248,6 +248,7 @@ test('handleClick should retry previous prompt after saving openapi api key', as
           title: 'Chat 1',
         },
       ],
+      streamingEnabled: false,
       viewMode: 'detail',
     }
     const result = await HandleClick.handleClick(state, 'save-openapi-api-key')
