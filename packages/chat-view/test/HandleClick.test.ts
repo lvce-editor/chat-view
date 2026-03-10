@@ -181,10 +181,20 @@ test('handleClick should retry previous prompt after saving openrouter api key',
 
 test('handleClick should open OpenRouter API keys settings', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
-    'Open.openExternal': async () => {},
+    'Main.openUri': async () => {},
   })
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'open-openrouter-api-key-settings')
+  expect(result).toBe(state)
+  expect(mockRpc.invocations).toEqual([['Main.openUri', 'app://settings.json']])
+})
+
+test('handleClick should open OpenRouter API keys website', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Open.openExternal': async () => {},
+  })
+  const state: ChatState = createDefaultState()
+  const result = await HandleClick.handleClick(state, 'open-openrouter-api-key-website')
   expect(result).toBe(state)
   expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://openrouter.ai/settings/keys']])
 })
@@ -260,6 +270,16 @@ test('handleClick should open OpenAPI API keys settings', async () => {
   const result = await HandleClick.handleClick(state, 'open-openapi-api-key-settings')
   expect(result).toBe(state)
   expect(mockRpc.invocations).toEqual([['Main.openUri', 'app://settings.json']])
+})
+
+test('handleClick should open OpenAPI API keys website', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Open.openExternal': async () => {},
+  })
+  const state: ChatState = createDefaultState()
+  const result = await HandleClick.handleClick(state, 'open-openapi-api-key-website')
+  expect(result).toBe(state)
+  expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://platform.openai.com/api-keys']])
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
