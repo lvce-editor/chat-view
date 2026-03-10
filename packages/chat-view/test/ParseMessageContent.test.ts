@@ -206,6 +206,56 @@ test('parseMessageContent should parse markdown unordered list blocks', () => {
   ])
 })
 
+test('parseMessageContent should parse markdown unordered list blocks with star markers', () => {
+  const rawMessage = ['I can help with:', '', '* Reading project files', '* Running tests', '* Explaining errors'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'I can help with:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Reading project files',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Running tests',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Explaining errors',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'unordered-list',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown table blocks', () => {
   const rawMessage = [
     'Here is the latest inventory:',
