@@ -83,8 +83,8 @@ const isDefaultSessionTitle = (title: string): boolean => {
 const sanitizeGeneratedTitle = (value: string): string => {
   return value
     .replace(/^title:\s*/i, '')
-    .replace(/^['"`\s]+|['"`\s]+$/g, '')
-    .replace(/\s+/g, ' ')
+    .replaceAll(/^['"`\s]+|['"`\s]+$/g, '')
+    .replaceAll(/\s+/g, ' ')
     .trim()
     .slice(0, 80)
 }
