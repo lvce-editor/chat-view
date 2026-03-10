@@ -11,11 +11,13 @@ export const loadPreferences = async (): Promise<{
   streamingEnabled: boolean
   passIncludeObfuscation: boolean
 }> => {
-  const openApiApiKey = await loadOpenApiApiKey()
-  const openRouterApiKey = await loadOpenRouterApiKey()
-  const emitStreamingFunctionCallEvents = await loadEmitStreamingFunctionCallEvents()
-  const streamingEnabled = await loadStreamingEnabled()
-  const passIncludeObfuscation = await loadPassIncludeObfuscation()
+  const [openApiApiKey, openRouterApiKey, emitStreamingFunctionCallEvents, streamingEnabled, passIncludeObfuscation] = await Promise.all([
+    loadOpenApiApiKey(),
+    loadOpenRouterApiKey(),
+    loadEmitStreamingFunctionCallEvents(),
+    loadStreamingEnabled(),
+    loadPassIncludeObfuscation(),
+  ])
 
   return {
     emitStreamingFunctionCallEvents,
