@@ -5,15 +5,15 @@ export const name = 'chat-view.openrouter-api-key-not-configured'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.handleModelChange', 'openRouter/meta-llama/llama-3.3-70b-instruct:free')
-  await Command.execute('Chat.handleInput', 'composer', 'hello from e2e', 'script')
+  await Chat.show()
+  await Chat.reset()
+  await Chat.handleModelChange('openRouter/meta-llama/llama-3.3-70b-instruct:free')
+  await Chat.handleInput('hello from e2e')
 
   // act
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleSubmit()
 
   // assert
   const messages = Locator('.ChatDetailsContent .Message')

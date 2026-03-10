@@ -2,15 +2,15 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.new-line-1'
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
+  await Chat.show()
+  await Chat.reset()
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
 
   // act
-  await Command.execute('Chat.enterNewLine')
+  await Chat.enterNewLine()
 
   // assert
   const input = Locator('.Chat .MultilineInputBox')

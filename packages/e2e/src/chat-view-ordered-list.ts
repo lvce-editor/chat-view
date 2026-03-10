@@ -4,14 +4,14 @@ export const name = 'chat-view.ordered-list'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.handleInput', 'composer', 'what tools do you have access to?', 'script')
+  await Chat.show()
+  await Chat.reset()
+  await Chat.handleInput('what tools do you have access to?')
 
   // act
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleSubmit()
 
   // assert
   const messages = Locator('.ChatMessages .Message')
