@@ -3,13 +3,14 @@ import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySettings/HandleClickOpenApiApiKeySettings.ts'
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
+import { handleClickRetryOpenApiRequest } from '../HandleClickRetryOpenApiRequest/HandleClickRetryOpenApiRequest.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
 import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiKeyWebsite/HandleClickOpenRouterApiKeyWebsite.ts'
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import * as InputName from '../InputName/InputName.ts'
-import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
+import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, RetryOpenApiRequest, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
@@ -40,6 +41,9 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (name === SaveOpenApiApiKey) {
     return handleClickSaveOpenApiApiKey(state)
+  }
+  if (name === RetryOpenApiRequest) {
+    return handleClickRetryOpenApiRequest(state)
   }
   if (name === OpenOpenRouterApiKeySettings) {
     return handleClickOpenRouterApiKeySettings(state)

@@ -3,6 +3,7 @@ import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
   openApiApiKeyRequiredMessage,
+  openApiRequestFailedOfflineMessage,
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
@@ -784,6 +785,43 @@ test('getStatusBarVirtualDom should render OpenRouter too many requests reasons 
   expect(waitReason).toBeDefined()
   expect(frequencyReason).toBeDefined()
   expect(modelReason).toBeDefined()
+})
+
+test('getStatusBarVirtualDom should render retry button for offline OpenAI request failure', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: openApiRequestFailedOfflineMessage, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const retryButton = result.find((node) => node.name === 'retry-openapi-request')
+  expect(retryButton).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  const retryButtonLabel = result.find((node) => node.text === 'Retry')
+  expect(retryButtonLabel).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render ordered list from assistant message text', () => {
