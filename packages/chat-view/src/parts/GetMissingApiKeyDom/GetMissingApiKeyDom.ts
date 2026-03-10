@@ -37,10 +37,10 @@ export const getMissingApiKeyDom = ({
       type: VirtualDomElements.Div,
     },
     {
+      buttonType: 'submit',
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       disabled: saveButtonDisabled,
-      buttonType: 'submit',
       name: saveButtonName,
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
