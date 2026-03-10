@@ -86,7 +86,7 @@ export const getCss = (
 
 .MarkdownTable th {
   background: var(--vscode-editorWidget-background);
- }
+}
 }`
 
   if (!renderHtmlCss.trim()) {
