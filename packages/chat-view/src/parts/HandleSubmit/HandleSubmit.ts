@@ -1,6 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { createSession } from '../CreateSession/CreateSession.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
@@ -13,7 +14,14 @@ import {
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
+import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
+import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+
+const slashCommandRegex = /^\/(clear|export|help|new)(?:\s+.*)?$/
+const mentionRegex = /(^|\s)@([^\s]+)/g
+const maxMentionCount = 5
+const maxMentionTextLength = 8000
 
 const appendMessageToSelectedSession = (
   sessions: readonly ChatSession[],
@@ -74,6 +82,142 @@ const isStreamingFunctionCallEvent = (parsed: unknown): boolean => {
 
 const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-response-part' => {
   return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed' ? 'sse-response-completed' : 'sse-response-part'
+}
+
+const getCommandHelpText = (): string => {
+  return [
+    'Available commands:',
+    '/new - Create and switch to a new chat session.',
+    '/clear - Clear messages in the selected chat session.',
+    '/export - Export current chat session as Markdown.',
+    '/help - Show this help.',
+  ].join('\n')
+}
+
+const withClearedComposer = (state: ChatState): ChatState => {
+  return FocusInput.focusInput({
+    ...state,
+    composerHeight: getMinComposerHeightForState(state),
+    composerValue: '',
+    inputSource: 'script',
+  })
+}
+
+const toMarkdownTranscript = (session: ChatSession): string => {
+  const lines = [`# ${session.title}`, '']
+  for (const message of session.messages) {
+    const role = message.role === 'assistant' ? 'Assistant' : 'User'
+    lines.push(`## ${role}`)
+    lines.push(message.text || '(empty)')
+    lines.push('')
+  }
+  return lines.join('\n').trim()
+}
+
+const executeSlashCommand = async (state: ChatState, command: 'clear' | 'export' | 'help' | 'new'): Promise<ChatState> => {
+  if (command === 'new') {
+    const nextState = await createSession(state)
+    return withClearedComposer({
+      ...nextState,
+      viewMode: 'detail',
+    })
+  }
+
+  const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
+  if (!selectedSession) {
+    return withClearedComposer(state)
+  }
+
+  if (command === 'clear') {
+    const updatedSessions = state.sessions.map((session) => {
+      if (session.id !== state.selectedSessionId) {
+        return session
+      }
+      return {
+        ...session,
+        messages: [],
+      }
+    })
+    const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)
+    if (updatedSelectedSession) {
+      await saveChatSession(updatedSelectedSession)
+    }
+    return withClearedComposer({
+      ...state,
+      sessions: updatedSessions,
+    })
+  }
+
+  const assistantText = command === 'help' ? getCommandHelpText() : ['```md', toMarkdownTranscript(selectedSession), '```'].join('\n')
+  const assistantMessage: ChatMessage = {
+    id: crypto.randomUUID(),
+    role: 'assistant',
+    text: assistantText,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
+  const updatedSessions = appendMessageToSelectedSession(state.sessions, state.selectedSessionId, assistantMessage)
+  const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)
+  if (updatedSelectedSession) {
+    await saveChatSession(updatedSelectedSession)
+  }
+  return withClearedComposer({
+    ...state,
+    sessions: updatedSessions,
+  })
+}
+
+const getSlashCommand = (value: string): 'clear' | 'export' | 'help' | 'new' | undefined => {
+  const trimmed = value.trim()
+  const match = trimmed.match(slashCommandRegex)
+  if (!match) {
+    return undefined
+  }
+  return match[1] as 'clear' | 'export' | 'help' | 'new'
+}
+
+const parseMentionedPaths = (value: string): readonly string[] => {
+  const matches = value.matchAll(mentionRegex)
+  const paths: string[] = []
+  for (const match of matches) {
+    const rawPath = match[2] || ''
+    const cleanedPath = rawPath.replaceAll(/[),.;:!?]+$/g, '')
+    if (!cleanedPath || isPathTraversalAttempt(cleanedPath)) {
+      continue
+    }
+    const normalizedPath = normalizeRelativePath(cleanedPath)
+    if (paths.includes(normalizedPath)) {
+      continue
+    }
+    paths.push(normalizedPath)
+    if (paths.length >= maxMentionCount) {
+      break
+    }
+  }
+  return paths
+}
+
+const getMentionContextMessage = async (value: string): Promise<ChatMessage | undefined> => {
+  const paths = parseMentionedPaths(value)
+  if (paths.length === 0) {
+    return undefined
+  }
+  const sections: string[] = []
+  for (const path of paths) {
+    try {
+      const fileContent = await RendererWorker.readFile(path)
+      const truncatedContent =
+        fileContent.length > maxMentionTextLength ? `${fileContent.slice(0, maxMentionTextLength)}\n... [truncated]` : fileContent
+      sections.push([`File: ${path}`, '```text', truncatedContent, '```'].join('\n'))
+    } catch (error) {
+      sections.push([`File: ${path}`, `Error: ${String(error)}`].join('\n'))
+    }
+  }
+  return {
+    id: crypto.randomUUID(),
+    role: 'user',
+    text: ['Referenced file context:', ...sections].join('\n\n'),
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
 }
 
 const isDefaultSessionTitle = (title: string): boolean => {
@@ -178,6 +322,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   if (!userText) {
     return state
   }
+
+  const slashCommand = getSlashCommand(userText)
+  if (slashCommand) {
+    return executeSlashCommand(state, slashCommand)
+  }
+
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const userMessageId = crypto.randomUUID()
   const userMessage: ChatMessage = {
@@ -272,6 +422,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
   const messages = (selectedOptimisticSession?.messages ?? []).filter((message) => !message.inProgress)
+  const mentionContextMessage = await getMentionContextMessage(userText)
+  const messagesWithMentionContext = mentionContextMessage ? [...messages, mentionContextMessage] : messages
 
   const handleTextChunkFunctionRef = streamingEnabled
     ? async (chunk: string): Promise<void> => {
@@ -282,7 +434,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const assistantMessage = await getAiResponse({
     assetDir,
     messageId: assistantMessageId,
-    messages,
+    messages: messagesWithMentionContext,
     mockAiResponseDelay,
     mockApiCommandId,
     models,
