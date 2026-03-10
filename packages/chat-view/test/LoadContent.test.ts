@@ -238,6 +238,7 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.openRouterApiKey).toBe('or-key-123')
   expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
@@ -264,6 +265,7 @@ test('loadContent should load openApiApiKey from preferences', async () => {
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.openApiApiKey).toBe('oa-key-123')
   expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
@@ -291,6 +293,7 @@ test('loadContent should load emitStreamingFunctionCallEvents from preferences',
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.emitStreamingFunctionCallEvents).toBe(true)
   expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
@@ -320,6 +323,7 @@ test('loadContent should load streamingEnabled from preferences', async () => {
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.streamingEnabled).toBe(true)
   expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
@@ -349,6 +353,37 @@ test('loadContent should load passIncludeObfuscation from preferences', async ()
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.passIncludeObfuscation).toBe(true)
   expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+  ])
+})
+
+test('loadContent should load aiSessionTitleGenerationEnabled from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.aiSessionTitleGenerationEnabled') {
+        return true
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.aiSessionTitleGenerationEnabled).toBe(true)
+  expect(mockRpc.invocations).toEqual([
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],

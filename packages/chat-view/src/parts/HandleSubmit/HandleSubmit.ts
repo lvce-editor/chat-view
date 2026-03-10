@@ -11,6 +11,8 @@ import {
   type HandleTextChunkState,
   updateMessageTextInSelectedSession,
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
+import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
+import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 const appendMessageToSelectedSession = (
@@ -74,8 +76,82 @@ const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-respon
   return value && typeof value === 'object' && Reflect.get(value, 'type') === 'response.completed' ? 'sse-response-completed' : 'sse-response-part'
 }
 
+const isDefaultSessionTitle = (title: string): boolean => {
+  return /^Chat \d+$/.test(title)
+}
+
+const sanitizeGeneratedTitle = (value: string): string => {
+  return value.replace(/^title:\s*/i, '').replace(/^['"`\s]+|['"`\s]+$/g, '').replace(/\s+/g, ' ').trim().slice(0, 80)
+}
+
+const updateSessionTitle = (sessions: readonly ChatSession[], selectedSessionId: string, title: string): readonly ChatSession[] => {
+  return sessions.map((session) => {
+    if (session.id !== selectedSessionId) {
+      return session
+    }
+    return {
+      ...session,
+      title,
+    }
+  })
+}
+
+const getAiSessionTitle = async (
+  state: ChatState,
+  userText: string,
+  assistantText: string,
+): Promise<string> => {
+  const { models, openApiApiBaseUrl, openApiApiKey, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, useMockApi } = state
+  if (useMockApi) {
+    return ''
+  }
+  const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
+  const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
+  if (usesOpenApiModel && !openApiApiKey) {
+    return ''
+  }
+  if (usesOpenRouterModel && !openRouterApiKey) {
+    return ''
+  }
+  if (!usesOpenApiModel && !usesOpenRouterModel) {
+    return ''
+  }
+
+  const titlePrompt = `Create a concise title (max 6 words) for this conversation. Respond only with the title, no punctuation at the end.
+User: ${userText}
+Assistant: ${assistantText}`
+  const promptMessage = {
+    id: crypto.randomUUID(),
+    role: 'user' as const,
+    text: titlePrompt,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
+  const titleResponse = await getAiResponse({
+    assetDir: state.assetDir,
+    messages: [promptMessage],
+    mockAiResponseDelay: state.mockAiResponseDelay,
+    mockApiCommandId: state.mockApiCommandId,
+    models,
+    nextMessageId: state.nextMessageId,
+    openApiApiBaseUrl,
+    openApiApiKey,
+    openRouterApiBaseUrl,
+    openRouterApiKey,
+    passIncludeObfuscation: state.passIncludeObfuscation,
+    platform: state.platform,
+    selectedModelId,
+    streamingEnabled: false,
+    useMockApi,
+    userText: titlePrompt,
+    webSearchEnabled: false,
+  })
+  const title = sanitizeGeneratedTitle(titleResponse.text)
+  return title && !isDefaultSessionTitle(title) ? title : ''
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
+    aiSessionTitleGenerationEnabled,
     assetDir,
     composerValue,
     emitStreamingFunctionCallEvents,
@@ -133,6 +209,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
 
   let optimisticState: ChatState
+  const createsNewSession = viewMode === 'list'
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
     await appendChatViewEvent({
@@ -251,9 +328,18 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   })
 
   const { latestState } = handleTextChunkState
-  const updatedSessions = streamingEnabled
+  let updatedSessions = streamingEnabled
     ? updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
     : appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
+  if (aiSessionTitleGenerationEnabled && createsNewSession) {
+    const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
+    if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
+      const generatedTitle = await getAiSessionTitle(latestState, userText, assistantMessage.text)
+      if (generatedTitle) {
+        updatedSessions = updateSessionTitle(updatedSessions, latestState.selectedSessionId, generatedTitle)
+      }
+    }
+  }
   const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
   if (selectedSession) {
     await saveChatSession(selectedSession)

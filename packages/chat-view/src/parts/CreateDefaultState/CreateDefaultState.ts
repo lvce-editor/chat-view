@@ -38,6 +38,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   return {
+    aiSessionTitleGenerationEnabled: false,
     assetDir: '',
     chatListScrollTop: 0,
     chatMessageFontFamily: 'system-ui',
