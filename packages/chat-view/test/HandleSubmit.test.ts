@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { beforeEach, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
@@ -469,6 +469,132 @@ test('handleSubmit should emit streaming function call data events when enabled'
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('handleSubmit should clear selected session messages for /clear', async () => {
+  const state = {
+    ...createDefaultState(),
+    composerValue: '/clear',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [
+          {
+            id: 'message-1',
+            role: 'user' as const,
+            text: 'hello',
+            time: '10:00',
+          },
+          {
+            id: 'message-2',
+            role: 'assistant' as const,
+            text: 'hi',
+            time: '10:01',
+          },
+        ],
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions[0].messages).toEqual([])
+  expect(result.composerValue).toBe('')
+  expect(result.focus).toBe('composer')
+})
+
+test('handleSubmit should create a new session for /new', async () => {
+  const state = {
+    ...createDefaultState(),
+    composerValue: '/new',
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions.length).toBe(state.sessions.length + 1)
+  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
+  expect(result.viewMode).toBe('detail')
+  expect(result.composerValue).toBe('')
+})
+
+test('handleSubmit should append help response for /help', async () => {
+  const state = {
+    ...createDefaultState(),
+    composerValue: '/help',
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  const lastMessage = result.sessions[0].messages.at(-1)
+  expect(lastMessage?.role).toBe('assistant')
+  expect(lastMessage?.text).toContain('Available commands:')
+  expect(lastMessage?.text).toContain('/new - Create and switch to a new chat session.')
+})
+
+test('handleSubmit should append markdown export for /export', async () => {
+  const state = {
+    ...createDefaultState(),
+    composerValue: '/export',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [
+          {
+            id: 'message-1',
+            role: 'user' as const,
+            text: 'hello',
+            time: '10:00',
+          },
+        ],
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  const lastMessage = result.sessions[0].messages.at(-1)
+  expect(lastMessage?.role).toBe('assistant')
+  expect(lastMessage?.text).toContain('```md')
+  expect(lastMessage?.text).toContain('# Chat 1')
+  expect(lastMessage?.text).toContain('## User')
+})
+
+test('handleSubmit should inject mentioned file context into ai request messages', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+    'ExtensionHostManagement.activateByEvent': async () => {},
+    'FileSystem.readFile': async () => 'const value = 1',
+  })
+  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+    'ExtensionHostCommand.executeCommand': async (_id: string, payload: any) => {
+      expect(payload.messages).toHaveLength(2)
+      expect(payload.messages[1].text).toContain('Referenced file context:')
+      expect(payload.messages[1].text).toContain('File: src/main.ts')
+      return {
+        text: 'Mocked OpenRouter response from command',
+        type: 'success',
+      }
+    },
+  })
+
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'check @src/main.ts',
+    mockApiCommandId: 'ChatE2e.mockApi',
+    models: [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' as const }],
+    selectedModelId: 'openrouter/model',
+    useMockApi: true,
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.sessions[0].messages).toHaveLength(2)
+  expect(mockRendererRpc.invocations).toContainEqual(['FileSystem.readFile', 'src/main.ts'])
+  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })
 
 test('handleSubmit should generate ai session title for new session when enabled', async () => {
