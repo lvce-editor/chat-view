@@ -1,6 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type {
   MessageCodeBlockNode,
+  MessageHeadingNode,
   MessageIntermediateNode,
   MessageListItemNode,
   MessageTableCellNode,
@@ -100,6 +101,33 @@ const getTableDom = (node: MessageTableNode): readonly VirtualDomNode[] => {
   ]
 }
 
+const getHeadingElementType = (level: MessageHeadingNode['level']): number => {
+  switch (level) {
+    case 1:
+      return VirtualDomElements.H1
+    case 2:
+      return VirtualDomElements.H2
+    case 3:
+      return VirtualDomElements.H3
+    case 4:
+      return VirtualDomElements.H4
+    case 5:
+      return VirtualDomElements.H5
+    case 6:
+      return VirtualDomElements.H6
+  }
+}
+
+const getHeadingDom = (node: MessageHeadingNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: node.children.length,
+      type: getHeadingElementType(node.level),
+    },
+    ...node.children.flatMap(getInlineNodeDom),
+  ]
+}
+
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
@@ -116,6 +144,9 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
   }
   if (node.type === 'code-block') {
     return getCodeBlockDom(node)
+  }
+  if (node.type === 'heading') {
+    return getHeadingDom(node)
   }
   if (node.type === 'ordered-list') {
     return [

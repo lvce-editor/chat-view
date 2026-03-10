@@ -11,6 +11,7 @@ const unorderedListItemRegex = /^\s*-\s+(.*)$/
 const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
+const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
 
 const normalizeInlineTables = (value: string): string => {
   return value
@@ -235,6 +236,18 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
       listItems.push({
         children: parseInlineNodes(unorderedMatch[1]),
         type: 'list-item',
+      })
+      continue
+    }
+
+    const headingMatch = line.match(markdownHeadingRegex)
+    if (headingMatch) {
+      flushList()
+      flushParagraph()
+      nodes.push({
+        children: parseInlineNodes(headingMatch[2]),
+        level: headingMatch[1].length as 1 | 2 | 3 | 4 | 5 | 6,
+        type: 'heading',
       })
       continue
     }

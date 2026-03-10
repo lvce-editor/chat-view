@@ -248,3 +248,24 @@ test('getMessageNodeDom should render code block nodes as pre and code dom nodes
     text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
   })
 })
+
+test('getMessageNodeDom should render heading nodes as matching heading dom nodes', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'Section title',
+        type: 'text',
+      },
+    ],
+    level: 3,
+    type: 'heading',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.H3,
+  })
+  expect(result[1]).toMatchObject({
+    text: 'Section title',
+  })
+})

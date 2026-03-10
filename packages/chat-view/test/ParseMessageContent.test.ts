@@ -491,3 +491,72 @@ test('parseMessageContent should parse fenced code blocks', () => {
     },
   ])
 })
+
+test('parseMessageContent should parse markdown heading blocks', () => {
+  const rawMessage = ['# Heading 1', '## Heading 2', '### Heading 3', '#### Heading 4', '##### Heading 5', '###### Heading 6'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Heading 1',
+          type: 'text',
+        },
+      ],
+      level: 1,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 2',
+          type: 'text',
+        },
+      ],
+      level: 2,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 3',
+          type: 'text',
+        },
+      ],
+      level: 3,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 4',
+          type: 'text',
+        },
+      ],
+      level: 4,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 5',
+          type: 'text',
+        },
+      ],
+      level: 5,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 6',
+          type: 'text',
+        },
+      ],
+      level: 6,
+      type: 'heading',
+    },
+  ])
+})
