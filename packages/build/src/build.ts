@@ -83,21 +83,6 @@ await writeJson(join(dist, 'package.json'), packageJson)
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
 
-delete debugViewPackageJson.scripts
-delete debugViewPackageJson.dependencies
-delete debugViewPackageJson.devDependencies
-delete debugViewPackageJson.prettier
-delete debugViewPackageJson.jest
-delete debugViewPackageJson.xo
-delete debugViewPackageJson.directories
-delete debugViewPackageJson.nodemonConfig
-debugViewPackageJson.version = version
-debugViewPackageJson.main = 'dist/chatDebugViewWorkerMain.js'
-
-await writeJson(join(debugViewDist, 'package.json'), debugViewPackageJson)
-await cp(join(root, 'README.md'), join(debugViewDist, 'README.md'))
-await cp(join(root, 'LICENSE'), join(debugViewDist, 'LICENSE'))
-
 const networkWorkerPackageJson = await readJson(join(root, 'packages', 'chat-network-worker', 'package.json'))
 
 delete networkWorkerPackageJson.scripts
