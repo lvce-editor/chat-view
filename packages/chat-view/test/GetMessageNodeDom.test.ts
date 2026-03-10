@@ -41,3 +41,42 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
     text: 'source',
   })
 })
+
+test('getMessageNodeDom should render markdown bold inline nodes as strong dom nodes', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'For ',
+        type: 'text',
+      },
+      {
+        text: 'Transport Agnostic',
+        type: 'bold',
+      },
+      {
+        text: ': over HTTP and WebSocket',
+        type: 'text',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.P,
+  })
+  expect(result[1]).toMatchObject({
+    text: 'For ',
+  })
+  expect(result[2]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Strong,
+  })
+  expect(result[3]).toMatchObject({
+    text: 'Transport Agnostic',
+  })
+  expect(result[4]).toMatchObject({
+    text: ': over HTTP and WebSocket',
+  })
+})
