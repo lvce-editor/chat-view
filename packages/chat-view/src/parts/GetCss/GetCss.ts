@@ -70,6 +70,17 @@ export const getCss = (
   cursor: pointer;
 }
 
+.ChatOrderedList,
+.ChatUnorderedList {
+  margin: 6px 0;
+  padding-inline-start: 20px;
+}
+
+.ChatOrderedListItem,
+.ChatUnorderedListItem {
+  margin: 2px 0;
+}
+
 .MarkdownTable {
   width: 100%;
   margin: 6px 0;

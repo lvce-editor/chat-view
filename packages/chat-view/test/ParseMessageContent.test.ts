@@ -54,7 +54,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
           type: 'list-item',
         },
       ],
-      type: 'list',
+      type: 'ordered-list',
     },
     {
       children: [
@@ -125,7 +125,7 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
           type: 'list-item',
         },
       ],
-      type: 'list',
+      type: 'ordered-list',
     },
   ])
 })
@@ -152,6 +152,56 @@ test('parseMessageContent should parse markdown bold text in paragraphs', () => 
         },
       ],
       type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown unordered list blocks', () => {
+  const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'I can help with:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Reading project files',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Running tests',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Explaining errors',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'unordered-list',
     },
   ])
 })
