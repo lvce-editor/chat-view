@@ -4,14 +4,13 @@ export const name = 'chat-view.one-message'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.handleInput', 'composer', 'hello from e2e', 'script')
+  await Chat.show()
+  await Chat.handleInput('hello from e2e')
 
   // act
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleSubmit()
 
   // assert
   const messages = Locator('.ChatMessages .Message')

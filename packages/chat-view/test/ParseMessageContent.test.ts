@@ -129,3 +129,287 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
     },
   ])
 })
+
+test('parseMessageContent should parse markdown bold text in paragraphs', () => {
+  const rawMessage = 'For **Transport Agnostic**: It can work over various transport protocols, including HTTP, WebSocket, and others.'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'For ',
+          type: 'text',
+        },
+        {
+          text: 'Transport Agnostic',
+          type: 'bold',
+        },
+        {
+          text: ': It can work over various transport protocols, including HTTP, WebSocket, and others.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown table blocks', () => {
+  const rawMessage = [
+    'Here is the latest inventory:',
+    '',
+    '| Item | Quantity | Price |',
+    '|------|----------|-------|',
+    '| Apples | 4 | $0.50 |',
+    '| Bread | 1 | $2.00 |',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Here is the latest inventory:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      headers: [
+        {
+          children: [
+            {
+              text: 'Item',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+        {
+          children: [
+            {
+              text: 'Quantity',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+        {
+          children: [
+            {
+              text: 'Price',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+      ],
+      rows: [
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: 'Apples',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '4',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '$0.50',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: 'Bread',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '1',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '$2.00',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+      ],
+      type: 'table',
+    },
+  ])
+})
+
+test('parseMessageContent should parse one-line markdown table rows', () => {
+  const rawMessage =
+    '| Item | Quantity | Price (per unit) | Category | |--------------|----------|------------------|-------------| | Apples | 4 | $0.50 | Fruits | | Bread | 1 | $2.00 | Bakery |'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      headers: [
+        {
+          children: [
+            {
+              text: 'Item',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+        {
+          children: [
+            {
+              text: 'Quantity',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+        {
+          children: [
+            {
+              text: 'Price (per unit)',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+        {
+          children: [
+            {
+              text: 'Category',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+      ],
+      rows: [
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: 'Apples',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '4',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '$0.50',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: 'Fruits',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: 'Bread',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '1',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: '$2.00',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+            {
+              children: [
+                {
+                  text: 'Bakery',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+      ],
+      type: 'table',
+    },
+  ])
+})

@@ -31,7 +31,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   const first = messages.nth(0)
   await expect(first).toHaveText('hello from e2e')
   const secondMessage = messages.nth(1)
-  await expect(secondMessage).toHaveText(`OpenAI request failed (status 401): Invalid API key. Please verify your OpenAI API key in Chat settings.`)
+  await expect(secondMessage).toHaveText(`OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.`)
 
   // TODO
   // Expect a Settings button to be present so users can open settings.json
