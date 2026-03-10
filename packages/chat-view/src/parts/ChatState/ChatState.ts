@@ -10,6 +10,7 @@ export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
+  readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string

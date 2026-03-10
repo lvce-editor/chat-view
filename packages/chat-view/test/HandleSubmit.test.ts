@@ -185,6 +185,7 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
       models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
       openApiApiKey: 'oa-key-123',
       selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: false,
       viewMode: 'detail' as const,
     }
     const result = await HandleSubmit.handleSubmit(state)
@@ -465,6 +466,50 @@ test('handleSubmit should emit streaming function call data events when enabled'
     expect(dataEvents).toHaveLength(3)
     expect(responseCompletedEvents).toHaveLength(2)
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should generate ai session title for new session when enabled', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  let requestIndex = 0
+  globalThis.fetch = (async () => {
+    requestIndex += 1
+    if (requestIndex === 1) {
+      return {
+        json: async () => ({ choices: [{ message: { content: 'Assistant answer' } }] }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      json: async () => ({ choices: [{ message: { content: 'TypeScript parser bug fix' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      aiSessionTitleGenerationEnabled: true,
+      composerValue: 'help me fix a parser bug',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: false,
+      viewMode: 'list' as const,
+    }
+    const result = await HandleSubmit.handleSubmit(state)
+    const newSession = result.sessions.at(-1)
+    expect(newSession).toBeDefined()
+    expect(newSession?.title).toBe('TypeScript parser bug fix')
+    expect(requestIndex).toBe(2)
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }

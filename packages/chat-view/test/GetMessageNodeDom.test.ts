@@ -181,3 +181,91 @@ test('getMessageNodeDom should render markdown table nodes as table dom nodes', 
     text: '4',
   })
 })
+
+test('getMessageNodeDom should render unordered list nodes as ul and li dom nodes', () => {
+  const result = getMessageNodeDom({
+    items: [
+      {
+        children: [
+          {
+            text: 'Read files',
+            type: 'text',
+          },
+        ],
+        type: 'list-item',
+      },
+      {
+        children: [
+          {
+            text: 'Run tests',
+            type: 'text',
+          },
+        ],
+        type: 'list-item',
+      },
+    ],
+    type: 'unordered-list',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatUnorderedList,
+    type: VirtualDomElements.Ul,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'Read files',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[4]).toMatchObject({
+    text: 'Run tests',
+  })
+})
+
+test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
+  const result = getMessageNodeDom({
+    text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+    type: 'code-block',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Pre,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Code,
+  })
+  expect(result[2]).toMatchObject({
+    text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+  })
+})
+
+test('getMessageNodeDom should render heading nodes as matching heading dom nodes', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'Section title',
+        type: 'text',
+      },
+    ],
+    level: 3,
+    type: 'heading',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.H3,
+  })
+  expect(result[1]).toMatchObject({
+    text: 'Section title',
+  })
+})

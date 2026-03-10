@@ -7,8 +7,11 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
+const unorderedListItemRegex = /^\s*-\s+(.*)$/
 const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
+const fencedCodeBlockRegex = /^```/
+const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
 
 const normalizeInlineTables = (value: string): string => {
   return value
@@ -136,6 +139,7 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
   const nodes: MessageIntermediateNode[] = []
   let paragraphLines: string[] = []
   let listItems: MessageListItemNode[] = []
+  let listType: 'ordered-list' | 'unordered-list' | '' = ''
 
   const flushParagraph = (): void => {
     if (paragraphLines.length === 0) {
@@ -154,9 +158,10 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     }
     nodes.push({
       items: listItems,
-      type: 'list',
+      type: listType || 'ordered-list',
     })
     listItems = []
+    listType = ''
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -164,6 +169,22 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     if (!line.trim()) {
       flushList()
       flushParagraph()
+      continue
+    }
+
+    if (fencedCodeBlockRegex.test(line.trim())) {
+      flushList()
+      flushParagraph()
+      const codeLines: string[] = []
+      i++
+      while (i < lines.length && !fencedCodeBlockRegex.test(lines[i].trim())) {
+        codeLines.push(lines[i])
+        i++
+      }
+      nodes.push({
+        text: codeLines.join('\n'),
+        type: 'code-block',
+      })
       continue
     }
 
@@ -191,12 +212,42 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
       }
     }
 
-    const match = line.match(orderedListItemRegex)
-    if (match) {
+    const orderedMatch = line.match(orderedListItemRegex)
+    if (orderedMatch) {
+      if (listType && listType !== 'ordered-list') {
+        flushList()
+      }
       flushParagraph()
+      listType = 'ordered-list'
       listItems.push({
-        children: parseInlineNodes(match[1]),
+        children: parseInlineNodes(orderedMatch[1]),
         type: 'list-item',
+      })
+      continue
+    }
+
+    const unorderedMatch = line.match(unorderedListItemRegex)
+    if (unorderedMatch) {
+      if (listType && listType !== 'unordered-list') {
+        flushList()
+      }
+      flushParagraph()
+      listType = 'unordered-list'
+      listItems.push({
+        children: parseInlineNodes(unorderedMatch[1]),
+        type: 'list-item',
+      })
+      continue
+    }
+
+    const headingMatch = line.match(markdownHeadingRegex)
+    if (headingMatch) {
+      flushList()
+      flushParagraph()
+      nodes.push({
+        children: parseInlineNodes(headingMatch[2]),
+        level: headingMatch[1].length as 1 | 2 | 3 | 4 | 5 | 6,
+        type: 'heading',
       })
       continue
     }

@@ -1,5 +1,7 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type {
+  MessageCodeBlockNode,
+  MessageHeadingNode,
   MessageIntermediateNode,
   MessageListItemNode,
   MessageTableCellNode,
@@ -9,11 +11,36 @@ import type {
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
+const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      type: VirtualDomElements.Pre,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Code,
+    },
+    text(node.text),
+  ]
+}
+
 const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
   return [
     {
       childCount: item.children.length,
       className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
+    },
+    ...item.children.flatMap(getInlineNodeDom),
+  ]
+}
+
+const getUnorderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: item.children.length,
+      className: ClassNames.ChatUnorderedListItem,
       type: VirtualDomElements.Li,
     },
     ...item.children.flatMap(getInlineNodeDom),
@@ -74,6 +101,33 @@ const getTableDom = (node: MessageTableNode): readonly VirtualDomNode[] => {
   ]
 }
 
+const getHeadingElementType = (level: MessageHeadingNode['level']): number => {
+  switch (level) {
+    case 1:
+      return VirtualDomElements.H1
+    case 2:
+      return VirtualDomElements.H2
+    case 3:
+      return VirtualDomElements.H3
+    case 4:
+      return VirtualDomElements.H4
+    case 5:
+      return VirtualDomElements.H5
+    case 6:
+      return VirtualDomElements.H6
+  }
+}
+
+const getHeadingDom = (node: MessageHeadingNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: node.children.length,
+      type: getHeadingElementType(node.level),
+    },
+    ...node.children.flatMap(getInlineNodeDom),
+  ]
+}
+
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
@@ -88,12 +142,28 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
   if (node.type === 'table') {
     return getTableDom(node)
   }
+  if (node.type === 'code-block') {
+    return getCodeBlockDom(node)
+  }
+  if (node.type === 'heading') {
+    return getHeadingDom(node)
+  }
+  if (node.type === 'ordered-list') {
+    return [
+      {
+        childCount: node.items.length,
+        className: ClassNames.ChatOrderedList,
+        type: VirtualDomElements.Ol,
+      },
+      ...node.items.flatMap(getOrderedListItemDom),
+    ]
+  }
   return [
     {
       childCount: node.items.length,
-      className: ClassNames.ChatOrderedList,
-      type: VirtualDomElements.Ol,
+      className: ClassNames.ChatUnorderedList,
+      type: VirtualDomElements.Ul,
     },
-    ...node.items.flatMap(getOrderedListItemDom),
+    ...node.items.flatMap(getUnorderedListItemDom),
   ]
 }

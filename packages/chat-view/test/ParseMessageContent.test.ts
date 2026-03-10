@@ -54,7 +54,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
           type: 'list-item',
         },
       ],
-      type: 'list',
+      type: 'ordered-list',
     },
     {
       children: [
@@ -125,7 +125,7 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
           type: 'list-item',
         },
       ],
-      type: 'list',
+      type: 'ordered-list',
     },
   ])
 })
@@ -152,6 +152,56 @@ test('parseMessageContent should parse markdown bold text in paragraphs', () => 
         },
       ],
       type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown unordered list blocks', () => {
+  const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'I can help with:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Reading project files',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Running tests',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Explaining errors',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'unordered-list',
     },
   ])
 })
@@ -410,6 +460,103 @@ test('parseMessageContent should parse one-line markdown table rows', () => {
         },
       ],
       type: 'table',
+    },
+  ])
+})
+
+test('parseMessageContent should parse fenced code blocks', () => {
+  const rawMessage = [
+    'Here is JSON-RPC request body:',
+    '',
+    '```json',
+    '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+    '```',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Here is JSON-RPC request body:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+      type: 'code-block',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown heading blocks', () => {
+  const rawMessage = ['# Heading 1', '## Heading 2', '### Heading 3', '#### Heading 4', '##### Heading 5', '###### Heading 6'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Heading 1',
+          type: 'text',
+        },
+      ],
+      level: 1,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 2',
+          type: 'text',
+        },
+      ],
+      level: 2,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 3',
+          type: 'text',
+        },
+      ],
+      level: 3,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 4',
+          type: 'text',
+        },
+      ],
+      level: 4,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 5',
+          type: 'text',
+        },
+      ],
+      level: 5,
+      type: 'heading',
+    },
+    {
+      children: [
+        {
+          text: 'Heading 6',
+          type: 'text',
+        },
+      ],
+      level: 6,
+      type: 'heading',
     },
   ])
 })

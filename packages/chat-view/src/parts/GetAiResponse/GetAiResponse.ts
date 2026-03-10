@@ -31,7 +31,7 @@ export const getAiResponse = async ({
   passIncludeObfuscation = false,
   platform,
   selectedModelId,
-  streamingEnabled = false,
+  streamingEnabled = true,
   useMockApi,
   userText,
   webSearchEnabled = false,

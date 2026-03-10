@@ -1,9 +1,30 @@
 import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptions.ts'
-import type { ApiRequestResult } from './ApiRequestResult.ts'
 import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
 import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
 import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
-import { parseResponseJson } from './ParseResponseJson.ts'
+
+export interface ApiRequestErrorResult {
+  readonly headers: Record<string, string>
+  readonly response: string
+  readonly statusCode: number
+  readonly type: 'error'
+}
+
+export interface ApiRequestSuccessResult {
+  readonly body: unknown
+  readonly headers: Record<string, string>
+  readonly statusCode: number
+  readonly type: 'success'
+}
+
+export type ApiRequestResult = ApiRequestSuccessResult | ApiRequestErrorResult
+
+const parseResponseJson = (responseText: string): unknown => {
+  if (!responseText) {
+    return null
+  }
+  return JSON.parse(responseText) as unknown
+}
 
 export const makeApiRequest = async (options: Readonly<MakeApiRequestOptions>): Promise<ApiRequestResult> => {
   let response: Response

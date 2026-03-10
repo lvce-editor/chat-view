@@ -1,4 +1,10 @@
-export type MessageIntermediateNode = MessageTextNode | MessageListNode | MessageTableNode
+export type MessageIntermediateNode =
+  | MessageTextNode
+  | MessageHeadingNode
+  | MessageOrderedListNode
+  | MessageUnorderedListNode
+  | MessageTableNode
+  | MessageCodeBlockNode
 
 export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode | MessageInlineBoldNode
 
@@ -23,9 +29,20 @@ export interface MessageTextNode {
   readonly type: 'text'
 }
 
-export interface MessageListNode {
+export interface MessageHeadingNode {
+  readonly children: readonly MessageInlineNode[]
+  readonly level: 1 | 2 | 3 | 4 | 5 | 6
+  readonly type: 'heading'
+}
+
+export interface MessageOrderedListNode {
   readonly items: readonly MessageListItemNode[]
-  readonly type: 'list'
+  readonly type: 'ordered-list'
+}
+
+export interface MessageUnorderedListNode {
+  readonly items: readonly MessageListItemNode[]
+  readonly type: 'unordered-list'
 }
 
 export interface MessageListItemNode {
@@ -47,4 +64,9 @@ export interface MessageTableCellNode {
 export interface MessageTableRowNode {
   readonly cells: readonly MessageTableCellNode[]
   readonly type: 'table-row'
+}
+
+export interface MessageCodeBlockNode {
+  readonly text: string
+  readonly type: 'code-block'
 }
