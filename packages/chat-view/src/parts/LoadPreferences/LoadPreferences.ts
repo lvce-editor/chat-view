@@ -13,12 +13,21 @@ export const loadPreferences = async (): Promise<{
   streamingEnabled: boolean
   passIncludeObfuscation: boolean
 }> => {
-  const aiSessionTitleGenerationEnabled = await loadAiSessionTitleGenerationEnabled()
-  const openApiApiKey = await loadOpenApiApiKey()
-  const openRouterApiKey = await loadOpenRouterApiKey()
-  const emitStreamingFunctionCallEvents = await loadEmitStreamingFunctionCallEvents()
-  const streamingEnabled = await loadStreamingEnabled()
-  const passIncludeObfuscation = await loadPassIncludeObfuscation()
+  const [
+    aiSessionTitleGenerationEnabled,
+    openApiApiKey,
+    openRouterApiKey,
+    emitStreamingFunctionCallEvents,
+    streamingEnabled,
+    passIncludeObfuscation,
+  ] = await Promise.all([
+    loadAiSessionTitleGenerationEnabled(),
+    loadOpenApiApiKey(),
+    loadOpenRouterApiKey(),
+    loadEmitStreamingFunctionCallEvents(),
+    loadStreamingEnabled(),
+    loadPassIncludeObfuscation(),
+  ])
 
   return {
     aiSessionTitleGenerationEnabled,
