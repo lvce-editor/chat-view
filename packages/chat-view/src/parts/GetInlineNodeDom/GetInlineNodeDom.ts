@@ -6,6 +6,15 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly Virtua
   if (inlineNode.type === 'text') {
     return [text(inlineNode.text)]
   }
+  if (inlineNode.type === 'bold') {
+    return [
+      {
+        childCount: 1,
+        type: VirtualDomElements.Strong,
+      },
+      text(inlineNode.text),
+    ]
+  }
   return [
     {
       childCount: 1,

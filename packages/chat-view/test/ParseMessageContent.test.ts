@@ -129,3 +129,30 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
     },
   ])
 })
+
+test('parseMessageContent should parse markdown bold text in paragraphs', () => {
+  const rawMessage =
+    'For **Transport Agnostic**: It can work over various transport protocols, including HTTP, WebSocket, and others.'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'For ',
+          type: 'text',
+        },
+        {
+          text: 'Transport Agnostic',
+          type: 'bold',
+        },
+        {
+          text: ': It can work over various transport protocols, including HTTP, WebSocket, and others.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})

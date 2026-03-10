@@ -1,10 +1,10 @@
 import type { MessageInlineNode, MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
-const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
+const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 
 const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
-  const matches = value.matchAll(markdownLinkRegex)
+  const matches = value.matchAll(markdownInlineRegex)
   const nodes: MessageInlineNode[] = []
   let lastIndex = 0
 
@@ -12,6 +12,7 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
     const fullMatch = match[0]
     const linkText = match[1]
     const href = match[2]
+    const boldText = match[3]
     const index = match.index ?? 0
     if (index > lastIndex) {
       nodes.push({
@@ -19,11 +20,18 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
         type: 'text',
       })
     }
-    nodes.push({
-      href,
-      text: linkText,
-      type: 'link',
-    })
+    if (linkText && href) {
+      nodes.push({
+        href,
+        text: linkText,
+        type: 'link',
+      })
+    } else if (boldText) {
+      nodes.push({
+        text: boldText,
+        type: 'bold',
+      })
+    }
     lastIndex = index + fullMatch.length
   }
 
