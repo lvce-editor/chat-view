@@ -9,6 +9,9 @@ import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientR
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
+const customUiInstruction =
+  'To render custom UI, emit this tag in assistant text: <custom-ui><html>...</html><css>...</css></custom-ui>. Do not call a render_html tool.'
+
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
 const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
@@ -666,10 +669,16 @@ export const getOpenApiAssistantText = async (
     stream,
     webSearchEnabled = false,
   } = options ?? { stream: false }
-  const openAiInput: any[] = messages.map((message) => ({
-    content: message.text,
-    role: message.role,
-  }))
+  const openAiInput: any[] = [
+    {
+      content: customUiInstruction,
+      role: 'system',
+    },
+    ...messages.map((message) => ({
+      content: message.text,
+      role: message.role,
+    })),
+  ]
   const tools = getBasicChatTools()
   const maxToolIterations = 4
   let previousResponseId: string | undefined

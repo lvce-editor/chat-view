@@ -5,6 +5,9 @@ import { getOpenRouterApiEndpoint } from '../GetOpenRouterApiEndpoint/GetOpenRou
 import { getOpenRouterKeyEndpoint } from '../GetOpenRouterKeyEndpoint/GetOpenRouterKeyEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
+const customUiInstruction =
+  'To render custom UI, emit this tag in assistant text: <custom-ui><html>...</html><css>...</css></custom-ui>. Do not call a render_html tool.'
+
 export interface GetOpenRouterAssistantTextSuccessResult {
   readonly text: string
   readonly type: 'success'
@@ -141,10 +144,16 @@ export const getOpenRouterAssistantText = async (
   assetDir: string,
   platform: number,
 ): Promise<GetOpenRouterAssistantTextResult> => {
-  const completionMessages: any[] = messages.map((message) => ({
-    content: message.text,
-    role: message.role,
-  }))
+  const completionMessages: any[] = [
+    {
+      content: customUiInstruction,
+      role: 'system',
+    },
+    ...messages.map((message) => ({
+      content: message.text,
+      role: message.role,
+    })),
+  ]
   const tools = getBasicChatTools()
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {

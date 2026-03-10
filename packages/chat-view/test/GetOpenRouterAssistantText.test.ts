@@ -75,6 +75,11 @@ test('getOpenRouterAssistantText should return success result when response is o
     expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
     expect(payload.messages).toEqual([
+      {
+        content:
+          'To render custom UI, emit this tag in assistant text: <custom-ui><html>...</html><css>...</css></custom-ui>. Do not call a render_html tool.',
+        role: 'system',
+      },
       { content: 'hello', role: 'user' },
       { content: 'Hi! How can I help?', role: 'assistant' },
       { content: 'Explain recursion.', role: 'user' },

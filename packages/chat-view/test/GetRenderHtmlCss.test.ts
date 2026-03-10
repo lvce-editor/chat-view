@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as GetRenderHtmlCss from '../src/parts/GetRenderHtmlCss/GetRenderHtmlCss.ts'
 
-test('getRenderHtmlCss should return css from selected session render_html calls', () => {
+test('getRenderHtmlCss should return css from selected session custom-ui blocks', () => {
   const result = GetRenderHtmlCss.getRenderHtmlCss(
     [
       {
@@ -10,22 +10,11 @@ test('getRenderHtmlCss should return css from selected session render_html calls
           {
             id: '1',
             role: 'assistant',
-            text: '',
+            text: [
+              '<custom-ui><html><div class="card">A</div></html><css>.card{color:red;}</css></custom-ui>',
+              '<custom-ui><html><div class="card">A</div></html><css>.card{color:red;}</css></custom-ui>',
+            ].join('\n\n'),
             time: '',
-            toolCalls: [
-              {
-                arguments: JSON.stringify({ css: '.card{color:red;}', html: '<div class="card">A</div>' }),
-                name: 'render_html',
-              },
-              {
-                arguments: JSON.stringify({ css: '.card{color:red;}', html: '<div class="card">A</div>' }),
-                name: 'render_html',
-              },
-              {
-                arguments: JSON.stringify({ uri: 'file:///x' }),
-                name: 'read_file',
-              },
-            ],
           },
         ],
         title: 'A',

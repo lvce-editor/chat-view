@@ -1,5 +1,5 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
-import { parseRenderHtmlArguments } from '../ParseRenderHtmlArguments/ParseRenderHtmlArguments.ts'
+import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessionId: string): string => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
@@ -10,18 +10,16 @@ export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessi
   const cssRules = new Set<string>()
 
   for (const message of selectedSession.messages) {
-    if (message.role !== 'assistant' || !message.toolCalls) {
+    if (message.role !== 'assistant') {
       continue
     }
-    for (const toolCall of message.toolCalls) {
-      if (toolCall.name !== 'render_html') {
+
+    const nodes = parseMessageContent(message.text)
+    for (const node of nodes) {
+      if (node.type !== 'custom-ui' || !node.css.trim()) {
         continue
       }
-      const parsed = parseRenderHtmlArguments(toolCall.arguments)
-      if (!parsed || !parsed.css.trim()) {
-        continue
-      }
-      cssRules.add(parsed.css)
+      cssRules.add(node.css)
     }
   }
 

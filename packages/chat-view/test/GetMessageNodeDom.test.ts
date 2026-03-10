@@ -41,3 +41,47 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
     text: 'source',
   })
 })
+
+test('getMessageNodeDom should render custom-ui html nodes', () => {
+  const result = getMessageNodeDom({
+    css: '.card { color: red; }',
+    html: '<div class="card">Sunny</div>',
+    type: 'custom-ui',
+  })
+
+  expect(result).toHaveLength(4)
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatCustomUiContent,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatCustomUiBody,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: 'card',
+    type: VirtualDomElements.Div,
+  })
+  expect(result[3]).toMatchObject({
+    text: 'Sunny',
+  })
+})
+
+test('getMessageNodeDom should render raw-content parts with pre tag', () => {
+  const result = getMessageNodeDom({
+    text: ['line 1', 'line 2'].join('\n'),
+    type: 'raw-content',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.Pre,
+  })
+  expect(result[1]).toMatchObject({
+    text: 'line 1\nline 2',
+  })
+})

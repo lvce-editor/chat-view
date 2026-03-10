@@ -129,3 +129,70 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
     },
   ])
 })
+
+test('parseMessageContent should parse custom-ui blocks and surrounding text', () => {
+  const rawMessage = [
+    'Here is a chart:',
+    '<custom-ui><html><div class="card">Sales</div></html><css>.card{color:green;}</css></custom-ui>',
+    'End of update.',
+  ].join('\n\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Here is a chart:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      css: '.card{color:green;}',
+      html: '<div class="card">Sales</div>',
+      type: 'custom-ui',
+    },
+    {
+      children: [
+        {
+          text: 'End of update.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse fenced blocks as raw-content parts', () => {
+  const rawMessage = ['before', '```', '      ____  ', '    o8%8888,    ', '  o88%8888888.  ', '```', 'after'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'before',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      text: ['      ____  ', '    o8%8888,    ', '  o88%8888888.  '].join('\n'),
+      type: 'raw-content',
+    },
+    {
+      children: [
+        {
+          text: 'after',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})

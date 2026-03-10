@@ -1,4 +1,4 @@
-export type MessageIntermediateNode = MessageTextNode | MessageListNode
+export type MessageIntermediateNode = MessageTextNode | MessageListNode | MessageCustomUiNode | RawContentPart
 
 export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode
 
@@ -26,4 +26,15 @@ export interface MessageListNode {
 export interface MessageListItemNode {
   readonly children: readonly MessageInlineNode[]
   readonly type: 'list-item'
+}
+
+export interface MessageCustomUiNode {
+  readonly css: string
+  readonly html: string
+  readonly type: 'custom-ui'
+}
+
+export interface RawContentPart {
+  readonly text: string
+  readonly type: 'raw-content'
 }

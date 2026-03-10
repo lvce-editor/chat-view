@@ -16,14 +16,8 @@ test('renderCss should return setCss command with uid and css', () => {
           {
             id: '1',
             role: 'assistant',
-            text: '',
+            text: '<custom-ui><html><div class="card">ok</div></html><css>.card{color:green;}</css></custom-ui>',
             time: '',
-            toolCalls: [
-              {
-                arguments: JSON.stringify({ css: '.card{color:green;}', html: '<div class="card">ok</div>' }),
-                name: 'render_html',
-              },
-            ],
           },
         ],
         title: 'Session 1',

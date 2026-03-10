@@ -68,6 +68,21 @@ export const getCss = (
   color: #4d94ff;
   text-decoration: underline;
   cursor: pointer;
+.ChatCustomUiContent {
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 6px;
+  background: var(--vscode-editor-background);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.ChatCustomUiBody {
+  min-height: 180px;
+  padding: 12px;
+}
+
+.ChatCustomUiBody * {
+  box-sizing: border-box;
 }`
 
   if (!renderHtmlCss.trim()) {
@@ -76,6 +91,6 @@ export const getCss = (
 
   return `${baseCss}
 
-/* render_html tool css */
+/* custom-ui css */
 ${renderHtmlCss}`
 }

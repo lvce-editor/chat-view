@@ -15,7 +15,7 @@ test('isEqual should return false when initial changes', () => {
   expect(DiffCss.isEqual(oldState, newState)).toBe(false)
 })
 
-test('isEqual should return false when render_html css changes for selected session', () => {
+test('isEqual should return false when custom-ui css changes for selected session', () => {
   const oldState: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -26,14 +26,8 @@ test('isEqual should return false when render_html css changes for selected sess
           {
             id: '1',
             role: 'assistant',
-            text: '',
+            text: '<custom-ui><html><div class="a">A</div></html><css>.a { color: red; }</css></custom-ui>',
             time: '',
-            toolCalls: [
-              {
-                arguments: JSON.stringify({ css: '.a { color: red; }', html: '<div class="a">A</div>' }),
-                name: 'render_html',
-              },
-            ],
           },
         ],
         title: 'Session 1',
@@ -49,14 +43,8 @@ test('isEqual should return false when render_html css changes for selected sess
           {
             id: '1',
             role: 'assistant',
-            text: '',
+            text: '<custom-ui><html><div class="a">A</div></html><css>.a { color: blue; }</css></custom-ui>',
             time: '',
-            toolCalls: [
-              {
-                arguments: JSON.stringify({ css: '.a { color: blue; }', html: '<div class="a">A</div>' }),
-                name: 'render_html',
-              },
-            ],
           },
         ],
         title: 'Session 1',
