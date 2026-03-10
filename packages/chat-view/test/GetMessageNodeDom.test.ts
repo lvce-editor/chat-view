@@ -181,3 +181,22 @@ test('getMessageNodeDom should render markdown table nodes as table dom nodes', 
     text: '4',
   })
 })
+
+test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
+  const result = getMessageNodeDom({
+    text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+    type: 'code-block',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Pre,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Code,
+  })
+  expect(result[2]).toMatchObject({
+    text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+  })
+})

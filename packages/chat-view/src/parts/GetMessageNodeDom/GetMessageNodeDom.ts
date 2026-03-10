@@ -1,5 +1,6 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type {
+  MessageCodeBlockNode,
   MessageIntermediateNode,
   MessageListItemNode,
   MessageTableCellNode,
@@ -8,6 +9,20 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
+
+const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      type: VirtualDomElements.Pre,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Code,
+    },
+    text(node.text),
+  ]
+}
 
 const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
   return [
@@ -87,6 +102,9 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
   }
   if (node.type === 'table') {
     return getTableDom(node)
+  }
+  if (node.type === 'code-block') {
+    return getCodeBlockDom(node)
   }
   return [
     {

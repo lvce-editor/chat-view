@@ -413,3 +413,31 @@ test('parseMessageContent should parse one-line markdown table rows', () => {
     },
   ])
 })
+
+test('parseMessageContent should parse fenced code blocks', () => {
+  const rawMessage = [
+    'Here is JSON-RPC request body:',
+    '',
+    '```json',
+    '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+    '```',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Here is JSON-RPC request body:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+      type: 'code-block',
+    },
+  ])
+})
