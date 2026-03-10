@@ -1,7 +1,7 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleDebugViewJs, bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.ts'
+import { bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
 const dist = join(root, '.tmp', 'dist')
@@ -59,7 +59,6 @@ await mkdir(networkWorkerDist, { recursive: true })
 await mkdir(toolWorkerDist, { recursive: true })
 
 await bundleJs()
-await bundleDebugViewJs()
 await bundleNetworkWorkerJs()
 await bundleToolWorkerJs()
 
