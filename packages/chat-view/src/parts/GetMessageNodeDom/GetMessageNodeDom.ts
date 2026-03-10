@@ -1,5 +1,11 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { MessageIntermediateNode, MessageListItemNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import type {
+  MessageIntermediateNode,
+  MessageListItemNode,
+  MessageTableCellNode,
+  MessageTableNode,
+  MessageTableRowNode,
+} from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
@@ -14,6 +20,60 @@ const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNo
   ]
 }
 
+const getTableHeadCellDom = (cell: MessageTableCellNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: cell.children.length,
+      type: VirtualDomElements.Th,
+    },
+    ...cell.children.flatMap(getInlineNodeDom),
+  ]
+}
+
+const getTableBodyCellDom = (cell: MessageTableCellNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: cell.children.length,
+      type: VirtualDomElements.Td,
+    },
+    ...cell.children.flatMap(getInlineNodeDom),
+  ]
+}
+
+const getTableRowDom = (row: MessageTableRowNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: row.cells.length,
+      type: VirtualDomElements.Tr,
+    },
+    ...row.cells.flatMap(getTableBodyCellDom),
+  ]
+}
+
+const getTableDom = (node: MessageTableNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 2,
+      className: ClassNames.MarkdownTable,
+      type: VirtualDomElements.Table,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.THead,
+    },
+    {
+      childCount: node.headers.length,
+      type: VirtualDomElements.Tr,
+    },
+    ...node.headers.flatMap(getTableHeadCellDom),
+    {
+      childCount: node.rows.length,
+      type: VirtualDomElements.TBody,
+    },
+    ...node.rows.flatMap(getTableRowDom),
+  ]
+}
+
 export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
@@ -24,6 +84,9 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
       },
       ...node.children.flatMap(getInlineNodeDom),
     ]
+  }
+  if (node.type === 'table') {
+    return getTableDom(node)
   }
   return [
     {

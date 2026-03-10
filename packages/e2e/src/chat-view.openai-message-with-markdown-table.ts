@@ -1,7 +1,6 @@
-/* eslint-disable @cspell/spellchecker */
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-streaming-function-tool-call-mock'
+export const name = 'chat-view.openai-message-with-markdown-table'
 
 export const skip = 1
 
@@ -23,7 +22,13 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
       sessionId: 'ab10c0d9-bf04-4f6e-a31a-7dd7788c49ad',
       text: `Got it! Here's a simple example of a groceries table. You can let me know if you want to customize it with more items, prices, quantities, or categories.
 
-| Item | Quantity | Price (per unit) | Category | |--------------|----------|------------------|-------------| | Apples | 4 | $0.50 | Fruits | | Bread | 1 | $2.00 | Bakery | | Milk | 2 liters | $1.50 | Dairy | | Carrots | 1 kg | $1.20 | Vegetables | | Chicken | 1.5 kg | $5.00 | Meat |
+| Item | Quantity | Price (per unit) | Category |
+|--------------|----------|------------------|-------------|
+| Apples | 4 | $0.50 | Fruits |
+| Bread | 1 | $2.00 | Bakery |
+| Milk | 2 liters | $1.50 | Dairy |
+| Carrots | 1 kg | $1.20 | Vegetables |
+| Chicken | 1.5 kg | $5.00 | Meat |
 
 Would you like me to add or change anything?`,
       time: '03:15 PM',
@@ -42,7 +47,8 @@ Would you like me to add or change anything?`,
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
+  const table = Locator('.ChatMessages .Message .MarkdownTable')
   await expect(messages).toHaveCount(2)
+  await expect(table).toHaveCount(1)
   await expect(messages.nth(0)).toHaveText('whats jsonrpc')
-  await expect(messages.nth(1)).toHaveText('toolsread_file index.html')
 }
