@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-array-reduce */
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
