@@ -89,11 +89,6 @@ jobs:
       - uses: actions/upload-artifact@v6
         if: matrix.os == 'ubuntu-24.04'
         with:
-          name: dist-chat-debug-view
-          path: ./.tmp/dist-chat-debug-view
-      - uses: actions/upload-artifact@v6
-        if: matrix.os == 'ubuntu-24.04'
-        with:
           name: dist-chat-network-worker
           path: ./.tmp/dist-chat-network-worker
       - uses: actions/upload-artifact@v6
@@ -114,10 +109,6 @@ jobs:
           path: ./.tmp/dist
       - uses: actions/download-artifact@v7
         with:
-          name: dist-chat-debug-view
-          path: ./.tmp/dist-chat-debug-view
-      - uses: actions/download-artifact@v7
-        with:
           name: dist-chat-network-worker
           path: ./.tmp/dist-chat-network-worker
       - uses: actions/download-artifact@v7
@@ -131,10 +122,6 @@ jobs:
 
       - run: npm publish --access public
         working-directory: ./.tmp/dist
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npm publish --access public
-        working-directory: ./.tmp/dist-chat-debug-view
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public

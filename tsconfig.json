@@ -3,9 +3,6 @@
   "include": [],
   "references": [
     {
-      "path": "./packages/chat-debug-view"
-    },
-    {
       "path": "./packages/chat-view"
     },
     {
