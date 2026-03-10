@@ -352,7 +352,7 @@ test('getAiResponse should include OpenAI http error details for non-429 respons
     })
 
     expect(result.role).toBe('assistant')
-    expect(result.text).toBe('OpenAI request failed (status 401): Invalid API key. Please verify your OpenAI API key in Chat settings.')
+    expect(result.text).toBe('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')
   } finally {
     globalThis.fetch = originalFetch
   }
