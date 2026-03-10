@@ -68,6 +68,25 @@ export const getCss = (
   color: #4d94ff;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.MarkdownTable {
+  width: 100%;
+  margin: 6px 0;
+  border-collapse: collapse;
+  border: 1px solid var(--vscode-editorWidget-border);
+}
+
+.MarkdownTable th,
+.MarkdownTable td {
+  border: 1px solid var(--vscode-editorWidget-border);
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.MarkdownTable th {
+  background: var(--vscode-editorWidget-background);
+ }
 }`
 
   if (!renderHtmlCss.trim()) {
