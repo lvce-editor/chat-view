@@ -35,6 +35,17 @@ const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNo
   ]
 }
 
+const getUnorderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: item.children.length,
+      className: ClassNames.ChatUnorderedListItem,
+      type: VirtualDomElements.Li,
+    },
+    ...item.children.flatMap(getInlineNodeDom),
+  ]
+}
+
 const getTableHeadCellDom = (cell: MessageTableCellNode): readonly VirtualDomNode[] => {
   return [
     {
@@ -106,12 +117,22 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
   if (node.type === 'code-block') {
     return getCodeBlockDom(node)
   }
+  if (node.type === 'ordered-list') {
+    return [
+      {
+        childCount: node.items.length,
+        className: ClassNames.ChatOrderedList,
+        type: VirtualDomElements.Ol,
+      },
+      ...node.items.flatMap(getOrderedListItemDom),
+    ]
+  }
   return [
     {
       childCount: node.items.length,
-      className: ClassNames.ChatOrderedList,
-      type: VirtualDomElements.Ol,
+      className: ClassNames.ChatUnorderedList,
+      type: VirtualDomElements.Ul,
     },
-    ...node.items.flatMap(getOrderedListItemDom),
+    ...node.items.flatMap(getUnorderedListItemDom),
   ]
 }

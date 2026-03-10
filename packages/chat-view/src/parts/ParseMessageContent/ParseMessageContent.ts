@@ -7,6 +7,7 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
+const unorderedListItemRegex = /^\s*-\s+(.*)$/
 const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
@@ -137,6 +138,7 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
   const nodes: MessageIntermediateNode[] = []
   let paragraphLines: string[] = []
   let listItems: MessageListItemNode[] = []
+  let listType: 'ordered-list' | 'unordered-list' | '' = ''
 
   const flushParagraph = (): void => {
     if (paragraphLines.length === 0) {
@@ -155,9 +157,10 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     }
     nodes.push({
       items: listItems,
-      type: 'list',
+      type: listType || 'ordered-list',
     })
     listItems = []
+    listType = ''
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -208,11 +211,29 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
       }
     }
 
-    const match = line.match(orderedListItemRegex)
-    if (match) {
+    const orderedMatch = line.match(orderedListItemRegex)
+    if (orderedMatch) {
+      if (listType && listType !== 'ordered-list') {
+        flushList()
+      }
       flushParagraph()
+      listType = 'ordered-list'
       listItems.push({
-        children: parseInlineNodes(match[1]),
+        children: parseInlineNodes(orderedMatch[1]),
+        type: 'list-item',
+      })
+      continue
+    }
+
+    const unorderedMatch = line.match(unorderedListItemRegex)
+    if (unorderedMatch) {
+      if (listType && listType !== 'unordered-list') {
+        flushList()
+      }
+      flushParagraph()
+      listType = 'unordered-list'
+      listItems.push({
+        children: parseInlineNodes(unorderedMatch[1]),
         type: 'list-item',
       })
       continue

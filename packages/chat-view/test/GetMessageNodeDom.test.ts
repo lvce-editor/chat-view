@@ -182,6 +182,54 @@ test('getMessageNodeDom should render markdown table nodes as table dom nodes', 
   })
 })
 
+test('getMessageNodeDom should render unordered list nodes as ul and li dom nodes', () => {
+  const result = getMessageNodeDom({
+    items: [
+      {
+        children: [
+          {
+            text: 'Read files',
+            type: 'text',
+          },
+        ],
+        type: 'list-item',
+      },
+      {
+        children: [
+          {
+            text: 'Run tests',
+            type: 'text',
+          },
+        ],
+        type: 'list-item',
+      },
+    ],
+    type: 'unordered-list',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatUnorderedList,
+    type: VirtualDomElements.Ul,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'Read files',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[4]).toMatchObject({
+    text: 'Run tests',
+  })
+})
+
 test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
   const result = getMessageNodeDom({
     text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
