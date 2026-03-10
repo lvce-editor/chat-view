@@ -9,6 +9,7 @@ import type {
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
+const fencedCodeBlockRegex = /^```/
 
 const normalizeInlineTables = (value: string): string => {
   return value
@@ -164,6 +165,22 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     if (!line.trim()) {
       flushList()
       flushParagraph()
+      continue
+    }
+
+    if (fencedCodeBlockRegex.test(line.trim())) {
+      flushList()
+      flushParagraph()
+      const codeLines: string[] = []
+      i++
+      while (i < lines.length && !fencedCodeBlockRegex.test(lines[i].trim())) {
+        codeLines.push(lines[i])
+        i++
+      }
+      nodes.push({
+        text: codeLines.join('\n'),
+        type: 'code-block',
+      })
       continue
     }
 
