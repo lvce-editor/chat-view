@@ -15,12 +15,6 @@ const tasks = [
     external: ['node:buffer', 'electron', 'ws', 'node:worker_threads'],
   },
   {
-    input: 'packages/chat-debug-view/src/chatDebugViewWorkerMain.ts',
-    outputDir: '.tmp/dist-chat-debug-view/dist',
-    outputFile: '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js',
-    external: ['electron', 'ws'],
-  },
-  {
     input: 'packages/chat-network-worker/src/chatNetworkWorkerMain.ts',
     outputDir: '.tmp/dist-chat-network-worker/dist',
     outputFile: '.tmp/dist-chat-network-worker/dist/chatNetworkWorkerMain.js',

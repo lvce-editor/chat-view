@@ -26,7 +26,6 @@ export const getRemoteUrl = (path: string): string => {
 // @ts-ignore
 const content = await readFile(rendererWorkerPath, 'utf8')
 const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
-const chatDebugViewWorkerPath = join(root, '.tmp/dist-chat-debug-view/dist/chatDebugViewWorkerMain.js')
 
 const replaceRemoteUrlWithAssetUrl = (
   currentContent: string,
@@ -48,13 +47,6 @@ const ${variableName} = \`${remoteUrl}\``
 
 let newContent = content
 newContent = replaceRemoteUrlWithAssetUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
-newContent = replaceRemoteUrlWithAssetUrl(
-  newContent,
-  'chatDebugViewWorkerUrl',
-  'chat-debug-view',
-  'chatDebugViewWorkerMain.js',
-  chatDebugViewWorkerPath,
-)
 
 if (newContent === content) {
   throw new Error('occurrence not found')
