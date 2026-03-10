@@ -21,6 +21,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   // act
   await Chat.handleSubmit()
+  await Command.execute('Chat.rerender')
 
   // assert
   const messages = Locator('.ChatMessages .Message')
