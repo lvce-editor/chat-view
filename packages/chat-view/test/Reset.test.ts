@@ -17,4 +17,5 @@ test('reset should clear sessions and composer and switch to list mode', async (
   expect(result.selectedSessionId).toBe('')
   expect(result.composerValue).toBe('')
   expect(result.mockAiResponseDelay).toBe(0)
+  expect(result.streamingEnabled).toBe(false)
 })

@@ -185,6 +185,7 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
       models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
       openApiApiKey: 'oa-key-123',
       selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: false,
       viewMode: 'detail' as const,
     }
     const result = await HandleSubmit.handleSubmit(state)

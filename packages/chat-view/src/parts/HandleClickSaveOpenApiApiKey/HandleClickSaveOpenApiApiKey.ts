@@ -44,6 +44,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     openRouterApiKey: updatedState.openRouterApiKey,
     platform: updatedState.platform,
     selectedModelId: updatedState.selectedModelId,
+    streamingEnabled: updatedState.streamingEnabled,
     useMockApi: updatedState.useMockApi,
     userText: previousUserMessage.text,
   })
