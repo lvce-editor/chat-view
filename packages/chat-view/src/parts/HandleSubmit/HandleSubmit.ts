@@ -21,7 +21,7 @@ import { set } from '../StatusBarStates/StatusBarStates.ts'
 const slashCommandRegex = /^\/(clear|export|help|new)(?:\s+.*)?$/
 const mentionRegex = /(^|\s)@([^\s]+)/g
 const maxMentionCount = 5
-const maxMentionTextLength = 8_000
+const maxMentionTextLength = 8000
 
 const appendMessageToSelectedSession = (
   sessions: readonly ChatSession[],
@@ -85,7 +85,13 @@ const getSseEventType = (value: unknown): 'sse-response-completed' | 'sse-respon
 }
 
 const getCommandHelpText = (): string => {
-  return ['Available commands:', '/new - Create and switch to a new chat session.', '/clear - Clear messages in the selected chat session.', '/export - Export current chat session as Markdown.', '/help - Show this help.'].join('\n')
+  return [
+    'Available commands:',
+    '/new - Create and switch to a new chat session.',
+    '/clear - Clear messages in the selected chat session.',
+    '/export - Export current chat session as Markdown.',
+    '/help - Show this help.',
+  ].join('\n')
 }
 
 const withClearedComposer = (state: ChatState): ChatState => {
@@ -199,7 +205,8 @@ const getMentionContextMessage = async (value: string): Promise<ChatMessage | un
   for (const path of paths) {
     try {
       const fileContent = await RendererWorker.readFile(path)
-      const truncatedContent = fileContent.length > maxMentionTextLength ? `${fileContent.slice(0, maxMentionTextLength)}\n... [truncated]` : fileContent
+      const truncatedContent =
+        fileContent.length > maxMentionTextLength ? `${fileContent.slice(0, maxMentionTextLength)}\n... [truncated]` : fileContent
       sections.push([`File: ${path}`, '```text', truncatedContent, '```'].join('\n'))
     } catch (error) {
       sections.push([`File: ${path}`, `Error: ${String(error)}`].join('\n'))
