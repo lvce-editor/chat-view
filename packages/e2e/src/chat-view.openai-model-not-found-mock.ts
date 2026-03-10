@@ -27,6 +27,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request failed (status 400): model_not_found [invalid_request_error].')
-  await expect(messages.nth(1)).toContainText("The requested model 'gpt-4.1-mini-wrong' does not exist.")
+  await expect(messages.nth(1)).toHaveText(
+    `OpenAI request failed (status 400): model_not_found [invalid_request_error]. The requested model 'gpt-4.1-mini-wrong' does not exist.`,
+  )
 }
