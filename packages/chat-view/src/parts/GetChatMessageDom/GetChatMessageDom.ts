@@ -29,27 +29,51 @@ export const getChatMessageDom = (
   const messageIntermediate = parseMessageContent(message.text)
   const messageDom = getMessageContentDom(messageIntermediate)
   const toolCallsDom = getToolCallsDom(message)
-  const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
-  const extraChildCount =
+  const textAndMetadataChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageIntermediate.length + 1 + toolCallsChildCount
-      : messageIntermediate.length + toolCallsChildCount
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.Message, roleClassName),
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: extraChildCount,
-      className: ClassNames.ChatMessageContent,
-      type: VirtualDomElements.Div,
-    },
-    ...toolCallsDom,
+      ? messageIntermediate.length + 1
+      : messageIntermediate.length
+  const textAndMetadataDom = [
     ...messageDom,
     ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
   ]
+
+  const messageNodes: VirtualDomNode[] = []
+
+  if (toolCallsDom.length > 0) {
+    messageNodes.push(
+      {
+        childCount: 1,
+        className: mergeClassNames(ClassNames.Message, roleClassName),
+        type: VirtualDomElements.Div,
+      },
+      {
+        childCount: 1,
+        className: ClassNames.ChatMessageContent,
+        type: VirtualDomElements.Div,
+      },
+      ...toolCallsDom,
+    )
+  }
+
+  if (textAndMetadataChildCount > 0 || toolCallsDom.length === 0) {
+    messageNodes.push(
+      {
+        childCount: 1,
+        className: mergeClassNames(ClassNames.Message, roleClassName),
+        type: VirtualDomElements.Div,
+      },
+      {
+        childCount: textAndMetadataChildCount,
+        className: ClassNames.ChatMessageContent,
+        type: VirtualDomElements.Div,
+      },
+      ...textAndMetadataDom,
+    )
+  }
+
+  return messageNodes
 }

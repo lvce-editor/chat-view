@@ -422,6 +422,65 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   })
 })
 
+test('getStatusBarVirtualDom should render assistant tool calls and text in separate message divs', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: 'I read the file successfully.',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: '{"uri":"file:///workspace/index.html"}',
+              id: 'call_1',
+              name: 'read_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+
+  const messagesNode = result.find((node) => node.className === 'ChatMessages')
+  const assistantMessageNodes = result.filter(
+    (node) => node.className?.split(' ').includes(ClassNames.Message) && node.className?.split(' ').includes(ClassNames.MessageAssistant),
+  )
+  const toolCallsNode = result.find((node) => node.className === ClassNames.ChatToolCalls)
+  const textNode = result.find((node) => node.text === 'I read the file successfully.')
+
+  expect(messagesNode).toMatchObject({
+    childCount: 2,
+  })
+  expect(assistantMessageNodes).toHaveLength(2)
+  expect(toolCallsNode).toBeDefined()
+  expect(textNode).toBeDefined()
+})
+
 test('getStatusBarVirtualDom should render assistant read_file path as clickable filename', () => {
   const path = 'src/index.html'
   const sessions = [
