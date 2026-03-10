@@ -157,13 +157,7 @@ test('parseMessageContent should parse markdown bold text in paragraphs', () => 
 })
 
 test('parseMessageContent should parse markdown unordered list blocks', () => {
-  const rawMessage = [
-    'I can help with:',
-    '',
-    '- Reading project files',
-    '- Running tests',
-    '- Explaining errors',
-  ].join('\n')
+  const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
   const result = ParseMessageContent.parseMessageContent(rawMessage)
 

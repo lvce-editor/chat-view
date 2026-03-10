@@ -1,9 +1,4 @@
-export type MessageIntermediateNode =
-  | MessageTextNode
-  | MessageOrderedListNode
-  | MessageUnorderedListNode
-  | MessageTableNode
-  | MessageCodeBlockNode
+export type MessageIntermediateNode = MessageTextNode | MessageOrderedListNode | MessageUnorderedListNode | MessageTableNode | MessageCodeBlockNode
 
 export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode | MessageInlineBoldNode
 
