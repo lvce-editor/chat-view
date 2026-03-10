@@ -4,21 +4,7 @@ export const name = 'chat-view.openai-message-with-markdown-table'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
-  const tmpDir = await FileSystem.getTmpDir()
-  await Workspace.setPath(tmpDir)
-  await Chat.show()
-  await Chat.reset()
-  await Chat.setStreamingEnabled(true)
-  await Chat.useMockApi()
-  await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  const sseResponseParts = [
-    {
-      eventId: 121,
-      inProgress: false,
-      messageId: '0618fa4e-5860-41e5-bf5f-5f43375cd043',
-      sessionId: 'ab10c0d9-bf04-4f6e-a31a-7dd7788c49ad',
-      text: `Got it! Here's a simple example of a groceries table. You can let me know if you want to customize it with more items, prices, quantities, or categories.
+  const mockText = `Got it! Here's a simple example of a groceries table. You can let me know if you want to customize it with more items, prices, quantities, or categories.
 
 | Item | Quantity | Price (per unit) | Category |
 |--------------|----------|------------------|-------------|
@@ -28,18 +14,15 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 | Carrots | 1 kg | $1.20 | Vegetables |
 | Chicken | 1.5 kg | $5.00 | Meat |
 
-Would you like me to add or change anything?`,
-      time: '03:15 PM',
-      timestamp: '2026-03-09T14:15:54.246Z',
-      type: 'chat-message-updated',
-    },
-  ]
-
-  for (const responsePart of sseResponseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
-  }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+Would you like me to add or change anything?`
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
+  await Chat.show()
+  await Chat.reset()
+  await Chat.setStreamingEnabled(false)
+  await Chat.useMockApi()
+  await Chat.handleModelChange('openapi/gpt-4.1-mini')
+  await Command.execute('Chat.registerMockResponse', { text: mockText })
   await Chat.handleInput('whats jsonrpc')
 
   // act
