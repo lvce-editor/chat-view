@@ -2,15 +2,15 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-invalid-api-key-mock'
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.setStreamingEnabled', false)
-  await Command.execute('Chat.useMockApi', true)
-  await Command.execute('Chat.handleModelChange', 'openapi/gpt-4.1-mini')
+  await Chat.show()
+  await Chat.reset()
+  await Chat.setStreamingEnabled(false)
+  await Chat.useMockApi()
+  await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.mockOpenApiSetHttpErrorResponse', 401, {
     error: {
       code: 'invalid_api_key',
@@ -20,10 +20,10 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
       type: 'invalid_request_error',
     },
   })
-  await Command.execute('Chat.handleInput', 'composer', 'hello from e2e', 'script')
+  await Chat.handleInput('hello from e2e')
 
   // act
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleSubmit()
 
   // assert
   const messages = Locator('.ChatMessages .Message')

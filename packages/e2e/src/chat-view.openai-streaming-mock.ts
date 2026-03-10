@@ -4,17 +4,17 @@ export const name = 'chat-view.openai-streaming-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.setStreamingEnabled', true)
-  await Command.execute('Chat.useMockApi', true)
-  await Command.execute('Chat.handleModelChange', 'openapi/gpt-4.1-mini')
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+  await Chat.show()
+  await Chat.reset()
+  await Chat.setStreamingEnabled(true)
+  await Chat.useMockApi()
+  await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.mockOpenApiStreamReset')
   await Command.execute('Chat.mockOpenApiStreamPushChunk', 'First')
-  await Command.execute('Chat.handleInput', 'composer', 'hello from e2e', 'script')
+  await Chat.handleInput('hello from e2e')
 
-  const submitPromise = Command.execute('Chat.handleSubmit')
+  const submitPromise = Chat.handleSubmit()
 
   const messages = Locator('.ChatDetailsContent .Message')
   await expect(messages).toHaveCount(2)

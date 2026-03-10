@@ -2,16 +2,16 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.delete-session'
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
+  await Chat.show()
+  await Chat.reset()
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
-  await Command.execute('Chat.handleInput', 'new session message', 'script')
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleInput('new session message')
+  await Chat.handleSubmit()
 
-  const sessionId = await Command.execute('Chat.getSelectedSessionId')
+  const sessionId = await Chat.getSelectedSessionId()
 
   // console.log({ sessionId })
 

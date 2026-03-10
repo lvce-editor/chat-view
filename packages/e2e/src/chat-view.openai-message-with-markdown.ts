@@ -5,14 +5,14 @@ export const name = 'chat-view.openai-streaming-function-tool-call-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
-  await Command.execute('Chat.setStreamingEnabled', true)
-  await Command.execute('Chat.useMockApi', true)
-  await Command.execute('Chat.handleModelChange', 'openapi/gpt-4.1-mini')
+  await Chat.show()
+  await Chat.reset()
+  await Chat.setStreamingEnabled(true)
+  await Chat.useMockApi()
+  await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.mockOpenApiStreamReset')
 
   const sseResponseParts = [
@@ -34,8 +34,8 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
   await Command.execute('Chat.mockOpenApiStreamFinish')
 
-  await Command.execute('Chat.handleInput', 'composer', 'weather in paris, france', 'script')
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleInput('weather in paris, france')
+  await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)

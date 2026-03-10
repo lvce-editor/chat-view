@@ -2,15 +2,15 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.very-long-message'
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
-  await Command.execute('Layout.showSecondarySideBar')
-  await Command.execute('Chat.reset')
+  await Chat.show()
+  await Chat.reset()
   const message = 'a'.repeat(3_000_000)
-  await Command.execute('Chat.handleInput', 'composer', message, 'script')
+  await Chat.handleInput(message)
 
   // act
-  await Command.execute('Chat.handleSubmit')
+  await Chat.handleSubmit()
 
   // assert
   const messages = Locator('.ChatMessages .Message')
