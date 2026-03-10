@@ -477,6 +477,130 @@ test('getStatusBarVirtualDom should render assistant read_file path as clickable
   })
 })
 
+test('getStatusBarVirtualDom should render assistant list_files uri as clickable filename', () => {
+  const uri = 'file:///workspace/src'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"uri":"${uri}"}`,
+              id: 'call_1',
+              name: 'list_files',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
+  const toolPrefixNode = result.find((node) => node.text === 'list_files ')
+  const fileNameNode = result.find((node) => node.text === 'src')
+  const fileNameLinkNode = result.find(
+    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
+  )
+
+  expect(toolCallItem).toMatchObject({
+    title: uri,
+    type: VirtualDomElements.Li,
+  })
+  expect(toolPrefixNode).toBeDefined()
+  expect(fileNameNode).toBeDefined()
+  expect(fileNameLinkNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    type: VirtualDomElements.Span,
+  })
+})
+
+test('getStatusBarVirtualDom should render assistant list_file uri as clickable filename', () => {
+  const uri = 'file:///workspace/package.json'
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: '',
+          time: '10:31',
+          toolCalls: [
+            {
+              arguments: `{"uri":"${uri}"}`,
+              id: 'call_1',
+              name: 'list_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+  )
+  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
+  const fileNameLinkNode = result.find(
+    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
+  )
+
+  expect(toolCallItem).toMatchObject({
+    title: uri,
+    type: VirtualDomElements.Li,
+  })
+  expect(fileNameLinkNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    type: VirtualDomElements.Span,
+  })
+})
+
 test('getStatusBarVirtualDom should render read_file not-found status', () => {
   const path = 'src/missing.html'
   const sessions = [

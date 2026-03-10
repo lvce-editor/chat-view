@@ -7,7 +7,7 @@ import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualD
 import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
 
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
-  if (toolCall.name === 'read_file') {
+  if (toolCall.name === 'read_file' || toolCall.name === 'list_files' || toolCall.name === 'list_file') {
     const virtualDom = getToolCallReadFileVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
