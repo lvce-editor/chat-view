@@ -19,7 +19,7 @@ export const getMissingApiKeyDom = ({
   return [
     {
       childCount: 2,
-      type: VirtualDomElements.Form,
+      type: VirtualDomElements.Div,
     },
     {
       childCount: 0,
