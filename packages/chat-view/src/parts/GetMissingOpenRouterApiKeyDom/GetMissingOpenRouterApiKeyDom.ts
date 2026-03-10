@@ -1,7 +1,12 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.ts'
-import { OpenOpenRouterApiKeySettings, OpenRouterApiKeyInput, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
+import {
+  OpenOpenRouterApiKeySettings,
+  OpenOpenRouterApiKeyWebsite,
+  OpenRouterApiKeyInput,
+  SaveOpenRouterApiKey,
+} from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 
 export const getMissingOpenRouterApiKeyDom = (
   openRouterApiKeyInput: string,
@@ -9,6 +14,7 @@ export const getMissingOpenRouterApiKeyDom = (
 ): readonly VirtualDomNode[] => {
   const isSaving = openRouterApiKeyState === 'saving'
   return getMissingApiKeyDom({
+    getApiKeyButtonName: OpenOpenRouterApiKeyWebsite,
     getApiKeyText: Strings.getOpenRouterApiKey(),
     inputName: OpenRouterApiKeyInput,
     inputValue: openRouterApiKeyInput,

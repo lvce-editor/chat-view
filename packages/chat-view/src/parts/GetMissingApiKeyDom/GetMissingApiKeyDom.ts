@@ -5,10 +5,12 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams.ts'
 
 export const getMissingApiKeyDom = ({
+  getApiKeyButtonName,
   getApiKeyText,
   inputName,
   inputValue,
   openSettingsButtonName,
+  openSettingsButtonText = Strings.settings(),
   placeholder,
   saveButtonDisabled = false,
   saveButtonName,
@@ -17,7 +19,7 @@ export const getMissingApiKeyDom = ({
   return [
     {
       childCount: 2,
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Form,
     },
     {
       childCount: 0,
@@ -25,11 +27,12 @@ export const getMissingApiKeyDom = ({
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder,
+      required: true,
       type: VirtualDomElements.Input,
       value: inputValue,
     },
     {
-      childCount: 2,
+      childCount: 3,
       className: ClassNames.Actions,
       type: VirtualDomElements.Div,
     },
@@ -37,6 +40,7 @@ export const getMissingApiKeyDom = ({
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       disabled: saveButtonDisabled,
+      buttonType: 'submit',
       name: saveButtonName,
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
@@ -45,10 +49,18 @@ export const getMissingApiKeyDom = ({
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
-      name: openSettingsButtonName,
+      name: getApiKeyButtonName,
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
     },
     text(getApiKeyText),
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      name: openSettingsButtonName,
+      onClick: DomEventListenerFunctions.HandleClick,
+      type: VirtualDomElements.Button,
+    },
+    text(openSettingsButtonText),
   ]
 }

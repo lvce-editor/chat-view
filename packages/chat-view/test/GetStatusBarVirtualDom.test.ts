@@ -620,13 +620,15 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
-})
+      const formNode = result.find((node) => node.type === VirtualDomElements.Form)
+      expect(formNode).toBeDefined()
 
 test('getStatusBarVirtualDom should render disabled OpenRouter save button with Saving text while api key is saving', () => {
   const sessions = [
     {
       id: 'session-1',
       messages: [{ id: 'm1', role: 'assistant' as const, text: openRouterApiKeyRequiredMessage, time: '10:31' }],
+        buttonType: 'submit',
       title: 'Chat 1',
     },
   ]
@@ -704,13 +706,15 @@ test('getStatusBarVirtualDom should render OpenAPI api key input and save button
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
-})
+      const formNode = result.find((node) => node.type === VirtualDomElements.Form)
+      expect(formNode).toBeDefined()
 
 test('getStatusBarVirtualDom should render OpenRouter request failure reasons as ordered list', () => {
   const sessions = [
     {
       id: 'session-1',
       messages: [{ id: 'm1', role: 'assistant' as const, text: openRouterRequestFailedMessage, time: '10:31' }],
+        buttonType: 'submit',
       title: 'Chat 1',
     },
   ]
