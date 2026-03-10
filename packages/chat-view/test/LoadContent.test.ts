@@ -11,7 +11,7 @@ beforeEach(() => {
 
 const expectInvocations = (actual: readonly (readonly [string, string])[], expected: readonly (readonly [string, string])[]): void => {
   expect(actual).toHaveLength(expected.length)
-  expect(actual).toEqual(expect.arrayContaining(expected))
+  expect(actual).toEqual(expect.arrayContaining([...expected]))
 }
 
 test('loadContent should initialize view and keep existing session', async () => {
