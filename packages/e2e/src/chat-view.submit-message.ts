@@ -4,7 +4,7 @@ export const name = 'chat-view.submit-message'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.setChatList', 1)
 
   const composer = Locator('.MultilineInputBox[name="composer"]')
