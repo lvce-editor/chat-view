@@ -10,7 +10,7 @@ const getDefaultModels = (): readonly ChatModel[] => {
     { id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi' },
     { id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' },
     { id: 'openapi/gpt-4o', name: 'GPT-4o', provider: 'openApi' },
-    { id: 'openapi/gpt-4.1-mini-wrong', name: 'GPT-4.1 Mini', provider: 'openApi' },
+    { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' },
     { id: 'codex-5.3', name: 'Codex 5.3', provider: 'openRouter' },
     { id: 'claude-code', name: 'Claude Code', provider: 'openRouter' },
     { id: 'claude-haiku', name: 'Claude Haiku', provider: 'openRouter' },
