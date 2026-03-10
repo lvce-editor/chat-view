@@ -3,6 +3,9 @@
   "image": "mcr.microsoft.com/devcontainers/node:24",
   "postCreateCommand": "npm ci && cd packages/e2e && npx playwright install",
   "postStartCommand": "npm run dev",
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]

@@ -295,8 +295,8 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
 test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
-    'FileSystem.readFile': async (path: string) => {
-      expect(path).toBe('README.md')
+    'FileSystem.readFile': async (uri: string) => {
+      expect(uri).toBe('file:///workspace/README.md')
       return '# Workspace Readme'
     },
   })
@@ -315,7 +315,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
                 tool_calls: [
                   {
                     function: {
-                      arguments: JSON.stringify({ path: 'README.md' }),
+                      arguments: JSON.stringify({ uri: 'file:///workspace/README.md' }),
                       name: 'read_file',
                     },
                     id: 'tool-1',
@@ -359,7 +359,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'README.md']])
+    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'file:///workspace/README.md']])
   } finally {
     globalThis.fetch = originalFetch
   }

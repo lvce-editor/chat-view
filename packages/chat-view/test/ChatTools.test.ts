@@ -9,12 +9,12 @@ const options = {
   platform: 0,
 }
 
-test('getBasicChatTools should return read, write and list tool definitions', () => {
+test('getBasicChatTools should return read, write, list and workspace uri tool definitions', () => {
   const tools = getBasicChatTools()
 
   const names = tools.map((tool) => tool.function.name)
 
-  expect(names).toEqual(['read_file', 'write_file', 'list_files'])
+  expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri', 'render_html'])
 })
 
 test('executeChatTool should execute read_file tool', async () => {
@@ -22,12 +22,13 @@ test('executeChatTool should execute read_file tool', async () => {
     'FileSystem.readFile': async () => 'hello world',
   })
 
-  const result = await executeChatTool('read_file', JSON.stringify({ path: './src/main.ts' }), options)
+  const uri = 'file:///workspace/src/main.ts'
+  const result = await executeChatTool('read_file', JSON.stringify({ uri }), options)
 
-  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'src/main.ts']])
+  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', uri]])
   expect(JSON.parse(result)).toEqual({
     content: 'hello world',
-    path: 'src/main.ts',
+    uri,
   })
 })
 
@@ -57,15 +58,48 @@ test('executeChatTool should execute list_files tool', async () => {
     ],
   })
 
-  const result = await executeChatTool('list_files', JSON.stringify({ path: '.' }), options)
+  const uri = 'file:///workspace'
+  const result = await executeChatTool('list_files', JSON.stringify({ uri }), options)
 
-  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readDirWithFileTypes', '.']])
+  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readDirWithFileTypes', uri]])
   expect(JSON.parse(result)).toEqual({
     entries: [
       [1, 'src'],
       [2, 'README.md'],
     ],
-    path: '.',
+    uri,
+  })
+})
+
+test('executeChatTool should execute getWorkspaceUri tool', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Workspace.getPath': async () => '/workspace/project',
+  })
+
+  const result = await executeChatTool('getWorkspaceUri', JSON.stringify({}), options)
+
+  expect(mockRendererRpc.invocations).toEqual([['Workspace.getPath']])
+  expect(JSON.parse(result)).toEqual({
+    workspaceUri: '/workspace/project',
+  })
+})
+
+test('executeChatTool should execute render_html tool', async () => {
+  const result = await executeChatTool(
+    'render_html',
+    JSON.stringify({
+      css: '.card { color: blue; }',
+      html: '<div class="card">weather</div>',
+      title: 'Weather Card',
+    }),
+    options,
+  )
+
+  expect(JSON.parse(result)).toEqual({
+    css: '.card { color: blue; }',
+    html: '<div class="card">weather</div>',
+    ok: true,
+    title: 'Weather Card',
   })
 })
 
