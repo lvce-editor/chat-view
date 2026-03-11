@@ -10,9 +10,7 @@ test('setUseChatNetworkWorkerForRequests should update state and persist by defa
   const state = CreateDefaultState.createDefaultState()
   const result = await SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests(state, true)
   expect(result.useChatNetworkWorkerForRequests).toBe(true)
-  expect(mockRpc.invocations).toEqual([
-    ['Preferences.update', { 'chatView.useChatNetworkWorkerForRequests': true }],
-  ])
+  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'chatView.useChatNetworkWorkerForRequests': true }]])
 })
 
 test('setUseChatNetworkWorkerForRequests should not persist when persist is false', async () => {
