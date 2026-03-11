@@ -1,10 +1,14 @@
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import { getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
 import { getMockOpenRouterAssistantText } from '../GetMockOpenRouterAssistantText/GetMockOpenRouterAssistantText.ts'
+import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenApiErrorMessage } from '../GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 import { getOpenApiModelId } from '../GetOpenApiModelId/GetOpenApiModelId.ts'
 import { getOpenRouterAssistantText } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
@@ -12,6 +16,7 @@ import { getOpenRouterErrorMessage } from '../GetOpenRouterErrorMessage/GetOpenR
 import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModelId.ts'
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
+import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
 export const getAiResponse = async ({
   assetDir,
@@ -42,6 +47,22 @@ export const getAiResponse = async ({
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (usesOpenApiModel) {
     if (useMockApi) {
+      const openAiInput: any[] = messages.map((message) => ({
+        content: message.text,
+        role: message.role,
+      }))
+      const modelId = getOpenApiModelId(selectedModelId)
+      const headers = {
+        Authorization: `Bearer ${openApiApiKey}`,
+        'Content-Type': 'application/json',
+        ...getClientRequestIdHeader(),
+      }
+      MockOpenApiRequest.capture({
+        headers,
+        method: 'POST',
+        payload: getOpenAiParams(openAiInput, modelId, streamingEnabled, passIncludeObfuscation, getBasicChatTools(), webSearchEnabled),
+        url: getOpenApiApiEndpoint(openApiApiBaseUrl),
+      })
       const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
       if (result.type === 'success') {
         const { text: assistantText } = result
