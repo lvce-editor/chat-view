@@ -35,9 +35,10 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     type: 'chat-attachment-added',
   })
   expect(events[0].type).toBe('chat-attachment-added')
-  if (events[0].type === 'chat-attachment-added') {
-    expect(events[0].blob).toBeInstanceOf(Blob)
+  if (events[0].type !== 'chat-attachment-added') {
+    throw new TypeError('Expected chat-attachment-added event')
   }
+  expect(events[0].blob).toBeInstanceOf(Blob)
 })
 
 test('handleDropFiles is no-op when no session is selected', async () => {

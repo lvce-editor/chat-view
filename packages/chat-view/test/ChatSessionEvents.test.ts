@@ -103,8 +103,9 @@ test('appendChatViewEvent stores attachment events including blob payload', asyn
     sessionId: 'session-1',
     type: 'chat-attachment-added',
   })
-  if (events[0].type === 'chat-attachment-added') {
-    expect(events[0].blob).toBeInstanceOf(Blob)
-    expect(events[0].blob.size).toBe(blob.size)
+  if (events[0].type !== 'chat-attachment-added') {
+    throw new TypeError('Expected chat-attachment-added event')
   }
+  expect(events[0].blob).toBeInstanceOf(Blob)
+  expect(events[0].blob.size).toBe(blob.size)
 })
