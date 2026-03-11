@@ -2,33 +2,21 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.delete-session'
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
-  await expect(composer).toBeVisible()
-  await Chat.handleInput('new session message')
+  const chatListItems = Locator('.ChatList .ChatListItem')
+  await Chat.handleInput('first session message')
   await Chat.handleSubmit()
+  await Chat.handleClickBack()
+  await expect(chatListItems).toHaveCount(1)
 
-  const sessionId = await Chat.getSelectedSessionId()
+  // act
+  await Command.execute('Chat.deleteSessionAtIndex', 0)
 
-  // console.log({ sessionId })
-
-  // const createdSessionItem = Locator(`.ChatList .ChatListItem[name="session:${createdSessionId}"]`)
-  // await expect(createdSessionItem).toHaveCount(1)
-
-  // await Command.execute('Chat.handleClickBack')
-  // await Command.execute('Chat.handleClickDelete', createdSessionId)
-
-  // const afterDelete = (await Command.execute('Chat.saveState')) as SavedState
-  // if (afterDelete.selectedSessionId === createdSessionId) {
-  //   throw new Error('expected selected session to change after deletion')
-  // }
-
-  // const deletedSessionItem = Locator(`.ChatList .ChatListItem[name="session:${createdSessionId}"]`)
-  // await expect(deletedSessionItem).toHaveCount(0)
-
-  // const chatListItems = Locator('.ChatList .ChatListItem')
-  // await expect(chatListItems).toHaveCount(1)
+  // assert
+  await expect(chatListItems).toHaveCount(0)
 }

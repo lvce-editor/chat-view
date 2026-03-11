@@ -1,6 +1,7 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
 import * as ClearInput from '../ClearInput/ClearInput.ts'
 import * as StatusBar from '../Create/Create.ts'
+import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
@@ -49,6 +50,7 @@ import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
   'Chat.create': StatusBar.create,
+  'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
