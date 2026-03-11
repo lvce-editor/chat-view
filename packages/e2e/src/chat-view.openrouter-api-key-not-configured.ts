@@ -3,8 +3,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openrouter-api-key-not-configured'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
@@ -16,7 +14,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.handleSubmit()
 
   // assert
-  const messages = Locator('.ChatDetailsContent .Message')
+  const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(1)).toContainText('OpenRouter API key is not configured')
 }
