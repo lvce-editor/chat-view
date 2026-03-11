@@ -1,11 +1,12 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage, ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
+import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModeDetailVirtualDom = (
@@ -27,6 +28,9 @@ export const getChatModeDetailVirtualDom = (
   messagesScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
+  projects: readonly Project[] = [],
+  selectedProjectId = '',
+  projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -34,13 +38,14 @@ export const getChatModeDetailVirtualDom = (
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 4,
+      childCount: 5,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
+    ...getProjectListDom(projects, selectedProjectId, projectListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
     ...getChatSendAreaDom(
       composerValue,

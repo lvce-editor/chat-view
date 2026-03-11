@@ -32,11 +32,20 @@ export const resetChatSessionStorage = (): void => {
 
 export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
   const sessions = await chatSessionStorage.listSessions()
-  return sessions.map((session) => ({
-    id: session.id,
-    messages: [],
-    title: session.title,
-  }))
+  return sessions.map((session) => {
+    const summary: ChatSession = {
+      id: session.id,
+      messages: [],
+      title: session.title,
+    }
+    if (!session.projectId) {
+      return summary
+    }
+    return {
+      ...summary,
+      projectId: session.projectId,
+    }
+  })
 }
 
 export const getChatSession = async (id: string): Promise<ChatSession | undefined> => {
@@ -44,19 +53,34 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
   if (!session) {
     return undefined
   }
-  return {
+  const result: ChatSession = {
     id: session.id,
     messages: [...session.messages],
     title: session.title,
   }
+  if (!session.projectId) {
+    return result
+  }
+  return {
+    ...result,
+    projectId: session.projectId,
+  }
 }
 
 export const saveChatSession = async (session: ChatSession): Promise<void> => {
-  await chatSessionStorage.setSession({
+  const value: ChatSession = {
     id: session.id,
     messages: [...session.messages],
     title: session.title,
-  })
+  }
+  await chatSessionStorage.setSession(
+    session.projectId
+      ? {
+          ...value,
+          projectId: session.projectId,
+        }
+      : value,
+  )
 }
 
 export const deleteChatSession = async (id: string): Promise<void> => {

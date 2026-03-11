@@ -8,9 +8,11 @@ import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiK
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
+import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 
@@ -20,6 +22,13 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (name === InputName.CreateSession) {
     return createSession(state)
+  }
+  if (name === InputName.CreateProject) {
+    return handleClickCreateProject(state)
+  }
+  if (InputName.isProjectInputName(name)) {
+    const projectId = InputName.getProjectIdFromInputName(name)
+    return selectProject(state, projectId)
   }
   if (InputName.isSessionInputName(name)) {
     const sessionId = InputName.getSessionIdFromInputName(name)

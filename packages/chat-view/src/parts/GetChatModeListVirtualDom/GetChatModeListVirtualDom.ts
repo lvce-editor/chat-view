@@ -1,10 +1,11 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
+import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -24,17 +25,21 @@ export const getChatModeListVirtualDom = (
   chatListScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
+  projects: readonly Project[] = [],
+  selectedProjectId = '',
+  projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 4,
+      childCount: 5,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(),
+    ...getProjectListDom(projects, selectedProjectId, projectListScrollTop),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,

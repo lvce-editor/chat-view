@@ -31,6 +31,7 @@ const getDefaultModels = (): readonly ChatModel[] => {
 }
 
 export const createDefaultState = (): ChatState => {
+  const defaultProjectId = 'project-1'
   const defaultSessionId = 'session-1'
   const defaultModelId = 'test'
   const chatMessageFontSize = 13
@@ -78,13 +79,23 @@ export const createDefaultState = (): ChatState => {
     openRouterApiKeyState: 'idle',
     passIncludeObfuscation: false,
     platform: 0,
+    projectListScrollTop: 0,
+    projects: [
+      {
+        id: defaultProjectId,
+        name: 'Current Workspace',
+        uri: '',
+      },
+    ],
     renamingSessionId: '',
     selectedModelId: defaultModelId,
+    selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
     sessions: [
       {
         id: defaultSessionId,
         messages: [],
+        projectId: defaultProjectId,
         title: Strings.defaultSessionTitle(),
       },
     ],

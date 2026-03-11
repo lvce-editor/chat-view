@@ -78,6 +78,7 @@ export const commandMap = {
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
+  'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),

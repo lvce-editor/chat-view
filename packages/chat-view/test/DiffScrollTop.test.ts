@@ -28,3 +28,13 @@ test('diffScrollTop should return false when messages scroll position changes', 
   const result = DiffScrollTop.diffScrollTop(oldState, newState)
   expect(result).toBe(false)
 })
+
+test('diffScrollTop should return false when project list scroll position changes', () => {
+  const oldState = createDefaultState()
+  const newState = {
+    ...createDefaultState(),
+    projectListScrollTop: 160,
+  }
+  const result = DiffScrollTop.diffScrollTop(oldState, newState)
+  expect(result).toBe(false)
+})

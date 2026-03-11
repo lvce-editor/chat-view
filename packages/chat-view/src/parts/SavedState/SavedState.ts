@@ -5,8 +5,11 @@ export interface SavedState {
   readonly composerValue: string
   readonly messagesScrollTop: number
   readonly nextMessageId: number
+  readonly projectListScrollTop: number
+  readonly projects: readonly { id: string; name: string; uri: string }[]
   readonly renamingSessionId: string
   readonly selectedModelId: string
+  readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly viewMode: ChatViewMode
 }

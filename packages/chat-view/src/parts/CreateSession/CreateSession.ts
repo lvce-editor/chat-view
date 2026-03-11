@@ -7,6 +7,7 @@ export const createSession = async (state: ChatState): Promise<ChatState> => {
   const session: ChatSession = {
     id,
     messages: [],
+    projectId: state.selectedProjectId,
     title: `Chat ${state.sessions.length + 1}`,
   }
   await saveChatSession(session)

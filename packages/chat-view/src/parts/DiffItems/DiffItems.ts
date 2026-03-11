@@ -6,8 +6,10 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
     oldState.initial === newState.initial &&
+    oldState.projectListScrollTop === newState.projectListScrollTop &&
     oldState.renamingSessionId === newState.renamingSessionId &&
     oldState.selectedModelId === newState.selectedModelId &&
+    oldState.selectedProjectId === newState.selectedProjectId &&
     oldState.selectedSessionId === newState.selectedSessionId &&
     oldState.sessions === newState.sessions &&
     oldState.tokensMax === newState.tokensMax &&

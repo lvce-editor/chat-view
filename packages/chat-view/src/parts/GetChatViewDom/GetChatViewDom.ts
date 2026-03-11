@@ -1,6 +1,7 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
@@ -26,11 +27,15 @@ export const getChatVirtualDom = (
   messagesScrollTop: number,
   composerDropActive = false,
   composerDropEnabled = true,
+  projects: readonly Project[] = [],
+  selectedProjectId = '',
+  projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
+  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   switch (viewMode) {
     case 'detail':
       return getChatModeDetailVirtualDom(
-        sessions,
+        visibleSessions,
         selectedSessionId,
         composerValue,
         openRouterApiKeyInput,
@@ -48,10 +53,13 @@ export const getChatVirtualDom = (
         messagesScrollTop,
         composerDropActive,
         composerDropEnabled,
+        projects,
+        selectedProjectId,
+        projectListScrollTop,
       )
     case 'list':
       return getChatModeListVirtualDom(
-        sessions,
+        visibleSessions,
         selectedSessionId,
         composerValue,
         models,
@@ -66,6 +74,9 @@ export const getChatVirtualDom = (
         chatListScrollTop,
         composerDropActive,
         composerDropEnabled,
+        projects,
+        selectedProjectId,
+        projectListScrollTop,
       )
     default:
       return getChatModeUnsupportedVirtualDom()

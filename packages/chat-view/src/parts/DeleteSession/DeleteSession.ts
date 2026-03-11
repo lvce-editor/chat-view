@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
@@ -38,8 +39,8 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
 }
 
 export const deleteSessionAtIndex = async (state: ChatState, index: number): Promise<ChatState> => {
-  const { sessions } = state
-  const session = sessions[index]
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const session = visibleSessions[index]
   if (!session) {
     return state
   }
