@@ -15,6 +15,15 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly Virtua
       text(inlineNode.text),
     ]
   }
+  if (inlineNode.type === 'italic') {
+    return [
+      {
+        childCount: 1,
+        type: VirtualDomElements.Em,
+      },
+      text(inlineNode.text),
+    ]
+  }
   return [
     {
       childCount: 1,

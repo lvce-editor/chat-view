@@ -8,7 +8,7 @@ import type {
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const unorderedListItemRegex = /^\s*[-*]\s+(.*)$/
-const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
+const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
@@ -86,6 +86,7 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
     const linkText = match[1]
     const href = match[2]
     const boldText = match[3]
+    const italicText = match[4]
     const index = match.index ?? 0
     if (index > lastIndex) {
       nodes.push({
@@ -103,6 +104,11 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
       nodes.push({
         text: boldText,
         type: 'bold',
+      })
+    } else if (italicText) {
+      nodes.push({
+        text: italicText,
+        type: 'italic',
       })
     }
     lastIndex = index + fullMatch.length

@@ -6,7 +6,7 @@ export type MessageIntermediateNode =
   | MessageTableNode
   | MessageCodeBlockNode
 
-export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode | MessageInlineBoldNode
+export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode | MessageInlineBoldNode | MessageInlineItalicNode
 
 export interface MessageInlineTextNode {
   readonly text: string
@@ -22,6 +22,11 @@ export interface MessageInlineLinkNode {
 export interface MessageInlineBoldNode {
   readonly text: string
   readonly type: 'bold'
+}
+
+export interface MessageInlineItalicNode {
+  readonly text: string
+  readonly type: 'italic'
 }
 
 export interface MessageTextNode {
