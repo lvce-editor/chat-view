@@ -1,5 +1,6 @@
 import { beforeEach, expect, test } from '@jest/globals'
 import {
+  appendChatViewEvent,
   deleteChatSession,
   getChatSession,
   getChatViewEvents,
@@ -76,4 +77,35 @@ test('deleteChatSession should append delete event and hide session from reads',
     sessionId: 'session-1',
     type: 'chat-session-deleted',
   })
+})
+
+test('appendChatViewEvent stores attachment events including blob payload', async () => {
+  const blob = new Blob(['bytes'], { type: 'image/png' })
+
+  await appendChatViewEvent({
+    attachmentId: 'attachment-1',
+    blob,
+    mimeType: 'image/png',
+    name: 'photo.png',
+    sessionId: 'session-1',
+    size: blob.size,
+    timestamp: '2026-03-11T00:00:00.000Z',
+    type: 'chat-attachment-added',
+  })
+
+  const events = await getChatViewEvents('session-1')
+
+  expect(events).toHaveLength(1)
+  expect(events[0]).toMatchObject({
+    attachmentId: 'attachment-1',
+    mimeType: 'image/png',
+    name: 'photo.png',
+    sessionId: 'session-1',
+    type: 'chat-attachment-added',
+  })
+  if (events[0].type !== 'chat-attachment-added') {
+    throw new TypeError('Expected chat-attachment-added event')
+  }
+  expect(events[0].blob).toBeInstanceOf(Blob)
+  expect(events[0].blob.size).toBe(blob.size)
 })

@@ -5,6 +5,7 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
     chatListScrollTop,
+    composerDropActive,
     composerFontFamily,
     composerFontSize,
     composerHeight,
@@ -47,6 +48,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerLineHeight,
     chatListScrollTop,
     messagesScrollTop,
+    composerDropActive,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

@@ -23,6 +23,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedViewMode = getSavedViewMode(savedState)
   const {
     aiSessionTitleGenerationEnabled,
+    composerDropActive,
     emitStreamingFunctionCallEvents,
     openApiApiKey,
     openRouterApiKey,
@@ -57,6 +58,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     ...state,
     aiSessionTitleGenerationEnabled,
     chatListScrollTop,
+    composerDropActive,
     emitStreamingFunctionCallEvents,
     initial: false,
     messagesScrollTop,

@@ -98,6 +98,31 @@ export const getCss = (
 .MarkdownTable th {
   background: var(--vscode-editorWidget-background);
 }
+
+.ChatSendAreaContent {
+  position: relative;
+}
+
+.ChatSendAreaDropTarget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: var(--ChatInputBoxHeight);
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-in-out, border-color 120ms ease-in-out, background-color 120ms ease-in-out;
+}
+
+.ChatSendAreaDropTargetActive {
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--vscode-focusBorder);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 10%, transparent);
+}
 }`
 
   if (!renderHtmlCss.trim()) {

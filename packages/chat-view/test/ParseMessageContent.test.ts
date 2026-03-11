@@ -256,6 +256,84 @@ test('parseMessageContent should parse markdown unordered list blocks with star 
   ])
 })
 
+test('parseMessageContent should parse unordered list blocks from escaped newlines', () => {
+  const rawMessage =
+    "The Python file is a program to display the Fibonacci sequence up to the n-th term specified by the user.\\n\\nHere's a summary of what it does:\\n- It prompts the user to enter how many terms of the Fibonacci sequence they want to see.\\n- It checks if the input is a positive integer.\\n- If the input is 1, it prints the first term (0).\\n- If the input is greater than 1, it generates and prints the Fibonacci sequence up to the specified number of terms. The sequence starts with 0 and 1, and each subsequent term is the sum of the previous two.\\n\\nWould you like me to explain the code line-by-line?"
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'The Python file is a program to display the Fibonacci sequence up to the n-th term specified by the user.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      children: [
+        {
+          text: "Here's a summary of what it does:",
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'It prompts the user to enter how many terms of the Fibonacci sequence they want to see.',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'It checks if the input is a positive integer.',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'If the input is 1, it prints the first term (0).',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'If the input is greater than 1, it generates and prints the Fibonacci sequence up to the specified number of terms. The sequence starts with 0 and 1, and each subsequent term is the sum of the previous two.',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'unordered-list',
+    },
+    {
+      children: [
+        {
+          text: 'Would you like me to explain the code line-by-line?',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown table blocks', () => {
   const rawMessage = [
     'Here is the latest inventory:',

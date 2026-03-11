@@ -19,6 +19,7 @@ export const getChatModeListVirtualDom = (
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
   chatListScrollTop = 0,
+  composerDropActive = true,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -39,6 +40,7 @@ export const getChatModeListVirtualDom = (
       composerFontSize,
       composerFontFamily,
       composerLineHeight,
+      composerDropActive,
     ),
   ]
 }

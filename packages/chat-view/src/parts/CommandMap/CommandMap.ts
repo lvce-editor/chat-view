@@ -13,6 +13,10 @@ import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
+import * as HandleDragEnter from '../HandleDragEnter/HandleDragEnter.ts'
+import * as HandleDragLeave from '../HandleDragLeave/HandleDragLeave.ts'
+import * as HandleDragOver from '../HandleDragOver/HandleDragOver.ts'
+import * as HandleDropFiles from '../HandleDropFiles/HandleDropFiles.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
@@ -63,6 +67,10 @@ export const commandMap = {
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
+  'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
+  'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
+  'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),
+  'Chat.handleDropFiles': wrapCommand(HandleDropFiles.handleDropFiles),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
