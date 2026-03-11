@@ -20,6 +20,7 @@ export interface ChatState {
   readonly composerFontSize: number
   readonly composerHeight: number
   readonly composerLineHeight: number
+  readonly composerDropActive: boolean
   readonly composerValue: string
   readonly disposed?: boolean
   readonly emitStreamingFunctionCallEvents: boolean

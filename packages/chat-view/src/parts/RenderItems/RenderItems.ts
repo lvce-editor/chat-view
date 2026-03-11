@@ -9,6 +9,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerFontSize,
     composerHeight,
     composerLineHeight,
+    composerDropActive,
     composerValue,
     initial,
     messagesScrollTop,
@@ -47,6 +48,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerLineHeight,
     chatListScrollTop,
     messagesScrollTop,
+    composerDropActive,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }
