@@ -2,11 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.delete-session'
 
-interface SavedState {
-  readonly selectedSessionId: string
-  readonly viewMode: string
-}
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -16,12 +11,11 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const chatListItems = Locator('.ChatList .ChatListItem')
   await Chat.handleInput('first session message')
   await Chat.handleSubmit()
-  const firstSessionId = await Chat.getSelectedSessionId()
   await Chat.handleClickBack()
   await expect(chatListItems).toHaveCount(1)
 
   // act
-  await Command.execute('Chat.handleClickDelete', firstSessionId)
+  await Command.execute('Chat.deleteSessionAtIndex', 0)
 
   // assert
   await expect(chatListItems).toHaveCount(0)
