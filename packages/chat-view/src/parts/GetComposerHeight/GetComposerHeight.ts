@@ -20,6 +20,9 @@ const estimateComposerHeight = (value: string, lineHeight: number): number => {
 
 export const getComposerHeight = async (state: ChatState, value: string, width = state.width): Promise<number> => {
   const { composerFontFamily, composerFontSize, composerLineHeight, maxComposerRows } = state
+  if (value === '') {
+    return composerLineHeight
+  }
   const minimumHeight = getMinComposerHeight(composerLineHeight)
   const maximumHeight = getMaxComposerHeight(composerLineHeight, maxComposerRows)
   const content = value || ' '
