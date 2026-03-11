@@ -29,6 +29,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     passIncludeObfuscation,
     streamingEnabled,
+    useChatNetworkWorkerForRequests,
   } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
@@ -72,6 +73,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     streamingEnabled,
+    useChatNetworkWorkerForRequests,
     viewMode,
   }
 }

@@ -32,6 +32,7 @@ export const getAiResponse = async ({
   platform,
   selectedModelId,
   streamingEnabled = true,
+  useChatNetworkWorkerForRequests = false,
   useMockApi,
   userText,
   webSearchEnabled = false,
@@ -79,6 +80,7 @@ export const getAiResponse = async ({
               }
             : {}),
           stream: streamingEnabled,
+          useChatNetworkWorkerForRequests,
           webSearchEnabled,
         },
       )
@@ -110,7 +112,15 @@ export const getAiResponse = async ({
         text = getOpenRouterErrorMessage(result)
       }
     } else if (openRouterApiKey) {
-      const result = await getOpenRouterAssistantText(messages, modelId, openRouterApiKey, openRouterApiBaseUrl, assetDir, platform)
+      const result = await getOpenRouterAssistantText(
+        messages,
+        modelId,
+        openRouterApiKey,
+        openRouterApiBaseUrl,
+        assetDir,
+        platform,
+        useChatNetworkWorkerForRequests,
+      )
       if (result.type === 'success') {
         const { text: assistantText } = result
         text = assistantText
