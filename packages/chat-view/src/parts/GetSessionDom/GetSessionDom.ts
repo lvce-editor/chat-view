@@ -1,4 +1,4 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -33,7 +33,6 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       'data-id': session.id,
       name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
-      role: AriaRoles.Button,
       tabIndex: 0,
       title: Strings.deleteChatSession(),
       type: VirtualDomElements.Button,

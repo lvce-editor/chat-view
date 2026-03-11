@@ -252,7 +252,6 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
   expect(settingsButton).toMatchObject({
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClickSettings,
-    role: 'button',
     type: VirtualDomElements.Button,
   })
 })
@@ -264,7 +263,6 @@ test('getStatusBarVirtualDom should render new chat button in header actions', (
   expect(newChatButton).toMatchObject({
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClickNew,
-    role: 'button',
     type: VirtualDomElements.Button,
   })
 })
@@ -276,7 +274,6 @@ test('getStatusBarVirtualDom should render debug button in header actions', () =
   expect(debugButton).toMatchObject({
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClickSessionDebug,
-    role: 'button',
     type: VirtualDomElements.Button,
   })
 })
@@ -288,7 +285,6 @@ test('getStatusBarVirtualDom should render close button in header actions', () =
   expect(closeButton).toMatchObject({
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClickClose,
-    role: 'button',
     type: VirtualDomElements.Button,
   })
 })
