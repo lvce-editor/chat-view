@@ -156,13 +156,13 @@ test('getOpenApiAssistantText should stream websocket response chunks when enabl
     const socket = MockWebSocket.instances[0]
     socket.emit('open', {})
     socket.emit('message', {
-      data: JSON.stringify({ type: 'response.output_text.delta', delta: 'Hello' }),
+      data: JSON.stringify({ delta: 'Hello', type: 'response.output_text.delta' }),
     })
     socket.emit('message', {
-      data: JSON.stringify({ type: 'response.output_text.delta', delta: ' websocket' }),
+      data: JSON.stringify({ delta: ' websocket', type: 'response.output_text.delta' }),
     })
     socket.emit('message', {
-      data: JSON.stringify({ type: 'response.completed', response: { id: 'resp_1', output: [] } }),
+      data: JSON.stringify({ response: { id: 'resp_1', output: [] }, type: 'response.completed' }),
     })
 
     const result = await requestPromise
