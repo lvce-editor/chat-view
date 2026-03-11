@@ -1,5 +1,5 @@
-import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptions.ts'
 import type { ApiRequestErrorResult } from '../MakeApiRequest/MakeApiRequest.ts'
+import type { MakeApiRequestOptions } from '../RequestShared/MakeApiRequestOptions.ts'
 import { getFetchThrownErrorResult } from '../RequestShared/GetFetchThrownErrorResult.ts'
 import { getHeadersObject } from '../RequestShared/GetHeadersObject.ts'
 import { getRequestInit } from '../RequestShared/GetRequestInit.ts'
