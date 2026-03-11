@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(backButton).toBeVisible()
 
   // act
-  await backButton.click()
+  await Chat.handleClickBack()
 
   // assert
   const chatList = Locator('.ChatList')
