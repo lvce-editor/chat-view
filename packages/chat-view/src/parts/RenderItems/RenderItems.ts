@@ -5,11 +5,11 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
     chatListScrollTop,
+    composerDropActive,
     composerFontFamily,
     composerFontSize,
     composerHeight,
     composerLineHeight,
-    composerDropActive,
     composerValue,
     initial,
     messagesScrollTop,

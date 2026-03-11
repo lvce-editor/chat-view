@@ -45,10 +45,7 @@ export const getChatSendAreaDom = (
     },
     {
       childCount: 0,
-      className: mergeClassNames(
-        ClassNames.ChatSendAreaDropTarget,
-        composerDropActive ? ClassNames.ChatSendAreaDropTargetActive : ClassNames.Empty,
-      ),
+      className: mergeClassNames(ClassNames.ChatSendAreaDropTarget, composerDropActive ? ClassNames.ChatSendAreaDropTargetActive : ClassNames.Empty),
       name: InputName.ComposerDropTarget,
       onDragEnter: DomEventListenerFunctions.HandleDragEnter,
       onDragLeave: DomEventListenerFunctions.HandleDragLeave,

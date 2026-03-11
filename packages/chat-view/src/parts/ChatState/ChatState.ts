@@ -16,11 +16,11 @@ export interface ChatState {
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
   readonly chatMessageLineHeight: number
+  readonly composerDropActive: boolean
   readonly composerFontFamily: string
   readonly composerFontSize: number
   readonly composerHeight: number
   readonly composerLineHeight: number
-  readonly composerDropActive: boolean
   readonly composerValue: string
   readonly disposed?: boolean
   readonly emitStreamingFunctionCallEvents: boolean
