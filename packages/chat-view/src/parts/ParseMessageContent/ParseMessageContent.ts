@@ -13,6 +13,13 @@ const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
 
+const normalizeEscapedNewlines = (value: string): string => {
+  if (value.includes('\\n')) {
+    return value.replaceAll(/\\r\\n|\\n/g, '\n')
+  }
+  return value
+}
+
 const normalizeInlineTables = (value: string): string => {
   return value
     .split(/\r?\n/)
@@ -135,7 +142,8 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     ]
   }
 
-  const lines = normalizeInlineTables(rawMessage).split(/\r?\n/)
+  const normalizedMessage = normalizeEscapedNewlines(rawMessage)
+  const lines = normalizeInlineTables(normalizedMessage).split(/\r?\n/)
   const nodes: MessageIntermediateNode[] = []
   let paragraphLines: string[] = []
   let listItems: MessageListItemNode[] = []
