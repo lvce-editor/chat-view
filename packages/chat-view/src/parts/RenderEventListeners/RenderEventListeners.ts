@@ -50,6 +50,26 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleDragEnter,
+      params: ['handleDragEnter', EventExpression.TargetName],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleDragOver,
+      params: ['handleDragOver', EventExpression.TargetName],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleDragLeave,
+      params: ['handleDragLeave', EventExpression.TargetName],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleDrop,
+      params: ['handleDropFiles', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || [])'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleModelChange,
       params: ['handleModelChange', EventExpression.TargetValue],
     },

@@ -48,6 +48,15 @@ export interface HandleSubmitEvent extends ChatViewEventBase {
   readonly value: string
 }
 
+export interface ChatAttachmentAddedEvent extends ChatViewEventBase {
+  readonly attachmentId: string
+  readonly blob: Blob
+  readonly mimeType: string
+  readonly name: string
+  readonly size: number
+  readonly type: 'chat-attachment-added'
+}
+
 export interface DataEvent extends ChatViewEventBase {
   readonly type: 'sse-response-part'
   readonly value: unknown
@@ -72,6 +81,7 @@ export type ChatViewEvent =
   | ChatSessionMessagesReplacedEvent
   | HandleInputEvent
   | HandleSubmitEvent
+  | ChatAttachmentAddedEvent
   | DataEvent
   | ResponseCompletedEvent
   | EventStreamFinishedEvent

@@ -44,6 +44,7 @@ export const createDefaultState = (): ChatState => {
     chatMessageFontFamily: 'system-ui',
     chatMessageFontSize,
     chatMessageLineHeight,
+    composerDropActive: false,
     composerFontFamily: 'system-ui',
     composerFontSize,
     composerHeight: composerLineHeight + 8,
