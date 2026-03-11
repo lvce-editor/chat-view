@@ -81,6 +81,45 @@ test('getMessageNodeDom should render markdown bold inline nodes as strong dom n
   })
 })
 
+test('getMessageNodeDom should render markdown italic inline nodes as em dom nodes', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'For ',
+        type: 'text',
+      },
+      {
+        text: 'asynchronous',
+        type: 'italic',
+      },
+      {
+        text: ': supports both sync and async communication',
+        type: 'text',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.P,
+  })
+  expect(result[1]).toMatchObject({
+    text: 'For ',
+  })
+  expect(result[2]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Em,
+  })
+  expect(result[3]).toMatchObject({
+    text: 'asynchronous',
+  })
+  expect(result[4]).toMatchObject({
+    text: ': supports both sync and async communication',
+  })
+})
+
 test('getMessageNodeDom should render markdown table nodes as table dom nodes', () => {
   const result = getMessageNodeDom({
     headers: [

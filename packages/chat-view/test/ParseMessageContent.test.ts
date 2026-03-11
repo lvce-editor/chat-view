@@ -156,6 +156,32 @@ test('parseMessageContent should parse markdown bold text in paragraphs', () => 
   ])
 })
 
+test('parseMessageContent should parse markdown italic text in paragraphs', () => {
+  const rawMessage = 'For *asynchronous*: Supports both synchronous and asynchronous communication.'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'For ',
+          type: 'text',
+        },
+        {
+          text: 'asynchronous',
+          type: 'italic',
+        },
+        {
+          text: ': Supports both synchronous and asynchronous communication.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown unordered list blocks', () => {
   const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
