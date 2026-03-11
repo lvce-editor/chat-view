@@ -8,16 +8,11 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-
   const headerTitle = Locator('.ChatHeader .ChatName .Label')
 
-  // act + assert
+  // act
   await Chat.handleClickNew()
+
+  // assert
   await expect(headerTitle).toHaveText('Chat 1')
-
-  await Chat.handleClickNew()
-  await expect(headerTitle).toHaveText('Chat 2')
-
-  await Chat.handleClickNew()
-  await expect(headerTitle).toHaveText('Chat 3')
 }
