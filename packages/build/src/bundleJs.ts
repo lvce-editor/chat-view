@@ -52,7 +52,7 @@ export const bundleNetworkWorkerJs = async () => {
   const options = getOptions(
     join(root, 'packages/chat-network-worker/src/chatNetworkWorkerMain.ts'),
     join(root, '.tmp/dist-chat-network-worker/dist/chatNetworkWorkerMain.js'),
-    ['@lvce-editor/rpc', 'ws', 'electron'],
+    ['ws', 'electron'],
   )
   await bundle(options)
 }
