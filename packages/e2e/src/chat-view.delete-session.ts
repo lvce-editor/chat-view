@@ -2,33 +2,64 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.delete-session'
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+interface SavedState {
+  readonly selectedSessionId: string
+  readonly viewMode: string
+}
+
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
   const composer = Locator('.MultilineInputBox[name="composer"]')
+  const backButton = Locator('.ChatHeader .IconButton[name="back"]')
+  const chatListItems = Locator('.ChatList .ChatListItem')
   await expect(composer).toBeVisible()
-  await Chat.handleInput('new session message')
+
+  // Create two independent sessions so deleting one can be validated thoroughly.
+  await Chat.handleInput('first session message')
   await Chat.handleSubmit()
+  await Command.execute('Chat.rerender')
+  const firstSessionId = await Chat.getSelectedSessionId()
 
-  const sessionId = await Chat.getSelectedSessionId()
+  await Chat.handleClickNew()
+  await Chat.handleInput('second session message')
+  await Chat.handleSubmit()
+  await Command.execute('Chat.rerender')
 
-  // console.log({ sessionId })
+  const secondSessionId = await Chat.getSelectedSessionId()
 
-  // const createdSessionItem = Locator(`.ChatList .ChatListItem[name="session:${createdSessionId}"]`)
-  // await expect(createdSessionItem).toHaveCount(1)
+  if (firstSessionId === secondSessionId) {
+    throw new Error('expected second submit to create/select a different session')
+  }
 
-  // await Command.execute('Chat.handleClickBack')
-  // await Command.execute('Chat.handleClickDelete', createdSessionId)
+  await expect(chatListItems).toHaveCount(2)
+  await expect(backButton).toBeVisible()
 
-  // const afterDelete = (await Command.execute('Chat.saveState')) as SavedState
-  // if (afterDelete.selectedSessionId === createdSessionId) {
-  //   throw new Error('expected selected session to change after deletion')
-  // }
+  // act
+  await Command.execute('Chat.handleClickDelete', secondSessionId)
+  await Command.execute('Chat.rerender')
 
-  // const deletedSessionItem = Locator(`.ChatList .ChatListItem[name="session:${createdSessionId}"]`)
-  // await expect(deletedSessionItem).toHaveCount(0)
+  // assert state switched back to the remaining session in detail mode
+  const afterDelete = (await Command.execute('Chat.saveState')) as SavedState
+  if (afterDelete.selectedSessionId !== firstSessionId) {
+    throw new Error('expected selected session to switch to remaining session after delete')
+  }
+  if (afterDelete.viewMode !== 'detail') {
+    throw new Error(`expected to stay in detail mode after deleting selected session, got ${afterDelete.viewMode}`)
+  }
 
-  // const chatListItems = Locator('.ChatList .ChatListItem')
-  // await expect(chatListItems).toHaveCount(1)
+  // assert detail content switched to the remaining session
+  const chatDetailsContent = Locator('.ChatDetailsContent')
+  await expect(chatDetailsContent).toContainText('first session message')
+  await expect(chatDetailsContent).not.toContainText('second session message')
+
+  // assert list no longer contains the deleted session
+  await Command.execute('Chat.handleClickBack')
+  await expect(backButton).toHaveCount(0)
+  const remainingSessionItem = Locator(`.ChatList .ChatListItem[name="session:${firstSessionId}"]`)
+  const deletedSessionItem = Locator(`.ChatList .ChatListItem[name="session:${secondSessionId}"]`)
+  await expect(remainingSessionItem).toHaveCount(1)
+  await expect(deletedSessionItem).toHaveCount(0)
+  await expect(chatListItems).toHaveCount(1)
 }
