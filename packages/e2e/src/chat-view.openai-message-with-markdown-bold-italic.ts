@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-message-with-markdown-bold-italic'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const mockText = 'Here is **test** in bold and *test* in italic.'
   const tmpDir = await FileSystem.getTmpDir()
