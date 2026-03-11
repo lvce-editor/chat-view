@@ -247,7 +247,7 @@ const createOpenApiWebSocketResponse = (
   const endpoint = getOpenApiWebSocketEndpoint(openApiApiBaseUrl, openApiApiKey)
   const encoder = new TextEncoder()
   const body = new ReadableStream<Uint8Array>({
-    start(controller) {
+    start(controller: ReadableStreamDefaultController<Uint8Array>): void {
       let socket: WebSocket
       let closed = false
 
@@ -270,7 +270,7 @@ const createOpenApiWebSocketResponse = (
         socket.send(payload)
       })
 
-      socket.addEventListener('message', (event) => {
+      socket.addEventListener('message', (event: Readonly<{ data?: unknown }>) => {
         const raw = typeof event.data === 'string' ? event.data : ''
         if (!raw) {
           return
@@ -791,7 +791,8 @@ export const getOpenApiAssistantText = async (
       if (webSocketResponse.type !== 'success') {
         return webSocketResponse
       }
-      response = webSocketResponse.response
+      const { response: webSocketRequestResponse } = webSocketResponse
+      response = webSocketRequestResponse
     } else {
       try {
         response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {

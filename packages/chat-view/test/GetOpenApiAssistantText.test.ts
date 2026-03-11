@@ -17,6 +17,168 @@ const getRequestBodyFromInit = (init: unknown): Record<string, unknown> => {
   return JSON.parse(body) as Record<string, unknown>
 }
 
+type WebSocketEventListener = (event: { readonly data?: unknown }) => void
+
+class MockWebSocket {
+  static instances: MockWebSocket[] = []
+
+  readonly listeners = new Map<string, WebSocketEventListener[]>()
+  readonly sent: string[] = []
+  readonly url: string
+
+  constructor(url: string) {
+    this.url = url
+    MockWebSocket.instances.push(this)
+  }
+
+  addEventListener(type: string, listener: WebSocketEventListener): void {
+    const current = this.listeners.get(type) || []
+    this.listeners.set(type, [...current, listener])
+  }
+
+  close(): void {
+    this.emit('close', {})
+  }
+
+  emit(type: string, event: { readonly data?: unknown }): void {
+    const listeners = this.listeners.get(type) || []
+    for (const listener of listeners) {
+      listener(event)
+    }
+  }
+
+  send(value: string): void {
+    this.sent.push(value)
+  }
+}
+
+test('getOpenApiAssistantText should send request through websocket when openApiUseWebSocket is true', async () => {
+  const originalFetch = globalThis.fetch
+  const originalWebSocket = globalThis.WebSocket
+  let fetchCalled = false
+  globalThis.fetch = (async () => {
+    fetchCalled = true
+    throw new Error('fetch should not be called')
+  }) as typeof globalThis.fetch
+  MockWebSocket.instances.length = 0
+  globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket
+
+  try {
+    const requestPromise = getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        openApiUseWebSocket: true,
+        stream: false,
+      },
+    )
+
+    const socket = MockWebSocket.instances[0]
+    socket.emit('open', {})
+    socket.emit('message', {
+      data: JSON.stringify({
+        output_text: 'hello from websocket',
+      }),
+    })
+    socket.emit('close', {})
+
+    const result = await requestPromise
+
+    expect(fetchCalled).toBe(false)
+    expect(socket.url).toBe('wss://api.openai.com/v1/responses?api_key=oa-key-123')
+    expect(socket.sent).toHaveLength(1)
+    const payload = JSON.parse(socket.sent[0]) as Record<string, unknown>
+    expect(payload.model).toBe('openai/gpt-4o-mini')
+    expect(payload.input).toEqual([
+      {
+        content: 'hello',
+        role: 'user',
+      },
+    ])
+    expect(result).toEqual({
+      text: 'hello from websocket',
+      type: 'success',
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+    globalThis.WebSocket = originalWebSocket
+  }
+})
+
+test('getOpenApiAssistantText should stream websocket response chunks when enabled', async () => {
+  const originalFetch = globalThis.fetch
+  const originalWebSocket = globalThis.WebSocket
+  let fetchCalled = false
+  globalThis.fetch = (async () => {
+    fetchCalled = true
+    throw new Error('fetch should not be called')
+  }) as typeof globalThis.fetch
+  MockWebSocket.instances.length = 0
+  globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket
+
+  const streamedChunks: string[] = []
+
+  try {
+    const requestPromise = getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        onTextChunk: async (chunk: string) => {
+          streamedChunks.push(chunk)
+        },
+        openApiUseWebSocket: true,
+        stream: true,
+      },
+    )
+
+    const socket = MockWebSocket.instances[0]
+    socket.emit('open', {})
+    socket.emit('message', {
+      data: JSON.stringify({ type: 'response.output_text.delta', delta: 'Hello' }),
+    })
+    socket.emit('message', {
+      data: JSON.stringify({ type: 'response.output_text.delta', delta: ' websocket' }),
+    })
+    socket.emit('message', {
+      data: JSON.stringify({ type: 'response.completed', response: { id: 'resp_1', output: [] } }),
+    })
+
+    const result = await requestPromise
+
+    expect(fetchCalled).toBe(false)
+    expect(streamedChunks).toEqual(['Hello', ' websocket'])
+    expect(result).toEqual({
+      text: 'Hello websocket',
+      type: 'success',
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+    globalThis.WebSocket = originalWebSocket
+  }
+})
+
 test('getOpenApiAssistantText should include x-client-request-id header', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
