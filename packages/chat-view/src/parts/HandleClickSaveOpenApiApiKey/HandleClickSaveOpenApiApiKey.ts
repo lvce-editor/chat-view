@@ -40,6 +40,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     nextMessageId: updatedState.nextMessageId,
     openApiApiBaseUrl: updatedState.openApiApiBaseUrl,
     openApiApiKey: updatedState.openApiApiKey,
+    openApiUseWebSocket: updatedState.openApiUseWebSocket,
     openRouterApiBaseUrl: updatedState.openRouterApiBaseUrl,
     openRouterApiKey: updatedState.openRouterApiKey,
     platform: updatedState.platform,

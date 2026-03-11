@@ -40,6 +40,7 @@ Assistant: ${assistantText}`
     nextMessageId: state.nextMessageId,
     openApiApiBaseUrl,
     openApiApiKey,
+    openApiUseWebSocket: state.openApiUseWebSocket,
     openRouterApiBaseUrl,
     openRouterApiKey,
     passIncludeObfuscation: state.passIncludeObfuscation,

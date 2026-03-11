@@ -6,6 +6,7 @@ export interface GetOpenApiAssistantTextOptions {
   readonly onEventStreamFinished?: () => Promise<void>
   readonly onTextChunk?: (chunk: string) => Promise<void>
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
+  readonly openApiUseWebSocket?: boolean
   readonly stream: boolean
   readonly webSearchEnabled?: boolean
 }

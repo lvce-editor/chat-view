@@ -15,6 +15,7 @@ export interface GetAiResponseOptions {
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string
+  readonly openApiUseWebSocket?: boolean
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
   readonly passIncludeObfuscation?: boolean

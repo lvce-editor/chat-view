@@ -42,6 +42,7 @@ export interface ChatState {
   readonly openApiApiKey: string
   readonly openApiApiKeyInput: string
   readonly openApiApiKeysSettingsUrl: string
+  readonly openApiUseWebSocket: boolean
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
   readonly openRouterApiKeyInput: string

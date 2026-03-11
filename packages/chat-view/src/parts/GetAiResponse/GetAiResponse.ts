@@ -26,6 +26,7 @@ export const getAiResponse = async ({
   onToolCallsChunk,
   openApiApiBaseUrl,
   openApiApiKey,
+  openApiUseWebSocket = false,
   openRouterApiBaseUrl,
   openRouterApiKey,
   passIncludeObfuscation = false,
@@ -78,6 +79,7 @@ export const getAiResponse = async ({
                 onToolCallsChunk,
               }
             : {}),
+          openApiUseWebSocket,
           stream: streamingEnabled,
           webSearchEnabled,
         },
