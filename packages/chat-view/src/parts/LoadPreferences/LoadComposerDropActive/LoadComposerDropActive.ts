@@ -1,9 +1,9 @@
 import * as Preferences from '../../Preferences/Preferences.ts'
 
-export const loadComposerDragActive = async (): Promise<boolean> => {
+export const loadComposerDropActive = async (): Promise<boolean> => {
   try {
-    const savedComposerDragActive = await Preferences.get('chatView.composerDragActive')
-    return typeof savedComposerDragActive === 'boolean' ? savedComposerDragActive : true
+    const savedComposerDropActive = await Preferences.get('chatView.composerDropActive')
+    return typeof savedComposerDropActive === 'boolean' ? savedComposerDropActive : true
   } catch {
     return true
   }
