@@ -227,6 +227,96 @@ const parseSseEvent = (eventChunk: string): readonly string[] => {
   return dataLines
 }
 
+const getOpenApiWebSocketEndpoint = (openApiApiBaseUrl: string, openApiApiKey: string): string => {
+  const trimmedBaseUrl = openApiApiBaseUrl.replace(/\/+$/, '')
+  const wsBaseUrl = trimmedBaseUrl.replace(/^http/i, (value) => (value.toLowerCase() === 'https' ? 'wss' : 'ws'))
+  const separator = wsBaseUrl.includes('?') ? '&' : '?'
+  return `${wsBaseUrl}/responses${separator}api_key=${encodeURIComponent(openApiApiKey)}`
+}
+
+const createOpenApiWebSocketResponse = (
+  openApiApiBaseUrl: string,
+  openApiApiKey: string,
+  payload: string,
+):
+  | {
+      readonly response: Response
+      readonly type: 'success'
+    }
+  | GetOpenApiAssistantTextErrorResult => {
+  const endpoint = getOpenApiWebSocketEndpoint(openApiApiBaseUrl, openApiApiKey)
+  const encoder = new TextEncoder()
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      let socket: WebSocket
+      let closed = false
+
+      const closeController = (): void => {
+        if (closed) {
+          return
+        }
+        closed = true
+        controller.close()
+      }
+
+      try {
+        socket = new WebSocket(endpoint)
+      } catch {
+        controller.error(new Error('failed to create websocket'))
+        return
+      }
+
+      socket.addEventListener('open', () => {
+        socket.send(payload)
+      })
+
+      socket.addEventListener('message', (event) => {
+        const raw = typeof event.data === 'string' ? event.data : ''
+        if (!raw) {
+          return
+        }
+        const trimmed = raw.trim()
+        if (trimmed === '[DONE]') {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          socket.close()
+          closeController()
+          return
+        }
+        if (trimmed.startsWith('data:')) {
+          controller.enqueue(encoder.encode(`${trimmed}\n\n`))
+        } else {
+          controller.enqueue(encoder.encode(`data: ${trimmed}\n\n`))
+        }
+        if (/"type"\s*:\s*"response\.completed"/.test(trimmed)) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          socket.close()
+          closeController()
+        }
+      })
+
+      socket.addEventListener('error', () => {
+        if (closed) {
+          return
+        }
+        closed = true
+        controller.error(new Error('websocket request failed'))
+      })
+
+      socket.addEventListener('close', () => {
+        closeController()
+      })
+    },
+  })
+
+  return {
+    response: new Response(body, {
+      status: 200,
+      statusText: 'OK',
+    }),
+    type: 'success',
+  }
+}
+
 const updateToolCallAccumulator = (
   accumulator: Readonly<Record<number, StreamingToolCall>>,
   chunk: readonly unknown[],
@@ -373,6 +463,23 @@ const parseOpenApiStream = async (
       await onDataEvent(parsed)
     }
     if (!parsed || typeof parsed !== 'object') {
+      return
+    }
+
+    const directOutputText = getResponseOutputText(parsed)
+    if (directOutputText) {
+      text += directOutputText
+      if (onTextChunk) {
+        await onTextChunk(directOutputText)
+      }
+      const parsedResponseId = Reflect.get(parsed, 'id')
+      if (typeof parsedResponseId === 'string' && parsedResponseId) {
+        responseId = parsedResponseId
+      }
+      const directResponseFunctionCalls = getResponseFunctionCalls(parsed)
+      if (directResponseFunctionCalls.length > 0) {
+        completedResponseFunctionCalls = directResponseFunctionCalls
+      }
       return
     }
 
@@ -663,6 +770,7 @@ export const getOpenApiAssistantText = async (
     onEventStreamFinished,
     onTextChunk,
     onToolCallsChunk,
+    openApiUseWebSocket = false,
     stream,
     webSearchEnabled = false,
   } = options ?? { stream: false }
@@ -674,21 +782,30 @@ export const getOpenApiAssistantText = async (
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
+    const requestPayload = JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId))
     let response: Response
-    try {
-      response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
-        body: JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)),
-        headers: {
-          Authorization: `Bearer ${openApiApiKey}`,
-          'Content-Type': 'application/json',
-          ...getClientRequestIdHeader(),
-        },
-        method: 'POST',
-      })
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
+    if (openApiUseWebSocket) {
+      const webSocketResponse = createOpenApiWebSocketResponse(openApiApiBaseUrl, openApiApiKey, requestPayload)
+      if (webSocketResponse.type !== 'success') {
+        return webSocketResponse
+      }
+      response = webSocketResponse.response
+    } else {
+      try {
+        response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
+          body: requestPayload,
+          headers: {
+            Authorization: `Bearer ${openApiApiKey}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+        })
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
       }
     }
 
@@ -716,7 +833,7 @@ export const getOpenApiAssistantText = async (
       }
     }
 
-    if (stream) {
+    if (stream || openApiUseWebSocket) {
       const streamResult = await parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent)
       if (streamResult.type !== 'success') {
         return streamResult
@@ -759,7 +876,7 @@ export const getOpenApiAssistantText = async (
         continue
       }
 
-      if (onEventStreamFinished) {
+      if (onEventStreamFinished && stream) {
         await onEventStreamFinished()
       }
 

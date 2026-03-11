@@ -247,6 +247,7 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
@@ -273,6 +274,7 @@ test('loadContent should load openApiApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
     ['Preferences.get', 'chatView.passIncludeObfuscation'],
@@ -302,6 +304,7 @@ test('loadContent should load emitStreamingFunctionCallEvents from preferences',
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
@@ -332,6 +335,7 @@ test('loadContent should load streamingEnabled from preferences', async () => {
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
@@ -362,6 +366,38 @@ test('loadContent should load passIncludeObfuscation from preferences', async ()
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+  ])
+})
+
+test('loadContent should load openApiUseWebSocket from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      if (key === 'chatView.openApiUseWebSocket') {
+        return true
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.openApiUseWebSocket).toBe(true)
+  expectInvocations(mockRpc.invocations, [
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
@@ -392,6 +428,7 @@ test('loadContent should load aiSessionTitleGenerationEnabled from preferences',
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
     ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'chatView.openApiUseWebSocket'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
