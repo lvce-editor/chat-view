@@ -1,4 +1,4 @@
-import * as Preferences from '../../Preferences/Preferences.ts'
+import * as Preferences from '../Preferences/Preferences.ts'
 
 export const loadComposerDropEnabled = async (): Promise<boolean> => {
   try {

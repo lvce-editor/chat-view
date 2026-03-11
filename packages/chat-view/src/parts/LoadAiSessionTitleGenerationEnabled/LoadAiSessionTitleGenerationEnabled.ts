@@ -1,4 +1,4 @@
-import * as Preferences from '../../Preferences/Preferences.ts'
+import * as Preferences from '../Preferences/Preferences.ts'
 
 export const loadAiSessionTitleGenerationEnabled = async (): Promise<boolean> => {
   try {
