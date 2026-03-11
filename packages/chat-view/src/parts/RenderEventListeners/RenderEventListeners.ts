@@ -92,6 +92,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleMessagesScroll', 'event.target.scrollTop'],
     },
     {
+      name: DomEventListenersFunctions.HandleProjectListScroll,
+      params: ['handleProjectListScroll', 'event.target.scrollTop'],
+    },
+    {
       name: DomEventListenersFunctions.HandleMessagesContextMenu,
       params: ['handleMessagesContextMenu'],
       preventDefault: true,
