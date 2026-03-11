@@ -6,6 +6,12 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   if (name !== InputName.ComposerDropTarget) {
     return state
   }
+  if (!state.composerDropEnabled) {
+    return {
+      ...state,
+      composerDropActive: false,
+    }
+  }
   const nextState =
     state.composerDropActive === false
       ? state
