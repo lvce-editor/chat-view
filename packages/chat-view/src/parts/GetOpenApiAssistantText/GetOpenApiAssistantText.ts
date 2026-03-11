@@ -782,7 +782,9 @@ export const getOpenApiAssistantText = async (
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
-    const requestPayload = JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId))
+    const requestPayload = JSON.stringify(
+      getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId),
+    )
     let response: Response
     if (openApiUseWebSocket) {
       const webSocketResponse = createOpenApiWebSocketResponse(openApiApiBaseUrl, openApiApiKey, requestPayload)
