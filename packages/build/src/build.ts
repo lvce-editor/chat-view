@@ -1,11 +1,10 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleJs, bundleNetworkWorkerJs, bundleToolWorkerJs } from './bundleJs.ts'
+import { bundleJs, bundleToolWorkerJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
 const dist = join(root, '.tmp', 'dist')
-const networkWorkerDist = join(root, '.tmp', 'dist-chat-network-worker')
 const toolWorkerDist = join(root, '.tmp', 'dist-chat-tool-worker')
 
 const readJson = async (path) => {
@@ -52,14 +51,11 @@ const getVersion = async () => {
 }
 
 await rm(dist, { recursive: true, force: true })
-await rm(networkWorkerDist, { recursive: true, force: true })
 await rm(toolWorkerDist, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
-await mkdir(networkWorkerDist, { recursive: true })
 await mkdir(toolWorkerDist, { recursive: true })
 
 await bundleJs()
-await bundleNetworkWorkerJs()
 await bundleToolWorkerJs()
 
 const version = await getVersion()
@@ -81,23 +77,6 @@ await writeJson(join(dist, 'package.json'), packageJson)
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
-
-const networkWorkerPackageJson = await readJson(join(root, 'packages', 'chat-network-worker', 'package.json'))
-
-delete networkWorkerPackageJson.scripts
-delete networkWorkerPackageJson.dependencies
-delete networkWorkerPackageJson.devDependencies
-delete networkWorkerPackageJson.prettier
-delete networkWorkerPackageJson.jest
-delete networkWorkerPackageJson.xo
-delete networkWorkerPackageJson.directories
-delete networkWorkerPackageJson.nodemonConfig
-networkWorkerPackageJson.version = version
-networkWorkerPackageJson.main = 'dist/chatNetworkWorkerMain.js'
-
-await writeJson(join(networkWorkerDist, 'package.json'), networkWorkerPackageJson)
-await cp(join(root, 'README.md'), join(networkWorkerDist, 'README.md'))
-await cp(join(root, 'LICENSE'), join(networkWorkerDist, 'LICENSE'))
 
 const toolWorkerPackageJson = await readJson(join(root, 'packages', 'chat-tool-worker', 'package.json'))
 

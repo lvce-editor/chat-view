@@ -6,9 +6,6 @@
       "path": "./packages/chat-view"
     },
     {
-      "path": "./packages/chat-network-worker"
-    },
-    {
       "path": "./packages/chat-tool-worker"
     },
     {

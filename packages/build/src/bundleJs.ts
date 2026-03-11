@@ -48,15 +48,6 @@ export const bundleJs = async () => {
   await bundle(options)
 }
 
-export const bundleNetworkWorkerJs = async () => {
-  const options = getOptions(
-    join(root, 'packages/chat-network-worker/src/chatNetworkWorkerMain.ts'),
-    join(root, '.tmp/dist-chat-network-worker/dist/chatNetworkWorkerMain.js'),
-    ['ws', 'electron'],
-  )
-  await bundle(options)
-}
-
 export const bundleToolWorkerJs = async () => {
   const options = getOptions(
     join(root, 'packages/chat-tool-worker/src/chatToolWorkerMain.ts'),
