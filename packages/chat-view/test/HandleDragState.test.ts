@@ -28,6 +28,28 @@ test('drag over keeps composer drop state enabled', async () => {
   expect(newState.composerDropActive).toBe(true)
 })
 
+test('drag enter keeps composer drop state disabled for non-file drags', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerDropActive: false,
+  }
+
+  const newState = await HandleDragEnter.handleDragEnter(state, InputName.ComposerDropTarget, false)
+
+  expect(newState.composerDropActive).toBe(false)
+})
+
+test('drag over keeps composer drop state disabled for non-file drags', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerDropActive: false,
+  }
+
+  const newState = await HandleDragOver.handleDragOver(state, InputName.ComposerDropTarget, false)
+
+  expect(newState.composerDropActive).toBe(false)
+})
+
 test('drag leave disables composer drop state', async () => {
   const state: ChatState = {
     ...createDefaultState(),

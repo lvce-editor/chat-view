@@ -53,12 +53,12 @@ test('renderEventListeners should return expected listeners', () => {
     },
     {
       name: DomEventListenersFunctions.HandleDragEnter,
-      params: ['handleDragEnter', EventExpression.TargetName],
+      params: ['handleDragEnter', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || []).length > 0'],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragOver,
-      params: ['handleDragOver', EventExpression.TargetName],
+      params: ['handleDragOver', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || []).length > 0'],
       preventDefault: true,
     },
     {
@@ -69,6 +69,16 @@ test('renderEventListeners should return expected listeners', () => {
     {
       name: DomEventListenersFunctions.HandleDrop,
       params: ['handleDropFiles', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || [])'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleDragEnterChatView,
+      params: ['handleDragEnter', 'composer-drop-target', 'Array.from(event.dataTransfer?.files || []).length > 0'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleDragOverChatView,
+      params: ['handleDragOver', 'composer-drop-target', 'Array.from(event.dataTransfer?.files || []).length > 0'],
       preventDefault: true,
     },
     {
