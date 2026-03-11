@@ -2,6 +2,8 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
+    oldState.composerDropActive === newState.composerDropActive &&
+    oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
     oldState.initial === newState.initial &&
     oldState.renamingSessionId === newState.renamingSessionId &&

@@ -103,25 +103,36 @@ export const getCss = (
   position: relative;
 }
 
-.ChatSendAreaDropTarget {
+.Chat {
+  position: relative;
+}
+
+.ChatViewDropOverlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  min-height: var(--ChatInputBoxHeight);
+  bottom: 0;
   border: 1px dashed transparent;
   border-radius: 6px;
   background: transparent;
+  color: var(--vscode-editor-foreground);
+  font-size: 13px;
+  font-weight: 600;
   opacity: 0;
   pointer-events: none;
+  z-index: 10;
   transition: opacity 120ms ease-in-out, border-color 120ms ease-in-out, background-color 120ms ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.ChatSendAreaDropTargetActive {
+.ChatViewDropOverlayActive {
   opacity: 1;
   pointer-events: auto;
   border-color: var(--vscode-focusBorder);
-  background: color-mix(in srgb, var(--vscode-focusBorder) 10%, transparent);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 12%, transparent);
 }
 }`
 
