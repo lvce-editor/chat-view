@@ -9,6 +9,26 @@ interface MockOpenApiRequest {
   readonly url: string
 }
 
+const assert = (condition: boolean, message: string): void => {
+  if (!condition) {
+    throw new Error(message)
+  }
+}
+
+const assertEqual = <T>(actual: T, expected: T, context: string): void => {
+  if (actual !== expected) {
+    throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
+  }
+}
+
+const assertDeepEqual = (actual: unknown, expected: unknown, context: string): void => {
+  const actualJson = JSON.stringify(actual)
+  const expectedJson = JSON.stringify(expected)
+  if (actualJson !== expectedJson) {
+    throw new Error(`${context}: expected ${expectedJson}, got ${actualJson}`)
+  }
+}
+
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
@@ -34,14 +54,14 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   // assert mocked outbound OpenAI request
   const requests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as readonly MockOpenApiRequest[]
-  expect(requests.length).toBe(1)
+  assertEqual(requests.length, 1, 'OpenAI request count')
 
   const request = requests[0]
-  expect(request.url).toBe('https://api.openai.com/v1/responses')
-  expect(request.method).toBe('POST')
-  expect(request.headers.Authorization).toBe('Bearer sk-e2e-openai-key')
-  expect(request.headers['Content-Type']).toBe('application/json')
-  expect(typeof request.headers['x-client-request-id']).toBe('string')
+  assertEqual(request.url, 'https://api.openai.com/v1/responses', 'OpenAI request URL')
+  assertEqual(request.method, 'POST', 'OpenAI request method')
+  assertEqual(request.headers.Authorization, 'Bearer sk-e2e-openai-key', 'OpenAI auth header')
+  assertEqual(request.headers['Content-Type'], 'application/json', 'OpenAI content-type header')
+  assertEqual(typeof request.headers['x-client-request-id'], 'string', 'OpenAI x-client-request-id header type')
 
   const payload = request.payload as {
     readonly input: readonly { readonly content: string; readonly role: string }[]
@@ -54,15 +74,15 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     readonly tools: readonly { readonly type: string }[]
   }
 
-  expect(payload.model).toBe('gpt-4.1-mini')
-  expect(payload.stream).toBe(true)
-  expect(payload.stream_options.include_obfuscation).toBe(false)
-  expect(payload.tool_choice).toBe('auto')
-  expect(payload.input.length).toBe(1)
-  expect(payload.input[0]).toEqual({
+  assertEqual(payload.model, 'gpt-4.1-mini', 'OpenAI payload model')
+  assertEqual(payload.stream, true, 'OpenAI payload stream flag')
+  assertEqual(payload.stream_options.include_obfuscation, false, 'OpenAI payload stream_options.include_obfuscation')
+  assertEqual(payload.tool_choice, 'auto', 'OpenAI payload tool_choice')
+  assertEqual(payload.input.length, 1, 'OpenAI payload input length')
+  assertDeepEqual(payload.input[0], {
     content: "what's 1+1",
     role: 'user',
-  })
-  expect(payload.tools.length > 0).toBe(true)
-  expect(payload.tools.some((tool) => tool.type === 'web_search')).toBe(true)
+  }, 'OpenAI payload first input')
+  assert(payload.tools.length > 0, 'OpenAI payload should include at least one tool')
+  assert(payload.tools.some((tool) => tool.type === 'web_search'), 'OpenAI payload should include web_search tool')
 }
