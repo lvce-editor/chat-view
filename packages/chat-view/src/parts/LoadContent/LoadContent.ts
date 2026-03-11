@@ -111,7 +111,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
   const preferredViewMode = savedViewMode || state.viewMode
-  const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode === 'detail' ? 'detail' : 'list'
+  const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
   return {
     ...state,
     aiSessionTitleGenerationEnabled,

@@ -28,7 +28,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
 test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   expect(result[0]).toMatchObject({
-    childCount: 5,
+    childCount: 4,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -65,8 +65,53 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   expect(detailsNode).toBeUndefined()
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
   const addProjectButton = result.find((node) => node.name === 'create-project')
+  expect(projectSidebar).toBeUndefined()
+  expect(addProjectButton).toBeUndefined()
+})
+
+test('getStatusBarVirtualDom should render projects and chats in chat-focus mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const projects = [{ id: 'project-1', name: 'Current Workspace', uri: 'file:///workspace' }]
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'chat-focus',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    false,
+    true,
+    projects,
+    'project-1',
+    0,
+  )
+
+  expect(result[0]).toMatchObject({
+    childCount: 6,
+    className: `${ClassNames.Viewlet} Chat ChatFocus`,
+  })
+  const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
+  const addProjectButton = result.find((node) => node.name === 'create-project')
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const composer = result.find((node) => node.name === 'composer')
+  const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(projectSidebar).toBeDefined()
   expect(addProjectButton).toBeDefined()
+  expect(chatList).toBeDefined()
+  expect(composer).toBeDefined()
+  expect(sessionButton).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render session list entries', () => {

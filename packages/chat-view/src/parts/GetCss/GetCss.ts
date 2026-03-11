@@ -14,17 +14,17 @@ export const getCss = (
   --ChatMessageFontFamily: ${chatMessageFontFamily};
 }
 
-.Viewlet.Chat {
+.Viewlet.Chat.ChatFocus {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 220px 240px 1fr;
   grid-template-rows: auto 1fr auto;
 }
 
-.ChatHeader {
-  grid-column: 1 / 3;
+.Chat.ChatFocus .ChatHeader {
+  grid-column: 1 / 4;
 }
 
-.ProjectSidebar {
+.Chat.ChatFocus .ProjectSidebar {
   border-right: 1px solid var(--ColorBorder, #3a3d41);
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@ export const getCss = (
   min-height: 0;
 }
 
-.ProjectList {
+.Chat.ChatFocus .ProjectList {
   min-height: 0;
   overflow: auto;
 }
@@ -57,7 +57,7 @@ export const getCss = (
   background: var(--ColorListActiveSelectionBackground, #04395e);
 }
 
-.ProjectAddButton {
+.Chat.ChatFocus .ProjectAddButton {
   background: transparent;
   border: 0;
   border-top: 1px solid var(--ColorBorder, #3a3d41);
@@ -71,13 +71,22 @@ export const getCss = (
 .ChatList,
 .ChatListEmpty,
 .ChatMessages {
-  grid-column: 2;
-  grid-row: 2;
   min-height: 0;
 }
 
-.ChatSendArea {
+.Chat.ChatFocus .ChatList,
+.Chat.ChatFocus .ChatListEmpty {
   grid-column: 2;
+  grid-row: 2;
+}
+
+.Chat.ChatFocus .ChatMessages {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.Chat.ChatFocus .ChatSendArea {
+  grid-column: 3;
   grid-row: 3;
 }
 `
