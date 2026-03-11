@@ -35,7 +35,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // assert mocked outbound OpenAI request
   const requests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as unknown
   if (!Array.isArray(requests)) {
-    throw new Error(`Expected Chat.mockOpenApiRequestGetAll to return an array, got ${typeof requests}`)
+    throw new TypeError(`Expected Chat.mockOpenApiRequestGetAll to return an array, got ${typeof requests}`)
   }
   expect(requests.length).toBe(1)
 
@@ -58,10 +58,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   }
 
   if (!Array.isArray(payload.input)) {
-    throw new Error('Expected payload.input to be an array')
+    throw new TypeError('Expected payload.input to be an array')
   }
   if (!Array.isArray(payload.tools)) {
-    throw new Error('Expected payload.tools to be an array')
+    throw new TypeError('Expected payload.tools to be an array')
   }
 
   expect(payload.model).toBe('gpt-4.1-mini')
