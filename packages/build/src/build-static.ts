@@ -23,7 +23,6 @@ export const getRemoteUrl = (path: string): string => {
   return `/remote/${url}`
 }
 
-// @ts-ignore
 const content = await readFile(rendererWorkerPath, 'utf8')
 const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
 
@@ -34,7 +33,6 @@ const replaceRemoteUrlWithAssetUrl = (
   workerMainName: string,
   localPath: string,
 ) => {
-  // @ts-ignore
   const remoteUrl = getRemoteUrl(localPath)
   const occurrence = `// const ${variableName} = \`\${assetDir}/packages/${packageName}/dist/${workerMainName}\`
 const ${variableName} = \`${remoteUrl}\``
