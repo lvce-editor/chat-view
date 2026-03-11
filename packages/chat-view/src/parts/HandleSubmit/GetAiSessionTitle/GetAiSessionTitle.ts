@@ -46,6 +46,7 @@ Assistant: ${assistantText}`
     platform: state.platform,
     selectedModelId,
     streamingEnabled: false,
+    useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useMockApi,
     userText: titlePrompt,
     webSearchEnabled: false,

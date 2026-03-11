@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import { makeApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenRouterApiEndpoint } from '../GetOpenRouterApiEndpoint/GetOpenRouterApiEndpoint.ts'
@@ -56,32 +57,78 @@ const getOpenRouterRaw429Message = async (response: Response): Promise<string | 
   return raw
 }
 
+const getOpenRouterRaw429MessageFromText = (responseText: string): string | undefined => {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(responseText) as unknown
+  } catch {
+    return undefined
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return undefined
+  }
+
+  const error = Reflect.get(parsed, 'error')
+  if (!error || typeof error !== 'object') {
+    return undefined
+  }
+
+  const metadata = Reflect.get(error, 'metadata')
+  if (!metadata || typeof metadata !== 'object') {
+    return undefined
+  }
+
+  const raw = Reflect.get(metadata, 'raw')
+  if (typeof raw !== 'string' || !raw) {
+    return undefined
+  }
+
+  return raw
+}
+
 const getOpenRouterLimitInfo = async (
   openRouterApiKey: string,
   openRouterApiBaseUrl: string,
+  useChatNetworkWorkerForRequests: boolean,
 ): Promise<GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined> => {
-  let response: Response
-  try {
-    response = await fetch(getOpenRouterKeyEndpoint(openRouterApiBaseUrl), {
+  let parsed: unknown
+  if (useChatNetworkWorkerForRequests) {
+    const result = await makeApiRequest({
       headers: {
         Authorization: `Bearer ${openRouterApiKey}`,
         ...getClientRequestIdHeader(),
       },
       method: 'GET',
+      url: getOpenRouterKeyEndpoint(openRouterApiBaseUrl),
     })
-  } catch {
-    return undefined
-  }
+    if (result.type === 'error') {
+      return undefined
+    }
+    parsed = result.body
+  } else {
+    let response: Response
+    try {
+      response = await fetch(getOpenRouterKeyEndpoint(openRouterApiBaseUrl), {
+        headers: {
+          Authorization: `Bearer ${openRouterApiKey}`,
+          ...getClientRequestIdHeader(),
+        },
+        method: 'GET',
+      })
+    } catch {
+      return undefined
+    }
 
-  if (!response.ok) {
-    return undefined
-  }
+    if (!response.ok) {
+      return undefined
+    }
 
-  let parsed: unknown
-  try {
-    parsed = (await response.json()) as unknown
-  } catch {
-    return undefined
+    try {
+      parsed = (await response.json()) as unknown
+    } catch {
+      return undefined
+    }
   }
 
   if (!parsed || typeof parsed !== 'object') {
@@ -140,6 +187,7 @@ export const getOpenRouterAssistantText = async (
   openRouterApiBaseUrl: string,
   assetDir: string,
   platform: number,
+  useChatNetworkWorkerForRequests = false,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
@@ -148,71 +196,124 @@ export const getOpenRouterAssistantText = async (
   const tools = getBasicChatTools()
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
-    let response: Response
-    try {
-      response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
-        body: JSON.stringify({
-          messages: completionMessages,
-          model: modelId,
-          tool_choice: 'auto',
-          tools,
-        }),
+    let parsed: unknown
+    if (useChatNetworkWorkerForRequests) {
+      const requestResult = await makeApiRequest({
         headers: {
           Authorization: `Bearer ${openRouterApiKey}`,
           'Content-Type': 'application/json',
           ...getClientRequestIdHeader(),
         },
         method: 'POST',
+        postBody: {
+          messages: completionMessages,
+          model: modelId,
+          tool_choice: 'auto',
+          tools,
+        },
+        url: getOpenRouterApiEndpoint(openRouterApiBaseUrl),
       })
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
-      }
-    }
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        const retryAfter = response.headers?.get?.('retry-after') ?? null
-        const rawMessage = await getOpenRouterRaw429Message(response)
-        const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl)
+      if (requestResult.type === 'error') {
+        if (requestResult.statusCode === 429) {
+          const retryAfter = requestResult.headers?.['retry-after'] ?? null
+          const rawMessage = getOpenRouterRaw429MessageFromText(requestResult.response)
+          const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
+          return {
+            details: 'too-many-requests',
+            ...(limitInfo || retryAfter
+              ? {
+                  limitInfo: {
+                    ...limitInfo,
+                    ...(retryAfter
+                      ? {
+                          retryAfter,
+                        }
+                      : {}),
+                  },
+                }
+              : {}),
+            ...(rawMessage
+              ? {
+                  rawMessage,
+                }
+              : {}),
+            statusCode: 429,
+            type: 'error',
+          }
+        }
         return {
-          details: 'too-many-requests',
-          ...(limitInfo || retryAfter
-            ? {
-                limitInfo: {
-                  ...limitInfo,
-                  ...(retryAfter
-                    ? {
-                        retryAfter,
-                      }
-                    : {}),
-                },
-              }
-            : {}),
-          ...(rawMessage
-            ? {
-                rawMessage,
-              }
-            : {}),
-          statusCode: 429,
+          details: 'http-error',
+          statusCode: requestResult.statusCode,
           type: 'error',
         }
       }
-      return {
-        details: 'http-error',
-        statusCode: response.status,
-        type: 'error',
+      parsed = requestResult.body
+    } else {
+      let response: Response
+      try {
+        response = await fetch(getOpenRouterApiEndpoint(openRouterApiBaseUrl), {
+          body: JSON.stringify({
+            messages: completionMessages,
+            model: modelId,
+            tool_choice: 'auto',
+            tools,
+          }),
+          headers: {
+            Authorization: `Bearer ${openRouterApiKey}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+        })
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
       }
-    }
 
-    let parsed: unknown
-    try {
-      parsed = (await response.json()) as unknown
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
+      if (!response.ok) {
+        if (response.status === 429) {
+          const retryAfter = response.headers?.get?.('retry-after') ?? null
+          const rawMessage = await getOpenRouterRaw429Message(response)
+          const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
+          return {
+            details: 'too-many-requests',
+            ...(limitInfo || retryAfter
+              ? {
+                  limitInfo: {
+                    ...limitInfo,
+                    ...(retryAfter
+                      ? {
+                          retryAfter,
+                        }
+                      : {}),
+                  },
+                }
+              : {}),
+            ...(rawMessage
+              ? {
+                  rawMessage,
+                }
+              : {}),
+            statusCode: 429,
+            type: 'error',
+          }
+        }
+        return {
+          details: 'http-error',
+          statusCode: response.status,
+          type: 'error',
+        }
+      }
+
+      try {
+        parsed = (await response.json()) as unknown
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
       }
     }
 

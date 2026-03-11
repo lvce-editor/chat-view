@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import type { GetOpenApiAssistantTextOptions } from '../GetOpenApiAssistantTextOptions/GetOpenApiAssistantTextOptions.ts'
 import type { GetOpenApiAssistantTextSuccessResult } from '../GetOpenApiAssistantTextSuccessResult/GetOpenApiAssistantTextSuccessResult.ts'
 import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { makeApiRequest, makeStreamingApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
@@ -648,6 +650,66 @@ const getOpenApiErrorDetails = async (
   }
 }
 
+const getOpenApiErrorDetailsFromResponseText = (
+  responseText: string,
+): Pick<GetOpenApiAssistantTextErrorResult, 'errorCode' | 'errorMessage' | 'errorType'> => {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(responseText) as unknown
+  } catch {
+    return {}
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    return {}
+  }
+
+  const error = Reflect.get(parsed, 'error')
+  if (!error || typeof error !== 'object') {
+    return {}
+  }
+
+  const errorCode = Reflect.get(error, 'code')
+  const errorMessage = Reflect.get(error, 'message')
+  const errorType = Reflect.get(error, 'type')
+
+  return {
+    ...(typeof errorCode === 'string'
+      ? {
+          errorCode,
+        }
+      : {}),
+    ...(typeof errorMessage === 'string'
+      ? {
+          errorMessage,
+        }
+      : {}),
+    ...(typeof errorType === 'string'
+      ? {
+          errorType,
+        }
+      : {}),
+  }
+}
+
+const getResponseFromSseEvents = (events: readonly unknown[]): Response => {
+  const chunks = events.map((event) => {
+    const data = typeof event === 'string' ? event : JSON.stringify(event)
+    return `data: ${data}\n\n`
+  })
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller): void {
+      for (const chunk of chunks) {
+        controller.enqueue(new TextEncoder().encode(chunk))
+      }
+      controller.close()
+    },
+  })
+  return {
+    body: stream,
+  } as Response
+}
+
 export const getOpenApiAssistantText = async (
   messages: readonly ChatMessage[],
   modelId: string,
@@ -664,6 +726,7 @@ export const getOpenApiAssistantText = async (
     onTextChunk,
     onToolCallsChunk,
     stream,
+    useChatNetworkWorkerForRequests = false,
     webSearchEnabled = false,
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
@@ -674,50 +737,97 @@ export const getOpenApiAssistantText = async (
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
-    let response: Response
-    try {
-      response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
-        body: JSON.stringify(getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)),
-        headers: {
-          Authorization: `Bearer ${openApiApiKey}`,
-          'Content-Type': 'application/json',
-          ...getClientRequestIdHeader(),
-        },
-        method: 'POST',
-      })
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
-      }
-    }
-
-    if (!response.ok) {
-      const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
-      return {
-        details: 'http-error',
-        ...(errorCode
-          ? {
-              errorCode,
-            }
-          : {}),
-        ...(errorMessage
-          ? {
-              errorMessage,
-            }
-          : {}),
-        ...(errorType
-          ? {
-              errorType,
-            }
-          : {}),
-        statusCode: response.status,
-        type: 'error',
-      }
-    }
+    const postBody = getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)
 
     if (stream) {
-      const streamResult = await parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent)
+      const streamResult = useChatNetworkWorkerForRequests
+        ? await (async (): Promise<ParseOpenApiStreamResult> => {
+            const requestResult = await makeStreamingApiRequest({
+              headers: {
+                Authorization: `Bearer ${openApiApiKey}`,
+                'Content-Type': 'application/json',
+                ...getClientRequestIdHeader(),
+              },
+              method: 'POST',
+              postBody,
+              url: getOpenApiApiEndpoint(openApiApiBaseUrl),
+            })
+            if (requestResult.type === 'error') {
+              if (requestResult.statusCode === 0) {
+                return {
+                  details: 'request-failed',
+                  type: 'error',
+                }
+              }
+              const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
+              return {
+                details: 'http-error',
+                ...(errorCode
+                  ? {
+                      errorCode,
+                    }
+                  : {}),
+                ...(errorMessage
+                  ? {
+                      errorMessage,
+                    }
+                  : {}),
+                ...(errorType
+                  ? {
+                      errorType,
+                    }
+                  : {}),
+                statusCode: requestResult.statusCode,
+                type: 'error',
+              }
+            }
+            const response = getResponseFromSseEvents(requestResult.body)
+            return parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent)
+          })()
+        : await (async (): Promise<ParseOpenApiStreamResult> => {
+            let response: Response
+            try {
+              response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
+                body: JSON.stringify(postBody),
+                headers: {
+                  Authorization: `Bearer ${openApiApiKey}`,
+                  'Content-Type': 'application/json',
+                  ...getClientRequestIdHeader(),
+                },
+                method: 'POST',
+              })
+            } catch {
+              return {
+                details: 'request-failed',
+                type: 'error',
+              }
+            }
+
+            if (!response.ok) {
+              const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
+              return {
+                details: 'http-error',
+                ...(errorCode
+                  ? {
+                      errorCode,
+                    }
+                  : {}),
+                ...(errorMessage
+                  ? {
+                      errorMessage,
+                    }
+                  : {}),
+                ...(errorType
+                  ? {
+                      errorType,
+                    }
+                  : {}),
+                statusCode: response.status,
+                type: 'error',
+              }
+            }
+            return parseOpenApiStream(response, onTextChunk, onToolCallsChunk, onDataEvent)
+          })()
       if (streamResult.type !== 'success') {
         return streamResult
       }
@@ -770,12 +880,97 @@ export const getOpenApiAssistantText = async (
     }
 
     let parsed: unknown
-    try {
-      parsed = (await response.json()) as unknown
-    } catch {
-      return {
-        details: 'request-failed',
-        type: 'error',
+    if (useChatNetworkWorkerForRequests) {
+      const requestResult = await makeApiRequest({
+        headers: {
+          Authorization: `Bearer ${openApiApiKey}`,
+          'Content-Type': 'application/json',
+          ...getClientRequestIdHeader(),
+        },
+        method: 'POST',
+        postBody,
+        url: getOpenApiApiEndpoint(openApiApiBaseUrl),
+      })
+      if (requestResult.type === 'error') {
+        if (requestResult.statusCode === 0) {
+          return {
+            details: 'request-failed',
+            type: 'error',
+          }
+        }
+        const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
+        return {
+          details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+          ...(errorType
+            ? {
+                errorType,
+              }
+            : {}),
+          statusCode: requestResult.statusCode,
+          type: 'error',
+        }
+      }
+      parsed = requestResult.body
+    } else {
+      let response: Response
+      try {
+        response = await fetch(getOpenApiApiEndpoint(openApiApiBaseUrl), {
+          body: JSON.stringify(postBody),
+          headers: {
+            Authorization: `Bearer ${openApiApiKey}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+        })
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
+      }
+
+      if (!response.ok) {
+        const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
+        return {
+          details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+          ...(errorType
+            ? {
+                errorType,
+              }
+            : {}),
+          statusCode: response.status,
+          type: 'error',
+        }
+      }
+
+      try {
+        parsed = (await response.json()) as unknown
+      } catch {
+        return {
+          details: 'request-failed',
+          type: 'error',
+        }
       }
     }
 
