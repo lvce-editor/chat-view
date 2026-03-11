@@ -1,10 +1,11 @@
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import { getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
 import { getMockOpenRouterAssistantText } from '../GetMockOpenRouterAssistantText/GetMockOpenRouterAssistantText.ts'
-import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
@@ -15,8 +16,7 @@ import { getOpenRouterErrorMessage } from '../GetOpenRouterErrorMessage/GetOpenR
 import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModelId.ts'
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
-import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
-import { getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
 export const getAiResponse = async ({
   assetDir,
