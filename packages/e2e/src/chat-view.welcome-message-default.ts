@@ -7,6 +7,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
 
   // assert
-  const welcomeMessage = Locator('.ChatWelcomeMessage')
+  const welcomeMessage = Locator('.ChatListEmpty')
   await expect(welcomeMessage).toBeVisible()
+  await expect(welcomeMessage).toHaveText('Click the + button to open a new chat.')
 }
