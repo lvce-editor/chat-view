@@ -45,7 +45,7 @@ const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
   })
 }
 
-const getOpenAiParams = (
+export const getOpenAiParams = (
   input: readonly unknown[],
   modelId: string,
   stream: boolean,
