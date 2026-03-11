@@ -48,6 +48,10 @@ export const composePlaceholder = (): string => {
   return i18nString('Type your message. Enter to send, Shift+Enter for newline.')
 }
 
+export const attachImageAsContext = (): string => {
+  return i18nString('Attach Image as Context')
+}
+
 export const openRouterApiKeyPlaceholder = (): string => {
   return i18nString('Enter OpenRouter API key')
 }

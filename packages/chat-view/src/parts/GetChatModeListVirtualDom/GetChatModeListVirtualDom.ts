@@ -1,9 +1,12 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModeListVirtualDom = (
   sessions: readonly ChatSession[],
@@ -19,12 +22,16 @@ export const getChatModeListVirtualDom = (
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
   chatListScrollTop = 0,
-  composerDropActive = true,
+  composerDropActive = false,
+  composerDropEnabled = true,
 ): readonly VirtualDomNode[] => {
+  const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 3,
+      childCount: 4,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
+      onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
+      onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(),
@@ -40,7 +47,19 @@ export const getChatModeListVirtualDom = (
       composerFontSize,
       composerFontFamily,
       composerLineHeight,
-      composerDropActive,
     ),
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.ChatViewDropOverlay, isDropOverlayVisible ? ClassNames.ChatViewDropOverlayActive : ClassNames.Empty),
+      name: InputName.ComposerDropTarget,
+      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
+      onDragOver: DomEventListenerFunctions.HandleDragOver,
+      onDrop: DomEventListenerFunctions.HandleDrop,
+      type: VirtualDomElements.Div,
+    },
+    {
+      text: Strings.attachImageAsContext(),
+      type: VirtualDomElements.Text,
+    },
   ]
 }

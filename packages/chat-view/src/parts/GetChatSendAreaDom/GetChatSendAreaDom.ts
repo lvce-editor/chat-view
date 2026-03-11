@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -19,7 +19,6 @@ export const getChatSendAreaDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
-  composerDropActive = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   return [
@@ -29,7 +28,7 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatSendAreaContent,
       type: VirtualDomElements.Div,
     },
@@ -42,16 +41,6 @@ export const getChatSendAreaDom = (
       placeholder: Strings.composePlaceholder(),
       type: VirtualDomElements.TextArea,
       value: composerValue,
-    },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.ChatSendAreaDropTarget, composerDropActive ? ClassNames.ChatSendAreaDropTargetActive : ClassNames.Empty),
-      name: InputName.ComposerDropTarget,
-      onDragEnter: DomEventListenerFunctions.HandleDragEnter,
-      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-      onDragOver: DomEventListenerFunctions.HandleDragOver,
-      onDrop: DomEventListenerFunctions.HandleDrop,
-      type: VirtualDomElements.Div,
     },
     {
       childCount: usageOverviewEnabled ? 3 : 2,

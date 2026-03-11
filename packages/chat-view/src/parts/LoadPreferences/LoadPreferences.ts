@@ -1,5 +1,5 @@
 import { loadAiSessionTitleGenerationEnabled } from './LoadAiSessionTitleGenerationEnabled/LoadAiSessionTitleGenerationEnabled.ts'
-import { loadComposerDropActive } from './LoadComposerDropActive/LoadComposerDropActive.ts'
+import { loadComposerDropEnabled } from './LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
 import { loadEmitStreamingFunctionCallEvents } from './LoadEmitStreamingFunctionCallEvents/LoadEmitStreamingFunctionCallEvents.ts'
 import { loadOpenApiApiKey } from './LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from './LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
@@ -8,7 +8,7 @@ import { loadStreamingEnabled } from './LoadStreamingEnabled/LoadStreamingEnable
 
 export const loadPreferences = async (): Promise<{
   aiSessionTitleGenerationEnabled: boolean
-  composerDropActive: boolean
+  composerDropEnabled: boolean
   emitStreamingFunctionCallEvents: boolean
   openApiApiKey: string
   openRouterApiKey: string
@@ -17,7 +17,7 @@ export const loadPreferences = async (): Promise<{
 }> => {
   const [
     aiSessionTitleGenerationEnabled,
-    composerDropActive,
+    composerDropEnabled,
     openApiApiKey,
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
@@ -25,7 +25,7 @@ export const loadPreferences = async (): Promise<{
     passIncludeObfuscation,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
-    loadComposerDropActive(),
+    loadComposerDropEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
@@ -35,7 +35,7 @@ export const loadPreferences = async (): Promise<{
 
   return {
     aiSessionTitleGenerationEnabled,
-    composerDropActive,
+    composerDropEnabled,
     emitStreamingFunctionCallEvents,
     openApiApiKey,
     openRouterApiKey,

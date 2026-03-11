@@ -28,7 +28,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
 test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 4,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -175,6 +175,38 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
     onClick: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Button,
   })
+})
+
+test('getStatusBarVirtualDom should render drag overlay message in composer drop target', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    '',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    true,
+  )
+  const composerDropTarget = result.find((node) => node.name === 'composer-drop-target')
+  const overlayMessage = result.find((node) => node.text === 'Attach Image as Context')
+  expect(composerDropTarget).toBeDefined()
+  expect(composerDropTarget).toMatchObject({
+    className: `${ClassNames.ChatViewDropOverlay} ${ClassNames.ChatViewDropOverlayActive}`,
+  })
+  expect(overlayMessage).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render message rows for selected session', () => {

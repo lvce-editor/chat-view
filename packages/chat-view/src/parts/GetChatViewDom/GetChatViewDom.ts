@@ -24,7 +24,8 @@ export const getChatVirtualDom = (
   composerLineHeight: number,
   chatListScrollTop: number,
   messagesScrollTop: number,
-  composerDropActive = true,
+  composerDropActive = false,
+  composerDropEnabled = true,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'detail':
@@ -46,6 +47,7 @@ export const getChatVirtualDom = (
         composerLineHeight,
         messagesScrollTop,
         composerDropActive,
+        composerDropEnabled,
       )
     case 'list':
       return getChatModeListVirtualDom(
@@ -63,6 +65,7 @@ export const getChatVirtualDom = (
         composerLineHeight,
         chatListScrollTop,
         composerDropActive,
+        composerDropEnabled,
       )
     default:
       return getChatModeUnsupportedVirtualDom()
