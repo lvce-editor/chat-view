@@ -79,10 +79,17 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   assertEqual(payload.stream_options.include_obfuscation, false, 'OpenAI payload stream_options.include_obfuscation')
   assertEqual(payload.tool_choice, 'auto', 'OpenAI payload tool_choice')
   assertEqual(payload.input.length, 1, 'OpenAI payload input length')
-  assertDeepEqual(payload.input[0], {
-    content: "what's 1+1",
-    role: 'user',
-  }, 'OpenAI payload first input')
+  assertDeepEqual(
+    payload.input[0],
+    {
+      content: "what's 1+1",
+      role: 'user',
+    },
+    'OpenAI payload first input',
+  )
   assert(payload.tools.length > 0, 'OpenAI payload should include at least one tool')
-  assert(payload.tools.some((tool) => tool.type === 'web_search'), 'OpenAI payload should include web_search tool')
+  assert(
+    payload.tools.some((tool) => tool.type === 'web_search'),
+    'OpenAI payload should include web_search tool',
+  )
 }
