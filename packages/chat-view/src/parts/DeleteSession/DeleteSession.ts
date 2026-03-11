@@ -36,3 +36,12 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
     sessions: hydratedSessions,
   }
 }
+
+export const deleteSessionAtIndex = async (state: ChatState, index: number): Promise<ChatState> => {
+  const { sessions } = state
+  const session = sessions[index]
+  if (!session) {
+    return state
+  }
+  return deleteSession(state, session.id)
+}
