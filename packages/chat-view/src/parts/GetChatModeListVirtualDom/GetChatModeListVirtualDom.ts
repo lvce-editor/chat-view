@@ -5,8 +5,8 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
-import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModeListVirtualDom = (

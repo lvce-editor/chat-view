@@ -1,7 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { renamingSessionId, sessions } = state
