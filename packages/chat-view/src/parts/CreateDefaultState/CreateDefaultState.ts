@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
