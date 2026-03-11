@@ -6,6 +6,7 @@ import { OpenApiApiKeyInput } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenRouterApiKeyInput } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 
 export const handleInput = async (state: ChatState, name: string, value: string, inputSource: 'user' | 'script' = 'user'): Promise<ChatState> => {
+  const { selectedSessionId } = state
   if (name === OpenApiApiKeyInput) {
     return {
       ...state,
@@ -21,9 +22,9 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   if (name !== InputName.Composer) {
     return state
   }
-  if (state.selectedSessionId) {
+  if (selectedSessionId) {
     await appendChatViewEvent({
-      sessionId: state.selectedSessionId,
+      sessionId: selectedSessionId,
       timestamp: new Date().toISOString(),
       type: 'handle-input',
       value,
