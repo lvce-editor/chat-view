@@ -109,7 +109,6 @@ export const getCss = (
   left: 0;
   right: 0;
   min-height: var(--ChatInputBoxHeight);
-  border: 1px dashed transparent;
   border-radius: 6px;
   background: transparent;
   opacity: 0;
