@@ -15,7 +15,7 @@ export const getCss = (
 }
 
 .Viewlet.Chat.ChatFocus {
-  background: linear-gradient(180deg, var(--ColorViewBackground, #181a1f) 0%, #161a1f 100%);
+  background: linear-gradient(180deg, var(--ColorViewBackground, #1d2229) 0%, #1f252d 100%);
   display: grid;
   grid-template-columns: 320px 1fr;
   grid-template-rows: auto 1fr auto;
@@ -26,7 +26,7 @@ export const getCss = (
 }
 
 .Chat.ChatFocus .ProjectSidebar {
-  background: color-mix(in srgb, var(--ColorSideBarBackground, #1a1d22) 90%, #0e141b 10%);
+  background: color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 88%, #1f2b38 12%);
   border-right: 1px solid var(--ColorBorder, #3a3d41);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
   display: flex;
@@ -82,16 +82,16 @@ export const getCss = (
 }
 
 .ProjectListItemSelected {
-  background: color-mix(in srgb, var(--ColorListActiveSelectionBackground, #0b4f77) 86%, #032235 14%);
+  background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #39424d) 84%, #2f3741 16%);
 }
 
 .ProjectListItem:not(.ProjectListItemSelected) .ProjectListItemLabel:hover,
 .ProjectListItem:not(.ProjectListItemSelected) .ProjectListItemLabel:focus-visible {
-  background: color-mix(in srgb, var(--ColorListHoverBackground, #2a323d) 65%, transparent);
+  background: color-mix(in srgb, var(--ColorListHoverBackground, #38414b) 50%, transparent);
 }
 
 .ProjectListItemSelected .ProjectListItemLabel {
-  color: var(--ColorListActiveSelectionForeground, #f7fbff);
+  color: var(--ColorListInactiveSelectionForeground, #e5ebf2);
 }
 
 .ProjectSessionItem {
@@ -115,12 +115,12 @@ export const getCss = (
 }
 
 .ProjectSessionItemSelected {
-  background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #2a2d31) 84%, #10151b 16%);
+  background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #353f4a) 86%, #2c3540 14%);
 }
 
 .ProjectSessionItem:not(.ProjectSessionItemSelected) .ProjectSessionItemLabel:hover,
 .ProjectSessionItem:not(.ProjectSessionItemSelected) .ProjectSessionItemLabel:focus-visible {
-  background: color-mix(in srgb, var(--ColorListHoverBackground, #2b323c) 55%, transparent);
+  background: color-mix(in srgb, var(--ColorListHoverBackground, #38414c) 46%, transparent);
 }
 
 .ProjectSessionItemSelected .ProjectSessionItemLabel {
