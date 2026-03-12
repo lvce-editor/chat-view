@@ -54,6 +54,7 @@ export interface ChatState {
   readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly passIncludeObfuscation: boolean
   readonly platform: number
+  readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
   readonly renamingSessionId: string

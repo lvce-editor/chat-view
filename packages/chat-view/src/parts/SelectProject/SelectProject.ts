@@ -12,7 +12,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
       ...state,
       selectedProjectId: projectId,
       selectedSessionId: '',
-      viewMode: 'list',
+      viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'list',
     }
   }
   const currentSessionVisible = visibleSessions.some((session) => session.id === state.selectedSessionId)
@@ -29,6 +29,6 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
     sessions,
-    viewMode: 'detail',
+    viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   }
 }

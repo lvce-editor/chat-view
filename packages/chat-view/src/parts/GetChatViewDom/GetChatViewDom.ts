@@ -5,7 +5,6 @@ import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDo
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
-import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
@@ -32,11 +31,10 @@ export const getChatVirtualDom = (
   selectedProjectId = '',
   projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
-  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   switch (viewMode) {
     case 'detail':
       return getChatModeDetailVirtualDom(
-        visibleSessions,
+        sessions,
         selectedSessionId,
         composerValue,
         openRouterApiKeyInput,
@@ -57,7 +55,7 @@ export const getChatVirtualDom = (
       )
     case 'list':
       return getChatModeListVirtualDom(
-        visibleSessions,
+        sessions,
         selectedSessionId,
         composerValue,
         models,

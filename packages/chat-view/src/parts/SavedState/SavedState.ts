@@ -6,6 +6,7 @@ export interface SavedState {
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly messagesScrollTop: number
   readonly nextMessageId: number
+  readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly { id: string; name: string; uri: string }[]
   readonly renamingSessionId: string

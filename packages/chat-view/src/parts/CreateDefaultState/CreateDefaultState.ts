@@ -80,6 +80,7 @@ export const createDefaultState = (): ChatState => {
     openRouterApiKeyState: 'idle',
     passIncludeObfuscation: false,
     platform: 0,
+    projectExpandedIds: [defaultProjectId],
     projectListScrollTop: 0,
     projects: [
       {

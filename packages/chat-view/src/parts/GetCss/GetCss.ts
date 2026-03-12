@@ -38,6 +38,10 @@ export const getCss = (
   overflow: auto;
 }
 
+.ProjectListGroup {
+  border-bottom: 1px solid var(--ColorBorder, #3a3d41);
+}
+
 .ProjectListItem {
   align-items: center;
   display: flex;

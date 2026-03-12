@@ -73,7 +73,7 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
 
 test('getStatusBarVirtualDom should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const projects = [{ id: 'project-1', name: 'Current Workspace', uri: 'file:///workspace' }]
+  const projects = [{ id: 'project-1', name: '_blank', uri: '' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
     'session-1',
@@ -101,7 +101,7 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
   )
 
   expect(result[0]).toMatchObject({
-    childCount: 6,
+    childCount: 5,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
@@ -112,7 +112,7 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   expect(projectSidebar).toBeDefined()
   expect(addProjectButton).toBeDefined()
-  expect(chatList).toBeDefined()
+  expect(chatList).toBeUndefined()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(normalModeButton).toBeDefined()
