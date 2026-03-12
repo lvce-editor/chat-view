@@ -4,7 +4,6 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
-import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
@@ -26,7 +25,6 @@ export const getChatModeChatFocusVirtualDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
-  chatListScrollTop = 0,
   messagesScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
@@ -40,7 +38,7 @@ export const getChatModeChatFocusVirtualDom = (
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 6,
+      childCount: 5,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, 'ChatFocus'),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
@@ -61,8 +59,7 @@ export const getChatModeChatFocusVirtualDom = (
       type: VirtualDomElements.Text,
     },
     ...getChatHeaderActionsDom('chat-focus'),
-    ...getProjectListDom(projects, selectedProjectId, projectListScrollTop),
-    ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
+    ...getProjectListDom(projects, sessions, selectedProjectId, selectedSessionId, projectListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
     ...getChatSendAreaDom(
       composerValue,

@@ -75,7 +75,7 @@ export const getChatVirtualDom = (
       )
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom(
-        visibleSessions,
+        sessions,
         selectedSessionId,
         composerValue,
         openRouterApiKeyInput,
@@ -90,7 +90,6 @@ export const getChatVirtualDom = (
         composerFontSize,
         composerFontFamily,
         composerLineHeight,
-        chatListScrollTop,
         messagesScrollTop,
         composerDropActive,
         composerDropEnabled,

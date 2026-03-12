@@ -84,7 +84,7 @@ export const createDefaultState = (): ChatState => {
     projects: [
       {
         id: defaultProjectId,
-        name: 'Current Workspace',
+        name: '_blank',
         uri: '',
       },
     ],
