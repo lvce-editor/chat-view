@@ -67,6 +67,7 @@ test('parseHtmlToVirtualDom should sanitize javascript img src', () => {
 })
 
 test('parseHtmlToVirtualDom should sanitize data img src', () => {
+  // eslint-disable-next-line @cspell/spellchecker
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==" />')
 
   expect(result[0]).toEqual({
