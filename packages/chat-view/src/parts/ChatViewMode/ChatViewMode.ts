@@ -1,1 +1,1 @@
-export type ChatViewMode = 'list' | 'detail'
+export type ChatViewMode = 'list' | 'detail' | 'chat-focus'

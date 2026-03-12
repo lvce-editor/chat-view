@@ -80,6 +80,7 @@ export const commandMap = {
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
+  'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),

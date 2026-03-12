@@ -16,6 +16,6 @@ export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
       type: VirtualDomElements.Span,
     },
     text(Strings.chats()),
-    ...getChatHeaderActionsDom(),
+    ...getChatHeaderActionsDom('list'),
   ]
 }

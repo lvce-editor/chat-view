@@ -2,9 +2,11 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { Project } from '../Project/Project.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatModel } from '../ChatModel/ChatModel.ts'
+export type { Project } from '../Project/Project.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
 export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
@@ -32,6 +34,7 @@ export interface ChatState {
   readonly height: number
   readonly initial: boolean
   readonly inputSource: 'user' | 'script'
+  readonly lastNormalViewMode: 'list' | 'detail'
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
   readonly maxComposerRows: number
@@ -51,8 +54,12 @@ export interface ChatState {
   readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly passIncludeObfuscation: boolean
   readonly platform: number
+  readonly projectExpandedIds: readonly string[]
+  readonly projectListScrollTop: number
+  readonly projects: readonly Project[]
   readonly renamingSessionId: string
   readonly selectedModelId: string
+  readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly streamingEnabled: boolean

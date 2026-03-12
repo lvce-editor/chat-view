@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
+import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySettings/HandleClickOpenApiApiKeySettings.ts'
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
@@ -11,8 +12,11 @@ import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
+import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
+import { toggleChatFocusMode } from '../ToggleChatFocusMode/ToggleChatFocusMode.ts'
+import { toggleProjectExpanded } from '../ToggleProjectExpanded/ToggleProjectExpanded.ts'
 
 export const handleClick = async (state: ChatState, name: string, id = ''): Promise<ChatState> => {
   if (!name) {
@@ -20,6 +24,23 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (name === InputName.CreateSession) {
     return createSession(state)
+  }
+  if (name === InputName.CreateProject) {
+    return handleClickCreateProject(state)
+  }
+  if (InputName.isCreateSessionInProjectInputName(name)) {
+    const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
+    return createSession(state, projectId)
+  }
+  if (name === InputName.ToggleChatFocus) {
+    return toggleChatFocusMode(state)
+  }
+  if (InputName.isProjectInputName(name)) {
+    const projectId = InputName.getProjectIdFromInputName(name)
+    if (state.viewMode === 'chat-focus') {
+      return toggleProjectExpanded(state, projectId)
+    }
+    return selectProject(state, projectId)
   }
   if (InputName.isSessionInputName(name)) {
     const sessionId = InputName.getSessionIdFromInputName(name)

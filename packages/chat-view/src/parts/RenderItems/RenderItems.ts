@@ -18,7 +18,11 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     openApiApiKeyInput,
     openRouterApiKeyInput,
     openRouterApiKeyState,
+    projectExpandedIds,
+    projectListScrollTop,
+    projects,
     selectedModelId,
+    selectedProjectId,
     selectedSessionId,
     sessions,
     tokensMax,
@@ -51,6 +55,10 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     messagesScrollTop,
     composerDropActive,
     composerDropEnabled,
+    projects,
+    projectExpandedIds,
+    selectedProjectId,
+    projectListScrollTop,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

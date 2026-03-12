@@ -3,6 +3,7 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 
 export const createDefaultState = (): ChatState => {
+  const defaultProjectId = 'project-1'
   const defaultSessionId = 'session-1'
   const defaultModelId = 'test'
   const chatMessageFontSize = 13
@@ -31,6 +32,7 @@ export const createDefaultState = (): ChatState => {
     height: 0,
     initial: true,
     inputSource: 'script',
+    lastNormalViewMode: 'list',
     lastSubmittedSessionId: '',
     listItemHeight: 40,
     maxComposerRows: 5,
@@ -50,13 +52,24 @@ export const createDefaultState = (): ChatState => {
     openRouterApiKeyState: 'idle',
     passIncludeObfuscation: false,
     platform: 0,
+    projectExpandedIds: [defaultProjectId],
+    projectListScrollTop: 0,
+    projects: [
+      {
+        id: defaultProjectId,
+        name: '_blank',
+        uri: '',
+      },
+    ],
     renamingSessionId: '',
     selectedModelId: defaultModelId,
+    selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
     sessions: [
       {
         id: defaultSessionId,
         messages: [],
+        projectId: defaultProjectId,
         title: Strings.defaultSessionTitle(),
       },
     ],

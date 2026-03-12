@@ -7,7 +7,7 @@ export const getSavedViewMode = (savedState: unknown): ChatViewMode | undefined 
     return undefined
   }
   const { viewMode } = savedState as Partial<SavedState>
-  if (viewMode !== 'list' && viewMode !== 'detail') {
+  if (viewMode !== 'list' && viewMode !== 'detail' && viewMode !== 'chat-focus') {
     return undefined
   }
   return viewMode

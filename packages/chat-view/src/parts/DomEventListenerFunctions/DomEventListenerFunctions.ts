@@ -29,3 +29,4 @@ export const HandleDragLeave = 28
 export const HandleDrop = 29
 export const HandleDragEnterChatView = 30
 export const HandleDragOverChatView = 31
+export const HandleProjectListScroll = 32

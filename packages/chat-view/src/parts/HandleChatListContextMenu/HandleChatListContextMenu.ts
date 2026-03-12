@@ -1,6 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getListIndex } from '../GetListIndex/GetListIndex.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 const CHAT_LIST_ITEM_CONTEXT_MENU = 'ChatListItemContextMenu'
 
@@ -9,7 +10,8 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
   if (index === -1) {
     return state
   }
-  const item = state.sessions[index]
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const item = visibleSessions[index]
   if (!item) {
     return state
   }
