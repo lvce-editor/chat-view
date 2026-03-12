@@ -18,6 +18,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     openApiApiKeyInput,
     openRouterApiKeyInput,
     openRouterApiKeyState,
+    projectExpandedIds,
     projectListScrollTop,
     projects,
     selectedModelId,
@@ -55,6 +56,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerDropActive,
     composerDropEnabled,
     projects,
+    projectExpandedIds,
     selectedProjectId,
     projectListScrollTop,
   )

@@ -79,6 +79,21 @@ const getSavedProjectListScrollTop = (savedState: unknown): number | undefined =
   return projectListScrollTop
 }
 
+const getSavedProjectExpandedIds = (savedState: unknown): readonly string[] | undefined => {
+  if (!isObject(savedState)) {
+    return undefined
+  }
+  const { projectExpandedIds } = savedState
+  if (!Array.isArray(projectExpandedIds)) {
+    return undefined
+  }
+  const ids = projectExpandedIds.filter((id) => typeof id === 'string') as readonly string[]
+  if (ids.length === 0) {
+    return undefined
+  }
+  return ids
+}
+
 const getSavedLastNormalViewMode = (savedState: unknown): 'list' | 'detail' | undefined => {
   if (!isObject(savedState)) {
     return undefined
@@ -129,6 +144,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
   const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
   const projectListScrollTop = getSavedProjectListScrollTop(savedState) ?? state.projectListScrollTop
+  const savedProjectExpandedIds = getSavedProjectExpandedIds(savedState)
+  const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) => projects.some((project) => project.id === id))
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
@@ -152,6 +169,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
     passIncludeObfuscation,
+    projectExpandedIds,
     projectListScrollTop,
     projects,
     selectedModelId,

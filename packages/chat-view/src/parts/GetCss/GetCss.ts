@@ -49,12 +49,20 @@ export const getCss = (
 }
 
 .ProjectListItemLabel {
+  align-items: center;
   cursor: pointer;
+  display: flex;
   flex: 1;
   overflow: hidden;
   padding: 0 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ProjectListChevron {
+  display: inline-block;
+  margin-right: 6px;
+  width: 10px;
 }
 
 .ProjectListItemSelected {

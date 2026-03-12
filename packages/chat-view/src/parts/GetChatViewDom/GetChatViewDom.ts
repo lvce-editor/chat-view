@@ -28,6 +28,7 @@ export const getChatVirtualDom = (
   composerDropActive = false,
   composerDropEnabled = true,
   projects: readonly Project[] = [],
+  projectExpandedIds: readonly string[] = [],
   selectedProjectId = '',
   projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
@@ -92,6 +93,7 @@ export const getChatVirtualDom = (
         composerDropActive,
         composerDropEnabled,
         projects,
+        projectExpandedIds,
         selectedProjectId,
         projectListScrollTop,
       )

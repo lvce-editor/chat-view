@@ -30,16 +30,18 @@ const getProjectSessionDom = (session: ChatSession, selectedSessionId: string): 
 const getProjectGroupDom = (
   project: Project,
   sessions: readonly ChatSession[],
+  projectExpandedIds: readonly string[],
   selectedProjectId: string,
   selectedSessionId: string,
 ): readonly VirtualDomNode[] => {
+  const expanded = projectExpandedIds.includes(project.id)
   const projectClassName = mergeClassNames(
     ClassNames.ProjectListItem,
     project.id === selectedProjectId ? ClassNames.ProjectListItemSelected : ClassNames.Empty,
   )
   return [
     {
-      childCount: 1 + sessions.length,
+      childCount: 1 + (expanded ? sessions.length : 0),
       className: ClassNames.ProjectListGroup,
       type: VirtualDomElements.Div,
     },
@@ -49,21 +51,28 @@ const getProjectGroupDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 1,
+      childCount: 2,
       className: ClassNames.ProjectListItemLabel,
       name: InputName.getProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
       tabIndex: 0,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ProjectListChevron,
+      type: VirtualDomElements.Span,
+    },
+    text(expanded ? '▾' : '▸'),
     text(project.name),
-    ...sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)),
+    ...(expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []),
   ]
 }
 
 export const getProjectListDom = (
   projects: readonly Project[],
   sessions: readonly ChatSession[],
+  projectExpandedIds: readonly string[],
   selectedProjectId: string,
   selectedSessionId: string,
   projectListScrollTop: number,
@@ -74,7 +83,7 @@ export const getProjectListDom = (
       const sessionProjectId = session.projectId || blankProjectId
       return sessionProjectId === project.id
     })
-    return getProjectGroupDom(project, projectSessions, selectedProjectId, selectedSessionId)
+    return getProjectGroupDom(project, projectSessions, projectExpandedIds, selectedProjectId, selectedSessionId)
   })
 
   return [

@@ -29,6 +29,7 @@ export const getChatModeChatFocusVirtualDom = (
   composerDropActive = false,
   composerDropEnabled = true,
   projects: readonly Project[] = [],
+  projectExpandedIds: readonly string[] = [],
   selectedProjectId = '',
   projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
@@ -59,7 +60,7 @@ export const getChatModeChatFocusVirtualDom = (
       type: VirtualDomElements.Text,
     },
     ...getChatHeaderActionsDom('chat-focus'),
-    ...getProjectListDom(projects, sessions, selectedProjectId, selectedSessionId, projectListScrollTop),
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
     ...getChatSendAreaDom(
       composerValue,

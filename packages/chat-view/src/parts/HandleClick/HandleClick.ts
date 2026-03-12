@@ -16,6 +16,7 @@ import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 import { toggleChatFocusMode } from '../ToggleChatFocusMode/ToggleChatFocusMode.ts'
+import { toggleProjectExpanded } from '../ToggleProjectExpanded/ToggleProjectExpanded.ts'
 
 export const handleClick = async (state: ChatState, name: string, id = ''): Promise<ChatState> => {
   if (!name) {
@@ -32,6 +33,9 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (InputName.isProjectInputName(name)) {
     const projectId = InputName.getProjectIdFromInputName(name)
+    if (state.viewMode === 'chat-focus') {
+      return toggleProjectExpanded(state, projectId)
+    }
     return selectProject(state, projectId)
   }
   if (InputName.isSessionInputName(name)) {
