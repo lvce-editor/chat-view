@@ -59,10 +59,10 @@ const getSavedProjects = (savedState: unknown): readonly { id: string; name: str
 }
 
 const ensureBlankProject = (
-  projects: readonly { id: string; name: string; uri: string }[],
-  fallbackBlankProject: { id: string; name: string; uri: string },
+  projects: readonly Readonly<{ id: string; name: string; uri: string }>[],
+  fallbackBlankProject: Readonly<{ id: string; name: string; uri: string }>,
 ): readonly { id: string; name: string; uri: string }[] => {
-  if (projects.some((project) => project.name === '_blank')) {
+  if (projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.name === '_blank')) {
     return projects
   }
   return [fallbackBlankProject, ...projects]
@@ -139,13 +139,19 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const blankProject = state.projects.find((project) => project.name === '_blank') || { id: 'project-blank', name: '_blank', uri: '' }
   const projects = ensureBlankProject(baseProjects, blankProject)
   const preferredProjectId = getSavedSelectedProjectId(savedState) || state.selectedProjectId
-  const selectedProjectId = projects.some((project) => project.id === preferredProjectId) ? preferredProjectId : projects[0]?.id || ''
+  const selectedProjectId =
+    projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === preferredProjectId) ?
+      preferredProjectId
+    :
+      projects[0]?.id || ''
   const preferredModelId = savedSelectedModelId || state.selectedModelId
   const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
   const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
   const projectListScrollTop = getSavedProjectListScrollTop(savedState) ?? state.projectListScrollTop
   const savedProjectExpandedIds = getSavedProjectExpandedIds(savedState)
-  const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) => projects.some((project) => project.id === id))
+  const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) =>
+    projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
+  )
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''

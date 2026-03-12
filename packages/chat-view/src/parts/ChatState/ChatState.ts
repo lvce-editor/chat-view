@@ -34,8 +34,8 @@ export interface ChatState {
   readonly height: number
   readonly initial: boolean
   readonly inputSource: 'user' | 'script'
-  readonly lastSubmittedSessionId: string
   readonly lastNormalViewMode: 'list' | 'detail'
+  readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly messagesScrollTop: number

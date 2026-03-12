@@ -33,6 +33,31 @@ export const getChatVirtualDom = (
   projectListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
+    case 'chat-focus':
+      return getChatModeChatFocusVirtualDom(
+        sessions,
+        selectedSessionId,
+        composerValue,
+        openRouterApiKeyInput,
+        openApiApiKeyInput,
+        models,
+        selectedModelId,
+        usageOverviewEnabled,
+        tokensUsed,
+        tokensMax,
+        openRouterApiKeyState,
+        composerHeight,
+        composerFontSize,
+        composerFontFamily,
+        composerLineHeight,
+        messagesScrollTop,
+        composerDropActive,
+        composerDropEnabled,
+        projects,
+        projectExpandedIds,
+        selectedProjectId,
+        projectListScrollTop,
+      )
     case 'detail':
       return getChatModeDetailVirtualDom(
         sessions,
@@ -71,31 +96,6 @@ export const getChatVirtualDom = (
         chatListScrollTop,
         composerDropActive,
         composerDropEnabled,
-      )
-    case 'chat-focus':
-      return getChatModeChatFocusVirtualDom(
-        sessions,
-        selectedSessionId,
-        composerValue,
-        openRouterApiKeyInput,
-        openApiApiKeyInput,
-        models,
-        selectedModelId,
-        usageOverviewEnabled,
-        tokensUsed,
-        tokensMax,
-        openRouterApiKeyState,
-        composerHeight,
-        composerFontSize,
-        composerFontFamily,
-        composerLineHeight,
-        messagesScrollTop,
-        composerDropActive,
-        composerDropEnabled,
-        projects,
-        projectExpandedIds,
-        selectedProjectId,
-        projectListScrollTop,
       )
     default:
       return getChatModeUnsupportedVirtualDom()
