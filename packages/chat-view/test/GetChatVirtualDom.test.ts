@@ -96,6 +96,7 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
     false,
     true,
     projects,
+    ['project-1'],
     'project-1',
     0,
   )
