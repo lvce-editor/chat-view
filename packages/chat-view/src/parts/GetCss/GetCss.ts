@@ -40,6 +40,29 @@ export const getCss = (
   min-height: 0;
   overflow: auto;
   padding: 10px 8px 12px;
+  scrollbar-color: color-mix(in srgb, var(--ColorScrollBarSliderBackground, #4b5563) 78%, transparent)
+    color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 92%, transparent);
+  scrollbar-width: thin;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 94%, transparent);
+  border-radius: 999px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ColorScrollBarSliderBackground, #4b5563) 70%, transparent);
+  border: 2px solid color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 94%, transparent);
+  border-radius: 999px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--ColorScrollBarSliderHoverBackground, #667284) 80%, transparent);
 }
 
 .ProjectListGroup {

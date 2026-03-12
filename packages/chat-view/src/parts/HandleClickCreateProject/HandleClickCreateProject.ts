@@ -29,6 +29,7 @@ const pickProjectUri = async (): Promise<string> => {
 }
 
 export const handleClickCreateProject = async (state: ChatState): Promise<ChatState> => {
+  await RendererWorker.confirm('project added')
   const uri = await pickProjectUri()
   if (!uri) {
     return state
