@@ -58,6 +58,16 @@ const getSavedProjects = (savedState: unknown): readonly { id: string; name: str
   return validProjects
 }
 
+const ensureBlankProject = (
+  projects: readonly { id: string; name: string; uri: string }[],
+  fallbackBlankProject: { id: string; name: string; uri: string },
+): readonly { id: string; name: string; uri: string }[] => {
+  if (projects.some((project) => project.name === '_blank')) {
+    return projects
+  }
+  return [fallbackBlankProject, ...projects]
+}
+
 const getSavedProjectListScrollTop = (savedState: unknown): number | undefined => {
   if (!isObject(savedState)) {
     return undefined
@@ -110,7 +120,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   }
   const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
   const savedProjects = getSavedProjects(savedState)
-  const projects = savedProjects && savedProjects.length > 0 ? savedProjects : state.projects
+  const baseProjects = savedProjects && savedProjects.length > 0 ? savedProjects : state.projects
+  const blankProject = state.projects.find((project) => project.name === '_blank') || { id: 'project-blank', name: '_blank', uri: '' }
+  const projects = ensureBlankProject(baseProjects, blankProject)
   const preferredProjectId = getSavedSelectedProjectId(savedState) || state.selectedProjectId
   const selectedProjectId = projects.some((project) => project.id === preferredProjectId) ? preferredProjectId : projects[0]?.id || ''
   const preferredModelId = savedSelectedModelId || state.selectedModelId
