@@ -13,6 +13,15 @@ const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
 
+const isHttpUrl = (url: string): boolean => {
+  const normalized = url.trim().toLowerCase()
+  return normalized.startsWith('http://') || normalized.startsWith('https://')
+}
+
+const sanitizeUrl = (url: string): string => {
+  return isHttpUrl(url) ? url : '#'
+}
+
 const normalizeEscapedNewlines = (value: string): string => {
   if (value.includes('\\n')) {
     return value.replaceAll(/\\r\\n|\\n/g, '\n')
@@ -96,7 +105,7 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
     }
     if (linkText && href) {
       nodes.push({
-        href,
+        href: sanitizeUrl(href),
         text: linkText,
         type: 'link',
       })

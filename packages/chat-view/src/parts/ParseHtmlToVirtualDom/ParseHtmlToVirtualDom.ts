@@ -259,8 +259,13 @@ const getElementType = (tagName: string): number => {
   }
 }
 
+const isHttpUrl = (url: string): boolean => {
+  const normalized = url.trim().toLowerCase()
+  return normalized.startsWith('http://') || normalized.startsWith('https://')
+}
+
 const normalizeUrl = (url: string): string => {
-  return url.toLowerCase().startsWith('javascript:') ? '#' : url
+  return isHttpUrl(url) ? url : '#'
 }
 
 const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unknown> => {
