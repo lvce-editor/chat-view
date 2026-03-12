@@ -18,6 +18,24 @@ test('handleClick should create a new session', async () => {
   expect(result.sessions[1].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
 })
 
+test('handleClick should create a new session in the selected project from project action button', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    projectExpandedIds: ['project-1'],
+    projects: [
+      { id: 'project-1', name: '_blank', uri: '' },
+      { id: 'project-2', name: 'Current Workspace', uri: '/workspace' },
+    ],
+    selectedProjectId: 'project-1',
+  }
+  const result = await HandleClick.handleClick(state, 'create-session-in-project:project-2')
+  expect(result.sessions).toHaveLength(2)
+  expect(result.selectedProjectId).toBe('project-2')
+  expect(result.sessions[1].projectId).toBe('project-2')
+  expect(result.projectExpandedIds).toEqual(['project-1', 'project-2'])
+  expect(result.selectedSessionId).toBe(result.sessions[1].id)
+})
+
 test('handleClick should select a session', async () => {
   const state: ChatState = {
     ...createDefaultState(),

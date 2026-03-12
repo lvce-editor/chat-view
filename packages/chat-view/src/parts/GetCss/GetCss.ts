@@ -52,6 +52,7 @@ export const getCss = (
 .ProjectListItem {
   align-items: center;
   display: flex;
+  gap: 6px;
   min-height: calc(var(--ChatListItemHeight) - 2px);
 }
 
@@ -92,6 +93,41 @@ export const getCss = (
 
 .ProjectListItemSelected .ProjectListItemLabel {
   color: var(--ColorListInactiveSelectionForeground, #e5ebf2);
+}
+
+.ProjectListItemActions {
+  display: flex;
+  padding-right: 6px;
+}
+
+.ProjectListItemAddChatButton {
+  align-items: center;
+  background: color-mix(in srgb, var(--ColorButtonSecondaryBackground, #3a434f) 76%, transparent);
+  border: 0;
+  border-radius: 5px;
+  color: var(--ColorForeground, #d0d8e2);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  height: 18px;
+  justify-content: center;
+  opacity: 0;
+  padding: 0;
+  transition: opacity 90ms ease, background-color 90ms ease;
+  visibility: hidden;
+  width: 18px;
+}
+
+.ProjectListItem:hover .ProjectListItemAddChatButton,
+.ProjectListItem:focus-within .ProjectListItemAddChatButton {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ProjectListItemAddChatButton:hover,
+.ProjectListItemAddChatButton:focus-visible {
+  background: color-mix(in srgb, var(--ColorButtonSecondaryHoverBackground, #4a5460) 82%, transparent);
 }
 
 .ProjectSessionItem {

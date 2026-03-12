@@ -46,7 +46,7 @@ const getProjectGroupDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 1,
+      childCount: 2,
       className: projectClassName,
       type: VirtualDomElements.Div,
     },
@@ -65,6 +65,21 @@ const getProjectGroupDom = (
     },
     text(expanded ? '▾' : '▸'),
     text(project.name),
+    {
+      childCount: 1,
+      className: ClassNames.ProjectListItemActions,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ProjectListItemAddChatButton,
+      name: InputName.getCreateSessionInProjectInputName(project.id),
+      onClick: DomEventListenerFunctions.HandleClick,
+      tabIndex: 0,
+      title: 'New chat in this project',
+      type: VirtualDomElements.Button,
+    },
+    text('+'),
     ...(expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []),
   ]
 }

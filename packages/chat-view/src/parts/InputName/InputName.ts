@@ -9,6 +9,7 @@ export const Model = 'model'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const CreateProject = 'create-project'
 export const CreateSession = 'create-session'
+export const CreateSessionInProjectPrefix = 'create-session-in-project:'
 export const SessionDebug = 'session-debug'
 export const Settings = 'settings'
 export const CloseChat = 'close-chat'
@@ -28,6 +29,7 @@ export type InputName =
   | typeof ToggleChatFocus
   | typeof CreateProject
   | typeof CreateSession
+  | `${typeof CreateSessionInProjectPrefix}${string}`
   | typeof SessionDebug
   | typeof Settings
   | typeof CloseChat
@@ -38,6 +40,18 @@ export type InputName =
 
 export const getProjectInputName = (projectId: string): `${typeof ProjectPrefix}${string}` => {
   return `${ProjectPrefix}${projectId}`
+}
+
+export const getCreateSessionInProjectInputName = (projectId: string): `${typeof CreateSessionInProjectPrefix}${string}` => {
+  return `${CreateSessionInProjectPrefix}${projectId}`
+}
+
+export const isCreateSessionInProjectInputName = (name: string): name is `${typeof CreateSessionInProjectPrefix}${string}` => {
+  return name.startsWith(CreateSessionInProjectPrefix)
+}
+
+export const getProjectIdFromCreateSessionInProjectInputName = (name: `${typeof CreateSessionInProjectPrefix}${string}`): string => {
+  return name.slice(CreateSessionInProjectPrefix.length)
 }
 
 export const isProjectInputName = (name: string): name is `${typeof ProjectPrefix}${string}` => {

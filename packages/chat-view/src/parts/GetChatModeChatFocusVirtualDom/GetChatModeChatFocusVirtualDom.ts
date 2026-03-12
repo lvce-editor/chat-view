@@ -3,7 +3,6 @@ import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
-import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
@@ -46,7 +45,7 @@ export const getChatModeChatFocusVirtualDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 2,
+      childCount: 1,
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
@@ -59,7 +58,6 @@ export const getChatModeChatFocusVirtualDom = (
       text: selectedSessionTitle,
       type: VirtualDomElements.Text,
     },
-    ...getChatHeaderActionsDom('chat-focus'),
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
     ...getChatSendAreaDom(

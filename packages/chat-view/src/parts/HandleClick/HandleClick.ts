@@ -28,6 +28,10 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   if (name === InputName.CreateProject) {
     return handleClickCreateProject(state)
   }
+  if (InputName.isCreateSessionInProjectInputName(name)) {
+    const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
+    return createSession(state, projectId)
+  }
   if (name === InputName.ToggleChatFocus) {
     return toggleChatFocusMode(state)
   }
