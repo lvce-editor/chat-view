@@ -10,8 +10,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "## Plan\n\n1. Build\n2. Test\n\n| Step | Status |\n|---|---|\n| Build | done |\n\n```ts\nconsole.log('ok')\n```" })
-  await Chat.handleInput("mixed markdown 1")
+  await Command.execute('Chat.registerMockResponse', {
+    text: "## Plan\n\n1. Build\n2. Test\n\n| Step | Status |\n|---|---|\n| Build | done |\n\n```ts\nconsole.log('ok')\n```",
+  })
+  await Chat.handleInput('mixed markdown 1')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

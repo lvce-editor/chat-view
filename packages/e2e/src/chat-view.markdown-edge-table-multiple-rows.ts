@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "| A | B |\n|---|---|\n| 1 | 2 |\n| 3 | 4 |\n| 5 | 6 |" })
-  await Chat.handleInput("table multiple rows")
+  await Command.execute('Chat.registerMockResponse', { text: '| A | B |\n|---|---|\n| 1 | 2 |\n| 3 | 4 |\n| 5 | 6 |' })
+  await Chat.handleInput('table multiple rows')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

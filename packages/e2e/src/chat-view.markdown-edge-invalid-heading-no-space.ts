@@ -10,15 +10,17 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "##HeadingWithoutSpace" })
-  await Chat.handleInput("invalid heading no space")
+  await Command.execute('Chat.registerMockResponse', { text: '##HeadingWithoutSpace' })
+  await Chat.handleInput('invalid heading no space')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  const headings = Locator('.ChatMessages .Message h1, .ChatMessages .Message h2, .ChatMessages .Message h3, .ChatMessages .Message h4, .ChatMessages .Message h5, .ChatMessages .Message h6')
+  const headings = Locator(
+    '.ChatMessages .Message h1, .ChatMessages .Message h2, .ChatMessages .Message h3, .ChatMessages .Message h4, .ChatMessages .Message h5, .ChatMessages .Message h6',
+  )
   await expect(headings).toHaveCount(0)
   const assistant = Locator('.ChatMessages .Message').nth(1)
   await expect(assistant).toContainText('##HeadingWithoutSpace')

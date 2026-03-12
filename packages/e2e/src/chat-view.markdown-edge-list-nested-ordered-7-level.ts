@@ -10,8 +10,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "1. L1\n   1. L2\n      1. L3\n         1. L4\n            1. L5\n               1. L6\n                  1. L7" })
-  await Chat.handleInput("7 level ordered list")
+  await Command.execute('Chat.registerMockResponse', {
+    text: '1. L1\n   1. L2\n      1. L3\n         1. L4\n            1. L5\n               1. L6\n                  1. L7',
+  })
+  await Chat.handleInput('7 level ordered list')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

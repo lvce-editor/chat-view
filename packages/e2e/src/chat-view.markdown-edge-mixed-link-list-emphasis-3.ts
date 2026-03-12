@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "- Read [guide](https://example.com/guide)\n- Mark as **done**\n- Keep *notes*" })
-  await Chat.handleInput("mixed markdown 3")
+  await Command.execute('Chat.registerMockResponse', { text: '- Read [guide](https://example.com/guide)\n- Mark as **done**\n- Keep *notes*' })
+  await Chat.handleInput('mixed markdown 3')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

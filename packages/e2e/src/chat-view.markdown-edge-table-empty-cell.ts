@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "| A | B | C |\n|---|---|---|\n| 1 |  | 3 |" })
-  await Chat.handleInput("table with empty cell")
+  await Command.execute('Chat.registerMockResponse', { text: '| A | B | C |\n|---|---|---|\n| 1 |  | 3 |' })
+  await Chat.handleInput('table with empty cell')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

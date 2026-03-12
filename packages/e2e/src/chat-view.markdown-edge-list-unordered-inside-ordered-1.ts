@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "1. Setup\n   - Install\n   - Configure\n2. Run" })
-  await Chat.handleInput("show mixed nested list")
+  await Command.execute('Chat.registerMockResponse', { text: '1. Setup\n   - Install\n   - Configure\n2. Run' })
+  await Chat.handleInput('show mixed nested list')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

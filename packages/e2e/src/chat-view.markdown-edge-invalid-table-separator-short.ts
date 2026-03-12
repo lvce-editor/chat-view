@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "| A | B |\n|--|---|\n| 1 | 2 |" })
-  await Chat.handleInput("invalid table separator")
+  await Command.execute('Chat.registerMockResponse', { text: '| A | B |\n|--|---|\n| 1 | 2 |' })
+  await Chat.handleInput('invalid table separator')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')

@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: "[Docs](https://example.com/ref#section(1))" })
-  await Chat.handleInput("fragment with parentheses")
+  await Command.execute('Chat.registerMockResponse', { text: '[Docs](https://example.com/ref#section(1))' })
+  await Chat.handleInput('fragment with parentheses')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')
