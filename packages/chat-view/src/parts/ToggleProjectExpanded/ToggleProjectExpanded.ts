@@ -4,9 +4,7 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const isExpanded = state.projectExpandedIds.includes(projectId)
-  const projectExpandedIds = isExpanded
-    ? state.projectExpandedIds.filter((id) => id !== projectId)
-    : [...state.projectExpandedIds, projectId]
+  const projectExpandedIds = isExpanded ? state.projectExpandedIds.filter((id) => id !== projectId) : [...state.projectExpandedIds, projectId]
 
   const visibleSessions = getVisibleSessions(state.sessions, projectId)
   if (visibleSessions.length === 0) {
