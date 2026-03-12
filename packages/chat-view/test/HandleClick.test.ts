@@ -31,6 +31,26 @@ test('handleClick should select a session', async () => {
   expect(result.viewMode).toBe('detail')
 })
 
+test('handleClick should switch from normal mode to chat-focus mode', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    viewMode: 'detail',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('chat-focus')
+  expect(result.lastNormalViewMode).toBe('detail')
+})
+
+test('handleClick should switch from chat-focus mode back to remembered normal mode', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    lastNormalViewMode: 'detail',
+    viewMode: 'chat-focus',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('detail')
+})
+
 test('handleClick should mark session for rename and prefill composer', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'session-rename:session-1')

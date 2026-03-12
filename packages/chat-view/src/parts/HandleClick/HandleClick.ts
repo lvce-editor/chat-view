@@ -15,6 +15,7 @@ import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRout
 import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
+import { toggleChatFocusMode } from '../ToggleChatFocusMode/ToggleChatFocusMode.ts'
 
 export const handleClick = async (state: ChatState, name: string, id = ''): Promise<ChatState> => {
   if (!name) {
@@ -25,6 +26,9 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   }
   if (name === InputName.CreateProject) {
     return handleClickCreateProject(state)
+  }
+  if (name === InputName.ToggleChatFocus) {
+    return toggleChatFocusMode(state)
   }
   if (InputName.isProjectInputName(name)) {
     const projectId = InputName.getProjectIdFromInputName(name)

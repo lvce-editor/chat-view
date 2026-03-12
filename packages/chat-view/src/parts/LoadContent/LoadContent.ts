@@ -69,6 +69,17 @@ const getSavedProjectListScrollTop = (savedState: unknown): number | undefined =
   return projectListScrollTop
 }
 
+const getSavedLastNormalViewMode = (savedState: unknown): 'list' | 'detail' | undefined => {
+  if (!isObject(savedState)) {
+    return undefined
+  }
+  const { lastNormalViewMode } = savedState
+  if (lastNormalViewMode !== 'list' && lastNormalViewMode !== 'detail') {
+    return undefined
+  }
+  return lastNormalViewMode
+}
+
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
@@ -111,6 +122,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
   const preferredViewMode = savedViewMode || state.viewMode
+  const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
+  const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
   return {
     ...state,
@@ -120,6 +133,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
     initial: false,
+    lastNormalViewMode,
     messagesScrollTop,
     openApiApiKey,
     openApiApiKeyInput: openApiApiKey,

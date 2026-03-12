@@ -18,9 +18,10 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   })
   return {
     ...state,
+    lastNormalViewMode: state.viewMode === 'chat-focus' ? state.lastNormalViewMode : 'detail',
     renamingSessionId: '',
     selectedSessionId: id,
     sessions,
-    viewMode: 'detail',
+    viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   }
 }

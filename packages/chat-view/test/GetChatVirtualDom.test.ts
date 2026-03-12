@@ -67,6 +67,8 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   const addProjectButton = result.find((node) => node.name === 'create-project')
   expect(projectSidebar).toBeUndefined()
   expect(addProjectButton).toBeUndefined()
+  const chatFocusButton = result.find((node) => node.title === 'Switch to chat focus mode')
+  expect(chatFocusButton).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render projects and chats in chat-focus mode', () => {
@@ -107,11 +109,13 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   const composer = result.find((node) => node.name === 'composer')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
+  const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   expect(projectSidebar).toBeDefined()
   expect(addProjectButton).toBeDefined()
   expect(chatList).toBeDefined()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
+  expect(normalModeButton).toBeDefined()
 })
 
 test('getStatusBarVirtualDom should render session list entries', () => {

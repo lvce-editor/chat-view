@@ -3,7 +3,7 @@ import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
-import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
+import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
@@ -46,7 +46,21 @@ export const getChatModeChatFocusVirtualDom = (
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDomDetailMode(selectedSessionTitle),
+    {
+      childCount: 2,
+      className: ClassNames.ChatHeader,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.Label,
+      type: VirtualDomElements.Span,
+    },
+    {
+      text: selectedSessionTitle,
+      type: VirtualDomElements.Text,
+    },
+    ...getChatHeaderActionsDom('chat-focus'),
     ...getProjectListDom(projects, selectedProjectId, projectListScrollTop),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),

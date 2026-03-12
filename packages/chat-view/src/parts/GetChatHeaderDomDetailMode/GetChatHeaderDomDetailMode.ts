@@ -22,6 +22,6 @@ export const getChatHeaderDomDetailMode = (selectedSessionTitle: string): readon
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-    ...getChatHeaderActionsDom(),
+    ...getChatHeaderActionsDom('detail'),
   ]
 }

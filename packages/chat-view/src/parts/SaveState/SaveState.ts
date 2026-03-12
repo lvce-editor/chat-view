@@ -5,6 +5,7 @@ export const saveState = (state: ChatState): SavedState => {
   const {
     chatListScrollTop,
     composerValue,
+    lastNormalViewMode,
     messagesScrollTop,
     nextMessageId,
     projectListScrollTop,
@@ -18,6 +19,7 @@ export const saveState = (state: ChatState): SavedState => {
   return {
     chatListScrollTop,
     composerValue,
+    lastNormalViewMode,
     messagesScrollTop,
     nextMessageId,
     projectListScrollTop,
