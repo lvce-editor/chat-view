@@ -139,11 +139,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const blankProject = state.projects.find((project) => project.name === '_blank') || { id: 'project-blank', name: '_blank', uri: '' }
   const projects = ensureBlankProject(baseProjects, blankProject)
   const preferredProjectId = getSavedSelectedProjectId(savedState) || state.selectedProjectId
-  const selectedProjectId =
-    projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === preferredProjectId) ?
-      preferredProjectId
-    :
-      projects[0]?.id || ''
+  const selectedProjectId = projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === preferredProjectId)
+    ? preferredProjectId
+    : projects[0]?.id || ''
   const preferredModelId = savedSelectedModelId || state.selectedModelId
   const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
   const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
