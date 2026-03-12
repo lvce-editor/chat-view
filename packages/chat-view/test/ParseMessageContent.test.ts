@@ -130,6 +130,61 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
   ])
 })
 
+test('parseMessageContent should sanitize non-http markdown links', () => {
+  const rawMessage = [
+    'Unsafe script: [click](javascript:alert(1))',
+    'Inline data: [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)',
+    'Blob source: [blob](blob:https://example.com/abc-123)',
+    'Allowed: [safe](https://example.com/docs)',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Unsafe script: ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'click',
+          type: 'link',
+        },
+        {
+          text: ')\nInline data: ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'data',
+          type: 'link',
+        },
+        {
+          text: '\nBlob source: ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'blob',
+          type: 'link',
+        },
+        {
+          text: '\nAllowed: ',
+          type: 'text',
+        },
+        {
+          href: 'https://example.com/docs',
+          text: 'safe',
+          type: 'link',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown bold text in paragraphs', () => {
   const rawMessage = 'For **Transport Agnostic**: It can work over various transport protocols, including HTTP, WebSocket, and others.'
 

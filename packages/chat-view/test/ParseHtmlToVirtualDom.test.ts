@@ -26,8 +26,18 @@ test('parseHtmlToVirtualDom should parse block and inline nodes', () => {
   })
 })
 
-test('parseHtmlToVirtualDom should sanitize javascript href', () => {
+test('parseHtmlToVirtualDom should sanitize non-http href', () => {
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<a href="javascript:alert(1)">Open</a>')
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    href: '#',
+    type: VirtualDomElements.A,
+  })
+})
+
+test('parseHtmlToVirtualDom should sanitize data href', () => {
+  const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">Open</a>')
 
   expect(result[0]).toEqual({
     childCount: 1,
@@ -48,6 +58,27 @@ test('parseHtmlToVirtualDom should keep img src attribute', () => {
 
 test('parseHtmlToVirtualDom should sanitize javascript img src', () => {
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<img src="javascript:alert(1)" />')
+
+  expect(result[0]).toEqual({
+    childCount: 0,
+    src: '#',
+    type: VirtualDomElements.Img,
+  })
+})
+
+test('parseHtmlToVirtualDom should sanitize data img src', () => {
+  // eslint-disable-next-line @cspell/spellchecker
+  const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==" />')
+
+  expect(result[0]).toEqual({
+    childCount: 0,
+    src: '#',
+    type: VirtualDomElements.Img,
+  })
+})
+
+test('parseHtmlToVirtualDom should sanitize blob img src', () => {
+  const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<img src="blob:https://example.com/abc-123" />')
 
   expect(result[0]).toEqual({
     childCount: 0,
