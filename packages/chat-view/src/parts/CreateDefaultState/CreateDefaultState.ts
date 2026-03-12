@@ -61,6 +61,7 @@ export const createDefaultState = (): ChatState => {
     initial: true,
     inputSource: 'script',
     lastSubmittedSessionId: '',
+    lastNormalViewMode: 'list',
     listItemHeight: 40,
     maxComposerRows: 5,
     messagesScrollTop: 0,

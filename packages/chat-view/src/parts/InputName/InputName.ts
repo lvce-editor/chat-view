@@ -6,6 +6,7 @@ export const ComposerDropTarget = 'composer-drop-target'
 export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
+export const ToggleChatFocus = 'toggle-chat-focus'
 export const CreateProject = 'create-project'
 export const CreateSession = 'create-session'
 export const SessionDebug = 'session-debug'
@@ -24,6 +25,7 @@ export type InputName =
   | typeof Send
   | typeof Back
   | typeof Model
+  | typeof ToggleChatFocus
   | typeof CreateProject
   | typeof CreateSession
   | typeof SessionDebug

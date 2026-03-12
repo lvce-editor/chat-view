@@ -24,6 +24,14 @@ export const settings = (): string => {
   return i18nString('Settings')
 }
 
+export const chatFocusMode = (): string => {
+  return i18nString('Switch to chat focus mode')
+}
+
+export const normalChatMode = (): string => {
+  return i18nString('Switch to normal chat mode')
+}
+
 export const closeChat = (): string => {
   return i18nString('Close Chat')
 }
