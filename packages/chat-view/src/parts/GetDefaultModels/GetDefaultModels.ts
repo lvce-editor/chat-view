@@ -1,14 +1,22 @@
 /* eslint-disable @cspell/spellchecker */
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 
-export const getDefaultModels = (): readonly ChatModel[] => {
+export const getDefaultModelsTest = (): readonly ChatModel[] => {
   const defaultModelId = 'test'
+  return [{ id: defaultModelId, name: 'test', provider: 'test' }]
+}
+
+export const getDefaultModelsOpenAi = (): readonly ChatModel[] => {
   return [
-    { id: defaultModelId, name: 'test', provider: 'test' },
     { id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi' },
     { id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' },
     { id: 'openapi/gpt-4o', name: 'GPT-4o', provider: 'openApi' },
     { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' },
+  ]
+}
+
+export const getDefaultModelsOpenRouter = (): readonly ChatModel[] => {
+  return [
     { id: 'codex-5.3', name: 'Codex 5.3', provider: 'openRouter' },
     { id: 'claude-code', name: 'Claude Code', provider: 'openRouter' },
     { id: 'claude-haiku', name: 'Claude Haiku', provider: 'openRouter' },
@@ -26,4 +34,8 @@ export const getDefaultModels = (): readonly ChatModel[] => {
       provider: 'openRouter',
     },
   ]
+}
+
+export const getDefaultModels = (): readonly ChatModel[] => {
+  return [...getDefaultModelsTest(), ...getDefaultModelsOpenAi(), ...getDefaultModelsOpenRouter()]
 }
