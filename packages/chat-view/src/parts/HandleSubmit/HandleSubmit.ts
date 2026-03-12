@@ -12,15 +12,15 @@ import {
   updateMessageTextInSelectedSession,
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
-import { appendMessageToSelectedSession } from './AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
-import { executeSlashCommand } from './ExecuteSlashCommand/ExecuteSlashCommand.ts'
-import { getAiSessionTitle } from './GetAiSessionTitle/GetAiSessionTitle.ts'
-import { getMentionContextMessage } from './GetMentionContextMessage/GetMentionContextMessage.ts'
-import { getSlashCommand } from './GetSlashCommand/GetSlashCommand.ts'
-import { getSseEventType } from './GetSseEventType/GetSseEventType.ts'
-import { isDefaultSessionTitle } from './IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
-import { isStreamingFunctionCallEvent } from './IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
-import { updateSessionTitle } from './UpdateSessionTitle/UpdateSessionTitle.ts'
+import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
+import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
+import { getAiSessionTitle } from '../GetAiSessionTitle/GetAiSessionTitle.ts'
+import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
+import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
+import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
+import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
+import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
+import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {

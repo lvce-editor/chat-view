@@ -1,7 +1,7 @@
-import type { ChatState } from '../../ChatState/ChatState.ts'
-import { getAiResponse } from '../../GetAiResponse/GetAiResponse.ts'
-import { isOpenApiModel } from '../../IsOpenApiModel/IsOpenApiModel.ts'
-import { isOpenRouterModel } from '../../IsOpenRouterModel/IsOpenRouterModel.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
+import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
+import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
+import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { sanitizeGeneratedTitle } from '../SanitizeGeneratedTitle/SanitizeGeneratedTitle.ts'
 
