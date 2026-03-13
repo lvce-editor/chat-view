@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage } from '../../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatState/ChatState.ts'
 import { parseMentionedPaths } from '../ParseMentionedPaths/ParseMentionedPaths.ts'
 
 const maxMentionTextLength = 8000
