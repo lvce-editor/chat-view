@@ -288,7 +288,13 @@ test('parseMessageContent should parse markdown unordered list blocks', () => {
 })
 
 test('parseMessageContent should nest indented unordered items inside ordered list items', () => {
-  const rawMessage = ['1. Ancient and Medieval Periods:', ' - Inhabited since prehistoric times.', ' - Settled by the Ligurians.', '2. The Grimaldi Family:', ' - Captured the fortress in 1297.'].join('\n')
+  const rawMessage = [
+    '1. Ancient and Medieval Periods:',
+    ' - Inhabited since prehistoric times.',
+    ' - Settled by the Ligurians.',
+    '2. The Grimaldi Family:',
+    ' - Captured the fortress in 1297.',
+  ].join('\n')
 
   const result = ParseMessageContent.parseMessageContent(rawMessage)
 
