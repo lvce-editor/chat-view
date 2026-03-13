@@ -770,3 +770,64 @@ test('parseMessageContent should parse markdown heading blocks', () => {
     },
   ])
 })
+
+test('parseMessageContent should parse markdown inline math', () => {
+  const result = ParseMessageContent.parseMessageContent('Quadratic roots are $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Quadratic roots are ',
+          type: 'text',
+        },
+        {
+          displayMode: false,
+          text: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
+          type: 'math-inline',
+        },
+        {
+          text: '.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown block math with double dollar delimiters', () => {
+  const rawMessage = ['For ax^2 + bx + c = 0:', '', '$$', 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', '$$'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'For ax^2 + bx + c = 0:',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+    {
+      text: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
+      type: 'math-block',
+    },
+  ])
+})
+
+test('parseMessageContent should not parse math inside fenced code blocks', () => {
+  const rawMessage = ['```ts', 'const value = "$x$"', '```'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      language: 'ts',
+      text: 'const value = "$x$"',
+      type: 'code-block',
+    },
+  ])
+})
