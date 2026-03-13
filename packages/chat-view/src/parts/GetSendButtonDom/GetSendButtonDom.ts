@@ -27,11 +27,11 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
         ]
       : []),
     {
+      buttonType: 'submit',
       childCount: 1,
       className: sendButtonClassName,
       disabled: isSendDisabled,
       name: InputName.Send,
-      onClick: DomEventListenerFunctions.HandleSubmit,
       role: AriaRoles.Button,
       title: Strings.sendMessage(),
       type: VirtualDomElements.Button,

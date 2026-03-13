@@ -27,7 +27,8 @@ export const getChatSendAreaDom = (
     {
       childCount: 1,
       className: ClassNames.ChatSendArea,
-      type: VirtualDomElements.Div,
+      onSubmit: DomEventListenerFunctions.HandleSubmit,
+      type: VirtualDomElements.Form,
     },
     {
       childCount: 2,
