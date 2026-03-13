@@ -24,6 +24,7 @@ test('loadUseChatMathWorker should return false when preference is not boolean',
 
   const result = await LoadUseChatMathWorker.loadUseChatMathWorker()
   expect(result).toBe(false)
+  expect(mockRpc.invocations).toEqual([['Preferences.get', 'chatView.useChatMathWorker']])
 })
 
 test('loadUseChatMathWorker should return false on preference read error', async () => {
@@ -35,4 +36,5 @@ test('loadUseChatMathWorker should return false on preference read error', async
 
   const result = await LoadUseChatMathWorker.loadUseChatMathWorker()
   expect(result).toBe(false)
+  expect(mockRpc.invocations).toEqual([['Preferences.get', 'chatView.useChatMathWorker']])
 })
