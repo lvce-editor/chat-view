@@ -30,6 +30,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     uid,
     usageOverviewEnabled,
     viewMode,
+    voiceDictationEnabled,
   } = newState
   if (initial) {
     return [ViewletCommand.SetDom2, uid, []]
@@ -59,6 +60,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     projectExpandedIds,
     selectedProjectId,
     projectListScrollTop,
+    voiceDictationEnabled,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

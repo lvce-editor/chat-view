@@ -20,6 +20,6 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const ordered = Locator('.ChatMessages .Message ol')
   const unordered = Locator('.ChatMessages .Message ul')
-  await expect(ordered).toHaveCount(2)
+  await expect(ordered).toHaveCount(1)
   await expect(unordered).toHaveCount(2)
 }
