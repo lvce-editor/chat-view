@@ -110,6 +110,7 @@ export const getProjectListDom = (
     {
       childCount: projects.length,
       className: ClassNames.ProjectList,
+      onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
       onScroll: DomEventListenerFunctions.HandleProjectListScroll,
       scrollTop: projectListScrollTop,
       type: VirtualDomElements.Div,
