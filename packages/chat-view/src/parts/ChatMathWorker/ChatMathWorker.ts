@@ -69,7 +69,7 @@ const startRender = (cacheKey: string, value: string, displayMode: boolean): voi
     return
   }
   pendingRenders.add(cacheKey)
-  void (async () => {
+  void (async (): Promise<void> => {
     try {
       const html = await renderViaRpc(value, displayMode)
       renderCache.set(cacheKey, html)
