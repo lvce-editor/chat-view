@@ -237,8 +237,8 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
     type: VirtualDomElements.Form,
   })
   expect(sendButton).toMatchObject({
-    className: ClassNames.IconButton,
     buttonType: 'submit',
+    className: ClassNames.IconButton,
     disabled: false,
     type: VirtualDomElements.Button,
   })
