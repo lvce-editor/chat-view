@@ -1,3 +1,5 @@
+// cspell:ignore katex Katex
+
 declare module 'katex/dist/katex.mjs' {
   interface KatexRenderOptions {
     readonly displayMode?: boolean
