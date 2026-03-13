@@ -244,6 +244,41 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   })
 })
 
+test('getStatusBarVirtualDom should render dictate button before send button when enabled', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+  const result = GetChatViewDom.getChatVirtualDom(
+    sessions,
+    'session-1',
+    'hello',
+    '',
+    'detail',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    false,
+    true,
+    [],
+    [],
+    '',
+    0,
+    true,
+  )
+  const dictateButtonIndex = result.findIndex((node) => node.name === 'dictate')
+  const sendButtonIndex = result.findIndex((node) => node.name === 'send')
+  expect(dictateButtonIndex).toBeGreaterThan(-1)
+  expect(sendButtonIndex).toBeGreaterThan(dictateButtonIndex)
+})
+
 test('getStatusBarVirtualDom should render drag overlay message in composer drop target', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(

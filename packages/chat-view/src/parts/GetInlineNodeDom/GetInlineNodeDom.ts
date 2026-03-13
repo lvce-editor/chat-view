@@ -1,6 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getMathInlineDom } from '../GetMathDom/GetMathDom.ts'
 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNode[] => {
   if (inlineNode.type === 'text') {
@@ -23,6 +24,9 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly Virtua
       },
       text(inlineNode.text),
     ]
+  }
+  if (inlineNode.type === 'math-inline') {
+    return getMathInlineDom(inlineNode)
   }
   return [
     {

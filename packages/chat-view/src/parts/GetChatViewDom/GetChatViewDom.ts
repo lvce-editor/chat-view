@@ -31,6 +31,7 @@ export const getChatVirtualDom = (
   projectExpandedIds: readonly string[] = [],
   selectedProjectId = '',
   projectListScrollTop = 0,
+  voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'chat-focus':
@@ -57,6 +58,7 @@ export const getChatVirtualDom = (
         projectExpandedIds,
         selectedProjectId,
         projectListScrollTop,
+        voiceDictationEnabled,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -78,6 +80,7 @@ export const getChatVirtualDom = (
         messagesScrollTop,
         composerDropActive,
         composerDropEnabled,
+        voiceDictationEnabled,
       )
     case 'list':
       return getChatModeListVirtualDom(
@@ -96,6 +99,7 @@ export const getChatVirtualDom = (
         chatListScrollTop,
         composerDropActive,
         composerDropEnabled,
+        voiceDictationEnabled,
       )
     default:
       return getChatModeUnsupportedVirtualDom()

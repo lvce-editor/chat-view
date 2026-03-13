@@ -10,6 +10,7 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
+import { getMathBlockDom } from '../GetMathDom/GetMathDom.ts'
 import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
 
 const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
@@ -161,6 +162,9 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
   }
   if (node.type === 'code-block') {
     return getCodeBlockDom(node)
+  }
+  if (node.type === 'math-block') {
+    return getMathBlockDom(node)
   }
   if (node.type === 'heading') {
     return getHeadingDom(node)
