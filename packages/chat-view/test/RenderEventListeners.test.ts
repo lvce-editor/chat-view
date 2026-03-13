@@ -16,6 +16,10 @@ test('renderEventListeners should return expected listeners', () => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickDicationButton,
+      params: ['handleClickDicationButton', RenderEventListeners.handleDictateClickExpression],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickReadFile,
       params: ['handleClickReadFile', 'event.target.dataset.uri'],
     },

@@ -117,6 +117,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     passIncludeObfuscation,
     streamingEnabled,
     useChatNetworkWorkerForRequests,
+    voiceDictationEnabled,
   } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
@@ -183,5 +184,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     streamingEnabled,
     useChatNetworkWorkerForRequests,
     viewMode,
+    voiceDictationEnabled,
   }
 }

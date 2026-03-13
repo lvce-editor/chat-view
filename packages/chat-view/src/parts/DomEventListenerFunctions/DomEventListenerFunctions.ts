@@ -31,3 +31,4 @@ export const HandleDragEnterChatView = 30
 export const HandleDragOverChatView = 31
 export const HandleProjectListScroll = 32
 export const HandleProjectListContextMenu = 33
+export const HandleClickDicationButton = 34
