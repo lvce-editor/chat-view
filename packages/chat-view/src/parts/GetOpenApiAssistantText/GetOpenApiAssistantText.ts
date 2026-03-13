@@ -109,7 +109,7 @@ const getShortToolErrorMessage = (error: string): string => {
   return `${firstLine.slice(0, 77)}...`
 }
 
-const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'status'> => {
+const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'errorStack' | 'status'> => {
   let parsed: unknown
   try {
     parsed = JSON.parse(content) as unknown
@@ -131,6 +131,7 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
       status: 'success',
     }
   }
+  const rawErrorStack = Reflect.get(parsed, 'stack')
   const errorMessage = getShortToolErrorMessage(rawError)
   if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
     return {
@@ -139,6 +140,11 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
   }
   return {
     errorMessage,
+    ...(typeof rawErrorStack === 'string' && rawErrorStack.trim()
+      ? {
+          errorStack: rawErrorStack,
+        }
+      : {}),
     status: 'error',
   }
 }
@@ -849,6 +855,11 @@ export const getOpenApiAssistantText = async (
                   errorMessage: executionStatus.errorMessage,
                 }
               : {}),
+            ...(executionStatus.errorStack
+              ? {
+                  errorStack: executionStatus.errorStack,
+                }
+              : {}),
             id: toolCall.callId,
             name: toolCall.name,
             ...(executionStatus.status
@@ -1000,6 +1011,11 @@ export const getOpenApiAssistantText = async (
                 errorMessage: executionStatus.errorMessage,
               }
             : {}),
+          ...(executionStatus.errorStack
+            ? {
+                errorStack: executionStatus.errorStack,
+              }
+            : {}),
           id: toolCall.callId,
           name: toolCall.name,
           ...(executionStatus.status
@@ -1067,6 +1083,11 @@ export const getOpenApiAssistantText = async (
               ...(executionStatus.errorMessage
                 ? {
                     errorMessage: executionStatus.errorMessage,
+                  }
+                : {}),
+              ...(executionStatus.errorStack
+                ? {
+                    errorStack: executionStatus.errorStack,
                   }
                 : {}),
               id,
