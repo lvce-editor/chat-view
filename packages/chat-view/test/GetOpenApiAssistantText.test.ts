@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
 const getRequestIdFromInit = (init: unknown): string | undefined => {
@@ -409,8 +410,6 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
     globalThis.fetch = originalFetch
   }
 })
-<<<<<<< Updated upstream
-=======
 
 test('getOpenApiAssistantText should include error stack in failed tool call chunks', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -505,4 +504,3 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
     globalThis.fetch = originalFetch
   }
 })
->>>>>>> Stashed changes

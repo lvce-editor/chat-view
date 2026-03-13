@@ -7,14 +7,9 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
-<<<<<<< Updated upstream
-const unorderedListItemRegex = /^\s*[-*]\s+(.*)$/
+const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
 const markdownInlineRegex =
   /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
-=======
-const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
-const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g
->>>>>>> Stashed changes
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/

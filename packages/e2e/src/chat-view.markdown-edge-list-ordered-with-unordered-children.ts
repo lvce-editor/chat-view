@@ -11,7 +11,13 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.registerMockResponse', {
-    text: ['1. Ancient and Medieval Periods:', ' - Inhabited since prehistoric times.', ' - Settled by the Ligurians.', '2. The Grimaldi Family:', ' - Captured the fortress in 1297.'].join('\n'),
+    text: [
+      '1. Ancient and Medieval Periods:',
+      ' - Inhabited since prehistoric times.',
+      ' - Settled by the Ligurians.',
+      '2. The Grimaldi Family:',
+      ' - Captured the fortress in 1297.',
+    ].join('\n'),
   })
   await Chat.handleInput('monaco history list')
 
