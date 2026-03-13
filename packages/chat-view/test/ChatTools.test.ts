@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { expect, test } from '@jest/globals'
-import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { executeChatTool, getBasicChatTools } from '../src/parts/ChatTools/ChatTools.ts'
-import { FileSystemWriteFile } from '../src/parts/ExtensionHostCommandType/ExtensionHostCommandType.ts'
 
 const options = {
   assetDir: '/test-asset-dir',
@@ -34,16 +33,12 @@ test('executeChatTool should execute read_file tool', async () => {
 
 test('executeChatTool should execute write_file tool', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
-  })
-  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    [FileSystemWriteFile]: async () => undefined,
+    'FileSystem.writeFile': async () => undefined,
   })
 
   const result = await executeChatTool('write_file', JSON.stringify({ content: 'new content', path: 'src/main.ts' }), options)
 
-  expect(mockRendererRpc.invocations).toEqual([['ExtensionHostManagement.activateByEvent', 'onFileSystem', '/test-asset-dir', 0]])
-  expect(mockExtensionHostRpc.invocations).toEqual([[FileSystemWriteFile, 'file', 'src/main.ts', 'new content']])
+  expect(mockRendererRpc.invocations).toEqual([['FileSystem.writeFile', 'src/main.ts', 'new content']])
   expect(JSON.parse(result)).toEqual({
     ok: true,
     path: 'src/main.ts',
