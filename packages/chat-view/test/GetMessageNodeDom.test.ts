@@ -1,5 +1,3 @@
-// cspell:ignore katex
-
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
@@ -366,7 +364,7 @@ test('getMessageNodeDom should render heading nodes as matching heading dom node
   })
 })
 
-test('getMessageNodeDom should render inline math nodes with katex output', () => {
+test('getMessageNodeDom should keep raw inline math markdown until worker result is ready', () => {
   const result = getMessageNodeDom({
     children: [
       {
@@ -383,17 +381,12 @@ test('getMessageNodeDom should render inline math nodes with katex output', () =
     className: ClassNames.Markdown,
     type: VirtualDomElements.P,
   })
-  expect(result[1]).toEqual({
-    childCount: 1,
-    className: ClassNames.MarkdownMathInline,
-    type: VirtualDomElements.Span,
-  })
-  expect(result[2]).toMatchObject({
-    className: 'katex',
+  expect(result[1]).toMatchObject({
+    text: '$a^2 + b^2 = c^2$',
   })
 })
 
-test('getMessageNodeDom should render block math nodes in block wrapper', () => {
+test('getMessageNodeDom should keep raw block math markdown until worker result is ready', () => {
   const result = getMessageNodeDom({
     text: '\\int_0^1 x^2 \\; dx',
     type: 'math-block',
@@ -404,12 +397,10 @@ test('getMessageNodeDom should render block math nodes in block wrapper', () => 
     className: ClassNames.MarkdownMathBlock,
     type: VirtualDomElements.Div,
   })
-  expect(result[1]).toMatchObject({
-    className: 'katex-display',
-  })
+  expect(result[1]).toMatchObject({ text: '$$\n\\int_0^1 x^2 \\; dx\n$$' })
 })
 
-test('getMessageNodeDom should keep raw inline math markdown when katex fails', () => {
+test('getMessageNodeDom should keep raw inline math markdown when worker rendering fails', () => {
   const result = getMessageNodeDom({
     children: [
       {
