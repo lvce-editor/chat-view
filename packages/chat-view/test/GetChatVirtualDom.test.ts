@@ -217,18 +217,25 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   )
   const composer = result.find((node) => node.name === 'composer')
   const sendButton = result.find((node) => node.name === 'send')
+  const composeForm = result.find((node) => node.className === ClassNames.ChatSendArea)
   expect(composer).toBeDefined()
   expect(sendButton).toBeDefined()
+  expect(composeForm).toBeDefined()
   expect(composer).toMatchObject({
     className: ClassNames.MultilineInputBox,
     onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.TextArea,
     value: 'hello',
   })
+  expect(composeForm).toMatchObject({
+    className: ClassNames.ChatSendArea,
+    onSubmit: DomEventListenerFunctions.HandleSubmit,
+    type: VirtualDomElements.Form,
+  })
   expect(sendButton).toMatchObject({
     className: ClassNames.IconButton,
+    buttonType: 'submit',
     disabled: false,
-    onClick: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Button,
   })
 })
