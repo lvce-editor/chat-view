@@ -59,9 +59,10 @@ const tokenize = (code: string, rules: readonly TokenRule[]): readonly CodeToken
       }
     }
     if (!matched) {
-      const last = tokens[tokens.length - 1]
+      const last = tokens.at(-1)
       if (last && last.className === '') {
-        tokens[tokens.length - 1] = { className: '', text: last.text + code[pos] }
+        tokens.pop()
+        tokens.push({ className: '', text: last.text + code[pos] })
       } else {
         tokens.push({ className: '', text: code[pos] })
       }
