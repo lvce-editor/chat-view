@@ -825,6 +825,7 @@ test('parseMessageContent should not parse math inside fenced code blocks', () =
 
   expect(result).toEqual([
     {
+      language: 'ts',
       text: 'const value = "$x$"',
       type: 'code-block',
     },
