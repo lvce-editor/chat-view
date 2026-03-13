@@ -1,10 +1,9 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
-import { executeFileSystemCommand } from '../ExecuteFileSystemCommand/ExecuteFileSystemCommand.ts'
-import { FileSystemWriteFile } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
-export const executeWriteFileTool = async (args: Readonly<Record<string, unknown>>, options: ExecuteToolOptions): Promise<string> => {
+export const executeWriteFileTool = async (args: Readonly<Record<string, unknown>>, _options: ExecuteToolOptions): Promise<string> => {
   const filePath = typeof args.path === 'string' ? args.path : ''
   const content = typeof args.content === 'string' ? args.content : ''
   if (!filePath || isPathTraversalAttempt(filePath)) {
@@ -12,7 +11,7 @@ export const executeWriteFileTool = async (args: Readonly<Record<string, unknown
   }
   const normalizedPath = normalizeRelativePath(filePath)
   try {
-    await executeFileSystemCommand(FileSystemWriteFile, ['file', normalizedPath, content], options)
+    await RendererWorker.writeFile(normalizedPath, content)
     return JSON.stringify({ ok: true, path: normalizedPath })
   } catch (error) {
     return JSON.stringify({ error: String(error), path: normalizedPath })
