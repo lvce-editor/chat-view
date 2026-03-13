@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-update-file-e2e'
@@ -51,7 +50,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
               type: 'function_call',
             },
             {
-              arguments: JSON.stringify({ path: 'index.html', content: 'hello updated' }),
+              arguments: JSON.stringify({ content: 'hello updated', path: 'index.html' }),
               call_id: 'call_03',
               id: 'fc_03',
               name: 'write_file',
