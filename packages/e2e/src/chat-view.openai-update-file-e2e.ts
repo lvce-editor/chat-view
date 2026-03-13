@@ -3,11 +3,9 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-update-file-e2e'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
-  const fs = await import('fs/promises')
-
   const tmpDir = await FileSystem.getTmpDir()
   // create index.html with initial content
-  await fs.writeFile(`${tmpDir}/index.html`, 'hello world', 'utf8')
+  await FileSystem.writeFile(`${tmpDir}/index.html`, 'hello world')
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -87,6 +85,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   // allow a short moment for the tool execution to complete and file to be written
   await new Promise((resolve) => setTimeout(resolve, 200))
 
-  const newContent = await fs.readFile(`${tmpDir}/index.html`, 'utf8')
-  await expect(newContent).toBe('hello updated')
+  const newContent = await FileSystem.readFile(`${tmpDir}/index.html`)
+  if (newContent !== 'hello updated') {
+    throw new Error(`Expected updated file content to be "hello updated", got "${newContent}"`)
+  }
 }
