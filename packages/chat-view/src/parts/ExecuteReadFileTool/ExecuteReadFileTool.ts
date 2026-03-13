@@ -18,19 +18,7 @@ export const executeReadFileTool = async (args: Readonly<Record<string, unknown>
       const content = await RendererWorker.readFile(uri)
       return JSON.stringify({ content, uri })
     } catch (error) {
-<<<<<<< HEAD
       return JSON.stringify({ ...getToolErrorPayload(error), uri })
-=======
-      return JSON.stringify({
-        error: String(error),
-        ...(error instanceof Error && typeof error.stack === 'string'
-          ? {
-              stack: error.stack,
-            }
-          : {}),
-        uri,
-      })
->>>>>>> origin/main
     }
   }
 
@@ -43,18 +31,6 @@ export const executeReadFileTool = async (args: Readonly<Record<string, unknown>
     const content = await RendererWorker.readFile(normalizedPath)
     return JSON.stringify({ content, path: normalizedPath })
   } catch (error) {
-<<<<<<< HEAD
     return JSON.stringify({ ...getToolErrorPayload(error), path: normalizedPath })
-=======
-    return JSON.stringify({
-      error: String(error),
-      ...(error instanceof Error && typeof error.stack === 'string'
-        ? {
-            stack: error.stack,
-          }
-        : {}),
-      path: normalizedPath,
-    })
->>>>>>> origin/main
   }
 }

@@ -2,7 +2,6 @@ import type { ChatToolCallStatus } from '../ChatMessage/ChatMessage.ts'
 
 export interface StreamingToolCall {
   readonly arguments: string
-  readonly errorStack?: string
   readonly errorMessage?: string
   readonly errorStack?: string
   readonly id?: string
