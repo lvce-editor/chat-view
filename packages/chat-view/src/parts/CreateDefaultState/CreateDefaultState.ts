@@ -81,6 +81,7 @@ export const createDefaultState = (): ChatState => {
     useChatNetworkWorkerForRequests: false,
     useMockApi: false,
     viewMode: 'list',
+    voiceDictationEnabled: false,
     warningCount: 0,
     webSearchEnabled: true,
     width: 0,

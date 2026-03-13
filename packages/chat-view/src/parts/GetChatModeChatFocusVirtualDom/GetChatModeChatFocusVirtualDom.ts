@@ -31,6 +31,7 @@ export const getChatModeChatFocusVirtualDom = (
   projectExpandedIds: readonly string[] = [],
   selectedProjectId = '',
   projectListScrollTop = 0,
+  voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -71,6 +72,7 @@ export const getChatModeChatFocusVirtualDom = (
       composerFontSize,
       composerFontFamily,
       composerLineHeight,
+      voiceDictationEnabled,
     ),
     {
       childCount: 1,

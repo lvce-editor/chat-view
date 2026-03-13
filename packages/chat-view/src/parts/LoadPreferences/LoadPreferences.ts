@@ -6,6 +6,7 @@ import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiK
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
+import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
 export const loadPreferences = async (): Promise<{
   aiSessionTitleGenerationEnabled: boolean
@@ -16,6 +17,7 @@ export const loadPreferences = async (): Promise<{
   streamingEnabled: boolean
   passIncludeObfuscation: boolean
   useChatNetworkWorkerForRequests: boolean
+  voiceDictationEnabled: boolean
 }> => {
   const [
     aiSessionTitleGenerationEnabled,
@@ -26,6 +28,7 @@ export const loadPreferences = async (): Promise<{
     streamingEnabled,
     passIncludeObfuscation,
     useChatNetworkWorkerForRequests,
+    voiceDictationEnabled,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
     loadComposerDropEnabled(),
@@ -35,6 +38,7 @@ export const loadPreferences = async (): Promise<{
     loadStreamingEnabled(),
     loadPassIncludeObfuscation(),
     loadUseChatNetworkWorkerForRequests(),
+    loadVoiceDictationEnabled(),
   ])
 
   return {
@@ -46,5 +50,6 @@ export const loadPreferences = async (): Promise<{
     passIncludeObfuscation,
     streamingEnabled,
     useChatNetworkWorkerForRequests,
+    voiceDictationEnabled,
   }
 }
