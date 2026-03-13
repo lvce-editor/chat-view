@@ -1,6 +1,7 @@
+/* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
-import { getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
@@ -57,18 +58,44 @@ export const getAiResponse = async ({
         'Content-Type': 'application/json',
         ...getClientRequestIdHeader(),
       }
-      MockOpenApiRequest.capture({
-        headers,
-        method: 'POST',
-        payload: getOpenAiParams(openAiInput, modelId, streamingEnabled, passIncludeObfuscation, getBasicChatTools(), webSearchEnabled),
-        url: getOpenApiApiEndpoint(openApiApiBaseUrl),
-      })
-      const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
-      if (result.type === 'success') {
-        const { text: assistantText } = result
-        text = assistantText
-      } else {
-        text = getOpenApiErrorMessage(result)
+      const maxToolIterations = 4
+      let previousResponseId: string | undefined
+      for (let i = 0; i <= maxToolIterations; i++) {
+        MockOpenApiRequest.capture({
+          headers,
+          method: 'POST',
+          payload: getOpenAiParams(
+            openAiInput,
+            modelId,
+            streamingEnabled,
+            passIncludeObfuscation,
+            getBasicChatTools(),
+            webSearchEnabled,
+            previousResponseId,
+          ),
+          url: getOpenApiApiEndpoint(openApiApiBaseUrl),
+        })
+        const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
+        if (result.type !== 'success') {
+          text = getOpenApiErrorMessage(result)
+          break
+        }
+        text = result.text
+        if (result.responseId) {
+          previousResponseId = result.responseId
+        }
+        if (result.responseFunctionCalls.length === 0) {
+          break
+        }
+        openAiInput.length = 0
+        for (const toolCall of result.responseFunctionCalls) {
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          openAiInput.push({
+            call_id: toolCall.callId,
+            output: content,
+            type: 'function_call_output',
+          })
+        }
       }
     } else if (openApiApiKey) {
       const result = await getOpenApiAssistantText(
