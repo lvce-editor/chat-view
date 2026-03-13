@@ -24,6 +24,7 @@ import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
+import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
@@ -80,6 +81,7 @@ export const commandMap = {
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
+  'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,

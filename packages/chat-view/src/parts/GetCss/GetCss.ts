@@ -109,8 +109,8 @@ export const getCss = (
   background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #39424d) 84%, #2f3741 16%);
 }
 
-.ProjectListItem:not(.ProjectListItemSelected) .ProjectListItemLabel:hover,
-.ProjectListItem:not(.ProjectListItemSelected) .ProjectListItemLabel:focus-visible {
+.ProjectListItem:not(.ProjectListItemSelected):hover,
+.ProjectListItem:not(.ProjectListItemSelected):focus-within {
   background: color-mix(in srgb, var(--ColorListHoverBackground, #38414b) 50%, transparent);
 }
 
@@ -177,8 +177,8 @@ export const getCss = (
   background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #353f4a) 86%, #2c3540 14%);
 }
 
-.ProjectSessionItem:not(.ProjectSessionItemSelected) .ProjectSessionItemLabel:hover,
-.ProjectSessionItem:not(.ProjectSessionItemSelected) .ProjectSessionItemLabel:focus-visible {
+.ProjectSessionItem:not(.ProjectSessionItemSelected):hover,
+.ProjectSessionItem:not(.ProjectSessionItemSelected):focus-within {
   background: color-mix(in srgb, var(--ColorListHoverBackground, #38414c) 46%, transparent);
 }
 

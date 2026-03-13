@@ -51,7 +51,7 @@ const getProjectGroupDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 2,
+      childCount: 3,
       className: ClassNames.ProjectListItemLabel,
       name: InputName.getProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
@@ -64,6 +64,11 @@ const getProjectGroupDom = (
       type: VirtualDomElements.Span,
     },
     text(expanded ? '▾' : '▸'),
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconFolder',
+      type: VirtualDomElements.Div,
+    },
     text(project.name),
     {
       childCount: 1,
@@ -110,6 +115,7 @@ export const getProjectListDom = (
     {
       childCount: projects.length,
       className: ClassNames.ProjectList,
+      onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
       onScroll: DomEventListenerFunctions.HandleProjectListScroll,
       scrollTop: projectListScrollTop,
       type: VirtualDomElements.Div,
