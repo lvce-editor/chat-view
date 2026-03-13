@@ -27,6 +27,7 @@ export const getChatModeDetailVirtualDom = (
   messagesScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
+  voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -53,6 +54,7 @@ export const getChatModeDetailVirtualDom = (
       composerFontSize,
       composerFontFamily,
       composerLineHeight,
+      voiceDictationEnabled,
     ),
     {
       childCount: 1,

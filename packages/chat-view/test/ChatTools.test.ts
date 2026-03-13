@@ -113,3 +113,24 @@ test('executeChatTool should return unknown tool error', async () => {
     error: 'Unknown tool: unknown_tool',
   })
 })
+
+test('executeChatTool should include error stack when tool execution throws', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystem.readFile': async () => {
+      const error = new TypeError("Cannot read properties of undefined (reading 'invoke')")
+      error.stack = "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1"
+      throw error
+    },
+  })
+
+  const uri = 'file:///workspace/src/main.ts'
+  const result = await executeChatTool('read_file', JSON.stringify({ uri }), options)
+
+  expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', uri]])
+  expect(JSON.parse(result)).toEqual({
+    error: "TypeError: Cannot read properties of undefined (reading 'invoke')",
+    errorStack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
+    stack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
+    uri,
+  })
+})

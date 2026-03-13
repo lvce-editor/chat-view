@@ -19,13 +19,16 @@ export const getChatSendAreaDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
+  voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
+  const controlsCount = usageOverviewEnabled ? 3 : 2
   return [
     {
       childCount: 1,
       className: ClassNames.ChatSendArea,
-      type: VirtualDomElements.Div,
+      onSubmit: DomEventListenerFunctions.HandleSubmit,
+      type: VirtualDomElements.Form,
     },
     {
       childCount: 2,
@@ -43,12 +46,12 @@ export const getChatSendAreaDom = (
       value: composerValue,
     },
     {
-      childCount: usageOverviewEnabled ? 3 : 2,
+      childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
       className: ClassNames.ChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
     ...getChatSelectVirtualDom(models, selectedModelId),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
-    ...getSendButtonDom(isSendDisabled),
+    ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

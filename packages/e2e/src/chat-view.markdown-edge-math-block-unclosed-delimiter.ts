@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.markdown-edge.list-mixed-bullets-and-numbers'
+export const name = 'chat-view.markdown-edge.math-block-unclosed-delimiter'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -10,16 +10,17 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: '- Alpha\n  1. One\n    - Nested bullet\n      1. Nested number' })
-  await Chat.handleInput('mixed list styles')
+  await Command.execute('Chat.registerMockResponse', { text: 'Before\n\n$$\nx = y + z\n\nAfter' })
+  await Chat.handleInput('unclosed block math delimiter')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')
 
   const messages = Locator('.ChatMessages .Message')
+  const blockMath = Locator('.ChatMessages .Message .MarkdownMathBlock')
+  const assistant = Locator('.ChatMessages .Message').nth(1)
   await expect(messages).toHaveCount(2)
-  const ordered = Locator('.ChatMessages .Message ol')
-  const unordered = Locator('.ChatMessages .Message ul')
-  await expect(ordered).toHaveCount(1)
-  await expect(unordered).toHaveCount(2)
+  await expect(blockMath).toHaveCount(0)
+  await expect(assistant).toContainText('$$')
+  await expect(assistant).toContainText('x = y + z')
 }

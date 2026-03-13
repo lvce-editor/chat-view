@@ -28,6 +28,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.tokensMax === newState.tokensMax &&
     oldState.tokensUsed === newState.tokensUsed &&
     oldState.usageOverviewEnabled === newState.usageOverviewEnabled &&
-    oldState.viewMode === newState.viewMode
+    oldState.viewMode === newState.viewMode &&
+    oldState.voiceDictationEnabled === newState.voiceDictationEnabled
   )
 }
