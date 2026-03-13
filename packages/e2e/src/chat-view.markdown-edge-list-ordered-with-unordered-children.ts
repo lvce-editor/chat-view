@@ -12,6 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.registerMockResponse', {
     text: [
+      // cspell:ignore Ligurians
       '1. Ancient and Medieval Periods:',
       ' - Inhabited since prehistoric times.',
       ' - Settled by the Ligurians.',
