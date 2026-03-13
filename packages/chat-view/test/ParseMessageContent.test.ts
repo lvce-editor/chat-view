@@ -695,6 +695,7 @@ test('parseMessageContent should parse fenced code blocks', () => {
       type: 'text',
     },
     {
+      language: 'json',
       text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
       type: 'code-block',
     },
