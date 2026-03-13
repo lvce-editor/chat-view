@@ -289,6 +289,7 @@ test('parseMessageContent should parse markdown unordered list blocks', () => {
 
 test('parseMessageContent should nest indented unordered items inside ordered list items', () => {
   const rawMessage = [
+    // cspell:ignore Ligurians
     '1. Ancient and Medieval Periods:',
     ' - Inhabited since prehistoric times.',
     ' - Settled by the Ligurians.',
