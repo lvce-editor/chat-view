@@ -1,5 +1,5 @@
-import { isPathTraversalAttempt } from '../../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
-import { normalizeRelativePath } from '../../NormalizeRelativePath/NormalizeRelativePath.ts'
+import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
+import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
 const mentionRegex = /(^|\s)@([^\s]+)/g
 const maxMentionCount = 5

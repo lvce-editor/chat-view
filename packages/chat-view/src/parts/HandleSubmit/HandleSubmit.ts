@@ -1,26 +1,26 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
+import { getAiSessionTitle } from '../GetAiSessionTitle/GetAiSessionTitle.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
+import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
+import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
+import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
 import {
   handleToolCallsChunkFunction,
   handleTextChunkFunction,
   type HandleTextChunkState,
   updateMessageTextInSelectedSession,
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
+import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
+import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
-import { appendMessageToSelectedSession } from './AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
-import { executeSlashCommand } from './ExecuteSlashCommand/ExecuteSlashCommand.ts'
-import { getAiSessionTitle } from './GetAiSessionTitle/GetAiSessionTitle.ts'
-import { getMentionContextMessage } from './GetMentionContextMessage/GetMentionContextMessage.ts'
-import { getSlashCommand } from './GetSlashCommand/GetSlashCommand.ts'
-import { getSseEventType } from './GetSseEventType/GetSseEventType.ts'
-import { isDefaultSessionTitle } from './IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
-import { isStreamingFunctionCallEvent } from './IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
-import { updateSessionTitle } from './UpdateSessionTitle/UpdateSessionTitle.ts'
+import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {

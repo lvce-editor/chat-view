@@ -1,8 +1,8 @@
-import type { ChatState } from '../../ChatState/ChatState.ts'
-import { getAiResponse } from '../../GetAiResponse/GetAiResponse.ts'
-import { isOpenApiModel } from '../../IsOpenApiModel/IsOpenApiModel.ts'
-import { isOpenRouterModel } from '../../IsOpenRouterModel/IsOpenRouterModel.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
+import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
+import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
+import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import { sanitizeGeneratedTitle } from '../SanitizeGeneratedTitle/SanitizeGeneratedTitle.ts'
 
 export const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
