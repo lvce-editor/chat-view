@@ -11,6 +11,5 @@ export const listen = async (): Promise<void> => {
     commandMap: CommandMap.commandMap,
   })
   RendererWorker.set(rpc)
-  await initializeChatNetworkWorker()
-  await initializeChatMathWorker()
+  await Promise.all([initializeChatNetworkWorker(), initializeChatMathWorker()])
 }
