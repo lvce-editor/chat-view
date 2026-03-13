@@ -49,6 +49,8 @@ export const getMessagesDom = (
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
-    ...displayMessages.flatMap((message) => GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState)),
+    ...displayMessages.flatMap((message) =>
+      GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState),
+    ),
   ]
 }
