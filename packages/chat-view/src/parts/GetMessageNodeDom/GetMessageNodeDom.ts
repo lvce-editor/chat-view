@@ -44,13 +44,25 @@ const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] 
 }
 
 const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
+  const hasNestedUnorderedList = (item.nestedItems?.length || 0) > 0
+  const nestedUnorderedListDom = hasNestedUnorderedList
+    ? [
+        {
+          childCount: item.nestedItems?.length || 0,
+          className: ClassNames.ChatUnorderedList,
+          type: VirtualDomElements.Ul,
+        },
+        ...(item.nestedItems || []).flatMap(getUnorderedListItemDom),
+      ]
+    : []
   return [
     {
-      childCount: item.children.length,
+      childCount: item.children.length + (hasNestedUnorderedList ? 1 : 0),
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
     ...item.children.flatMap(getInlineNodeDom),
+    ...nestedUnorderedListDom,
   ]
 }
 
