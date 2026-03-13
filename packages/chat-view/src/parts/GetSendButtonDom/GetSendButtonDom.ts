@@ -14,7 +14,7 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
             childCount: 1,
             className: ClassNames.IconButton,
             name: InputName.Dictate,
-            onClick: DomEventListenerFunctions.HandleClickDicationButton,
+            onClick: DomEventListenerFunctions.HandleClickDictationButton,
             role: AriaRoles.Button,
             title: Strings.startVoiceDictation(),
             type: VirtualDomElements.Button,

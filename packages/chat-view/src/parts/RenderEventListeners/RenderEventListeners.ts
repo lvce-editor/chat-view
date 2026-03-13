@@ -72,8 +72,8 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id'],
     },
     {
-      name: DomEventListenersFunctions.HandleClickDicationButton,
-      params: ['handleClickDicationButton', handleDictateClickExpression],
+      name: DomEventListenersFunctions.HandleClickDictationButton,
+      params: ['handleClickDictationButton', handleDictateClickExpression],
     },
     {
       name: DomEventListenersFunctions.HandleClickReadFile,
