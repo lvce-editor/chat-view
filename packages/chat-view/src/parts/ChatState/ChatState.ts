@@ -70,6 +70,7 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useMockApi: boolean
   readonly viewMode: ChatViewMode
+  readonly voiceDictationEnabled: boolean
   readonly warningCount: number
   readonly webSearchEnabled: boolean
   readonly width: number

@@ -24,6 +24,7 @@ export const getChatModeListVirtualDom = (
   chatListScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
+  voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
@@ -47,6 +48,7 @@ export const getChatModeListVirtualDom = (
       composerFontSize,
       composerFontFamily,
       composerLineHeight,
+      voiceDictationEnabled,
     ),
     {
       childCount: 1,

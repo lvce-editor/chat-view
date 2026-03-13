@@ -3,6 +3,7 @@ export const Problems = 'Problems'
 
 export const Composer = 'composer'
 export const ComposerDropTarget = 'composer-drop-target'
+export const Dictate = 'dictate'
 export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
@@ -23,6 +24,7 @@ export type InputName =
   | typeof Problems
   | typeof Composer
   | typeof ComposerDropTarget
+  | typeof Dictate
   | typeof Send
   | typeof Back
   | typeof Model

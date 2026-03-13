@@ -72,6 +72,10 @@ export const sendMessage = (): string => {
   return i18nString('Send message')
 }
 
+export const startVoiceDictation = (): string => {
+  return i18nString('Start voice dictation')
+}
+
 export const send = (): string => {
   return i18nString('Send')
 }
