@@ -109,7 +109,7 @@ const getShortToolErrorMessage = (error: string): string => {
   return `${firstLine.slice(0, 77)}...`
 }
 
-const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'status'> => {
+const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'errorStack' | 'status'> => {
   let parsed: unknown
   try {
     parsed = JSON.parse(content) as unknown
@@ -131,13 +131,25 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
       status: 'success',
     }
   }
+  const rawStack = Reflect.get(parsed, 'stack')
+  const errorStack = typeof rawStack === 'string' && rawStack.trim() ? rawStack : undefined
   const errorMessage = getShortToolErrorMessage(rawError)
   if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
     return {
+      ...(errorStack
+        ? {
+            errorStack,
+          }
+        : {}),
       status: 'not-found',
     }
   }
   return {
+    ...(errorStack
+      ? {
+          errorStack,
+        }
+      : {}),
     errorMessage,
     status: 'error',
   }
@@ -844,6 +856,11 @@ export const getOpenApiAssistantText = async (
           const executionStatus = getToolCallExecutionStatus(content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
+            ...(executionStatus.errorStack
+              ? {
+                  errorStack: executionStatus.errorStack,
+                }
+              : {}),
             ...(executionStatus.errorMessage
               ? {
                   errorMessage: executionStatus.errorMessage,
@@ -995,6 +1012,11 @@ export const getOpenApiAssistantText = async (
         const executionStatus = getToolCallExecutionStatus(content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
+          ...(executionStatus.errorStack
+            ? {
+                errorStack: executionStatus.errorStack,
+              }
+            : {}),
           ...(executionStatus.errorMessage
             ? {
                 errorMessage: executionStatus.errorMessage,
@@ -1064,6 +1086,11 @@ export const getOpenApiAssistantText = async (
             const executionStatus = getToolCallExecutionStatus(content)
             executedToolCalls.push({
               arguments: typeof rawArguments === 'string' ? rawArguments : '',
+              ...(executionStatus.errorStack
+                ? {
+                    errorStack: executionStatus.errorStack,
+                  }
+                : {}),
               ...(executionStatus.errorMessage
                 ? {
                     errorMessage: executionStatus.errorMessage,
