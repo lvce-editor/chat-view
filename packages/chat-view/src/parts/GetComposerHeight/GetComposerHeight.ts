@@ -28,7 +28,7 @@ export const getComposerHeight = async (state: ChatState, value: string, width =
   const content = value || ' '
   const composerWidth = getComposerWidth(width)
   try {
-    const measuredHeight = await measureTextBlockHeight(content, composerFontFamily, composerFontSize, composerLineHeight, composerWidth)
+    const measuredHeight = await measureTextBlockHeight(content, composerFontFamily, composerFontSize, `${composerLineHeight}px`, composerWidth)
     const height = Math.ceil(measuredHeight) + 8
     return Math.max(minimumHeight, Math.min(maximumHeight, height))
   } catch {
