@@ -5,8 +5,14 @@ export type MessageIntermediateNode =
   | MessageUnorderedListNode
   | MessageTableNode
   | MessageCodeBlockNode
+  | MessageMathBlockNode
 
-export type MessageInlineNode = MessageInlineTextNode | MessageInlineLinkNode | MessageInlineBoldNode | MessageInlineItalicNode
+export type MessageInlineNode =
+  | MessageInlineTextNode
+  | MessageInlineLinkNode
+  | MessageInlineBoldNode
+  | MessageInlineItalicNode
+  | MessageMathInlineNode
 
 export interface MessageInlineTextNode {
   readonly text: string
@@ -27,6 +33,12 @@ export interface MessageInlineBoldNode {
 export interface MessageInlineItalicNode {
   readonly text: string
   readonly type: 'italic'
+}
+
+export interface MessageMathInlineNode {
+  readonly displayMode: boolean
+  readonly text: string
+  readonly type: 'math-inline'
 }
 
 export interface MessageTextNode {
@@ -74,4 +86,9 @@ export interface MessageTableRowNode {
 export interface MessageCodeBlockNode {
   readonly text: string
   readonly type: 'code-block'
+}
+
+export interface MessageMathBlockNode {
+  readonly text: string
+  readonly type: 'math-block'
 }

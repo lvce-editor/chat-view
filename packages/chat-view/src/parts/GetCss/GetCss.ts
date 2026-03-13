@@ -226,6 +226,18 @@ export const getCss = (
   grid-column: 2;
   grid-row: 3;
 }
+
+.MarkdownMathInline {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.MarkdownMathBlock {
+  margin: 8px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
 `
 
   if (!renderHtmlCss.trim()) {

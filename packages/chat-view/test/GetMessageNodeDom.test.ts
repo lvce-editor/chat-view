@@ -1,3 +1,5 @@
+// cspell:ignore katex
+
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
@@ -306,5 +308,65 @@ test('getMessageNodeDom should render heading nodes as matching heading dom node
   })
   expect(result[1]).toMatchObject({
     text: 'Section title',
+  })
+})
+
+test('getMessageNodeDom should render inline math nodes with katex output', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        displayMode: false,
+        text: 'a^2 + b^2 = c^2',
+        type: 'math-inline',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.P,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.MarkdownMathInline,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[2]).toMatchObject({
+    className: 'katex',
+  })
+})
+
+test('getMessageNodeDom should render block math nodes in block wrapper', () => {
+  const result = getMessageNodeDom({
+    text: '\\int_0^1 x^2 \\; dx',
+    type: 'math-block',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.MarkdownMathBlock,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[1]).toMatchObject({
+    className: 'katex-display',
+  })
+})
+
+test('getMessageNodeDom should keep raw inline math markdown when katex fails', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        displayMode: false,
+        text: '\\invalid{',
+        type: 'math-inline',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[1]).toMatchObject({
+    text: '$\\invalid{$',
   })
 })

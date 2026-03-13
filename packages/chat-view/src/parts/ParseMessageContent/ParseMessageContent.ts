@@ -8,10 +8,12 @@ import type {
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const unorderedListItemRegex = /^\s*[-*]\s+(.*)$/
-const markdownInlineRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g
+const markdownInlineRegex =
+  /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
+const markdownMathBlockDelimiter = '$$'
 
 const isHttpUrl = (url: string): boolean => {
   const normalized = url.trim().toLowerCase()
@@ -96,6 +98,8 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
     const href = match[2]
     const boldText = match[3]
     const italicText = match[4]
+    const mathDollars = match.groups?.mathDollars
+    const mathText = match.groups?.mathText
     const index = match.index ?? 0
     if (index > lastIndex) {
       nodes.push({
@@ -118,6 +122,12 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
       nodes.push({
         text: italicText,
         type: 'italic',
+      })
+    } else if (mathDollars && mathText) {
+      nodes.push({
+        displayMode: mathDollars.length === 2,
+        text: mathText.trim(),
+        type: 'math-inline',
       })
     }
     lastIndex = index + fullMatch.length
@@ -209,6 +219,29 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
         type: 'code-block',
       })
       continue
+    }
+
+    if (line.trim() === markdownMathBlockDelimiter) {
+      const endIndex = lines.findIndex((candidate, index) => {
+        if (index <= i) {
+          return false
+        }
+        return candidate.trim() === markdownMathBlockDelimiter
+      })
+      if (endIndex !== -1) {
+        flushList()
+        flushParagraph()
+        const mathText = lines
+          .slice(i + 1, endIndex)
+          .join('\n')
+          .trim()
+        nodes.push({
+          text: mathText,
+          type: 'math-block',
+        })
+        i = endIndex
+        continue
+      }
     }
 
     if (isTableRow(line) && i + 1 < lines.length) {
