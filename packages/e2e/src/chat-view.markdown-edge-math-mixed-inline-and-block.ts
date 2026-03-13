@@ -1,4 +1,4 @@
-// cspell:ignore katex
+// cspell:ignore katex infty
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.math-mixed-inline-and-block'
