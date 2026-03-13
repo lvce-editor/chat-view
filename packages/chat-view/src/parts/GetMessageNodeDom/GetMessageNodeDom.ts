@@ -9,11 +9,9 @@ import type {
   MessageTableRowNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
-<<<<<<< HEAD
-import { getMathBlockDom } from '../GetMathDom/GetMathDom.ts'
-=======
 import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
+import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
+import { getMathBlockDom } from '../GetMathDom/GetMathDom.ts'
 
 const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
   if (!token.className) {
@@ -28,7 +26,6 @@ const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
     text(token.text),
   ]
 }
->>>>>>> origin/main
 
 const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] => {
   const tokens = highlightCode(node.text, node.language)
