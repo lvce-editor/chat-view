@@ -32,6 +32,7 @@ export const getChatVirtualDom = (
   selectedProjectId = '',
   projectListScrollTop = 0,
   voiceDictationEnabled = false,
+  useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'chat-focus':
@@ -59,6 +60,7 @@ export const getChatVirtualDom = (
         selectedProjectId,
         projectListScrollTop,
         voiceDictationEnabled,
+        useChatMathWorker,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -81,6 +83,7 @@ export const getChatVirtualDom = (
         composerDropActive,
         composerDropEnabled,
         voiceDictationEnabled,
+        useChatMathWorker,
       )
     case 'list':
       return getChatModeListVirtualDom(
