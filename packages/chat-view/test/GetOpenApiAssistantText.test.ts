@@ -426,24 +426,48 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
     fetchInvocations.push(args)
     requestCount += 1
     if (requestCount === 1) {
+      const firstResponseChunks = [
+        'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+        'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}\n\n',
+        'data: {"type":"response.completed","response":{"id":"resp_1","output":[{"type":"function_call","call_id":"call_1","name":"read_file","arguments":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}]}}\n\n',
+        'data: [DONE]\n\n',
+      ]
+      let index = 0
       return {
-        json: async () => ({
-          id: 'resp_1',
-          output: [
-            {
-              arguments: '{"uri":"file:///workspace/src/main.ts"}',
-              call_id: 'call_1',
-              name: 'read_file',
-              type: 'function_call',
+        body: {
+          getReader: () => ({
+            read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+              if (index >= firstResponseChunks.length) {
+                return { done: true, value: undefined }
+              }
+              const value = new TextEncoder().encode(firstResponseChunks[index++])
+              return { done: false, value }
             },
-          ],
-        }),
+          }),
+        },
         ok: true,
         status: 200,
       } as Response
     }
+    const secondResponseChunks = [
+      'data: {"type":"response.created","response":{"id":"resp_2"}}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"done"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_2","output":[]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
     return {
-      json: async () => ({ id: 'resp_2', output_text: 'done' }),
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= secondResponseChunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(secondResponseChunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
       ok: true,
       status: 200,
     } as Response
