@@ -107,12 +107,16 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
   })
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
   const addProjectButton = result.find((node) => node.name === 'create-project')
+  const projectList = result.find((node) => node.className === ClassNames.ProjectList)
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   const composer = result.find((node) => node.name === 'composer')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   expect(projectSidebar).toBeDefined()
+  expect(projectList).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
+  })
   expect(addProjectButton).toBeDefined()
   expect(chatList).toBeUndefined()
   expect(composer).toBeDefined()

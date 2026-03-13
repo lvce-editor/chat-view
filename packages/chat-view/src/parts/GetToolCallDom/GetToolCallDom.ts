@@ -6,6 +6,23 @@ import { getToolCallReadFileVirtualDom } from './GetToolCallReadFileVirtualDom.t
 import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
 
+const getToolCallDisplayName = (name: string): string => {
+  if (name === 'getWorkspaceUri') {
+    return 'get_workspace_uri'
+  }
+  return name
+}
+
+const getToolCallLabel = (toolCall: ChatToolCall): string => {
+  const displayName = getToolCallDisplayName(toolCall.name)
+  const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
+  const statusLabel = getToolCallStatusLabel(toolCall)
+  if (argumentPreview === '{}') {
+    return `${displayName}${statusLabel}`
+  }
+  return `${displayName} ${argumentPreview}${statusLabel}`
+}
+
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'read_file' || toolCall.name === 'list_files' || toolCall.name === 'list_file') {
     const virtualDom = getToolCallReadFileVirtualDom(toolCall)
@@ -21,8 +38,7 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
     }
   }
 
-  const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
-  const label = `${toolCall.name} ${argumentPreview}${getToolCallStatusLabel(toolCall)}`
+  const label = getToolCallLabel(toolCall)
   return [
     {
       childCount: 1,
