@@ -469,6 +469,7 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
         onToolCallsChunk: async (toolCalls) => {
           toolCallsChunks.push(toolCalls)
         },
+        stream: true,
       },
     )
 
