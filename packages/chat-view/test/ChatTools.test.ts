@@ -129,6 +129,7 @@ test('executeChatTool should include error stack when tool execution throws', as
   expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', uri]])
   expect(JSON.parse(result)).toEqual({
     error: "TypeError: Cannot read properties of undefined (reading 'invoke')",
+    errorStack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
     stack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
     uri,
   })
