@@ -72,6 +72,7 @@ export interface MessageTableRowNode {
 }
 
 export interface MessageCodeBlockNode {
+  readonly language?: string
   readonly text: string
   readonly type: 'code-block'
 }
