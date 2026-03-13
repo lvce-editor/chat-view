@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { getToolErrorPayload } from '../GetToolErrorPayload/GetToolErrorPayload.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
@@ -17,15 +18,7 @@ export const executeReadFileTool = async (args: Readonly<Record<string, unknown>
       const content = await RendererWorker.readFile(uri)
       return JSON.stringify({ content, uri })
     } catch (error) {
-      return JSON.stringify({
-        error: String(error),
-        ...(error instanceof Error && typeof error.stack === 'string'
-          ? {
-              stack: error.stack,
-            }
-          : {}),
-        uri,
-      })
+      return JSON.stringify({ ...getToolErrorPayload(error), uri })
     }
   }
 
@@ -38,14 +31,6 @@ export const executeReadFileTool = async (args: Readonly<Record<string, unknown>
     const content = await RendererWorker.readFile(normalizedPath)
     return JSON.stringify({ content, path: normalizedPath })
   } catch (error) {
-    return JSON.stringify({
-      error: String(error),
-      ...(error instanceof Error && typeof error.stack === 'string'
-        ? {
-            stack: error.stack,
-          }
-        : {}),
-      path: normalizedPath,
-    })
+    return JSON.stringify({ ...getToolErrorPayload(error), path: normalizedPath })
   }
 }

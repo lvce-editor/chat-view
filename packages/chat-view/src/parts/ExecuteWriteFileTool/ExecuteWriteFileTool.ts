@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { getToolErrorPayload } from '../GetToolErrorPayload/GetToolErrorPayload.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
@@ -14,6 +15,6 @@ export const executeWriteFileTool = async (args: Readonly<Record<string, unknown
     await RendererWorker.writeFile(normalizedPath, content)
     return JSON.stringify({ ok: true, path: normalizedPath })
   } catch (error) {
-    return JSON.stringify({ error: String(error), path: normalizedPath })
+    return JSON.stringify({ ...getToolErrorPayload(error), path: normalizedPath })
   }
 }

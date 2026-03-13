@@ -401,6 +401,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
     expect(result.sessions[0].messages[1].toolCalls).toEqual([
       {
         arguments: '{"path":"index.html"}',
+        errorStack: expect.any(String),
         id: 'call_1',
         name: 'read_file',
         status: 'not-found',

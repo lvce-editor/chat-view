@@ -489,7 +489,7 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
     const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
     const input = secondRequestBody.input as readonly Record<string, unknown>[]
     const firstOutput = JSON.parse(String(input[0].output)) as Record<string, unknown>
-    expect(firstOutput.stack).toBe("TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1")
+    expect(firstOutput.errorStack).toBe("TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1")
     expect(toolCallsChunks.at(-1)).toEqual([
       {
         arguments: '{"uri":"file:///workspace/src/main.ts"}',

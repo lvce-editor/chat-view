@@ -131,20 +131,26 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
       status: 'success',
     }
   }
-  const rawErrorStack = Reflect.get(parsed, 'stack')
+  const rawStack = Reflect.get(parsed, 'errorStack') ?? Reflect.get(parsed, 'stack')
+  const errorStack = typeof rawStack === 'string' && rawStack.trim() ? rawStack : undefined
   const errorMessage = getShortToolErrorMessage(rawError)
   if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
     return {
+      ...(errorStack
+        ? {
+            errorStack,
+          }
+        : {}),
       status: 'not-found',
     }
   }
   return {
-    errorMessage,
-    ...(typeof rawErrorStack === 'string' && rawErrorStack.trim()
+    ...(errorStack
       ? {
-          errorStack: rawErrorStack,
+          errorStack,
         }
       : {}),
+    errorMessage,
     status: 'error',
   }
 }
@@ -850,6 +856,11 @@ export const getOpenApiAssistantText = async (
           const executionStatus = getToolCallExecutionStatus(content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
+            ...(executionStatus.errorStack
+              ? {
+                  errorStack: executionStatus.errorStack,
+                }
+              : {}),
             ...(executionStatus.errorMessage
               ? {
                   errorMessage: executionStatus.errorMessage,
@@ -1006,6 +1017,11 @@ export const getOpenApiAssistantText = async (
         const executionStatus = getToolCallExecutionStatus(content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
+          ...(executionStatus.errorStack
+            ? {
+                errorStack: executionStatus.errorStack,
+              }
+            : {}),
           ...(executionStatus.errorMessage
             ? {
                 errorMessage: executionStatus.errorMessage,
@@ -1080,6 +1096,11 @@ export const getOpenApiAssistantText = async (
             const executionStatus = getToolCallExecutionStatus(content)
             executedToolCalls.push({
               arguments: typeof rawArguments === 'string' ? rawArguments : '',
+              ...(executionStatus.errorStack
+                ? {
+                    errorStack: executionStatus.errorStack,
+                  }
+                : {}),
               ...(executionStatus.errorMessage
                 ? {
                     errorMessage: executionStatus.errorMessage,
