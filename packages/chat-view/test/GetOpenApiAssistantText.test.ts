@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
 const getRequestIdFromInit = (init: unknown): string | undefined => {
@@ -402,6 +403,100 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
         errorMessage: 'Unknown tool: invalid_tool',
         id: 'call_1',
         name: 'invalid_tool',
+        status: 'error',
+      },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenApiAssistantText should include error stack in failed tool call chunks', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystem.readFile': async () => {
+      const error = new TypeError("Cannot read properties of undefined (reading 'invoke')")
+      error.stack = "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1"
+      throw error
+    },
+  })
+  const originalFetch = globalThis.fetch
+  const fetchInvocations: Array<readonly unknown[]> = []
+  let requestCount = 0
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocations.push(args)
+    requestCount += 1
+    const firstResponseChunks = [
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_1","output":[{"type":"function_call","call_id":"call_1","name":"read_file","arguments":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    const secondResponseChunks = [
+      'data: {"type":"response.created","response":{"id":"resp_2"}}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"done"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_2","output":[]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    const chunks = requestCount === 1 ? firstResponseChunks : secondResponseChunks
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const toolCallsChunks: unknown[] = []
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'read index.html',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        onToolCallsChunk: async (toolCalls) => {
+          toolCallsChunks.push(toolCalls)
+        },
+        stream: true,
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'done',
+      type: 'success',
+    })
+    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'file:///workspace/src/main.ts']])
+    expect(fetchInvocations).toHaveLength(2)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    const input = secondRequestBody.input as readonly Record<string, unknown>[]
+    const firstOutput = JSON.parse(String(input[0].output)) as Record<string, unknown>
+    expect(firstOutput.stack).toBe("TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1")
+    expect(toolCallsChunks.at(-1)).toEqual([
+      {
+        arguments: '{"uri":"file:///workspace/src/main.ts"}',
+        errorMessage: "TypeError: Cannot read properties of undefined (reading 'invoke')",
+        errorStack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
+        id: 'call_1',
+        name: 'read_file',
         status: 'error',
       },
     ])
