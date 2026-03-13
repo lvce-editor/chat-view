@@ -1,5 +1,5 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { MessageMathBlockNode, MessageMathInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
