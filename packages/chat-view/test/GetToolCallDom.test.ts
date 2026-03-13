@@ -66,3 +66,29 @@ test('getToolCallDom should include img src from render_html tool calls', () => 
     type: VirtualDomElements.Img,
   })
 })
+
+test('getToolCallDom should display getWorkspaceUri as get_workspace_uri', () => {
+  const result = getToolCallDom({
+    arguments: '{}',
+    name: 'getWorkspaceUri',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(2)
+  expect(result[1]).toMatchObject({
+    text: 'get_workspace_uri',
+  })
+})
+
+test('getToolCallDom should not display empty object arguments', () => {
+  const result = getToolCallDom({
+    arguments: '{}',
+    name: 'unknown_tool',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(2)
+  expect(result[1]).toMatchObject({
+    text: 'unknown_tool',
+  })
+})
