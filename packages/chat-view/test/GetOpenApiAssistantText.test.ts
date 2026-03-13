@@ -425,6 +425,7 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     fetchInvocations.push(args)
     requestCount += 1
+<<<<<<< HEAD
     if (requestCount === 1) {
       const firstResponseChunks = [
         'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
@@ -449,21 +450,40 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
         status: 200,
       } as Response
     }
+=======
+    const firstResponseChunks = [
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"function_call","call_id":"call_1","name":"read_file","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","output_index":0,"delta":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_1","output":[{"type":"function_call","call_id":"call_1","name":"read_file","arguments":"{\\"uri\\":\\"file:///workspace/src/main.ts\\"}"}]}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+>>>>>>> origin/main
     const secondResponseChunks = [
       'data: {"type":"response.created","response":{"id":"resp_2"}}\n\n',
       'data: {"type":"response.output_text.delta","delta":"done"}\n\n',
       'data: {"type":"response.completed","response":{"id":"resp_2","output":[]}}\n\n',
       'data: [DONE]\n\n',
     ]
+<<<<<<< HEAD
+=======
+    const chunks = requestCount === 1 ? firstResponseChunks : secondResponseChunks
+>>>>>>> origin/main
     let index = 0
     return {
       body: {
         getReader: () => ({
           read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+<<<<<<< HEAD
             if (index >= secondResponseChunks.length) {
               return { done: true, value: undefined }
             }
             const value = new TextEncoder().encode(secondResponseChunks[index++])
+=======
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+>>>>>>> origin/main
             return { done: false, value }
           },
         }),

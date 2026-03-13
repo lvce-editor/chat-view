@@ -131,8 +131,12 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
       status: 'success',
     }
   }
+<<<<<<< HEAD
   const rawStack = Reflect.get(parsed, 'stack')
   const errorStack = typeof rawStack === 'string' && rawStack.trim() ? rawStack : undefined
+=======
+  const rawErrorStack = Reflect.get(parsed, 'stack')
+>>>>>>> origin/main
   const errorMessage = getShortToolErrorMessage(rawError)
   if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
     return {
@@ -151,6 +155,11 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
         }
       : {}),
     errorMessage,
+    ...(typeof rawErrorStack === 'string' && rawErrorStack.trim()
+      ? {
+          errorStack: rawErrorStack,
+        }
+      : {}),
     status: 'error',
   }
 }
@@ -866,6 +875,11 @@ export const getOpenApiAssistantText = async (
                   errorMessage: executionStatus.errorMessage,
                 }
               : {}),
+            ...(executionStatus.errorStack
+              ? {
+                  errorStack: executionStatus.errorStack,
+                }
+              : {}),
             id: toolCall.callId,
             name: toolCall.name,
             ...(executionStatus.status
@@ -1022,6 +1036,11 @@ export const getOpenApiAssistantText = async (
                 errorMessage: executionStatus.errorMessage,
               }
             : {}),
+          ...(executionStatus.errorStack
+            ? {
+                errorStack: executionStatus.errorStack,
+              }
+            : {}),
           id: toolCall.callId,
           name: toolCall.name,
           ...(executionStatus.status
@@ -1094,6 +1113,11 @@ export const getOpenApiAssistantText = async (
               ...(executionStatus.errorMessage
                 ? {
                     errorMessage: executionStatus.errorMessage,
+                  }
+                : {}),
+              ...(executionStatus.errorStack
+                ? {
+                    errorStack: executionStatus.errorStack,
                   }
                 : {}),
               id,

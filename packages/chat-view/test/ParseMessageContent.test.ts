@@ -287,6 +287,76 @@ test('parseMessageContent should parse markdown unordered list blocks', () => {
   ])
 })
 
+test('parseMessageContent should nest indented unordered items inside ordered list items', () => {
+  const rawMessage = [
+    // cspell:ignore Ligurians
+    '1. Ancient and Medieval Periods:',
+    ' - Inhabited since prehistoric times.',
+    ' - Settled by the Ligurians.',
+    '2. The Grimaldi Family:',
+    ' - Captured the fortress in 1297.',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Ancient and Medieval Periods:',
+              type: 'text',
+            },
+          ],
+          nestedItems: [
+            {
+              children: [
+                {
+                  text: 'Inhabited since prehistoric times.',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+            {
+              children: [
+                {
+                  text: 'Settled by the Ligurians.',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'The Grimaldi Family:',
+              type: 'text',
+            },
+          ],
+          nestedItems: [
+            {
+              children: [
+                {
+                  text: 'Captured the fortress in 1297.',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'ordered-list',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown unordered list blocks with star markers', () => {
   const rawMessage = ['I can help with:', '', '* Reading project files', '* Running tests', '* Explaining errors'].join('\n')
 

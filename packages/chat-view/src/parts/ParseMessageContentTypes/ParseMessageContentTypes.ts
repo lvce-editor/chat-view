@@ -64,6 +64,7 @@ export interface MessageUnorderedListNode {
 
 export interface MessageListItemNode {
   readonly children: readonly MessageInlineNode[]
+  readonly nestedItems?: readonly MessageListItemNode[]
   readonly type: 'list-item'
 }
 
