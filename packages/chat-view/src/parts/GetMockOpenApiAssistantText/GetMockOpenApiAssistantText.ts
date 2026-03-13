@@ -2,6 +2,52 @@ import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/G
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
+type ResponseFunctionCall = {
+  readonly arguments: string
+  readonly callId: string
+  readonly name: string
+}
+
+type GetMockOpenApiAssistantTextSuccessResult = {
+  readonly responseFunctionCalls: readonly ResponseFunctionCall[]
+  readonly responseId?: string
+  readonly text: string
+  readonly type: 'success'
+}
+
+type GetMockOpenApiAssistantTextResult = GetMockOpenApiAssistantTextSuccessResult | Exclude<GetOpenApiAssistantTextResult, { type: 'success' }>
+
+const getResponseFunctionCalls = (value: unknown): readonly ResponseFunctionCall[] => {
+  if (!value || typeof value !== 'object') {
+    return []
+  }
+  const output = Reflect.get(value, 'output')
+  if (!Array.isArray(output)) {
+    return []
+  }
+  const responseFunctionCalls: ResponseFunctionCall[] = []
+  for (const item of output) {
+    if (!item || typeof item !== 'object') {
+      continue
+    }
+    if (Reflect.get(item, 'type') !== 'function_call') {
+      continue
+    }
+    const callId = Reflect.get(item, 'call_id')
+    const name = Reflect.get(item, 'name')
+    const rawArguments = Reflect.get(item, 'arguments')
+    if (typeof callId !== 'string' || typeof name !== 'string') {
+      continue
+    }
+    responseFunctionCalls.push({
+      arguments: typeof rawArguments === 'string' ? rawArguments : '',
+      callId,
+      name,
+    })
+  }
+  return responseFunctionCalls
+}
+
 const parseSseDataLines = (eventChunk: string): readonly string[] => {
   const lines = eventChunk.split('\n')
   const dataLines: string[] = []
@@ -37,7 +83,7 @@ export const getMockOpenApiAssistantText = async (
   onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>,
   onDataEvent?: (value: unknown) => Promise<void>,
   onEventStreamFinished?: () => Promise<void>,
-): Promise<GetOpenApiAssistantTextResult> => {
+): Promise<GetMockOpenApiAssistantTextResult> => {
   const error = MockOpenApiStream.takeErrorResponse()
   if (error) {
     return error
@@ -46,6 +92,9 @@ export const getMockOpenApiAssistantText = async (
   let text = ''
   let remainder = ''
   let toolCallAccumulator: Readonly<Record<number, StreamingToolCall>> = {}
+  let responseFunctionCalls: readonly ResponseFunctionCall[] = []
+  let responseId: string | undefined
+  let requestDone = false
   let finishedNotified = false
 
   const notifyFinished = async (): Promise<void> => {
@@ -67,6 +116,13 @@ export const getMockOpenApiAssistantText = async (
     }
     const eventType = Reflect.get(parsed, 'type')
     if (eventType === 'response.completed') {
+      const response = Reflect.get(parsed, 'response')
+      responseFunctionCalls = getResponseFunctionCalls(response)
+      const parsedResponseId = response && typeof response === 'object' ? Reflect.get(response, 'id') : undefined
+      if (typeof parsedResponseId === 'string' && parsedResponseId) {
+        responseId = parsedResponseId
+      }
+      requestDone = true
       await notifyFinished()
       return
     }
@@ -143,8 +199,9 @@ export const getMockOpenApiAssistantText = async (
   const consumeSseDataLines = async (dataLines: readonly string[]): Promise<void> => {
     for (const line of dataLines) {
       if (line === '[DONE]') {
+        requestDone = true
         await notifyFinished()
-        continue
+        break
       }
       let parsed: unknown
       try {
@@ -153,10 +210,13 @@ export const getMockOpenApiAssistantText = async (
         continue
       }
       await handleParsedSseEvent(parsed)
+      if (requestDone) {
+        break
+      }
     }
   }
 
-  while (true) {
+  while (!requestDone) {
     const chunk = await MockOpenApiStream.readNextChunk()
     if (typeof chunk !== 'string') {
       break
@@ -172,6 +232,9 @@ export const getMockOpenApiAssistantText = async (
         remainder = remainder.slice(separatorIndex + 2)
         const dataLines = parseSseDataLines(rawEvent)
         await consumeSseDataLines(dataLines)
+        if (requestDone) {
+          break
+        }
       }
       continue
     }
@@ -181,7 +244,7 @@ export const getMockOpenApiAssistantText = async (
     }
   }
 
-  if (remainder) {
+  if (!requestDone && remainder) {
     const dataLines = parseSseDataLines(remainder)
     await consumeSseDataLines(dataLines)
   }
@@ -189,6 +252,12 @@ export const getMockOpenApiAssistantText = async (
   await notifyFinished()
 
   return {
+    ...(responseId
+      ? {
+          responseId,
+        }
+      : {}),
+    responseFunctionCalls,
     text,
     type: 'success',
   }
