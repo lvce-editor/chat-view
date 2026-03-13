@@ -10,19 +10,39 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
+<<<<<<< HEAD
 import { getMathBlockDom } from '../GetMathDom/GetMathDom.ts'
+=======
+import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
+
+const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
+  if (!token.className) {
+    return [text(token.text)]
+  }
+  return [
+    {
+      childCount: 1,
+      className: token.className,
+      type: VirtualDomElements.Span,
+    },
+    text(token.text),
+  ]
+}
+>>>>>>> origin/main
 
 const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] => {
+  const tokens = highlightCode(node.text, node.language)
+  const tokenDom = tokens.flatMap(getTokenDom)
   return [
     {
       childCount: 1,
       type: VirtualDomElements.Pre,
     },
     {
-      childCount: 1,
+      childCount: tokens.length,
       type: VirtualDomElements.Code,
     },
-    text(node.text),
+    ...tokenDom,
   ]
 }
 

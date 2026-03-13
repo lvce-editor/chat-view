@@ -208,16 +208,25 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
     if (fencedCodeBlockRegex.test(line.trim())) {
       flushList()
       flushParagraph()
+      const language = line.trim().slice(3).trim()
       const codeLines: string[] = []
       i++
       while (i < lines.length && !fencedCodeBlockRegex.test(lines[i].trim())) {
         codeLines.push(lines[i])
         i++
       }
-      nodes.push({
-        text: codeLines.join('\n'),
-        type: 'code-block',
-      })
+      if (language) {
+        nodes.push({
+          language,
+          text: codeLines.join('\n'),
+          type: 'code-block',
+        })
+      } else {
+        nodes.push({
+          text: codeLines.join('\n'),
+          type: 'code-block',
+        })
+      }
       continue
     }
 
