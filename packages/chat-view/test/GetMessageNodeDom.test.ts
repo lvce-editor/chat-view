@@ -271,6 +271,61 @@ test('getMessageNodeDom should render unordered list nodes as ul and li dom node
   })
 })
 
+test('getMessageNodeDom should render nested unordered list inside ordered list item', () => {
+  const result = getMessageNodeDom({
+    items: [
+      {
+        children: [
+          {
+            text: 'Ancient and Medieval Periods:',
+            type: 'text',
+          },
+        ],
+        nestedItems: [
+          {
+            children: [
+              {
+                text: 'Inhabited since prehistoric times.',
+                type: 'text',
+              },
+            ],
+            type: 'list-item',
+          },
+        ],
+        type: 'list-item',
+      },
+    ],
+    type: 'ordered-list',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatOrderedList,
+    type: VirtualDomElements.Ol,
+  })
+  expect(result[1]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatOrderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'Ancient and Medieval Periods:',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedList,
+    type: VirtualDomElements.Ul,
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[5]).toMatchObject({
+    text: 'Inhabited since prehistoric times.',
+  })
+})
+
 test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
   const result = getMessageNodeDom({
     text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',

@@ -7,7 +7,7 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
-const unorderedListItemRegex = /^\s*[-*]\s+(.*)$/
+const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
 const markdownInlineRegex =
   /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
@@ -293,13 +293,29 @@ export const parseMessageContent = (rawMessage: string): readonly MessageInterme
 
     const unorderedMatch = line.match(unorderedListItemRegex)
     if (unorderedMatch) {
+      const indentation = unorderedMatch[1]
+      const unorderedText = unorderedMatch[2]
+      if (listType === 'ordered-list' && listItems.length > 0 && indentation.length > 0) {
+        const lastIndex = listItems.length - 1
+        const previousItem = listItems[lastIndex]
+        const nestedItems = previousItem.nestedItems ? [...previousItem.nestedItems] : []
+        nestedItems.push({
+          children: parseInlineNodes(unorderedText),
+          type: 'list-item',
+        })
+        listItems[lastIndex] = {
+          ...previousItem,
+          nestedItems,
+        }
+        continue
+      }
       if (listType && listType !== 'unordered-list') {
         flushList()
       }
       flushParagraph()
       listType = 'unordered-list'
       listItems.push({
-        children: parseInlineNodes(unorderedMatch[1]),
+        children: parseInlineNodes(unorderedText),
         type: 'list-item',
       })
       continue
