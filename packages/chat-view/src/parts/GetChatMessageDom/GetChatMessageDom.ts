@@ -20,6 +20,7 @@ export const getChatMessageDom = (
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
+  useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
@@ -27,7 +28,7 @@ export const getChatMessageDom = (
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
   const messageIntermediate = parseMessageContent(message.text)
-  const messageDom = getMessageContentDom(messageIntermediate)
+  const messageDom = getMessageContentDom(messageIntermediate, useChatMathWorker)
   const toolCallsDom = getToolCallsDom(message)
   const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
