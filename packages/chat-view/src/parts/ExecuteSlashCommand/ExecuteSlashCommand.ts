@@ -1,7 +1,7 @@
 import type { ChatMessage, ChatState } from '../ChatState/ChatState.ts'
+import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
-import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
