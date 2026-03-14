@@ -35,30 +35,15 @@ export const getChatModeChatFocusVirtualDom = (
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 5,
+      childCount: 4,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, 'ChatFocus'),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeader,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
-    },
-    {
-      text: selectedSessionTitle,
-      type: VirtualDomElements.Text,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
     ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
