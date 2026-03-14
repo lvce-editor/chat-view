@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
@@ -10,6 +11,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   if (visibleSessions.length === 0) {
     return {
       ...state,
+      parsedMessages: [],
       projectExpandedIds,
       selectedProjectId: projectId,
       selectedSessionId: '',
@@ -26,9 +28,11 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
     }
     return loadedSession
   })
+  const parsedMessages = await getParsedMessagesForSession(sessions, selectedSessionId, state.useChatMathWorker)
 
   return {
     ...state,
+    parsedMessages,
     projectExpandedIds,
     selectedProjectId: projectId,
     selectedSessionId,

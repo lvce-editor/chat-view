@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
@@ -10,6 +11,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   if (visibleSessions.length === 0) {
     return {
       ...state,
+      parsedMessages: [],
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'list',
@@ -24,8 +26,10 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     }
     return loadedSession
   })
+  const parsedMessages = await getParsedMessagesForSession(sessions, nextSelectedSessionId, state.useChatMathWorker)
   return {
     ...state,
+    parsedMessages,
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
     sessions,

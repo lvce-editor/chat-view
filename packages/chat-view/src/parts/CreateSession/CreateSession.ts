@@ -15,6 +15,7 @@ export const createSession = async (state: ChatState, projectIdOverride = ''): P
   await saveChatSession(session)
   return {
     ...state,
+    parsedMessages: [],
     projectExpandedIds: state.projectExpandedIds.includes(projectId) ? state.projectExpandedIds : [...state.projectExpandedIds, projectId],
     renamingSessionId: '',
     selectedProjectId: projectId,

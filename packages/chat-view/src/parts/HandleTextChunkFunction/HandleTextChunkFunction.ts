@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -92,6 +93,11 @@ export const handleTextChunkFunction = async (
   )
   const nextState = {
     ...handleTextChunkState.latestState,
+    parsedMessages: await getParsedMessagesForSession(
+      updatedSessions,
+      handleTextChunkState.latestState.selectedSessionId,
+      handleTextChunkState.latestState.useChatMathWorker,
+    ),
     sessions: updatedSessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)
@@ -133,6 +139,11 @@ export const handleToolCallsChunkFunction = async (
   )
   const nextState = {
     ...handleTextChunkState.latestState,
+    parsedMessages: await getParsedMessagesForSession(
+      updatedSessions,
+      handleTextChunkState.latestState.selectedSessionId,
+      handleTextChunkState.latestState.useChatMathWorker,
+    ),
     sessions: updatedSessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)

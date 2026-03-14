@@ -2,6 +2,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
@@ -81,6 +82,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
     openRouterApiKeyState: 'idle',
+    parsedMessages: await getParsedMessagesForSession(updatedSessions, updatedState.selectedSessionId, updatedState.useChatMathWorker),
     sessions: updatedSessions,
   }
 }

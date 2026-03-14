@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const exists = state.sessions.some((session) => session.id === id)
@@ -16,9 +17,11 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     }
     return loadedSession
   })
+  const parsedMessages = await getParsedMessagesForSession(sessions, id, state.useChatMathWorker)
   return {
     ...state,
     lastNormalViewMode: state.viewMode === 'chat-focus' ? state.lastNormalViewMode : 'detail',
+    parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
     sessions,

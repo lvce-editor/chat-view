@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
@@ -13,6 +14,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   if (filtered.length === 0) {
     return {
       ...state,
+      parsedMessages: [],
       renamingSessionId: '',
       selectedSessionId: '',
       sessions: [],
@@ -30,8 +32,10 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
     }
     return loadedSession
   })
+  const parsedMessages = await getParsedMessagesForSession(hydratedSessions, nextSelectedSessionId, state.useChatMathWorker)
   return {
     ...state,
+    parsedMessages,
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,

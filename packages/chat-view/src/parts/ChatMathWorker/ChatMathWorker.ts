@@ -81,6 +81,18 @@ const startRender = (cacheKey: string, value: string, displayMode: boolean): voi
   })()
 }
 
+export const renderToString = async (value: string, displayMode: boolean): Promise<string> => {
+  const cacheKey = getCacheKey(value, displayMode)
+  const cached = renderCache.get(cacheKey)
+  if (cached) {
+    return cached
+  }
+  const html = await renderViaRpc(value, displayMode)
+  renderCache.set(cacheKey, html)
+  pendingRenders.delete(cacheKey)
+  return html
+}
+
 export const tryRenderToString = (value: string, displayMode: boolean): string | undefined => {
   const cacheKey = getCacheKey(value, displayMode)
   const cached = renderCache.get(cacheKey)

@@ -1,5 +1,6 @@
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 
 export const openMockSession = async (state: ChatState, mockSessionId: string, mockChatMessages: readonly ChatMessage[]): Promise<ChatState> => {
   const { sessions: currentSessions } = state
@@ -35,6 +36,7 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
 
   return {
     ...state,
+    parsedMessages: await getParsedMessagesForSession(sessions, mockSessionId, state.useChatMathWorker),
     renamingSessionId: '',
     selectedSessionId: mockSessionId,
     sessions,

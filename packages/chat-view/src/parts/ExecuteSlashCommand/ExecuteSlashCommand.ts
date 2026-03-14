@@ -1,6 +1,7 @@
 import type { ChatMessage, ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
@@ -36,6 +37,7 @@ export const executeSlashCommand = async (state: ChatState, command: 'clear' | '
     }
     return withClearedComposer({
       ...state,
+      parsedMessages: [],
       sessions: updatedSessions,
     })
   }
@@ -54,6 +56,7 @@ export const executeSlashCommand = async (state: ChatState, command: 'clear' | '
   }
   return withClearedComposer({
     ...state,
+    parsedMessages: await getParsedMessagesForSession(updatedSessions, state.selectedSessionId, state.useChatMathWorker),
     sessions: updatedSessions,
   })
 }

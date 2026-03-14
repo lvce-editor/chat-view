@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openApiApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { setOpenApiApiKey } from '../SetOpenApiApiKey/SetOpenApiApiKey.ts'
 
@@ -67,6 +68,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
   return {
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
+    parsedMessages: await getParsedMessagesForSession(updatedSessions, updatedState.selectedSessionId, updatedState.useChatMathWorker),
     sessions: updatedSessions,
   }
 }

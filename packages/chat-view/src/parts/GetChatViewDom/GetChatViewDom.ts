@@ -1,6 +1,7 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
@@ -33,6 +34,7 @@ export const getChatVirtualDom = (
   projectListScrollTop = 0,
   voiceDictationEnabled = false,
   useChatMathWorker = false,
+  parsedMessages: readonly (readonly MessageIntermediateNode[])[] = [],
 ): readonly VirtualDomNode[] => {
   switch (viewMode) {
     case 'chat-focus':
@@ -61,6 +63,7 @@ export const getChatVirtualDom = (
         projectListScrollTop,
         voiceDictationEnabled,
         useChatMathWorker,
+        parsedMessages,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -84,6 +87,7 @@ export const getChatVirtualDom = (
         composerDropEnabled,
         voiceDictationEnabled,
         useChatMathWorker,
+        parsedMessages,
       )
     case 'list':
       return getChatModeListVirtualDom(

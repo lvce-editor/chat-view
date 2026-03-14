@@ -386,36 +386,7 @@ test('getMessageNodeDom should keep raw inline math markdown until worker result
   })
 })
 
-<<<<<<< HEAD
 test('getMessageNodeDom should keep raw block math markdown until worker result is ready', () => {
-=======
-test('getMessageNodeDom should render inline math nodes when chat math worker is enabled', () => {
-  const result = getMessageNodeDom(
-    {
-      children: [
-        {
-          displayMode: false,
-          text: 'a^2 + b^2 = c^2',
-          type: 'math-inline',
-        },
-      ],
-      type: 'text',
-    },
-    true,
-  )
-
-  expect(result[1]).toEqual({
-    childCount: 1,
-    className: ClassNames.MarkdownMathInline,
-    type: VirtualDomElements.Span,
-  })
-  expect(result[2]).toMatchObject({
-    className: 'katex',
-  })
-})
-
-test('getMessageNodeDom should render block math nodes in block wrapper', () => {
->>>>>>> origin/main
   const result = getMessageNodeDom({
     text: '\\int_0^1 x^2 \\; dx',
     type: 'math-block',

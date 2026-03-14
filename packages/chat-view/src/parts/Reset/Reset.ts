@@ -10,6 +10,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     composerValue: '',
     mockAiResponseDelay: 0,
     openRouterApiKey: '',
+    parsedMessages: [],
     selectedModelId: 'test',
     selectedSessionId: '',
     sessions: [],

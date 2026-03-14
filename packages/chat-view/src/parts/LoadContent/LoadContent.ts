@@ -11,6 +11,7 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 
 const toSummarySession = (session: ChatSession): ChatSession => {
   const summary: ChatSession = {
@@ -156,6 +157,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
+  const parsedMessages = await getParsedMessagesForSession(sessions, selectedSessionId, useChatMathWorker)
   const preferredViewMode = savedViewMode || state.viewMode
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
@@ -175,6 +177,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
     passIncludeObfuscation,
+    parsedMessages,
     projectExpandedIds,
     projectListScrollTop,
     projects,
