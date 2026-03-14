@@ -1,5 +1,5 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState, Project } from '../ChatState/ChatState.ts'
+import { openFolder } from '../OpenFolder/OpenFolder.ts'
 import { selectProject } from '../SelectProject/SelectProject.ts'
 
 const getProjectName = (uri: string, fallbackIndex: number): string => {
@@ -19,18 +19,8 @@ const getNextProjectId = (projects: readonly Project[]): string => {
   return `project-${projects.length + 1}`
 }
 
-const pickProjectUri = async (): Promise<string> => {
-  try {
-    const workspaceUri = await RendererWorker.getWorkspacePath()
-    return workspaceUri
-  } catch {
-    return ''
-  }
-}
-
 export const handleClickCreateProject = async (state: ChatState): Promise<ChatState> => {
-  await RendererWorker.confirm('project added')
-  const uri = await pickProjectUri()
+  const uri = await openFolder()
   if (!uri) {
     return state
   }
