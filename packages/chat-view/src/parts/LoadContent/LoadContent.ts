@@ -1,6 +1,7 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
@@ -11,7 +12,6 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
-import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 
 const toSummarySession = (session: ChatSession): ChatSession => {
   const summary: ChatSession = {
@@ -176,8 +176,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
-    passIncludeObfuscation,
     parsedMessages,
+    passIncludeObfuscation,
     projectExpandedIds,
     projectListScrollTop,
     projects,

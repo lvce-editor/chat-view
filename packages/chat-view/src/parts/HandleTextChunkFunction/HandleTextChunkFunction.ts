@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
-import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { getParsedMessagesForSession } from '../ComputeParsedMessages/ComputeParsedMessages.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export interface HandleTextChunkState {
