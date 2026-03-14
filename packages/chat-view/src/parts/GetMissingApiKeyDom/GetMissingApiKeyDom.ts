@@ -7,17 +7,20 @@ import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams.ts'
 export const getMissingApiKeyDom = ({
   getApiKeyText,
   inputName,
+  inputRequired = false,
   inputValue,
   openSettingsButtonName,
   placeholder,
   saveButtonDisabled = false,
   saveButtonName,
   saveButtonText = Strings.save(),
+  saveButtonType = 'button',
+  useForm = false,
 }: MissingApiKeyDomParams): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
-      type: VirtualDomElements.Div,
+      type: useForm ? VirtualDomElements.Form : VirtualDomElements.Div,
     },
     {
       childCount: 0,
@@ -25,6 +28,7 @@ export const getMissingApiKeyDom = ({
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder,
+      required: inputRequired,
       type: VirtualDomElements.Input,
       value: inputValue,
     },
@@ -34,6 +38,7 @@ export const getMissingApiKeyDom = ({
       type: VirtualDomElements.Div,
     },
     {
+      buttonType: saveButtonType,
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       disabled: saveButtonDisabled,

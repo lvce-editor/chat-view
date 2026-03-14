@@ -7,9 +7,12 @@ export const getMissingOpenApiApiKeyDom = (openApiApiKeyInput: string): readonly
   return getMissingApiKeyDom({
     getApiKeyText: Strings.getOpenApiApiKey(),
     inputName: OpenApiApiKeyInput,
+    inputRequired: true,
     inputValue: openApiApiKeyInput,
     openSettingsButtonName: OpenOpenApiApiKeySettings,
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonName: SaveOpenApiApiKey,
+    saveButtonType: 'submit',
+    useForm: true,
   })
 }
