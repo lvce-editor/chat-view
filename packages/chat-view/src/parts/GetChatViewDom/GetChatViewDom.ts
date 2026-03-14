@@ -2,16 +2,13 @@ import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
+import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
-const getParsedMessagesFallback = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-): readonly (readonly MessageIntermediateNode[])[] => {
+const getParsedMessagesFallback = (sessions: readonly ChatSession[], selectedSessionId: string): readonly (readonly MessageIntermediateNode[])[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   if (!selectedSession) {
     return []
