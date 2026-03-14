@@ -16,7 +16,7 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3' },
 ] as const
 
-test('getStatusBarVirtualDom should render root chat container', () => {
+test('getChatVirtualDOm should render root chat container', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   expect(result.length).toBeGreaterThan(0)
   expect(result[0]).toMatchObject({
@@ -25,7 +25,7 @@ test('getStatusBarVirtualDom should render root chat container', () => {
   })
 })
 
-test('getStatusBarVirtualDom should structure chat sections as header and list in list mode', () => {
+test('getChatVirtualDOm should structure chat sections as header and list in list mode', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   expect(result[0]).toMatchObject({
     childCount: 4,
@@ -71,7 +71,7 @@ test('getStatusBarVirtualDom should structure chat sections as header and list i
   expect(chatFocusButton).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render projects and chats in chat-focus mode', () => {
+test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const projects = [{ id: 'project-1', name: '_blank', uri: '' }]
   const result = GetChatViewDom.getChatVirtualDom(
@@ -125,7 +125,7 @@ test('getStatusBarVirtualDom should render projects and chats in chat-focus mode
   expect(normalModeButton).toBeUndefined()
 })
 
-test('getStatusBarVirtualDom should render session list entries', () => {
+test('getChatVirtualDOm should render session list entries', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -165,7 +165,7 @@ test('getStatusBarVirtualDom should render session list entries', () => {
   })
 })
 
-test('getStatusBarVirtualDom should restore chat list scroll position', () => {
+test('getChatVirtualDOm should restore chat list scroll position', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -197,7 +197,7 @@ test('getStatusBarVirtualDom should restore chat list scroll position', () => {
   })
 })
 
-test('getStatusBarVirtualDom should render composer textarea', () => {
+test('getChatVirtualDOm should render composer textarea', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -244,7 +244,7 @@ test('getStatusBarVirtualDom should render composer textarea', () => {
   })
 })
 
-test('getStatusBarVirtualDom should render dictate button before send button when enabled', () => {
+test('getChatVirtualDOm should render dictate button before send button when enabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -279,7 +279,7 @@ test('getStatusBarVirtualDom should render dictate button before send button whe
   expect(sendButtonIndex).toBeGreaterThan(dictateButtonIndex)
 })
 
-test('getStatusBarVirtualDom should render drag overlay message in composer drop target', () => {
+test('getChatVirtualDOm should render drag overlay message in composer drop target', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -311,7 +311,7 @@ test('getStatusBarVirtualDom should render drag overlay message in composer drop
   expect(overlayMessage).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render message rows for selected session', () => {
+test('getChatVirtualDOm should render message rows for selected session', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -343,7 +343,7 @@ test('getStatusBarVirtualDom should render message rows for selected session', (
   expect(messageNode).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should restore messages scroll position', () => {
+test('getChatVirtualDOm should restore messages scroll position', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -379,7 +379,7 @@ test('getStatusBarVirtualDom should restore messages scroll position', () => {
   })
 })
 
-test('getStatusBarVirtualDom should render settings button in header actions', () => {
+test('getChatVirtualDOm should render settings button in header actions', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   const settingsButton = result.find((node) => node.title === 'Settings')
   expect(settingsButton).toBeDefined()
@@ -390,7 +390,7 @@ test('getStatusBarVirtualDom should render settings button in header actions', (
   })
 })
 
-test('getStatusBarVirtualDom should render new chat button in header actions', () => {
+test('getChatVirtualDOm should render new chat button in header actions', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   const newChatButton = result.find((node) => node.title === 'New Chat')
   expect(newChatButton).toBeDefined()
@@ -401,7 +401,7 @@ test('getStatusBarVirtualDom should render new chat button in header actions', (
   })
 })
 
-test('getStatusBarVirtualDom should render debug button in header actions', () => {
+test('getChatVirtualDOm should render debug button in header actions', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   const debugButton = result.find((node) => node.title === 'Debug')
   expect(debugButton).toBeDefined()
@@ -412,7 +412,7 @@ test('getStatusBarVirtualDom should render debug button in header actions', () =
   })
 })
 
-test('getStatusBarVirtualDom should render close button in header actions', () => {
+test('getChatVirtualDOm should render close button in header actions', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   const closeButton = result.find((node) => node.title === 'Close Chat')
   expect(closeButton).toBeDefined()
@@ -423,7 +423,7 @@ test('getStatusBarVirtualDom should render close button in header actions', () =
   })
 })
 
-test('getStatusBarVirtualDom should hide session list in detail mode', () => {
+test('getChatVirtualDOm should hide session list in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -449,7 +449,7 @@ test('getStatusBarVirtualDom should hide session list in detail mode', () => {
   expect(sessionButton).toBeUndefined()
 })
 
-test('getStatusBarVirtualDom should render selected session messages in detail mode', () => {
+test('getChatVirtualDOm should render selected session messages in detail mode', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -488,7 +488,7 @@ test('getStatusBarVirtualDom should render selected session messages in detail m
   expect(messageNodes).toHaveLength(2)
 })
 
-test('getStatusBarVirtualDom should render assistant tool call lines', () => {
+test('getChatVirtualDOm should render assistant tool call lines', () => {
   const uri = 'file:///workspace/index.html'
   const sessions = [
     {
@@ -552,7 +552,7 @@ test('getStatusBarVirtualDom should render assistant tool call lines', () => {
   })
 })
 
-test('getStatusBarVirtualDom should render assistant read_file path as clickable filename', () => {
+test('getChatVirtualDOm should render assistant read_file path as clickable filename', () => {
   const path = 'src/index.html'
   const sessions = [
     {
@@ -607,7 +607,7 @@ test('getStatusBarVirtualDom should render assistant read_file path as clickable
   })
 })
 
-test('getStatusBarVirtualDom should render assistant list_files uri as clickable filename', () => {
+test('getChatVirtualDOm should render assistant list_files uri as clickable filename', () => {
   const uri = 'file:///workspace/src'
   const sessions = [
     {
@@ -671,7 +671,7 @@ test('getStatusBarVirtualDom should render assistant list_files uri as clickable
   })
 })
 
-test('getStatusBarVirtualDom should render assistant list_file uri as clickable filename', () => {
+test('getChatVirtualDOm should render assistant list_file uri as clickable filename', () => {
   const uri = 'file:///workspace/package.json'
   const sessions = [
     {
@@ -731,7 +731,7 @@ test('getStatusBarVirtualDom should render assistant list_file uri as clickable 
   })
 })
 
-test('getStatusBarVirtualDom should render read_file not-found status', () => {
+test('getChatVirtualDOm should render read_file not-found status', () => {
   const path = 'src/missing.html'
   const sessions = [
     {
@@ -780,7 +780,7 @@ test('getStatusBarVirtualDom should render read_file not-found status', () => {
   expect(statusNode).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render read_file error status with short message', () => {
+test('getChatVirtualDOm should render read_file error status with short message', () => {
   const path = 'src/index.html'
   const sessions = [
     {
@@ -830,7 +830,7 @@ test('getStatusBarVirtualDom should render read_file error status with short mes
   expect(statusNode).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render OpenRouter api key input and save button for missing key message', () => {
+test('getChatVirtualDOm should render OpenRouter api key input and save button for missing key message', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -876,7 +876,7 @@ test('getStatusBarVirtualDom should render OpenRouter api key input and save but
   })
 })
 
-test('getStatusBarVirtualDom should render disabled OpenRouter save button with Saving text while api key is saving', () => {
+test('getChatVirtualDOm should render disabled OpenRouter save button with Saving text while api key is saving', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -914,7 +914,7 @@ test('getStatusBarVirtualDom should render disabled OpenRouter save button with 
   expect(savingText).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render OpenAPI api key input and save button for missing key message', () => {
+test('getChatVirtualDOm should render OpenAPI api key input and save button for missing key message', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -960,7 +960,7 @@ test('getStatusBarVirtualDom should render OpenAPI api key input and save button
   })
 })
 
-test('getStatusBarVirtualDom should render OpenRouter request failure reasons as ordered list', () => {
+test('getChatVirtualDOm should render OpenRouter request failure reasons as ordered list', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -1000,7 +1000,7 @@ test('getStatusBarVirtualDom should render OpenRouter request failure reasons as
   expect(internetReason).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render OpenRouter too many requests reasons as ordered list', () => {
+test('getChatVirtualDOm should render OpenRouter too many requests reasons as ordered list', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -1040,7 +1040,7 @@ test('getStatusBarVirtualDom should render OpenRouter too many requests reasons 
   expect(modelReason).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render ordered list from assistant message text', () => {
+test('getChatVirtualDOm should render ordered list from assistant message text', () => {
   const sessions = [
     {
       id: 'session-1',
@@ -1105,7 +1105,7 @@ test('getStatusBarVirtualDom should render ordered list from assistant message t
   expect(listFilesReason).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render selected chat title in detail mode', () => {
+test('getChatVirtualDOm should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -1134,7 +1134,7 @@ test('getStatusBarVirtualDom should render selected chat title in detail mode', 
   expect(titleNode).toBeDefined()
 })
 
-test('getStatusBarVirtualDom should render back button in detail mode', () => {
+test('getChatVirtualDOm should render back button in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -1167,13 +1167,13 @@ test('getStatusBarVirtualDom should render back button in detail mode', () => {
   })
 })
 
-test('getStatusBarVirtualDom should hide back button in list mode', () => {
+test('getChatVirtualDOm should hide back button in list mode', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeUndefined()
 })
 
-test('getStatusBarVirtualDom should not render token usage overview when disabled', () => {
+test('getChatVirtualDOm should not render token usage overview when disabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -1199,7 +1199,7 @@ test('getStatusBarVirtualDom should not render token usage overview when disable
   expect(usageRing).toBeUndefined()
 })
 
-test('getStatusBarVirtualDom should render token usage overview when enabled', () => {
+test('getChatVirtualDOm should render token usage overview when enabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
