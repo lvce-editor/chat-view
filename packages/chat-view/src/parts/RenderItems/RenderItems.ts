@@ -29,6 +29,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     tokensUsed,
     uid,
     usageOverviewEnabled,
+    useChatMathWorker,
     viewMode,
     voiceDictationEnabled,
   } = newState
@@ -61,6 +62,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     selectedProjectId,
     projectListScrollTop,
     voiceDictationEnabled,
+    useChatMathWorker,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

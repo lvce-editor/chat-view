@@ -116,6 +116,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     passIncludeObfuscation,
     streamingEnabled,
+    useChatMathWorker,
     useChatNetworkWorkerForRequests,
     voiceDictationEnabled,
   } = await loadPreferences()
@@ -182,6 +183,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     streamingEnabled,
+    useChatMathWorker,
     useChatNetworkWorkerForRequests,
     viewMode,
     voiceDictationEnabled,

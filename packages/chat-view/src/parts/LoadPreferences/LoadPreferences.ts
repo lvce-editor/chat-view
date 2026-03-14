@@ -5,6 +5,7 @@ import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
+import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
@@ -16,6 +17,7 @@ export const loadPreferences = async (): Promise<{
   openRouterApiKey: string
   streamingEnabled: boolean
   passIncludeObfuscation: boolean
+  useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   voiceDictationEnabled: boolean
 }> => {
@@ -27,6 +29,7 @@ export const loadPreferences = async (): Promise<{
     emitStreamingFunctionCallEvents,
     streamingEnabled,
     passIncludeObfuscation,
+    useChatMathWorker,
     useChatNetworkWorkerForRequests,
     voiceDictationEnabled,
   ] = await Promise.all([
@@ -37,6 +40,7 @@ export const loadPreferences = async (): Promise<{
     loadEmitStreamingFunctionCallEvents(),
     loadStreamingEnabled(),
     loadPassIncludeObfuscation(),
+    loadUseChatMathWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadVoiceDictationEnabled(),
   ])
@@ -49,6 +53,7 @@ export const loadPreferences = async (): Promise<{
     openRouterApiKey,
     passIncludeObfuscation,
     streamingEnabled,
+    useChatMathWorker,
     useChatNetworkWorkerForRequests,
     voiceDictationEnabled,
   }

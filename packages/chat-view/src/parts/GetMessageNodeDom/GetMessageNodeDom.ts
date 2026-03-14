@@ -43,7 +43,7 @@ const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] 
   ]
 }
 
-const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
+const getOrderedListItemDom = (item: MessageListItemNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   const hasNestedUnorderedList = (item.nestedItems?.length || 0) > 0
   const nestedUnorderedListDom = hasNestedUnorderedList
     ? [
@@ -52,7 +52,7 @@ const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNo
           className: ClassNames.ChatUnorderedList,
           type: VirtualDomElements.Ul,
         },
-        ...(item.nestedItems || []).flatMap(getUnorderedListItemDom),
+        ...(item.nestedItems || []).flatMap((nestedItem) => getUnorderedListItemDom(nestedItem, useChatMathWorker)),
       ]
     : []
   return [
@@ -61,53 +61,53 @@ const getOrderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNo
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    ...item.children.flatMap(getInlineNodeDom),
+    ...item.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ...nestedUnorderedListDom,
   ]
 }
 
-const getUnorderedListItemDom = (item: MessageListItemNode): readonly VirtualDomNode[] => {
+const getUnorderedListItemDom = (item: MessageListItemNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: item.children.length,
       className: ClassNames.ChatUnorderedListItem,
       type: VirtualDomElements.Li,
     },
-    ...item.children.flatMap(getInlineNodeDom),
+    ...item.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
   ]
 }
 
-const getTableHeadCellDom = (cell: MessageTableCellNode): readonly VirtualDomNode[] => {
+const getTableHeadCellDom = (cell: MessageTableCellNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: cell.children.length,
       type: VirtualDomElements.Th,
     },
-    ...cell.children.flatMap(getInlineNodeDom),
+    ...cell.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
   ]
 }
 
-const getTableBodyCellDom = (cell: MessageTableCellNode): readonly VirtualDomNode[] => {
+const getTableBodyCellDom = (cell: MessageTableCellNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: cell.children.length,
       type: VirtualDomElements.Td,
     },
-    ...cell.children.flatMap(getInlineNodeDom),
+    ...cell.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
   ]
 }
 
-const getTableRowDom = (row: MessageTableRowNode): readonly VirtualDomNode[] => {
+const getTableRowDom = (row: MessageTableRowNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: row.cells.length,
       type: VirtualDomElements.Tr,
     },
-    ...row.cells.flatMap(getTableBodyCellDom),
+    ...row.cells.flatMap((cell) => getTableBodyCellDom(cell, useChatMathWorker)),
   ]
 }
 
-const getTableDom = (node: MessageTableNode): readonly VirtualDomNode[] => {
+const getTableDom = (node: MessageTableNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
@@ -122,12 +122,12 @@ const getTableDom = (node: MessageTableNode): readonly VirtualDomNode[] => {
       childCount: node.headers.length,
       type: VirtualDomElements.Tr,
     },
-    ...node.headers.flatMap(getTableHeadCellDom),
+    ...node.headers.flatMap((cell) => getTableHeadCellDom(cell, useChatMathWorker)),
     {
       childCount: node.rows.length,
       type: VirtualDomElements.TBody,
     },
-    ...node.rows.flatMap(getTableRowDom),
+    ...node.rows.flatMap((row) => getTableRowDom(row, useChatMathWorker)),
   ]
 }
 
@@ -148,17 +148,17 @@ const getHeadingElementType = (level: MessageHeadingNode['level']): number => {
   }
 }
 
-const getHeadingDom = (node: MessageHeadingNode): readonly VirtualDomNode[] => {
+const getHeadingDom = (node: MessageHeadingNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
   return [
     {
       childCount: node.children.length,
       type: getHeadingElementType(node.level),
     },
-    ...node.children.flatMap(getInlineNodeDom),
+    ...node.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
   ]
 }
 
-export const getMessageNodeDom = (node: MessageIntermediateNode): readonly VirtualDomNode[] => {
+export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
       {
@@ -166,20 +166,20 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
         className: ClassNames.Markdown,
         type: VirtualDomElements.P,
       },
-      ...node.children.flatMap(getInlineNodeDom),
+      ...node.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ]
   }
   if (node.type === 'table') {
-    return getTableDom(node)
+    return getTableDom(node, useChatMathWorker)
   }
   if (node.type === 'code-block') {
     return getCodeBlockDom(node)
   }
   if (node.type === 'math-block') {
-    return getMathBlockDom(node)
+    return getMathBlockDom(node, useChatMathWorker)
   }
   if (node.type === 'heading') {
-    return getHeadingDom(node)
+    return getHeadingDom(node, useChatMathWorker)
   }
   if (node.type === 'ordered-list') {
     return [
@@ -188,7 +188,7 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
         className: ClassNames.ChatOrderedList,
         type: VirtualDomElements.Ol,
       },
-      ...node.items.flatMap(getOrderedListItemDom),
+      ...node.items.flatMap((item) => getOrderedListItemDom(item, useChatMathWorker)),
     ]
   }
   return [
@@ -197,6 +197,6 @@ export const getMessageNodeDom = (node: MessageIntermediateNode): readonly Virtu
       className: ClassNames.ChatUnorderedList,
       type: VirtualDomElements.Ul,
     },
-    ...node.items.flatMap(getUnorderedListItemDom),
+    ...node.items.flatMap((item) => getUnorderedListItemDom(item, useChatMathWorker)),
   ]
 }

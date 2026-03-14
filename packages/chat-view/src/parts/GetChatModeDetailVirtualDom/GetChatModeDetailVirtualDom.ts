@@ -28,6 +28,7 @@ export const getChatModeDetailVirtualDom = (
   composerDropActive = false,
   composerDropEnabled = true,
   voiceDictationEnabled = false,
+  useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -42,7 +43,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop),
+    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
     ...getChatSendAreaDom(
       composerValue,
       models,

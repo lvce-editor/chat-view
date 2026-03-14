@@ -3,7 +3,7 @@ import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessage
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getMathInlineDom } from '../GetMathDom/GetMathDom.ts'
 
-export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly VirtualDomNode[] => {
+export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (inlineNode.type === 'text') {
     return [text(inlineNode.text)]
   }
@@ -26,7 +26,7 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode): readonly Virtua
     ]
   }
   if (inlineNode.type === 'math-inline') {
-    return getMathInlineDom(inlineNode)
+    return getMathInlineDom(inlineNode, useChatMathWorker)
   }
   return [
     {
