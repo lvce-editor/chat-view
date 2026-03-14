@@ -13,12 +13,16 @@ const renderMath = (
   useChatMathWorker = false,
 ): { readonly rootChildCount: number; readonly virtualDom: readonly VirtualDomNode[] } | undefined => {
   try {
-    const html = useChatMathWorker
-      ? ChatMathWorker.tryRenderToString(value, displayMode)
-      : katex.renderToString(value, {
-          displayMode,
-          throwOnError: true,
-        })
+    let html: string | undefined
+    if (useChatMathWorker) {
+      html = ChatMathWorker.tryRenderToString(value, displayMode)
+    }
+    if (typeof html !== 'string') {
+      html = katex.renderToString(value, {
+        displayMode,
+        throwOnError: true,
+      })
+    }
     if (typeof html !== 'string') {
       return undefined
     }
