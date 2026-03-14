@@ -2,9 +2,9 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
-import { getToolCallReadFileVirtualDom } from './GetToolCallReadFileVirtualDom.ts'
-import { getToolCallRenderHtmlVirtualDom } from './GetToolCallRenderHtmlVirtualDom.ts'
-import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
+import { getToolCallReadFileVirtualDom } from '../GetToolCallDom/GetToolCallReadFileVirtualDom/GetToolCallReadFileVirtualDom.ts'
+import { getToolCallRenderHtmlVirtualDom } from '../GetToolCallRenderHtmlVirtualDom/GetToolCallRenderHtmlVirtualDom.ts'
+import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
 const getToolCallDisplayName = (name: string): string => {
   if (name === 'getWorkspaceUri') {

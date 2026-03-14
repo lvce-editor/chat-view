@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
-import { getToolCallDom } from '../src/parts/GetToolCallDom/GetToolCallDom.ts'
+import { getToolCallDom } from '../src/parts/GetToolCallDom2/GetToolCallDom.ts'
 
 test('getToolCallDom should render render_html tool calls as native virtual dom previews', () => {
   const result = getToolCallDom({

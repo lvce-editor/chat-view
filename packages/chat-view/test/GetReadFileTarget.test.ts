@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { getReadFileTarget } from '../src/parts/GetToolCallDom/GetReadFileTarget.ts'
+import { getReadFileTarget } from '../src/parts/GetReadFileTarget/GetReadFileTarget.ts'
 
 test('getReadFileTarget should return target for complete uri arguments', () => {
   const result = getReadFileTarget('{"uri":"file:///workspace/src/index.ts"}')

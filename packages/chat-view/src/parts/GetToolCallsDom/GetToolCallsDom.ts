@@ -2,7 +2,7 @@ import { VirtualDomElements } from '@lvce-editor/constants'
 import { text, type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { getToolCallDom } from '../GetToolCallDom/GetToolCallDom.ts'
+import { getToolCallDom } from '../GetToolCallDom2/GetToolCallDom.ts'
 
 export const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[] => {
   if (message.role !== 'assistant' || !message.toolCalls || message.toolCalls.length === 0) {

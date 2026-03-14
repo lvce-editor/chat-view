@@ -237,6 +237,32 @@ test('parseMessageContent should parse markdown italic text in paragraphs', () =
   ])
 })
 
+test('parseMessageContent should parse bold inside italic markers', () => {
+  const rawMessage = '*italic with **bold** inside*'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'italic with ',
+          type: 'italic',
+        },
+        {
+          text: 'bold',
+          type: 'bold',
+        },
+        {
+          text: ' inside',
+          type: 'italic',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown unordered list blocks', () => {
   const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
