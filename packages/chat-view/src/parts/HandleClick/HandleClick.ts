@@ -22,59 +22,51 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
   if (!name) {
     return state
   }
-  if (name === InputName.CreateSession) {
-    return createSession(state)
-  }
-  if (name === InputName.CreateProject) {
-    return handleClickCreateProject(state)
-  }
-  if (InputName.isCreateSessionInProjectInputName(name)) {
-    const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
-    return createSession(state, projectId)
-  }
-  if (name === InputName.ToggleChatFocus) {
-    return toggleChatFocusMode(state)
-  }
-  if (InputName.isProjectInputName(name)) {
-    const projectId = InputName.getProjectIdFromInputName(name)
-    if (state.viewMode === 'chat-focus') {
-      return toggleProjectExpanded(state, projectId)
+  switch (true) {
+    case name === InputName.CreateSession:
+      return createSession(state)
+    case name === InputName.CreateProject:
+      return handleClickCreateProject(state)
+    case InputName.isCreateSessionInProjectInputName(name): {
+      const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
+      return createSession(state, projectId)
     }
-    return selectProject(state, projectId)
+    case name === InputName.ToggleChatFocus:
+      return toggleChatFocusMode(state)
+    case InputName.isProjectInputName(name): {
+      const projectId = InputName.getProjectIdFromInputName(name)
+      if (state.viewMode === 'chat-focus') {
+        return toggleProjectExpanded(state, projectId)
+      }
+      return selectProject(state, projectId)
+    }
+    case InputName.isSessionInputName(name): {
+      const sessionId = InputName.getSessionIdFromInputName(name)
+      return selectSession(state, sessionId)
+    }
+    case InputName.isRenameInputName(name): {
+      const sessionId = InputName.getRenameIdFromInputName(name)
+      return startRename(state, sessionId)
+    }
+    case name === InputName.SessionDelete:
+      return deleteSession(state, id)
+    case name === InputName.Send:
+      return handleClickSend(state)
+    case name === SaveOpenRouterApiKey:
+      return handleClickSaveOpenRouterApiKey(state)
+    case name === SaveOpenApiApiKey:
+      return handleClickSaveOpenApiApiKey(state)
+    case name === OpenOpenRouterApiKeySettings:
+      return handleClickOpenRouterApiKeySettings(state)
+    case name === OpenOpenRouterApiKeyWebsite:
+      return handleClickOpenRouterApiKeyWebsite(state)
+    case name === OpenOpenApiApiKeySettings:
+      return handleClickOpenApiApiKeySettings(state)
+    case name === OpenOpenApiApiKeyWebsite:
+      return handleClickOpenApiApiKeyWebsite(state)
+    default:
+      return state
   }
-  if (InputName.isSessionInputName(name)) {
-    const sessionId = InputName.getSessionIdFromInputName(name)
-    return selectSession(state, sessionId)
-  }
-  if (InputName.isRenameInputName(name)) {
-    const sessionId = InputName.getRenameIdFromInputName(name)
-    return startRename(state, sessionId)
-  }
-  if (name === InputName.SessionDelete) {
-    return deleteSession(state, id)
-  }
-  if (name === InputName.Send) {
-    return handleClickSend(state)
-  }
-  if (name === SaveOpenRouterApiKey) {
-    return handleClickSaveOpenRouterApiKey(state)
-  }
-  if (name === SaveOpenApiApiKey) {
-    return handleClickSaveOpenApiApiKey(state)
-  }
-  if (name === OpenOpenRouterApiKeySettings) {
-    return handleClickOpenRouterApiKeySettings(state)
-  }
-  if (name === OpenOpenRouterApiKeyWebsite) {
-    return handleClickOpenRouterApiKeyWebsite(state)
-  }
-  if (name === OpenOpenApiApiKeySettings) {
-    return handleClickOpenApiApiKeySettings(state)
-  }
-  if (name === OpenOpenApiApiKeyWebsite) {
-    return handleClickOpenApiApiKeyWebsite(state)
-  }
-  return state
 }
 
 export { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
