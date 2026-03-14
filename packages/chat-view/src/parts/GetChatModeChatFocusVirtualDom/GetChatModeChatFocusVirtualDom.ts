@@ -63,7 +63,15 @@ export const getChatModeChatFocusVirtualDom = (
       type: VirtualDomElements.Text,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker, parsedMessages),
+    ...getMessagesDom(
+      messages,
+      openRouterApiKeyInput,
+      openApiApiKeyInput,
+      openRouterApiKeyState,
+      messagesScrollTop,
+      useChatMathWorker,
+      parsedMessages,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       models,

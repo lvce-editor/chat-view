@@ -45,7 +45,15 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker, parsedMessages),
+    ...getMessagesDom(
+      messages,
+      openRouterApiKeyInput,
+      openApiApiKeyInput,
+      openRouterApiKeyState,
+      messagesScrollTop,
+      useChatMathWorker,
+      parsedMessages,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       models,
