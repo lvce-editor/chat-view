@@ -105,9 +105,21 @@ const getSavedLastNormalViewMode = (savedState: unknown): 'list' | 'detail' | un
   return lastNormalViewMode
 }
 
+const getSavedComposerValue = (savedState: unknown): string | undefined => {
+  if (!isObject(savedState)) {
+    return undefined
+  }
+  const { composerValue } = savedState
+  if (typeof composerValue !== 'string') {
+    return undefined
+  }
+  return composerValue
+}
+
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
+  const savedComposerValue = getSavedComposerValue(savedState)
   const {
     aiSessionTitleGenerationEnabled,
     composerDropEnabled,
@@ -166,6 +178,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     chatListScrollTop,
     composerDropActive: false,
     composerDropEnabled,
+    composerValue: savedComposerValue ?? state.composerValue,
     emitStreamingFunctionCallEvents,
     initial: false,
     lastNormalViewMode,

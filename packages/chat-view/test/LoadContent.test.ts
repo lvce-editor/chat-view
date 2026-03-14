@@ -187,6 +187,30 @@ test('loadContent should restore scroll positions from savedState', async () => 
   expect(result.messagesScrollTop).toBe(260)
 })
 
+test('loadContent should restore composerValue from savedState', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerValue: 'draft from state',
+  }
+  const savedState = {
+    composerValue: 'draft from saved state',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.composerValue).toBe('draft from saved state')
+})
+
+test('loadContent should ignore invalid saved composerValue', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerValue: 'draft from state',
+  }
+  const savedState = {
+    composerValue: 123,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.composerValue).toBe('draft from state')
+})
+
 test('loadContent should ignore invalid saved scroll positions', async () => {
   const state: ChatState = {
     ...createDefaultState(),
