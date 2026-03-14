@@ -19,6 +19,7 @@ import {
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 
@@ -74,6 +75,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     text: '',
     time: assistantTime,
   }
+  await Promise.all([parseAndStoreMessageContent(userMessage), parseAndStoreMessageContent(inProgressAssistantMessage)])
 
   let workingSessions = sessions
   if (viewMode === 'detail') {
@@ -212,7 +214,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const { latestState } = handleTextChunkState
   let updatedSessions = streamingEnabled
-    ? updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
+    ? await updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
     : appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
   if (aiSessionTitleGenerationEnabled && createsNewSession) {
     const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)

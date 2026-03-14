@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import { copyParsedMessageContent, parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -8,14 +9,15 @@ export interface HandleTextChunkState {
   previousState: ChatState
 }
 
-export const updateMessageTextInSelectedSession = (
+export const updateMessageTextInSelectedSession = async (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
   messageId: string,
   text: string,
   inProgress: boolean,
-): readonly ChatSession[] => {
-  return sessions.map((session) => {
+): Promise<readonly ChatSession[]> => {
+  let updatedMessage: ChatSession['messages'][number] | undefined
+  const updatedSessions = sessions.map((session) => {
     if (session.id !== selectedSessionId) {
       return session
     }
@@ -25,14 +27,19 @@ export const updateMessageTextInSelectedSession = (
         if (message.id !== messageId) {
           return message
         }
-        return {
+        updatedMessage = {
           ...message,
           inProgress,
           text,
         }
+        return updatedMessage
       }),
     }
   })
+  if (updatedMessage) {
+    await parseAndStoreMessageContent(updatedMessage)
+  }
+  return updatedSessions
 }
 
 export const updateMessageToolCallsInSelectedSession = (
@@ -51,10 +58,12 @@ export const updateMessageToolCallsInSelectedSession = (
         if (message.id !== messageId) {
           return message
         }
-        return {
+        const updatedMessage = {
           ...message,
           toolCalls,
         }
+        copyParsedMessageContent(message, updatedMessage)
+        return updatedMessage
       }),
     }
   })
@@ -83,7 +92,7 @@ export const handleTextChunkFunction = async (
     }
   }
   const updatedText = assistantMessage.text + chunk
-  const updatedSessions = updateMessageTextInSelectedSession(
+  const updatedSessions = await updateMessageTextInSelectedSession(
     handleTextChunkState.latestState.sessions,
     handleTextChunkState.latestState.selectedSessionId,
     assistantMessageId,

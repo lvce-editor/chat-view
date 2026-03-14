@@ -3,6 +3,7 @@ import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
+import { copyParsedMessageContent, getEmptyMessageContent, setParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 const hasMessageText = (message: ChatMessage): boolean => {
   return message.text.trim().length > 0
@@ -15,15 +16,19 @@ const getDisplayMessages = (messages: readonly ChatMessage[]): readonly ChatMess
       displayMessages.push(message)
       continue
     }
-    displayMessages.push({
+    const toolCallMessage: ChatMessage = {
       ...message,
       text: '',
-    })
+    }
+    setParsedMessageContent(toolCallMessage, getEmptyMessageContent())
+    displayMessages.push(toolCallMessage)
     if (hasMessageText(message)) {
       const { toolCalls: _toolCalls, ...messageWithoutToolCalls } = message
-      displayMessages.push({
+      const textMessage: ChatMessage = {
         ...messageWithoutToolCalls,
-      })
+      }
+      copyParsedMessageContent(message, textMessage)
+      displayMessages.push(textMessage)
     }
   }
   return displayMessages

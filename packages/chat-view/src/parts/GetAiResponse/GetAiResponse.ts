@@ -18,6 +18,7 @@ import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModel
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 export const getAiResponse = async ({
   assetDir,
@@ -183,10 +184,12 @@ export const getAiResponse = async ({
     text = await getMockAiResponse(userText, mockAiResponseDelay)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  return {
+  const message: ChatMessage = {
     id: messageId || crypto.randomUUID(),
     role: 'assistant',
     text,
     time: assistantTime,
   }
+  await parseAndStoreMessageContent(message)
+  return message
 }

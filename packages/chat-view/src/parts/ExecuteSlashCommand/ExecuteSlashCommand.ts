@@ -3,6 +3,7 @@ import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSessio
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
 
@@ -47,6 +48,7 @@ export const executeSlashCommand = async (state: ChatState, command: 'clear' | '
     text: assistantText,
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   }
+  await parseAndStoreMessageContent(assistantMessage)
   const updatedSessions = appendMessageToSelectedSession(state.sessions, state.selectedSessionId, assistantMessage)
   const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)
   if (updatedSelectedSession) {
