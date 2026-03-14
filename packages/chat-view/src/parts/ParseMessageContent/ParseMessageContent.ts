@@ -10,6 +10,7 @@ const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
 const markdownInlineRegex =
   /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
+const markdownItalicWithBoldRegex = /\*([^*\n]*?)\*\*([^*\n]+)\*\*([^*\n]*?)\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
 const markdownHeadingRegex = /^\s*(#{1,6})\s+(.*)$/
@@ -87,7 +88,7 @@ const toTableRow = (line: string): MessageTableRowNode => {
   }
 }
 
-const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
+const parseInlineNodesSimple = (value: string): readonly MessageInlineNode[] => {
   const matches = value.matchAll(markdownInlineRegex)
   const nodes: MessageInlineNode[] = []
   let lastIndex = 0
@@ -138,6 +139,66 @@ const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
       text: value.slice(lastIndex),
       type: 'text',
     })
+  }
+
+  if (nodes.length === 0) {
+    return [
+      {
+        text: value,
+        type: 'text',
+      },
+    ]
+  }
+
+  return nodes
+}
+
+const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
+  const nestedMatches = value.matchAll(markdownItalicWithBoldRegex)
+  const nodes: MessageInlineNode[] = []
+  let lastIndex = 0
+  let foundNestedItalicBold = false
+
+  for (const match of nestedMatches) {
+    const fullMatch = match[0]
+    const italicBefore = match[1]
+    const boldText = match[2]
+    const italicAfter = match[3]
+    const index = match.index ?? 0
+    foundNestedItalicBold = true
+
+    if (index > lastIndex) {
+      nodes.push(...parseInlineNodesSimple(value.slice(lastIndex, index)))
+    }
+
+    if (italicBefore) {
+      nodes.push({
+        text: italicBefore,
+        type: 'italic',
+      })
+    }
+
+    nodes.push({
+      text: boldText,
+      type: 'bold',
+    })
+
+    if (italicAfter) {
+      nodes.push({
+        text: italicAfter,
+        type: 'italic',
+      })
+    }
+
+    lastIndex = index + fullMatch.length
+  }
+
+  if (!foundNestedItalicBold) {
+    return parseInlineNodesSimple(value)
+  }
+
+  if (lastIndex < value.length) {
+    nodes.push(...parseInlineNodesSimple(value.slice(lastIndex)))
   }
 
   if (nodes.length === 0) {
