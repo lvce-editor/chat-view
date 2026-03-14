@@ -954,6 +954,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   })
   expect(apiKeyInput).toMatchObject({
     onInput: DomEventListenerFunctions.HandleInput,
+    pattern: '^sk-.+',
     required: true,
     type: VirtualDomElements.Input,
     value: 'oa-key-typed',
