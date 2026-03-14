@@ -102,9 +102,10 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   )
 
   expect(result[0]).toMatchObject({
-    childCount: 5,
+    childCount: 4,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
+  const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
   const addProjectButton = result.find((node) => node.name === 'create-project')
   const projectList = result.find((node) => node.className === ClassNames.ProjectList)
@@ -114,6 +115,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   expect(projectSidebar).toBeDefined()
+  expect(chatHeader).toBeUndefined()
   expect(projectList).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
   })
