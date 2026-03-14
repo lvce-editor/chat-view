@@ -35,8 +35,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText(
-    'OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.',
-  )
+  await expect(messages.nth(1)).toHaveText('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')
   await expect(Locator('[name="open-api-api-key"]')).toHaveCount(0)
 }
