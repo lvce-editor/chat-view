@@ -7,6 +7,7 @@ export const getMissingOpenApiApiKeyDom = (openApiApiKeyInput: string): readonly
   return getMissingApiKeyDom({
     getApiKeyText: Strings.getOpenApiApiKey(),
     inputName: OpenApiApiKeyInput,
+    inputPattern: '^sk-.+',
     inputRequired: true,
     inputValue: openApiApiKeyInput,
     openSettingsButtonName: OpenOpenApiApiKeySettings,

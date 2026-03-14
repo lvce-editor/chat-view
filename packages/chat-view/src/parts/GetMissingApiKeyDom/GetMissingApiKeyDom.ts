@@ -7,6 +7,7 @@ import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams.ts'
 export const getMissingApiKeyDom = ({
   getApiKeyText,
   inputName,
+  inputPattern,
   inputRequired = false,
   inputValue,
   openSettingsButtonName,
@@ -27,6 +28,7 @@ export const getMissingApiKeyDom = ({
       className: ClassNames.InputBox,
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
+      pattern: inputPattern,
       placeholder,
       required: inputRequired,
       type: VirtualDomElements.Input,
