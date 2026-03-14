@@ -16,5 +16,5 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   // assert
   const input = Locator('.Chat .MultilineInputBox')
-  await expect(input).toHaveCSS('height', '88px')
+  await expect(input).toHaveCSS('height', '94px')
 }
