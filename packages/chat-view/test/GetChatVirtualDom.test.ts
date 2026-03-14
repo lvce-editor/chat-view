@@ -10,6 +10,7 @@ import {
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
+import { parseAndStoreMessagesContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 
 const models = [
   { id: 'test', name: 'test' },
@@ -1050,7 +1051,7 @@ test('getChatVirtualDOm should render OpenRouter too many requests reasons as or
   expect(modelReason).toBeDefined()
 })
 
-test('getChatVirtualDOm should render ordered list from assistant message text', () => {
+test('getChatVirtualDOm should render ordered list from assistant message text', async () => {
   const sessions = [
     {
       id: 'session-1',
@@ -1073,6 +1074,8 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
       title: 'Chat 1',
     },
   ]
+
+  await parseAndStoreMessagesContent(sessions[0].messages)
 
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
