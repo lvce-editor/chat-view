@@ -2,9 +2,9 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getFileNameFromUri } from './GetFileNameFromUri.ts'
-import { getReadFileTarget } from './GetReadFileTarget.ts'
-import { getToolCallStatusLabel } from './GetToolCallStatusLabel.ts'
+import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
+import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
+import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
 export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)

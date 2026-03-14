@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import type { ChatToolCall } from '../src/parts/ChatMessage/ChatMessage.ts'
-import { getToolCallStatusLabel } from '../src/parts/GetToolCallDom/GetToolCallStatusLabel.ts'
+import { getToolCallStatusLabel } from '../src/parts/GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
 const createToolCall = (overrides: Partial<ChatToolCall>): ChatToolCall => {
   return {
