@@ -3,6 +3,7 @@ export interface GetOpenApiAssistantTextErrorResult {
   readonly errorCode?: string
   readonly errorMessage?: string
   readonly errorType?: string
+  readonly isOffline?: boolean
   readonly statusCode?: number
   readonly type: 'error'
 }

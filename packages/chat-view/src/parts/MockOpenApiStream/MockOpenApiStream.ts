@@ -39,6 +39,18 @@ export const setHttpErrorResponse = (statusCode: number, body: unknown): void =>
   }
 }
 
+export const setRequestFailedResponse = (isOffline: boolean = false): void => {
+  errorResult = {
+    details: 'request-failed',
+    ...(isOffline
+      ? {
+          isOffline: true,
+        }
+      : {}),
+    type: 'error',
+  }
+}
+
 export const takeErrorResponse = (): GetOpenApiAssistantTextErrorResult | undefined => {
   const error = errorResult
   errorResult = undefined
