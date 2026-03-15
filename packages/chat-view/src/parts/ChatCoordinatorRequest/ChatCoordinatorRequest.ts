@@ -1,7 +1,7 @@
 import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 
-export interface GetAiResponseOptions {
+export interface GetAiResponseRequestOptions {
   readonly assetDir: string
   readonly messageId?: string
   readonly messages: readonly ChatMessage[]
@@ -9,10 +9,6 @@ export interface GetAiResponseOptions {
   readonly mockApiCommandId: string
   readonly models: readonly ChatModel[]
   readonly nextMessageId: number
-  readonly onDataEvent?: (value: unknown) => Promise<void>
-  readonly onEventStreamFinished?: () => Promise<void>
-  readonly onTextChunk?: (chunk: string) => Promise<void>
-  readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string
   readonly openRouterApiBaseUrl: string
@@ -21,9 +17,12 @@ export interface GetAiResponseOptions {
   readonly platform: number
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
-  readonly useChatCoordinatorWorker?: boolean
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useMockApi: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean
+}
+
+export const getAiResponse = async (options: Readonly<GetAiResponseRequestOptions>): Promise<ChatMessage> => {
+  return ChatCoordinatorWorker.invoke('ChatCoordinator.getAiResponse', options) as Promise<ChatMessage>
 }

@@ -5,6 +5,7 @@ import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
+import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
@@ -15,8 +16,9 @@ export const loadPreferences = async (): Promise<{
   emitStreamingFunctionCallEvents: boolean
   openApiApiKey: string
   openRouterApiKey: string
-  streamingEnabled: boolean
   passIncludeObfuscation: boolean
+  streamingEnabled: boolean
+  useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   voiceDictationEnabled: boolean
@@ -29,6 +31,7 @@ export const loadPreferences = async (): Promise<{
     emitStreamingFunctionCallEvents,
     streamingEnabled,
     passIncludeObfuscation,
+    useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     voiceDictationEnabled,
@@ -40,6 +43,7 @@ export const loadPreferences = async (): Promise<{
     loadEmitStreamingFunctionCallEvents(),
     loadStreamingEnabled(),
     loadPassIncludeObfuscation(),
+    loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadVoiceDictationEnabled(),
@@ -53,6 +57,7 @@ export const loadPreferences = async (): Promise<{
     openRouterApiKey,
     passIncludeObfuscation,
     streamingEnabled,
+    useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     voiceDictationEnabled,

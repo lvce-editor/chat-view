@@ -80,6 +80,7 @@ export const createDefaultState = (): ChatState => {
     uid: 0,
     usageOverviewEnabled: false,
     useChatMathWorker: true,
+    useChatCoordinatorWorker: false,
     useChatNetworkWorkerForRequests: false,
     useMockApi: false,
     viewMode: 'list',
