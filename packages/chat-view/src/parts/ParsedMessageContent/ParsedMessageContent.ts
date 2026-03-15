@@ -1,6 +1,11 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import type { MessageInlineNode, MessageIntermediateNode, MessageListItemNode, MessageTableCellNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import type {
+  MessageInlineNode,
+  MessageIntermediateNode,
+  MessageListItemNode,
+  MessageTableCellNode,
+} from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
