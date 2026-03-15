@@ -153,7 +153,7 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
           type: 'link',
         },
         {
-          text: ')\nInline data: ',
+          text: '\nInline data: ',
           type: 'text',
         },
         {
@@ -177,6 +177,27 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
         {
           href: 'https://example.com/docs',
           text: 'safe',
+          type: 'link',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown links with parentheses in urls', () => {
+  const result = ParseMessageContent.parseMessageContent('Reference: [API](https://example.com/query(arg))')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Reference: ',
+          type: 'text',
+        },
+        {
+          href: 'https://example.com/query(arg)',
+          text: 'API',
           type: 'link',
         },
       ],

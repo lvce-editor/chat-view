@@ -4,6 +4,7 @@ import * as StatusBar from '../Create/Create.ts'
 import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
+import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
@@ -61,6 +62,7 @@ export const commandMap = {
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
+  'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
