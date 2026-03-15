@@ -2,6 +2,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { copyParsedMessageContent, parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -114,6 +115,11 @@ export const handleTextChunkFunction = async (
   )
   const nextState = {
     ...handleTextChunkState.latestState,
+    ...(handleTextChunkState.latestState.messagesAutoScrollEnabled
+      ? {
+          messagesScrollTop: getNextAutoScrollTop(handleTextChunkState.latestState.messagesScrollTop),
+        }
+      : {}),
     parsedMessages: updated.parsedMessages,
     sessions: updated.sessions,
   }
@@ -157,6 +163,11 @@ export const handleToolCallsChunkFunction = async (
   )
   const nextState = {
     ...handleTextChunkState.latestState,
+    ...(handleTextChunkState.latestState.messagesAutoScrollEnabled
+      ? {
+          messagesScrollTop: getNextAutoScrollTop(handleTextChunkState.latestState.messagesScrollTop),
+        }
+      : {}),
     parsedMessages: updated.parsedMessages,
     sessions: updated.sessions,
   }

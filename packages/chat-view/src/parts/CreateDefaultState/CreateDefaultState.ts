@@ -36,6 +36,7 @@ export const createDefaultState = (): ChatState => {
     lastSubmittedSessionId: '',
     listItemHeight: 40,
     maxComposerRows: 5,
+    messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,
     mockApiCommandId: '',

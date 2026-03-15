@@ -9,6 +9,7 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { getAiSessionTitle } from '../GetAiSessionTitle/GetAiSessionTitle.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
 import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
 import {
@@ -22,6 +23,16 @@ import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/Is
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
+
+const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
+  if (!state.messagesAutoScrollEnabled) {
+    return state
+  }
+  return {
+    ...state,
+    messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
+  }
+}
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
@@ -109,18 +120,20 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       title: `Chat ${workingSessions.length + 1}`,
     }
     await saveChatSession(newSession)
-    optimisticState = FocusInput.focusInput({
-      ...state,
-      composerHeight: getMinComposerHeightForState(state),
-      composerValue: '',
-      inputSource: 'script',
-      lastSubmittedSessionId: newSessionId,
-      nextMessageId: nextMessageId + 1,
-      parsedMessages,
-      selectedSessionId: newSessionId,
-      sessions: [...workingSessions, newSession],
-      viewMode: 'detail',
-    })
+    optimisticState = withUpdatedMessageScrollTop(
+      FocusInput.focusInput({
+        ...state,
+        composerHeight: getMinComposerHeightForState(state),
+        composerValue: '',
+        inputSource: 'script',
+        lastSubmittedSessionId: newSessionId,
+        nextMessageId: nextMessageId + 1,
+        parsedMessages,
+        selectedSessionId: newSessionId,
+        sessions: [...workingSessions, newSession],
+        viewMode: 'detail',
+      }),
+    )
   } else {
     await appendChatViewEvent({
       sessionId: selectedSessionId,
@@ -136,16 +149,18 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     if (selectedSession) {
       await saveChatSession(selectedSession)
     }
-    optimisticState = FocusInput.focusInput({
-      ...state,
-      composerHeight: getMinComposerHeightForState(state),
-      composerValue: '',
-      inputSource: 'script',
-      lastSubmittedSessionId: selectedSessionId,
-      nextMessageId: nextMessageId + 1,
-      parsedMessages,
-      sessions: updatedSessions,
-    })
+    optimisticState = withUpdatedMessageScrollTop(
+      FocusInput.focusInput({
+        ...state,
+        composerHeight: getMinComposerHeightForState(state),
+        composerValue: '',
+        inputSource: 'script',
+        lastSubmittedSessionId: selectedSessionId,
+        nextMessageId: nextMessageId + 1,
+        parsedMessages,
+        sessions: updatedSessions,
+      }),
+    )
   }
 
   set(state.uid, state, optimisticState)
@@ -249,10 +264,12 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   if (selectedSession) {
     await saveChatSession(selectedSession)
   }
-  return FocusInput.focusInput({
-    ...latestState,
-    nextMessageId: latestState.nextMessageId + 1,
-    parsedMessages: finalParsedMessages,
-    sessions: updatedSessions,
-  })
+  return withUpdatedMessageScrollTop(
+    FocusInput.focusInput({
+      ...latestState,
+      nextMessageId: latestState.nextMessageId + 1,
+      parsedMessages: finalParsedMessages,
+      sessions: updatedSessions,
+    }),
+  )
 }

@@ -95,7 +95,7 @@ test('renderEventListeners should return expected listeners', () => {
     },
     {
       name: DomEventListenersFunctions.HandleMessagesScroll,
-      params: ['handleMessagesScroll', 'event.target.scrollTop'],
+      params: ['handleMessagesScroll', 'event.target.scrollTop', 'event.target.scrollHeight', 'event.target.clientHeight'],
     },
     {
       name: DomEventListenersFunctions.HandleProjectListScroll,

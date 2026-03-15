@@ -10,12 +10,19 @@ export const handleChatListScroll = async (state: ChatState, chatListScrollTop: 
   }
 }
 
-export const handleMessagesScroll = async (state: ChatState, messagesScrollTop: number): Promise<ChatState> => {
-  if (state.messagesScrollTop === messagesScrollTop) {
+export const handleMessagesScroll = async (
+  state: ChatState,
+  messagesScrollTop: number,
+  scrollHeight: number,
+  clientHeight: number,
+): Promise<ChatState> => {
+  const messagesAutoScrollEnabled = messagesScrollTop + clientHeight >= scrollHeight - 8
+  if (state.messagesScrollTop === messagesScrollTop && state.messagesAutoScrollEnabled === messagesAutoScrollEnabled) {
     return state
   }
   return {
     ...state,
+    messagesAutoScrollEnabled,
     messagesScrollTop,
   }
 }
