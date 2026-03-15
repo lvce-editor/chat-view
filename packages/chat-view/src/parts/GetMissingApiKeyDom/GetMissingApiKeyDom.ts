@@ -52,6 +52,7 @@ export const getMissingApiKeyDom = ({
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      inputType: 'button',
       name: openSettingsButtonName,
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
