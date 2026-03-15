@@ -169,7 +169,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
-  let parsedMessages = state.parsedMessages
+  let {parsedMessages} = state
   for (const session of sessions) {
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
   }
@@ -192,8 +192,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
-    passIncludeObfuscation,
     parsedMessages,
+    passIncludeObfuscation,
     projectExpandedIds,
     projectListScrollTop,
     projects,

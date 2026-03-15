@@ -3,4 +3,5 @@ import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseM
 export interface ParsedMessage {
   readonly id: string
   readonly parsedContent: readonly MessageIntermediateNode[]
+  readonly text: string
 }

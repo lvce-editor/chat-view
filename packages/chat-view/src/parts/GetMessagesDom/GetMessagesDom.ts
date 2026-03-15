@@ -1,10 +1,10 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import { getEmptyMessageContent, getParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 interface DisplayMessage {

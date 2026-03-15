@@ -1,11 +1,11 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 

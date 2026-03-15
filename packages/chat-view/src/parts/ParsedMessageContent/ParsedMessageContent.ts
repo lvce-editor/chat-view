@@ -26,17 +26,18 @@ export const getParsedMessageContent = (
 export const setParsedMessageContent = (
   parsedMessages: readonly ParsedMessage[],
   messageId: string,
+  text: string,
   parsedContent: readonly MessageIntermediateNode[],
 ): readonly ParsedMessage[] => {
   const index = parsedMessages.findIndex((item) => item.id === messageId)
   if (index === -1) {
-    return [...parsedMessages, { id: messageId, parsedContent }]
+    return [...parsedMessages, { id: messageId, parsedContent, text }]
   }
   const existingItem = parsedMessages[index]
-  if (existingItem.parsedContent === parsedContent) {
+  if (existingItem.text === text && existingItem.parsedContent === parsedContent) {
     return parsedMessages
   }
-  return [...parsedMessages.slice(0, index), { ...existingItem, parsedContent }, ...parsedMessages.slice(index + 1)]
+  return [...parsedMessages.slice(0, index), { ...existingItem, parsedContent, text }, ...parsedMessages.slice(index + 1)]
 }
 
 export const copyParsedMessageContent = (
@@ -44,24 +45,24 @@ export const copyParsedMessageContent = (
   sourceMessageId: string,
   targetMessageId: string,
 ): readonly ParsedMessage[] => {
-  const parsed = getParsedMessageContent(parsedMessages, sourceMessageId)
-  if (!parsed) {
+  const parsedMessage = parsedMessages.find((item) => item.id === sourceMessageId)
+  if (!parsedMessage) {
     return parsedMessages
   }
-  return setParsedMessageContent(parsedMessages, targetMessageId, parsed)
+  return setParsedMessageContent(parsedMessages, targetMessageId, parsedMessage.text, parsedMessage.parsedContent)
 }
 
 export const parseAndStoreMessageContent = async (
   parsedMessages: readonly ParsedMessage[],
   message: ChatMessage,
 ): Promise<readonly ParsedMessage[]> => {
-  const existingParsed = getParsedMessageContent(parsedMessages, message.id)
-  if (existingParsed) {
+  const existingParsedMessage = parsedMessages.find((item) => item.id === message.id)
+  if (existingParsedMessage && existingParsedMessage.text === message.text) {
     return parsedMessages
   }
   await Promise.resolve()
   const parsedContent = message.text === '' ? emptyMessageContent : parseMessageContent(message.text)
-  return setParsedMessageContent(parsedMessages, message.id, parsedContent)
+  return setParsedMessageContent(parsedMessages, message.id, message.text, parsedContent)
 }
 
 export const parseAndStoreMessagesContent = async (

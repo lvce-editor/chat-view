@@ -75,7 +75,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     text: '',
     time: assistantTime,
   }
-  let parsedMessages = state.parsedMessages
+  let {parsedMessages} = state
   parsedMessages = await parseAndStoreMessageContent(parsedMessages, userMessage)
   parsedMessages = await parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 

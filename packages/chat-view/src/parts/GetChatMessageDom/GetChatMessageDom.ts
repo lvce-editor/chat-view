@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -13,7 +14,6 @@ import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
-import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 export const getChatMessageDom = (
   message: ChatMessage,
