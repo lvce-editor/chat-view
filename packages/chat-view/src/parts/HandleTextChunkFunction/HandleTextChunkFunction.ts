@@ -1,8 +1,8 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
-import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { copyParsedMessageContent, parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
