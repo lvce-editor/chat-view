@@ -19,8 +19,9 @@ test('handleChatListScroll should return same state when unchanged', async () =>
 
 test('handleMessagesScroll should update messagesScrollTop', async () => {
   const state = createDefaultState()
-  const result = await HandleScroll.handleMessagesScroll(state, 77)
+  const result = await HandleScroll.handleMessagesScroll(state, 77, 200, 100)
   expect(result.messagesScrollTop).toBe(77)
+  expect(result.messagesAutoScrollEnabled).toBe(false)
 })
 
 test('handleMessagesScroll should return same state when unchanged', async () => {
@@ -28,6 +29,16 @@ test('handleMessagesScroll should return same state when unchanged', async () =>
     ...createDefaultState(),
     messagesScrollTop: 25,
   }
-  const result = await HandleScroll.handleMessagesScroll(state, 25)
+  const result = await HandleScroll.handleMessagesScroll(state, 25, 125, 100)
   expect(result).toBe(state)
+})
+
+test('handleMessagesScroll should re-enable auto scroll when at bottom', async () => {
+  const state = {
+    ...createDefaultState(),
+    messagesAutoScrollEnabled: false,
+    messagesScrollTop: 90,
+  }
+  const result = await HandleScroll.handleMessagesScroll(state, 100, 200, 100)
+  expect(result.messagesAutoScrollEnabled).toBe(true)
 })

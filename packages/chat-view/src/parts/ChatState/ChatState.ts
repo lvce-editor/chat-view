@@ -39,6 +39,7 @@ export interface ChatState {
   readonly lastSubmittedSessionId: string
   readonly listItemHeight: number
   readonly maxComposerRows: number
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number
   readonly mockApiCommandId: string
