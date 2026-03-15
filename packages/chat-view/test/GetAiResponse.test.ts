@@ -15,7 +15,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
   let streamFinished = 0
   const invocations: unknown[][] = []
   const mockRpc = {
-    invoke: async (method: string, options: unknown) => {
+    invoke: async (method: string, options: unknown): Promise<{ id: string; role: 'assistant'; text: string; time: string }> => {
       invocations.push([method, options])
       return {
         id: 'assistant-1',

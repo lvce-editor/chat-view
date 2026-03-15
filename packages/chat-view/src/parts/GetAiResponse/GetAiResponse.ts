@@ -50,7 +50,11 @@ export const getAiResponse = async ({
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         assetDir,
-        messageId,
+        ...(messageId
+          ? {
+              messageId,
+            }
+          : {}),
         messages,
         mockAiResponseDelay,
         mockApiCommandId,
