@@ -10,11 +10,7 @@ const getCacheKey = (value: string, displayMode: boolean): string => {
 }
 
 const sendMessagePortToChatMathWorker = async (port: MessagePort): Promise<void> => {
-  try {
-    await RendererWorker.invoke('sendMessagePortToChatMathWorker', port)
-  } catch {
-    await RendererWorker.invoke('SendMessagePortToChatMathWorker.sendMessagePortToChatMathWorker', port)
-  }
+  await RendererWorker.sendMessagePortToChatMathWorker(port, 0)
 }
 
 const createRpc = (): Promise<Rpc> => {

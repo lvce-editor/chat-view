@@ -7,7 +7,6 @@ import { parseHtmlToVirtualDomWithRootCount } from '../ParseHtmlToVirtualDom/Par
 const renderMath = (
   value: string,
   displayMode: boolean,
-  _useChatMathWorker = false,
 ): { readonly rootChildCount: number; readonly virtualDom: readonly VirtualDomNode[] } | undefined => {
   try {
     const html = ChatMathWorker.tryRenderToString(value, displayMode)
@@ -21,7 +20,7 @@ const renderMath = (
 }
 
 export const getMathInlineDom = (node: MessageMathInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
-  const rendered = renderMath(node.text, node.displayMode, useChatMathWorker)
+  const rendered = renderMath(node.text, node.displayMode)
   if (!rendered) {
     const fallback = node.displayMode ? `$$${node.text}$$` : `$${node.text}$`
     return [text(fallback)]
@@ -37,7 +36,7 @@ export const getMathInlineDom = (node: MessageMathInlineNode, useChatMathWorker 
 }
 
 export const getMathBlockDom = (node: MessageMathBlockNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
-  const rendered = renderMath(node.text, true, useChatMathWorker)
+  const rendered = renderMath(node.text, true)
   if (!rendered) {
     return [
       {
