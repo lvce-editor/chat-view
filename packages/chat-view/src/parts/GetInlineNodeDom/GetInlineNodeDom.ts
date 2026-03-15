@@ -25,6 +25,19 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
       text(inlineNode.text),
     ]
   }
+  if (inlineNode.type === 'bold-italic') {
+    return [
+      {
+        childCount: 2,
+        type: VirtualDomElements.Strong,
+      },
+      {
+        childCount: 1,
+        type: VirtualDomElements.Em,
+      },
+      text(inlineNode.text),
+    ]
+  }
   if (inlineNode.type === 'math-inline') {
     return getMathInlineDom(inlineNode, useChatMathWorker)
   }

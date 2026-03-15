@@ -9,7 +9,7 @@ import type {
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
 const markdownInlineRegex =
-  /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
+  /\[([^\]]+)\]\(([^)]+)\)|\*\*\*([^*]+)\*\*\*|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
 const markdownItalicWithBoldRegex = /\*([^*\n]*?)\*\*([^*\n]+)\*\*([^*\n]*?)\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
@@ -97,8 +97,9 @@ const parseInlineNodesSimple = (value: string): readonly MessageInlineNode[] => 
     const fullMatch = match[0]
     const linkText = match[1]
     const href = match[2]
-    const boldText = match[3]
-    const italicText = match[4]
+    const boldItalicText = match[3]
+    const boldText = match[4]
+    const italicText = match[5]
     const mathDollars = match.groups?.mathDollars
     const mathText = match.groups?.mathText
     const index = match.index ?? 0
@@ -113,6 +114,11 @@ const parseInlineNodesSimple = (value: string): readonly MessageInlineNode[] => 
         href: sanitizeUrl(href),
         text: linkText,
         type: 'link',
+      })
+    } else if (boldItalicText) {
+      nodes.push({
+        text: boldItalicText,
+        type: 'bold-italic',
       })
     } else if (boldText) {
       nodes.push({

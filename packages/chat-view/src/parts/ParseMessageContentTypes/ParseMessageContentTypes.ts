@@ -12,6 +12,7 @@ export type MessageInlineNode =
   | MessageInlineLinkNode
   | MessageInlineBoldNode
   | MessageInlineItalicNode
+  | MessageInlineBoldItalicNode
   | MessageMathInlineNode
 
 export interface MessageInlineTextNode {
@@ -33,6 +34,11 @@ export interface MessageInlineBoldNode {
 export interface MessageInlineItalicNode {
   readonly text: string
   readonly type: 'italic'
+}
+
+export interface MessageInlineBoldItalicNode {
+  readonly text: string
+  readonly type: 'bold-italic'
 }
 
 export interface MessageMathInlineNode {
