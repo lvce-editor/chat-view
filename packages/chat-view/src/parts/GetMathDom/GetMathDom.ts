@@ -1,7 +1,4 @@
-// cspell:ignore katex
-
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import katex from 'katex/dist/katex.mjs'
 import type { MessageMathBlockNode, MessageMathInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -10,19 +7,10 @@ import { parseHtmlToVirtualDomWithRootCount } from '../ParseHtmlToVirtualDom/Par
 const renderMath = (
   value: string,
   displayMode: boolean,
-  useChatMathWorker = false,
+  _useChatMathWorker = false,
 ): { readonly rootChildCount: number; readonly virtualDom: readonly VirtualDomNode[] } | undefined => {
   try {
-    let html: string | undefined
-    if (useChatMathWorker) {
-      html = ChatMathWorker.tryRenderToString(value, displayMode)
-    }
-    if (typeof html !== 'string') {
-      html = katex.renderToString(value, {
-        displayMode,
-        throwOnError: true,
-      })
-    }
+    const html = ChatMathWorker.tryRenderToString(value, displayMode)
     if (typeof html !== 'string') {
       return undefined
     }

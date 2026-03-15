@@ -90,3 +90,18 @@ export const tryRenderToString = (value: string, displayMode: boolean): string |
   startRender(cacheKey, value, displayMode)
   return undefined
 }
+
+export const renderToString = async (value: string, displayMode: boolean): Promise<string | undefined> => {
+  const cacheKey = getCacheKey(value, displayMode)
+  const cached = renderCache.get(cacheKey)
+  if (cached) {
+    return cached
+  }
+  try {
+    const html = await renderViaRpc(value, displayMode)
+    renderCache.set(cacheKey, html)
+    return html
+  } catch {
+    return undefined
+  }
+}
