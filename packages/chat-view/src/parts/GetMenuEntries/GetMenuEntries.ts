@@ -1,6 +1,6 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
-import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
+import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.ts'
 
 const menuEntryOpenContainingFolder: MenuEntry = {
