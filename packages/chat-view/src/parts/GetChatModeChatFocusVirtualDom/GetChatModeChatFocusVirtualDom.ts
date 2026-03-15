@@ -5,6 +5,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -33,6 +34,7 @@ export const getChatModeChatFocusVirtualDom = (
   projectListScrollTop = 0,
   voiceDictationEnabled = false,
   useChatMathWorker = false,
+  parsedMessages: readonly ParsedMessage[] = [],
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
@@ -46,7 +48,7 @@ export const getChatModeChatFocusVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
+    ...getMessagesDom(messages, parsedMessages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
     ...getChatSendAreaDom(
       composerValue,
       models,

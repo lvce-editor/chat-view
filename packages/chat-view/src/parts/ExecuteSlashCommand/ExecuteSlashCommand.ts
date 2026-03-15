@@ -48,7 +48,7 @@ export const executeSlashCommand = async (state: ChatState, command: 'clear' | '
     text: assistantText,
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   }
-  await parseAndStoreMessageContent(assistantMessage)
+  const parsedMessages = await parseAndStoreMessageContent(state.parsedMessages, assistantMessage)
   const updatedSessions = appendMessageToSelectedSession(state.sessions, state.selectedSessionId, assistantMessage)
   const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)
   if (updatedSelectedSession) {
@@ -56,6 +56,7 @@ export const executeSlashCommand = async (state: ChatState, command: 'clear' | '
   }
   return withClearedComposer({
     ...state,
+    parsedMessages,
     sessions: updatedSessions,
   })
 }

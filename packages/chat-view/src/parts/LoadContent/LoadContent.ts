@@ -169,7 +169,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
-  await Promise.all(sessions.map((session) => parseAndStoreMessagesContent(session.messages)))
+  let parsedMessages = state.parsedMessages
+  for (const session of sessions) {
+    parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
+  }
   const preferredViewMode = savedViewMode || state.viewMode
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
@@ -190,6 +193,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     openRouterApiKeyInput: openRouterApiKey,
     passIncludeObfuscation,
+    parsedMessages,
     projectExpandedIds,
     projectListScrollTop,
     projects,

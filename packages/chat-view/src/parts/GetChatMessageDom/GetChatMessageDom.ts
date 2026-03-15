@@ -13,10 +13,11 @@ import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
-import { getParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 export const getChatMessageDom = (
   message: ChatMessage,
+  parsedMessageContent: readonly MessageIntermediateNode[],
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
@@ -27,24 +28,13 @@ export const getChatMessageDom = (
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
-  const messageIntermediate = getParsedMessageContent(message) || [
-    {
-      children: [
-        {
-          text: message.text,
-          type: 'text',
-        },
-      ],
-      type: 'text' as const,
-    },
-  ]
-  const messageDom = getMessageContentDom(messageIntermediate, useChatMathWorker)
+  const messageDom = getMessageContentDom(parsedMessageContent, useChatMathWorker)
   const toolCallsDom = getToolCallsDom(message)
   const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageIntermediate.length + 1 + toolCallsChildCount
-      : messageIntermediate.length + toolCallsChildCount
+      ? parsedMessageContent.length + 1 + toolCallsChildCount
+      : parsedMessageContent.length + toolCallsChildCount
   return [
     {
       childCount: 1,

@@ -3,32 +3,47 @@ import type { ChatMessage } from '../ChatState/ChatState.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
-import { copyParsedMessageContent, getEmptyMessageContent, setParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { getEmptyMessageContent, getParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+
+interface DisplayMessage {
+  readonly message: ChatMessage
+  readonly parsedContent: readonly MessageIntermediateNode[]
+}
 
 const hasMessageText = (message: ChatMessage): boolean => {
   return message.text.trim().length > 0
 }
 
-const getDisplayMessages = (messages: readonly ChatMessage[]): readonly ChatMessage[] => {
-  const displayMessages: ChatMessage[] = []
+const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
+  const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
+    const parsedContent = getParsedMessageContent(parsedMessages, message.id)
+    if (!parsedContent) {
+      continue
+    }
     if (message.role !== 'assistant' || !message.toolCalls || message.toolCalls.length === 0) {
-      displayMessages.push(message)
+      displayMessages.push({ message, parsedContent })
       continue
     }
     const toolCallMessage: ChatMessage = {
       ...message,
       text: '',
     }
-    setParsedMessageContent(toolCallMessage, getEmptyMessageContent())
-    displayMessages.push(toolCallMessage)
+    displayMessages.push({
+      message: toolCallMessage,
+      parsedContent: getEmptyMessageContent(),
+    })
     if (hasMessageText(message)) {
       const { toolCalls: _toolCalls, ...messageWithoutToolCalls } = message
       const textMessage: ChatMessage = {
         ...messageWithoutToolCalls,
       }
-      copyParsedMessageContent(message, textMessage)
-      displayMessages.push(textMessage)
+      displayMessages.push({
+        message: textMessage,
+        parsedContent,
+      })
     }
   }
   return displayMessages
@@ -36,6 +51,7 @@ const getDisplayMessages = (messages: readonly ChatMessage[]): readonly ChatMess
 
 export const getMessagesDom = (
   messages: readonly ChatMessage[],
+  parsedMessages: readonly ParsedMessage[],
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
@@ -45,7 +61,7 @@ export const getMessagesDom = (
   if (messages.length === 0) {
     return GetEmptyMessagesDom.getEmptyMessagesDom()
   }
-  const displayMessages = getDisplayMessages(messages)
+  const displayMessages = getDisplayMessages(messages, parsedMessages)
   return [
     {
       childCount: displayMessages.length,
@@ -55,8 +71,15 @@ export const getMessagesDom = (
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
-    ...displayMessages.flatMap((message) =>
-      GetChatMessageDom.getChatMessageDom(message, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, useChatMathWorker),
+    ...displayMessages.flatMap((item) =>
+      GetChatMessageDom.getChatMessageDom(
+        item.message,
+        item.parsedContent,
+        openRouterApiKeyInput,
+        openApiApiKeyInput,
+        openRouterApiKeyState,
+        useChatMathWorker,
+      ),
     ),
   ]
 }

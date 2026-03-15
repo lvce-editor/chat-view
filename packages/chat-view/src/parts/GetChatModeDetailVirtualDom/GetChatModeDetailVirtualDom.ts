@@ -6,6 +6,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModeDetailVirtualDom = (
@@ -29,6 +30,7 @@ export const getChatModeDetailVirtualDom = (
   composerDropEnabled = true,
   voiceDictationEnabled = false,
   useChatMathWorker = false,
+  parsedMessages: readonly ParsedMessage[] = [],
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -43,7 +45,7 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
+    ...getMessagesDom(messages, parsedMessages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
     ...getChatSendAreaDom(
       composerValue,
       models,

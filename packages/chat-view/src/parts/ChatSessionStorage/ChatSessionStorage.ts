@@ -2,7 +2,6 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { IndexedDbChatSessionStorage } from '../IndexedDbChatSessionStorage/IndexedDbChatSessionStorage.ts'
 import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
-import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 export interface ChatSessionStorage {
   appendEvent(event: ChatViewEvent): Promise<void>
@@ -65,7 +64,6 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
         projectId: session.projectId,
       }
     : resultBase
-  await parseAndStoreMessagesContent(result.messages)
   return result
 }
 

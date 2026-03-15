@@ -8,7 +8,7 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
   if (!mockSessionId) {
     return state
   }
-  await parseAndStoreMessagesContent(mockChatMessages)
+  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, mockChatMessages)
 
   const existingSession = currentSessions.find((session) => session.id === mockSessionId)
   const sessions: readonly ChatSession[] = existingSession
@@ -37,6 +37,7 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
 
   return {
     ...state,
+    parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,
     sessions,

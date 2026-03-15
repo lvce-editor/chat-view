@@ -2,6 +2,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
@@ -53,6 +54,7 @@ export interface ChatState {
   readonly openRouterApiKeysSettingsUrl: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly passIncludeObfuscation: boolean
+  readonly parsedMessages: readonly ParsedMessage[]
   readonly platform: number
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number

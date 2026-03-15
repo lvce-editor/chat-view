@@ -18,7 +18,6 @@ import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModel
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
-import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 export const getAiResponse = async ({
   assetDir,
@@ -190,6 +189,5 @@ export const getAiResponse = async ({
     text,
     time: assistantTime,
   }
-  await parseAndStoreMessageContent(message)
   return message
 }

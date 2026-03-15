@@ -1,8 +1,7 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
-
-const parsedMessageContentByMessage = new WeakMap<ChatMessage, readonly MessageIntermediateNode[]>()
 
 const emptyMessageContent: readonly MessageIntermediateNode[] = [
   {
@@ -16,32 +15,64 @@ const emptyMessageContent: readonly MessageIntermediateNode[] = [
   },
 ]
 
-export const getParsedMessageContent = (message: ChatMessage): readonly MessageIntermediateNode[] | undefined => {
-  return parsedMessageContentByMessage.get(message)
+export const getParsedMessageContent = (
+  parsedMessages: readonly ParsedMessage[],
+  messageId: string,
+): readonly MessageIntermediateNode[] | undefined => {
+  const parsedMessage = parsedMessages.find((item) => item.id === messageId)
+  return parsedMessage?.parsedContent
 }
 
-export const setParsedMessageContent = (message: ChatMessage, value: readonly MessageIntermediateNode[]): void => {
-  parsedMessageContentByMessage.set(message, value)
-}
-
-export const copyParsedMessageContent = (source: ChatMessage, target: ChatMessage): void => {
-  const parsed = parsedMessageContentByMessage.get(source)
-  if (!parsed) {
-    return
+export const setParsedMessageContent = (
+  parsedMessages: readonly ParsedMessage[],
+  messageId: string,
+  parsedContent: readonly MessageIntermediateNode[],
+): readonly ParsedMessage[] => {
+  const index = parsedMessages.findIndex((item) => item.id === messageId)
+  if (index === -1) {
+    return [...parsedMessages, { id: messageId, parsedContent }]
   }
-  parsedMessageContentByMessage.set(target, parsed)
+  const existingItem = parsedMessages[index]
+  if (existingItem.parsedContent === parsedContent) {
+    return parsedMessages
+  }
+  return [...parsedMessages.slice(0, index), { ...existingItem, parsedContent }, ...parsedMessages.slice(index + 1)]
 }
 
-export const parseAndStoreMessageContent = async (message: ChatMessage): Promise<void> => {
-  if (parsedMessageContentByMessage.has(message)) {
-    return
+export const copyParsedMessageContent = (
+  parsedMessages: readonly ParsedMessage[],
+  sourceMessageId: string,
+  targetMessageId: string,
+): readonly ParsedMessage[] => {
+  const parsed = getParsedMessageContent(parsedMessages, sourceMessageId)
+  if (!parsed) {
+    return parsedMessages
+  }
+  return setParsedMessageContent(parsedMessages, targetMessageId, parsed)
+}
+
+export const parseAndStoreMessageContent = async (
+  parsedMessages: readonly ParsedMessage[],
+  message: ChatMessage,
+): Promise<readonly ParsedMessage[]> => {
+  const existingParsed = getParsedMessageContent(parsedMessages, message.id)
+  if (existingParsed) {
+    return parsedMessages
   }
   await Promise.resolve()
-  parsedMessageContentByMessage.set(message, message.text === '' ? emptyMessageContent : parseMessageContent(message.text))
+  const parsedContent = message.text === '' ? emptyMessageContent : parseMessageContent(message.text)
+  return setParsedMessageContent(parsedMessages, message.id, parsedContent)
 }
 
-export const parseAndStoreMessagesContent = async (messages: readonly ChatMessage[]): Promise<void> => {
-  await Promise.all(messages.map(parseAndStoreMessageContent))
+export const parseAndStoreMessagesContent = async (
+  parsedMessages: readonly ParsedMessage[],
+  messages: readonly ChatMessage[],
+): Promise<readonly ParsedMessage[]> => {
+  let nextParsedMessages = parsedMessages
+  for (const message of messages) {
+    nextParsedMessages = await parseAndStoreMessageContent(nextParsedMessages, message)
+  }
+  return nextParsedMessages
 }
 
 export const getEmptyMessageContent = (): readonly MessageIntermediateNode[] => {
