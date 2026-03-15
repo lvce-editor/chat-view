@@ -45,7 +45,7 @@
   "dependencies": {
     "@lvce-editor/constants": "^5.5.0",
     "@lvce-editor/i18n": "^2.1.0",
-    "@lvce-editor/virtual-dom-worker": "^8.13.0",
+    "@lvce-editor/virtual-dom-worker": "^9.0.0",
     "katex": "^0.16.38"
   },
   "devDependencies": {
