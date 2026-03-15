@@ -10,19 +10,19 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
   if (inlineNode.type === 'bold') {
     return [
       {
-        childCount: 1,
+        childCount: inlineNode.children.length,
         type: VirtualDomElements.Strong,
       },
-      text(inlineNode.text),
+      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ]
   }
   if (inlineNode.type === 'italic') {
     return [
       {
-        childCount: 1,
+        childCount: inlineNode.children.length,
         type: VirtualDomElements.Em,
       },
-      text(inlineNode.text),
+      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ]
   }
   if (inlineNode.type === 'math-inline') {
