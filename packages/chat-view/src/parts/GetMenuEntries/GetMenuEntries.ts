@@ -1,22 +1,7 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
-import type { ChatState } from '../ChatState/ChatState.ts'
-import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
+import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.ts'
-
-const menuEntryNewFile: MenuEntry = {
-  command: 'Explorer.newFile',
-  flags: MenuItemFlags.None,
-  id: 'newFile',
-  label: ViewletExplorerStrings.newFile(),
-}
-
-const menuEntryNewFolder: MenuEntry = {
-  command: 'Explorer.newFolder',
-  flags: MenuItemFlags.None,
-  id: 'newFolder',
-  label: ViewletExplorerStrings.newFolder(),
-}
 
 const menuEntryOpenContainingFolder: MenuEntry = {
   command: 'Explorer.openContainingFolder',
@@ -81,23 +66,6 @@ const menuEntryDelete: MenuEntry = {
   label: ViewletExplorerStrings.deleteItem(),
 }
 
-const ALL_ENTRIES: readonly MenuEntry[] = [
-  menuEntryNewFile,
-  menuEntryNewFolder,
-  menuEntryOpenContainingFolder,
-  menuEntryOpenInIntegratedTerminal,
-  MenuEntrySeparator.menuEntrySeparator,
-  menuEntryCut,
-  menuEntryCopy,
-  menuEntryPaste,
-  MenuEntrySeparator.menuEntrySeparator,
-  menuEntryCopyPath,
-  menuEntryCopyRelativePath,
-  MenuEntrySeparator.menuEntrySeparator,
-  menuEntryRename,
-  menuEntryDelete,
-]
-
 const getMenuEntriesFile = (): readonly MenuEntry[] => {
   return [
     menuEntryOpenContainingFolder,
@@ -115,6 +83,6 @@ const getMenuEntriesFile = (): readonly MenuEntry[] => {
   ]
 }
 
-export const getMenuEntries = (state: ChatState): readonly MenuEntry[] => {
+export const getMenuEntries = (): readonly MenuEntry[] => {
   return getMenuEntriesFile()
 }
