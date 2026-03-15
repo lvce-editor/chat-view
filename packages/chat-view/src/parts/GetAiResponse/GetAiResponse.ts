@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
@@ -26,6 +27,7 @@ export const getAiResponse = async ({
   mockAiResponseDelay = 800,
   mockApiCommandId,
   models,
+  nextMessageId,
   onDataEvent,
   onEventStreamFinished,
   onTextChunk,
@@ -38,11 +40,53 @@ export const getAiResponse = async ({
   platform,
   selectedModelId,
   streamingEnabled = true,
+  useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
   useMockApi,
   userText,
   webSearchEnabled = false,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
+  if (useChatCoordinatorWorker) {
+    try {
+      const result = await ChatCoordinatorRequest.getAiResponse({
+        assetDir,
+        ...(messageId
+          ? {
+              messageId,
+            }
+          : {}),
+        messages,
+        mockAiResponseDelay,
+        mockApiCommandId,
+        models,
+        nextMessageId,
+        openApiApiBaseUrl,
+        openApiApiKey,
+        openRouterApiBaseUrl,
+        openRouterApiKey,
+        passIncludeObfuscation,
+        platform,
+        selectedModelId,
+        streamingEnabled,
+        useChatNetworkWorkerForRequests,
+        useMockApi,
+        userText,
+        webSearchEnabled,
+      })
+      if (streamingEnabled) {
+        if (onTextChunk) {
+          await onTextChunk(result.text)
+        }
+        if (onEventStreamFinished) {
+          await onEventStreamFinished()
+        }
+      }
+      return result
+    } catch {
+      // Fall back to the local implementation if coordinator worker RPC is unavailable.
+    }
+  }
+
   let text = ''
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)

@@ -1,9 +1,10 @@
 import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { ChatMathWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 
 const sendMessagePortToChatCoordinatorWorker = async (port: MessagePort): Promise<void> => {
-  // TODO:
-  await RendererWorker.sendMessagePortToChatMathWorker(port, 0)
+  const command = 'HandleMessagePort.handleMessagePort'
+  await RendererWorker.invokeAndTransfer('SendMessagePortToExtensionHostWorker.sendMessagePortToChatCoordinatorWorker', port, command)
 }
 
 export const initializeChatCoordinatorWorker = async (): Promise<void> => {
@@ -11,5 +12,5 @@ export const initializeChatCoordinatorWorker = async (): Promise<void> => {
     commandMap: {},
     send: sendMessagePortToChatCoordinatorWorker,
   })
-  ChatMathWorker.set(rpc)
+  ChatCoordinatorWorker.set(rpc)
 }

@@ -1,6 +1,7 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 import {
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
@@ -8,6 +9,70 @@ import {
 } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
+
+test('getAiResponse should use chat coordinator worker when enabled', async () => {
+  const chunks: string[] = []
+  let streamFinished = 0
+  const invocations: unknown[][] = []
+  const mockRpc = {
+    invoke: async (method: string, options: unknown): Promise<{ id: string; role: 'assistant'; text: string; time: string }> => {
+      invocations.push([method, options])
+      return {
+        id: 'assistant-1',
+        role: 'assistant',
+        text: 'Coordinator response',
+        time: '10:01',
+      }
+    },
+  }
+  ChatCoordinatorWorker.set(mockRpc)
+
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    onEventStreamFinished: async () => {
+      streamFinished++
+    },
+    onTextChunk: async (chunk: string) => {
+      chunks.push(chunk)
+    },
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: 'oa-key-123',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4o-mini',
+    streamingEnabled: true,
+    useChatCoordinatorWorker: true,
+    useChatNetworkWorkerForRequests: false,
+    useMockApi: false,
+    userText: 'hello',
+  })
+
+  expect(invocations).toEqual([
+    [
+      'ChatCoordinator.getAiResponse',
+      expect.objectContaining({
+        selectedModelId: 'openapi/gpt-4o-mini',
+        useChatNetworkWorkerForRequests: false,
+        userText: 'hello',
+      }),
+    ],
+  ])
+  expect(result.text).toBe('Coordinator response')
+  expect(chunks).toEqual(['Coordinator response'])
+  expect(streamFinished).toBe(1)
+})
 
 test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
