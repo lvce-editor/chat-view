@@ -26,12 +26,12 @@ export interface MessageInlineLinkNode {
 }
 
 export interface MessageInlineBoldNode {
-  readonly text: string
+  readonly children: readonly MessageInlineNode[]
   readonly type: 'bold'
 }
 
 export interface MessageInlineItalicNode {
-  readonly text: string
+  readonly children: readonly MessageInlineNode[]
   readonly type: 'italic'
 }
 

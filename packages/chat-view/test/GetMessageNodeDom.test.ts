@@ -52,7 +52,12 @@ test('getMessageNodeDom should render markdown bold inline nodes as strong dom n
         type: 'text',
       },
       {
-        text: 'Transport Agnostic',
+        children: [
+          {
+            text: 'Transport Agnostic',
+            type: 'text',
+          },
+        ],
         type: 'bold',
       },
       {
@@ -91,7 +96,12 @@ test('getMessageNodeDom should render markdown italic inline nodes as em dom nod
         type: 'text',
       },
       {
-        text: 'asynchronous',
+        children: [
+          {
+            text: 'asynchronous',
+            type: 'text',
+          },
+        ],
         type: 'italic',
       },
       {

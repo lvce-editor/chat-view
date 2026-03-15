@@ -79,34 +79,56 @@ const parseBoldToken = (value: string, start: number): ParsedInlineToken | undef
     return undefined
   }
   const text = value.slice(start + 2, end)
-  if (!text || text.includes('*') || text.includes('\n')) {
+  if (!text || text.includes('\n')) {
     return undefined
   }
   return {
     length: end - start + 2,
     node: {
-      text,
+      children: parseInlineNodes(text),
       type: 'bold',
     },
   }
+}
+
+const findItalicEnd = (value: string, start: number): number => {
+  let index = start + 1
+  while (index < value.length) {
+    if (value[index] === '\n') {
+      return -1
+    }
+    if (value[index] !== '*') {
+      index++
+      continue
+    }
+    if (value[index + 1] !== '*') {
+      return index
+    }
+    const boldEnd = value.indexOf('**', index + 2)
+    if (boldEnd === -1) {
+      return -1
+    }
+    index = boldEnd + 2
+  }
+  return -1
 }
 
 const parseItalicToken = (value: string, start: number): ParsedInlineToken | undefined => {
   if (value[start] !== '*' || value[start + 1] === '*') {
     return undefined
   }
-  const end = value.indexOf('*', start + 1)
+  const end = findItalicEnd(value, start)
   if (end === -1) {
     return undefined
   }
   const text = value.slice(start + 1, end)
-  if (!text || text.includes('*') || text.includes('\n')) {
+  if (!text || text.includes('\n')) {
     return undefined
   }
   return {
     length: end - start + 1,
     node: {
-      text,
+      children: parseInlineNodes(text),
       type: 'italic',
     },
   }
