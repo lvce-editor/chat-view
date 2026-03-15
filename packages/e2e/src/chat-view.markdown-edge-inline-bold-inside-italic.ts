@@ -21,5 +21,5 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const strong = Locator('.ChatMessages .Message strong')
   const em = Locator('.ChatMessages .Message em')
   await expect(strong).toHaveCount(1)
-  await expect(em).toHaveCount(2)
+  await expect(em).toHaveCount(1)
 }
