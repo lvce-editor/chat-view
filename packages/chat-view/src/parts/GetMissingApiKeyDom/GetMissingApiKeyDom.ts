@@ -2,7 +2,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
-import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams.ts'
+import { type MissingApiKeyDomParams } from './MissingApiKeyDomParams/MissingApiKeyDomParams.ts'
 
 export const getMissingApiKeyDom = ({
   getApiKeyText,
