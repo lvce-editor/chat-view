@@ -46,6 +46,13 @@ const parseMathInline = async (children: readonly MessageInlineNode[]): Promise<
       })
       continue
     }
+    if (child.type === 'strikethrough') {
+      nextChildren.push({
+        ...child,
+        children: await parseMathInline(child.children),
+      })
+      continue
+    }
     nextChildren.push(child)
   }
   return nextChildren

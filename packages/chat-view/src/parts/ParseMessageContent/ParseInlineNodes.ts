@@ -134,6 +134,27 @@ const parseItalicToken = (value: string, start: number): ParsedInlineToken | und
   }
 }
 
+const parseStrikethroughToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (value[start] !== '~' || value[start + 1] !== '~') {
+    return undefined
+  }
+  const end = value.indexOf('~~', start + 2)
+  if (end === -1) {
+    return undefined
+  }
+  const text = value.slice(start + 2, end)
+  if (!text || text.includes('\n')) {
+    return undefined
+  }
+  return {
+    length: end - start + 2,
+    node: {
+      children: parseInlineNodes(text),
+      type: 'strikethrough',
+    },
+  }
+}
+
 const parseMathToken = (value: string, start: number): ParsedInlineToken | undefined => {
   if (value[start] !== '$') {
     return undefined
@@ -182,7 +203,7 @@ const parseMathToken = (value: string, start: number): ParsedInlineToken | undef
 }
 
 const parseInlineToken = (value: string, start: number): ParsedInlineToken | undefined => {
-  return parseLinkToken(value, start) || parseBoldToken(value, start) || parseItalicToken(value, start) || parseMathToken(value, start)
+  return parseLinkToken(value, start) || parseBoldToken(value, start) || parseItalicToken(value, start) || parseStrikethroughToken(value, start) || parseMathToken(value, start)
 }
 
 export const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
