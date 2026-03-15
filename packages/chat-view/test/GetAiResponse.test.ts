@@ -1,12 +1,12 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 import {
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
   openRouterTooManyRequestsMessage,
 } from '../src/parts/chatViewStrings/chatViewStrings.ts'
-import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
