@@ -1,10 +1,30 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
+import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
+
+const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly ParsedMessage[] => {
+  const parsedMessages: ParsedMessage[] = []
+  for (const session of sessions) {
+    for (const message of session.messages) {
+      if (parsedMessages.some((item) => item.id === message.id)) {
+        continue
+      }
+      parsedMessages.push({
+        id: message.id,
+        parsedContent: message.text === '' ? getEmptyMessageContent() : parseMessageContent(message.text),
+        text: message.text,
+      })
+    }
+  }
+  return parsedMessages
+}
 
 export const getChatVirtualDom = (
   sessions: readonly ChatSession[],
@@ -33,7 +53,9 @@ export const getChatVirtualDom = (
   projectListScrollTop = 0,
   voiceDictationEnabled = false,
   useChatMathWorker = false,
+  parsedMessages?: readonly ParsedMessage[],
 ): readonly VirtualDomNode[] => {
+  const effectiveParsedMessages = parsedMessages || getFallbackParsedMessages(sessions)
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom(
@@ -61,6 +83,7 @@ export const getChatVirtualDom = (
         projectListScrollTop,
         voiceDictationEnabled,
         useChatMathWorker,
+        effectiveParsedMessages,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -84,6 +107,7 @@ export const getChatVirtualDom = (
         composerDropEnabled,
         voiceDictationEnabled,
         useChatMathWorker,
+        effectiveParsedMessages,
       )
     case 'list':
       return getChatModeListVirtualDom(

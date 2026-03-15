@@ -1,6 +1,8 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { copyParsedMessageContent, parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export interface HandleTextChunkState {
@@ -8,14 +10,16 @@ export interface HandleTextChunkState {
   previousState: ChatState
 }
 
-export const updateMessageTextInSelectedSession = (
+export const updateMessageTextInSelectedSession = async (
   sessions: readonly ChatSession[],
+  parsedMessages: readonly ParsedMessage[],
   selectedSessionId: string,
   messageId: string,
   text: string,
   inProgress: boolean,
-): readonly ChatSession[] => {
-  return sessions.map((session) => {
+): Promise<{ readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] }> => {
+  let updatedMessage: ChatSession['messages'][number] | undefined
+  const updatedSessions = sessions.map((session) => {
     if (session.id !== selectedSessionId) {
       return session
     }
@@ -25,23 +29,34 @@ export const updateMessageTextInSelectedSession = (
         if (message.id !== messageId) {
           return message
         }
-        return {
+        updatedMessage = {
           ...message,
           inProgress,
           text,
         }
+        return updatedMessage
       }),
     }
   })
+  let nextParsedMessages = parsedMessages
+  if (updatedMessage) {
+    nextParsedMessages = await parseAndStoreMessageContent(parsedMessages, updatedMessage)
+  }
+  return {
+    parsedMessages: nextParsedMessages,
+    sessions: updatedSessions,
+  }
 }
 
 export const updateMessageToolCallsInSelectedSession = (
   sessions: readonly ChatSession[],
+  parsedMessages: readonly ParsedMessage[],
   selectedSessionId: string,
   messageId: string,
   toolCalls: readonly StreamingToolCall[],
-): readonly ChatSession[] => {
-  return sessions.map((session) => {
+): { readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] } => {
+  let nextParsedMessages = parsedMessages
+  const updatedSessions = sessions.map((session) => {
     if (session.id !== selectedSessionId) {
       return session
     }
@@ -51,13 +66,19 @@ export const updateMessageToolCallsInSelectedSession = (
         if (message.id !== messageId) {
           return message
         }
-        return {
+        const updatedMessage = {
           ...message,
           toolCalls,
         }
+        nextParsedMessages = copyParsedMessageContent(nextParsedMessages, message.id, updatedMessage.id)
+        return updatedMessage
       }),
     }
   })
+  return {
+    parsedMessages: nextParsedMessages,
+    sessions: updatedSessions,
+  }
 }
 
 export const handleTextChunkFunction = async (
@@ -83,8 +104,9 @@ export const handleTextChunkFunction = async (
     }
   }
   const updatedText = assistantMessage.text + chunk
-  const updatedSessions = updateMessageTextInSelectedSession(
+  const updated = await updateMessageTextInSelectedSession(
     handleTextChunkState.latestState.sessions,
+    handleTextChunkState.latestState.parsedMessages,
     handleTextChunkState.latestState.selectedSessionId,
     assistantMessageId,
     updatedText,
@@ -92,7 +114,8 @@ export const handleTextChunkFunction = async (
   )
   const nextState = {
     ...handleTextChunkState.latestState,
-    sessions: updatedSessions,
+    parsedMessages: updated.parsedMessages,
+    sessions: updated.sessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)
   // @ts-ignore
@@ -125,15 +148,17 @@ export const handleToolCallsChunkFunction = async (
       previousState: handleTextChunkState.previousState,
     }
   }
-  const updatedSessions = updateMessageToolCallsInSelectedSession(
+  const updated = updateMessageToolCallsInSelectedSession(
     handleTextChunkState.latestState.sessions,
+    handleTextChunkState.latestState.parsedMessages,
     handleTextChunkState.latestState.selectedSessionId,
     assistantMessageId,
     toolCalls,
   )
   const nextState = {
     ...handleTextChunkState.latestState,
-    sessions: updatedSessions,
+    parsedMessages: updated.parsedMessages,
+    sessions: updated.sessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)
   // @ts-ignore

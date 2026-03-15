@@ -19,6 +19,7 @@ import {
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 
@@ -74,6 +75,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     text: '',
     time: assistantTime,
   }
+  let { parsedMessages } = state
+  parsedMessages = await parseAndStoreMessageContent(parsedMessages, userMessage)
+  parsedMessages = await parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 
   let workingSessions = sessions
   if (viewMode === 'detail') {
@@ -111,6 +115,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       inputSource: 'script',
       lastSubmittedSessionId: newSessionId,
       nextMessageId: nextMessageId + 1,
+      parsedMessages,
       selectedSessionId: newSessionId,
       sessions: [...workingSessions, newSession],
       viewMode: 'detail',
@@ -137,6 +142,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       inputSource: 'script',
       lastSubmittedSessionId: selectedSessionId,
       nextMessageId: nextMessageId + 1,
+      parsedMessages,
       sessions: updatedSessions,
     })
   }
@@ -211,9 +217,23 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   })
 
   const { latestState } = handleTextChunkState
-  let updatedSessions = streamingEnabled
-    ? updateMessageTextInSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessageId, assistantMessage.text, false)
-    : appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
+  let finalParsedMessages = latestState.parsedMessages
+  let updatedSessions: readonly ChatSession[]
+  if (streamingEnabled) {
+    const updated = await updateMessageTextInSelectedSession(
+      latestState.sessions,
+      finalParsedMessages,
+      latestState.selectedSessionId,
+      assistantMessageId,
+      assistantMessage.text,
+      false,
+    )
+    updatedSessions = updated.sessions
+    finalParsedMessages = updated.parsedMessages
+  } else {
+    finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
+    updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
+  }
   if (aiSessionTitleGenerationEnabled && createsNewSession) {
     const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
     if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
@@ -230,6 +250,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   return FocusInput.focusInput({
     ...latestState,
     nextMessageId: latestState.nextMessageId + 1,
+    parsedMessages: finalParsedMessages,
     sessions: updatedSessions,
   })
 }

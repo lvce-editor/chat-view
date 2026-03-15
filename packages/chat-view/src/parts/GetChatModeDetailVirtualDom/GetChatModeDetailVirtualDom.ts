@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage, ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
@@ -29,6 +30,7 @@ export const getChatModeDetailVirtualDom = (
   composerDropEnabled = true,
   voiceDictationEnabled = false,
   useChatMathWorker = false,
+  parsedMessages: readonly ParsedMessage[] = [],
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -43,7 +45,15 @@ export const getChatModeDetailVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle),
-    ...getMessagesDom(messages, openRouterApiKeyInput, openApiApiKeyInput, openRouterApiKeyState, messagesScrollTop, useChatMathWorker),
+    ...getMessagesDom(
+      messages,
+      parsedMessages,
+      openRouterApiKeyInput,
+      openApiApiKeyInput,
+      openRouterApiKeyState,
+      messagesScrollTop,
+      useChatMathWorker,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       models,

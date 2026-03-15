@@ -53,18 +53,18 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
   if (!session) {
     return undefined
   }
-  const result: ChatSession = {
+  const resultBase: ChatSession = {
     id: session.id,
     messages: [...session.messages],
     title: session.title,
   }
-  if (!session.projectId) {
-    return result
-  }
-  return {
-    ...result,
-    projectId: session.projectId,
-  }
+  const result = session.projectId
+    ? {
+        ...resultBase,
+        projectId: session.projectId,
+      }
+    : resultBase
+  return result
 }
 
 export const saveChatSession = async (session: ChatSession): Promise<void> => {

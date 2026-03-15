@@ -183,10 +183,11 @@ export const getAiResponse = async ({
     text = await getMockAiResponse(userText, mockAiResponseDelay)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  return {
+  const message: ChatMessage = {
     id: messageId || crypto.randomUUID(),
     role: 'assistant',
     text,
     time: assistantTime,
   }
+  return message
 }
