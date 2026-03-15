@@ -53,8 +53,8 @@ export interface ChatState {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeysSettingsUrl: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
-  readonly passIncludeObfuscation: boolean
   readonly parsedMessages: readonly ParsedMessage[]
+  readonly passIncludeObfuscation: boolean
   readonly platform: number
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
