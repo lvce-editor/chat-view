@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.link-url-parentheses'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -22,5 +20,5 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const links = Locator('.ChatMessages .Message a')
   await expect(links).toHaveCount(1)
-  await expect(links).toHaveAttribute('href', 'https://example.com/query(arg))')
+  await expect(links).toHaveAttribute('href', 'https://example.com/query(arg)')
 }
