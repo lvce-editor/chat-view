@@ -9,7 +9,7 @@ import type {
 const orderedListItemRegex = /^\s*\d+\.\s+(.*)$/
 const unorderedListItemRegex = /^(\s*)[-*]\s+(.*)$/
 const markdownInlineRegex =
-  /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
+  /\[([^\]]+)\]\(((?:[^()\n]+|\([^()\n]*\))+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|(?<![a-zA-Z0-9])(?<mathDollars>\${1,2})(?!\.|\(["'])(?<mathText>(?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\k<mathDollars>(?![a-zA-Z0-9])/g
 const markdownItalicWithBoldRegex = /\*([^*\n]*?)\*\*([^*\n]+)\*\*([^*\n]*?)\*/g
 const markdownTableSeparatorCellRegex = /^:?-{3,}:?$/
 const fencedCodeBlockRegex = /^```/
