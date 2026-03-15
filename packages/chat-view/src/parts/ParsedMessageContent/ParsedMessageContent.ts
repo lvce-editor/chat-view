@@ -1,3 +1,4 @@
+import { ChatMathWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type {
@@ -6,7 +7,6 @@ import type {
   MessageListItemNode,
   MessageTableCellNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const emptyMessageContent: readonly MessageIntermediateNode[] = [
@@ -21,56 +21,118 @@ const emptyMessageContent: readonly MessageIntermediateNode[] = [
   },
 ]
 
-const primeInlineMath = async (children: readonly MessageInlineNode[]): Promise<void> => {
+const parseMathInline = async (children: readonly MessageInlineNode[]): Promise<readonly MessageInlineNode[]> => {
+  const nextChildren: MessageInlineNode[] = []
   for (const child of children) {
-    if (child.type !== 'math-inline') {
+    if (child.type === 'math-inline') {
+      const dom = await ChatMathWorker.getMathInlineDom(child)
+      nextChildren.push({
+        dom,
+        type: 'math-inline-dom',
+      })
       continue
     }
-    await ChatMathWorker.renderToString(child.text, child.displayMode)
+    if (child.type === 'bold') {
+      nextChildren.push({
+        ...child,
+        children: await parseMathInline(child.children),
+      })
+      continue
+    }
+    if (child.type === 'italic') {
+      nextChildren.push({
+        ...child,
+        children: await parseMathInline(child.children),
+      })
+      continue
+    }
+    nextChildren.push(child)
   }
+  return nextChildren
 }
 
-const primeListItemMath = async (item: MessageListItemNode): Promise<void> => {
-  await primeInlineMath(item.children)
+const parseMathListItem = async (item: MessageListItemNode): Promise<MessageListItemNode> => {
+  const children = await parseMathInline(item.children)
   if (!item.nestedItems) {
-    return
+    return {
+      ...item,
+      children,
+    }
   }
+  const nestedItems: MessageListItemNode[] = []
   for (const nestedItem of item.nestedItems) {
-    await primeListItemMath(nestedItem)
+    nestedItems.push(await parseMathListItem(nestedItem))
+  }
+  return {
+    ...item,
+    children,
+    nestedItems,
   }
 }
 
-const primeTableCellMath = async (cell: MessageTableCellNode): Promise<void> => {
-  await primeInlineMath(cell.children)
+const parseMathTableCell = async (cell: MessageTableCellNode): Promise<MessageTableCellNode> => {
+  return {
+    ...cell,
+    children: await parseMathInline(cell.children),
+  }
 }
 
-const primeMathRenderCache = async (parsedContent: readonly MessageIntermediateNode[]): Promise<void> => {
+export const parseMessage = async (rawMessage: string): Promise<readonly MessageIntermediateNode[]> => {
+  const parsedContent = parseMessageContent(rawMessage)
+  const nextParsedContent: MessageIntermediateNode[] = []
   for (const node of parsedContent) {
     if (node.type === 'math-block') {
-      await ChatMathWorker.renderToString(node.text, true)
+      const dom = await ChatMathWorker.getMathBlockDom(node)
+      nextParsedContent.push({
+        dom,
+        type: 'math-block-dom',
+      })
       continue
     }
     if (node.type === 'text' || node.type === 'heading') {
-      await primeInlineMath(node.children)
+      nextParsedContent.push({
+        ...node,
+        children: await parseMathInline(node.children),
+      })
       continue
     }
     if (node.type === 'ordered-list' || node.type === 'unordered-list') {
+      const items: MessageListItemNode[] = []
       for (const item of node.items) {
-        await primeListItemMath(item)
+        items.push(await parseMathListItem(item))
       }
+      nextParsedContent.push({
+        ...node,
+        items,
+      })
       continue
     }
     if (node.type === 'table') {
+      const headers: MessageTableCellNode[] = []
       for (const header of node.headers) {
-        await primeTableCellMath(header)
+        headers.push(await parseMathTableCell(header))
       }
+      const rows = []
       for (const row of node.rows) {
+        const cells: MessageTableCellNode[] = []
         for (const cell of row.cells) {
-          await primeTableCellMath(cell)
+          cells.push(await parseMathTableCell(cell))
         }
+        rows.push({
+          ...row,
+          cells,
+        })
       }
+      nextParsedContent.push({
+        ...node,
+        headers,
+        rows,
+      })
+      continue
     }
+    nextParsedContent.push(node)
   }
+  return nextParsedContent
 }
 
 export const getParsedMessageContent = (
@@ -119,8 +181,7 @@ export const parseAndStoreMessageContent = async (
     return parsedMessages
   }
   await Promise.resolve()
-  const parsedContent = message.text === '' ? emptyMessageContent : parseMessageContent(message.text)
-  await primeMathRenderCache(parsedContent)
+  const parsedContent = message.text === '' ? emptyMessageContent : await parseMessage(message.text)
   return setParsedMessageContent(parsedMessages, message.id, message.text, parsedContent)
 }
 
