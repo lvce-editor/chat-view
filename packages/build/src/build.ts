@@ -1,11 +1,10 @@
 import { execa } from 'execa'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { bundleJs, bundleToolWorkerJs } from './bundleJs.ts'
+import { bundleJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
 const dist = join(root, '.tmp', 'dist')
-const toolWorkerDist = join(root, '.tmp', 'dist-chat-tool-worker')
 
 const readJson = async (path) => {
   const content = await readFile(path, 'utf8')
@@ -51,12 +50,9 @@ const getVersion = async () => {
 }
 
 await rm(dist, { recursive: true, force: true })
-await rm(toolWorkerDist, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
-await mkdir(toolWorkerDist, { recursive: true })
 
 await bundleJs()
-await bundleToolWorkerJs()
 
 const version = await getVersion()
 
@@ -77,20 +73,3 @@ await writeJson(join(dist, 'package.json'), packageJson)
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
-
-const toolWorkerPackageJson = await readJson(join(root, 'packages', 'chat-tool-worker', 'package.json'))
-
-delete toolWorkerPackageJson.scripts
-delete toolWorkerPackageJson.dependencies
-delete toolWorkerPackageJson.devDependencies
-delete toolWorkerPackageJson.prettier
-delete toolWorkerPackageJson.jest
-delete toolWorkerPackageJson.xo
-delete toolWorkerPackageJson.directories
-delete toolWorkerPackageJson.nodemonConfig
-toolWorkerPackageJson.version = version
-toolWorkerPackageJson.main = 'dist/chatToolWorkerMain.js'
-
-await writeJson(join(toolWorkerDist, 'package.json'), toolWorkerPackageJson)
-await cp(join(root, 'README.md'), join(toolWorkerDist, 'README.md'))
-await cp(join(root, 'LICENSE'), join(toolWorkerDist, 'LICENSE'))

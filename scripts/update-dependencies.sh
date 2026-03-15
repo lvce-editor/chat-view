@@ -31,7 +31,6 @@ cd packages/build                                   && updateDependencies && cd 
 cd packages/e2e                                     && updateDependencies && cd ../.. &&
 cd packages/server                                  && updateDependencies && cd ../.. &&
 cd packages/chat-view                       && updateDependencies && cd ../.. &&
-cd packages/chat-tool-worker                       && updateDependencies && cd ../.. &&
 
 echo "Great Success!"
 

@@ -47,12 +47,3 @@ export const bundleJs = async () => {
   ])
   await bundle(options)
 }
-
-export const bundleToolWorkerJs = async () => {
-  const options = getOptions(
-    join(root, 'packages/chat-tool-worker/src/chatToolWorkerMain.ts'),
-    join(root, '.tmp/dist-chat-tool-worker/dist/chatToolWorkerMain.js'),
-    ['@lvce-editor/rpc'],
-  )
-  await bundle(options)
-}
