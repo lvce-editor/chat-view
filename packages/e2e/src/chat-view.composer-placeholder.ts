@@ -9,5 +9,5 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const composer = Locator('.MultilineInputBox[name="composer"]')
 
   // assert
-  await expect(composer).toHaveAttribute('placeholder', 'Type your message. Enter to send, Shift+Enter for newline.')
+  await expect(composer).toHaveAttribute('placeholder', 'Type your message. Enter to send.')
 }

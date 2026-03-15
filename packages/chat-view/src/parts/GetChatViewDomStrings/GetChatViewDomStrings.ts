@@ -53,7 +53,7 @@ export const assistant = (): string => {
 }
 
 export const composePlaceholder = (): string => {
-  return i18nString('Type your message. Enter to send, Shift+Enter for newline.')
+  return i18nString('Type your message. Enter to send.')
 }
 
 export const attachImageAsContext = (): string => {
