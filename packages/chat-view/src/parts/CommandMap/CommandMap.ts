@@ -5,7 +5,11 @@ import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
+<<<<<<< HEAD
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
+=======
+import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+>>>>>>> origin/main
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
@@ -54,6 +58,7 @@ import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWor
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
+import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
@@ -65,6 +70,7 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
+  'Chat.getMenuEntryIds': getMenuEntryIds,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
