@@ -1075,7 +1075,7 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
     },
   ]
 
-  await parseAndStoreMessagesContent(sessions[0].messages)
+  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
 
   const result = GetChatViewDom.getChatVirtualDom(
     sessions,
@@ -1096,6 +1096,15 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
     20,
     0,
     0,
+    false,
+    true,
+    [],
+    [],
+    '',
+    0,
+    false,
+    false,
+    parsedMessages,
   )
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
