@@ -1,3 +1,5 @@
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+
 export type MessageIntermediateNode =
   | MessageTextNode
   | MessageHeadingNode
@@ -6,6 +8,7 @@ export type MessageIntermediateNode =
   | MessageTableNode
   | MessageCodeBlockNode
   | MessageMathBlockNode
+  | MessageMathBlockDomNode
 
 export type MessageInlineNode =
   | MessageInlineTextNode
@@ -13,6 +16,7 @@ export type MessageInlineNode =
   | MessageInlineBoldNode
   | MessageInlineItalicNode
   | MessageMathInlineNode
+  | MessageMathInlineDomNode
 
 export interface MessageInlineTextNode {
   readonly text: string
@@ -39,6 +43,11 @@ export interface MessageMathInlineNode {
   readonly displayMode: boolean
   readonly text: string
   readonly type: 'math-inline'
+}
+
+export interface MessageMathInlineDomNode {
+  readonly dom: readonly VirtualDomNode[]
+  readonly type: 'math-inline-dom'
 }
 
 export interface MessageTextNode {
@@ -93,4 +102,9 @@ export interface MessageCodeBlockNode {
 export interface MessageMathBlockNode {
   readonly text: string
   readonly type: 'math-block'
+}
+
+export interface MessageMathBlockDomNode {
+  readonly dom: readonly VirtualDomNode[]
+  readonly type: 'math-block-dom'
 }

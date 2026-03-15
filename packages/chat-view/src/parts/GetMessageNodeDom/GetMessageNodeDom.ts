@@ -10,7 +10,6 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
-import { getMathBlockDom } from '../GetMathDom/GetMathDom.ts'
 import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
 
 const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
@@ -176,7 +175,17 @@ export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWork
     return getCodeBlockDom(node)
   }
   if (node.type === 'math-block') {
-    return getMathBlockDom(node, useChatMathWorker)
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.MarkdownMathBlock,
+        type: VirtualDomElements.Div,
+      },
+      text(`$$\n${node.text}\n$$`),
+    ]
+  }
+  if (node.type === 'math-block-dom') {
+    return node.dom
   }
   if (node.type === 'heading') {
     return getHeadingDom(node, useChatMathWorker)

@@ -1,7 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import { getMathInlineDom } from '../GetMathDom/GetMathDom.ts'
 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (inlineNode.type === 'text') {
@@ -26,7 +25,11 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
     ]
   }
   if (inlineNode.type === 'math-inline') {
-    return getMathInlineDom(inlineNode, useChatMathWorker)
+    const fallback = inlineNode.displayMode ? `$$${inlineNode.text}$$` : `$${inlineNode.text}$`
+    return [text(fallback)]
+  }
+  if (inlineNode.type === 'math-inline-dom') {
+    return inlineNode.dom
   }
   return [
     {
