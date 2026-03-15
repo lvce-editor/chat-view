@@ -86,11 +86,6 @@ jobs:
         with:
           name: dist
           path: ./.tmp/dist
-      - uses: actions/upload-artifact@v6
-        if: matrix.os == 'ubuntu-24.04'
-        with:
-          name: dist-chat-tool-worker
-          path: ./.tmp/dist-chat-tool-worker
 
   publish-release:
     name: publish-release
@@ -102,10 +97,6 @@ jobs:
         with:
           name: dist
           path: ./.tmp/dist
-      - uses: actions/download-artifact@v7
-        with:
-          name: dist-chat-tool-worker
-          path: ./.tmp/dist-chat-tool-worker
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
@@ -113,10 +104,6 @@ jobs:
 
       - run: npm publish --access public
         working-directory: ./.tmp/dist
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npm publish --access public
-        working-directory: ./.tmp/dist-chat-tool-worker
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Publish GitHub release

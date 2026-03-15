@@ -14,12 +14,6 @@ const tasks = [
     outputFile: '.tmp/dist/dist/chatViewWorkerMain.js',
     external: ['node:buffer', 'electron', 'ws', 'node:worker_threads'],
   },
-  {
-    input: 'packages/chat-tool-worker/src/chatToolWorkerMain.ts',
-    outputDir: '.tmp/dist-chat-tool-worker/dist',
-    outputFile: '.tmp/dist-chat-tool-worker/dist/chatToolWorkerMain.js',
-    external: ['@lvce-editor/rpc'],
-  },
 ]
 
 const main = async () => {
