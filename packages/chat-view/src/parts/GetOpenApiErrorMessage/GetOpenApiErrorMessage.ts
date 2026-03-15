@@ -57,7 +57,7 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
       return openApiRequestFailedMessage
     }
     case 'request-failed':
-      if (isOffline()) {
+      if (errorResult.isOffline || isOffline()) {
         return openApiRequestFailedOfflineMessage
       }
       return openApiRequestFailedMessage
