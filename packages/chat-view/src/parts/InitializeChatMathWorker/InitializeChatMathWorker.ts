@@ -1,4 +1,4 @@
-import { LazyTransferMessagePortRpcParent, type Rpc } from '@lvce-editor/rpc'
+import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
 import { ChatMathWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const sendMessagePortToChatMathWorker = async (port: MessagePort): Promise<void> => {
