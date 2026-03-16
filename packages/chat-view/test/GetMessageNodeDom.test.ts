@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getMessageNodeDom } from '../src/parts/GetMessageNodeDom/GetMessageNodeDom.ts'
 
 test('getMessageNodeDom should render markdown link inline nodes as clickable link dom nodes', () => {
@@ -65,6 +66,33 @@ test('getMessageNodeDom should render markdown image inline nodes as img dom nod
     className: ClassNames.ImageElement,
     src: 'http://invalid-url',
     type: VirtualDomElements.Img,
+  })
+})
+
+test('getMessageNodeDom should render markdown file links with data-uri and read-file click handler', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'Open ',
+        type: 'text',
+      },
+      {
+        href: 'file:///workspace/src/index.ts',
+        text: 'index.ts',
+        type: 'link',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatMessageLink,
+    'data-uri': 'file:///workspace/src/index.ts',
+    href: '#',
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    title: 'file:///workspace/src/index.ts',
+    type: VirtualDomElements.A,
   })
 })
 

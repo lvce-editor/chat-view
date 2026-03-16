@@ -14,7 +14,15 @@ const isAlphaNumeric = (value: string | undefined): boolean => {
   return code >= 97 && code <= 122
 }
 
-const sanitizeUrl = (url: string): string => {
+const sanitizeLinkUrl = (url: string): string => {
+  const normalized = url.trim().toLowerCase()
+  if (normalized.startsWith('http://') || normalized.startsWith('https://') || normalized.startsWith('file://')) {
+    return url
+  }
+  return '#'
+}
+
+const sanitizeImageUrl = (url: string): string => {
   const normalized = url.trim().toLowerCase()
   if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
     return url
@@ -58,7 +66,7 @@ const parseLinkToken = (value: string, start: number): ParsedInlineToken | undef
         return {
           length: index - start + 1,
           node: {
-            href: sanitizeUrl(href),
+            href: sanitizeLinkUrl(href),
             text,
             type: 'link',
           },
@@ -102,7 +110,7 @@ const parseImageToken = (value: string, start: number): ParsedInlineToken | unde
           length: index - start + 1,
           node: {
             alt,
-            src: sanitizeUrl(src),
+            src: sanitizeImageUrl(src),
             type: 'image',
           },
         }

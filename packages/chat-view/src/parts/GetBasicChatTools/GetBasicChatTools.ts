@@ -3,7 +3,8 @@ import type { ChatTool } from '../Types/Types.ts'
 const getReadFileTool = (): ChatTool => {
   return {
     function: {
-      description: 'Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
+      description:
+        'Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI. When you reference files in your response, use markdown links like [index.ts](file:///workspace/src/index.ts).',
       name: 'read_file',
       parameters: {
         additionalProperties: false,

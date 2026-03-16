@@ -176,6 +176,7 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
     'Unsafe script: [click](javascript:alert(1))',
     'Inline data: [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)',
     'Blob source: [blob](blob:https://example.com/abc-123)',
+    'File ref: [index.ts](file:///workspace/src/index.ts)',
     'Allowed: [safe](https://example.com/docs)',
   ].join('\n')
 
@@ -209,6 +210,15 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
         {
           href: '#',
           text: 'blob',
+          type: 'link',
+        },
+        {
+          text: '\nFile ref: ',
+          type: 'text',
+        },
+        {
+          href: 'file:///workspace/src/index.ts',
+          text: 'index.ts',
           type: 'link',
         },
         {
