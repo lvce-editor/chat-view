@@ -29,7 +29,7 @@ test('getChatVirtualDOm should render root chat container', () => {
 test('getChatVirtualDOm should structure chat sections as header and list in list mode', () => {
   const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
   expect(result[0]).toMatchObject({
-    childCount: 4,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
@@ -63,7 +63,9 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     disabled: true,
   })
   const detailsNode = result.find((node) => node.className === ClassNames.ChatDetails)
+  const composerDropTarget = result.find((node) => node.name === 'composer-drop-target')
   expect(detailsNode).toBeUndefined()
+  expect(composerDropTarget).toBeUndefined()
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
   const addProjectButton = result.find((node) => node.name === 'create-project')
   expect(projectSidebar).toBeUndefined()
@@ -103,7 +105,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   )
 
   expect(result[0]).toMatchObject({
-    childCount: 4,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
