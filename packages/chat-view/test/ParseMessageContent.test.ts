@@ -908,6 +908,7 @@ test('parseMessageContent should parse markdown heading blocks', () => {
   ])
 })
 
+// eslint-disable-next-line @cspell/spellchecker
 test('parseMessageContent should parse markdown blockquotes with nested list and inline formatting', () => {
   const rawMessage = ['> This is a quote.', '> ', '> - It can contain lists.', '> - **Bold text**', '> - `Inline code`'].join('\n')
 
