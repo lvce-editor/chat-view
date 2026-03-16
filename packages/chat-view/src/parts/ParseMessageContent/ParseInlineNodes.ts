@@ -225,7 +225,13 @@ const parseMathToken = (value: string, start: number): ParsedInlineToken | undef
 }
 
 const parseInlineToken = (value: string, start: number): ParsedInlineToken | undefined => {
-  return parseImageToken(value, start) || parseLinkToken(value, start) || parseBoldToken(value, start) || parseItalicToken(value, start) || parseMathToken(value, start)
+  return (
+    parseImageToken(value, start) ||
+    parseLinkToken(value, start) ||
+    parseBoldToken(value, start) ||
+    parseItalicToken(value, start) ||
+    parseMathToken(value, start)
+  )
 }
 
 export const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
