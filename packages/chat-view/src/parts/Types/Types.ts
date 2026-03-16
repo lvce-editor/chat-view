@@ -15,4 +15,5 @@ export type ChatTool = {
 export type ExecuteToolOptions = {
   readonly assetDir: string
   readonly platform: number
+  readonly useChatToolWorker?: boolean
 }

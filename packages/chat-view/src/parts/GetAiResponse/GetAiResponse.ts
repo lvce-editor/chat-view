@@ -42,6 +42,7 @@ export const getAiResponse = async ({
   streamingEnabled = true,
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
+  useChatToolWorker = false,
   useMockApi,
   userText,
   webSearchEnabled = false,
@@ -69,6 +70,7 @@ export const getAiResponse = async ({
         selectedModelId,
         streamingEnabled,
         useChatNetworkWorkerForRequests,
+        useChatToolWorker,
         useMockApi,
         userText,
         webSearchEnabled,
@@ -133,7 +135,7 @@ export const getAiResponse = async ({
         }
         openAiInput.length = 0
         for (const toolCall of result.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
           openAiInput.push({
             call_id: toolCall.callId,
             output: content,
@@ -173,6 +175,7 @@ export const getAiResponse = async ({
             : {}),
           stream: streamingEnabled,
           useChatNetworkWorkerForRequests,
+          useChatToolWorker,
           webSearchEnabled,
         },
       )
@@ -212,6 +215,7 @@ export const getAiResponse = async ({
         assetDir,
         platform,
         useChatNetworkWorkerForRequests,
+        useChatToolWorker,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

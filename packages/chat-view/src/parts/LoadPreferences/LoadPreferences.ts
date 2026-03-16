@@ -8,6 +8,7 @@ import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabl
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
+import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
 export const loadPreferences = async (): Promise<{
@@ -21,6 +22,7 @@ export const loadPreferences = async (): Promise<{
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
+  useChatToolWorker: boolean
   voiceDictationEnabled: boolean
 }> => {
   const [
@@ -34,6 +36,7 @@ export const loadPreferences = async (): Promise<{
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
+    useChatToolWorker,
     voiceDictationEnabled,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
@@ -46,6 +49,7 @@ export const loadPreferences = async (): Promise<{
     loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
     loadUseChatNetworkWorkerForRequests(),
+    loadUseChatToolWorker(),
     loadVoiceDictationEnabled(),
   ])
 
@@ -60,6 +64,7 @@ export const loadPreferences = async (): Promise<{
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
+    useChatToolWorker,
     voiceDictationEnabled,
   }
 }

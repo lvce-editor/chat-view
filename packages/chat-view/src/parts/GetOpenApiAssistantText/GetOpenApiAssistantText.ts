@@ -739,6 +739,7 @@ export const getOpenApiAssistantText = async (
     onToolCallsChunk,
     stream,
     useChatNetworkWorkerForRequests = false,
+    useChatToolWorker = false,
     webSearchEnabled = false,
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
@@ -852,7 +853,7 @@ export const getOpenApiAssistantText = async (
         openAiInput.length = 0
         const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of streamResult.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
           const executionStatus = getToolCallExecutionStatus(content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
@@ -1013,7 +1014,7 @@ export const getOpenApiAssistantText = async (
       openAiInput.length = 0
       const executedToolCalls: StreamingToolCall[] = []
       for (const toolCall of responseFunctionCalls) {
-        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform })
+        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
         const executionStatus = getToolCallExecutionStatus(content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
@@ -1091,7 +1092,7 @@ export const getOpenApiAssistantText = async (
           }
           const name = Reflect.get(toolFunction, 'name')
           const rawArguments = Reflect.get(toolFunction, 'arguments')
-          const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
+          const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker }) : '{}'
           if (typeof name === 'string') {
             const executionStatus = getToolCallExecutionStatus(content)
             executedToolCalls.push({

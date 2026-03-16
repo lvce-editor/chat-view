@@ -132,6 +132,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
+    useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
   const legacySavedSessions = getSavedSessions(savedState)
@@ -206,6 +207,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
+    useChatToolWorker,
     viewMode,
     voiceDictationEnabled,
   }

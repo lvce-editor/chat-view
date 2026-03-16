@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatToolWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import { executeChatTool, getBasicChatTools } from '../src/parts/ChatTools/ChatTools.ts'
 
 const options = {
@@ -112,6 +112,15 @@ test('executeChatTool should return unknown tool error', async () => {
   expect(JSON.parse(result)).toEqual({
     error: 'Unknown tool: unknown_tool',
   })
+})
+
+test('executeChatTool should delegate to chat tool worker when enabled', async () => {
+  using mockRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => '{"ok":true}',
+  })
+  const result = await executeChatTool('read_file', JSON.stringify({ path: 'a.txt' }), { ...options, useChatToolWorker: true })
+  expect(result).toBe('{"ok":true}')
+  expect(mockRpc.invocations).toEqual([['ChatTool.execute', 'read_file', '{"path":"a.txt"}', { assetDir: '/test-asset-dir', platform: 0 }]])
 })
 
 test('executeChatTool should include error stack when tool execution throws', async () => {

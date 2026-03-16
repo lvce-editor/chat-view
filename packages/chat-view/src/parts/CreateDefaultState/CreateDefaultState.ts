@@ -83,6 +83,7 @@ export const createDefaultState = (): ChatState => {
     useChatCoordinatorWorker: true,
     useChatMathWorker: true,
     useChatNetworkWorkerForRequests: false,
+    useChatToolWorker: false,
     useMockApi: false,
     viewMode: 'list',
     voiceDictationEnabled: false,
