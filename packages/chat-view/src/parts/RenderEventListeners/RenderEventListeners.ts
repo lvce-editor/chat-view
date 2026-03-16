@@ -179,5 +179,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleSubmit,
       params: ['handleSubmit'],
     },
+    {
+      name: DomEventListenersFunctions.HandleMissingApiKeySubmit,
+      params: ['handleMissingApiKeySubmit', 'event.submitter?.name || ""'],
+      preventDefault: true,
+    },
   ]
 }

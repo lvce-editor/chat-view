@@ -21,6 +21,8 @@ export const getMissingApiKeyDom = ({
   return [
     {
       childCount: 2,
+      method: useForm ? 'GET' : undefined,
+      onSubmit: useForm ? DomEventListenerFunctions.HandleMissingApiKeySubmit : undefined,
       type: useForm ? VirtualDomElements.Form : VirtualDomElements.Div,
     },
     {
@@ -45,7 +47,7 @@ export const getMissingApiKeyDom = ({
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       disabled: saveButtonDisabled,
       name: saveButtonName,
-      onClick: DomEventListenerFunctions.HandleClick,
+      onClick: useForm ? undefined : DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
     },
     text(saveButtonText),

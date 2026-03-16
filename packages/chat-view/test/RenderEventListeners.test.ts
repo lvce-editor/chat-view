@@ -123,5 +123,10 @@ test('renderEventListeners should return expected listeners', () => {
       name: DomEventListenersFunctions.HandleSubmit,
       params: ['handleSubmit'],
     },
+    {
+      name: DomEventListenersFunctions.HandleMissingApiKeySubmit,
+      params: ['handleMissingApiKeySubmit', 'event.submitter?.name || ""'],
+      preventDefault: true,
+    },
   ])
 })
