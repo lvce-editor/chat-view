@@ -2,9 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.new-chat-empty-input-composer-visible'
 
-export const skip = 1
-
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
@@ -16,9 +14,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(composer).toHaveValue('abc')
 
   await Chat.handleClickNew()
-  await Command.execute('Chat.clearInput')
   await expect(composer).toHaveValue('')
 
   await Chat.handleClickNew()
+  await expect(composer).toHaveValue('')
   await expect(composer).toBeVisible()
 }

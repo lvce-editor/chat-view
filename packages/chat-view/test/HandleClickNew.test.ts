@@ -3,7 +3,10 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import { handleClickNew } from '../src/parts/HandleClickNew/HandleClickNew.ts'
 
 test('handleClickNew should create and select a new session', async () => {
-  const state = createDefaultState()
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'draft message',
+  }
 
   const result = await handleClickNew(state)
 
@@ -11,4 +14,5 @@ test('handleClickNew should create and select a new session', async () => {
   const newSession = result.sessions.at(-1)
   expect(result.selectedSessionId).toBe(newSession?.id)
   expect(newSession?.title).toBe('Chat 2')
+  expect(result.composerValue).toBe('')
 })
