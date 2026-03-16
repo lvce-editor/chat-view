@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.math-inline-invalid-latex'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -23,5 +21,6 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const assistant = Locator('.ChatMessages .Message').nth(1)
   await expect(messages).toHaveCount(2)
   await expect(inlineMath).toHaveCount(0)
-  await expect(assistant).toContainText('$\\notARealCommand{x}$')
+  await expect(assistant).toHaveText(`Invalid inline: $
+otARealCommand{x}$`)
 }
