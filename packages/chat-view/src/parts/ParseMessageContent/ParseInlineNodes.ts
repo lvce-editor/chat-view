@@ -198,6 +198,27 @@ const parseStrikethroughToken = (value: string, start: number): ParsedInlineToke
   }
 }
 
+const parseInlineCodeToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (value[start] !== '`') {
+    return undefined
+  }
+  const end = value.indexOf('`', start + 1)
+  if (end === -1) {
+    return undefined
+  }
+  const codeText = value.slice(start + 1, end)
+  if (!codeText || codeText.includes('\n')) {
+    return undefined
+  }
+  return {
+    length: end - start + 1,
+    node: {
+      text: codeText,
+      type: 'inline-code',
+    },
+  }
+}
+
 const parseMathToken = (value: string, start: number): ParsedInlineToken | undefined => {
   if (value[start] !== '$') {
     return undefined
@@ -255,6 +276,7 @@ const parseInlineToken = (value: string, start: number): ParsedInlineToken | und
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseStrikethroughToken(value, start) ||
+    parseInlineCodeToken(value, start) ||
     parseMathToken(value, start)
   )
 }
