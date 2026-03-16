@@ -400,6 +400,90 @@ test('getMessageNodeDom should render heading nodes as matching heading dom node
   })
 })
 
+test('getMessageNodeDom should render blockquote nodes with nested markdown blocks', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        children: [
+          {
+            text: 'This is a quote.',
+            type: 'text',
+          },
+        ],
+        type: 'text',
+      },
+      {
+        items: [
+          {
+            children: [
+              {
+                text: 'It can contain lists.',
+                type: 'text',
+              },
+            ],
+            type: 'list-item',
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Bold text',
+                    type: 'text',
+                  },
+                ],
+                type: 'bold',
+              },
+            ],
+            type: 'list-item',
+          },
+        ],
+        type: 'unordered-list',
+      },
+    ],
+    type: 'blockquote',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 2,
+    className: ClassNames.MarkdownQuote,
+    type: VirtualDomElements.Div,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.P,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'This is a quote.',
+  })
+  expect(result[3]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatUnorderedList,
+    type: VirtualDomElements.Ul,
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[5]).toMatchObject({
+    text: 'It can contain lists.',
+  })
+  expect(result[6]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatUnorderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[7]).toEqual({
+    childCount: 1,
+    type: VirtualDomElements.Strong,
+  })
+  expect(result[8]).toMatchObject({
+    text: 'Bold text',
+  })
+})
+
 test('getMessageNodeDom should keep raw inline math markdown until worker result is cached', () => {
   const result = getMessageNodeDom({
     children: [

@@ -960,6 +960,67 @@ test('parseMessageContent should parse markdown heading blocks', () => {
   ])
 })
 
+// eslint-disable-next-line @cspell/spellchecker
+test('parseMessageContent should parse markdown blockquotes with nested list and inline formatting', () => {
+  const rawMessage = ['> This is a quote.', '> ', '> - It can contain lists.', '> - **Bold text**', '> - `Inline code`'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          children: [
+            {
+              text: 'This is a quote.',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+        {
+          items: [
+            {
+              children: [
+                {
+                  text: 'It can contain lists.',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+            {
+              children: [
+                {
+                  children: [
+                    {
+                      text: 'Bold text',
+                      type: 'text',
+                    },
+                  ],
+                  type: 'bold',
+                },
+              ],
+              type: 'list-item',
+            },
+            {
+              children: [
+                {
+                  text: '`Inline code`',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+          ],
+          type: 'unordered-list',
+        },
+      ],
+      type: 'blockquote',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown inline math', () => {
   const result = ParseMessageContent.parseMessageContent('Quadratic roots are $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.')
 

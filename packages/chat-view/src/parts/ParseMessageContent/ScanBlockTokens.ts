@@ -1,5 +1,6 @@
 export type BlockToken =
   | BlockBlankToken
+  | BlockBlockQuoteLineToken
   | BlockCodeToken
   | BlockHeadingLineToken
   | BlockMathToken
@@ -15,6 +16,11 @@ interface BlockBlankToken {
 interface BlockParagraphLineToken {
   readonly text: string
   readonly type: 'paragraph-line'
+}
+
+interface BlockBlockQuoteLineToken {
+  readonly text: string
+  readonly type: 'blockquote-line'
 }
 
 interface BlockHeadingLineToken {
@@ -154,6 +160,21 @@ const parseUnorderedListItemLine = (line: string): ParsedUnorderedListItemLine |
   }
 }
 
+const parseBlockQuoteLine = (line: string): string | undefined => {
+  const trimmedStart = line.trimStart()
+  if (!trimmedStart.startsWith('>')) {
+    return undefined
+  }
+  const content = trimmedStart.slice(1)
+  if (!content) {
+    return ''
+  }
+  if (content.startsWith(' ')) {
+    return content.slice(1)
+  }
+  return content
+}
+
 const isTableRow = (line: string): boolean => {
   const trimmed = line.trim()
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) {
@@ -182,6 +203,15 @@ export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
     if (!trimmed) {
       tokens.push({
         type: 'blank-line',
+      })
+      continue
+    }
+
+    const blockQuoteLine = parseBlockQuoteLine(line)
+    if (blockQuoteLine !== undefined) {
+      tokens.push({
+        text: blockQuoteLine,
+        type: 'blockquote-line',
       })
       continue
     }
