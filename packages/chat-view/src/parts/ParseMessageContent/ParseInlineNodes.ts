@@ -203,7 +203,13 @@ const parseMathToken = (value: string, start: number): ParsedInlineToken | undef
 }
 
 const parseInlineToken = (value: string, start: number): ParsedInlineToken | undefined => {
-  return parseLinkToken(value, start) || parseBoldToken(value, start) || parseItalicToken(value, start) || parseStrikethroughToken(value, start) || parseMathToken(value, start)
+  return (
+    parseLinkToken(value, start) ||
+    parseBoldToken(value, start) ||
+    parseItalicToken(value, start) ||
+    parseStrikethroughToken(value, start) ||
+    parseMathToken(value, start)
+  )
 }
 
 export const parseInlineNodes = (value: string): readonly MessageInlineNode[] => {
