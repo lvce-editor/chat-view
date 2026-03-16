@@ -1,4 +1,4 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
@@ -15,7 +15,6 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
             className: ClassNames.IconButton,
             name: InputName.Dictate,
             onClick: DomEventListenerFunctions.HandleClickDictationButton,
-            role: AriaRoles.Button,
             title: Strings.startVoiceDictation(),
             type: VirtualDomElements.Button,
           },
@@ -32,7 +31,6 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
       className: sendButtonClassName,
       disabled: isSendDisabled,
       name: InputName.Send,
-      role: AriaRoles.Button,
       title: Strings.sendMessage(),
       type: VirtualDomElements.Button,
     },
