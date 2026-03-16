@@ -2,6 +2,7 @@ import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 
 export type MessageIntermediateNode =
   | MessageTextNode
+  | MessageBlockQuoteNode
   | MessageHeadingNode
   | MessageOrderedListNode
   | MessageUnorderedListNode
@@ -59,6 +60,11 @@ export interface MessageHeadingNode {
   readonly children: readonly MessageInlineNode[]
   readonly level: 1 | 2 | 3 | 4 | 5 | 6
   readonly type: 'heading'
+}
+
+export interface MessageBlockQuoteNode {
+  readonly children: readonly MessageIntermediateNode[]
+  readonly type: 'blockquote'
 }
 
 export interface MessageOrderedListNode {
