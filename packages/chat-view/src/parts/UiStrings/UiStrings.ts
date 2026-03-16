@@ -1,6 +1,7 @@
 export const CollapseAllFoldersInExplorer = 'Collapse All Folders in Explorer'
 export const Copy = 'Copy'
 export const CopyPath = 'Copy Path'
+export const CopyAsE2eTest = 'Copy as E2E Test'
 export const CopyRelativePath = 'Copy Relative Path'
 export const Cut = 'Cut'
 export const Delete = 'Delete'

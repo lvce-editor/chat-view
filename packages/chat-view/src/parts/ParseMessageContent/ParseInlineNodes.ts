@@ -14,7 +14,15 @@ const isAlphaNumeric = (value: string | undefined): boolean => {
   return code >= 97 && code <= 122
 }
 
-const sanitizeUrl = (url: string): string => {
+const sanitizeLinkUrl = (url: string): string => {
+  const normalized = url.trim().toLowerCase()
+  if (normalized.startsWith('http://') || normalized.startsWith('https://') || normalized.startsWith('file://')) {
+    return url
+  }
+  return '#'
+}
+
+const sanitizeImageUrl = (url: string): string => {
   const normalized = url.trim().toLowerCase()
   if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
     return url
@@ -58,7 +66,7 @@ const parseLinkToken = (value: string, start: number): ParsedInlineToken | undef
         return {
           length: index - start + 1,
           node: {
-            href: sanitizeUrl(href),
+            href: sanitizeLinkUrl(href),
             text,
             type: 'link',
           },
@@ -102,7 +110,7 @@ const parseImageToken = (value: string, start: number): ParsedInlineToken | unde
           length: index - start + 1,
           node: {
             alt,
-            src: sanitizeUrl(src),
+            src: sanitizeImageUrl(src),
             type: 'image',
           },
         }
@@ -137,9 +145,6 @@ const parseBoldToken = (value: string, start: number): ParsedInlineToken | undef
 const findItalicEnd = (value: string, start: number): number => {
   let index = start + 1
   while (index < value.length) {
-    if (value[index] === '\n') {
-      return -1
-    }
     if (value[index] !== '*') {
       index++
       continue
@@ -165,7 +170,7 @@ const parseItalicToken = (value: string, start: number): ParsedInlineToken | und
     return undefined
   }
   const text = value.slice(start + 1, end)
-  if (!text || text.includes('\n')) {
+  if (!text) {
     return undefined
   }
   return {
@@ -194,6 +199,27 @@ const parseStrikethroughToken = (value: string, start: number): ParsedInlineToke
     node: {
       children: parseInlineNodes(text),
       type: 'strikethrough',
+    },
+  }
+}
+
+const parseInlineCodeToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (value[start] !== '`') {
+    return undefined
+  }
+  const end = value.indexOf('`', start + 1)
+  if (end === -1) {
+    return undefined
+  }
+  const codeText = value.slice(start + 1, end)
+  if (!codeText || codeText.includes('\n')) {
+    return undefined
+  }
+  return {
+    length: end - start + 1,
+    node: {
+      text: codeText,
+      type: 'inline-code',
     },
   }
 }
@@ -255,6 +281,7 @@ const parseInlineToken = (value: string, start: number): ParsedInlineToken | und
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseStrikethroughToken(value, start) ||
+    parseInlineCodeToken(value, start) ||
     parseMathToken(value, start)
   )
 }

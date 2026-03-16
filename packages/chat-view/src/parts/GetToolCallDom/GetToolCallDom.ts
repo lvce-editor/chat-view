@@ -15,6 +15,9 @@ const getToolCallDisplayName = (name: string): string => {
 
 const getToolCallLabel = (toolCall: ChatToolCall): string => {
   const displayName = getToolCallDisplayName(toolCall.name)
+  if (toolCall.name === 'getWorkspaceUri' && toolCall.result) {
+    return `${displayName} ${toolCall.result}`
+  }
   const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
   const statusLabel = getToolCallStatusLabel(toolCall)
   if (argumentPreview === '{}') {

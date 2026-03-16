@@ -176,6 +176,7 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
     'Unsafe script: [click](javascript:alert(1))',
     'Inline data: [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)',
     'Blob source: [blob](blob:https://example.com/abc-123)',
+    'File ref: [index.ts](file:///workspace/src/index.ts)',
     'Allowed: [safe](https://example.com/docs)',
   ].join('\n')
 
@@ -209,6 +210,15 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
         {
           href: '#',
           text: 'blob',
+          type: 'link',
+        },
+        {
+          text: '\nFile ref: ',
+          type: 'text',
+        },
+        {
+          href: 'file:///workspace/src/index.ts',
+          text: 'index.ts',
           type: 'link',
         },
         {
@@ -323,6 +333,29 @@ test('parseMessageContent should parse markdown italic text in paragraphs', () =
         {
           text: ': Supports both synchronous and asynchronous communication.',
           type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should parse markdown italic text across multiple lines in paragraphs', () => {
+  const rawMessage = '*line one\nline two*'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          children: [
+            {
+              text: 'line one\nline two',
+              type: 'text',
+            },
+          ],
+          type: 'italic',
         },
       ],
       type: 'text',
@@ -1047,8 +1080,8 @@ test('parseMessageContent should parse markdown blockquotes with nested list and
             {
               children: [
                 {
-                  text: '`Inline code`',
-                  type: 'text',
+                  text: 'Inline code',
+                  type: 'inline-code',
                 },
               ],
               type: 'list-item',
