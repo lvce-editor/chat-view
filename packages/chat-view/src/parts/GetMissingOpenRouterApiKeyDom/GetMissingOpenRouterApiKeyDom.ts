@@ -17,5 +17,7 @@ export const getMissingOpenRouterApiKeyDom = (
     saveButtonDisabled: isSaving,
     saveButtonName: SaveOpenRouterApiKey,
     saveButtonText: isSaving ? Strings.saving() : Strings.save(),
+    saveButtonType: 'submit',
+    useForm: true,
   })
 }

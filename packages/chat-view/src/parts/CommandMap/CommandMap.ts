@@ -26,6 +26,7 @@ import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
+import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
@@ -91,6 +92,7 @@ export const commandMap = {
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
+  'Chat.handleMissingApiKeySubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingApiKeySubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),

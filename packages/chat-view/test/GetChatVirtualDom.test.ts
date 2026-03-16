@@ -864,15 +864,22 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     0,
   )
   const apiKeyInput = result.find((node) => node.name === 'open-router-api-key')
+  const apiKeyInputIndex = result.findIndex((node) => node.name === 'open-router-api-key')
+  const apiKeyForm = result[apiKeyInputIndex - 1]
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const openRouterButton = result.find((node) => node.name === 'open-openrouter-api-key-settings')
+  expect(apiKeyForm).toMatchObject({
+    method: 'GET',
+    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+    type: VirtualDomElements.Form,
+  })
   expect(apiKeyInput).toMatchObject({
     onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.Input,
     value: 'or-key-typed',
   })
   expect(saveButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
+    buttonType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
@@ -912,8 +919,8 @@ test('getChatVirtualDOm should render disabled OpenRouter save button with Savin
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
   expect(saveButton).toMatchObject({
+    buttonType: 'submit',
     disabled: true,
-    onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
   expect(savingText).toBeDefined()
@@ -953,6 +960,8 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
   const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-website')
   expect(apiKeyForm).toMatchObject({
+    method: 'GET',
+    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
@@ -964,7 +973,6 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   })
   expect(saveButton).toMatchObject({
     buttonType: 'submit',
-    onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({
