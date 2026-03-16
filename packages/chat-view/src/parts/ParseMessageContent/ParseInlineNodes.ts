@@ -247,17 +247,14 @@ const parseMathToken = (value: string, start: number): ParsedInlineToken | undef
 
 const parseInlineToken = (value: string, start: number): ParsedInlineToken | undefined => {
   return (
-<<<<<<< HEAD
     parseImageToken(value, start) ||
     parseLinkToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
-=======
     parseLinkToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseStrikethroughToken(value, start) ||
->>>>>>> origin/main
     parseMathToken(value, start)
   )
 }
