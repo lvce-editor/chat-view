@@ -951,7 +951,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   const apiKeyInputIndex = result.findIndex((node) => node.name === 'open-api-api-key')
   const apiKeyForm = result[apiKeyInputIndex - 1]
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
-  const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-settings')
+  const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-website')
   expect(apiKeyForm).toMatchObject({
     type: VirtualDomElements.Form,
   })
