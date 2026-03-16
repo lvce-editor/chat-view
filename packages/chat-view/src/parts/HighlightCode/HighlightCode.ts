@@ -43,6 +43,18 @@ const cssRules: readonly TokenRule[] = [
   { className: ClassNames.TokenProperty, regex: /[a-zA-Z-]+(?=\s*:)/ },
 ]
 
+const pythonRules: readonly TokenRule[] = [
+  { className: ClassNames.TokenComment, regex: /#[^\n]*/ },
+  { className: ClassNames.TokenString, regex: /"[^"\\]*(?:\\.[^"\\]*)*"/ },
+  { className: ClassNames.TokenString, regex: /'[^'\\]*(?:\\.[^'\\]*)*'/ },
+  { className: ClassNames.TokenNumber, regex: /\b\d+\.?\d*\b/ },
+  {
+    className: ClassNames.TokenKeyword,
+    regex:
+      /\b(?:def|class|return|if|elif|else|for|while|in|import|from|as|with|try|except|finally|raise|lambda|yield|pass|break|continue|True|False|None|and|or|not|is)\b/,
+  },
+]
+
 const tokenize = (code: string, rules: readonly TokenRule[]): readonly CodeToken[] => {
   const tokens: CodeToken[] = []
   let pos = 0
@@ -86,6 +98,9 @@ export const highlightCode = (code: string, language: string | undefined): reado
   }
   if (normalized === 'js' || normalized === 'javascript') {
     return tokenize(code, jsRules)
+  }
+  if (normalized === 'py' || normalized === 'python') {
+    return tokenize(code, pythonRules)
   }
   return [{ className: '', text: code }]
 }
