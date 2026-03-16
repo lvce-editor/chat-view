@@ -14,6 +14,7 @@ export type MessageIntermediateNode =
 export type MessageInlineNode =
   | MessageInlineTextNode
   | MessageInlineLinkNode
+  | MessageInlineImageNode
   | MessageInlineBoldNode
   | MessageInlineItalicNode
   | MessageInlineStrikethroughNode
@@ -29,6 +30,12 @@ export interface MessageInlineLinkNode {
   readonly href: string
   readonly text: string
   readonly type: 'link'
+}
+
+export interface MessageInlineImageNode {
+  readonly alt: string
+  readonly src: string
+  readonly type: 'image'
 }
 
 export interface MessageInlineBoldNode {

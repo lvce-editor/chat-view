@@ -70,6 +70,49 @@ const parseLinkToken = (value: string, start: number): ParsedInlineToken | undef
   return undefined
 }
 
+const parseImageToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (value[start] !== '!' || value[start + 1] !== '[') {
+    return undefined
+  }
+  const textEnd = value.indexOf(']', start + 2)
+  if (textEnd === -1) {
+    return undefined
+  }
+  if (value[textEnd + 1] !== '(') {
+    return undefined
+  }
+  let depth = 1
+  let index = textEnd + 2
+  while (index < value.length) {
+    const current = value[index]
+    if (current === '\n') {
+      return undefined
+    }
+    if (current === '(') {
+      depth++
+    } else if (current === ')') {
+      depth--
+      if (depth === 0) {
+        const alt = value.slice(start + 2, textEnd)
+        const src = value.slice(textEnd + 2, index)
+        if (!src) {
+          return undefined
+        }
+        return {
+          length: index - start + 1,
+          node: {
+            alt,
+            src: sanitizeUrl(src),
+            type: 'image',
+          },
+        }
+      }
+    }
+    index++
+  }
+  return undefined
+}
+
 const parseBoldToken = (value: string, start: number): ParsedInlineToken | undefined => {
   if (value[start] !== '*' || value[start + 1] !== '*') {
     return undefined
@@ -204,6 +247,10 @@ const parseMathToken = (value: string, start: number): ParsedInlineToken | undef
 
 const parseInlineToken = (value: string, start: number): ParsedInlineToken | undefined => {
   return (
+    parseImageToken(value, start) ||
+    parseLinkToken(value, start) ||
+    parseBoldToken(value, start) ||
+    parseItalicToken(value, start) ||
     parseLinkToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||

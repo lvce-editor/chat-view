@@ -5,6 +5,7 @@ import { initializeChatCoordinatorWorker } from '../InitializeChatCoordinatorWor
 import { initializeChatMathWorker } from '../InitializeChatMathWorker/InitializeChatMathWorker.ts'
 import { initializeChatNetworkWorker } from '../InitializeChatNetworkWorker/InitializeChatNetworkWorker.ts'
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
+import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
 
 export const listen = async (): Promise<void> => {
@@ -13,5 +14,11 @@ export const listen = async (): Promise<void> => {
     commandMap: CommandMap.commandMap,
   })
   RendererWorker.set(rpc)
-  await Promise.all([initializeChatNetworkWorker(), initializeChatMathWorker(), initializeChatCoordinatorWorker(), initializeChatToolWorker()])
+  await Promise.all([
+    initializeChatNetworkWorker(),
+    initializeChatMathWorker(),
+    initializeChatCoordinatorWorker(),
+    initializeChatToolWorker(),
+    initializeOpenerWorker(),
+  ])
 }

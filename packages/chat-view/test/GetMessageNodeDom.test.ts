@@ -42,6 +42,32 @@ test('getMessageNodeDom should render markdown link inline nodes as clickable li
   })
 })
 
+test('getMessageNodeDom should render markdown image inline nodes as img dom nodes with fallback alt text', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        alt: 'This is an image',
+        src: 'http://invalid-url',
+        type: 'image',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.Markdown,
+    type: VirtualDomElements.P,
+  })
+  expect(result[1]).toEqual({
+    alt: 'This is an image (image could not be loaded)',
+    childCount: 0,
+    className: ClassNames.ImageElement,
+    src: 'http://invalid-url',
+    type: VirtualDomElements.Img,
+  })
+})
+
 test('getMessageNodeDom should render markdown bold inline nodes as strong dom nodes', () => {
   const result = getMessageNodeDom({
     children: [

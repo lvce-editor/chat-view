@@ -206,6 +206,27 @@ test('parseMessageContent should parse markdown links with parentheses in urls',
   ])
 })
 
+test('parseMessageContent should parse markdown images', () => {
+  const result = ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Preview: ',
+          type: 'text',
+        },
+        {
+          alt: 'This is an image',
+          src: 'http://invalid-url',
+          type: 'image',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown bold text in paragraphs', () => {
   const rawMessage = 'For **Transport Agnostic**: It can work over various transport protocols, including HTTP, WebSocket, and others.'
 

@@ -29,7 +29,7 @@ export const getChatModeListVirtualDom = (
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
-      childCount: 4,
+      childCount: isDropOverlayVisible ? 4 : 3,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
@@ -38,18 +38,22 @@ export const getChatModeListVirtualDom = (
     ...getChatHeaderListModeDom(),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatViewDropOverlay, isDropOverlayVisible ? ClassNames.ChatViewDropOverlayActive : ClassNames.Empty),
-      name: InputName.ComposerDropTarget,
-      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-      onDragOver: DomEventListenerFunctions.HandleDragOver,
-      onDrop: DomEventListenerFunctions.HandleDrop,
-      type: VirtualDomElements.Div,
-    },
-    {
-      text: Strings.attachImageAsContext(),
-      type: VirtualDomElements.Text,
-    },
+    ...(isDropOverlayVisible
+      ? [
+          {
+            childCount: 1,
+            className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
+            name: InputName.ComposerDropTarget,
+            onDragLeave: DomEventListenerFunctions.HandleDragLeave,
+            onDragOver: DomEventListenerFunctions.HandleDragOver,
+            onDrop: DomEventListenerFunctions.HandleDrop,
+            type: VirtualDomElements.Div,
+          },
+          {
+            text: Strings.attachImageAsContext(),
+            type: VirtualDomElements.Text,
+          },
+        ]
+      : []),
   ]
 }
