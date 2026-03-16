@@ -104,7 +104,6 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
     const token = tokens[i]
 
     if (token.type === 'blank-line') {
-      flushList()
       flushParagraph()
       continue
     }
