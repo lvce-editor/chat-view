@@ -1,3 +1,5 @@
+import { MenuEntryId } from '@lvce-editor/constants'
+
 export const getMenuEntryIds = (): readonly number[] => {
-  return []
+  return [MenuEntryId.Chat]
 }
