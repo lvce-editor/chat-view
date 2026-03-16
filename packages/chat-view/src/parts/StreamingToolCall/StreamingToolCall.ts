@@ -6,5 +6,6 @@ export interface StreamingToolCall {
   readonly errorStack?: string
   readonly id?: string
   readonly name: string
+  readonly result?: string
   readonly status?: ChatToolCallStatus
 }

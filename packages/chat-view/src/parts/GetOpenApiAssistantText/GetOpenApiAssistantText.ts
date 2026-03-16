@@ -155,6 +155,26 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
   }
 }
 
+const getToolCallResult = (name: string, content: string): string | undefined => {
+  if (name !== 'getWorkspaceUri') {
+    return undefined
+  }
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(content) as unknown
+  } catch {
+    return undefined
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return undefined
+  }
+  const workspaceUri = Reflect.get(parsed, 'workspaceUri')
+  if (typeof workspaceUri !== 'string' || !workspaceUri) {
+    return undefined
+  }
+  return workspaceUri
+}
+
 const getResponseOutputText = (parsed: unknown): string => {
   if (!parsed || typeof parsed !== 'object') {
     return ''
@@ -855,6 +875,7 @@ export const getOpenApiAssistantText = async (
         for (const toolCall of streamResult.responseFunctionCalls) {
           const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
           const executionStatus = getToolCallExecutionStatus(content)
+          const toolCallResult = getToolCallResult(toolCall.name, content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
             ...(executionStatus.errorStack
@@ -874,6 +895,11 @@ export const getOpenApiAssistantText = async (
               : {}),
             id: toolCall.callId,
             name: toolCall.name,
+            ...(toolCallResult
+              ? {
+                  result: toolCallResult,
+                }
+              : {}),
             ...(executionStatus.status
               ? {
                   status: executionStatus.status,
@@ -1016,6 +1042,7 @@ export const getOpenApiAssistantText = async (
       for (const toolCall of responseFunctionCalls) {
         const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
         const executionStatus = getToolCallExecutionStatus(content)
+        const toolCallResult = getToolCallResult(toolCall.name, content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
           ...(executionStatus.errorStack
@@ -1035,6 +1062,11 @@ export const getOpenApiAssistantText = async (
             : {}),
           id: toolCall.callId,
           name: toolCall.name,
+          ...(toolCallResult
+            ? {
+                result: toolCallResult,
+              }
+            : {}),
           ...(executionStatus.status
             ? {
                 status: executionStatus.status,
@@ -1095,6 +1127,7 @@ export const getOpenApiAssistantText = async (
           const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker }) : '{}'
           if (typeof name === 'string') {
             const executionStatus = getToolCallExecutionStatus(content)
+            const toolCallResult = getToolCallResult(name, content)
             executedToolCalls.push({
               arguments: typeof rawArguments === 'string' ? rawArguments : '',
               ...(executionStatus.errorStack
@@ -1114,6 +1147,11 @@ export const getOpenApiAssistantText = async (
                 : {}),
               id,
               name,
+              ...(toolCallResult
+                ? {
+                    result: toolCallResult,
+                  }
+                : {}),
               ...(executionStatus.status
                 ? {
                     status: executionStatus.status,
