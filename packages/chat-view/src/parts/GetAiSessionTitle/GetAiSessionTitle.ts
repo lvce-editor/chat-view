@@ -48,6 +48,7 @@ Assistant: ${assistantText}`
     streamingEnabled: false,
     useChatCoordinatorWorker: state.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
+    useChatToolWorker: state.useChatToolWorker,
     useMockApi,
     userText: titlePrompt,
     webSearchEnabled: false,

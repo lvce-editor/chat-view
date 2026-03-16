@@ -23,6 +23,7 @@ export interface GetAiResponseOptions {
   readonly streamingEnabled?: boolean
   readonly useChatCoordinatorWorker?: boolean
   readonly useChatNetworkWorkerForRequests?: boolean
+  readonly useChatToolWorker?: boolean
   readonly useMockApi: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean

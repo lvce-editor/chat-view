@@ -188,6 +188,7 @@ export const getOpenRouterAssistantText = async (
   assetDir: string,
   platform: number,
   useChatNetworkWorkerForRequests = false,
+  useChatToolWorker = false,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
@@ -359,7 +360,7 @@ export const getOpenRouterAssistantText = async (
         }
         const name = Reflect.get(toolFunction, 'name')
         const rawArguments = Reflect.get(toolFunction, 'arguments')
-        const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform }) : '{}'
+        const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker }) : '{}'
         completionMessages.push({
           content,
           role: 'tool',

@@ -8,5 +8,6 @@ export interface GetOpenApiAssistantTextOptions {
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly stream: boolean
   readonly useChatNetworkWorkerForRequests?: boolean
+  readonly useChatToolWorker?: boolean
   readonly webSearchEnabled?: boolean
 }

@@ -1,4 +1,5 @@
 import type { ExecuteToolOptions } from '../Types/Types.ts'
+import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 import { executeGetWorkspaceUriTool } from '../ExecuteGetWorkspaceUriTool/ExecuteGetWorkspaceUriTool.ts'
 import { executeListFilesTool } from '../ExecuteListFilesTool/ExecuteListFilesTool.ts'
 import { executeReadFileTool } from '../ExecuteReadFileTool/ExecuteReadFileTool.ts'
@@ -7,6 +8,12 @@ import { executeWriteFileTool } from '../ExecuteWriteFileTool/ExecuteWriteFileTo
 import { parseToolArguments } from '../ParseToolArguments/ParseToolArguments.ts'
 
 export const executeChatTool = async (name: string, rawArguments: unknown, options: ExecuteToolOptions): Promise<string> => {
+  if (options.useChatToolWorker) {
+    return ChatToolRequest.execute(name, rawArguments, {
+      assetDir: options.assetDir,
+      platform: options.platform,
+    })
+  }
   const args = parseToolArguments(rawArguments)
   if (name === 'read_file') {
     return executeReadFileTool(args, options)
