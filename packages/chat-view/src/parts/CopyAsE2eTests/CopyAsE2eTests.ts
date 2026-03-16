@@ -49,7 +49,7 @@ const toFinalMessages = (events: readonly ChatViewEvent[]): readonly ChatMessage
   return order.map((id) => byId.get(id)).filter((message) => !!message) as readonly ChatMessage[]
 }
 
-export const copyAsE2eTets = (events: readonly ChatViewEvent[]): string => {
+export const copyAsE2eTests = (events: readonly ChatViewEvent[]): string => {
   const messages = toFinalMessages(events).filter((message) => (message.role === 'assistant' ? !message.inProgress : true))
   const lines: string[] = []
   lines.push("import type { Test } from '@lvce-editor/test-with-playwright'")

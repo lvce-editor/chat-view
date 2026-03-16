@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
-import { copyAsE2eTets } from '../src/parts/CopyAsE2eTets/CopyAsE2eTets.ts'
+import { copyAsE2eTests } from '../src/parts/CopyAsE2eTests/CopyAsE2eTests.ts'
 
-test('copyAsE2eTets should generate e2e test from chat message events', () => {
-  const output = copyAsE2eTets([
+test('copyAsE2eTests should generate e2e test from chat message events', () => {
+  const output = copyAsE2eTests([
     {
       message: {
         id: 'message-1',
