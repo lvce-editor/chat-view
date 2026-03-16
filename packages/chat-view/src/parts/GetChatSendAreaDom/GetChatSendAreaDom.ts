@@ -15,10 +15,6 @@ export const getChatSendAreaDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
