@@ -77,13 +77,21 @@ const emitToolCalls = async (
   await onToolCallsChunk(toolCalls)
 }
 
+const throwIfAborted = (abortSignal?: Readonly<AbortSignal>): void => {
+  if (abortSignal?.aborted) {
+    throw new DOMException('The operation was aborted.', 'AbortError')
+  }
+}
+
 export const getMockOpenApiAssistantText = async (
   stream: boolean,
   onTextChunk?: (chunk: string) => Promise<void>,
   onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>,
   onDataEvent?: (value: unknown) => Promise<void>,
   onEventStreamFinished?: () => Promise<void>,
+  abortSignal?: Readonly<AbortSignal>,
 ): Promise<GetMockOpenApiAssistantTextResult> => {
+  throwIfAborted(abortSignal)
   const error = MockOpenApiStream.takeErrorResponse()
   if (error) {
     return error
@@ -217,7 +225,9 @@ export const getMockOpenApiAssistantText = async (
   }
 
   while (!requestDone) {
-    const chunk = await MockOpenApiStream.readNextChunk()
+    throwIfAborted(abortSignal)
+    const chunk = await MockOpenApiStream.readNextChunk(abortSignal)
+    throwIfAborted(abortSignal)
     if (typeof chunk !== 'string') {
       break
     }

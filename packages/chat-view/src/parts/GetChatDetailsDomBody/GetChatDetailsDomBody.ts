@@ -12,6 +12,7 @@ export const getChatDetailsDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  requestInProgress = false,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -25,6 +26,6 @@ export const getChatDetailsDom = (
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, false, requestInProgress),
   ]
 }

@@ -54,6 +54,7 @@ export const getChatVirtualDom = (
   voiceDictationEnabled = false,
   useChatMathWorker = false,
   parsedMessages?: readonly ParsedMessage[],
+  requestInProgress = false,
 ): readonly VirtualDomNode[] => {
   const effectiveParsedMessages = parsedMessages || getFallbackParsedMessages(sessions)
   switch (viewMode) {
@@ -84,6 +85,7 @@ export const getChatVirtualDom = (
         voiceDictationEnabled,
         useChatMathWorker,
         effectiveParsedMessages,
+        requestInProgress,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -108,6 +110,7 @@ export const getChatVirtualDom = (
         voiceDictationEnabled,
         useChatMathWorker,
         effectiveParsedMessages,
+        requestInProgress,
       )
     case 'list':
       return getChatModeListVirtualDom(
@@ -127,6 +130,7 @@ export const getChatVirtualDom = (
         composerDropActive,
         composerDropEnabled,
         voiceDictationEnabled,
+        requestInProgress,
       )
     default:
       return getChatModeUnsupportedVirtualDom()

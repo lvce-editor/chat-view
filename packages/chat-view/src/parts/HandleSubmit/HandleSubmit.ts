@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import * as ActiveChatRequests from '../ActiveChatRequests/ActiveChatRequests.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -34,6 +35,13 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   }
 }
 
+const isAbortError = (error: unknown): boolean => {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
+  return Reflect.get(error, 'name') === 'AbortError'
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     aiSessionTitleGenerationEnabled,
@@ -61,6 +69,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     viewMode,
     webSearchEnabled,
   } = state
+  if (state.requestInProgress) {
+    return state
+  }
   const userText = composerValue.trim()
   if (!userText) {
     return state
@@ -130,6 +141,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
+        requestInProgress: true,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, newSession],
         viewMode: 'detail',
@@ -159,6 +171,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: selectedSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
+        requestInProgress: true,
         sessions: updatedSessions,
       }),
     )
@@ -183,95 +196,123 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       }
     : undefined
 
-  const assistantMessage = await getAiResponse({
-    assetDir,
-    messageId: assistantMessageId,
-    messages: messagesWithMentionContext,
-    mockAiResponseDelay,
-    mockApiCommandId,
-    models,
-    nextMessageId: optimisticState.nextMessageId,
-    onDataEvent: async (value: unknown): Promise<void> => {
-      if (!emitStreamingFunctionCallEvents && isStreamingFunctionCallEvent(value)) {
-        return
-      }
-      const sseEventType = getSseEventType(value)
-      await appendChatViewEvent({
-        sessionId: optimisticState.selectedSessionId,
-        timestamp: new Date().toISOString(),
-        type: sseEventType,
-        value,
-      })
-    },
-    onEventStreamFinished: async (): Promise<void> => {
-      await appendChatViewEvent({
-        sessionId: optimisticState.selectedSessionId,
-        timestamp: new Date().toISOString(),
-        type: 'event-stream-finished',
-        value: '[DONE]',
-      })
-    },
-    ...(handleTextChunkFunctionRef
-      ? {
-          onTextChunk: handleTextChunkFunctionRef,
+  const abortSignal = ActiveChatRequests.create(state.uid)
+  try {
+    const assistantMessage = await getAiResponse({
+      abortSignal,
+      assetDir,
+      messageId: assistantMessageId,
+      messages: messagesWithMentionContext,
+      mockAiResponseDelay,
+      mockApiCommandId,
+      models,
+      nextMessageId: optimisticState.nextMessageId,
+      onDataEvent: async (value: unknown): Promise<void> => {
+        if (!emitStreamingFunctionCallEvents && isStreamingFunctionCallEvent(value)) {
+          return
         }
-      : {}),
-    onToolCallsChunk: async (toolCalls): Promise<void> => {
-      handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
-    },
-    openApiApiBaseUrl,
-    openApiApiKey,
-    openRouterApiBaseUrl,
-    openRouterApiKey,
-    passIncludeObfuscation,
-    platform,
-    selectedModelId,
-    streamingEnabled,
-    useChatCoordinatorWorker,
-    useChatNetworkWorkerForRequests,
-    useChatToolWorker,
-    useMockApi,
-    userText,
-    webSearchEnabled,
-  })
+        const sseEventType = getSseEventType(value)
+        await appendChatViewEvent({
+          sessionId: optimisticState.selectedSessionId,
+          timestamp: new Date().toISOString(),
+          type: sseEventType,
+          value,
+        })
+      },
+      onEventStreamFinished: async (): Promise<void> => {
+        await appendChatViewEvent({
+          sessionId: optimisticState.selectedSessionId,
+          timestamp: new Date().toISOString(),
+          type: 'event-stream-finished',
+          value: '[DONE]',
+        })
+      },
+      ...(handleTextChunkFunctionRef
+        ? {
+            onTextChunk: handleTextChunkFunctionRef,
+          }
+        : {}),
+      onToolCallsChunk: async (toolCalls): Promise<void> => {
+        handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
+      },
+      openApiApiBaseUrl,
+      openApiApiKey,
+      openRouterApiBaseUrl,
+      openRouterApiKey,
+      passIncludeObfuscation,
+      platform,
+      selectedModelId,
+      streamingEnabled,
+      useChatCoordinatorWorker,
+      useChatNetworkWorkerForRequests,
+      useChatToolWorker,
+      useMockApi,
+      userText,
+      webSearchEnabled,
+    })
 
-  const { latestState } = handleTextChunkState
-  let finalParsedMessages = latestState.parsedMessages
-  let updatedSessions: readonly ChatSession[]
-  if (streamingEnabled) {
-    const updated = await updateMessageTextInSelectedSession(
-      latestState.sessions,
-      finalParsedMessages,
-      latestState.selectedSessionId,
-      assistantMessageId,
-      assistantMessage.text,
-      false,
-    )
-    updatedSessions = updated.sessions
-    finalParsedMessages = updated.parsedMessages
-  } else {
-    finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
-    updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
-  }
-  if (aiSessionTitleGenerationEnabled && createsNewSession) {
-    const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
-    if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
-      const generatedTitle = await getAiSessionTitle(latestState, userText, assistantMessage.text)
-      if (generatedTitle) {
-        updatedSessions = updateSessionTitle(updatedSessions, latestState.selectedSessionId, generatedTitle)
+    const { latestState } = handleTextChunkState
+    let finalParsedMessages = latestState.parsedMessages
+    let updatedSessions: readonly ChatSession[]
+    if (streamingEnabled) {
+      const updated = await updateMessageTextInSelectedSession(
+        latestState.sessions,
+        finalParsedMessages,
+        latestState.selectedSessionId,
+        assistantMessageId,
+        assistantMessage.text,
+        false,
+      )
+      updatedSessions = updated.sessions
+      finalParsedMessages = updated.parsedMessages
+    } else {
+      finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
+      updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
+    }
+    if (aiSessionTitleGenerationEnabled && createsNewSession) {
+      const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
+      if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
+        const generatedTitle = await getAiSessionTitle(latestState, userText, assistantMessage.text)
+        if (generatedTitle) {
+          updatedSessions = updateSessionTitle(updatedSessions, latestState.selectedSessionId, generatedTitle)
+        }
       }
     }
-  }
-  const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
-  if (selectedSession) {
-    await saveChatSession(selectedSession)
-  }
-  return withUpdatedMessageScrollTop(
-    FocusInput.focusInput({
+    const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
+    if (selectedSession) {
+      await saveChatSession(selectedSession)
+    }
+    return withUpdatedMessageScrollTop(
+      FocusInput.focusInput({
+        ...latestState,
+        nextMessageId: latestState.nextMessageId + 1,
+        parsedMessages: finalParsedMessages,
+        requestInProgress: false,
+        sessions: updatedSessions,
+      }),
+    )
+  } catch (error) {
+    if (!isAbortError(error)) {
+      throw error
+    }
+    const { latestState } = handleTextChunkState
+    const updated = await updateMessageTextInSelectedSession(
+      latestState.sessions,
+      latestState.parsedMessages,
+      latestState.selectedSessionId,
+      assistantMessageId,
+      latestState.sessions
+        .find((session) => session.id === latestState.selectedSessionId)
+        ?.messages.find((message) => message.id === assistantMessageId)?.text ?? '',
+      false,
+    )
+    return {
       ...latestState,
-      nextMessageId: latestState.nextMessageId + 1,
-      parsedMessages: finalParsedMessages,
-      sessions: updatedSessions,
-    }),
-  )
+      parsedMessages: updated.parsedMessages,
+      requestInProgress: false,
+      sessions: updated.sessions,
+    }
+  } finally {
+    ActiveChatRequests.clear(state.uid)
+  }
 }

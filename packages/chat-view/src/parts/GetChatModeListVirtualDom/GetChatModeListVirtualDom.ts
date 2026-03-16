@@ -25,6 +25,7 @@ export const getChatModeListVirtualDom = (
   composerDropActive = false,
   composerDropEnabled = true,
   voiceDictationEnabled = false,
+  requestInProgress = false,
 ): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
@@ -37,7 +38,16 @@ export const getChatModeListVirtualDom = (
     },
     ...getChatHeaderListModeDom(),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      voiceDictationEnabled,
+      requestInProgress,
+    ),
     ...(isDropOverlayVisible
       ? [
           {

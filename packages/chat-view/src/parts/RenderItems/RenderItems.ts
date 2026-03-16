@@ -22,6 +22,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     projectExpandedIds,
     projectListScrollTop,
     projects,
+    requestInProgress,
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
@@ -65,6 +66,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     voiceDictationEnabled,
     useChatMathWorker,
     parsedMessages,
+    requestInProgress,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

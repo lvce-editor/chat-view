@@ -64,6 +64,7 @@ export const createDefaultState = (): ChatState => {
       },
     ],
     renamingSessionId: '',
+    requestInProgress: false,
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,

@@ -78,7 +78,10 @@ export const finish = (): void => {
   }
 }
 
-export const readNextChunk = async (): Promise<string | undefined> => {
+export const readNextChunk = async (signal?: Readonly<AbortSignal>): Promise<string | undefined> => {
+  if (signal?.aborted) {
+    throw new DOMException('The operation was aborted.', 'AbortError')
+  }
   if (queue.length > 0) {
     return queue.shift()
   }
@@ -86,6 +89,20 @@ export const readNextChunk = async (): Promise<string | undefined> => {
     return undefined
   }
   const { promise, resolve } = Promise.withResolvers<string | undefined>()
+  if (signal) {
+    const abortHandler = (): void => {
+      const index = waiters.indexOf(resolve)
+      if (index !== -1) {
+        waiters.splice(index, 1)
+      }
+      resolve(undefined)
+      signal.removeEventListener('abort', abortHandler)
+    }
+    signal.addEventListener('abort', abortHandler)
+    void promise.finally(() => {
+      signal.removeEventListener('abort', abortHandler)
+    })
+  }
   waiters.push(resolve)
   return promise
 }

@@ -2,6 +2,7 @@ import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {
+  readonly abortSignal?: Readonly<AbortSignal>
   readonly assetDir: string
   readonly messageId?: string
   readonly messages: readonly ChatMessage[]

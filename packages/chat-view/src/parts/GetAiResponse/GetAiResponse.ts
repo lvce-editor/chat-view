@@ -21,6 +21,7 @@ import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
 export const getAiResponse = async ({
+  abortSignal,
   assetDir,
   messageId,
   messages,
@@ -46,8 +47,11 @@ export const getAiResponse = async ({
   useMockApi,
   userText,
   webSearchEnabled = false,
-}: GetAiResponseOptions): Promise<ChatMessage> => {
-  if (useChatCoordinatorWorker) {
+}: Readonly<GetAiResponseOptions>): Promise<ChatMessage> => {
+  if (abortSignal?.aborted) {
+    throw new DOMException('The operation was aborted.', 'AbortError')
+  }
+  if (useChatCoordinatorWorker && !abortSignal) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         assetDir,
@@ -121,7 +125,14 @@ export const getAiResponse = async ({
           ),
           url: getOpenApiApiEndpoint(openApiApiBaseUrl),
         })
-        const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
+        const result = await getMockOpenApiAssistantText(
+          streamingEnabled,
+          onTextChunk,
+          onToolCallsChunk,
+          onDataEvent,
+          onEventStreamFinished,
+          abortSignal,
+        )
         if (result.type !== 'success') {
           text = getOpenApiErrorMessage(result)
           break
@@ -177,6 +188,11 @@ export const getAiResponse = async ({
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
           webSearchEnabled,
+          ...(abortSignal
+            ? {
+                abortSignal,
+              }
+            : {}),
         },
       )
       if (result.type === 'success') {
@@ -216,6 +232,7 @@ export const getAiResponse = async ({
         platform,
         useChatNetworkWorkerForRequests,
         useChatToolWorker,
+        abortSignal,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result
@@ -228,7 +245,7 @@ export const getAiResponse = async ({
     }
   }
   if (!text && !usesOpenApiModel && !usesOpenRouterModel) {
-    text = await getMockAiResponse(userText, mockAiResponseDelay)
+    text = await getMockAiResponse(userText, mockAiResponseDelay, abortSignal)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const message: ChatMessage = {

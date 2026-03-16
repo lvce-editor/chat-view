@@ -5,7 +5,7 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled: boolean): readonly VirtualDomNode[] => {
+export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled: boolean, requestInProgress = false): readonly VirtualDomNode[] => {
   const sendButtonClassName = getSendButtonClassName(isSendDisabled)
   return [
     ...(voiceDictationEnabled
@@ -26,12 +26,12 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
         ]
       : []),
     {
-      buttonType: 'submit',
+      buttonType: requestInProgress ? 'button' : 'submit',
       childCount: 1,
       className: sendButtonClassName,
       disabled: isSendDisabled,
-      name: InputName.Send,
-      title: Strings.sendMessage(),
+      name: requestInProgress ? InputName.Stop : InputName.Send,
+      title: requestInProgress ? Strings.stopMessageGeneration() : Strings.sendMessage(),
       type: VirtualDomElements.Button,
     },
     {

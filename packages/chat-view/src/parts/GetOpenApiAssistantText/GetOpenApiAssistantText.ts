@@ -732,6 +732,7 @@ export const getOpenApiAssistantText = async (
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
   const {
+    abortSignal,
     includeObfuscation = false,
     onDataEvent,
     onEventStreamFinished,
@@ -750,6 +751,9 @@ export const getOpenApiAssistantText = async (
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
+    if (abortSignal?.aborted) {
+      throw new DOMException('The operation was aborted.', 'AbortError')
+    }
     const postBody = getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)
 
     if (stream) {
@@ -808,8 +812,16 @@ export const getOpenApiAssistantText = async (
                   ...getClientRequestIdHeader(),
                 },
                 method: 'POST',
+                ...(abortSignal
+                  ? {
+                      signal: abortSignal,
+                    }
+                  : {}),
               })
-            } catch {
+            } catch (error) {
+              if (abortSignal?.aborted) {
+                throw error
+              }
               return {
                 details: 'request-failed',
                 type: 'error',
@@ -955,8 +967,16 @@ export const getOpenApiAssistantText = async (
             ...getClientRequestIdHeader(),
           },
           method: 'POST',
+          ...(abortSignal
+            ? {
+                signal: abortSignal,
+              }
+            : {}),
         })
-      } catch {
+      } catch (error) {
+        if (abortSignal?.aborted) {
+          throw error
+        }
         return {
           details: 'request-failed',
           type: 'error',

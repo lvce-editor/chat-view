@@ -9,6 +9,7 @@ import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiK
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { handleClickStop } from '../HandleClickStop/HandleClickStop.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
@@ -52,6 +53,8 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
       return deleteSession(state, id)
     case name === InputName.Send:
       return handleClickSend(state)
+    case name === InputName.Stop:
+      return handleClickStop(state)
     case name === SaveOpenRouterApiKey:
       return handleClickSaveOpenRouterApiKey(state)
     case name === SaveOpenApiApiKey:

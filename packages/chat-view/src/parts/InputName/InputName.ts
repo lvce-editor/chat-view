@@ -5,6 +5,7 @@ export const Composer = 'composer'
 export const ComposerDropTarget = 'composer-drop-target'
 export const Dictate = 'dictate'
 export const Send = 'send'
+export const Stop = 'stop'
 export const Back = 'back'
 export const Model = 'model'
 export const ToggleChatFocus = 'toggle-chat-focus'
@@ -26,6 +27,7 @@ export type InputName =
   | typeof ComposerDropTarget
   | typeof Dictate
   | typeof Send
+  | typeof Stop
   | typeof Back
   | typeof Model
   | typeof ToggleChatFocus

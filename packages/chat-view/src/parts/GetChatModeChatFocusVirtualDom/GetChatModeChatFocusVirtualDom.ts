@@ -35,6 +35,7 @@ export const getChatModeChatFocusVirtualDom = (
   voiceDictationEnabled = false,
   useChatMathWorker = false,
   parsedMessages: readonly ParsedMessage[] = [],
+  requestInProgress = false,
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
@@ -57,7 +58,16 @@ export const getChatModeChatFocusVirtualDom = (
       messagesScrollTop,
       useChatMathWorker,
     ),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      voiceDictationEnabled,
+      requestInProgress,
+    ),
     ...(isDropOverlayVisible
       ? [
           {

@@ -61,6 +61,7 @@ export interface ChatState {
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
   readonly renamingSessionId: string
+  readonly requestInProgress: boolean
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string

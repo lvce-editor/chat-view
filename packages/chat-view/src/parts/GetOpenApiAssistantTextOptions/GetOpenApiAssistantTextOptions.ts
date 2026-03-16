@@ -1,6 +1,7 @@
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetOpenApiAssistantTextOptions {
+  readonly abortSignal?: Readonly<AbortSignal>
   readonly includeObfuscation?: boolean
   readonly onDataEvent?: (value: unknown) => Promise<void>
   readonly onEventStreamFinished?: () => Promise<void>

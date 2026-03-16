@@ -189,6 +189,7 @@ export const getOpenRouterAssistantText = async (
   platform: number,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = false,
+  abortSignal?: Readonly<AbortSignal>,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
@@ -265,8 +266,16 @@ export const getOpenRouterAssistantText = async (
             ...getClientRequestIdHeader(),
           },
           method: 'POST',
+          ...(abortSignal
+            ? {
+                signal: abortSignal,
+              }
+            : {}),
         })
-      } catch {
+      } catch (error) {
+        if (abortSignal?.aborted) {
+          throw error
+        }
         return {
           details: 'request-failed',
           type: 'error',

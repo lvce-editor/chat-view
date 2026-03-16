@@ -16,8 +16,9 @@ export const getChatSendAreaDom = (
   tokensUsed: number,
   tokensMax: number,
   voiceDictationEnabled = false,
+  requestInProgress = false,
 ): readonly VirtualDomNode[] => {
-  const isSendDisabled = composerValue.trim() === ''
+  const isSendDisabled = !requestInProgress && composerValue.trim() === ''
   const controlsCount = usageOverviewEnabled ? 3 : 2
   return [
     {
@@ -48,6 +49,6 @@ export const getChatSendAreaDom = (
     },
     ...getChatSelectVirtualDom(models, selectedModelId),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
-    ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
+    ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, requestInProgress),
   ]
 }
