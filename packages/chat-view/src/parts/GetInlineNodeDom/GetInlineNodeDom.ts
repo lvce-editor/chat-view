@@ -52,6 +52,15 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
       ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ]
   }
+  if (inlineNode.type === 'inline-code') {
+    return [
+      {
+        childCount: 1,
+        type: VirtualDomElements.Code,
+      },
+      text(inlineNode.text),
+    ]
+  }
   if (inlineNode.type === 'math-inline') {
     const fallback = inlineNode.displayMode ? `$$${inlineNode.text}$$` : `$${inlineNode.text}$`
     return [text(fallback)]

@@ -1070,8 +1070,8 @@ test('parseMessageContent should parse markdown blockquotes with nested list and
             {
               children: [
                 {
-                  text: '`Inline code`',
-                  type: 'text',
+                  text: 'Inline code',
+                  type: 'inline-code',
                 },
               ],
               type: 'list-item',
