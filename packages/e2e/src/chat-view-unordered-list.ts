@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.unordered-list'
 
-// export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   const mockText = `The purpose of life is a deeply philosophical and personal question that varies from person to person. Many perspectives exist:
