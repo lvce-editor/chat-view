@@ -20,7 +20,9 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   const messages = Locator('.ChatMessages .Message')
   const table = Locator('.ChatMessages .Message .MarkdownTable')
-  const headings = Locator('.ChatMessages .Message .MarkdownTable h1, .ChatMessages .Message .MarkdownTable h2, .ChatMessages .Message .MarkdownTable h3')
+  const headings = Locator(
+    '.ChatMessages .Message .MarkdownTable h1, .ChatMessages .Message .MarkdownTable h2, .ChatMessages .Message .MarkdownTable h3',
+  )
   await expect(messages).toHaveCount(2)
   await expect(table).toHaveCount(1)
   await expect(headings).toHaveCount(0)
