@@ -37,6 +37,10 @@ export const copyPath = (): string => {
   return I18nString.i18nString(UiStrings.CopyPath)
 }
 
+export const copyAsE2eTest = (): string => {
+  return I18nString.i18nString(UiStrings.CopyAsE2eTest)
+}
+
 export const copyRelativePath = (): string => {
   return I18nString.i18nString(UiStrings.CopyRelativePath)
 }

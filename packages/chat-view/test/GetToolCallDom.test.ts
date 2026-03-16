@@ -80,6 +80,20 @@ test('getToolCallDom should display getWorkspaceUri as get_workspace_uri', () =>
   })
 })
 
+test('getToolCallDom should display getWorkspaceUri result value', () => {
+  const result = getToolCallDom({
+    arguments: '{}',
+    name: 'getWorkspaceUri',
+    result: 'file:///home/user/some-folder',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(2)
+  expect(result[1]).toMatchObject({
+    text: 'get_workspace_uri file:///home/user/some-folder',
+  })
+})
+
 test('getToolCallDom should not display empty object arguments', () => {
   const result = getToolCallDom({
     arguments: '{}',

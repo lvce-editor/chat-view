@@ -45,6 +45,13 @@ const menuEntryCopyPath: MenuEntry = {
   label: ViewletExplorerStrings.copyPath(),
 }
 
+const menuEntryCopyAsE2eTest: MenuEntry = {
+  command: 'Chat.copyAsE2eTest',
+  flags: MenuItemFlags.None,
+  id: 'copyAsE2eTest',
+  label: ViewletExplorerStrings.copyPath(),
+}
+
 const menuEntryCopyRelativePath: MenuEntry = {
   command: 'Explorer.copyRelativePath',
   flags: MenuItemFlags.RestoreFocus,
@@ -68,6 +75,7 @@ const menuEntryDelete: MenuEntry = {
 
 const getMenuEntriesFile = (): readonly MenuEntry[] => {
   return [
+    menuEntryCopyAsE2eTest,
     menuEntryOpenContainingFolder,
     menuEntryOpenInIntegratedTerminal,
     MenuEntrySeparator.menuEntrySeparator,

@@ -2,19 +2,18 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.submit-message'
 
-export const skip = 1
-
-export const test: Test = async ({ Command, expect, Locator }) => {
-  await Command.execute('Chat.setChatList', 1)
-
+export const test: Test = async ({ Chat, expect, Locator }) => {
+  // arrange
+  await Chat.show()
+  await Chat.reset()
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
-  await composer.type('hello from e2e')
+  await Chat.handleInput('hello from e2e')
 
-  const sendButton = Locator('.Button[name="send"]')
-  await sendButton.click()
+  // act
+  await Chat.handleSubmit()
 
-  const messages = Locator('.ChatDetailsContent .Message')
-  await expect(messages).toHaveCount(1)
+  const messages = Locator('.ChatMessages .Message')
+  await expect(messages).toHaveCount(2)
   await expect(messages.first()).toContainText('hello from e2e')
 }

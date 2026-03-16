@@ -248,6 +248,30 @@ export const getCss = (
 .StrikeThrough {
   text-decoration: line-through;
 }
+
+/* syntax highlight token colors */
+.TokenComment {
+  color: var(--ColorSymbolIconColorForeground, #7f8794);
+}
+
+.TokenString {
+  color: var(--ColorChartsGreen, #a6d189);
+}
+
+.TokenNumber,
+.TokenValue {
+  color: var(--ColorChartsBlue, #8caaee);
+}
+
+.TokenKeyword,
+.TokenTag {
+  color: var(--ColorChartsPurple, #ca9ee6);
+}
+
+.TokenAttribute,
+.TokenProperty {
+  color: var(--ColorChartsOrange, #ef9f76);
+}
 `
 
   if (!renderHtmlCss.trim()) {
