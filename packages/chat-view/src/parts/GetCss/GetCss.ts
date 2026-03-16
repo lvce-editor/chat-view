@@ -238,6 +238,10 @@ export const getCss = (
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+.StrikeThrough {
+  text-decoration: line-through;
+}
 `
 
   if (!renderHtmlCss.trim()) {

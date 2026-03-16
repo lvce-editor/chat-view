@@ -42,6 +42,16 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
       ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
     ]
   }
+  if (inlineNode.type === 'strikethrough') {
+    return [
+      {
+        childCount: inlineNode.children.length,
+        className: ClassNames.StrikeThrough,
+        type: VirtualDomElements.Span,
+      },
+      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
+    ]
+  }
   if (inlineNode.type === 'math-inline') {
     const fallback = inlineNode.displayMode ? `$$${inlineNode.text}$$` : `$${inlineNode.text}$`
     return [text(fallback)]

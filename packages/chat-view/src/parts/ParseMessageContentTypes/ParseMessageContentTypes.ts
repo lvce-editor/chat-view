@@ -16,6 +16,7 @@ export type MessageInlineNode =
   | MessageInlineImageNode
   | MessageInlineBoldNode
   | MessageInlineItalicNode
+  | MessageInlineStrikethroughNode
   | MessageMathInlineNode
   | MessageMathInlineDomNode
 
@@ -44,6 +45,11 @@ export interface MessageInlineBoldNode {
 export interface MessageInlineItalicNode {
   readonly children: readonly MessageInlineNode[]
   readonly type: 'italic'
+}
+
+export interface MessageInlineStrikethroughNode {
+  readonly children: readonly MessageInlineNode[]
+  readonly type: 'strikethrough'
 }
 
 export interface MessageMathInlineNode {
