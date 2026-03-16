@@ -233,6 +233,12 @@ export const getCss = (
   vertical-align: middle;
 }
 
+.MarkdownQuote {
+  border-left: 3px solid var(--ColorBorder, #3a3d41);
+  margin: 8px 0;
+  padding-left: 12px;
+}
+
 .MarkdownMathBlock {
   margin: 8px 0;
   overflow-x: auto;

@@ -4,8 +4,8 @@ import type {
   MessageTableCellNode,
   MessageTableRowNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import type { BlockToken } from './ScanBlockTokens.ts'
 import { parseInlineNodes } from './ParseInlineNodes.ts'
+import { type BlockToken, scanBlockTokens } from './ScanBlockTokens.ts'
 
 const isTableSeparatorCell = (value: string): boolean => {
   if (!value) {
@@ -133,6 +133,25 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
       nodes.push({
         text: token.text,
         type: 'math-block',
+      })
+      continue
+    }
+
+    if (token.type === 'blockquote-line') {
+      flushList()
+      flushParagraph()
+      const lines: string[] = []
+      while (i < tokens.length && tokens[i].type === 'blockquote-line') {
+        const quoteToken = tokens[i]
+        if (quoteToken.type === 'blockquote-line') {
+          lines.push(quoteToken.text)
+        }
+        i++
+      }
+      i--
+      nodes.push({
+        children: parseBlockTokens(scanBlockTokens(lines.join('\n'))),
+        type: 'blockquote',
       })
       continue
     }

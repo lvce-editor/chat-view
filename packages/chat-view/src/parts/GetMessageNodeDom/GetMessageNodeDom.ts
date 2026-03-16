@@ -1,5 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type {
+  MessageBlockQuoteNode,
   MessageCodeBlockNode,
   MessageHeadingNode,
   MessageIntermediateNode,
@@ -157,6 +158,17 @@ const getHeadingDom = (node: MessageHeadingNode, useChatMathWorker: boolean): re
   ]
 }
 
+const getBlockQuoteDom = (node: MessageBlockQuoteNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: node.children.length,
+      className: ClassNames.MarkdownQuote,
+      type: VirtualDomElements.Div,
+    },
+    ...node.children.flatMap((child) => getMessageNodeDom(child, useChatMathWorker)),
+  ]
+}
+
 export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [
@@ -189,6 +201,9 @@ export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWork
   }
   if (node.type === 'heading') {
     return getHeadingDom(node, useChatMathWorker)
+  }
+  if (node.type === 'blockquote') {
+    return getBlockQuoteDom(node, useChatMathWorker)
   }
   if (node.type === 'ordered-list') {
     return [
