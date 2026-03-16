@@ -330,6 +330,29 @@ test('parseMessageContent should parse markdown italic text in paragraphs', () =
   ])
 })
 
+test('parseMessageContent should parse markdown italic text across multiple lines in paragraphs', () => {
+  const rawMessage = '*line one\nline two*'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          children: [
+            {
+              text: 'line one\nline two',
+              type: 'text',
+            },
+          ],
+          type: 'italic',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown strikethrough text in paragraphs', () => {
   const rawMessage = 'Please use ~~strikethrough~~ formatting.'
 
