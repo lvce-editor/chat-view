@@ -120,9 +120,7 @@ test('executeChatTool should delegate to chat tool worker when enabled', async (
   })
   const result = await executeChatTool('read_file', JSON.stringify({ path: 'a.txt' }), { ...options, useChatToolWorker: true })
   expect(result).toBe('{"ok":true}')
-  expect(mockRpc.invocations).toEqual([
-    ['ChatTool.execute', 'read_file', '{"path":"a.txt"}', { assetDir: '/test-asset-dir', platform: 0 }],
-  ])
+  expect(mockRpc.invocations).toEqual([['ChatTool.execute', 'read_file', '{"path":"a.txt"}', { assetDir: '/test-asset-dir', platform: 0 }]])
 })
 
 test('executeChatTool should include error stack when tool execution throws', async () => {
