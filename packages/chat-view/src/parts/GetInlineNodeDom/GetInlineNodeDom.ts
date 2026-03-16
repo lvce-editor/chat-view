@@ -2,9 +2,27 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
+const getImageAltText = (alt: string): string => {
+  if (!alt.trim()) {
+    return 'image could not be loaded'
+  }
+  return `${alt} (image could not be loaded)`
+}
+
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (inlineNode.type === 'text') {
     return [text(inlineNode.text)]
+  }
+  if (inlineNode.type === 'image') {
+    return [
+      {
+        alt: getImageAltText(inlineNode.alt),
+        childCount: 0,
+        className: ClassNames.ImageElement,
+        src: inlineNode.src,
+        type: VirtualDomElements.Img,
+      },
+    ]
   }
   if (inlineNode.type === 'bold') {
     return [
