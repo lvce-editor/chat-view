@@ -68,6 +68,47 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
   ])
 })
 
+test('parseMessageContent should keep ordered list items together across blank lines', () => {
+  const rawMessage = ['1. First item', '', '2. Second item', '', '3. Third item'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'First item',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Second item',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Third item',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'ordered-list',
+    },
+  ])
+})
+
 test('parseMessageContent should return a text node for empty messages', () => {
   const result = ParseMessageContent.parseMessageContent('')
 
