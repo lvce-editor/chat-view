@@ -137,9 +137,6 @@ const parseBoldToken = (value: string, start: number): ParsedInlineToken | undef
 const findItalicEnd = (value: string, start: number): number => {
   let index = start + 1
   while (index < value.length) {
-    if (value[index] === '\n') {
-      return -1
-    }
     if (value[index] !== '*') {
       index++
       continue
@@ -165,7 +162,7 @@ const parseItalicToken = (value: string, start: number): ParsedInlineToken | und
     return undefined
   }
   const text = value.slice(start + 1, end)
-  if (!text || text.includes('\n')) {
+  if (!text) {
     return undefined
   }
   return {
