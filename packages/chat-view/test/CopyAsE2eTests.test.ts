@@ -37,8 +37,8 @@ test('copyAsE2eTests should generate e2e test from chat message events', () => {
     },
   ])
 
-  expect(output).toContain("await Command.execute('Chat.mockOpenApiStreamPushChunk', \"hello from assistant\")")
-  expect(output).toContain("await Chat.handleInput(\"hello\")")
+  expect(output).toContain('await Command.execute(\'Chat.mockOpenApiStreamPushChunk\', "hello from assistant")')
+  expect(output).toContain('await Chat.handleInput("hello")')
   expect(output).toContain('await expect(messages).toHaveCount(2)')
   expect(output).toContain('await expect(messages.nth(1)).toContainText("hello from assistant")')
 })
