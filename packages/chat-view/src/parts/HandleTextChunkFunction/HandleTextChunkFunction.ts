@@ -11,6 +11,35 @@ export interface HandleTextChunkState {
   previousState: ChatState
 }
 
+const getToolCallMergeKey = (toolCall: StreamingToolCall): string => {
+  if (toolCall.id) {
+    return `id:${toolCall.id}`
+  }
+  return `value:${toolCall.name}:${toolCall.arguments}`
+}
+
+const mergeToolCalls = (existing: readonly StreamingToolCall[] = [], incoming: readonly StreamingToolCall[]): readonly StreamingToolCall[] => {
+  if (incoming.length === 0) {
+    return existing
+  }
+  const merged = [...existing]
+  const indexByKey = new Map<string, number>()
+  for (let i = 0; i < merged.length; i++) {
+    indexByKey.set(getToolCallMergeKey(merged[i]), i)
+  }
+  for (const toolCall of incoming) {
+    const key = getToolCallMergeKey(toolCall)
+    const existingIndex = indexByKey.get(key)
+    if (existingIndex === undefined) {
+      indexByKey.set(key, merged.length)
+      merged.push(toolCall)
+      continue
+    }
+    merged[existingIndex] = toolCall
+  }
+  return merged
+}
+
 export const updateMessageTextInSelectedSession = async (
   sessions: readonly ChatSession[],
   parsedMessages: readonly ParsedMessage[],
@@ -69,7 +98,7 @@ export const updateMessageToolCallsInSelectedSession = (
         }
         const updatedMessage = {
           ...message,
-          toolCalls,
+          toolCalls: mergeToolCalls(message.toolCalls, toolCalls),
         }
         nextParsedMessages = copyParsedMessageContent(nextParsedMessages, message.id, updatedMessage.id)
         return updatedMessage
