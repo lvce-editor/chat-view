@@ -1,12 +1,17 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
 const getImageAltText = (alt: string): string => {
   if (!alt.trim()) {
     return 'image could not be loaded'
   }
   return `${alt} (image could not be loaded)`
+}
+
+const isFileUri = (href: string): boolean => {
+  return href.trim().toLowerCase().startsWith('file://')
 }
 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
@@ -67,6 +72,20 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
   }
   if (inlineNode.type === 'math-inline-dom') {
     return inlineNode.dom
+  }
+  if (isFileUri(inlineNode.href)) {
+    return [
+      {
+        childCount: 1,
+        className: ClassNames.ChatMessageLink,
+        'data-uri': inlineNode.href,
+        href: '#',
+        onClick: DomEventListenerFunctions.HandleClickReadFile,
+        title: inlineNode.href,
+        type: VirtualDomElements.A,
+      },
+      text(inlineNode.text),
+    ]
   }
   return [
     {
