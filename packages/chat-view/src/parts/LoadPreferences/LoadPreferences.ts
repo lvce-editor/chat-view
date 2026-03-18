@@ -1,6 +1,7 @@
 import { loadAiSessionTitleGenerationEnabled } from '../LoadAiSessionTitleGenerationEnabled/LoadAiSessionTitleGenerationEnabled.ts'
 import { loadAuthEnabled } from '../LoadAuthEnabled/LoadAuthEnabled.ts'
 import { loadBackendAccessToken } from '../LoadBackendAccessToken/LoadBackendAccessToken.ts'
+import { loadBackendRefreshToken } from '../LoadBackendRefreshToken/LoadBackendRefreshToken.ts'
 import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
 import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctionCallEvents/LoadEmitStreamingFunctionCallEvents.ts'
@@ -18,6 +19,7 @@ export const loadPreferences = async (): Promise<{
   aiSessionTitleGenerationEnabled: boolean
   authAccessToken: string
   authEnabled: boolean
+  authRefreshToken: string
   backendUrl: string
   composerDropEnabled: boolean
   emitStreamingFunctionCallEvents: boolean
@@ -35,6 +37,7 @@ export const loadPreferences = async (): Promise<{
     aiSessionTitleGenerationEnabled,
     authAccessToken,
     authEnabled,
+    authRefreshToken,
     backendUrl,
     composerDropEnabled,
     openApiApiKey,
@@ -52,6 +55,7 @@ export const loadPreferences = async (): Promise<{
     loadAuthEnabled(),
     loadBackendUrl(),
     loadBackendAccessToken(),
+    loadBackendRefreshToken(),
     loadComposerDropEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
@@ -69,6 +73,7 @@ export const loadPreferences = async (): Promise<{
     aiSessionTitleGenerationEnabled,
     authAccessToken,
     authEnabled,
+    authRefreshToken,
     backendUrl,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,

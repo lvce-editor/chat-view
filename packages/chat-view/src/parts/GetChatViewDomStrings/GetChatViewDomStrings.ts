@@ -40,6 +40,10 @@ export const logoutFromBackend = (): string => {
   return i18nString('Logout from backend')
 }
 
+export const loggingInToBackend = (): string => {
+  return i18nString('Logging in to backend')
+}
+
 export const chatFocusMode = (): string => {
   return i18nString('Switch to chat focus mode')
 }

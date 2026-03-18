@@ -7,10 +7,12 @@ export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
+  const hasAuthError = authEnabled && !!authErrorMessage
   return [
     {
-      childCount: 2,
+      childCount: hasAuthError ? 3 : 2,
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
@@ -27,5 +29,15 @@ export const getChatHeaderDomDetailMode = (
     },
     text(selectedSessionTitle),
     ...getChatHeaderActionsDom('detail', authEnabled, authStatus),
+    ...(hasAuthError
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatAuthError,
+            type: VirtualDomElements.Span,
+          },
+          text(authErrorMessage),
+        ]
+      : []),
   ]
 }

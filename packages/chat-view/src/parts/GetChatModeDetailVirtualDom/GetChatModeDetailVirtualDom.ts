@@ -33,6 +33,7 @@ export const getChatModeDetailVirtualDom = (
   parsedMessages: readonly ParsedMessage[] = [],
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
@@ -46,7 +47,7 @@ export const getChatModeDetailVirtualDom = (
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, authStatus),
+    ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, authStatus, authErrorMessage),
     ...getMessagesDom(
       messages,
       parsedMessages,

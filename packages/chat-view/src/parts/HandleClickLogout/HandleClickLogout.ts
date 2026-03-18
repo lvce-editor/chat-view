@@ -10,11 +10,13 @@ export const handleClickLogout = async (state: ChatState): Promise<ChatState> =>
   }
   await Preferences.update({
     'secrets.chatBackendAccessToken': '',
+    'secrets.chatBackendRefreshToken': '',
   })
   return {
     ...state,
     authAccessToken: '',
     authErrorMessage: '',
+    authRefreshToken: '',
     authStatus: 'signed-out',
     userName: '',
     userSubscriptionPlan: '',

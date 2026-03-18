@@ -58,6 +58,10 @@ import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWor
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
+import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
+import * as MockBackendAuthResponse from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
+import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
+import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
@@ -66,6 +70,7 @@ export const commandMap = {
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getCommandIds': getCommandIds,
+  'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getMenuEntryIds': getMenuEntryIds,
@@ -104,6 +109,7 @@ export const commandMap = {
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
   'Chat.mockOpenApiSetRequestFailedResponse': wrapCommand(MockOpenApiSetRequestFailedResponse.mockOpenApiSetRequestFailedResponse),
+  'Chat.mockBackendAuthResponse': wrapCommand(MockBackendAuthResponse.mockBackendAuthResponse),
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
@@ -116,6 +122,8 @@ export const commandMap = {
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
+  'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
+  'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),

@@ -17,6 +17,7 @@ export interface ChatState {
   readonly authAccessToken: string
   readonly authEnabled: boolean
   readonly authErrorMessage: string
+  readonly authRefreshToken: string
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly assetDir: string
   readonly backendUrl: string

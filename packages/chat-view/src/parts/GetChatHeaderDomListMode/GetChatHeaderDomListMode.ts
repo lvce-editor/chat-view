@@ -6,10 +6,12 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 export const getChatHeaderListModeDom = (
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
+  const hasAuthError = authEnabled && !!authErrorMessage
   return [
     {
-      childCount: 2,
+      childCount: hasAuthError ? 3 : 2,
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
@@ -20,5 +22,15 @@ export const getChatHeaderListModeDom = (
     },
     text(Strings.chats()),
     ...getChatHeaderActionsDom('list', authEnabled, authStatus),
+    ...(hasAuthError
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatAuthError,
+            type: VirtualDomElements.Span,
+          },
+          text(authErrorMessage),
+        ]
+      : []),
   ]
 }

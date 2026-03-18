@@ -15,6 +15,7 @@ export const createDefaultState = (): ChatState => {
     authAccessToken: '',
     authEnabled: false,
     authErrorMessage: '',
+    authRefreshToken: '',
     authStatus: 'signed-out',
     assetDir: '',
     backendUrl: '',

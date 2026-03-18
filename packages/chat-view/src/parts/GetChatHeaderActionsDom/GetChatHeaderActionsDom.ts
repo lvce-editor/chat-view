@@ -12,16 +12,19 @@ export const getChatHeaderActionsDom = (
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
 ): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
+  const isSigningIn = authStatus === 'signing-in'
   const authAction =
     authEnabled && authStatus !== 'signed-in'
       ? {
+          disabled: isSigningIn,
           icon: 'MaskIcon MaskIconAccount',
           name: InputName.Login,
           onClick: DomEventListenerFunctions.HandleClick,
-          title: Strings.loginToBackend(),
+          title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
         }
       : authEnabled
         ? {
+            disabled: false,
             icon: 'MaskIcon MaskIconSignOut',
             name: InputName.Logout,
             onClick: DomEventListenerFunctions.HandleClick,
