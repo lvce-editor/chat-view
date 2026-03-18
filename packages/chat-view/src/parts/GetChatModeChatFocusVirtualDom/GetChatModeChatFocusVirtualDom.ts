@@ -35,7 +35,13 @@ export const getChatModeChatFocusVirtualDom = (
   voiceDictationEnabled = false,
   useChatMathWorker = false,
   parsedMessages: readonly ParsedMessage[] = [],
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
+  void authEnabled
+  void authStatus
+  void authErrorMessage
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive

@@ -2,6 +2,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.auth-login-success'
 
+const assertEqual = <T>(actual: T, expected: T, context: string): void => {
+  if (actual !== expected) {
+    throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
+  }
+}
+
 interface AuthState {
   readonly authAccessToken: string
   readonly authRefreshToken: string
@@ -35,7 +41,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(loginButton).toHaveCount(0)
 
   const authState = (await Command.execute('Chat.getAuthState')) as AuthState
-  expect(authState.authAccessToken).toBe('access-token-1')
-  expect(authState.authRefreshToken).toBe('refresh-token-1')
-  expect(authState.authStatus).toBe('signed-in')
+  assertEqual(authState.authAccessToken, 'access-token-1', 'auth access token')
+  assertEqual(authState.authRefreshToken, 'refresh-token-1', 'auth refresh token')
+  assertEqual(authState.authStatus, 'signed-in', 'auth status')
 }

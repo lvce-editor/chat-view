@@ -2,6 +2,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.auth-login-error'
 
+const assertEqual = <T>(actual: T, expected: T, context: string): void => {
+  if (actual !== expected) {
+    throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
+  }
+}
+
 interface AuthState {
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
 }
@@ -29,5 +35,5 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(logoutButton).toHaveCount(0)
 
   const authState = (await Command.execute('Chat.getAuthState')) as AuthState
-  expect(authState.authStatus).toBe('signed-out')
+  assertEqual(authState.authStatus, 'signed-out', 'auth status')
 }
