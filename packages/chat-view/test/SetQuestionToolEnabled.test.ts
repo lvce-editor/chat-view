@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as SetQuestionToolEnabled from '../src/parts/SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import * as SetQuestionToolEnabled from '../src/parts/SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 
 test('setQuestionToolEnabled should set questionToolEnabled to true', () => {
   const state = createDefaultState()

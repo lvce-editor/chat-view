@@ -247,8 +247,8 @@ export const getAiResponse = async ({
                 onToolCallsChunk,
               }
             : {}),
-          stream: streamingEnabled,
           questionToolEnabled,
+          stream: streamingEnabled,
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
           webSearchEnabled,
