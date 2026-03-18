@@ -4,6 +4,9 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
+    authEnabled,
+    authErrorMessage,
+    authStatus,
     chatListScrollTop,
     composerDropActive,
     composerDropEnabled,
@@ -65,6 +68,9 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     voiceDictationEnabled,
     useChatMathWorker,
     parsedMessages,
+    authEnabled,
+    authStatus,
+    authErrorMessage,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

@@ -2,6 +2,8 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
+import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
+import { handleClickLogout } from '../HandleClickLogout/HandleClickLogout.ts'
 import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySettings/HandleClickOpenApiApiKeySettings.ts'
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
@@ -64,6 +66,10 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
       return handleClickOpenApiApiKeySettings(state)
     case name === OpenOpenApiApiKeyWebsite:
       return handleClickOpenApiApiKeyWebsite(state)
+    case name === InputName.Login:
+      return handleClickLogin(state)
+    case name === InputName.Logout:
+      return handleClickLogout(state)
     default:
       return state
   }

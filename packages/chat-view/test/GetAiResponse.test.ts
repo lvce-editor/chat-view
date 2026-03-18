@@ -3,6 +3,9 @@ import { expect, test } from '@jest/globals'
 import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 import {
+  backendAccessTokenRequiredMessage,
+  backendCompletionFailedMessage,
+  backendUrlRequiredMessage,
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
   openRouterTooManyRequestsMessage,
@@ -286,6 +289,154 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
+})
+
+test('getAiResponse should use backend completions when auth is enabled', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        choices: [{ message: { content: 'Backend completion response' } }],
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('Backend completion response')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should require backend url when auth is enabled', async () => {
+  const result = await getAiResponse({
+    assetDir: '',
+    authAccessToken: 'backend-token',
+    authEnabled: true,
+    backendUrl: '',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4o-mini',
+    useMockApi: false,
+    userText: 'hello',
+  })
+
+  expect(result.text).toBe(backendUrlRequiredMessage)
+})
+
+test('getAiResponse should require backend access token when auth is enabled', async () => {
+  const result = await getAiResponse({
+    assetDir: '',
+    authAccessToken: '',
+    authEnabled: true,
+    backendUrl: 'https://backend.example.com',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4o-mini',
+    useMockApi: false,
+    userText: 'hello',
+  })
+
+  expect(result.text).toBe(backendAccessTokenRequiredMessage)
+})
+
+test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      ok: false,
+      status: 500,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(backendCompletionFailedMessage)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {

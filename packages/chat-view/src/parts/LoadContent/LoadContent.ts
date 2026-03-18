@@ -123,6 +123,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedComposerValue = getSavedComposerValue(savedState)
   const {
     aiSessionTitleGenerationEnabled,
+    authAccessToken,
+    authEnabled,
+    authRefreshToken,
+    backendUrl,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
     openApiApiKey,
@@ -182,6 +186,11 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   return {
     ...state,
     aiSessionTitleGenerationEnabled,
+    authAccessToken,
+    authEnabled,
+    authRefreshToken,
+    authStatus: authAccessToken ? 'signed-in' : 'signed-out',
+    backendUrl,
     chatListScrollTop,
     composerDropActive: false,
     composerDropEnabled,

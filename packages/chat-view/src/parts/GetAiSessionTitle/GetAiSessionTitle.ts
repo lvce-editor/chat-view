@@ -6,19 +6,30 @@ import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import { sanitizeGeneratedTitle } from '../SanitizeGeneratedTitle/SanitizeGeneratedTitle.ts'
 
 export const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
-  const { models, openApiApiBaseUrl, openApiApiKey, openRouterApiBaseUrl, openRouterApiKey, selectedModelId, useMockApi } = state
+  const {
+    authAccessToken,
+    authEnabled,
+    backendUrl,
+    models,
+    openApiApiBaseUrl,
+    openApiApiKey,
+    openRouterApiBaseUrl,
+    openRouterApiKey,
+    selectedModelId,
+    useMockApi,
+  } = state
   if (useMockApi) {
     return ''
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (usesOpenApiModel && !openApiApiKey) {
+  if (!authEnabled && usesOpenApiModel && !openApiApiKey) {
     return ''
   }
-  if (usesOpenRouterModel && !openRouterApiKey) {
+  if (!authEnabled && usesOpenRouterModel && !openRouterApiKey) {
     return ''
   }
-  if (!usesOpenApiModel && !usesOpenRouterModel) {
+  if (!authEnabled && !usesOpenApiModel && !usesOpenRouterModel) {
     return ''
   }
 
@@ -33,6 +44,9 @@ Assistant: ${assistantText}`
   }
   const titleResponse = await getAiResponse({
     assetDir: state.assetDir,
+    authAccessToken,
+    authEnabled,
+    backendUrl,
     messages: [promptMessage],
     mockAiResponseDelay: state.mockAiResponseDelay,
     mockApiCommandId: state.mockApiCommandId,

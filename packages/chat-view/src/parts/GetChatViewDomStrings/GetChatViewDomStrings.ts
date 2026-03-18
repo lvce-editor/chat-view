@@ -24,6 +24,26 @@ export const settings = (): string => {
   return i18nString('Settings')
 }
 
+export const login = (): string => {
+  return i18nString('Login')
+}
+
+export const logout = (): string => {
+  return i18nString('Logout')
+}
+
+export const loginToBackend = (): string => {
+  return i18nString('Login to backend')
+}
+
+export const logoutFromBackend = (): string => {
+  return i18nString('Logout from backend')
+}
+
+export const loggingInToBackend = (): string => {
+  return i18nString('Logging in to backend')
+}
+
 export const chatFocusMode = (): string => {
   return i18nString('Switch to chat focus mode')
 }

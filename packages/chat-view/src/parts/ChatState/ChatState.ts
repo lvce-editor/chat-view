@@ -15,6 +15,12 @@ export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 export interface ChatState {
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
+  readonly authAccessToken: string
+  readonly authEnabled: boolean
+  readonly authErrorMessage: string
+  readonly authRefreshToken: string
+  readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly backendUrl: string
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
@@ -75,6 +81,9 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
+  readonly userName: string
+  readonly userSubscriptionPlan: string
+  readonly userUsedTokens: number
   readonly viewMode: ChatViewMode
   readonly voiceDictationEnabled: boolean
   readonly warningCount: number

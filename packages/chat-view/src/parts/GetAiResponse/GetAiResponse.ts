@@ -3,7 +3,13 @@ import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
-import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import {
+  backendAccessTokenRequiredMessage,
+  backendCompletionFailedMessage,
+  backendUrlRequiredMessage,
+  openApiApiKeyRequiredMessage,
+  openRouterApiKeyRequiredMessage,
+} from '../chatViewStrings/chatViewStrings.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
@@ -20,8 +26,65 @@ import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
+const getBackendCompletionsEndpoint = (backendUrl: string): string => {
+  const trimmedBackendUrl = backendUrl.replace(/\/+$/, '')
+  return `${trimmedBackendUrl}/v1/chat/completions`
+}
+
+const getEffectiveBackendModelId = (selectedModelId: string): string => {
+  const separatorIndex = selectedModelId.indexOf('/')
+  if (separatorIndex === -1) {
+    return selectedModelId
+  }
+  return selectedModelId.slice(separatorIndex + 1)
+}
+
+const getBackendAssistantText = async (
+  messages: readonly ChatMessage[],
+  selectedModelId: string,
+  backendUrl: string,
+  authAccessToken: string,
+): Promise<string> => {
+  let response: Response
+  try {
+    response = await fetch(getBackendCompletionsEndpoint(backendUrl), {
+      body: JSON.stringify({
+        messages: messages.map((message) => ({
+          content: message.text,
+          role: message.role,
+        })),
+        model: getEffectiveBackendModelId(selectedModelId),
+        stream: false,
+      }),
+      headers: {
+        Authorization: `Bearer ${authAccessToken}`,
+        'Content-Type': 'application/json',
+        ...getClientRequestIdHeader(),
+      },
+      method: 'POST',
+    })
+  } catch {
+    return backendCompletionFailedMessage
+  }
+  if (!response.ok) {
+    return backendCompletionFailedMessage
+  }
+  const json = (await response.json()) as {
+    readonly choices?: readonly {
+      readonly message?: {
+        readonly content?: string
+      }
+    }[]
+  }
+  const content = json.choices?.[0]?.message?.content
+  return typeof content === 'string' && content ? content : backendCompletionFailedMessage
+}
+
 export const getAiResponse = async ({
   assetDir,
+  authAccessToken,
+  authEnabled = false,
+  backendUrl = '',
   messageId,
   messages,
   mockAiResponseDelay = 800,
@@ -47,7 +110,7 @@ export const getAiResponse = async ({
   userText,
   webSearchEnabled = false,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
-  if (useChatCoordinatorWorker) {
+  if (useChatCoordinatorWorker && !authEnabled) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         assetDir,
@@ -90,9 +153,18 @@ export const getAiResponse = async ({
   }
 
   let text = ''
+  if (authEnabled) {
+    if (!backendUrl) {
+      text = backendUrlRequiredMessage
+    } else if (authAccessToken) {
+      text = await getBackendAssistantText(messages, selectedModelId, backendUrl, authAccessToken)
+    } else {
+      text = backendAccessTokenRequiredMessage
+    }
+  }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (usesOpenApiModel) {
+  if (!text && usesOpenApiModel) {
     if (useMockApi) {
       const openAiInput: any[] = messages.map((message) => ({
         content: message.text,
@@ -188,7 +260,7 @@ export const getAiResponse = async ({
     } else {
       text = openApiApiKeyRequiredMessage
     }
-  } else if (usesOpenRouterModel) {
+  } else if (!text && usesOpenRouterModel) {
     const modelId = getOpenRouterModelId(selectedModelId)
     if (useMockApi) {
       const result = await getMockOpenRouterAssistantText(

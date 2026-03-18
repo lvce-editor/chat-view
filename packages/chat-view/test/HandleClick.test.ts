@@ -121,6 +121,72 @@ test('handleClick should keep state for unknown action', async () => {
   expect(result).toBe(state)
 })
 
+test('handleClick should login via auth bridge and persist backend access token', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Auth.login': async () => {
+      return {
+        accessToken: 'backend-token-1',
+        refreshToken: 'backend-refresh-token-1',
+        subscriptionPlan: 'pro',
+        usedTokens: 321,
+        userName: 'simon',
+      }
+    },
+    'Preferences.update': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    authEnabled: true,
+    backendUrl: 'https://backend.example.com',
+  }
+  const result = await HandleClick.handleClick(state, 'login')
+  expect(result.authAccessToken).toBe('backend-token-1')
+  expect(result.authRefreshToken).toBe('backend-refresh-token-1')
+  expect(result.authStatus).toBe('signed-in')
+  expect(result.userName).toBe('simon')
+  expect(result.userSubscriptionPlan).toBe('pro')
+  expect(result.userUsedTokens).toBe(321)
+  expect(mockRpc.invocations).toEqual([
+    ['Auth.login', 'https://backend.example.com'],
+    [
+      'Preferences.update',
+      {
+        'secrets.chatBackendAccessToken': 'backend-token-1',
+        'secrets.chatBackendRefreshToken': 'backend-refresh-token-1',
+      },
+    ],
+  ])
+})
+
+test('handleClick should logout and clear persisted backend access token', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Auth.logout': async () => {},
+    'Preferences.update': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    authAccessToken: 'backend-token-1',
+    authEnabled: true,
+    authRefreshToken: 'backend-refresh-token-1',
+    authStatus: 'signed-in',
+    backendUrl: 'https://backend.example.com',
+    userName: 'simon',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 321,
+  }
+  const result = await HandleClick.handleClick(state, 'logout')
+  expect(result.authAccessToken).toBe('')
+  expect(result.authRefreshToken).toBe('')
+  expect(result.authStatus).toBe('signed-out')
+  expect(result.userName).toBe('')
+  expect(result.userSubscriptionPlan).toBe('')
+  expect(result.userUsedTokens).toBe(0)
+  expect(mockRpc.invocations).toEqual([
+    ['Auth.logout', 'https://backend.example.com'],
+    ['Preferences.update', { 'secrets.chatBackendAccessToken': '', 'secrets.chatBackendRefreshToken': '' }],
+  ])
+})
+
 test('handleClick should submit message when clicking send', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},

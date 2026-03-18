@@ -14,6 +14,9 @@ const isEqualProjectExpandedIds = (a: readonly string[], b: readonly string[]): 
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
+    oldState.authEnabled === newState.authEnabled &&
+    oldState.authErrorMessage === newState.authErrorMessage &&
+    oldState.authStatus === newState.authStatus &&
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&

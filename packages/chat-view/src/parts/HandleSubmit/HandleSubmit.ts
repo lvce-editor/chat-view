@@ -38,6 +38,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     aiSessionTitleGenerationEnabled,
     assetDir,
+    authAccessToken,
+    authEnabled,
+    backendUrl,
     composerValue,
     emitStreamingFunctionCallEvents,
     mockAiResponseDelay,
@@ -185,6 +188,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const assistantMessage = await getAiResponse({
     assetDir,
+    authAccessToken,
+    authEnabled,
+    backendUrl,
     messageId: assistantMessageId,
     messages: messagesWithMentionContext,
     mockAiResponseDelay,

@@ -6,8 +6,31 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getChatHeaderActionsDom = (viewMode: ChatViewMode): readonly VirtualDomNode[] => {
+export const getChatHeaderActionsDom = (
+  viewMode: ChatViewMode,
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
+  const isSigningIn = authStatus === 'signing-in'
+  const authAction =
+    authEnabled && authStatus !== 'signed-in'
+      ? ({
+          disabled: isSigningIn,
+          icon: 'MaskIcon MaskIconAccount',
+          name: InputName.Login,
+          onClick: DomEventListenerFunctions.HandleClick,
+          title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
+        } as const)
+      : authEnabled
+        ? ({
+            disabled: false,
+            icon: 'MaskIcon MaskIconSignOut',
+            name: InputName.Logout,
+            onClick: DomEventListenerFunctions.HandleClick,
+            title: Strings.logoutFromBackend(),
+          } as const)
+        : undefined
   const items = [
     {
       icon: 'MaskIcon MaskIconLayoutPanelLeft',
@@ -33,6 +56,7 @@ export const getChatHeaderActionsDom = (viewMode: ChatViewMode): readonly Virtua
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
+    ...(authAction ? [authAction] : []),
     {
       icon: 'MaskIcon MaskIconClose',
       name: InputName.CloseChat,

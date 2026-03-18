@@ -3,6 +3,7 @@ import * as ClearInput from '../ClearInput/ClearInput.ts'
 import * as StatusBar from '../Create/Create.ts'
 import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
+import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
@@ -34,6 +35,7 @@ import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
+import * as MockBackendAuthResponse from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
 import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenApiRequestGetAll.ts'
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
@@ -49,6 +51,8 @@ import { rerender } from '../Rerender/Rerender.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
+import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
+import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
@@ -65,6 +69,7 @@ export const commandMap = {
   'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
+  'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
@@ -100,6 +105,7 @@ export const commandMap = {
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
+  'Chat.mockBackendAuthResponse': wrapCommand(MockBackendAuthResponse.mockBackendAuthResponse),
   'Chat.mockOpenApiRequestGetAll': wrapGetter(MockOpenApiRequestGetAll.mockOpenApiRequestGetAll),
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
@@ -115,6 +121,8 @@ export const commandMap = {
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
+  'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
+  'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),

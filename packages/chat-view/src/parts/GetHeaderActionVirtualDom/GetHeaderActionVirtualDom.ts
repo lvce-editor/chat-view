@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { InputName } from '../InputName/InputName.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
@@ -7,11 +7,13 @@ export const getHeaderActionVirtualDom = (item: {
   readonly title: string
   readonly name: InputName
   readonly onClick: number
+  readonly disabled?: boolean
 }): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
-      className: ClassNames.IconButton,
+      className: mergeClassNames(ClassNames.IconButton, item.disabled ? ClassNames.IconButtonDisabled : ''),
+      disabled: item.disabled,
       name: item.name,
       onClick: item.onClick,
       title: item.title,

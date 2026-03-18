@@ -428,6 +428,128 @@ test('getChatVirtualDOm should render close button in header actions', () => {
   })
 })
 
+test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
+  const result = GetChatViewDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    false,
+    true,
+    [],
+    [],
+    '',
+    0,
+    false,
+    false,
+    undefined,
+    true,
+    'signed-out',
+    '',
+  )
+  const loginButton = result.find((node) => node.title === 'Login to backend')
+  expect(loginButton).toBeDefined()
+  expect(loginButton).toMatchObject({
+    className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDOm should disable login button while signing in', () => {
+  const result = GetChatViewDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    false,
+    true,
+    [],
+    [],
+    '',
+    0,
+    false,
+    false,
+    undefined,
+    true,
+    'signing-in',
+    '',
+  )
+  const loginButton = result.find((node) => node.name === 'login')
+  expect(loginButton).toBeDefined()
+  expect(loginButton).toMatchObject({
+    disabled: true,
+    title: 'Logging in to backend',
+  })
+})
+
+test('getChatVirtualDOm should render auth error label when login fails', () => {
+  const result = GetChatViewDom.getChatVirtualDom(
+    [],
+    '',
+    '',
+    '',
+    'list',
+    models,
+    'test',
+    false,
+    0,
+    0,
+    '',
+    'idle',
+    28,
+    13,
+    'system-ui',
+    20,
+    0,
+    0,
+    false,
+    true,
+    [],
+    [],
+    '',
+    0,
+    false,
+    false,
+    undefined,
+    true,
+    'signed-out',
+    'Invalid backend credentials.',
+  )
+  const authError = result.find((node) => node.className === 'ChatAuthError')
+  expect(authError).toBeDefined()
+  const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
+  expect(authErrorText).toBeDefined()
+})
+
 test('getChatVirtualDOm should hide session list in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const result = GetChatViewDom.getChatVirtualDom(

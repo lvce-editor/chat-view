@@ -3,10 +3,15 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
+export const getChatHeaderListModeDom = (
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  authErrorMessage = '',
+): readonly VirtualDomNode[] => {
+  const hasAuthError = authEnabled && !!authErrorMessage
   return [
     {
-      childCount: 2,
+      childCount: hasAuthError ? 3 : 2,
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
@@ -16,6 +21,16 @@ export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
       type: VirtualDomElements.Span,
     },
     text(Strings.chats()),
-    ...getChatHeaderActionsDom('list'),
+    ...getChatHeaderActionsDom('list', authEnabled, authStatus),
+    ...(hasAuthError
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatAuthError,
+            type: VirtualDomElements.Span,
+          },
+          text(authErrorMessage),
+        ]
+      : []),
   ]
 }

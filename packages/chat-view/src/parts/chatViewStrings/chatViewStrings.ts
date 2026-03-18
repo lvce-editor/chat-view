@@ -21,3 +21,9 @@ export const openRouterTooManyRequestsReasons = [
   'Reduce request frequency to avoid rate limits.',
   'Use a different model if this one is saturated.',
 ] as const
+
+export const backendUrlRequiredMessage = 'Backend URL is not configured. Configure your backend URL and try again.'
+
+export const backendAccessTokenRequiredMessage = 'You are not logged in. Click Login to continue.'
+
+export const backendCompletionFailedMessage = 'Backend completion request failed.'
