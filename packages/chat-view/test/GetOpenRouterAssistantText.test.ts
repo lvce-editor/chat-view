@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatToolWorker } from '@lvce-editor/rpc-registry'
 import { getOpenRouterAssistantText } from '../src/parts/GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 
 const parseJsonRequestBody = (body: unknown): any => {
@@ -293,11 +293,14 @@ test('getOpenRouterAssistantText should include raw metadata message for 429', a
 })
 
 test('getOpenRouterAssistantText should execute read_file tool calls and continue completion', async () => {
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
-    'FileSystem.readFile': async (uri: string) => {
-      expect(uri).toBe('file:///workspace/README.md')
-      return '# Workspace Readme'
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async (name: string, rawArguments: string) => {
+      expect(name).toBe('read_file')
+      expect(rawArguments).toBe('{"uri":"file:///workspace/README.md"}')
+      return JSON.stringify({
+        content: '# Workspace Readme',
+        uri: 'file:///workspace/README.md',
+      })
     },
   })
   const originalFetch = globalThis.fetch
@@ -359,13 +362,19 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'file:///workspace/README.md']])
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"uri":"file:///workspace/README.md"}', { assetDir: '/tmp', platform: 3 }])
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
 test('getOpenRouterAssistantText should block tool paths outside workspace', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        error: 'Access denied: path must be relative and stay within the open workspace folder.',
+      }),
+  })
   const originalFetch = globalThis.fetch
   const requests: Array<{ readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> }> = []
   globalThis.fetch = (async (...args: readonly unknown[]) => {
@@ -430,6 +439,7 @@ test('getOpenRouterAssistantText should block tool paths outside workspace', asy
     const toolResultMessage = secondRequestMessages.find((message) => message.role === 'tool')
     const toolResultContent = typeof toolResultMessage?.content === 'string' ? toolResultMessage.content : ''
     expect(toolResultContent).toContain('Access denied')
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"path":"../secret.txt"}', { assetDir: '', platform: 0 }])
   } finally {
     globalThis.fetch = originalFetch
   }
