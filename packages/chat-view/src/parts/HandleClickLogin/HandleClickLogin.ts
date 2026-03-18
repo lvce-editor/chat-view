@@ -44,9 +44,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
   let usedMockResponse = false
   try {
     usedMockResponse = MockBackendAuth.hasPendingMockLoginResponse()
-    const response = usedMockResponse
-      ? await MockBackendAuth.consumeNextLoginResponse()
-      : await RendererWorker.invoke('Auth.login', state.backendUrl)
+    const response = usedMockResponse ? await MockBackendAuth.consumeNextLoginResponse() : await RendererWorker.invoke('Auth.login', state.backendUrl)
     if (!isLoginResponse(response)) {
       return {
         ...signingInState,

@@ -20,7 +20,7 @@ const getDelay = (payload: unknown): number => {
   if (!isObject(payload)) {
     return 0
   }
-  const delay = payload.delay
+  const { delay } = payload
   return typeof delay === 'number' && delay > 0 ? delay : 0
 }
 
