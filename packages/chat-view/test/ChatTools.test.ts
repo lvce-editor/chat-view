@@ -61,13 +61,19 @@ test('executeChatTool should execute read_file tool', async () => {
 
 test('executeChatTool should execute write_file tool', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystem.readFile': async () => 'const value = 1\n',
     'FileSystem.writeFile': async () => undefined,
   })
 
   const result = await executeChatTool('write_file', JSON.stringify({ content: 'new content', path: 'src/main.ts' }), options)
 
-  expect(mockRendererRpc.invocations).toEqual([['FileSystem.writeFile', 'src/main.ts', 'new content']])
+  expect(mockRendererRpc.invocations).toEqual([
+    ['FileSystem.readFile', 'src/main.ts'],
+    ['FileSystem.writeFile', 'src/main.ts', 'new content'],
+  ])
   expect(JSON.parse(result)).toEqual({
+    linesAdded: 1,
+    linesDeleted: 1,
     ok: true,
     path: 'src/main.ts',
   })
