@@ -156,10 +156,10 @@ export const getAiResponse = async ({
   if (authEnabled) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
-    } else if (!authAccessToken) {
-      text = backendAccessTokenRequiredMessage
-    } else {
+    } else if (authAccessToken) {
       text = await getBackendAssistantText(messages, selectedModelId, backendUrl, authAccessToken)
+    } else {
+      text = backendAccessTokenRequiredMessage
     }
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
