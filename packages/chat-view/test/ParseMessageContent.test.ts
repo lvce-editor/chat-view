@@ -267,6 +267,63 @@ test('parseMessageContent should parse markdown links with parentheses in urls',
   ])
 })
 
+test('parseMessageContent should parse raw https urls followed by quote and parenthesis', () => {
+  const result = ParseMessageContent.parseMessageContent('Service notice: https://www.protezionecivile.gov.it")BE AWARE')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Service notice: ',
+          type: 'text',
+        },
+        {
+          href: 'https://www.protezionecivile.gov.it',
+          text: 'https://www.protezionecivile.gov.it',
+          type: 'link',
+        },
+        {
+          text: '")BE AWARE',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should not parse markdown link with empty text', () => {
+  const result = ParseMessageContent.parseMessageContent('[](https://example.com)')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: '[](https://example.com)',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should not parse raw url inside unclosed markdown link destination', () => {
+  const result = ParseMessageContent.parseMessageContent('See [documentation](https://example.com/docs')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'See [documentation](https://example.com/docs',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown images', () => {
   const result = ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
 
