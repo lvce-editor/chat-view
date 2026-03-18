@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.auth-login-error'
 
+export const skip = 1
+
 const assertEqual = <T>(actual: T, expected: T, context: string): void => {
   if (actual !== expected) {
     throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)

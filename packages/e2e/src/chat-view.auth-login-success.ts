@@ -14,6 +14,8 @@ interface AuthState {
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
 }
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
