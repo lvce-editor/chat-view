@@ -173,3 +173,50 @@ test('getToolCallDom should render ask_question with no answers', () => {
     text: '(no answers)',
   })
 })
+
+test('getToolCallDom should render write_file as filename with line count badges', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      content: 'const value = 2\n',
+      path: 'src/main.ts',
+    }),
+    name: 'write_file',
+    result: JSON.stringify({
+      linesAdded: 1,
+      linesDeleted: 1,
+      ok: true,
+      path: 'src/main.ts',
+    }),
+    status: 'success',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 5,
+    className: ClassNames.ChatOrderedListItem,
+    title: 'src/main.ts',
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'write_file ',
+  })
+  expect(result[4]).toMatchObject({
+    text: 'main.ts',
+  })
+  expect(result[5]).toEqual({
+    childCount: 1,
+    className: ClassNames.Insertion,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[6]).toMatchObject({
+    text: ' +1',
+  })
+  expect(result[7]).toEqual({
+    childCount: 1,
+    className: ClassNames.Deletion,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[8]).toMatchObject({
+    text: ' -1',
+  })
+  expect(result.find((node) => node.text === '"const value = 2\\n"')).toBeUndefined()
+})
