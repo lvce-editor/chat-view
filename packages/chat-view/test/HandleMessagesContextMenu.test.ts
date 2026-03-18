@@ -3,6 +3,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleMessagesContextMenu from '../src/parts/HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleMessagesContextMenu should invoke ContextMenu.show with menu id', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'ContextMenu.show': async () => {},

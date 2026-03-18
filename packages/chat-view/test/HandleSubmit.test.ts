@@ -659,7 +659,7 @@ test('handleSubmit should generate ai session title for new session when enabled
 })
 
 test('handleSubmit should queue message while a request is in progress', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
   const state = {
@@ -682,7 +682,7 @@ test('handleSubmit should queue message while a request is in progress', async (
 })
 
 test('handleSubmit should drain queued messages after current submit completes', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
   const state = {
@@ -715,7 +715,7 @@ test('handleSubmit should drain queued messages after current submit completes',
 })
 
 test('handleSubmit should clear queued messages when active submit returns missing api key', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
   const state = {
