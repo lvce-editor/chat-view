@@ -13,6 +13,8 @@ export const CreateSession = 'create-session'
 export const CreateSessionInProjectPrefix = 'create-session-in-project:'
 export const SessionDebug = 'session-debug'
 export const Settings = 'settings'
+export const Login = 'login'
+export const Logout = 'logout'
 export const CloseChat = 'close-chat'
 export const SessionDelete = 'SessionDelete'
 export const ProjectPrefix = 'project:'
@@ -34,6 +36,8 @@ export type InputName =
   | `${typeof CreateSessionInProjectPrefix}${string}`
   | typeof SessionDebug
   | typeof Settings
+  | typeof Login
+  | typeof Logout
   | typeof CloseChat
   | typeof SessionDelete
   | `${typeof ProjectPrefix}${string}`

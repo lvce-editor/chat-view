@@ -25,6 +25,8 @@ export const getChatModeListVirtualDom = (
   composerDropActive = false,
   composerDropEnabled = true,
   voiceDictationEnabled = false,
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
 ): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
@@ -35,7 +37,7 @@ export const getChatModeListVirtualDom = (
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderListModeDom(),
+    ...getChatHeaderListModeDom(authEnabled, authStatus),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
     ...(isDropOverlayVisible

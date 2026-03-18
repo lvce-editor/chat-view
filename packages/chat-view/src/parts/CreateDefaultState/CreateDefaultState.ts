@@ -12,7 +12,12 @@ export const createDefaultState = (): ChatState => {
   const composerLineHeight = 20
   return {
     aiSessionTitleGenerationEnabled: false,
+    authAccessToken: '',
+    authEnabled: false,
+    authErrorMessage: '',
+    authStatus: 'signed-out',
     assetDir: '',
+    backendUrl: '',
     chatListScrollTop: 0,
     chatMessageFontFamily: 'system-ui',
     chatMessageFontSize,
@@ -78,6 +83,9 @@ export const createDefaultState = (): ChatState => {
     streamingEnabled: true,
     tokensMax: 0,
     tokensUsed: 0,
+    userName: '',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
     uid: 0,
     usageOverviewEnabled: false,
     useChatCoordinatorWorker: true,

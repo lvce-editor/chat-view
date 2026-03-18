@@ -3,7 +3,11 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 
-export const getChatHeaderDomDetailMode = (selectedSessionTitle: string): readonly VirtualDomNode[] => {
+export const getChatHeaderDomDetailMode = (
+  selectedSessionTitle: string,
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
@@ -22,6 +26,6 @@ export const getChatHeaderDomDetailMode = (selectedSessionTitle: string): readon
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-    ...getChatHeaderActionsDom('detail'),
+    ...getChatHeaderActionsDom('detail', authEnabled, authStatus),
   ]
 }

@@ -3,6 +3,9 @@ import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.t
 
 export interface GetAiResponseOptions {
   readonly assetDir: string
+  readonly authAccessToken?: string
+  readonly authEnabled?: boolean
+  readonly backendUrl?: string
   readonly messageId?: string
   readonly messages: readonly ChatMessage[]
   readonly mockAiResponseDelay?: number

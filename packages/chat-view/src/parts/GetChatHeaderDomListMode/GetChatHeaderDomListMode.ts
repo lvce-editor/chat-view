@@ -3,7 +3,10 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
-export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
+export const getChatHeaderListModeDom = (
+  authEnabled = false,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
@@ -16,6 +19,6 @@ export const getChatHeaderListModeDom = (): readonly VirtualDomNode[] => {
       type: VirtualDomElements.Span,
     },
     text(Strings.chats()),
-    ...getChatHeaderActionsDom('list'),
+    ...getChatHeaderActionsDom('list', authEnabled, authStatus),
   ]
 }

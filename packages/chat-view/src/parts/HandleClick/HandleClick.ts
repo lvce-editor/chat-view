@@ -4,8 +4,10 @@ import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySettings/HandleClickOpenApiApiKeySettings.ts'
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
+import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
 import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiKeyWebsite/HandleClickOpenRouterApiKeyWebsite.ts'
+import { handleClickLogout } from '../HandleClickLogout/HandleClickLogout.ts'
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
@@ -64,6 +66,10 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
       return handleClickOpenApiApiKeySettings(state)
     case name === OpenOpenApiApiKeyWebsite:
       return handleClickOpenApiApiKeyWebsite(state)
+    case name === InputName.Login:
+      return handleClickLogin(state)
+    case name === InputName.Logout:
+      return handleClickLogout(state)
     default:
       return state
   }
