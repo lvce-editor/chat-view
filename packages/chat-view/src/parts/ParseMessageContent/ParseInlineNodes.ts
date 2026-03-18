@@ -103,6 +103,9 @@ const parseRawLinkToken = (value: string, start: number): ParsedInlineToken | un
   if (!value.startsWith('https://', start) && !value.startsWith('http://', start)) {
     return undefined
   }
+  if (start >= 2 && value[start - 1] === '(' && value[start - 2] === ']') {
+    return undefined
+  }
   const end = findRawUrlEnd(value, start)
   const rawUrl = value.slice(start, end)
   const href = trimRawUrlEnd(rawUrl)

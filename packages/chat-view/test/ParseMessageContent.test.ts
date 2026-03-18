@@ -292,6 +292,38 @@ test('parseMessageContent should parse raw https urls followed by quote and pare
   ])
 })
 
+test('parseMessageContent should not parse markdown link with empty text', () => {
+  const result = ParseMessageContent.parseMessageContent('[](https://example.com)')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: '[](https://example.com)',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should not parse raw url inside unclosed markdown link destination', () => {
+  const result = ParseMessageContent.parseMessageContent('See [documentation](https://example.com/docs')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'See [documentation](https://example.com/docs',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown images', () => {
   const result = ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
 
