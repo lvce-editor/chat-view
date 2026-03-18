@@ -17,8 +17,20 @@ const getToolCallDisplayName = (name: string): string => {
   return name
 }
 
+const hasIncompleteJsonArguments = (rawArguments: string): boolean => {
+  try {
+    JSON.parse(rawArguments)
+    return false
+  } catch {
+    return true
+  }
+}
+
 const getToolCallLabel = (toolCall: ChatToolCall): string => {
   const displayName = getToolCallDisplayName(toolCall.name)
+  if (toolCall.name === 'write_file' && !toolCall.status && hasIncompleteJsonArguments(toolCall.arguments)) {
+    return `${displayName} (in progress)`
+  }
   const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
   const statusLabel = getToolCallStatusLabel(toolCall)
   if (argumentPreview === '{}') {
