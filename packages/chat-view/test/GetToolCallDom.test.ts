@@ -237,8 +237,8 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
   const uri = 'file:///workspace/src/main.ts'
   const result = getToolCallDom({
     arguments: JSON.stringify({
-      oldString: 'const value = 1',
       newString: 'const value = 2',
+      oldString: 'const value = 1',
       uri,
     }),
     name: 'edit_file',
