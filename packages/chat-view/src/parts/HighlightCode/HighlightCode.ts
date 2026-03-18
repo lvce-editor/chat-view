@@ -55,6 +55,13 @@ const pythonRules: readonly TokenRule[] = [
   },
 ]
 
+const jsonRules: readonly TokenRule[] = [
+  { className: ClassNames.TokenProperty, regex: /"[^"\\]*(?:\\.[^"\\]*)*"(?=\s*:)/ },
+  { className: ClassNames.TokenString, regex: /"[^"\\]*(?:\\.[^"\\]*)*"/ },
+  { className: ClassNames.TokenNumber, regex: /-?\b\d+\.?\d*(?:[eE][+-]?\d+)?\b/ },
+  { className: ClassNames.TokenKeyword, regex: /\b(?:true|false|null)\b/ },
+]
+
 const tokenize = (code: string, rules: readonly TokenRule[]): readonly CodeToken[] => {
   const tokens: CodeToken[] = []
   let pos = 0
@@ -101,6 +108,9 @@ export const highlightCode = (code: string, language: string | undefined): reado
   }
   if (normalized === 'py' || normalized === 'python') {
     return tokenize(code, pythonRules)
+  }
+  if (normalized === 'json') {
+    return tokenize(code, jsonRules)
   }
   return [{ className: '', text: code }]
 }
