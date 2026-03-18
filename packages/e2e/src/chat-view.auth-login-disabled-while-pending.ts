@@ -17,12 +17,13 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   })
 
   const loginButton = Locator('.IconButton[name="login"]')
+  const pendingLoginButton = Locator('.IconButton[name="login"][title="Logging in to backend"]')
   const logoutButton = Locator('.IconButton[name="logout"]')
 
   await expect(loginButton).toBeVisible()
 
   const clickPromise = loginButton.click()
-  await expect(loginButton).toBeDisabled()
+  await expect(pendingLoginButton).toBeVisible()
   await clickPromise
 
   await expect(logoutButton).toBeVisible()
