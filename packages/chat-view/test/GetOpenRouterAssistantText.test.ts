@@ -362,7 +362,12 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
       text: 'Loaded README successfully.',
       type: 'success',
     })
-    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"uri":"file:///workspace/README.md"}', { assetDir: '/tmp', platform: 3 }])
+    expect(mockChatToolRpc.invocations).toContainEqual([
+      'ChatTool.execute',
+      'read_file',
+      '{"uri":"file:///workspace/README.md"}',
+      { assetDir: '/tmp', platform: 3 },
+    ])
   } finally {
     globalThis.fetch = originalFetch
   }

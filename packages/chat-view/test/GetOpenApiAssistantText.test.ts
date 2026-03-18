@@ -492,7 +492,12 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
       text: 'done',
       type: 'success',
     })
-    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"uri":"file:///workspace/src/main.ts"}', { assetDir: '', platform: 0 }])
+    expect(mockChatToolRpc.invocations).toContainEqual([
+      'ChatTool.execute',
+      'read_file',
+      '{"uri":"file:///workspace/src/main.ts"}',
+      { assetDir: '', platform: 0 },
+    ])
     expect(fetchInvocations).toHaveLength(2)
     const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
     const input = secondRequestBody.input as readonly Record<string, unknown>[]
