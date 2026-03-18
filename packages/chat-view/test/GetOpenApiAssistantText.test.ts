@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatToolWorker } from '@lvce-editor/rpc-registry'
 import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
 const getRequestIdFromInit = (init: unknown): string | undefined => {
@@ -73,6 +73,9 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
 })
 
 test('getOpenApiAssistantText should send follow-up request when streaming function-call argument events use item_id', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => JSON.stringify({ error: 'Unknown tool: invalid_tool' }),
+  })
   const originalFetch = globalThis.fetch
   const fetchInvocations: Array<readonly unknown[]> = []
   let requestCount = 0
@@ -144,6 +147,7 @@ test('getOpenApiAssistantText should send follow-up request when streaming funct
         type: 'function_call_output',
       },
     ])
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'invalid_tool', '{"path":"index.html"}', { assetDir: '', platform: 0 }])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -311,6 +315,9 @@ test('getOpenApiAssistantText should not include web_search tool when webSearchE
 })
 
 test('getOpenApiAssistantText should execute streaming tool calls and send automatic follow-up requests', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => JSON.stringify({ error: 'Unknown tool: invalid_tool' }),
+  })
   const originalFetch = globalThis.fetch
   const fetchInvocations: Array<readonly unknown[]> = []
   let requestCount = 0
@@ -406,18 +413,19 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
         status: 'error',
       },
     ])
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'invalid_tool', '{"path":"index.html"}', { assetDir: '', platform: 0 }])
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
 test('getOpenApiAssistantText should include error stack in failed tool call chunks', async () => {
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'FileSystem.readFile': async () => {
-      const error = new TypeError("Cannot read properties of undefined (reading 'invoke')")
-      error.stack = "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1"
-      throw error
-    },
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        error: "TypeError: Cannot read properties of undefined (reading 'invoke')",
+        errorStack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
+      }),
   })
   const originalFetch = globalThis.fetch
   const fetchInvocations: Array<readonly unknown[]> = []
@@ -484,7 +492,12 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
       text: 'done',
       type: 'success',
     })
-    expect(mockRendererRpc.invocations).toEqual([['FileSystem.readFile', 'file:///workspace/src/main.ts']])
+    expect(mockChatToolRpc.invocations).toContainEqual([
+      'ChatTool.execute',
+      'read_file',
+      '{"uri":"file:///workspace/src/main.ts"}',
+      { assetDir: '', platform: 0 },
+    ])
     expect(fetchInvocations).toHaveLength(2)
     const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
     const input = secondRequestBody.input as readonly Record<string, unknown>[]

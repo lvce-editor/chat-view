@@ -68,7 +68,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
       expect.objectContaining({
         selectedModelId: 'openapi/gpt-4o-mini',
         useChatNetworkWorkerForRequests: false,
-        useChatToolWorker: false,
+        useChatToolWorker: true,
         userText: 'hello',
       }),
     ],
