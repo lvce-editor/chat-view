@@ -96,6 +96,33 @@ test('getMessageNodeDom should render markdown file links with data-uri and read
   })
 })
 
+test('getMessageNodeDom should render markdown vscode file links with data-uri and read-file click handler', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'Open ',
+        type: 'text',
+      },
+      {
+        href: 'vscode-references:///workspace/src/main.ts',
+        text: 'main.ts',
+        type: 'link',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatMessageLink,
+    'data-uri': 'vscode-references:///workspace/src/main.ts',
+    href: '#',
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    title: 'vscode-references:///workspace/src/main.ts',
+    type: VirtualDomElements.A,
+  })
+})
+
 test('getMessageNodeDom should render markdown bold inline nodes as strong dom nodes', () => {
   const result = getMessageNodeDom({
     children: [

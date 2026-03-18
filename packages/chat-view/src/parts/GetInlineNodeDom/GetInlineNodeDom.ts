@@ -10,8 +10,9 @@ const getImageAltText = (alt: string): string => {
   return `${alt} (image could not be loaded)`
 }
 
-const isFileUri = (href: string): boolean => {
-  return href.trim().toLowerCase().startsWith('file://')
+const isFileReferenceUri = (href: string): boolean => {
+  const normalized = href.trim().toLowerCase()
+  return normalized.startsWith('file://') || normalized.startsWith('vscode-references://')
 }
 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
@@ -73,7 +74,7 @@ export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorke
   if (inlineNode.type === 'math-inline-dom') {
     return inlineNode.dom
   }
-  if (isFileUri(inlineNode.href)) {
+  if (isFileReferenceUri(inlineNode.href)) {
     return [
       {
         childCount: 1,
