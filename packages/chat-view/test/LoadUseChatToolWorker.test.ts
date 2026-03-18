@@ -17,17 +17,17 @@ test('loadUseChatToolWorker should return stored boolean value', async () => {
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chatView.useChatToolWorker']])
 })
 
-test('loadUseChatToolWorker should return false when preference is not boolean', async () => {
+test('loadUseChatToolWorker should return true when preference is not boolean', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => 'true',
   })
 
   const result = await LoadUseChatToolWorker.loadUseChatToolWorker()
-  expect(result).toBe(false)
+  expect(result).toBe(true)
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chatView.useChatToolWorker']])
 })
 
-test('loadUseChatToolWorker should return false on preference read error', async () => {
+test('loadUseChatToolWorker should return true on preference read error', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => {
       throw new Error('failed')
@@ -35,6 +35,6 @@ test('loadUseChatToolWorker should return false on preference read error', async
   })
 
   const result = await LoadUseChatToolWorker.loadUseChatToolWorker()
-  expect(result).toBe(false)
+  expect(result).toBe(true)
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chatView.useChatToolWorker']])
 })

@@ -760,14 +760,18 @@ export const getOpenApiAssistantText = async (
     questionToolEnabled = false,
     stream,
     useChatNetworkWorkerForRequests = false,
-    useChatToolWorker = false,
+    useChatToolWorker = true,
     webSearchEnabled = false,
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
   }))
+<<<<<<< HEAD
   const tools = getBasicChatTools(questionToolEnabled)
+=======
+  const tools = await getBasicChatTools()
+>>>>>>> origin/main
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {

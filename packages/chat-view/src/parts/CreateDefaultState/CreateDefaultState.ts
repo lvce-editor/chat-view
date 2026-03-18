@@ -90,7 +90,7 @@ export const createDefaultState = (): ChatState => {
     useChatCoordinatorWorker: true,
     useChatMathWorker: true,
     useChatNetworkWorkerForRequests: false,
-    useChatToolWorker: false,
+    useChatToolWorker: true,
     useMockApi: false,
     userName: '',
     userSubscriptionPlan: '',

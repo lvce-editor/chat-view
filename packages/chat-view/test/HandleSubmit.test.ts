@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { beforeEach, expect, test } from '@jest/globals'
-import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
@@ -326,6 +326,13 @@ test('handleSubmit should suppress streaming function call data events by defaul
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        error: 'File not found: index.html',
+        errorStack: "TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1",
+      }),
+  })
   const originalFetch = globalThis.fetch
   let requestIndex = 0
   globalThis.fetch = (async () => {
@@ -408,6 +415,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
       },
     ])
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"path":"index.html"}', { assetDir: '', platform: 0 }])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -416,6 +424,12 @@ test('handleSubmit should suppress streaming function call data events by defaul
 test('handleSubmit should emit streaming function call data events when enabled', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
+  })
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        error: 'File not found: index.html',
+      }),
   })
   const originalFetch = globalThis.fetch
   let requestIndex = 0
@@ -467,6 +481,7 @@ test('handleSubmit should emit streaming function call data events when enabled'
     expect(dataEvents).toHaveLength(3)
     expect(responseCompletedEvents).toHaveLength(2)
     expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
+    expect(mockChatToolRpc.invocations).toContainEqual(['ChatTool.execute', 'read_file', '{"path":"index.html"}', { assetDir: '', platform: 0 }])
   } finally {
     globalThis.fetch = originalFetch
   }

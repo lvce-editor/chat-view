@@ -1,4 +1,5 @@
 import type { ChatTool } from '../Types/Types.ts'
+import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 
 const getReadFileTool = (): ChatTool => {
   return {
@@ -113,6 +114,7 @@ const getRenderHtmlTool = (): ChatTool => {
   }
 }
 
+<<<<<<< HEAD
 const getAskQuestionTool = (): ChatTool => {
   return {
     function: {
@@ -151,4 +153,12 @@ export const getBasicChatTools = (questionToolEnabled = false): readonly ChatToo
     getRenderHtmlTool(),
     ...(questionToolEnabled ? [getAskQuestionTool()] : []),
   ]
+=======
+export const getBasicChatTools = async (): Promise<readonly ChatTool[]> => {
+  try {
+    return await ChatToolRequest.getTools()
+  } catch {
+    return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+  }
+>>>>>>> origin/main
 }

@@ -106,7 +106,7 @@ export const getAiResponse = async ({
   streamingEnabled = true,
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
-  useChatToolWorker = false,
+  useChatToolWorker = true,
   useMockApi,
   userText,
   webSearchEnabled = false,
@@ -189,7 +189,11 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
+<<<<<<< HEAD
             getBasicChatTools(questionToolEnabled),
+=======
+            await getBasicChatTools(),
+>>>>>>> origin/main
             webSearchEnabled,
             previousResponseId,
           ),
