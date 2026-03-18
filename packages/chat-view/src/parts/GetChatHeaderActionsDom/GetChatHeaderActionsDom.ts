@@ -15,21 +15,21 @@ export const getChatHeaderActionsDom = (
   const isSigningIn = authStatus === 'signing-in'
   const authAction =
     authEnabled && authStatus !== 'signed-in'
-      ? {
+      ? ({
           disabled: isSigningIn,
           icon: 'MaskIcon MaskIconAccount',
           name: InputName.Login,
           onClick: DomEventListenerFunctions.HandleClick,
           title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
-        }
+        } as const)
       : authEnabled
-        ? {
+        ? ({
             disabled: false,
             icon: 'MaskIcon MaskIconSignOut',
             name: InputName.Logout,
             onClick: DomEventListenerFunctions.HandleClick,
             title: Strings.logoutFromBackend(),
-          }
+          } as const)
         : undefined
   const items = [
     {
