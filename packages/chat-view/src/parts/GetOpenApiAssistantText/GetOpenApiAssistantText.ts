@@ -757,6 +757,7 @@ export const getOpenApiAssistantText = async (
     onEventStreamFinished,
     onTextChunk,
     onToolCallsChunk,
+    questionToolEnabled = false,
     stream,
     useChatNetworkWorkerForRequests = false,
     useChatToolWorker = false,
@@ -766,7 +767,7 @@ export const getOpenApiAssistantText = async (
     content: message.text,
     role: message.role,
   }))
-  const tools = getBasicChatTools()
+  const tools = getBasicChatTools(questionToolEnabled)
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {

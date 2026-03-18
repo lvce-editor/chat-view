@@ -113,6 +113,42 @@ const getRenderHtmlTool = (): ChatTool => {
   }
 }
 
-export const getBasicChatTools = (): readonly ChatTool[] => {
-  return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+const getAskQuestionTool = (): ChatTool => {
+  return {
+    function: {
+      description:
+        'Ask the user a multiple-choice question in the chat UI. Use this when you need a user decision before continuing. Provide short answer options.',
+      name: 'ask_question',
+      parameters: {
+        additionalProperties: false,
+        properties: {
+          answers: {
+            description: 'List of answer options shown to the user.',
+            items: {
+              type: 'string',
+            },
+            type: 'array',
+          },
+          question: {
+            description: 'The question text shown to the user.',
+            type: 'string',
+          },
+        },
+        required: ['question', 'answers'],
+        type: 'object',
+      },
+    },
+    type: 'function',
+  }
+}
+
+export const getBasicChatTools = (questionToolEnabled = false): readonly ChatTool[] => {
+  return [
+    getReadFileTool(),
+    getWriteFileTool(),
+    getListFilesTool(),
+    getGetWorkspaceUriTool(),
+    getRenderHtmlTool(),
+    ...(questionToolEnabled ? [getAskQuestionTool()] : []),
+  ]
 }

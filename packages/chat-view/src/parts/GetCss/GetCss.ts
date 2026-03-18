@@ -272,6 +272,29 @@ export const getCss = (
 .TokenProperty {
   color: var(--ColorChartsOrange, #ef9f76);
 }
+
+.ChatToolCallQuestionText {
+  margin-bottom: 6px;
+}
+
+.ChatToolCallQuestionOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ChatToolCallQuestionOption {
+  background: color-mix(in srgb, var(--ColorBadgeBackground, #2f3640) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 70%, transparent);
+  border-radius: 999px;
+  color: var(--ColorForeground, #d5dbe3);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 `
 
   if (!renderHtmlCss.trim()) {

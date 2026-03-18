@@ -53,6 +53,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     openRouterApiKey,
     passIncludeObfuscation,
     platform,
+    questionToolEnabled,
     selectedModelId,
     selectedSessionId,
     sessions,
@@ -231,6 +232,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     openRouterApiKey,
     passIncludeObfuscation,
     platform,
+    ...(typeof questionToolEnabled === 'boolean'
+      ? {
+          questionToolEnabled,
+        }
+      : {}),
     selectedModelId,
     streamingEnabled,
     useChatCoordinatorWorker,

@@ -16,6 +16,12 @@ test('getBasicChatTools should return read, write, list and workspace uri tool d
   expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri', 'render_html'])
 })
 
+test('getBasicChatTools should include ask_question tool when enabled', () => {
+  const tools = getBasicChatTools(true)
+  const names = tools.map((tool) => tool.function.name)
+  expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri', 'render_html', 'ask_question'])
+})
+
 test('executeChatTool should execute read_file tool', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'FileSystem.readFile': async () => 'hello world',
@@ -95,6 +101,16 @@ test('executeChatTool should execute render_html tool', async () => {
     html: '<div class="card">weather</div>',
     ok: true,
     title: 'Weather Card',
+  })
+})
+
+test('executeChatTool should execute ask_question tool', async () => {
+  const result = await executeChatTool('ask_question', JSON.stringify({ answers: ['A', 'B'], question: 'Pick one?' }), options)
+
+  expect(JSON.parse(result)).toEqual({
+    answers: ['A', 'B'],
+    ok: true,
+    question: 'Pick one?',
   })
 })
 

@@ -124,3 +124,52 @@ test('getToolCallDom should not display empty object arguments', () => {
     text: 'unknown_tool',
   })
 })
+
+test('getToolCallDom should render ask_question tool calls', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      answers: ['Option A', 'Option B'],
+      question: 'Which option?',
+    }),
+    name: 'ask_question',
+  })
+
+  expect(result).toHaveLength(8)
+  expect(result[2]).toMatchObject({
+    text: 'ask_question: Which option?',
+  })
+  expect(result[5]).toMatchObject({
+    text: 'Option A',
+  })
+  expect(result[7]).toMatchObject({
+    text: 'Option B',
+  })
+})
+
+test('getToolCallDom should render ask_question with empty question', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      answers: ['A'],
+      question: '',
+    }),
+    name: 'ask_question',
+  })
+
+  expect(result[2]).toMatchObject({
+    text: 'ask_question: (empty question)',
+  })
+})
+
+test('getToolCallDom should render ask_question with no answers', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      answers: [],
+      question: 'No answers?',
+    }),
+    name: 'ask_question',
+  })
+
+  expect(result[5]).toMatchObject({
+    text: '(no answers)',
+  })
+})
