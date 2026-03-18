@@ -1,5 +1,6 @@
 import type { ExecuteToolOptions } from '../Types/Types.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
+import { executeAskQuestionTool } from '../ExecuteAskQuestionTool/ExecuteAskQuestionTool.ts'
 import { executeGetWorkspaceUriTool } from '../ExecuteGetWorkspaceUriTool/ExecuteGetWorkspaceUriTool.ts'
 import { executeListFilesTool } from '../ExecuteListFilesTool/ExecuteListFilesTool.ts'
 import { executeReadFileTool } from '../ExecuteReadFileTool/ExecuteReadFileTool.ts'
@@ -33,6 +34,10 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
 
   if (name === 'render_html') {
     return executeRenderHtmlTool(args, options)
+  }
+
+  if (name === 'ask_question') {
+    return executeAskQuestionTool(args)
   }
 
   return JSON.stringify({ error: `Unknown tool: ${name}` })

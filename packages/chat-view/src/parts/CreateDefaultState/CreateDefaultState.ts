@@ -69,6 +69,7 @@ export const createDefaultState = (): ChatState => {
         uri: '',
       },
     ],
+    questionToolEnabled: false,
     renamingSessionId: '',
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,

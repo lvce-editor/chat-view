@@ -189,12 +189,13 @@ export const getOpenRouterAssistantText = async (
   platform: number,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
+  questionToolEnabled = false,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const completionMessages: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
   }))
-  const tools = await getBasicChatTools()
+  const tools = await getBasicChatTools(questionToolEnabled)
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
     let parsed: unknown

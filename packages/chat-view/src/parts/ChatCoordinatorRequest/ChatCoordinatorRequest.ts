@@ -15,6 +15,7 @@ export interface GetAiResponseRequestOptions {
   readonly openRouterApiKey: string
   readonly passIncludeObfuscation?: boolean
   readonly platform: number
+  readonly questionToolEnabled?: boolean
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
   readonly useChatNetworkWorkerForRequests?: boolean

@@ -4,6 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getToolCallArgumentPreview } from '../GetToolCallArgumentPreview/GetToolCallArgumentPreview.ts'
+import { getToolCallAskQuestionVirtualDom } from '../GetToolCallAskQuestionVirtualDom/GetToolCallAskQuestionVirtualDom.ts'
 import { getToolCallReadFileVirtualDom } from '../GetToolCallReadFileVirtualDom/GetToolCallReadFileVirtualDom.ts'
 import { getToolCallRenderHtmlVirtualDom } from '../GetToolCallRenderHtmlVirtualDom/GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
@@ -73,6 +74,13 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
 
   if (toolCall.name === 'render_html') {
     const virtualDom = getToolCallRenderHtmlVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'ask_question') {
+    const virtualDom = getToolCallAskQuestionVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }

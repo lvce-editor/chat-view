@@ -66,6 +66,7 @@ export interface ChatState {
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
+  readonly questionToolEnabled?: boolean
   readonly renamingSessionId: string
   readonly selectedModelId: string
   readonly selectedProjectId: string

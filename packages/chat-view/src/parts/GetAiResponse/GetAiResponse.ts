@@ -101,6 +101,7 @@ export const getAiResponse = async ({
   openRouterApiKey,
   passIncludeObfuscation = false,
   platform,
+  questionToolEnabled = false,
   selectedModelId,
   streamingEnabled = true,
   useChatCoordinatorWorker = false,
@@ -130,6 +131,7 @@ export const getAiResponse = async ({
         openRouterApiKey,
         passIncludeObfuscation,
         platform,
+        questionToolEnabled,
         selectedModelId,
         streamingEnabled,
         useChatNetworkWorkerForRequests,
@@ -187,7 +189,7 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
-            await getBasicChatTools(),
+            await getBasicChatTools(questionToolEnabled),
             webSearchEnabled,
             previousResponseId,
           ),
@@ -245,6 +247,7 @@ export const getAiResponse = async ({
                 onToolCallsChunk,
               }
             : {}),
+          questionToolEnabled,
           stream: streamingEnabled,
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
@@ -288,6 +291,7 @@ export const getAiResponse = async ({
         platform,
         useChatNetworkWorkerForRequests,
         useChatToolWorker,
+        questionToolEnabled,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result
