@@ -220,3 +220,15 @@ test('getToolCallDom should render write_file as filename with line count badges
   })
   expect(result.find((node) => node.text === '"const value = 2\\n"')).toBeUndefined()
 })
+
+test('getToolCallDom should show write_file in progress for incomplete json arguments', () => {
+  const result = getToolCallDom({
+    arguments: '{"path":"src/main.ts","content":"const value',
+    name: 'write_file',
+  })
+
+  expect(result).toHaveLength(2)
+  expect(result[1]).toMatchObject({
+    text: 'write_file (in progress)',
+  })
+})
