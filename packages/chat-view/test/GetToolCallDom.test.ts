@@ -232,3 +232,38 @@ test('getToolCallDom should show write_file in progress for incomplete json argu
     text: 'write_file (in progress)',
   })
 })
+
+test('getToolCallDom should render edit_file as filename with uri title', () => {
+  const uri = 'file:///workspace/src/main.ts'
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      newString: 'const value = 2',
+      oldString: 'const value = 1',
+      uri,
+    }),
+    name: 'edit_file',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(5)
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.ChatOrderedListItem,
+    title: uri,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'edit_file ',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallReadFileLink,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    title: uri,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[4]).toMatchObject({
+    text: 'main.ts',
+  })
+})

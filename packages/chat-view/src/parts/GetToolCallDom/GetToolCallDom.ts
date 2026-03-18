@@ -150,6 +150,42 @@ const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly Virtua
   ]
 }
 
+const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
+  const target = getReadFileTarget(toolCall.arguments)
+  if (!target) {
+    return []
+  }
+  const fileName = getFileNameFromUri(target.title)
+  const fileNameClickableProps = target.clickableUri
+    ? {
+        'data-uri': target.clickableUri,
+        onClick: DomEventListenerFunctions.HandleClickReadFile,
+      }
+    : {}
+  return [
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: target.title,
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 0,
+      className: ClassNames.FileIcon,
+      type: VirtualDomElements.Div,
+    },
+    text('edit_file '),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      title: target.clickableUri,
+      ...fileNameClickableProps,
+      type: VirtualDomElements.Span,
+    },
+    text(fileName),
+  ]
+}
+
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'getWorkspaceUri') {
     const virtualDom = getToolCallGetWorkspaceUriVirtualDom(toolCall)
@@ -167,6 +203,13 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
 
   if (toolCall.name === 'write_file') {
     const virtualDom = getToolCallWriteFileVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'edit_file') {
+    const virtualDom = getToolCallEditFileVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }
