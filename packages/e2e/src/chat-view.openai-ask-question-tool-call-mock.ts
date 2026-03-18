@@ -1,4 +1,3 @@
- 
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-ask-question-tool-call-mock'

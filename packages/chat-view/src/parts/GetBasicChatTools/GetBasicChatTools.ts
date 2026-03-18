@@ -148,13 +148,14 @@ const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boole
   if (!questionToolEnabled) {
     return tools
   }
-  if (tools.some((tool) => tool.function.name === 'ask_question')) {
-    return tools
+  for (const tool of tools) {
+    if (tool.function.name === 'ask_question') {
+      return tools
+    }
   }
   return [...tools, getAskQuestionTool()]
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getBasicChatTools = async (questionToolEnabled = false): Promise<readonly ChatTool[]> => {
   const fallbackTools = [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
   try {
