@@ -26,10 +26,7 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
   return parsedMessages
 }
 
-const getSessionsWithQueuedMessages = (
-  sessions: readonly ChatSession[],
-  queuedMessages: readonly ChatQueuedMessage[],
-): readonly ChatSession[] => {
+const getSessionsWithQueuedMessages = (sessions: readonly ChatSession[], queuedMessages: readonly ChatQueuedMessage[]): readonly ChatSession[] => {
   if (queuedMessages.length === 0) {
     return sessions
   }
