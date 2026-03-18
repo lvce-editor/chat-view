@@ -1,8 +1,8 @@
+import type { ChatQueuedMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
-import type { ChatQueuedMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 
@@ -68,15 +68,15 @@ export interface ChatState {
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
-  readonly queuedMessages: readonly ChatQueuedMessage[]
   readonly questionToolEnabled?: boolean
+  readonly queuedMessages: readonly ChatQueuedMessage[]
   readonly renamingSessionId: string
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
-  readonly submitInProgress: boolean
   readonly streamingEnabled: boolean
+  readonly submitInProgress: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number

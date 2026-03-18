@@ -2,9 +2,9 @@
 import { beforeEach, expect, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { openApiApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
-import { openApiApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 
 beforeEach(() => {
   resetChatSessionStorage()
