@@ -35,6 +35,85 @@ interface ParsedInlineToken {
   readonly node: MessageInlineNode
 }
 
+const isOpenBracket = (value: string): boolean => {
+  return value === '(' || value === '[' || value === '{'
+}
+
+const isCloseBracket = (value: string): boolean => {
+  return value === ')' || value === ']' || value === '}'
+}
+
+const findRawUrlEnd = (value: string, start: number): number => {
+  let index = start
+  while (index < value.length) {
+    const current = value[index]
+    if (
+      current === ' ' ||
+      current === '\n' ||
+      current === '\r' ||
+      current === '\t' ||
+      current === '"' ||
+      current === "'" ||
+      current === '`' ||
+      current === '<' ||
+      current === '>'
+    ) {
+      break
+    }
+    index++
+  }
+  return index
+}
+
+const trimRawUrlEnd = (url: string): string => {
+  let end = url.length
+  while (end > 0) {
+    const current = url[end - 1]
+    if (current === '.' || current === ',' || current === ':' || current === ';' || current === '!' || current === '?') {
+      end--
+      continue
+    }
+    if (isCloseBracket(current)) {
+      const inner = url.slice(0, end - 1)
+      let openCount = 0
+      let closeCount = 0
+      for (let i = 0; i < inner.length; i++) {
+        if (isOpenBracket(inner[i])) {
+          openCount++
+        } else if (isCloseBracket(inner[i])) {
+          closeCount++
+        }
+      }
+      if (closeCount >= openCount) {
+        end--
+        continue
+      }
+    }
+    break
+  }
+  return url.slice(0, end)
+}
+
+const parseRawLinkToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (!value.startsWith('https://', start) && !value.startsWith('http://', start)) {
+    return undefined
+  }
+  const end = findRawUrlEnd(value, start)
+  const rawUrl = value.slice(start, end)
+  const href = trimRawUrlEnd(rawUrl)
+  if (!href) {
+    return undefined
+  }
+  return {
+    length: href.length,
+    node: {
+      href: sanitizeLinkUrl(href),
+      text: href,
+      type: 'link',
+    },
+  }
+}
+
 const parseLinkToken = (value: string, start: number): ParsedInlineToken | undefined => {
   if (value[start] !== '[') {
     return undefined
@@ -275,6 +354,7 @@ const parseInlineToken = (value: string, start: number): ParsedInlineToken | und
   return (
     parseImageToken(value, start) ||
     parseLinkToken(value, start) ||
+    parseRawLinkToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseLinkToken(value, start) ||

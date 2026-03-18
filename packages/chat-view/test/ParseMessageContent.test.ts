@@ -257,6 +257,31 @@ test('parseMessageContent should parse markdown links with parentheses in urls',
   ])
 })
 
+test('parseMessageContent should parse raw https urls followed by quote and parenthesis', () => {
+  const result = ParseMessageContent.parseMessageContent('Service notice: https://www.protezionecivile.gov.it")BE AWARE')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Service notice: ',
+          type: 'text',
+        },
+        {
+          href: 'https://www.protezionecivile.gov.it',
+          text: 'https://www.protezionecivile.gov.it',
+          type: 'link',
+        },
+        {
+          text: '")BE AWARE',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown images', () => {
   const result = ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
 
