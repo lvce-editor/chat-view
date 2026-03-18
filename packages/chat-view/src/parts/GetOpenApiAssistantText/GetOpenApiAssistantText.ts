@@ -759,14 +759,14 @@ export const getOpenApiAssistantText = async (
     onToolCallsChunk,
     stream,
     useChatNetworkWorkerForRequests = false,
-    useChatToolWorker = false,
+    useChatToolWorker = true,
     webSearchEnabled = false,
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
     role: message.role,
   }))
-  const tools = getBasicChatTools()
+  const tools = await getBasicChatTools()
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {

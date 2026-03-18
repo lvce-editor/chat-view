@@ -8,12 +8,34 @@ const options = {
   platform: 0,
 }
 
-test('getBasicChatTools should return read, write, list and workspace uri tool definitions', () => {
-  const tools = getBasicChatTools()
+test('getBasicChatTools should load tools from chat tool worker', async () => {
+  using mockRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {
+              uri: {
+                type: 'string',
+              },
+            },
+            required: ['uri'],
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  const tools = await getBasicChatTools()
 
   const names = tools.map((tool) => tool.function.name)
 
-  expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri', 'render_html'])
+  expect(names).toEqual(['read_file'])
+  expect(mockRpc.invocations).toEqual([['ChatTool.getTools']])
 })
 
 test('executeChatTool should execute read_file tool', async () => {

@@ -1,4 +1,5 @@
 import type { ChatTool } from '../Types/Types.ts'
+import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 
 const getReadFileTool = (): ChatTool => {
   return {
@@ -113,6 +114,10 @@ const getRenderHtmlTool = (): ChatTool => {
   }
 }
 
-export const getBasicChatTools = (): readonly ChatTool[] => {
-  return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+export const getBasicChatTools = async (): Promise<readonly ChatTool[]> => {
+  try {
+    return await ChatToolRequest.getTools()
+  } catch {
+    return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+  }
 }
