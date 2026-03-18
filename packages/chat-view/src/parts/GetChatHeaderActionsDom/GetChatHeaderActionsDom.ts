@@ -56,13 +56,7 @@ export const getChatHeaderActionsDom = (
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
-    ...(authAction
-      ? [
-          {
-            ...authAction,
-          },
-        ]
-      : []),
+    ...(authAction ? [authAction] : []),
     {
       icon: 'MaskIcon MaskIconClose',
       name: InputName.CloseChat,

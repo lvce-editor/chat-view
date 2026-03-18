@@ -52,10 +52,10 @@ export const loadPreferences = async (): Promise<{
     voiceDictationEnabled,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
-    loadAuthEnabled(),
-    loadBackendUrl(),
     loadBackendAccessToken(),
+    loadAuthEnabled(),
     loadBackendRefreshToken(),
+    loadBackendUrl(),
     loadComposerDropEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
