@@ -295,6 +295,10 @@ export const getCss = (
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.MessageQueued {
+  opacity: 0.6;
+}
 `
 
   if (!renderHtmlCss.trim()) {

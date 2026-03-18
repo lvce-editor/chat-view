@@ -22,6 +22,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     openRouterApiKeyInput,
     openRouterApiKeyState,
     parsedMessages,
+    queuedMessages,
     projectExpandedIds,
     projectListScrollTop,
     projects,
@@ -71,6 +72,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     authEnabled,
     authStatus,
     authErrorMessage,
+    queuedMessages,
   )
   return [ViewletCommand.SetDom2, uid, dom]
 }

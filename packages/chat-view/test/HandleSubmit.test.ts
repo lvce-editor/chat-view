@@ -4,6 +4,7 @@ import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-
 import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
+import { openApiApiKeyRequiredMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
 
 beforeEach(() => {
   resetChatSessionStorage()
@@ -655,4 +656,92 @@ test('handleSubmit should generate ai session title for new session when enabled
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('handleSubmit should queue message while a request is in progress', async () => {
+  const mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'queued message',
+    submitInProgress: true,
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.composerValue).toBe('')
+  expect(result.queuedMessages).toHaveLength(1)
+  expect(result.queuedMessages[0]).toMatchObject({
+    queued: true,
+    role: 'user',
+    sessionId: state.selectedSessionId,
+    text: 'queued message',
+  })
+  expect(result.sessions[0].messages).toHaveLength(0)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleSubmit should drain queued messages after current submit completes', async () => {
+  const mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'first message',
+    mockAiResponseDelay: 0,
+    queuedMessages: [
+      {
+        id: 'queued-1',
+        queued: true as const,
+        role: 'user' as const,
+        sessionId: 'session-1',
+        text: 'second message',
+        time: '10:01',
+      },
+    ],
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.queuedMessages).toEqual([])
+  expect(result.sessions[0].messages).toHaveLength(4)
+  expect(result.sessions[0].messages.map((message) => message.text)).toEqual([
+    'first message',
+    'Mock AI response: I received "first message".',
+    'second message',
+    'Mock AI response: I received "second message".',
+  ])
+  expect(result.submitInProgress).toBe(false)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender']])
+})
+
+test('handleSubmit should clear queued messages when active submit returns missing api key', async () => {
+  const mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'first message',
+    models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+    openApiApiKey: '',
+    queuedMessages: [
+      {
+        id: 'queued-1',
+        queued: true as const,
+        role: 'user' as const,
+        sessionId: 'session-1',
+        text: 'second message',
+        time: '10:01',
+      },
+    ],
+    selectedModelId: 'openapi/gpt-4o-mini',
+    streamingEnabled: false,
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.queuedMessages).toEqual([])
+  expect(result.sessions[0].messages).toHaveLength(2)
+  expect(result.sessions[0].messages[0].text).toBe('first message')
+  expect(result.sessions[0].messages[1].text).toBe(openApiApiKeyRequiredMessage)
+  expect(result.sessions[0].messages.find((message) => message.text === 'second message')).toBeUndefined()
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })

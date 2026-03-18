@@ -1,5 +1,5 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
+import type { ChatMessage, ChatModel, ChatQueuedMessage, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -38,6 +38,7 @@ export const getChatModeChatFocusVirtualDom = (
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
   authErrorMessage = '',
+  queuedMessages: readonly ChatQueuedMessage[] = [],
 ): readonly VirtualDomNode[] => {
   void authEnabled
   void authStatus
@@ -57,6 +58,7 @@ export const getChatModeChatFocusVirtualDom = (
     ...getMessagesDom(
       messages,
       parsedMessages,
+      queuedMessages.filter((message) => message.sessionId === selectedSessionId),
       openRouterApiKeyInput,
       openApiApiKeyInput,
       openRouterApiKeyState,

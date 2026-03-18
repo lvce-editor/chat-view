@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { ChatMessage, ChatQueuedMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -22,7 +22,13 @@ import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSession
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { openApiApiKeyRequiredMessage, openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
+
+interface SubmitResult {
+  readonly state: ChatState
+  readonly stopQueue: boolean
+}
 
 const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   if (!state.messagesAutoScrollEnabled) {
@@ -34,14 +40,54 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   }
 }
 
-export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
+const hasInProgressRequest = (state: ChatState): boolean => {
+  if (state.submitInProgress) {
+    return true
+  }
+  return state.sessions.some((session) => session.messages.some((message) => message.inProgress))
+}
+
+const shouldStopQueue = (assistantText: string): boolean => {
+  return assistantText === openApiApiKeyRequiredMessage || assistantText === openRouterApiKeyRequiredMessage
+}
+
+const createQueuedMessage = (userText: string, sessionId: string): ChatQueuedMessage => {
+  return {
+    id: crypto.randomUUID(),
+    queued: true,
+    role: 'user',
+    sessionId,
+    text: userText,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
+}
+
+const enqueueMessage = async (state: ChatState, userText: string): Promise<ChatState> => {
+  const queuedMessage = createQueuedMessage(userText, state.selectedSessionId)
+  const parsedMessages = await parseAndStoreMessageContent(state.parsedMessages, queuedMessage)
+  const queuedState = withUpdatedMessageScrollTop(
+    FocusInput.focusInput({
+      ...state,
+      composerHeight: getMinComposerHeightForState(state),
+      composerValue: '',
+      inputSource: 'script',
+      parsedMessages,
+      queuedMessages: [...state.queuedMessages, queuedMessage],
+    }),
+  )
+  set(state.uid, state, queuedState)
+  // @ts-ignore
+  await RendererWorker.invoke('Chat.rerender')
+  return queuedState
+}
+
+const submitSingle = async (state: ChatState, userText: string): Promise<SubmitResult> => {
   const {
     aiSessionTitleGenerationEnabled,
     assetDir,
     authAccessToken,
     authEnabled,
     backendUrl,
-    composerValue,
     emitStreamingFunctionCallEvents,
     mockAiResponseDelay,
     mockApiCommandId,
@@ -65,14 +111,13 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     viewMode,
     webSearchEnabled,
   } = state
-  const userText = composerValue.trim()
-  if (!userText) {
-    return state
-  }
 
   const slashCommand = getSlashCommand(userText)
   if (slashCommand) {
-    return executeSlashCommand(state, slashCommand)
+    return {
+      state: await executeSlashCommand(state, slashCommand),
+      stopQueue: false,
+    }
   }
 
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -136,6 +181,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         parsedMessages,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, newSession],
+        submitInProgress: true,
         viewMode: 'detail',
       }),
     )
@@ -164,6 +210,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         nextMessageId: nextMessageId + 1,
         parsedMessages,
         sessions: updatedSessions,
+        submitInProgress: true,
       }),
     )
   }
@@ -278,12 +325,58 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   if (selectedSession) {
     await saveChatSession(selectedSession)
   }
-  return withUpdatedMessageScrollTop(
-    FocusInput.focusInput({
-      ...latestState,
-      nextMessageId: latestState.nextMessageId + 1,
-      parsedMessages: finalParsedMessages,
-      sessions: updatedSessions,
-    }),
-  )
+  return {
+    state: withUpdatedMessageScrollTop(
+      FocusInput.focusInput({
+        ...latestState,
+        nextMessageId: latestState.nextMessageId + 1,
+        parsedMessages: finalParsedMessages,
+        sessions: updatedSessions,
+        submitInProgress: false,
+      }),
+    ),
+    stopQueue: shouldStopQueue(assistantMessage.text),
+  }
+}
+
+const drainQueue = async (state: ChatState): Promise<ChatState> => {
+  let currentState = state
+  while (currentState.queuedMessages.length > 0) {
+    const nextQueued = currentState.queuedMessages[0]
+    const queueState: ChatState = {
+      ...currentState,
+      queuedMessages: currentState.queuedMessages.slice(1),
+      selectedSessionId: nextQueued.sessionId,
+      viewMode: 'detail',
+    }
+    const result = await submitSingle(queueState, nextQueued.text)
+    if (result.stopQueue) {
+      return {
+        ...result.state,
+        queuedMessages: [],
+      }
+    }
+    currentState = result.state
+  }
+  return currentState
+}
+
+export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
+  const userText = state.composerValue.trim()
+  if (!userText) {
+    return state
+  }
+  if (hasInProgressRequest(state)) {
+    return enqueueMessage(state, userText)
+  }
+  const result = await submitSingle(state, userText)
+  if (result.stopQueue || result.state.queuedMessages.length === 0) {
+    return result.stopQueue
+      ? {
+          ...result.state,
+          queuedMessages: [],
+        }
+      : result.state
+  }
+  return drainQueue(result.state)
 }

@@ -1,5 +1,5 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage, ChatQueuedMessage } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -52,16 +52,17 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
 export const getMessagesDom = (
   messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
+  queuedMessages: readonly ChatQueuedMessage[] = [],
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   messagesScrollTop = 0,
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
-  if (messages.length === 0) {
+  if (messages.length === 0 && queuedMessages.length === 0) {
     return GetEmptyMessagesDom.getEmptyMessagesDom()
   }
-  const displayMessages = getDisplayMessages(messages, parsedMessages)
+  const displayMessages = getDisplayMessages([...messages, ...queuedMessages], parsedMessages)
   return [
     {
       childCount: displayMessages.length,

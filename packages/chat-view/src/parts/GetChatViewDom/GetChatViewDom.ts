@@ -1,5 +1,5 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
+import type { ChatModel, ChatQueuedMessage, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
@@ -24,6 +24,19 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
     }
   }
   return parsedMessages
+}
+
+const getSessionsWithQueuedMessages = (
+  sessions: readonly ChatSession[],
+  queuedMessages: readonly ChatQueuedMessage[],
+): readonly ChatSession[] => {
+  if (queuedMessages.length === 0) {
+    return sessions
+  }
+  return sessions.map((session) => ({
+    ...session,
+    messages: [...session.messages, ...queuedMessages.filter((message) => message.sessionId === session.id)],
+  }))
 }
 
 export const getChatVirtualDom = (
@@ -57,8 +70,9 @@ export const getChatVirtualDom = (
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
   authErrorMessage = '',
+  queuedMessages: readonly ChatQueuedMessage[] = [],
 ): readonly VirtualDomNode[] => {
-  const effectiveParsedMessages = parsedMessages || getFallbackParsedMessages(sessions)
+  const effectiveParsedMessages = parsedMessages || getFallbackParsedMessages(getSessionsWithQueuedMessages(sessions, queuedMessages))
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom(
@@ -90,6 +104,7 @@ export const getChatVirtualDom = (
         authEnabled,
         authStatus,
         authErrorMessage,
+        queuedMessages,
       )
     case 'detail':
       return getChatModeDetailVirtualDom(
@@ -117,6 +132,7 @@ export const getChatVirtualDom = (
         authEnabled,
         authStatus,
         authErrorMessage,
+        queuedMessages,
       )
     case 'list':
       return getChatModeListVirtualDom(

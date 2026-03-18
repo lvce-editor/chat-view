@@ -13,8 +13,15 @@ export interface ChatToolCall {
 export interface ChatMessage {
   readonly id: string
   readonly inProgress?: boolean
+  readonly queued?: boolean
   readonly role: 'user' | 'assistant'
   readonly text: string
   readonly time: string
   readonly toolCalls?: readonly ChatToolCall[]
+}
+
+export interface ChatQueuedMessage extends ChatMessage {
+  readonly queued: true
+  readonly role: 'user'
+  readonly sessionId: string
 }

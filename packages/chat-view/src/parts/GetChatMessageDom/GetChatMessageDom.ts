@@ -24,6 +24,7 @@ export const getChatMessageDom = (
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
+  const queuedClassName = message.queued ? ClassNames.MessageQueued : ''
   const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
@@ -38,7 +39,7 @@ export const getChatMessageDom = (
   return [
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.Message, roleClassName),
+      className: mergeClassNames(ClassNames.Message, roleClassName, queuedClassName),
       type: VirtualDomElements.Div,
     },
     {
