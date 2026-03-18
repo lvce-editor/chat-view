@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getToolCallDom } from '../src/parts/GetToolCallDom/GetToolCallDom.ts'
 
 test('getToolCallDom should render render_html tool calls as native virtual dom previews', () => {
@@ -81,16 +82,33 @@ test('getToolCallDom should display getWorkspaceUri as get_workspace_uri', () =>
 })
 
 test('getToolCallDom should display getWorkspaceUri result value', () => {
+  const uri = 'file:///home/user/some-folder'
   const result = getToolCallDom({
     arguments: '{}',
     name: 'getWorkspaceUri',
-    result: 'file:///home/user/some-folder',
+    result: uri,
     status: 'success',
   })
 
-  expect(result).toHaveLength(2)
-  expect(result[1]).toMatchObject({
-    text: 'get_workspace_uri file:///home/user/some-folder',
+  expect(result).toHaveLength(5)
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.ChatOrderedListItem,
+    title: uri,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'get_workspace_uri ',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallReadFileLink,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[4]).toMatchObject({
+    text: 'some-folder',
   })
 })
 
