@@ -9,7 +9,7 @@ const toLines = (value: string): readonly string[] => {
     return []
   }
   const split = value.split('\n').map((line) => (line.endsWith('\r') ? line.slice(0, -1) : line))
-  if (split.length > 0 && split[split.length - 1] === '') {
+  if (split.length > 0 && split.at(-1) === '') {
     split.pop()
   }
   return split
