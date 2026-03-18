@@ -114,7 +114,6 @@ const getRenderHtmlTool = (): ChatTool => {
   }
 }
 
-<<<<<<< HEAD
 const getAskQuestionTool = (): ChatTool => {
   return {
     function: {
@@ -144,21 +143,23 @@ const getAskQuestionTool = (): ChatTool => {
   }
 }
 
-export const getBasicChatTools = (questionToolEnabled = false): readonly ChatTool[] => {
-  return [
-    getReadFileTool(),
-    getWriteFileTool(),
-    getListFilesTool(),
-    getGetWorkspaceUriTool(),
-    getRenderHtmlTool(),
-    ...(questionToolEnabled ? [getAskQuestionTool()] : []),
-  ]
-=======
-export const getBasicChatTools = async (): Promise<readonly ChatTool[]> => {
-  try {
-    return await ChatToolRequest.getTools()
-  } catch {
-    return [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boolean): readonly ChatTool[] => {
+  if (!questionToolEnabled) {
+    return tools
   }
->>>>>>> origin/main
+  if (tools.some((tool) => tool.function.name === 'ask_question')) {
+    return tools
+  }
+  return [...tools, getAskQuestionTool()]
+}
+
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+export const getBasicChatTools = async (questionToolEnabled = false): Promise<readonly ChatTool[]> => {
+  const fallbackTools = [getReadFileTool(), getWriteFileTool(), getListFilesTool(), getGetWorkspaceUriTool(), getRenderHtmlTool()]
+  try {
+    return withQuestionTool(await ChatToolRequest.getTools(), questionToolEnabled)
+  } catch {
+    return withQuestionTool(fallbackTools, questionToolEnabled)
+  }
 }

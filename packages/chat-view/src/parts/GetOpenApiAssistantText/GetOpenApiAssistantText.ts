@@ -767,11 +767,7 @@ export const getOpenApiAssistantText = async (
     content: message.text,
     role: message.role,
   }))
-<<<<<<< HEAD
-  const tools = getBasicChatTools(questionToolEnabled)
-=======
-  const tools = await getBasicChatTools()
->>>>>>> origin/main
+  const tools = await getBasicChatTools(questionToolEnabled)
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {

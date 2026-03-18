@@ -38,8 +38,8 @@ test('getBasicChatTools should load tools from chat tool worker', async () => {
   expect(mockRpc.invocations).toEqual([['ChatTool.getTools']])
 })
 
-test('getBasicChatTools should include ask_question tool when enabled', () => {
-  const tools = getBasicChatTools(true)
+test('getBasicChatTools should include ask_question tool when enabled', async () => {
+  const tools = await getBasicChatTools(true)
   const names = tools.map((tool) => tool.function.name)
   expect(names).toEqual(['read_file', 'write_file', 'list_files', 'getWorkspaceUri', 'render_html', 'ask_question'])
 })

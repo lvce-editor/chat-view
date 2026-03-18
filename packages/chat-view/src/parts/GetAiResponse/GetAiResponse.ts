@@ -189,11 +189,7 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
-<<<<<<< HEAD
-            getBasicChatTools(questionToolEnabled),
-=======
-            await getBasicChatTools(),
->>>>>>> origin/main
+            await getBasicChatTools(questionToolEnabled),
             webSearchEnabled,
             previousResponseId,
           ),
