@@ -21,3 +21,13 @@ test('handleClickReadFile should do nothing for empty uri', async () => {
 
   expect(mockRpc.invocations).toEqual([])
 })
+
+test('handleClickReadFile should normalize vscode-references uri before opening', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.openUri': async () => {},
+  })
+
+  await HandleClickReadFile.handleClickReadFile('vscode-references:///workspace/src/main.ts')
+
+  expect(mockRpc.invocations).toEqual([['Main.openUri', 'file:///workspace/src/main.ts']])
+})

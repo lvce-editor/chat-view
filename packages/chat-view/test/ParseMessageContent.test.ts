@@ -177,6 +177,7 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
     'Inline data: [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)',
     'Blob source: [blob](blob:https://example.com/abc-123)',
     'File ref: [index.ts](file:///workspace/src/index.ts)',
+    'VS Code ref: [main.ts](vscode-references:///workspace/src/main.ts)',
     'Allowed: [safe](https://example.com/docs)',
   ].join('\n')
 
@@ -219,6 +220,15 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
         {
           href: 'file:///workspace/src/index.ts',
           text: 'index.ts',
+          type: 'link',
+        },
+        {
+          text: '\nVS Code ref: ',
+          type: 'text',
+        },
+        {
+          href: 'vscode-references:///workspace/src/main.ts',
+          text: 'main.ts',
           type: 'link',
         },
         {

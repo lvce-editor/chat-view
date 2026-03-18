@@ -4,7 +4,7 @@ const getReadFileTool = (): ChatTool => {
   return {
     function: {
       description:
-        'Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI. When you reference files in your response, use markdown links like [index.ts](file:///workspace/src/index.ts).',
+        'Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI. When you reference files in your response, use markdown links like [index.ts](vscode-references:///workspace/src/index.ts).',
       name: 'read_file',
       parameters: {
         additionalProperties: false,

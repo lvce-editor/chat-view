@@ -16,7 +16,12 @@ const isAlphaNumeric = (value: string | undefined): boolean => {
 
 const sanitizeLinkUrl = (url: string): string => {
   const normalized = url.trim().toLowerCase()
-  if (normalized.startsWith('http://') || normalized.startsWith('https://') || normalized.startsWith('file://')) {
+  if (
+    normalized.startsWith('http://') ||
+    normalized.startsWith('https://') ||
+    normalized.startsWith('file://') ||
+    normalized.startsWith('vscode-references://')
+  ) {
     return url
   }
   return '#'
