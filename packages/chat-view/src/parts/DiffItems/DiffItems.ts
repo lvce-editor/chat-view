@@ -12,6 +12,21 @@ const isEqualProjectExpandedIds = (a: readonly string[], b: readonly string[]): 
   return true
 }
 
+const isEqualQueuedMessages = (a: ChatState['queuedMessages'], b: ChatState['queuedMessages']): boolean => {
+  if (a === b) {
+    return true
+  }
+  if (a.length !== b.length) {
+    return false
+  }
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) {
+      return false
+    }
+  }
+  return true
+}
+
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
     oldState.authEnabled === newState.authEnabled &&
@@ -23,6 +38,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.initial === newState.initial &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     oldState.projectListScrollTop === newState.projectListScrollTop &&
+    isEqualQueuedMessages(oldState.queuedMessages, newState.queuedMessages) &&
     oldState.renamingSessionId === newState.renamingSessionId &&
     oldState.selectedModelId === newState.selectedModelId &&
     oldState.selectedProjectId === newState.selectedProjectId &&
