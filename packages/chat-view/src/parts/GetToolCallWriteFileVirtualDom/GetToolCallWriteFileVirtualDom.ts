@@ -14,6 +14,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
   }
   const fileName = getFileNameFromUri(target.title)
   const statusLabel = getToolCallStatusLabel(toolCall)
+  const showDiffStats = toolCall.status !== 'error' && toolCall.status !== 'not-found'
   const { linesAdded, linesDeleted } = parseWriteFileLineCounts(toolCall.result)
   const fileNameClickableProps = target.clickableUri
     ? {
@@ -23,7 +24,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
     : {}
   return [
     {
-      childCount: statusLabel ? 6 : 5,
+      childCount: showDiffStats ? (statusLabel ? 6 : 5) : statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
       title: target.title,
       type: VirtualDomElements.Li,
@@ -46,18 +47,22 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
       type: VirtualDomElements.Span,
     },
     text(fileName),
-    {
-      childCount: 1,
-      className: ClassNames.Insertion,
-      type: VirtualDomElements.Span,
-    },
-    text(` +${linesAdded}`),
-    {
-      childCount: 1,
-      className: ClassNames.Deletion,
-      type: VirtualDomElements.Span,
-    },
-    text(` -${linesDeleted}`),
+    ...(showDiffStats
+      ? ([
+          {
+            childCount: 1,
+            className: ClassNames.Insertion,
+            type: VirtualDomElements.Span,
+          },
+          text(` +${linesAdded}`),
+          {
+            childCount: 1,
+            className: ClassNames.Deletion,
+            type: VirtualDomElements.Span,
+          },
+          text(` -${linesDeleted}`),
+        ] as const)
+      : []),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }

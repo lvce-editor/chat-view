@@ -425,6 +425,60 @@ test('getChatVirtualDOm should render close button in header actions', () => {
   })
 })
 
+test('getChatVirtualDOm should render search button in header actions when search is enabled', () => {
+  const result = renderChatView({
+    searchEnabled: true,
+  })
+  const searchButton = result.find((node) => node.name === 'toggle-search')
+  expect(searchButton).toBeDefined()
+  expect(searchButton).toMatchObject({
+    className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDOm should render search input below header when search field is visible', () => {
+  const result = renderChatView({
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'dummy',
+  })
+  const searchFieldContainer = result.find((node) => node.className === ClassNames.SearchFieldContainer)
+  const searchInput = result.find((node) => node.name === 'search')
+  expect(searchFieldContainer).toBeDefined()
+  expect(searchInput).toMatchObject({
+    inputType: 'search',
+    onInput: DomEventListenerFunctions.HandleSearchInput,
+    type: VirtualDomElements.Input,
+    value: 'dummy',
+  })
+})
+
+test('getChatVirtualDOm should filter chat list by search value when search enabled', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'alpha' },
+    { id: 'session-2', messages: [], title: 'beta' },
+    { id: 'session-3', messages: [], title: 'alphabet' },
+  ]
+  const result = renderChatView({
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'alpha',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const filteredSessionItems = result.filter((node) => node.className === ClassNames.ChatListItem)
+  expect(filteredSessionItems).toHaveLength(2)
+  const alphaLabel = result.find((node) => node.text === 'alpha')
+  const alphabetLabel = result.find((node) => node.text === 'alphabet')
+  const betaLabel = result.find((node) => node.text === 'beta')
+  expect(alphaLabel).toBeDefined()
+  expect(alphabetLabel).toBeDefined()
+  expect(betaLabel).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,
@@ -788,7 +842,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
@@ -815,8 +869,8 @@ test('getChatVirtualDOm should render disabled OpenRouter save button with Savin
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
     disabled: true,
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(savingText).toBeDefined()
@@ -854,7 +908,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({

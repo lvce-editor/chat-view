@@ -22,8 +22,11 @@ const dummySessions: readonly ChatSession[] = [
 export const setChatList = (state: ChatState): ChatState => {
   return {
     ...state,
+    searchEnabled: true,
+    searchFieldVisible: false,
+    searchValue: '',
     selectedSessionId: dummySessions[0].id,
     sessions: dummySessions,
-    viewMode: 'detail',
+    viewMode: 'list',
   }
 }

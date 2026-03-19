@@ -75,6 +75,9 @@ export interface ChatState {
   readonly questionToolEnabled?: boolean
   readonly renamingSessionId: string
   readonly runMode: RunMode
+  readonly searchEnabled: boolean
+  readonly searchFieldVisible: boolean
+  readonly searchValue: string
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string

@@ -12,7 +12,5 @@ export const getMissingOpenApiApiKeyDom = (): readonly VirtualDomNode[] => {
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonName: SaveOpenApiApiKey,
-    saveButtonType: 'submit',
-    useForm: true,
   })
 }
