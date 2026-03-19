@@ -1,16 +1,16 @@
 import { expect, test } from '@jest/globals'
 import * as CreateDefaultState from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import * as SetTodolistToolEnabled from '../src/parts/SetTodolistToolEnabled/SetTodolistToolEnabled.ts'
+import * as SetTodoListToolEnabled from '../src/parts/SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
 
-test('setTodolistToolEnabled should set todoListToolEnabled to true', () => {
+test('setTodoListToolEnabled should set todoListToolEnabled to true', () => {
   const state = CreateDefaultState.createDefaultState()
-  const result = SetTodolistToolEnabled.setTodolistToolEnabled(state, true)
+  const result = SetTodoListToolEnabled.setTodoListToolEnabled(state, true)
   expect(result.todoListToolEnabled).toBe(true)
 })
 
-test('setTodolistToolEnabled should set todoListToolEnabled to false', () => {
+test('setTodoListToolEnabled should set todoListToolEnabled to false', () => {
   const state = CreateDefaultState.createDefaultState()
-  const result = SetTodolistToolEnabled.setTodolistToolEnabled(
+  const result = SetTodoListToolEnabled.setTodoListToolEnabled(
     {
       ...state,
       todoListToolEnabled: true,

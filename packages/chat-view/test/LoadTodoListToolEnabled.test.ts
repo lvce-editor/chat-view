@@ -3,7 +3,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as LoadTodoListToolEnabled from '../src/parts/LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 
 test('loadTodoListToolEnabled should return stored boolean value', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.todoListToolEnabled') {
         return true
@@ -18,7 +18,7 @@ test('loadTodoListToolEnabled should return stored boolean value', async () => {
 })
 
 test('loadTodoListToolEnabled should return false when preference is not boolean', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => 'true',
   })
 
@@ -28,7 +28,7 @@ test('loadTodoListToolEnabled should return false when preference is not boolean
 })
 
 test('loadTodoListToolEnabled should return false on preference read error', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => {
       throw new Error('failed')
     },

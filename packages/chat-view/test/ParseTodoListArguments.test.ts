@@ -24,7 +24,11 @@ test('parseTodoListArguments should return empty array for invalid json', () => 
 
 test('parseTodoListArguments should filter invalid entries', () => {
   const rawArguments = JSON.stringify({
-    todos: [{ status: 'todo', text: 'Task 1' }, { status: 'unknown', text: 'Task 2' }, { status: 'completed', text: 1 }],
+    todos: [
+      { status: 'todo', text: 'Task 1' },
+      { status: 'unknown', text: 'Task 2' },
+      { status: 'completed', text: 1 },
+    ],
   })
   const result = ParseTodoListArguments.parseTodoListArguments(rawArguments)
   expect(result).toEqual([{ status: 'todo', text: 'Task 1' }])
