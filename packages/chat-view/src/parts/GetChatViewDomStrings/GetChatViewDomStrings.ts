@@ -108,6 +108,10 @@ export const saving = (): string => {
   return i18nString('Saving...')
 }
 
+export const working = (): string => {
+  return i18nString('Working')
+}
+
 export const getOpenRouterApiKey = (): string => {
   return i18nString('Get API Key')
 }
