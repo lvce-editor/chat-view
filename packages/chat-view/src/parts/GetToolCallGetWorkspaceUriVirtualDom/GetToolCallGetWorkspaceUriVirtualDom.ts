@@ -31,6 +31,11 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
       onClick: DomEventListenerFunctions.HandleClickReadFile,
       type: VirtualDomElements.Span,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      type: VirtualDomElements.Span,
+    },
     text(fileName),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
