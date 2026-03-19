@@ -318,7 +318,7 @@ test('handleClick should open OpenRouter API keys settings', async () => {
 })
 
 test('handleClick should open OpenRouter API keys website', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openExternal': async () => {},
   })
   const state: ChatState = createDefaultState()
