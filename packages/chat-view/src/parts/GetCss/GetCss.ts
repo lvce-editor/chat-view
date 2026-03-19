@@ -51,6 +51,7 @@ export const getCss = (
 
 .ChatHeader .Label {
   text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .Chat.ChatFocus .ProjectSidebar {
