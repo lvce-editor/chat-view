@@ -237,7 +237,9 @@ export const getCss = (
 .ChatList,
 .ChatListEmpty,
 .ChatMessages {
+  margin: 0;
   min-height: 0;
+  padding: 0;
 }
 
 .Chat.ChatFocus .ChatList,
