@@ -14,13 +14,13 @@ test('appendMessageToSelectedSession should append to selected session', () => {
   const sessions: readonly ChatSession[] = [
     {
       id: 'session-1',
-      title: 'one',
       messages: [],
+      title: 'one',
     },
     {
       id: 'session-2',
-      title: 'two',
       messages: [],
+      title: 'two',
     },
   ]
 
@@ -29,13 +29,13 @@ test('appendMessageToSelectedSession should append to selected session', () => {
   expect(result).toEqual([
     {
       id: 'session-1',
-      title: 'one',
       messages: [],
+      title: 'one',
     },
     {
       id: 'session-2',
-      title: 'two',
       messages: [message],
+      title: 'two',
     },
   ])
 })
@@ -44,8 +44,8 @@ test('appendMessageToSelectedSession should leave sessions unchanged when id is 
   const sessions: readonly ChatSession[] = [
     {
       id: 'session-1',
-      title: 'one',
       messages: [],
+      title: 'one',
     },
   ]
 
