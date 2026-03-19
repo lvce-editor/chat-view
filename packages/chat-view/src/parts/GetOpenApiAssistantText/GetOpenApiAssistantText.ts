@@ -13,6 +13,9 @@ import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
+const errorPrefixRegex = /^Error:\s*/
+const notFoundErrorRegex = /not[\s_-]?found|enoent/i
+
 const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
   return tools.map((tool) => {
     if (!tool || typeof tool !== 'object') {
@@ -101,7 +104,7 @@ const getStreamChunkText = (content: unknown): string => {
 }
 
 const getShortToolErrorMessage = (error: string): string => {
-  const trimmed = error.trim().replace(/^Error:\s*/, '')
+  const trimmed = error.trim().replace(errorPrefixRegex, '')
   const firstLine = trimmed.split('\n')[0]
   if (firstLine.length <= 80) {
     return firstLine
@@ -134,7 +137,7 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
   const rawStack = Reflect.get(parsed, 'errorStack') ?? Reflect.get(parsed, 'stack')
   const errorStack = typeof rawStack === 'string' && rawStack.trim() ? rawStack : undefined
   const errorMessage = getShortToolErrorMessage(rawError)
-  if (/not[\s_-]?found|enoent/i.test(errorMessage)) {
+  if (notFoundErrorRegex.test(errorMessage)) {
     return {
       ...(errorStack
         ? {
