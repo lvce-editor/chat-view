@@ -6,8 +6,8 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Chat.handleModelChange('test')
   await Chat.show()
+  await Chat.reset()
 
   // act
   const messages = Locator('.ChatMessages .Message')
