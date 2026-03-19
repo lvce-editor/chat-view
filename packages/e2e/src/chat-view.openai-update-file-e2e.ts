@@ -83,6 +83,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
+  await expect(messages.nth(0)).toHaveText('Please update index.html to say hello updated')
+  await expect(messages.nth(1)).toContainText('write_file index.html')
+  await expect(messages.nth(1)).toContainText('+1')
+  await expect(messages.nth(1)).toContainText('-1')
 
   // allow a short moment for the tool execution to complete and file to be written
   await new Promise((resolve) => setTimeout(resolve, 200))

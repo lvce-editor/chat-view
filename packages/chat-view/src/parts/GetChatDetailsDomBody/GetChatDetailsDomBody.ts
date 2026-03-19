@@ -1,5 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatSendAreaDom/GetChatSendAreaDom.ts'
 
@@ -12,6 +13,8 @@ export const getChatDetailsDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  showRunMode: boolean,
+  runMode: RunMode,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -25,6 +28,6 @@ export const getChatDetailsDom = (
       type: VirtualDomElements.Span,
     },
     text(selectedSessionTitle),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, showRunMode, runMode),
   ]
 }
