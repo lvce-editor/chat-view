@@ -1,8 +1,8 @@
 import type { ChatSession } from '../ChatState/ChatState.ts'
-import { copyParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import { mergeToolCalls } from '../MergeToolCalls/MergeToolCalls.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { mergeToolCalls } from '../MergeToolCalls/MergeToolCalls.ts'
+import { copyParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 export const updateMessageToolCallsInSelectedSession = (
   sessions: readonly ChatSession[],

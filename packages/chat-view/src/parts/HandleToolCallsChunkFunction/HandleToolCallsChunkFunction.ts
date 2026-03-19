@@ -1,9 +1,9 @@
 import type { HandleTextChunkState } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
+import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { getMessageById } from '../GetMessageById/GetMessageById.ts'
 import { getNextHandleTextChunkState } from '../GetNextHandleTextChunkState/GetNextHandleTextChunkState.ts'
 import { getSelectedSession } from '../GetSelectedSession/GetSelectedSession.ts'
 import { setAndRerenderHandleTextChunkState } from '../SetAndRerenderHandleTextChunkState/SetAndRerenderHandleTextChunkState.ts'
-import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
 
 export const handleToolCallsChunkFunction = async (

@@ -1,6 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 
 export const getNextHandleTextChunkState = (
   latestState: ChatState,

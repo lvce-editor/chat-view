@@ -1,6 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
 export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/HandleToolCallsChunkFunction.ts'
+export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
