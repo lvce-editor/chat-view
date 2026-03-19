@@ -27,6 +27,9 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
         time: '10:01',
       }
     },
+    [Symbol.dispose]: (): void => {
+      // noop
+    },
   }
   ChatCoordinatorWorker.set(mockRpc)
 

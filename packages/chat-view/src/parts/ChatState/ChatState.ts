@@ -14,7 +14,6 @@ export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
-  readonly chatStorageWorkerEnabled: boolean
   readonly addContextButtonEnabled: boolean
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
@@ -32,6 +31,7 @@ export interface ChatState {
   readonly chatSendAreaPaddingLeft: number
   readonly chatSendAreaPaddingRight: number
   readonly chatSendAreaPaddingTop: number
+  readonly chatStorageWorkerEnabled: boolean
   readonly composerDropActive: boolean
   readonly composerDropEnabled: boolean
   readonly composerFontFamily: string

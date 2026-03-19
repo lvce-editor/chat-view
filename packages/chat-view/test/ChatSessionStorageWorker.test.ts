@@ -1,5 +1,4 @@
 import { beforeEach, expect, test } from '@jest/globals'
-import * as ChatStorageWorker from '../src/parts/ChatStorageWorker/ChatStorageWorker.ts'
 import {
   appendChatViewEvent,
   clearChatSessions,
@@ -11,6 +10,7 @@ import {
   saveChatSession,
   setChatStorageWorkerEnabled,
 } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import * as ChatStorageWorker from '../src/parts/ChatStorageWorker/ChatStorageWorker.ts'
 
 beforeEach(() => {
   resetChatSessionStorage()
@@ -22,12 +22,12 @@ test('chat session storage should delegate to ChatStorageWorker when enabled', a
     invoke: async (method: string, ...params: readonly unknown[]): Promise<unknown> => {
       invocations.push([method, ...params])
       switch (method) {
-        case 'ChatStorage.listSessions':
-          return [{ id: 'worker-session', messages: [{ id: 'm1', role: 'user', text: 'hi', time: '10:00' }], title: 'From Worker' }]
-        case 'ChatStorage.getSession':
-          return { id: 'worker-session', messages: [{ id: 'm1', role: 'user', text: 'hi', time: '10:00' }], title: 'From Worker' }
         case 'ChatStorage.getEvents':
           return [{ sessionId: 'worker-session', timestamp: '2026-01-01T00:00:00.000Z', title: 'From Worker', type: 'chat-session-created' }]
+        case 'ChatStorage.getSession':
+          return { id: 'worker-session', messages: [{ id: 'm1', role: 'user', text: 'hi', time: '10:00' }], title: 'From Worker' }
+        case 'ChatStorage.listSessions':
+          return [{ id: 'worker-session', messages: [{ id: 'm1', role: 'user', text: 'hi', time: '10:00' }], title: 'From Worker' }]
         default:
           return undefined
       }

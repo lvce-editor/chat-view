@@ -11,7 +11,6 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   return {
-    chatStorageWorkerEnabled: false,
     addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
@@ -29,6 +28,7 @@ export const createDefaultState = (): ChatState => {
     chatSendAreaPaddingLeft: 8,
     chatSendAreaPaddingRight: 8,
     chatSendAreaPaddingTop: 10,
+    chatStorageWorkerEnabled: false,
     composerDropActive: false,
     composerDropEnabled: true,
     composerFontFamily: 'system-ui',
