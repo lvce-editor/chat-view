@@ -10,6 +10,7 @@ export const getChatHeaderActionsDom = (
   viewMode: ChatViewMode,
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  searchEnabled = false,
 ): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
   const isSigningIn = authStatus === 'signing-in'
@@ -38,6 +39,16 @@ export const getChatHeaderActionsDom = (
       onClick: DomEventListenerFunctions.HandleClick,
       title: toggleTitle,
     },
+    ...(searchEnabled
+      ? [
+          {
+            icon: 'MaskIcon MaskIconSearch',
+            name: InputName.ToggleSearch,
+            onClick: DomEventListenerFunctions.HandleClick,
+            title: Strings.search(),
+          } as const,
+        ]
+      : []),
     {
       icon: 'MaskIcon MaskIconDebugPause',
       name: InputName.SessionDebug,

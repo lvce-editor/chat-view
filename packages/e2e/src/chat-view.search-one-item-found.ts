@@ -1,0 +1,23 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
+export const name = 'chat-view.search-one-item-found'
+
+export const skip = 1
+
+export const test: Test = async ({ Command, expect, Locator }) => {
+  await Command.execute('Chat.setChatList', 1)
+  await Command.execute('Chat.setSearchEnabled', true)
+
+  const searchButton = Locator('.ChatHeader .IconButton[name="toggle-search"]')
+  await searchButton.click()
+
+  const searchInput = Locator('.ChatHeader .InputBox[name="search"]')
+  await expect(searchInput).toBeVisible()
+  await searchInput.type('Dummy Chat B')
+
+  const list = Locator('.ChatList .ChatListItem')
+  await expect(list).toHaveCount(1)
+
+  const labels = Locator('.ChatListItemLabel')
+  await expect(labels).toHaveText('Dummy Chat B')
+}

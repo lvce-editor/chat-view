@@ -11,6 +11,8 @@ test('saveState should persist global state without session payloads', () => {
     messagesScrollTop: 120,
     nextMessageId: 4,
     renamingSessionId: 'session-1',
+    searchFieldVisible: true,
+    searchValue: 'draft query',
     selectedModelId: 'codex-5.3',
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
@@ -24,6 +26,8 @@ test('saveState should persist global state without session payloads', () => {
   expect(result.selectedModelId).toBe('codex-5.3')
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.renamingSessionId).toBe('session-1')
+  expect(result.searchFieldVisible).toBe(true)
+  expect(result.searchValue).toBe('draft query')
   expect(result.viewMode).toBe('list')
   expect(result.chatListScrollTop).toBe(80)
   expect(result.messagesScrollTop).toBe(120)
