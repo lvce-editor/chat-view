@@ -25,6 +25,10 @@ export interface ChatState {
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
   readonly chatMessageLineHeight: number
+  readonly chatSendAreaPaddingBottom: number
+  readonly chatSendAreaPaddingLeft: number
+  readonly chatSendAreaPaddingRight: number
+  readonly chatSendAreaPaddingTop: number
   readonly composerDropActive: boolean
   readonly composerDropEnabled: boolean
   readonly composerFontFamily: string
@@ -73,6 +77,10 @@ export interface ChatState {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly streamingEnabled: boolean
+  readonly textAreaPaddingBottom: number
+  readonly textAreaPaddingLeft: number
+  readonly textAreaPaddingRight: number
+  readonly textAreaPaddingTop: number
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number
