@@ -2,10 +2,11 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.one-message'
 
-export const skip = 1
-
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
+  await Chat.handleModelChange('test')
   await Chat.show()
 
   // act
@@ -13,10 +14,6 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   for (let i = 0; i < 20; i++) {
     await Chat.handleInput('hello from e2e')
     await Chat.handleSubmit()
-    // const firstMessage = messages.nth(i * 2)
-    // await expect(firstMessage).toHaveText('hello from e2e')
-    // const secondMessage = messages.nth(i * 2 - 1)
-    // await expect(secondMessage).toHaveText('Mock AI response: I received "hello from e2e".')
   }
 
   // assert
