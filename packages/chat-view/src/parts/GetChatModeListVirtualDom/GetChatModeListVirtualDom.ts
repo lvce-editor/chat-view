@@ -9,23 +9,6 @@ import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-<<<<<<< HEAD
-export const getChatModeListVirtualDom = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-  composerValue: string,
-  models: readonly ChatModel[],
-  selectedModelId: string,
-  usageOverviewEnabled: boolean,
-  tokensUsed: number,
-  tokensMax: number,
-  showRunMode: boolean,
-  runMode: RunMode,
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
-=======
 export interface GetChatModeListVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
@@ -39,9 +22,11 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerLineHeight?: number
   readonly composerValue: string
   readonly models: readonly ChatModel[]
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -52,7 +37,6 @@ export const getChatModeListVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
->>>>>>> origin/main
   chatListScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
@@ -62,14 +46,20 @@ export const getChatModeListVirtualDom = ({
   composerLineHeight = 20,
   composerValue,
   models,
+  runMode,
   selectedModelId,
   selectedSessionId,
   sessions,
+  showRunMode,
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
+  void composerHeight
+  void composerFontSize
+  void composerFontFamily
+  void composerLineHeight
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {

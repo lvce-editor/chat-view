@@ -10,27 +10,6 @@ import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-<<<<<<< HEAD
-export const getChatModeDetailVirtualDom = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-  composerValue: string,
-  openRouterApiKeyInput: string,
-  openApiApiKeyInput: string,
-  models: readonly ChatModel[],
-  selectedModelId: string,
-  usageOverviewEnabled: boolean,
-  tokensUsed: number,
-  tokensMax: number,
-  showRunMode: boolean,
-  runMode: RunMode,
-  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
-  messagesScrollTop = 0,
-=======
 export interface GetChatModeDetailVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
@@ -48,9 +27,11 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -62,7 +43,6 @@ export const getChatModeDetailVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
->>>>>>> origin/main
   composerDropActive = false,
   composerDropEnabled = true,
   composerFontFamily = 'system-ui',
@@ -76,15 +56,21 @@ export const getChatModeDetailVirtualDom = ({
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
+  runMode,
   selectedModelId,
   selectedSessionId,
   sessions,
+  showRunMode,
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
+  void composerHeight
+  void composerFontSize
+  void composerFontFamily
+  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []

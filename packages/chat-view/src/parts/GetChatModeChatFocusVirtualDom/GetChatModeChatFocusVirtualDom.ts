@@ -10,27 +10,6 @@ import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-<<<<<<< HEAD
-export const getChatModeChatFocusVirtualDom = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-  composerValue: string,
-  openRouterApiKeyInput: string,
-  openApiApiKeyInput: string,
-  models: readonly ChatModel[],
-  selectedModelId: string,
-  usageOverviewEnabled: boolean,
-  tokensUsed: number,
-  tokensMax: number,
-  showRunMode: boolean,
-  runMode: RunMode,
-  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
-  messagesScrollTop = 0,
-=======
 export interface GetChatModeChatFocusVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
@@ -51,10 +30,12 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -66,7 +47,6 @@ export const getChatModeChatFocusVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
->>>>>>> origin/main
   composerDropActive = false,
   composerDropEnabled = true,
   composerFontFamily = 'system-ui',
@@ -83,10 +63,12 @@ export const getChatModeChatFocusVirtualDom = ({
   projectExpandedIds = [],
   projectListScrollTop = 0,
   projects = [],
+  runMode,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
   sessions,
+  showRunMode,
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
@@ -96,6 +78,10 @@ export const getChatModeChatFocusVirtualDom = ({
   void authEnabled
   void authStatus
   void authErrorMessage
+  void composerHeight
+  void composerFontSize
+  void composerFontFamily
+  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
