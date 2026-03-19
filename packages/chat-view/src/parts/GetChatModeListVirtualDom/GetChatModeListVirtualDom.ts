@@ -23,7 +23,10 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly modelPickerOpen?: boolean
+  readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
+  readonly newChatModelPickerEnabled?: boolean
   readonly runMode: RunMode
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
@@ -53,7 +56,10 @@ export const getChatModeListVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  modelPickerOpen = false,
+  modelPickerSearchValue = '',
   models,
+  newChatModelPickerEnabled = false,
   runMode,
   searchEnabled = false,
   searchFieldVisible = false,
@@ -89,7 +95,10 @@ export const getChatModeListVirtualDom = ({
     ...getChatListDom(visibleSessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
+      modelPickerOpen,
+      modelPickerSearchValue,
       models,
+      newChatModelPickerEnabled,
       selectedModelId,
       usageOverviewEnabled,
       tokensUsed,

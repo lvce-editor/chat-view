@@ -42,7 +42,10 @@ export interface GetChatVirtualDomOptions {
   readonly composerLineHeight: number
   readonly composerValue: string
   readonly messagesScrollTop: number
+  readonly modelPickerOpen?: boolean
+  readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
+  readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
@@ -83,7 +86,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerLineHeight,
     composerValue,
     messagesScrollTop,
+    modelPickerOpen = false,
+    modelPickerSearchValue = '',
     models,
+    newChatModelPickerEnabled = false,
     openApiApiKeyInput,
     openRouterApiKeyInput,
     openRouterApiKeyState,
@@ -127,7 +133,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerLineHeight,
         composerValue,
         messagesScrollTop,
+        modelPickerOpen,
+        modelPickerSearchValue,
         models,
+        newChatModelPickerEnabled,
         openApiApiKeyInput,
         openRouterApiKeyInput,
         openRouterApiKeyState,
@@ -163,7 +172,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerLineHeight,
         composerValue,
         messagesScrollTop,
+        modelPickerOpen,
+        modelPickerSearchValue,
         models,
+        newChatModelPickerEnabled,
         openApiApiKeyInput,
         openRouterApiKeyInput,
         openRouterApiKeyState,
@@ -195,7 +207,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerHeight,
         composerLineHeight,
         composerValue,
+        modelPickerOpen,
+        modelPickerSearchValue,
         models,
+        newChatModelPickerEnabled,
         runMode,
         searchEnabled,
         searchFieldVisible,

@@ -41,6 +41,21 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
         searchFieldVisible: !state.searchFieldVisible,
         searchValue: state.searchFieldVisible ? '' : state.searchValue,
       }
+    case name === InputName.ModelPickerToggle:
+      return {
+        ...state,
+        modelPickerOpen: !state.modelPickerOpen,
+        modelPickerSearchValue: state.modelPickerOpen ? '' : state.modelPickerSearchValue,
+      }
+    case InputName.isModelPickerItemInputName(name): {
+      const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
+      return {
+        ...state,
+        modelPickerOpen: false,
+        modelPickerSearchValue: '',
+        selectedModelId: modelId,
+      }
+    }
     case InputName.isProjectInputName(name): {
       const projectId = InputName.getProjectIdFromInputName(name)
       if (state.viewMode === 'chat-focus') {

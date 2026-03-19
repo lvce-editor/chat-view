@@ -4,6 +4,7 @@ import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getChatModelPickerVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
 import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
@@ -13,7 +14,10 @@ import * as InputName from '../InputName/InputName.ts'
 
 export const getChatSendAreaDom = (
   composerValue: string,
+  modelPickerOpen: boolean,
+  modelPickerSearchValue: string,
   models: readonly ChatModel[],
+  newChatModelPickerEnabled: boolean,
   selectedModelId: string,
   usageOverviewEnabled: boolean,
   tokensUsed: number,
@@ -95,7 +99,9 @@ export const getChatSendAreaDom = (
       className: ClassNames.ChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
-    ...getChatSelectVirtualDom(models, selectedModelId),
+    ...(newChatModelPickerEnabled
+      ? getChatModelPickerVirtualDom(models, selectedModelId, modelPickerOpen, modelPickerSearchValue)
+      : getChatSelectVirtualDom(models, selectedModelId)),
     ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),

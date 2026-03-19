@@ -7,3 +7,14 @@ test('handleModelChange should update selected model id', async () => {
   const result = await HandleModelChange.handleModelChange(state, 'claude-code')
   expect(result.selectedModelId).toBe('claude-code')
 })
+
+test('handleModelChange should close and clear model picker state', async () => {
+  const state = {
+    ...createDefaultState(),
+    modelPickerOpen: true,
+    modelPickerSearchValue: 'gpt',
+  }
+  const result = await HandleModelChange.handleModelChange(state, 'claude-code')
+  expect(result.modelPickerOpen).toBe(false)
+  expect(result.modelPickerSearchValue).toBe('')
+})

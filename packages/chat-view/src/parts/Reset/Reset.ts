@@ -9,6 +9,8 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     composerHeight: getMinComposerHeightForState(state),
     composerValue: '',
     mockAiResponseDelay: 0,
+    modelPickerOpen: false,
+    modelPickerSearchValue: '',
     openApiApiKey: '',
     openRouterApiKey: '',
     openRouterApiKeyInput: '',

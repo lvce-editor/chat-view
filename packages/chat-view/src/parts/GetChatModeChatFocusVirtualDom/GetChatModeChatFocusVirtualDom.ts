@@ -24,7 +24,10 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerLineHeight?: number
   readonly composerValue: string
   readonly messagesScrollTop?: number
+  readonly modelPickerOpen?: boolean
+  readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
+  readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
@@ -60,7 +63,10 @@ export const getChatModeChatFocusVirtualDom = ({
   composerLineHeight = 20,
   composerValue,
   messagesScrollTop = 0,
+  modelPickerOpen = false,
+  modelPickerSearchValue = '',
   models,
+  newChatModelPickerEnabled = false,
   openApiApiKeyInput,
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
@@ -113,7 +119,10 @@ export const getChatModeChatFocusVirtualDom = ({
     ),
     ...getChatSendAreaDom(
       composerValue,
+      modelPickerOpen,
+      modelPickerSearchValue,
       models,
+      newChatModelPickerEnabled,
       selectedModelId,
       usageOverviewEnabled,
       tokensUsed,
