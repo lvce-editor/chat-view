@@ -8,6 +8,8 @@ export const getCss = (
 ): string => {
   const baseCss = `:root {
   --ChatInputBoxHeight: ${composerHeight}px;
+  --ChatTextAreaHeight: ${composerHeight}px;
+  --ChatSendAreaHeight: ${composerHeight + 62}px;
   --ChatListItemHeight: ${listItemHeight}px;
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
@@ -225,6 +227,13 @@ export const getCss = (
 .Chat.ChatFocus .ChatSendArea {
   grid-column: 2;
   grid-row: 3;
+  height: var(--ChatSendAreaHeight);
+  min-height: var(--ChatSendAreaHeight);
+}
+
+.Chat .MultilineInputBox {
+  height: var(--ChatTextAreaHeight);
+  min-height: var(--ChatTextAreaHeight);
 }
 
 .MarkdownMathInline {
