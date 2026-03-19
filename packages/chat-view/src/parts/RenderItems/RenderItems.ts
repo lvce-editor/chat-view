@@ -42,6 +42,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   if (initial) {
     return [ViewletCommand.SetDom2, uid, []]
   }
+<<<<<<< HEAD
   const dom = getChatVirtualDom(
     sessions,
     selectedSessionId,
@@ -61,20 +62,39 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     composerFontSize,
     composerFontFamily,
     composerLineHeight,
+=======
+  const dom = getChatVirtualDom({
+    authEnabled,
+    authErrorMessage,
+    authStatus,
+>>>>>>> origin/main
     chatListScrollTop,
-    messagesScrollTop,
     composerDropActive,
     composerDropEnabled,
-    projects,
-    projectExpandedIds,
-    selectedProjectId,
-    projectListScrollTop,
-    voiceDictationEnabled,
-    useChatMathWorker,
+    composerFontFamily,
+    composerFontSize,
+    composerHeight,
+    composerLineHeight,
+    composerValue,
+    messagesScrollTop,
+    models,
+    openApiApiKeyInput,
+    openRouterApiKeyInput,
+    openRouterApiKeyState,
     parsedMessages,
-    authEnabled,
-    authStatus,
-    authErrorMessage,
-  )
+    projectExpandedIds,
+    projectListScrollTop,
+    projects,
+    selectedModelId,
+    selectedProjectId,
+    selectedSessionId,
+    sessions,
+    tokensMax,
+    tokensUsed,
+    usageOverviewEnabled,
+    useChatMathWorker,
+    viewMode,
+    voiceDictationEnabled,
+  })
   return [ViewletCommand.SetDom2, uid, dom]
 }

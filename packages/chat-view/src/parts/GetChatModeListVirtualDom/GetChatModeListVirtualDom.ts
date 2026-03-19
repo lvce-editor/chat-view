@@ -9,6 +9,7 @@ import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+<<<<<<< HEAD
 export const getChatModeListVirtualDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
@@ -24,14 +25,51 @@ export const getChatModeListVirtualDom = (
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
   composerLineHeight = 20,
+=======
+export interface GetChatModeListVirtualDomOptions {
+  readonly authEnabled?: boolean
+  readonly authErrorMessage?: string
+  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly chatListScrollTop?: number
+  readonly composerDropActive?: boolean
+  readonly composerDropEnabled?: boolean
+  readonly composerFontFamily?: string
+  readonly composerFontSize?: number
+  readonly composerHeight?: number
+  readonly composerLineHeight?: number
+  readonly composerValue: string
+  readonly models: readonly ChatModel[]
+  readonly selectedModelId: string
+  readonly selectedSessionId: string
+  readonly sessions: readonly ChatSession[]
+  readonly tokensMax: number
+  readonly tokensUsed: number
+  readonly usageOverviewEnabled: boolean
+  readonly voiceDictationEnabled?: boolean
+}
+
+export const getChatModeListVirtualDom = ({
+  authEnabled = false,
+  authErrorMessage = '',
+  authStatus = 'signed-out',
+>>>>>>> origin/main
   chatListScrollTop = 0,
   composerDropActive = false,
   composerDropEnabled = true,
+  composerFontFamily = 'system-ui',
+  composerFontSize = 13,
+  composerHeight = 28,
+  composerLineHeight = 20,
+  composerValue,
+  models,
+  selectedModelId,
+  selectedSessionId,
+  sessions,
+  tokensMax,
+  tokensUsed,
+  usageOverviewEnabled,
   voiceDictationEnabled = false,
-  authEnabled = false,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
-  authErrorMessage = '',
-): readonly VirtualDomNode[] => {
+}: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   return [
     {
