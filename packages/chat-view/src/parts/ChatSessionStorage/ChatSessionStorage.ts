@@ -1,5 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
+import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.ts'
 import { IndexedDbChatSessionStorage } from '../IndexedDbChatSessionStorage/IndexedDbChatSessionStorage.ts'
 import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
 
@@ -21,6 +22,11 @@ const createDefaultStorage = (): Readonly<ChatSessionStorage> => {
 }
 
 let chatSessionStorage: Readonly<ChatSessionStorage> = createDefaultStorage()
+let chatStorageWorkerEnabled = false
+
+export const setChatStorageWorkerEnabled = (enabled: boolean): void => {
+  chatStorageWorkerEnabled = enabled
+}
 
 export const setChatSessionStorage = (storage: Readonly<ChatSessionStorage>): void => {
   chatSessionStorage = storage
@@ -28,10 +34,13 @@ export const setChatSessionStorage = (storage: Readonly<ChatSessionStorage>): vo
 
 export const resetChatSessionStorage = (): void => {
   chatSessionStorage = new InMemoryChatSessionStorage()
+  chatStorageWorkerEnabled = false
 }
 
 export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
-  const sessions = await chatSessionStorage.listSessions()
+  const sessions = chatStorageWorkerEnabled
+    ? ((await ChatStorageWorker.invoke('ChatStorage.listSessions')) as readonly ChatSession[])
+    : await chatSessionStorage.listSessions()
   return sessions.map((session) => {
     const summary: ChatSession = {
       id: session.id,
@@ -49,7 +58,9 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
 }
 
 export const getChatSession = async (id: string): Promise<ChatSession | undefined> => {
-  const session = await chatSessionStorage.getSession(id)
+  const session = chatStorageWorkerEnabled
+    ? ((await ChatStorageWorker.invoke('ChatStorage.getSession', id)) as ChatSession | undefined)
+    : await chatSessionStorage.getSession(id)
   if (!session) {
     return undefined
   }
@@ -73,28 +84,46 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
     messages: [...session.messages],
     title: session.title,
   }
-  await chatSessionStorage.setSession(
-    session.projectId
-      ? {
-          ...value,
-          projectId: session.projectId,
-        }
-      : value,
-  )
+  const sessionValue = session.projectId
+    ? {
+        ...value,
+        projectId: session.projectId,
+      }
+    : value
+  if (chatStorageWorkerEnabled) {
+    await ChatStorageWorker.invoke('ChatStorage.setSession', sessionValue)
+    return
+  }
+  await chatSessionStorage.setSession(sessionValue)
 }
 
 export const deleteChatSession = async (id: string): Promise<void> => {
+  if (chatStorageWorkerEnabled) {
+    await ChatStorageWorker.invoke('ChatStorage.deleteSession', id)
+    return
+  }
   await chatSessionStorage.deleteSession(id)
 }
 
 export const clearChatSessions = async (): Promise<void> => {
+  if (chatStorageWorkerEnabled) {
+    await ChatStorageWorker.invoke('ChatStorage.clear')
+    return
+  }
   await chatSessionStorage.clear()
 }
 
 export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
+  if (chatStorageWorkerEnabled) {
+    await ChatStorageWorker.invoke('ChatStorage.appendEvent', event)
+    return
+  }
   await chatSessionStorage.appendEvent(event)
 }
 
 export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {
+  if (chatStorageWorkerEnabled) {
+    return ChatStorageWorker.invoke('ChatStorage.getEvents', sessionId) as Promise<readonly ChatViewEvent[]>
+  }
   return chatSessionStorage.getEvents(sessionId)
 }

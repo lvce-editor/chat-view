@@ -17,7 +17,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
   const chunks: string[] = []
   let streamFinished = 0
   const invocations: unknown[][] = []
-  const mockRpc = {
+  using mockRpc = {
     invoke: async (method: string, options: unknown): Promise<{ id: string; role: 'assistant'; text: string; time: string }> => {
       invocations.push([method, options])
       return {
@@ -26,6 +26,9 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
         text: 'Coordinator response',
         time: '10:01',
       }
+    },
+    [Symbol.dispose]: (): void => {
+      // noop
     },
   }
   ChatCoordinatorWorker.set(mockRpc)
