@@ -14,7 +14,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
 
-const hasVisibleInlineContent = (children: readonly MessageTextNode['children']): boolean => {
+const hasVisibleInlineContent = (children: MessageTextNode['children']): boolean => {
   return children.some((child) => child.type !== 'text' || child.text.trim() !== '')
 }
 
