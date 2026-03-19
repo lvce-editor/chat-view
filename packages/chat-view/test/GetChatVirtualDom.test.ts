@@ -17,8 +17,45 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3' },
 ] as const
 
+const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
+  authEnabled: false,
+  authErrorMessage: '',
+  authStatus: 'signed-out',
+  chatListScrollTop: 0,
+  composerDropActive: false,
+  composerDropEnabled: true,
+  composerFontFamily: 'system-ui',
+  composerFontSize: 13,
+  composerHeight: 28,
+  composerLineHeight: 20,
+  composerValue: '',
+  messagesScrollTop: 0,
+  models,
+  openApiApiKeyInput: '',
+  openRouterApiKeyInput: '',
+  openRouterApiKeyState: 'idle',
+  runMode: 'local',
+  selectedModelId: 'test',
+  selectedProjectId: '',
+  selectedSessionId: '',
+  sessions: [],
+  showRunMode: false,
+  todoListToolEnabled: false,
+  tokensMax: 0,
+  tokensUsed: 0,
+  usageOverviewEnabled: false,
+  viewMode: 'list',
+  voiceDictationEnabled: false,
+  ...overrides,
+})
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
+  return GetChatViewDom.getChatVirtualDom(createOptions(overrides))
+}
+
 test('getChatVirtualDOm should render root chat container', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   expect(result.length).toBeGreaterThan(0)
   expect(result[0]).toMatchObject({
     className: `${ClassNames.Viewlet} Chat`,
@@ -27,7 +64,7 @@ test('getChatVirtualDOm should render root chat container', () => {
 })
 
 test('getChatVirtualDOm should structure chat sections as header and list in list mode', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   expect(result[0]).toMatchObject({
     childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
@@ -77,32 +114,14 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const projects = [{ id: 'project-1', name: '_blank', uri: '' }]
-  const result = GetChatViewDom.getChatVirtualDom(
-    sessions,
-    'session-1',
-    '',
-    '',
-    'chat-focus',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
+  const result = renderChatView({
+    projectExpandedIds: ['project-1'],
     projects,
-    ['project-1'],
-    'project-1',
-    0,
-  )
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'chat-focus',
+  })
 
   expect(result[0]).toMatchObject({
     childCount: 3,
@@ -137,26 +156,10 @@ test('getChatVirtualDOm should render session list entries', () => {
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'list',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+  })
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
@@ -177,26 +180,11 @@ test('getChatVirtualDOm should restore chat list scroll position', () => {
     { id: 'session-1', messages: [], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    chatListScrollTop: 90,
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'list',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    90,
-    0,
-  )
+  })
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
     onScroll: DomEventListenerFunctions.HandleChatListScroll,
@@ -207,26 +195,12 @@ test('getChatVirtualDOm should restore chat list scroll position', () => {
 
 test('getChatVirtualDOm should render composer textarea', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    composerValue: 'hello',
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    'hello',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const composer = result.find((node) => node.name === 'composer')
   const sendButton = result.find((node) => node.name === 'send')
   const composeForm = result.find((node) => node.className === ClassNames.ChatSendArea)
@@ -254,62 +228,110 @@ test('getChatVirtualDOm should render composer textarea', () => {
 
 test('getChatVirtualDOm should render dictate button before send button when enabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    composerValue: 'hello',
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    'hello',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
-    [],
-    [],
-    '',
-    0,
-    true,
-  )
+    viewMode: 'detail',
+    voiceDictationEnabled: true,
+  })
   const dictateButtonIndex = result.findIndex((node) => node.name === 'dictate')
   const sendButtonIndex = result.findIndex((node) => node.name === 'send')
   expect(dictateButtonIndex).toBeGreaterThan(-1)
   expect(sendButtonIndex).toBeGreaterThan(dictateButtonIndex)
 })
 
+test('getChatVirtualDOm should render todo list above composer when enabled and not empty', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant' as const,
+          text: '',
+          time: '',
+          toolCalls: [
+            {
+              arguments: JSON.stringify({
+                todos: [
+                  { status: 'todo', text: 'Run baseline tests' },
+                  { status: 'inProgress', text: 'Implement feature' },
+                  { status: 'completed', text: 'Review and summary' },
+                ],
+              }),
+              name: 'todo_list',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    todoListToolEnabled: true,
+    viewMode: 'detail',
+  })
+  const todoList = result.find((node) => node.className === ClassNames.ChatTodoList)
+  const todoItems = result.filter((node) => node.className?.startsWith(`${ClassNames.ChatTodoListItem} `))
+  const headerText = result.find((node) => node.text === 'Todos (1/3)')
+  const composer = result.find((node) => node.name === 'composer')
+  const todoListIndex = result.findIndex((node) => node.className === ClassNames.ChatTodoList)
+  const composerIndex = result.findIndex((node) => node.name === 'composer')
+  expect(todoList).toBeDefined()
+  expect(todoItems).toHaveLength(3)
+  expect(headerText).toBeDefined()
+  expect(composer).toBeDefined()
+  expect(todoListIndex).toBeGreaterThan(-1)
+  expect(composerIndex).toBeGreaterThan(todoListIndex)
+  expect(todoItems.some((node) => node.className?.includes(' todo'))).toBe(true)
+  expect(todoItems.some((node) => node.className?.includes(' inProgress'))).toBe(true)
+  expect(todoItems.some((node) => node.className?.includes(' completed'))).toBe(true)
+})
+
+test('getChatVirtualDOm should not render todo list when disabled', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant' as const,
+          text: '',
+          time: '',
+          toolCalls: [
+            {
+              arguments: JSON.stringify({
+                todos: [{ status: 'todo', text: 'Task 1' }],
+              }),
+              name: 'todo_list',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    todoListToolEnabled: false,
+    viewMode: 'detail',
+  })
+  const todoList = result.find((node) => node.className === ClassNames.ChatTodoList)
+  expect(todoList).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render drag overlay message in composer drop target', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    composerDropActive: true,
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    true,
-  )
+    viewMode: 'detail',
+  })
   const composerDropTarget = result.find((node) => node.name === 'composer-drop-target')
   const overlayMessage = result.find((node) => node.text === 'Attach Image as Context')
   expect(composerDropTarget).toBeDefined()
@@ -327,26 +349,11 @@ test('getChatVirtualDOm should render message rows for selected session', () => 
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const messageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   expect(messageNode).toBeDefined()
 })
@@ -359,26 +366,12 @@ test('getChatVirtualDOm should restore messages scroll position', () => {
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    messagesScrollTop: 180,
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    180,
-  )
+    viewMode: 'detail',
+  })
   const messages = result.find((node) => node.className === 'ChatMessages')
   expect(messages).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
@@ -388,7 +381,7 @@ test('getChatVirtualDOm should restore messages scroll position', () => {
 })
 
 test('getChatVirtualDOm should render settings button in header actions', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   const settingsButton = result.find((node) => node.title === 'Settings')
   expect(settingsButton).toBeDefined()
   expect(settingsButton).toMatchObject({
@@ -399,7 +392,7 @@ test('getChatVirtualDOm should render settings button in header actions', () => 
 })
 
 test('getChatVirtualDOm should render new chat button in header actions', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   const newChatButton = result.find((node) => node.title === 'New Chat')
   expect(newChatButton).toBeDefined()
   expect(newChatButton).toMatchObject({
@@ -410,7 +403,7 @@ test('getChatVirtualDOm should render new chat button in header actions', () => 
 })
 
 test('getChatVirtualDOm should render debug button in header actions', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   const debugButton = result.find((node) => node.title === 'Debug')
   expect(debugButton).toBeDefined()
   expect(debugButton).toMatchObject({
@@ -421,7 +414,7 @@ test('getChatVirtualDOm should render debug button in header actions', () => {
 })
 
 test('getChatVirtualDOm should render close button in header actions', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   const closeButton = result.find((node) => node.title === 'Close Chat')
   expect(closeButton).toBeDefined()
   expect(closeButton).toMatchObject({
@@ -432,38 +425,10 @@ test('getChatVirtualDOm should render close button in header actions', () => {
 })
 
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
-  const result = GetChatViewDom.getChatVirtualDom(
-    [],
-    '',
-    '',
-    '',
-    'list',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
-    [],
-    [],
-    '',
-    0,
-    false,
-    false,
-    undefined,
-    true,
-    'signed-out',
-    '',
-  )
+  const result = renderChatView({
+    authEnabled: true,
+    authStatus: 'signed-out',
+  })
   const loginButton = result.find((node) => node.title === 'Login to backend')
   expect(loginButton).toBeDefined()
   expect(loginButton).toMatchObject({
@@ -474,38 +439,10 @@ test('getChatVirtualDOm should render login button in header actions when auth i
 })
 
 test('getChatVirtualDOm should disable login button while signing in', () => {
-  const result = GetChatViewDom.getChatVirtualDom(
-    [],
-    '',
-    '',
-    '',
-    'list',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
-    [],
-    [],
-    '',
-    0,
-    false,
-    false,
-    undefined,
-    true,
-    'signing-in',
-    '',
-  )
+  const result = renderChatView({
+    authEnabled: true,
+    authStatus: 'signing-in',
+  })
   const loginButton = result.find((node) => node.name === 'login')
   expect(loginButton).toBeDefined()
   expect(loginButton).toMatchObject({
@@ -515,38 +452,11 @@ test('getChatVirtualDOm should disable login button while signing in', () => {
 })
 
 test('getChatVirtualDOm should render auth error label when login fails', () => {
-  const result = GetChatViewDom.getChatVirtualDom(
-    [],
-    '',
-    '',
-    '',
-    'list',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
-    [],
-    [],
-    '',
-    0,
-    false,
-    false,
-    undefined,
-    true,
-    'signed-out',
-    'Invalid backend credentials.',
-  )
+  const result = renderChatView({
+    authEnabled: true,
+    authErrorMessage: 'Invalid backend credentials.',
+    authStatus: 'signed-out',
+  })
   const authError = result.find((node) => node.className === 'ChatAuthError')
   expect(authError).toBeDefined()
   const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
@@ -555,26 +465,11 @@ test('getChatVirtualDOm should render auth error label when login fails', () => 
 
 test('getChatVirtualDOm should hide session list in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   expect(sessionButton).toBeUndefined()
 })
@@ -590,26 +485,11 @@ test('getChatVirtualDOm should render selected session messages in detail mode',
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const userMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageUser))
   const assistantMessageNode = result.find((node) => node.className?.includes(ClassNames.MessageAssistant))
   const messageNodes = result.filter((node) => node.className?.split(' ').includes(ClassNames.Message))
@@ -642,31 +522,17 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
   const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
   const toolPrefixNode = result.find((node) => node.text === 'read_file ')
   const fileNameNode = result.find((node) => node.text === 'index.html')
   const fileNameLinkNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink)
+  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
 
   expect(toolCallItem).toMatchObject({
     title: uri,
@@ -675,6 +541,7 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
   expect(fileIconNode).toBeDefined()
   expect(toolPrefixNode).toBeDefined()
   expect(fileNameNode).toBeDefined()
+  expect(fileNameSpanNode).toBeDefined()
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
     onClick: DomEventListenerFunctions.HandleClickReadFile,
@@ -706,35 +573,22 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === path,
   )
+  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
 
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': path,
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     type: VirtualDomElements.Span,
   })
+  expect(fileNameSpanNode).toBeDefined()
 })
 
 test('getChatVirtualDOm should render assistant list_files uri as clickable filename', () => {
@@ -761,32 +615,18 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
   const toolPrefixNode = result.find((node) => node.text === 'list_files ')
   const fileNameNode = result.find((node) => node.text === 'src')
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
   )
+  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
 
   expect(toolCallItem).toMatchObject({
     title: uri,
@@ -794,6 +634,7 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
   })
   expect(toolPrefixNode).toBeDefined()
   expect(fileNameNode).toBeDefined()
+  expect(fileNameSpanNode).toBeDefined()
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
     onClick: DomEventListenerFunctions.HandleClickReadFile,
@@ -825,30 +666,16 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
   )
+  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
 
   expect(toolCallItem).toMatchObject({
     title: uri,
@@ -859,6 +686,7 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     type: VirtualDomElements.Span,
   })
+  expect(fileNameSpanNode).toBeDefined()
 })
 
 test('getChatVirtualDOm should render read_file not-found status', () => {
@@ -886,26 +714,11 @@ test('getChatVirtualDOm should render read_file not-found status', () => {
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const statusNode = result.find((node) => node.text === ' (not-found)')
   expect(statusNode).toBeDefined()
 })
@@ -936,26 +749,11 @@ test('getChatVirtualDOm should render read_file error status with short message'
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const statusNode = result.find((node) => node.text === ' (error: permission denied)')
   expect(statusNode).toBeDefined()
 })
@@ -968,26 +766,12 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    openRouterApiKeyInput: 'or-key-typed',
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    'or-key-typed',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const apiKeyInput = result.find((node) => node.name === 'open-router-api-key')
   const apiKeyInputIndex = result.findIndex((node) => node.name === 'open-router-api-key')
   const apiKeyForm = result[apiKeyInputIndex - 1]
@@ -1021,26 +805,13 @@ test('getChatVirtualDOm should render disabled OpenRouter save button with Savin
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    openRouterApiKeyInput: 'or-key-typed',
+    openRouterApiKeyState: 'saving',
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    'or-key-typed',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'saving',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
   expect(saveButton).toMatchObject({
@@ -1059,26 +830,13 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    openApiApiKeyInput: 'oa-key-typed',
+    openRouterApiKeyInput: 'or-key-typed',
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    'or-key-typed',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    'oa-key-typed',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
   const apiKeyInputIndex = result.findIndex((node) => node.name === 'open-api-api-key')
   const apiKeyForm = result[apiKeyInputIndex - 1]
@@ -1114,26 +872,11 @@ test('getChatVirtualDOm should render OpenRouter request failure reasons as orde
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const cspReason = result.find((node) => node.text === 'ContentSecurityPolicyViolation: Check DevTools for details.')
@@ -1154,26 +897,11 @@ test('getChatVirtualDOm should render OpenRouter too many requests reasons as or
       title: 'Chat 1',
     },
   ]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const waitReason = result.find((node) => node.text === 'Wait a short time and retry your request.')
@@ -1212,35 +940,12 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
 
   const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
 
-  const result = GetChatViewDom.getChatVirtualDom(
-    sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-    false,
-    true,
-    [],
-    [],
-    '',
-    0,
-    false,
-    false,
+  const result = renderChatView({
     parsedMessages,
-  )
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
   const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
   const listItems = result.filter((node) => node.type === VirtualDomElements.Li)
   const readFileReason = result.find(
@@ -1264,26 +969,11 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
 
 test('getChatVirtualDOm should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const backButtonIndex = result.findIndex((node) => node.name === 'back')
   expect(backButtonIndex).toBeGreaterThan(-1)
   const titleNode = result[backButtonIndex + 3]
@@ -1293,26 +983,11 @@ test('getChatVirtualDOm should render selected chat title in detail mode', () =>
 
 test('getChatVirtualDOm should render back button in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeDefined()
   expect(backButton).toMatchObject({
@@ -1325,59 +1000,34 @@ test('getChatVirtualDOm should render back button in detail mode', () => {
 })
 
 test('getChatVirtualDOm should hide back button in list mode', () => {
-  const result = GetChatViewDom.getChatVirtualDom([], '', '', '', 'list', models, 'test', false, 0, 0, '', 'idle', 28, 13, 'system-ui', 20, 0, 0)
+  const result = renderChatView()
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeUndefined()
 })
 
 test('getChatVirtualDOm should not render token usage overview when disabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    100,
-    1000,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    tokensMax: 1000,
+    tokensUsed: 100,
+    viewMode: 'detail',
+  })
   const usageRing = result.find((node) => node.className === ClassNames.TokenUsageRing)
   expect(usageRing).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render token usage overview when enabled', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    true,
-    100,
-    1000,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    tokensMax: 1000,
+    tokensUsed: 100,
+    usageOverviewEnabled: true,
+    viewMode: 'detail',
+  })
   const usageContainer = result.find((node) => node.className === ClassNames.TokenUsageOverview)
   const usageRing = result.find((node) => node.className === ClassNames.TokenUsageRing)
   const usageText = result.find((node) => node.text === '100 / 1000')

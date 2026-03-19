@@ -2,10 +2,12 @@ import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
+import { getTodoListItems } from '../GetTodoListItems/GetTodoListItems.ts'
 import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
@@ -26,120 +28,175 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
   return parsedMessages
 }
 
-export const getChatVirtualDom = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-  composerValue: string,
-  openRouterApiKeyInput: string,
-  viewMode: ChatViewMode,
-  models: readonly ChatModel[],
-  selectedModelId: string,
-  usageOverviewEnabled: boolean,
-  tokensUsed: number,
-  tokensMax: number,
-  openApiApiKeyInput: string,
-  openRouterApiKeyState: 'idle' | 'saving',
-  composerHeight: number,
-  composerFontSize: number,
-  composerFontFamily: string,
-  composerLineHeight: number,
-  chatListScrollTop: number,
-  messagesScrollTop: number,
-  composerDropActive = false,
-  composerDropEnabled = true,
-  projects: readonly Project[] = [],
-  projectExpandedIds: readonly string[] = [],
-  selectedProjectId = '',
-  projectListScrollTop = 0,
-  voiceDictationEnabled = false,
-  useChatMathWorker = false,
-  parsedMessages?: readonly ParsedMessage[],
-  authEnabled = false,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
-  authErrorMessage = '',
-): readonly VirtualDomNode[] => {
-  const effectiveParsedMessages = parsedMessages || getFallbackParsedMessages(sessions)
+export interface GetChatVirtualDomOptions {
+  readonly authEnabled?: boolean
+  readonly authErrorMessage?: string
+  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly chatListScrollTop: number
+  readonly composerDropActive?: boolean
+  readonly composerDropEnabled?: boolean
+  readonly composerFontFamily: string
+  readonly composerFontSize: number
+  readonly composerHeight: number
+  readonly composerLineHeight: number
+  readonly composerValue: string
+  readonly messagesScrollTop: number
+  readonly models: readonly ChatModel[]
+  readonly openApiApiKeyInput: string
+  readonly openRouterApiKeyInput: string
+  readonly openRouterApiKeyState: 'idle' | 'saving'
+  readonly parsedMessages?: readonly ParsedMessage[]
+  readonly projectExpandedIds?: readonly string[]
+  readonly projectListScrollTop?: number
+  readonly projects?: readonly Project[]
+  readonly runMode: RunMode
+  readonly selectedModelId: string
+  readonly selectedProjectId?: string
+  readonly selectedSessionId: string
+  readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
+  readonly todoListToolEnabled: boolean
+  readonly tokensMax: number
+  readonly tokensUsed: number
+  readonly usageOverviewEnabled: boolean
+  readonly useChatMathWorker?: boolean
+  readonly viewMode: ChatViewMode
+  readonly voiceDictationEnabled?: boolean
+}
+
+export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly VirtualDomNode[] => {
+  const {
+    authEnabled = false,
+    authErrorMessage = '',
+    authStatus = 'signed-out',
+    chatListScrollTop,
+    composerDropActive = false,
+    composerDropEnabled = true,
+    composerFontFamily,
+    composerFontSize,
+    composerHeight,
+    composerLineHeight,
+    composerValue,
+    messagesScrollTop,
+    models,
+    openApiApiKeyInput,
+    openRouterApiKeyInput,
+    openRouterApiKeyState,
+    parsedMessages: parsedMessagesInput,
+    projectExpandedIds = [],
+    projectListScrollTop = 0,
+    projects = [],
+    runMode,
+    selectedModelId,
+    selectedProjectId = '',
+    selectedSessionId,
+    sessions,
+    showRunMode,
+    todoListToolEnabled,
+    tokensMax,
+    tokensUsed,
+    usageOverviewEnabled,
+    useChatMathWorker = false,
+    viewMode,
+    voiceDictationEnabled = false,
+  } = options
+
+  const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
+  const todoListItems = getTodoListItems(sessions, selectedSessionId)
+
   switch (viewMode) {
     case 'chat-focus':
-      return getChatModeChatFocusVirtualDom(
-        sessions,
-        selectedSessionId,
-        composerValue,
-        openRouterApiKeyInput,
-        openApiApiKeyInput,
-        models,
-        selectedModelId,
-        usageOverviewEnabled,
-        tokensUsed,
-        tokensMax,
-        openRouterApiKeyState,
-        composerHeight,
-        composerFontSize,
-        composerFontFamily,
-        composerLineHeight,
-        messagesScrollTop,
+      return getChatModeChatFocusVirtualDom({
+        authEnabled,
+        authErrorMessage,
+        authStatus,
         composerDropActive,
         composerDropEnabled,
-        projects,
+        composerFontFamily,
+        composerFontSize,
+        composerHeight,
+        composerLineHeight,
+        composerValue,
+        messagesScrollTop,
+        models,
+        openApiApiKeyInput,
+        openRouterApiKeyInput,
+        openRouterApiKeyState,
+        parsedMessages,
         projectExpandedIds,
-        selectedProjectId,
         projectListScrollTop,
-        voiceDictationEnabled,
-        useChatMathWorker,
-        effectiveParsedMessages,
-        authEnabled,
-        authStatus,
-        authErrorMessage,
-      )
-    case 'detail':
-      return getChatModeDetailVirtualDom(
-        sessions,
-        selectedSessionId,
-        composerValue,
-        openRouterApiKeyInput,
-        openApiApiKeyInput,
-        models,
+        projects,
+        runMode,
         selectedModelId,
-        usageOverviewEnabled,
-        tokensUsed,
+        selectedProjectId,
+        selectedSessionId,
+        sessions,
+        showRunMode,
+        todoListItems,
+        todoListToolEnabled,
         tokensMax,
-        openRouterApiKeyState,
-        composerHeight,
-        composerFontSize,
-        composerFontFamily,
-        composerLineHeight,
-        messagesScrollTop,
+        tokensUsed,
+        usageOverviewEnabled,
+        useChatMathWorker,
+        voiceDictationEnabled,
+      })
+    case 'detail':
+      return getChatModeDetailVirtualDom({
+        authEnabled,
+        authErrorMessage,
+        authStatus,
         composerDropActive,
         composerDropEnabled,
-        voiceDictationEnabled,
-        useChatMathWorker,
-        effectiveParsedMessages,
-        authEnabled,
-        authStatus,
-        authErrorMessage,
-      )
-    case 'list':
-      return getChatModeListVirtualDom(
-        sessions,
-        selectedSessionId,
-        composerValue,
-        models,
-        selectedModelId,
-        usageOverviewEnabled,
-        tokensUsed,
-        tokensMax,
-        composerHeight,
-        composerFontSize,
         composerFontFamily,
+        composerFontSize,
+        composerHeight,
         composerLineHeight,
+        composerValue,
+        messagesScrollTop,
+        models,
+        openApiApiKeyInput,
+        openRouterApiKeyInput,
+        openRouterApiKeyState,
+        parsedMessages,
+        runMode,
+        selectedModelId,
+        selectedSessionId,
+        sessions,
+        showRunMode,
+        todoListItems,
+        todoListToolEnabled,
+        tokensMax,
+        tokensUsed,
+        usageOverviewEnabled,
+        useChatMathWorker,
+        voiceDictationEnabled,
+      })
+    case 'list':
+      return getChatModeListVirtualDom({
+        authEnabled,
+        authErrorMessage,
+        authStatus,
         chatListScrollTop,
         composerDropActive,
         composerDropEnabled,
+        composerFontFamily,
+        composerFontSize,
+        composerHeight,
+        composerLineHeight,
+        composerValue,
+        models,
+        runMode,
+        selectedModelId,
+        selectedSessionId,
+        sessions,
+        showRunMode,
+        todoListItems,
+        todoListToolEnabled,
+        tokensMax,
+        tokensUsed,
+        usageOverviewEnabled,
         voiceDictationEnabled,
-        authEnabled,
-        authStatus,
-        authErrorMessage,
-      )
+      })
     default:
       return getChatModeUnsupportedVirtualDom()
   }

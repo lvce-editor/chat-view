@@ -1,6 +1,8 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
+import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
@@ -9,39 +11,82 @@ import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getChatModeChatFocusVirtualDom = (
-  sessions: readonly ChatSession[],
-  selectedSessionId: string,
-  composerValue: string,
-  openRouterApiKeyInput: string,
-  openApiApiKeyInput: string,
-  models: readonly ChatModel[],
-  selectedModelId: string,
-  usageOverviewEnabled: boolean,
-  tokensUsed: number,
-  tokensMax: number,
-  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-  composerHeight = 28,
-  composerFontSize = 13,
-  composerFontFamily = 'system-ui',
-  composerLineHeight = 20,
-  messagesScrollTop = 0,
+export interface GetChatModeChatFocusVirtualDomOptions {
+  readonly authEnabled?: boolean
+  readonly authErrorMessage?: string
+  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly composerDropActive?: boolean
+  readonly composerDropEnabled?: boolean
+  readonly composerFontFamily?: string
+  readonly composerFontSize?: number
+  readonly composerHeight?: number
+  readonly composerLineHeight?: number
+  readonly composerValue: string
+  readonly messagesScrollTop?: number
+  readonly models: readonly ChatModel[]
+  readonly openApiApiKeyInput: string
+  readonly openRouterApiKeyInput: string
+  readonly openRouterApiKeyState?: 'idle' | 'saving'
+  readonly parsedMessages?: readonly ParsedMessage[]
+  readonly projectExpandedIds?: readonly string[]
+  readonly projectListScrollTop?: number
+  readonly projects?: readonly Project[]
+  readonly runMode: RunMode
+  readonly selectedModelId: string
+  readonly selectedProjectId?: string
+  readonly selectedSessionId: string
+  readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
+  readonly todoListItems: readonly TodoListItem[]
+  readonly todoListToolEnabled: boolean
+  readonly tokensMax: number
+  readonly tokensUsed: number
+  readonly usageOverviewEnabled: boolean
+  readonly useChatMathWorker?: boolean
+  readonly voiceDictationEnabled?: boolean
+}
+
+export const getChatModeChatFocusVirtualDom = ({
+  authEnabled = false,
+  authErrorMessage = '',
+  authStatus = 'signed-out',
   composerDropActive = false,
   composerDropEnabled = true,
-  projects: readonly Project[] = [],
-  projectExpandedIds: readonly string[] = [],
-  selectedProjectId = '',
+  composerFontFamily = 'system-ui',
+  composerFontSize = 13,
+  composerHeight = 28,
+  composerLineHeight = 20,
+  composerValue,
+  messagesScrollTop = 0,
+  models,
+  openApiApiKeyInput,
+  openRouterApiKeyInput,
+  openRouterApiKeyState = 'idle',
+  parsedMessages = [],
+  projectExpandedIds = [],
   projectListScrollTop = 0,
-  voiceDictationEnabled = false,
+  projects = [],
+  runMode,
+  selectedModelId,
+  selectedProjectId = '',
+  selectedSessionId,
+  sessions,
+  showRunMode,
+  todoListItems,
+  todoListToolEnabled,
+  tokensMax,
+  tokensUsed,
+  usageOverviewEnabled,
   useChatMathWorker = false,
-  parsedMessages: readonly ParsedMessage[] = [],
-  authEnabled = false,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
-  authErrorMessage = '',
-): readonly VirtualDomNode[] => {
+  voiceDictationEnabled = false,
+}: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   void authEnabled
   void authStatus
   void authErrorMessage
+  void composerHeight
+  void composerFontSize
+  void composerFontFamily
+  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
@@ -64,7 +109,19 @@ export const getChatModeChatFocusVirtualDom = (
       useChatMathWorker,
       true,
     ),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      showRunMode,
+      runMode,
+      todoListToolEnabled,
+      todoListItems,
+      voiceDictationEnabled,
+    ),
     ...(isDropOverlayVisible
       ? [
           {

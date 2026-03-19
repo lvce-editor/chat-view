@@ -40,6 +40,11 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
       ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      type: VirtualDomElements.Span,
+    },
     text(fileName),
     {
       childCount: 1,
