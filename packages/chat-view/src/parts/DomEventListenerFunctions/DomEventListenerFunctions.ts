@@ -33,3 +33,4 @@ export const HandleProjectListScroll = 32
 export const HandleProjectListContextMenu = 33
 export const HandleClickDictationButton = 34
 export const HandleMissingApiKeySubmit = 35
+export const HandleRunModeChange = 36

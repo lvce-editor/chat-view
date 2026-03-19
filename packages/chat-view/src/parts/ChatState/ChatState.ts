@@ -4,6 +4,7 @@ import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatModel } from '../ChatModel/ChatModel.ts'
@@ -72,10 +73,12 @@ export interface ChatState {
   readonly projects: readonly Project[]
   readonly questionToolEnabled?: boolean
   readonly renamingSessionId: string
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly streamingEnabled: boolean
   readonly textAreaPaddingBottom: number
   readonly textAreaPaddingLeft: number

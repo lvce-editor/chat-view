@@ -7,6 +7,7 @@ export const Dictate = 'dictate'
 export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
+export const RunMode = 'runMode'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const CreateProject = 'create-project'
 export const CreateSession = 'create-session'
@@ -30,6 +31,7 @@ export type InputName =
   | typeof Send
   | typeof Back
   | typeof Model
+  | typeof RunMode
   | typeof ToggleChatFocus
   | typeof CreateProject
   | typeof CreateSession
