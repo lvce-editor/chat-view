@@ -4,7 +4,7 @@ import * as HandleClickFileName from '../src/parts/HandleClickFileName/HandleCli
 import * as HandleClickReadFile from '../src/parts/HandleClickReadFile/HandleClickReadFile.ts'
 
 test('handleClickReadFile should open uri', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
 
@@ -14,7 +14,7 @@ test('handleClickReadFile should open uri', async () => {
 })
 
 test('handleClickReadFile should do nothing for empty uri', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
 
@@ -24,7 +24,7 @@ test('handleClickReadFile should do nothing for empty uri', async () => {
 })
 
 test('handleClickReadFile should normalize vscode-references uri before opening', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
 
@@ -34,7 +34,7 @@ test('handleClickReadFile should normalize vscode-references uri before opening'
 })
 
 test('handleClickFileName should open uri', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
 
