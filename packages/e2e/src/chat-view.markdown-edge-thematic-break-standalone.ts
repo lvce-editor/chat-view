@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.markdown-edge.thematic-break'
+export const name = 'chat-view.markdown-edge.thematic-break-standalone'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -10,8 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: 'Before\n\n---\n\nAfter' })
-  await Chat.handleInput('render thematic break')
+  await Command.execute('Chat.registerMockResponse', { text: '---' })
+  await Chat.handleInput('render standalone thematic break')
 
   await Chat.handleSubmit()
   await Command.execute('Chat.rerender')
@@ -21,7 +21,5 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const hr = Locator('.ChatMessages .Message hr')
   await expect(hr).toHaveCount(1)
   const assistant = Locator('.ChatMessages .Message').nth(1)
-  await expect(assistant).toContainText('Before')
-  await expect(assistant).toContainText('After')
   await expect(assistant).not.toContainText('---')
 }
