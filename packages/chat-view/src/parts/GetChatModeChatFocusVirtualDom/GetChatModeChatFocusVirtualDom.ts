@@ -1,6 +1,7 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
@@ -29,10 +30,12 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -60,10 +63,12 @@ export const getChatModeChatFocusVirtualDom = ({
   projectExpandedIds = [],
   projectListScrollTop = 0,
   projects = [],
+  runMode,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
   sessions,
+  showRunMode,
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
@@ -73,6 +78,10 @@ export const getChatModeChatFocusVirtualDom = ({
   void authEnabled
   void authStatus
   void authErrorMessage
+  void composerHeight
+  void composerFontSize
+  void composerFontFamily
+  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
@@ -95,7 +104,17 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      showRunMode,
+      runMode,
+      voiceDictationEnabled,
+    ),
     ...(isDropOverlayVisible
       ? [
           {
