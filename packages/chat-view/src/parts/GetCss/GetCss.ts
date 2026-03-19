@@ -16,6 +16,11 @@ export const getCss = (
   --ChatMessageFontFamily: ${chatMessageFontFamily};
 }
 
+
+.ChatSendArea{
+  height: var(--ChatSendAreaHeight);
+}
+
 .Viewlet.Chat.ChatFocus {
   background: linear-gradient(180deg, var(--ColorViewBackground, #1d2229) 0%, #1f252d 100%);
   display: grid;
