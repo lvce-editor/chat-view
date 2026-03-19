@@ -90,7 +90,7 @@ test('getToolCallDom should display getWorkspaceUri result value', () => {
     status: 'success',
   })
 
-  expect(result).toHaveLength(5)
+  expect(result).toHaveLength(6)
   expect(result[0]).toEqual({
     childCount: 3,
     className: ClassNames.ChatOrderedListItem,
@@ -107,7 +107,12 @@ test('getToolCallDom should display getWorkspaceUri result value', () => {
     onClick: DomEventListenerFunctions.HandleClickReadFile,
     type: VirtualDomElements.Span,
   })
-  expect(result[4]).toMatchObject({
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[5]).toMatchObject({
     text: 'some-folder',
   })
 })
@@ -199,23 +204,28 @@ test('getToolCallDom should render write_file as filename with line count badges
   expect(result[2]).toMatchObject({
     text: 'write_file ',
   })
-  expect(result[4]).toMatchObject({
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[5]).toMatchObject({
     text: 'main.ts',
   })
-  expect(result[5]).toEqual({
+  expect(result[6]).toEqual({
     childCount: 1,
     className: ClassNames.Insertion,
     type: VirtualDomElements.Span,
   })
-  expect(result[6]).toMatchObject({
+  expect(result[7]).toMatchObject({
     text: ' +1',
   })
-  expect(result[7]).toEqual({
+  expect(result[8]).toEqual({
     childCount: 1,
     className: ClassNames.Deletion,
     type: VirtualDomElements.Span,
   })
-  expect(result[8]).toMatchObject({
+  expect(result[9]).toMatchObject({
     text: ' -1',
   })
   expect(result.find((node) => node.text === '"const value = 2\\n"')).toBeUndefined()
@@ -245,7 +255,7 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     status: 'success',
   })
 
-  expect(result).toHaveLength(5)
+  expect(result).toHaveLength(6)
   expect(result[0]).toEqual({
     childCount: 3,
     className: ClassNames.ChatOrderedListItem,
@@ -263,7 +273,12 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     title: uri,
     type: VirtualDomElements.Span,
   })
-  expect(result[4]).toMatchObject({
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[5]).toMatchObject({
     text: 'main.ts',
   })
 })
