@@ -599,7 +599,12 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
   expect(fileNameSpanNode).toBeDefined()
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(fileNameSpanNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
 })
@@ -640,10 +645,14 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
 
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': path,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
-  expect(fileNameSpanNode).toBeDefined()
+  expect(fileNameSpanNode).toMatchObject({
+    'data-uri': path,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
 })
 
 test('getChatVirtualDOm should render assistant list_files uri as clickable filename', () => {
@@ -692,7 +701,12 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
   expect(fileNameSpanNode).toBeDefined()
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(fileNameSpanNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
 })
@@ -738,10 +752,14 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
   })
   expect(fileNameLinkNode).toMatchObject({
     'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
-  expect(fileNameSpanNode).toBeDefined()
+  expect(fileNameSpanNode).toMatchObject({
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
 })
 
 test('getChatVirtualDOm should render read_file not-found status', () => {

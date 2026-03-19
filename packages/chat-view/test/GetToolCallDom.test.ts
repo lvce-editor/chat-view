@@ -104,12 +104,14 @@ test('getToolCallDom should display getWorkspaceUri result value', () => {
     childCount: 1,
     className: ClassNames.ChatToolCallReadFileLink,
     'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
   expect(result[4]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallFileName,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
   expect(result[5]).toMatchObject({
@@ -207,6 +209,8 @@ test('getToolCallDom should render write_file as filename with line count badges
   expect(result[4]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallFileName,
+    'data-uri': 'src/main.ts',
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
   expect(result[5]).toMatchObject({
@@ -301,13 +305,15 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     childCount: 1,
     className: ClassNames.ChatToolCallReadFileLink,
     'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     title: uri,
     type: VirtualDomElements.Span,
   })
   expect(result[4]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallFileName,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
   expect(result[5]).toMatchObject({
