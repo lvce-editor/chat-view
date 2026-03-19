@@ -8,6 +8,7 @@ import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctio
 import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
+import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
@@ -27,6 +28,7 @@ export const loadPreferences = async (): Promise<{
   openApiApiKey: string
   openRouterApiKey: string
   passIncludeObfuscation: boolean
+  searchEnabled: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
   useChatCoordinatorWorker: boolean
@@ -45,6 +47,7 @@ export const loadPreferences = async (): Promise<{
     openApiApiKey,
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
+    searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
     passIncludeObfuscation,
@@ -63,6 +66,7 @@ export const loadPreferences = async (): Promise<{
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
+    loadSearchEnabled(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
     loadPassIncludeObfuscation(),
@@ -84,6 +88,7 @@ export const loadPreferences = async (): Promise<{
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,
+    searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
     useChatCoordinatorWorker,

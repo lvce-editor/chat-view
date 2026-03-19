@@ -712,6 +712,46 @@ test('loadContent should load todoListToolEnabled from preferences', async () =>
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.streamingEnabled'],
     ['Preferences.get', 'chatView.todoListToolEnabled'],
+    ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+    ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
+    ['Preferences.get', 'chatView.useChatCoordinatorWorker'],
+    ['Preferences.get', 'chatView.useChatMathWorker'],
+    ['Preferences.get', 'chatView.useChatToolWorker'],
+    ['Preferences.get', 'chatView.voiceDictationEnabled'],
+  ])
+})
+
+test('loadContent should load searchEnabled from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.searchEnabled') {
+        return true
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.searchEnabled).toBe(true)
+  expect(result.searchFieldVisible).toBe(false)
+  expect(result.searchValue).toBe('')
+  expectInvocations(mockRpc.invocations, [
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
+    ['Preferences.get', 'chatView.composerDropEnabled'],
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
+    ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
     ['Preferences.get', 'chatView.passIncludeObfuscation'],
     ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
     ['Preferences.get', 'chatView.useChatCoordinatorWorker'],

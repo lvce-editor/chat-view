@@ -112,6 +112,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleSearchInput,
+      params: ['handleSearchValueChange', EventExpression.TargetValue],
+    },
+    {
       name: DomEventListenersFunctions.HandleDragEnter,
       params: ['handleDragEnter', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || []).length > 0'],
       preventDefault: true,

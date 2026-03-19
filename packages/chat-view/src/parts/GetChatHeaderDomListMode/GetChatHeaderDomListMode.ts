@@ -1,17 +1,24 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatHeaderListModeDom = (
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
   authErrorMessage = '',
+  searchEnabled = false,
+  searchFieldVisible = false,
+  searchValue = '',
 ): readonly VirtualDomNode[] => {
   const hasAuthError = authEnabled && !!authErrorMessage
+  const hasSearchField = searchEnabled && searchFieldVisible
+  const headerChildCount = 2 + (hasAuthError ? 1 : 0) + (hasSearchField ? 1 : 0)
   return [
     {
-      childCount: hasAuthError ? 3 : 2,
+      childCount: headerChildCount,
       className: ClassNames.ChatHeader,
       type: VirtualDomElements.Div,
     },
@@ -21,7 +28,26 @@ export const getChatHeaderListModeDom = (
       type: VirtualDomElements.Span,
     },
     text(Strings.chats()),
-    ...getChatHeaderActionsDom('list', authEnabled, authStatus),
+    ...getChatHeaderActionsDom('list', authEnabled, authStatus, searchEnabled),
+    ...(hasSearchField
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.SearchFieldContainer,
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: 0,
+            className: ClassNames.InputBox,
+            inputType: 'search',
+            name: InputName.Search,
+            onInput: DomEventListenerFunctions.HandleSearchInput,
+            placeholder: Strings.searchChats(),
+            type: VirtualDomElements.Input,
+            value: searchValue,
+          },
+        ]
+      : []),
     ...(hasAuthError
       ? [
           {

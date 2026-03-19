@@ -25,6 +25,9 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerValue: string
   readonly models: readonly ChatModel[]
   readonly runMode: RunMode
+  readonly searchEnabled?: boolean
+  readonly searchFieldVisible?: boolean
+  readonly searchValue?: string
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -52,6 +55,9 @@ export const getChatModeListVirtualDom = ({
   composerValue,
   models,
   runMode,
+  searchEnabled = false,
+  searchFieldVisible = false,
+  searchValue = '',
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -68,6 +74,9 @@ export const getChatModeListVirtualDom = ({
   void composerFontFamily
   void composerLineHeight
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const searchValueTrimmed = searchValue.trim().toLowerCase()
+  const visibleSessions =
+    searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
   return [
     {
       childCount: isDropOverlayVisible ? 4 : 3,
@@ -76,8 +85,8 @@ export const getChatModeListVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderListModeDom(authEnabled, authStatus, authErrorMessage),
-    ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
+    ...getChatHeaderListModeDom(authEnabled, authStatus, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
+    ...getChatListDom(visibleSessions, selectedSessionId, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       models,

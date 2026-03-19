@@ -2,6 +2,7 @@ export const Notifications = 'Notifications'
 export const Problems = 'Problems'
 
 export const Composer = 'composer'
+export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
@@ -10,6 +11,7 @@ export const Back = 'back'
 export const Model = 'model'
 export const RunMode = 'runMode'
 export const ToggleChatFocus = 'toggle-chat-focus'
+export const ToggleSearch = 'toggle-search'
 export const CreateProject = 'create-project'
 export const CreateSession = 'create-session'
 export const CreateSessionInProjectPrefix = 'create-session-in-project:'
@@ -27,6 +29,7 @@ export type InputName =
   | typeof Notifications
   | typeof Problems
   | typeof Composer
+  | typeof Search
   | typeof ComposerDropTarget
   | typeof AddContext
   | typeof Dictate
@@ -35,6 +38,7 @@ export type InputName =
   | typeof Model
   | typeof RunMode
   | typeof ToggleChatFocus
+  | typeof ToggleSearch
   | typeof CreateProject
   | typeof CreateSession
   | `${typeof CreateSessionInProjectPrefix}${string}`
