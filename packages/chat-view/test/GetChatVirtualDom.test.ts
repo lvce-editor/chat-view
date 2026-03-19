@@ -117,6 +117,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
+  const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(projectSidebar).toBeDefined()
   expect(chatHeader).toBeUndefined()
   expect(projectList).toMatchObject({
@@ -128,6 +129,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
   expect(normalModeButton).toBeUndefined()
+  expect(welcomeMessage).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render session list entries', () => {
