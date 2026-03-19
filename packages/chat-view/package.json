@@ -45,7 +45,7 @@
   "dependencies": {
     "@lvce-editor/constants": "^5.8.0",
     "@lvce-editor/i18n": "^2.1.0",
-    "@lvce-editor/virtual-dom-worker": "^9.2.0"
+    "@lvce-editor/virtual-dom-worker": "^9.3.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.3.0",

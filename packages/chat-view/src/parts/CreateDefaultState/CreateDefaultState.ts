@@ -11,6 +11,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   return {
+    addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
     authAccessToken: '',
@@ -76,6 +77,9 @@ export const createDefaultState = (): ChatState => {
     questionToolEnabled: false,
     renamingSessionId: '',
     runMode: 'local',
+    searchEnabled: false,
+    searchFieldVisible: false,
+    searchValue: '',
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,

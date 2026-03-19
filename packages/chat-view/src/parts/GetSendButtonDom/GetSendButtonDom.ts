@@ -41,3 +41,19 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
     },
   ]
 }
+
+export const getAddContextButtonDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.IconButton,
+      name: InputName.AddContext,
+      title: Strings.addContext(),
+      type: VirtualDomElements.Button,
+    },
+    {
+      text: Strings.addContext(),
+      type: VirtualDomElements.Text,
+    },
+  ]
+}

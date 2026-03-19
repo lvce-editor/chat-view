@@ -24,6 +24,14 @@ export const settings = (): string => {
   return i18nString('Settings')
 }
 
+export const search = (): string => {
+  return i18nString('Search')
+}
+
+export const searchChats = (): string => {
+  return i18nString('Search chats')
+}
+
 export const login = (): string => {
   return i18nString('Login')
 }
@@ -94,6 +102,10 @@ export const sendMessage = (): string => {
 
 export const startVoiceDictation = (): string => {
   return i18nString('Start voice dictation')
+}
+
+export const addContext = (): string => {
+  return i18nString('Add Context')
 }
 
 export const send = (): string => {

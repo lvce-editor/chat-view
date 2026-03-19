@@ -29,6 +29,7 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
 }
 
 export interface GetChatVirtualDomOptions {
+  readonly addContextButtonEnabled: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -50,6 +51,9 @@ export interface GetChatVirtualDomOptions {
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
   readonly runMode: RunMode
+  readonly searchEnabled?: boolean
+  readonly searchFieldVisible?: boolean
+  readonly searchValue?: string
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -66,6 +70,7 @@ export interface GetChatVirtualDomOptions {
 
 export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly VirtualDomNode[] => {
   const {
+    addContextButtonEnabled,
     authEnabled = false,
     authErrorMessage = '',
     authStatus = 'signed-out',
@@ -87,6 +92,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     projectListScrollTop = 0,
     projects = [],
     runMode,
+    searchEnabled = false,
+    searchFieldVisible = false,
+    searchValue = '',
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
@@ -107,6 +115,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -142,6 +151,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'detail':
       return getChatModeDetailVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -173,6 +183,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'list':
       return getChatModeListVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -186,6 +197,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         models,
         runMode,
+        searchEnabled,
+        searchFieldVisible,
+        searchValue,
         selectedModelId,
         selectedSessionId,
         sessions,

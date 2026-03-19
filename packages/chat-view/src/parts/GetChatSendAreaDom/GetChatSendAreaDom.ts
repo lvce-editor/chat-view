@@ -7,7 +7,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
-import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
+import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -18,6 +18,7 @@ export const getChatSendAreaDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  addContextButtonEnabled: boolean,
   showRunMode: boolean,
   runMode: RunMode,
   todoListToolEnabled: boolean,
@@ -25,7 +26,7 @@ export const getChatSendAreaDom = (
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-  const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
+  const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0) + (addContextButtonEnabled ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
   const getTodoItemClassName = (status: TodoListItem['status']): string => {
@@ -97,6 +98,7 @@ export const getChatSendAreaDom = (
     ...getChatSelectVirtualDom(models, selectedModelId),
     ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
+    ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

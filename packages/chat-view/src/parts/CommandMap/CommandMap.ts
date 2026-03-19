@@ -33,6 +33,7 @@ import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
+import * as HandleSearchValueChange from '../HandleSearchValueChange/HandleSearchValueChange.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
@@ -52,12 +53,14 @@ import { rerender } from '../Rerender/Rerender.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
+import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAddContextButtonEnabled.ts'
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
+import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
@@ -106,6 +109,7 @@ export const commandMap = {
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
+  'Chat.handleSearchValueChange': wrapCommand(HandleSearchValueChange.handleSearchValueChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
@@ -126,12 +130,14 @@ export const commandMap = {
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
+  'Chat.setAddContextButtonEnabled': wrapCommand(SetAddContextButtonEnabled.setAddContextButtonEnabled),
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
+  'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
