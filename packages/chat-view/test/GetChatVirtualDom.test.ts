@@ -48,6 +48,7 @@ const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOption
   ...overrides,
 })
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
   return GetChatViewDom.getChatVirtualDom(createOptions(overrides))
 }
