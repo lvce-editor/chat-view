@@ -31,10 +31,11 @@ export const getChatMessageDom = (
   const messageDom = getMessageContentDom(parsedMessageContent, useChatMathWorker)
   const toolCallsDom = getToolCallsDom(message)
   const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
+  const messageDomChildCount = messageDom.filter((node) => node.type !== VirtualDomElements.Text).length
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? parsedMessageContent.length + 1 + toolCallsChildCount
-      : parsedMessageContent.length + toolCallsChildCount
+      ? messageDomChildCount + 1 + toolCallsChildCount
+      : messageDomChildCount + toolCallsChildCount
   return [
     {
       childCount: 1,

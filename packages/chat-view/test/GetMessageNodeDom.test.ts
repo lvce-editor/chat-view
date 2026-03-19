@@ -619,3 +619,17 @@ test('getMessageNodeDom should keep raw inline math markdown when math rendering
     text: '$\\invalid{$',
   })
 })
+
+test('getMessageNodeDom should not render empty markdown paragraphs', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: '',
+        type: 'text',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result).toEqual([])
+})
