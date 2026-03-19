@@ -14,6 +14,7 @@ export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface ChatState {
+  readonly addContextButtonEnabled: boolean
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
   readonly authAccessToken: string

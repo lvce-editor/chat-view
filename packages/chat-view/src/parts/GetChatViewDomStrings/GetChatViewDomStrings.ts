@@ -96,6 +96,10 @@ export const startVoiceDictation = (): string => {
   return i18nString('Start voice dictation')
 }
 
+export const addContext = (): string => {
+  return i18nString('Add Context')
+}
+
 export const send = (): string => {
   return i18nString('Send')
 }

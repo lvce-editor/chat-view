@@ -11,6 +11,7 @@ import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeDetailVirtualDomOptions {
+  readonly addContextButtonEnabled: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -40,6 +41,7 @@ export interface GetChatModeDetailVirtualDomOptions {
 }
 
 export const getChatModeDetailVirtualDom = ({
+  addContextButtonEnabled,
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
@@ -100,6 +102,7 @@ export const getChatModeDetailVirtualDom = ({
       usageOverviewEnabled,
       tokensUsed,
       tokensMax,
+      addContextButtonEnabled,
       showRunMode,
       runMode,
       voiceDictationEnabled,
