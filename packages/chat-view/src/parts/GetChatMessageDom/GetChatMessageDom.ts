@@ -18,8 +18,8 @@ import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 export const getChatMessageDom = (
   message: ChatMessage,
   parsedMessageContent: readonly MessageIntermediateNode[],
-  openRouterApiKeyInput: string,
-  openApiApiKeyInput = '',
+  _openRouterApiKeyInput: string,
+  _openApiApiKeyInput = '',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
@@ -48,8 +48,8 @@ export const getChatMessageDom = (
     },
     ...toolCallsDom,
     ...messageDom,
-    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyInput) : []),
-    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyInput, openRouterApiKeyState) : []),
+    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom() : []),
+    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
   ]

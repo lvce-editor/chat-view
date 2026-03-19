@@ -840,7 +840,6 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
   expect(apiKeyInput).toMatchObject({
     onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.Input,
-    value: 'or-key-typed',
   })
   expect(saveButton).toMatchObject({
     inputType: 'submit',
@@ -907,7 +906,6 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     pattern: '^sk-.+',
     required: true,
     type: VirtualDomElements.Input,
-    value: 'oa-key-typed',
   })
   expect(saveButton).toMatchObject({
     inputType: 'submit',
