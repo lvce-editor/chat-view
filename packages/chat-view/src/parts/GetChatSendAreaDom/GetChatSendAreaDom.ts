@@ -26,10 +26,7 @@ export const getChatSendAreaDom = (
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-<<<<<<< HEAD
   const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0) + (addContextButtonEnabled ? 1 : 0)
-=======
-  const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
   const getTodoItemClassName = (status: TodoListItem['status']): string => {
@@ -41,7 +38,6 @@ export const getChatSendAreaDom = (
     }
     return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemTodo} todo`
   }
->>>>>>> origin/main
   return [
     {
       childCount: 1,

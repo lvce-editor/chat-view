@@ -18,6 +18,7 @@ const models = [
 ] as const
 
 const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
+  addContextButtonEnabled: false,
   authEnabled: false,
   authErrorMessage: '',
   authStatus: 'signed-out',
