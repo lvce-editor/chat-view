@@ -46,5 +46,8 @@ test('renderCss should return setCss command with uid and css', () => {
   expect(result[2]).toContain('--ChatSendAreaPaddingLeft: 8px;')
   expect(result[2]).toContain('--ChatSendAreaPaddingRight: 8px;')
   expect(result[2]).toContain('--ChatSendAreaPaddingBottom: 10px;')
+  expect(result[2]).toContain('.ChatTodoList')
+  expect(result[2]).toContain('.ChatTodoListItemInProgress::before')
+  expect(result[2]).toContain('.ChatTodoListItemCompleted::before')
   expect(result[2]).toContain('.card{color:green;}')
 })
