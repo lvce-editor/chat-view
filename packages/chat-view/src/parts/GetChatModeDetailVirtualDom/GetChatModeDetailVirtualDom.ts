@@ -2,6 +2,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-
 import type { ChatMessage, ChatModel, ChatSession } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
+import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
@@ -33,6 +34,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
+  readonly todoListItems: readonly TodoListItem[]
+  readonly todoListToolEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -63,6 +66,8 @@ export const getChatModeDetailVirtualDom = ({
   selectedSessionId,
   sessions,
   showRunMode,
+  todoListItems,
+  todoListToolEnabled,
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
@@ -105,6 +110,8 @@ export const getChatModeDetailVirtualDom = ({
       addContextButtonEnabled,
       showRunMode,
       runMode,
+      todoListToolEnabled,
+      todoListItems,
       voiceDictationEnabled,
     ),
     ...(isDropOverlayVisible

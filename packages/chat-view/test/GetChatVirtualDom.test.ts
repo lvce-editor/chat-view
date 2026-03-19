@@ -40,6 +40,7 @@ const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOption
   selectedSessionId: '',
   sessions: [],
   showRunMode: false,
+  todoListToolEnabled: false,
   tokensMax: 0,
   tokensUsed: 0,
   usageOverviewEnabled: false,
@@ -238,6 +239,89 @@ test('getChatVirtualDOm should render dictate button before send button when ena
   const sendButtonIndex = result.findIndex((node) => node.name === 'send')
   expect(dictateButtonIndex).toBeGreaterThan(-1)
   expect(sendButtonIndex).toBeGreaterThan(dictateButtonIndex)
+})
+
+test('getChatVirtualDOm should render todo list above composer when enabled and not empty', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant' as const,
+          text: '',
+          time: '',
+          toolCalls: [
+            {
+              arguments: JSON.stringify({
+                todos: [
+                  { status: 'todo', text: 'Run baseline tests' },
+                  { status: 'inProgress', text: 'Implement feature' },
+                  { status: 'completed', text: 'Review and summary' },
+                ],
+              }),
+              name: 'todo_list',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    todoListToolEnabled: true,
+    viewMode: 'detail',
+  })
+  const todoList = result.find((node) => node.className === ClassNames.ChatTodoList)
+  const todoItems = result.filter((node) => node.className?.startsWith(`${ClassNames.ChatTodoListItem} `))
+  const headerText = result.find((node) => node.text === 'Todos (1/3)')
+  const composer = result.find((node) => node.name === 'composer')
+  const todoListIndex = result.findIndex((node) => node.className === ClassNames.ChatTodoList)
+  const composerIndex = result.findIndex((node) => node.name === 'composer')
+  expect(todoList).toBeDefined()
+  expect(todoItems).toHaveLength(3)
+  expect(headerText).toBeDefined()
+  expect(composer).toBeDefined()
+  expect(todoListIndex).toBeGreaterThan(-1)
+  expect(composerIndex).toBeGreaterThan(todoListIndex)
+  expect(todoItems.some((node) => node.className?.includes(' todo'))).toBe(true)
+  expect(todoItems.some((node) => node.className?.includes(' inProgress'))).toBe(true)
+  expect(todoItems.some((node) => node.className?.includes(' completed'))).toBe(true)
+})
+
+test('getChatVirtualDOm should not render todo list when disabled', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant' as const,
+          text: '',
+          time: '',
+          toolCalls: [
+            {
+              arguments: JSON.stringify({
+                todos: [{ status: 'todo', text: 'Task 1' }],
+              }),
+              name: 'todo_list',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    todoListToolEnabled: false,
+    viewMode: 'detail',
+  })
+  const todoList = result.find((node) => node.className === ClassNames.ChatTodoList)
+  expect(todoList).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render drag overlay message in composer drop target', () => {

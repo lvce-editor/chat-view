@@ -94,6 +94,7 @@ export const createDefaultState = (): ChatState => {
     textAreaPaddingLeft: 12,
     textAreaPaddingRight: 12,
     textAreaPaddingTop: 0,
+    todoListToolEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     uid: 0,

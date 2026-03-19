@@ -683,3 +683,40 @@ test('loadContent should load voiceDictationEnabled from preferences', async () 
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
   ])
 })
+
+test('loadContent should load todoListToolEnabled from preferences', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.todoListToolEnabled') {
+        return true
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.todoListToolEnabled).toBe(true)
+  expectInvocations(mockRpc.invocations, [
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
+    ['Preferences.get', 'chatView.composerDropEnabled'],
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.todoListToolEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+    ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
+    ['Preferences.get', 'chatView.useChatCoordinatorWorker'],
+    ['Preferences.get', 'chatView.useChatMathWorker'],
+    ['Preferences.get', 'chatView.useChatToolWorker'],
+    ['Preferences.get', 'chatView.voiceDictationEnabled'],
+  ])
+})

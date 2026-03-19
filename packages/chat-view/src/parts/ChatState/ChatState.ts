@@ -85,6 +85,7 @@ export interface ChatState {
   readonly textAreaPaddingLeft: number
   readonly textAreaPaddingRight: number
   readonly textAreaPaddingTop: number
+  readonly todoListToolEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number
