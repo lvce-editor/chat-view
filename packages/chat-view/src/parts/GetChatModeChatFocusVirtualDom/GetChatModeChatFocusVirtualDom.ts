@@ -12,6 +12,7 @@ import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeChatFocusVirtualDomOptions {
+  readonly addContextButtonEnabled: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -47,6 +48,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
 }
 
 export const getChatModeChatFocusVirtualDom = ({
+  addContextButtonEnabled,
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
@@ -116,6 +118,7 @@ export const getChatModeChatFocusVirtualDom = ({
       usageOverviewEnabled,
       tokensUsed,
       tokensMax,
+      addContextButtonEnabled,
       showRunMode,
       runMode,
       todoListToolEnabled,

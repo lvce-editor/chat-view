@@ -29,6 +29,7 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
 }
 
 export interface GetChatVirtualDomOptions {
+  readonly addContextButtonEnabled: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -66,6 +67,7 @@ export interface GetChatVirtualDomOptions {
 
 export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly VirtualDomNode[] => {
   const {
+    addContextButtonEnabled,
     authEnabled = false,
     authErrorMessage = '',
     authStatus = 'signed-out',
@@ -107,6 +109,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -142,6 +145,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'detail':
       return getChatModeDetailVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -173,6 +177,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'list':
       return getChatModeListVirtualDom({
+        addContextButtonEnabled,
         authEnabled,
         authErrorMessage,
         authStatus,

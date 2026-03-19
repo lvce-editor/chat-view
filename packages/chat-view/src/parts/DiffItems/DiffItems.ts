@@ -14,6 +14,7 @@ const isEqualProjectExpandedIds = (a: readonly string[], b: readonly string[]): 
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
+    oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     oldState.authStatus === newState.authStatus &&

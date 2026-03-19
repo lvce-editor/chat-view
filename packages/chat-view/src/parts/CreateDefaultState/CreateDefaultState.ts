@@ -11,6 +11,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   return {
+    addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
     authAccessToken: '',
