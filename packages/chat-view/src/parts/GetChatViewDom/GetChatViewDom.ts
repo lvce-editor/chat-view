@@ -2,6 +2,7 @@ import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
@@ -35,6 +36,8 @@ export const getChatVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,
   usageOverviewEnabled: boolean,
+  showRunMode: boolean,
+  runMode: RunMode,
   tokensUsed: number,
   tokensMax: number,
   openApiApiKeyInput: string,
@@ -70,6 +73,8 @@ export const getChatVirtualDom = (
         models,
         selectedModelId,
         usageOverviewEnabled,
+        showRunMode,
+        runMode,
         tokensUsed,
         tokensMax,
         openRouterApiKeyState,
@@ -101,6 +106,8 @@ export const getChatVirtualDom = (
         models,
         selectedModelId,
         usageOverviewEnabled,
+        showRunMode,
+        runMode,
         tokensUsed,
         tokensMax,
         openRouterApiKeyState,
@@ -126,6 +133,8 @@ export const getChatVirtualDom = (
         models,
         selectedModelId,
         usageOverviewEnabled,
+        showRunMode,
+        runMode,
         tokensUsed,
         tokensMax,
         composerHeight,

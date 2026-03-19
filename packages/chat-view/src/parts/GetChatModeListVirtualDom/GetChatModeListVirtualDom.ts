@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
@@ -17,6 +18,8 @@ export const getChatModeListVirtualDom = (
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
+  showRunMode: boolean,
+  runMode: RunMode,
   composerHeight = 28,
   composerFontSize = 13,
   composerFontFamily = 'system-ui',
@@ -40,7 +43,7 @@ export const getChatModeListVirtualDom = (
     },
     ...getChatHeaderListModeDom(authEnabled, authStatus, authErrorMessage),
     ...getChatListDom(sessions, selectedSessionId, chatListScrollTop),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
+    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, showRunMode, runMode, voiceDictationEnabled),
     ...(isDropOverlayVisible
       ? [
           {
