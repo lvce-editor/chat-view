@@ -201,6 +201,7 @@ test('getChatVirtualDOm should restore chat list scroll position', () => {
   expect(chatList).toMatchObject({
     onScroll: DomEventListenerFunctions.HandleChatListScroll,
     scrollTop: 90,
+    type: VirtualDomElements.Ul,
   })
 })
 
