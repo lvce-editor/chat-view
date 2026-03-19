@@ -17,4 +17,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(1)).toContainText('OpenRouter API key is not configured')
+  const openRouterApiKeyInput = Locator('[name="open-router-api-key"]')
+  await expect(openRouterApiKeyInput).toBeVisible()
+  await expect(openRouterApiKeyInput).toHaveAttribute('pattern', null)
 }
