@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { beforeEach, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -318,7 +318,7 @@ test('handleClick should open OpenRouter API keys settings', async () => {
 })
 
 test('handleClick should open OpenRouter API keys website', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openExternal': async () => {},
   })
   const state: ChatState = createDefaultState()
@@ -402,7 +402,7 @@ test('handleClick should open OpenAPI API keys settings', async () => {
 })
 
 test('handleClick should open OpenAPI API keys website', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openExternal': async () => {},
   })
   const state: ChatState = createDefaultState()
