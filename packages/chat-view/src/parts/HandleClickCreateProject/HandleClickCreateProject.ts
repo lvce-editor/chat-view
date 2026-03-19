@@ -2,12 +2,15 @@ import type { ChatState, Project } from '../ChatState/ChatState.ts'
 import { openFolder } from '../OpenFolder/OpenFolder.ts'
 import { selectProject } from '../SelectProject/SelectProject.ts'
 
+const fileSchemeRegex = /^file:\/\//
+const trailingSlashesRegex = /\/+$/
+
 const getProjectName = (uri: string, fallbackIndex: number): string => {
   if (!uri) {
     return `Project ${fallbackIndex}`
   }
-  const withoutScheme = uri.replace(/^file:\/\//, '')
-  const normalized = withoutScheme.replace(/\/+$/, '')
+  const withoutScheme = uri.replace(fileSchemeRegex, '')
+  const normalized = withoutScheme.replace(trailingSlashesRegex, '')
   const lastSegment = normalized.split('/').pop()
   if (!lastSegment) {
     return `Project ${fallbackIndex}`

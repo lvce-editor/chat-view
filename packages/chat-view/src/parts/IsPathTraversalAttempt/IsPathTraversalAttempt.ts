@@ -1,3 +1,6 @@
+const windowsAbsolutePathRegex = /^[a-zA-Z]:[\\/]/
+const pathSeparatorRegex = /[\\/]/
+
 export const isPathTraversalAttempt = (path: string): boolean => {
   if (!path) {
     return false
@@ -8,9 +11,9 @@ export const isPathTraversalAttempt = (path: string): boolean => {
   if (path.startsWith('file://')) {
     return true
   }
-  if (/^[a-zA-Z]:[\\/]/.test(path)) {
+  if (windowsAbsolutePathRegex.test(path)) {
     return true
   }
-  const segments = path.split(/[\\/]/)
+  const segments = path.split(pathSeparatorRegex)
   return segments.includes('..')
 }
