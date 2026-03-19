@@ -14,10 +14,11 @@ export const getCss = (
   chatSendAreaPaddingBottom: number,
   renderHtmlCss: string,
 ): string => {
+  const chatSendAreaHeight = composerHeight + chatSendAreaPaddingTop + chatSendAreaPaddingBottom
   const baseCss = `:root {
   --ChatInputBoxHeight: ${composerHeight}px;
   --ChatTextAreaHeight: ${composerHeight}px;
-  --ChatSendAreaHeight: ${composerHeight + 62}px;
+  --ChatSendAreaHeight: ${chatSendAreaHeight}px;
   --ChatTextAreaPaddingTop: ${textAreaPaddingTop}px;
   --ChatTextAreaPaddingLeft: ${textAreaPaddingLeft}px;
   --ChatTextAreaPaddingRight: ${textAreaPaddingRight}px;
