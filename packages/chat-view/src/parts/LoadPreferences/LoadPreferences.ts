@@ -9,6 +9,7 @@ import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
+import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
@@ -27,6 +28,7 @@ export const loadPreferences = async (): Promise<{
   openRouterApiKey: string
   passIncludeObfuscation: boolean
   streamingEnabled: boolean
+  todoListToolEnabled: boolean
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
@@ -44,6 +46,7 @@ export const loadPreferences = async (): Promise<{
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
     streamingEnabled,
+    todoListToolEnabled,
     passIncludeObfuscation,
     useChatCoordinatorWorker,
     useChatMathWorker,
@@ -61,6 +64,7 @@ export const loadPreferences = async (): Promise<{
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
     loadStreamingEnabled(),
+    loadTodoListToolEnabled(),
     loadPassIncludeObfuscation(),
     loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
@@ -81,6 +85,7 @@ export const loadPreferences = async (): Promise<{
     openRouterApiKey,
     passIncludeObfuscation,
     streamingEnabled,
+    todoListToolEnabled,
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,

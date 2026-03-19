@@ -3,9 +3,11 @@ import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
+import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
+import { getTodoListItems } from '../GetTodoListItems/GetTodoListItems.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
 import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
@@ -54,6 +56,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
+  readonly todoListToolEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
@@ -90,6 +93,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedSessionId,
     sessions,
     showRunMode,
+    todoListToolEnabled,
     tokensMax,
     tokensUsed,
     usageOverviewEnabled,
@@ -99,6 +103,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
   } = options
 
   const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
+  const todoListItems = getTodoListItems(sessions, selectedSessionId)
 
   switch (viewMode) {
     case 'chat-focus':
@@ -128,6 +133,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedSessionId,
         sessions,
         showRunMode,
+        todoListItems,
+        todoListToolEnabled,
         tokensMax,
         tokensUsed,
         usageOverviewEnabled,
@@ -157,6 +164,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedSessionId,
         sessions,
         showRunMode,
+        todoListItems,
+        todoListToolEnabled,
         tokensMax,
         tokensUsed,
         usageOverviewEnabled,
@@ -182,6 +191,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedSessionId,
         sessions,
         showRunMode,
+        todoListItems,
+        todoListToolEnabled,
         tokensMax,
         tokensUsed,
         usageOverviewEnabled,
