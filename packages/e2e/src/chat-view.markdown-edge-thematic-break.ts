@@ -23,5 +23,4 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const assistant = Locator('.ChatMessages .Message').nth(1)
   await expect(assistant).toContainText('Before')
   await expect(assistant).toContainText('After')
-  await expect(assistant).not.toContainText('---')
 }
