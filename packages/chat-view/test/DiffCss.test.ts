@@ -66,3 +66,15 @@ test('isEqual should return false when render_html css changes for selected sess
 
   expect(DiffCss.isEqual(oldState, newState)).toBe(false)
 })
+
+test('isEqual should return false when textAreaPaddingTop changes', () => {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), textAreaPaddingTop: 1 }
+  expect(DiffCss.isEqual(oldState, newState)).toBe(false)
+})
+
+test('isEqual should return false when chatSendAreaPaddingTop changes', () => {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), chatSendAreaPaddingTop: 11 }
+  expect(DiffCss.isEqual(oldState, newState)).toBe(false)
+})
