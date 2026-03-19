@@ -47,3 +47,9 @@ test('handleInput should update searchValue when editing search input', async ()
   const result = await HandleInput.handleInput(state, 'search', 'dummy')
   expect(result.searchValue).toBe('dummy')
 })
+
+test('handleInput should update modelPickerSearchValue when editing model picker search input', async () => {
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'model-picker-search', 'gpt')
+  expect(result.modelPickerSearchValue).toBe('gpt')
+})

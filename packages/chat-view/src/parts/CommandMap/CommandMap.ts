@@ -58,6 +58,7 @@ import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
+import * as SetNewChatModelPickerEnabled from '../SetNewChatModelPickerEnabled/SetNewChatModelPickerEnabled.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
@@ -135,6 +136,7 @@ export const commandMap = {
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
+  'Chat.setNewChatModelPickerEnabled': wrapCommand(SetNewChatModelPickerEnabled.setNewChatModelPickerEnabled),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),

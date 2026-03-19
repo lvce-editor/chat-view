@@ -9,6 +9,9 @@ export const Dictate = 'dictate'
 export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
+export const ModelPickerToggle = 'model-picker-toggle'
+export const ModelPickerSearch = 'model-picker-search'
+export const ModelPickerSettings = 'model-picker-settings'
 export const RunMode = 'runMode'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const ToggleSearch = 'toggle-search'
@@ -24,6 +27,7 @@ export const SessionDelete = 'SessionDelete'
 export const ProjectPrefix = 'project:'
 export const SessionPrefix = 'session:'
 export const RenamePrefix = 'session-rename:'
+export const ModelPickerItemPrefix = 'model-picker-item:'
 
 export type InputName =
   | typeof Notifications
@@ -36,6 +40,9 @@ export type InputName =
   | typeof Send
   | typeof Back
   | typeof Model
+  | typeof ModelPickerToggle
+  | typeof ModelPickerSearch
+  | typeof ModelPickerSettings
   | typeof RunMode
   | typeof ToggleChatFocus
   | typeof ToggleSearch
@@ -51,6 +58,7 @@ export type InputName =
   | `${typeof ProjectPrefix}${string}`
   | `${typeof SessionPrefix}${string}`
   | `${typeof RenamePrefix}${string}`
+  | `${typeof ModelPickerItemPrefix}${string}`
 
 export const getProjectInputName = (projectId: string): `${typeof ProjectPrefix}${string}` => {
   return `${ProjectPrefix}${projectId}`
@@ -98,4 +106,16 @@ export const isRenameInputName = (name: string): name is `${typeof RenamePrefix}
 
 export const getRenameIdFromInputName = (name: `${typeof RenamePrefix}${string}`): string => {
   return name.slice(RenamePrefix.length)
+}
+
+export const getModelPickerItemInputName = (modelId: string): `${typeof ModelPickerItemPrefix}${string}` => {
+  return `${ModelPickerItemPrefix}${modelId}`
+}
+
+export const isModelPickerItemInputName = (name: string): name is `${typeof ModelPickerItemPrefix}${string}` => {
+  return name.startsWith(ModelPickerItemPrefix)
+}
+
+export const getModelIdFromModelPickerItemInputName = (name: `${typeof ModelPickerItemPrefix}${string}`): string => {
+  return name.slice(ModelPickerItemPrefix.length)
 }

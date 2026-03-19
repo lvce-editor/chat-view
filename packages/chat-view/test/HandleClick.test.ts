@@ -145,6 +145,28 @@ test('handleClick should keep state for unknown action', async () => {
   expect(result).toBe(state)
 })
 
+test('handleClick should toggle model picker open state', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    modelPickerOpen: false,
+  }
+  const result = await HandleClick.handleClick(state, 'model-picker-toggle')
+  expect(result.modelPickerOpen).toBe(true)
+})
+
+test('handleClick should select model from model picker item and close picker', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    modelPickerOpen: true,
+    modelPickerSearchValue: 'gpt',
+    selectedModelId: 'test',
+  }
+  const result = await HandleClick.handleClick(state, 'model-picker-item:openapi/gpt-4.1-mini')
+  expect(result.selectedModelId).toBe('openapi/gpt-4.1-mini')
+  expect(result.modelPickerOpen).toBe(false)
+  expect(result.modelPickerSearchValue).toBe('')
+})
+
 test('handleClick should login via auth bridge and persist backend access token', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Auth.login': async () => {

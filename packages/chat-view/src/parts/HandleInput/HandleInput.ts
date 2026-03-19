@@ -23,6 +23,12 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   if (name === InputName.Search) {
     return handleSearchValueChange(state, value)
   }
+  if (name === InputName.ModelPickerSearch) {
+    return {
+      ...state,
+      modelPickerSearchValue: value,
+    }
+  }
   if (name !== InputName.Composer) {
     return state
   }

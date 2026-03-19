@@ -55,3 +55,9 @@ test('isEqual should ignore uid when chat fields are equal', () => {
   const state2: ChatState = { ...createDefaultState(), sessions, uid: 2 }
   expect(DiffItems.isEqual(state1, state2)).toBe(true)
 })
+
+test('isEqual should return false when model picker open state changes', () => {
+  const state1: ChatState = { ...createDefaultState(), modelPickerOpen: false }
+  const state2: ChatState = { ...createDefaultState(), modelPickerOpen: true }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})

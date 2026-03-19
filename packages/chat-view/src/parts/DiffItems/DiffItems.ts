@@ -22,6 +22,9 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
     oldState.initial === newState.initial &&
+    oldState.modelPickerOpen === newState.modelPickerOpen &&
+    oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
+    oldState.newChatModelPickerEnabled === newState.newChatModelPickerEnabled &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     oldState.projectListScrollTop === newState.projectListScrollTop &&
     oldState.renamingSessionId === newState.renamingSessionId &&

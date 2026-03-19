@@ -112,6 +112,61 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(chatFocusButton).toBeDefined()
 })
 
+test('getChatVirtualDOm should render model picker button instead of select when experimental picker is enabled', () => {
+  const result = renderChatView({
+    newChatModelPickerEnabled: true,
+  })
+  const modelSelect = result.find((node) => node.name === 'model')
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  expect(modelSelect).toBeUndefined()
+  expect(modelPickerToggle).toMatchObject({
+    className: ClassNames.Select,
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(modelPicker).toBeUndefined()
+})
+
+test('getChatVirtualDOm should render open model picker with search input and settings button', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    newChatModelPickerEnabled: true,
+    viewMode: 'detail',
+  })
+  const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
+  const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
+  expect(modelPicker).toBeDefined()
+  expect(modelPickerSearchInput).toMatchObject({
+    onInput: DomEventListenerFunctions.HandleInput,
+    placeholder: 'Search models',
+    type: VirtualDomElements.Input,
+  })
+  expect(modelPickerSettingsButton).toMatchObject({
+    className: ClassNames.IconButton,
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDOm should filter model picker entries by search', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    modelPickerSearchValue: 'codex',
+    models,
+    newChatModelPickerEnabled: true,
+    selectedModelId: 'codex-5.3',
+    viewMode: 'detail',
+  })
+  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
+  const codexLabel = result.find((node) => node.text === 'Codex 5.3')
+  const testLabel = result.find((node) => node.text === 'test')
+  expect(modelPickerItems).toHaveLength(1)
+  expect(codexLabel).toBeDefined()
+  expect(testLabel).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const projects = [{ id: 'project-1', name: '_blank', uri: '' }]
