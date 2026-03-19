@@ -259,6 +259,16 @@ export const getCss = (
   overflow-y: hidden;
 }
 
+.ChatMessageContent hr,
+.ChatToolCallRenderHtmlBody hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 78%, transparent);
+  display: block;
+  height: 0;
+  margin: 12px 0;
+  width: 100%;
+}
+
 .StrikeThrough {
   text-decoration: line-through;
 }
