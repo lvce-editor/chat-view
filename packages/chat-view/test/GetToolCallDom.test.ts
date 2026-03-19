@@ -243,6 +243,38 @@ test('getToolCallDom should show write_file in progress for incomplete json argu
   })
 })
 
+test('getToolCallDom should not render write_file diff badges when tool call failed', () => {
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      content: '<h1>Hello</h1>',
+      path: 'index.html',
+    }),
+    errorMessage: 'Failed to save file: DOMException: A requested file or directory could not be found at the time an operation was processed.',
+    name: 'write_file',
+    result: '',
+    status: 'error',
+  })
+
+  expect(result).toHaveLength(7)
+  expect(result[0]).toEqual({
+    childCount: 4,
+    className: ClassNames.ChatOrderedListItem,
+    title: 'index.html',
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'write_file ',
+  })
+  expect(result[5]).toMatchObject({
+    text: 'index.html',
+  })
+  expect(result[6]).toMatchObject({
+    text: ' (error: Failed to save file: DOMException: A requested file or directory could not be found at the time an operation was processed.)',
+  })
+  expect(result.find((node) => node.text === ' +0')).toBeUndefined()
+  expect(result.find((node) => node.text === ' -0')).toBeUndefined()
+})
+
 test('getToolCallDom should render edit_file as filename with uri title', () => {
   const uri = 'file:///workspace/src/main.ts'
   const result = getToolCallDom({
