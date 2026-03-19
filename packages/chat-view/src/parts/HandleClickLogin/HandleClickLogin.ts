@@ -13,6 +13,8 @@ interface LoginResponse {
   readonly userName?: string
 }
 
+const trailingSlashesRegex = /\/+$/
+
 const isLoginResponse = (value: unknown): value is LoginResponse => {
   if (!value || typeof value !== 'object') {
     return false
@@ -21,7 +23,7 @@ const isLoginResponse = (value: unknown): value is LoginResponse => {
 }
 
 const trimTrailingSlashes = (value: string): string => {
-  return value.replace(/\/+$/, '')
+  return value.replace(trailingSlashesRegex, '')
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {

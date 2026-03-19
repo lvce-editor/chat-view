@@ -77,25 +77,29 @@ interface ParsedUnorderedListItemLine {
 }
 
 const markdownMathBlockDelimiter = '$$'
+const escapedNewlineRegex = /\\r\\n|\\n/g
+const lineBreakRegex = /\r?\n/
+const tableDelimiterRegex = /\|\s*[-:]{3,}/
+const inlineTableCellRegex = /\|\s+\|/g
 
 const normalizeEscapedNewlines = (value: string): string => {
   if (value.includes('\\n')) {
-    return value.replaceAll(/\\r\\n|\\n/g, '\n')
+    return value.replaceAll(escapedNewlineRegex, '\n')
   }
   return value
 }
 
 const normalizeInlineTables = (value: string): string => {
   return value
-    .split(/\r?\n/)
+    .split(lineBreakRegex)
     .map((line) => {
       if (!line.includes('|')) {
         return line
       }
-      if (!/\|\s*[-:]{3,}/.test(line)) {
+      if (!tableDelimiterRegex.test(line)) {
         return line
       }
-      return line.replaceAll(/\|\s+\|/g, '|\n|')
+      return line.replaceAll(inlineTableCellRegex, '|\n|')
     })
     .join('\n')
 }
@@ -226,7 +230,7 @@ const getTableCells = (line: string): readonly string[] => {
 
 export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
   const normalizedMessage = normalizeInlineTables(normalizeEscapedNewlines(rawMessage))
-  const lines = normalizedMessage.split(/\r?\n/)
+  const lines = normalizedMessage.split(lineBreakRegex)
   const tokens: BlockToken[] = []
 
   for (let i = 0; i < lines.length; i++) {

@@ -4,6 +4,8 @@ export const name = 'chat-view.openai-api-key-missing-invalid-input'
 
 export const skip = 1
 
+const rgbChannelRegex = /\d+/g
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -32,7 +34,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(Locator('[name="open-api-api-key"]:invalid')).toBeVisible()
   // @ts-ignore
   const outlineColor = await openAiApiKeyInput.evaluate((node) => getComputedStyle(node).outlineColor)
-  const rgb = outlineColor.match(/\d+/g)?.map(Number) || []
+  const rgb = outlineColor.match(rgbChannelRegex)?.map(Number) || []
   const [red = 0, green = 0, blue = 0] = rgb
   // @ts-ignore
   await expect(rgb.length).toBe(3)

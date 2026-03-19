@@ -26,8 +26,10 @@ import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
+const trailingSlashesRegex = /\/+$/
+
 const getBackendCompletionsEndpoint = (backendUrl: string): string => {
-  const trimmedBackendUrl = backendUrl.replace(/\/+$/, '')
+  const trimmedBackendUrl = backendUrl.replace(trailingSlashesRegex, '')
   return `${trimmedBackendUrl}/v1/chat/completions`
 }
 
