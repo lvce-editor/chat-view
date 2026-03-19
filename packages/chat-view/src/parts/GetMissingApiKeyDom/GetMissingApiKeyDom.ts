@@ -9,7 +9,6 @@ export const getMissingApiKeyDom = ({
   inputName,
   inputPattern,
   inputRequired = false,
-  inputValue,
   openSettingsButtonName,
   placeholder,
   saveButtonDisabled = false,
@@ -34,7 +33,6 @@ export const getMissingApiKeyDom = ({
       placeholder,
       required: inputRequired,
       type: VirtualDomElements.Input,
-      value: inputValue,
     },
     {
       childCount: 2,
