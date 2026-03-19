@@ -6,6 +6,7 @@ export type BlockToken =
   | BlockMathToken
   | BlockOrderedListItemLineToken
   | BlockParagraphLineToken
+  | BlockThematicBreakToken
   | BlockTableRowLineToken
   | BlockUnorderedListItemLineToken
 
@@ -55,6 +56,10 @@ interface BlockCodeToken {
 interface BlockMathToken {
   readonly text: string
   readonly type: 'math-block'
+}
+
+interface BlockThematicBreakToken {
+  readonly type: 'thematic-break'
 }
 
 interface ParsedHeadingLine {
@@ -175,6 +180,34 @@ const parseBlockQuoteLine = (line: string): string | undefined => {
   return content
 }
 
+const isThematicBreakLine = (line: string): boolean => {
+  const trimmedStart = line.trimStart()
+  const leadingSpaces = line.length - trimmedStart.length
+  if (leadingSpaces > 3) {
+    return false
+  }
+  const trimmed = trimmedStart.trimEnd()
+  if (!trimmed) {
+    return false
+  }
+  const marker = trimmed[0]
+  if (marker !== '-' && marker !== '_' && marker !== '*') {
+    return false
+  }
+  let markerCount = 0
+  for (let i = 0; i < trimmed.length; i++) {
+    const char = trimmed[i]
+    if (char === marker) {
+      markerCount++
+      continue
+    }
+    if (char !== ' ') {
+      return false
+    }
+  }
+  return markerCount >= 3
+}
+
 const isTableRow = (line: string): boolean => {
   const trimmed = line.trim()
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) {
@@ -265,6 +298,13 @@ export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
         level: heading.level,
         text: heading.text,
         type: 'heading-line',
+      })
+      continue
+    }
+
+    if (isThematicBreakLine(line)) {
+      tokens.push({
+        type: 'thematic-break',
       })
       continue
     }

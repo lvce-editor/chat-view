@@ -199,6 +199,14 @@ export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWork
   if (node.type === 'math-block-dom') {
     return node.dom
   }
+  if (node.type === 'thematic-break') {
+    return [
+      {
+        childCount: 0,
+        type: VirtualDomElements.Hr,
+      },
+    ]
+  }
   if (node.type === 'heading') {
     return getHeadingDom(node, useChatMathWorker)
   }

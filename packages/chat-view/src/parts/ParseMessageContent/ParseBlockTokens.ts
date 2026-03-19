@@ -136,6 +136,15 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
       continue
     }
 
+    if (token.type === 'thematic-break') {
+      flushList()
+      flushParagraph()
+      nodes.push({
+        type: 'thematic-break',
+      })
+      continue
+    }
+
     if (token.type === 'blockquote-line') {
       flushList()
       flushParagraph()
