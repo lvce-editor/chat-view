@@ -11,6 +11,10 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
   }
   const statusLabel = getToolCallStatusLabel(toolCall)
   const fileName = getFileNameFromUri(toolCall.result)
+  const fileNameClickableProps = {
+    'data-uri': toolCall.result,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+  }
   return [
     {
       childCount: statusLabel ? 4 : 3,
@@ -27,13 +31,13 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
     {
       childCount: 1,
       className: ClassNames.ChatToolCallReadFileLink,
-      'data-uri': toolCall.result,
-      onClick: DomEventListenerFunctions.HandleClickReadFile,
+      ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
     {
       childCount: 1,
       className: ClassNames.ChatToolCallFileName,
+      ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
     text(fileName),

@@ -19,7 +19,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
   const fileNameClickableProps = target.clickableUri
     ? {
         'data-uri': target.clickableUri,
-        onClick: DomEventListenerFunctions.HandleClickReadFile,
+        onClick: DomEventListenerFunctions.HandleClickFileName,
       }
     : {}
   return [
@@ -44,6 +44,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
     {
       childCount: 1,
       className: ClassNames.ChatToolCallFileName,
+      ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
     text(fileName),

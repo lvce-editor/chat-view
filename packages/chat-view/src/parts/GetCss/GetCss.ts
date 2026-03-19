@@ -14,7 +14,10 @@ export const getCss = (
   chatSendAreaPaddingBottom: number,
   renderHtmlCss: string,
 ): string => {
-  const chatSendAreaHeight = composerHeight + chatSendAreaPaddingTop + chatSendAreaPaddingBottom
+  const buttonsHeight = 20
+  const gap = 10
+  const contentPadding = 10
+  const chatSendAreaHeight = composerHeight + chatSendAreaPaddingTop + chatSendAreaPaddingBottom + buttonsHeight + gap + contentPadding * 2
   const baseCss = `:root {
   --ChatInputBoxHeight: ${composerHeight}px;
   --ChatTextAreaHeight: ${composerHeight}px;
@@ -31,26 +34,12 @@ export const getCss = (
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
-}`
-
-  if (!renderHtmlCss.trim()) {
-    return `${baseCss}
-
-.ChatTodoList {
-  background: var(--vscode-editorWidget-background);
-  border: 1px solid var(--vscode-editorWidget-border);
-  border-radius: 6px;
-  margin-bottom: 8px;
-  overflow: hidden;
 }
 
-.ChatTodoListHeader {
-  border-bottom: 1px solid var(--vscode-editorWidget-border);
-  color: var(--vscode-descriptionForeground);
-  font-size: 12px;
-  line-height: 18px;
-  padding: 6px 10px;
+.ChatSendAreaBottom{
+  height: ${buttonsHeight}px;
 }
+<<<<<<< HEAD
 
 .ChatTodoListItems {
   list-style: none;
@@ -303,6 +292,12 @@ export const getCss = (
   background: var(--vscode-list-hoverBackground);
 }
 
+=======
+`
+
+  return `${baseCss}
+
+>>>>>>> origin/main
 /* render_html tool css */
 ${renderHtmlCss}`
 }
