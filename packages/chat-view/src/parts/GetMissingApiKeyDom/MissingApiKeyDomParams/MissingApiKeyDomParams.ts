@@ -9,6 +9,4 @@ export interface MissingApiKeyDomParams {
   readonly saveButtonDisabled?: boolean
   readonly saveButtonName: string
   readonly saveButtonText?: string
-  readonly saveButtonType?: 'button' | 'submit'
-  readonly useForm?: boolean
 }
