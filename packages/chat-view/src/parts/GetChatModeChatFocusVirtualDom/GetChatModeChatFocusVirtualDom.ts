@@ -62,6 +62,7 @@ export const getChatModeChatFocusVirtualDom = (
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,
+      true,
     ),
     ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, voiceDictationEnabled),
     ...(isDropOverlayVisible

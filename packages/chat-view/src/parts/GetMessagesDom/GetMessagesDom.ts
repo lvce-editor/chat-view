@@ -57,9 +57,10 @@ export const getMessagesDom = (
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   messagesScrollTop = 0,
   useChatMathWorker = false,
+  hideWelcomeMessage = false,
 ): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
-    return GetEmptyMessagesDom.getEmptyMessagesDom()
+    return hideWelcomeMessage ? [] : GetEmptyMessagesDom.getEmptyMessagesDom()
   }
   const displayMessages = getDisplayMessages(messages, parsedMessages)
   return [
