@@ -30,7 +30,7 @@ export const getMissingApiKeyDom = ({
       className: ClassNames.InputBox,
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
-      pattern: inputPattern,
+      ...(inputPattern ? { pattern: inputPattern } : {}),
       placeholder,
       required: inputRequired,
       type: VirtualDomElements.Input,
