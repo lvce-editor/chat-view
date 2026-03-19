@@ -105,8 +105,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
-        authEnabled,
         addContextButtonEnabled,
+        authEnabled,
         authErrorMessage,
         authStatus,
         composerDropActive,
@@ -139,8 +139,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'detail':
       return getChatModeDetailVirtualDom({
-        authEnabled,
         addContextButtonEnabled,
+        authEnabled,
         authErrorMessage,
         authStatus,
         composerDropActive,
@@ -169,8 +169,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       })
     case 'list':
       return getChatModeListVirtualDom({
-        authEnabled,
         addContextButtonEnabled,
+        authEnabled,
         authErrorMessage,
         authStatus,
         chatListScrollTop,
