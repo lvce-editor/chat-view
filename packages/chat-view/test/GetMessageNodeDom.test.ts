@@ -262,52 +262,58 @@ test('getMessageNodeDom should render markdown table nodes as table dom nodes', 
   })
 
   expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatTableWrapper,
+    style: 'padding-bottom: 8px;',
+    type: VirtualDomElements.Div,
+  })
+  expect(result[1]).toEqual({
     childCount: 2,
     className: ClassNames.MarkdownTable,
     type: VirtualDomElements.Table,
   })
-  expect(result[1]).toEqual({
+  expect(result[2]).toEqual({
     childCount: 1,
     type: VirtualDomElements.THead,
   })
-  expect(result[2]).toEqual({
+  expect(result[3]).toEqual({
     childCount: 2,
     type: VirtualDomElements.Tr,
   })
-  expect(result[3]).toEqual({
+  expect(result[4]).toEqual({
     childCount: 1,
     type: VirtualDomElements.Th,
   })
-  expect(result[4]).toMatchObject({
+  expect(result[5]).toMatchObject({
     text: 'Item',
   })
-  expect(result[5]).toEqual({
+  expect(result[6]).toEqual({
     childCount: 1,
     type: VirtualDomElements.Th,
   })
-  expect(result[6]).toMatchObject({
+  expect(result[7]).toMatchObject({
     text: 'Quantity',
   })
-  expect(result[7]).toEqual({
+  expect(result[8]).toEqual({
     childCount: 1,
     type: VirtualDomElements.TBody,
   })
-  expect(result[8]).toEqual({
+  expect(result[9]).toEqual({
     childCount: 2,
     type: VirtualDomElements.Tr,
   })
-  expect(result[9]).toEqual({
+  expect(result[10]).toEqual({
     childCount: 1,
     type: VirtualDomElements.Td,
   })
-  expect(result[10]).toMatchObject({
+  expect(result[11]).toMatchObject({
     text: 'Apples',
   })
-  expect(result[11]).toEqual({
+  expect(result[12]).toEqual({
     childCount: 1,
     type: VirtualDomElements.Td,
   })
-  expect(result[12]).toMatchObject({
+  expect(result[13]).toMatchObject({
     text: '4',
   })
 })
