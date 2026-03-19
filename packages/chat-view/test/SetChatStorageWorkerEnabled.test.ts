@@ -4,7 +4,7 @@ import * as CreateDefaultState from '../src/parts/CreateDefaultState/CreateDefau
 import * as SetChatStorageWorkerEnabled from '../src/parts/SetChatStorageWorkerEnabled/SetChatStorageWorkerEnabled.ts'
 
 test('setChatStorageWorkerEnabled should update state and persist by default', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.update': async () => {},
   })
   try {
@@ -18,7 +18,7 @@ test('setChatStorageWorkerEnabled should update state and persist by default', a
 })
 
 test('setChatStorageWorkerEnabled should not persist when persist is false', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.update': async () => {},
   })
   try {

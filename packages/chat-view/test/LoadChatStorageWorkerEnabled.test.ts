@@ -3,7 +3,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as LoadChatStorageWorkerEnabled from '../src/parts/LoadChatStorageWorkerEnabled/LoadChatStorageWorkerEnabled.ts'
 
 test('loadChatStorageWorkerEnabled should return stored boolean value', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.chatStorageWorkerEnabled') {
         return true
@@ -22,7 +22,7 @@ test('loadChatStorageWorkerEnabled should return stored boolean value', async ()
 })
 
 test('loadChatStorageWorkerEnabled should return false when preference is not boolean', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => 'true',
   })
 
@@ -36,7 +36,7 @@ test('loadChatStorageWorkerEnabled should return false when preference is not bo
 })
 
 test('loadChatStorageWorkerEnabled should return false on preference read error', async () => {
-  const mockRpc = RendererWorker.registerMockRpc({
+  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async () => {
       throw new Error('failed')
     },
