@@ -22,4 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const hr = Locator('.ChatMessages .Message hr')
   await expect(hr).toHaveCount(1)
+  await expect(hr).toHaveCSS('display', 'block')
+  await expect(hr).toHaveCSS('height', '0px')
+  await expect(hr).toHaveCSS('border-top-style', 'solid')
+  await expect(hr).toHaveCSS('border-top-width', '1px')
 }

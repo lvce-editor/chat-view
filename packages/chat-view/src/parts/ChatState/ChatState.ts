@@ -4,6 +4,7 @@ import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 
 export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatModel } from '../ChatModel/ChatModel.ts'
@@ -25,6 +26,10 @@ export interface ChatState {
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
   readonly chatMessageLineHeight: number
+  readonly chatSendAreaPaddingBottom: number
+  readonly chatSendAreaPaddingLeft: number
+  readonly chatSendAreaPaddingRight: number
+  readonly chatSendAreaPaddingTop: number
   readonly composerDropActive: boolean
   readonly composerDropEnabled: boolean
   readonly composerFontFamily: string
@@ -68,11 +73,17 @@ export interface ChatState {
   readonly projects: readonly Project[]
   readonly questionToolEnabled?: boolean
   readonly renamingSessionId: string
+  readonly runMode: RunMode
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showRunMode: boolean
   readonly streamingEnabled: boolean
+  readonly textAreaPaddingBottom: number
+  readonly textAreaPaddingLeft: number
+  readonly textAreaPaddingRight: number
+  readonly textAreaPaddingTop: number
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly uid: number

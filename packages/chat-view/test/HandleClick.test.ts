@@ -6,6 +6,8 @@ import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSes
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 beforeEach(() => {
   resetChatSessionStorage()
 })
@@ -15,7 +17,7 @@ test('handleClick should create a new session', async () => {
   const result = await HandleClick.handleClick(state, 'create-session')
   expect(result.sessions).toHaveLength(2)
   expect(result.selectedSessionId).toBe(result.sessions[1].id)
-  expect(result.sessions[1].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+  expect(result.sessions[1].id).toMatch(uuidRegex)
 })
 
 test('handleClick should create a new session in the selected project from project action button', async () => {

@@ -31,6 +31,7 @@ import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleM
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
+import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import { initialize } from '../Initialize/Initialize.ts'
@@ -57,6 +58,7 @@ import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
+import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
@@ -102,6 +104,7 @@ export const commandMap = {
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
+  'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
@@ -128,6 +131,7 @@ export const commandMap = {
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
+  'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),

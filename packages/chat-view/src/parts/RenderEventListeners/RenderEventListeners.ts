@@ -146,6 +146,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleModelChange', EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleRunModeChange,
+      params: ['handleRunModeChange', EventExpression.TargetValue],
+    },
+    {
       name: DomEventListenersFunctions.HandleChatListScroll,
       params: ['handleChatListScroll', 'event.target.scrollTop'],
     },

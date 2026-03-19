@@ -1,3 +1,5 @@
+const defaultSessionTitleRegex = /^Chat \d+$/
+
 export const isDefaultSessionTitle = (title: string): boolean => {
-  return /^Chat \d+$/.test(title)
+  return defaultSessionTitleRegex.test(title)
 }

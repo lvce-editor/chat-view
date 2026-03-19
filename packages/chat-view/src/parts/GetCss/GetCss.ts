@@ -4,14 +4,38 @@ export const getCss = (
   chatMessageFontSize: number,
   chatMessageLineHeight: number,
   chatMessageFontFamily: string,
+  textAreaPaddingTop: number,
+  textAreaPaddingLeft: number,
+  textAreaPaddingRight: number,
+  textAreaPaddingBottom: number,
+  chatSendAreaPaddingTop: number,
+  chatSendAreaPaddingLeft: number,
+  chatSendAreaPaddingRight: number,
+  chatSendAreaPaddingBottom: number,
   renderHtmlCss: string,
 ): string => {
   const baseCss = `:root {
   --ChatInputBoxHeight: ${composerHeight}px;
+  --ChatTextAreaHeight: ${composerHeight}px;
+  --ChatSendAreaHeight: ${composerHeight + 62}px;
+  --ChatTextAreaPaddingTop: ${textAreaPaddingTop}px;
+  --ChatTextAreaPaddingLeft: ${textAreaPaddingLeft}px;
+  --ChatTextAreaPaddingRight: ${textAreaPaddingRight}px;
+  --ChatTextAreaPaddingBottom: ${textAreaPaddingBottom}px;
+  --ChatSendAreaPaddingTop: ${chatSendAreaPaddingTop}px;
+  --ChatSendAreaPaddingLeft: ${chatSendAreaPaddingLeft}px;
+  --ChatSendAreaPaddingRight: ${chatSendAreaPaddingRight}px;
+  --ChatSendAreaPaddingBottom: ${chatSendAreaPaddingBottom}px;
   --ChatListItemHeight: ${listItemHeight}px;
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
+}
+
+
+.ChatSendArea{
+  height: var(--ChatSendAreaHeight);
+  padding: var(--ChatSendAreaPaddingTop) var(--ChatSendAreaPaddingRight) var(--ChatSendAreaPaddingBottom) var(--ChatSendAreaPaddingLeft);
 }
 
 .Viewlet.Chat.ChatFocus {
@@ -23,6 +47,11 @@ export const getCss = (
 
 .Chat.ChatFocus .ChatHeader {
   grid-column: 1 / 3;
+}
+
+.ChatHeader .Label {
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .Chat.ChatFocus .ProjectSidebar {
@@ -209,7 +238,9 @@ export const getCss = (
 .ChatList,
 .ChatListEmpty,
 .ChatMessages {
+  margin: 0;
   min-height: 0;
+  padding: 0;
 }
 
 .Chat.ChatFocus .ChatList,
@@ -225,6 +256,32 @@ export const getCss = (
 .Chat.ChatFocus .ChatSendArea {
   grid-column: 2;
   grid-row: 3;
+  height: var(--ChatSendAreaHeight);
+  min-height: var(--ChatSendAreaHeight);
+}
+
+.Chat .MultilineInputBox {
+  height: var(--ChatTextAreaHeight);
+  min-height: var(--ChatTextAreaHeight);
+  padding: var(--ChatTextAreaPaddingTop) var(--ChatTextAreaPaddingRight) var(--ChatTextAreaPaddingBottom) var(--ChatTextAreaPaddingLeft);
+}
+
+.Select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%),
+    linear-gradient(135deg, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) 50%,
+    calc(100% - 6px) 50%;
+  background-repeat: no-repeat;
+  background-size:
+    4px 4px,
+    4px 4px;
+  max-width: 60px;
+  padding-right: 16px;
 }
 
 .MarkdownMathInline {
@@ -243,6 +300,16 @@ export const getCss = (
   margin: 8px 0;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.ChatMessageContent hr,
+.ChatToolCallRenderHtmlBody hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 78%, transparent);
+  display: block;
+  height: 0;
+  margin: 12px 0;
+  width: 100%;
 }
 
 .StrikeThrough {

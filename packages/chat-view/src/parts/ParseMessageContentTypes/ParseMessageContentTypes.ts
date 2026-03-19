@@ -9,6 +9,7 @@ export type MessageIntermediateNode =
   | MessageTableNode
   | MessageCodeBlockNode
   | MessageMathBlockNode
+  | MessageThematicBreakNode
   | MessageMathBlockDomNode
 
 export type MessageInlineNode =
@@ -127,6 +128,10 @@ export interface MessageCodeBlockNode {
 export interface MessageMathBlockNode {
   readonly text: string
   readonly type: 'math-block'
+}
+
+export interface MessageThematicBreakNode {
+  readonly type: 'thematic-break'
 }
 
 export interface MessageMathBlockDomNode {

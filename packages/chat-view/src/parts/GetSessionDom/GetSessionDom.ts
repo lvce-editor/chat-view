@@ -11,7 +11,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
     {
       childCount: 2,
       className: sessionClassName,
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Li,
     },
     {
       childCount: 1,

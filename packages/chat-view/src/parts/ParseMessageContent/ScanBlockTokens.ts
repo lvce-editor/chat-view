@@ -6,6 +6,7 @@ export type BlockToken =
   | BlockMathToken
   | BlockOrderedListItemLineToken
   | BlockParagraphLineToken
+  | BlockThematicBreakToken
   | BlockTableRowLineToken
   | BlockUnorderedListItemLineToken
 
@@ -57,6 +58,10 @@ interface BlockMathToken {
   readonly type: 'math-block'
 }
 
+interface BlockThematicBreakToken {
+  readonly type: 'thematic-break'
+}
+
 interface ParsedHeadingLine {
   readonly level: 1 | 2 | 3 | 4 | 5 | 6
   readonly text: string
@@ -72,25 +77,29 @@ interface ParsedUnorderedListItemLine {
 }
 
 const markdownMathBlockDelimiter = '$$'
+const escapedNewlineRegex = /\\r\\n|\\n/g
+const lineBreakRegex = /\r?\n/
+const tableDelimiterRegex = /\|\s*[-:]{3,}/
+const inlineTableCellRegex = /\|\s+\|/g
 
 const normalizeEscapedNewlines = (value: string): string => {
   if (value.includes('\\n')) {
-    return value.replaceAll(/\\r\\n|\\n/g, '\n')
+    return value.replaceAll(escapedNewlineRegex, '\n')
   }
   return value
 }
 
 const normalizeInlineTables = (value: string): string => {
   return value
-    .split(/\r?\n/)
+    .split(lineBreakRegex)
     .map((line) => {
       if (!line.includes('|')) {
         return line
       }
-      if (!/\|\s*[-:]{3,}/.test(line)) {
+      if (!tableDelimiterRegex.test(line)) {
         return line
       }
-      return line.replaceAll(/\|\s+\|/g, '|\n|')
+      return line.replaceAll(inlineTableCellRegex, '|\n|')
     })
     .join('\n')
 }
@@ -175,6 +184,34 @@ const parseBlockQuoteLine = (line: string): string | undefined => {
   return content
 }
 
+const isThematicBreakLine = (line: string): boolean => {
+  const trimmedStart = line.trimStart()
+  const leadingSpaces = line.length - trimmedStart.length
+  if (leadingSpaces > 3) {
+    return false
+  }
+  const trimmed = trimmedStart.trimEnd()
+  if (!trimmed) {
+    return false
+  }
+  const marker = trimmed[0]
+  if (marker !== '-' && marker !== '_' && marker !== '*') {
+    return false
+  }
+  let markerCount = 0
+  for (let i = 0; i < trimmed.length; i++) {
+    const char = trimmed[i]
+    if (char === marker) {
+      markerCount++
+      continue
+    }
+    if (char !== ' ') {
+      return false
+    }
+  }
+  return markerCount >= 3
+}
+
 const isTableRow = (line: string): boolean => {
   const trimmed = line.trim()
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) {
@@ -193,7 +230,7 @@ const getTableCells = (line: string): readonly string[] => {
 
 export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
   const normalizedMessage = normalizeInlineTables(normalizeEscapedNewlines(rawMessage))
-  const lines = normalizedMessage.split(/\r?\n/)
+  const lines = normalizedMessage.split(lineBreakRegex)
   const tokens: BlockToken[] = []
 
   for (let i = 0; i < lines.length; i++) {
@@ -265,6 +302,13 @@ export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
         level: heading.level,
         text: heading.text,
         type: 'heading-line',
+      })
+      continue
+    }
+
+    if (isThematicBreakLine(line)) {
+      tokens.push({
+        type: 'thematic-break',
       })
       continue
     }
