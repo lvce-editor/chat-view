@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.thematic-break'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -20,7 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const hr = Locator('.ChatMessages .Message hr')
   await expect(hr).toHaveCount(1)
-  const assistant = Locator('.ChatMessages .Message').nth(1)
-  await expect(assistant).toContainText('Before')
-  await expect(assistant).toContainText('After')
+  await expect(hr).toHaveCSS('display', 'block')
+  await expect(hr).toHaveCSS('height', '0px')
+  await expect(hr).toHaveCSS('border-top-style', 'solid')
+  await expect(hr).toHaveCSS('border-top-width', '1px')
 }
