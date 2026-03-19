@@ -17,9 +17,7 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3' },
 ] as const
 
-const createOptions = (
-  overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {},
-): GetChatViewDom.GetChatVirtualDomOptions => ({
+const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
   authEnabled: false,
   authErrorMessage: '',
   authStatus: 'signed-out',
@@ -658,26 +656,11 @@ test('getChatVirtualDOm should render read_file error status with short message'
     },
   ]
 
-  const result = GetChatViewDom.getChatVirtualDom(
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
     sessions,
-    'session-1',
-    '',
-    '',
-    'detail',
-    models,
-    'test',
-    false,
-    0,
-    0,
-    '',
-    'idle',
-    28,
-    13,
-    'system-ui',
-    20,
-    0,
-    0,
-  )
+    viewMode: 'detail',
+  })
   const statusNode = result.find((node) => node.text === ' (error: permission denied)')
   expect(statusNode).toBeDefined()
 })
