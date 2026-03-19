@@ -104,7 +104,17 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
-    ...getChatSendAreaDom(composerValue, models, selectedModelId, usageOverviewEnabled, tokensUsed, tokensMax, showRunMode, runMode, voiceDictationEnabled),
+    ...getChatSendAreaDom(
+      composerValue,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      showRunMode,
+      runMode,
+      voiceDictationEnabled,
+    ),
     ...(isDropOverlayVisible
       ? [
           {
