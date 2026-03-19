@@ -2,6 +2,8 @@ import { expect, test } from '@jest/globals'
 import { ChatToolWorker } from '@lvce-editor/rpc-registry'
 import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 const getRequestIdFromInit = (init: unknown): string | undefined => {
   const requestInit = init as RequestInit | undefined
   const headers = requestInit?.headers as Record<string, unknown> | undefined
@@ -63,7 +65,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
     })
 
     const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+    expect(requestId).toMatch(uuidRegex)
     const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
     expect(requestBody.include_obfuscation).toBeUndefined()
     expect(requestBody.stream_options).toBeUndefined()

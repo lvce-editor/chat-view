@@ -3,6 +3,8 @@ import { expect, test } from '@jest/globals'
 import { ChatToolWorker } from '@lvce-editor/rpc-registry'
 import { getOpenRouterAssistantText } from '../src/parts/GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 const parseJsonRequestBody = (body: unknown): any => {
   if (typeof body !== 'string') {
     return {}
@@ -72,7 +74,7 @@ test('getOpenRouterAssistantText should return success result when response is o
       method: 'POST',
     })
     const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
-    expect(requestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+    expect(requestId).toMatch(uuidRegex)
     const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
     expect(payload.messages).toEqual([
       { content: 'hello', role: 'user' },
