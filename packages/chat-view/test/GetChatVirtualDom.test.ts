@@ -789,7 +789,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     value: 'or-key-typed',
   })
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
@@ -816,8 +816,8 @@ test('getChatVirtualDOm should render disabled OpenRouter save button with Savin
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const savingText = result.find((node) => node.text === 'Saving...')
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
     disabled: true,
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(savingText).toBeDefined()
@@ -856,7 +856,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     value: 'oa-key-typed',
   })
   expect(saveButton).toMatchObject({
-    buttonType: 'submit',
+    inputType: 'submit',
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({

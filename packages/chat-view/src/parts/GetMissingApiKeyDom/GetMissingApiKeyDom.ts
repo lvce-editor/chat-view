@@ -15,15 +15,13 @@ export const getMissingApiKeyDom = ({
   saveButtonDisabled = false,
   saveButtonName,
   saveButtonText = Strings.save(),
-  saveButtonType = 'button',
-  useForm = false,
 }: MissingApiKeyDomParams): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 2,
-      method: useForm ? 'GET' : undefined,
-      onSubmit: useForm ? DomEventListenerFunctions.HandleMissingApiKeySubmit : undefined,
-      type: useForm ? VirtualDomElements.Form : VirtualDomElements.Div,
+      method: 'GET',
+      onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+      type: VirtualDomElements.Form,
     },
     {
       childCount: 0,
@@ -42,12 +40,11 @@ export const getMissingApiKeyDom = ({
       type: VirtualDomElements.Div,
     },
     {
-      buttonType: saveButtonType,
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
       disabled: saveButtonDisabled,
+      inputType: 'submit',
       name: saveButtonName,
-      onClick: useForm ? undefined : DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
     },
     text(saveButtonText),
