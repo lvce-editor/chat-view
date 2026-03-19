@@ -5,6 +5,7 @@ import type {
   MessageHeadingNode,
   MessageIntermediateNode,
   MessageListItemNode,
+  MessageTextNode,
   MessageTableCellNode,
   MessageTableNode,
   MessageTableRowNode,
@@ -12,6 +13,10 @@ import type {
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 import { type CodeToken, highlightCode } from '../HighlightCode/HighlightCode.ts'
+
+const hasVisibleInlineContent = (children: readonly MessageTextNode['children']): boolean => {
+  return children.some((child) => child.type !== 'text' || child.text.trim() !== '')
+}
 
 const getTokenDom = (token: CodeToken): readonly VirtualDomNode[] => {
   if (!token.className) {
@@ -171,6 +176,9 @@ const getBlockQuoteDom = (node: MessageBlockQuoteNode, useChatMathWorker: boolea
 
 export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
+    if (!hasVisibleInlineContent(node.children)) {
+      return []
+    }
     return [
       {
         childCount: node.children.length,
