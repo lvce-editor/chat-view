@@ -13,7 +13,5 @@ export const getMissingOpenApiApiKeyDom = (openApiApiKeyInput: string): readonly
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonName: SaveOpenApiApiKey,
-    saveButtonType: 'submit',
-    useForm: true,
   })
 }

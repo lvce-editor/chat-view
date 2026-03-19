@@ -71,6 +71,28 @@ test('handleClick should switch from chat-focus mode back to remembered normal m
   expect(result.viewMode).toBe('detail')
 })
 
+test('handleClick should toggle search field visibility on', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    searchEnabled: true,
+    searchFieldVisible: false,
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-search')
+  expect(result.searchFieldVisible).toBe(true)
+})
+
+test('handleClick should clear search value when toggling search field visibility off', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'hello',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-search')
+  expect(result.searchFieldVisible).toBe(false)
+  expect(result.searchValue).toBe('')
+})
+
 test('handleClick should mark session for rename and prefill composer', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'session-rename:session-1')

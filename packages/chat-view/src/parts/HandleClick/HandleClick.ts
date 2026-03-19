@@ -35,6 +35,12 @@ export const handleClick = async (state: ChatState, name: string, id = ''): Prom
     }
     case name === InputName.ToggleChatFocus:
       return toggleChatFocusMode(state)
+    case name === InputName.ToggleSearch:
+      return {
+        ...state,
+        searchFieldVisible: !state.searchFieldVisible,
+        searchValue: state.searchFieldVisible ? '' : state.searchValue,
+      }
     case InputName.isProjectInputName(name): {
       const projectId = InputName.getProjectIdFromInputName(name)
       if (state.viewMode === 'chat-focus') {

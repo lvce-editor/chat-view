@@ -4,4 +4,6 @@ import * as RenderEventListeners from '../src/parts/RenderEventListeners/RenderE
 test('renderEventListeners should return expected listeners', () => {
   const result = RenderEventListeners.renderEventListeners()
   expect(result).toBeDefined()
+  const searchListener = result.find((listener) => listener.params?.[0] === 'handleSearchValueChange')
+  expect(searchListener).toBeDefined()
 })
