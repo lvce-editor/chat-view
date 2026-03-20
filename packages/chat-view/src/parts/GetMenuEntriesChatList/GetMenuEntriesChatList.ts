@@ -13,7 +13,7 @@ export const getMenuEntriesChatList = (sessionId: string = ''): readonly MenuEnt
     },
     {
       args: [sessionId],
-      command: 'Chat.handleClickArchive',
+      command: 'Chat.handleClickDelete',
       flags: MenuItemFlags.None,
       id: 'archive',
       label: ViewletExplorerStrings.archive(),
