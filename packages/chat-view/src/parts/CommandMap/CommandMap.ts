@@ -1,6 +1,8 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
 import * as ClearInput from '../ClearInput/ClearInput.ts'
+import * as CopyInput from '../CopyInput/CopyInput.ts'
 import * as StatusBar from '../Create/Create.ts'
+import * as CutInput from '../CutInput/CutInput.ts'
 import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
@@ -51,6 +53,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
+import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
@@ -79,7 +82,9 @@ import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
+  'Chat.copyInput': wrapCommand(CopyInput.copyInput),
   'Chat.create': StatusBar.create,
+  'Chat.cutInput': wrapCommand(CutInput.cutInput),
   'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
@@ -92,7 +97,7 @@ export const commandMap = {
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
-  'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
+  'Chat.handleChatListContextMenu': wrapCommand(HandleChatListContextMenu.handleChatListContextMenu),
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleChatWelcomeContextMenu': wrapCommand(HandleChatWelcomeContextMenu.handleChatWelcomeContextMenu),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
@@ -135,6 +140,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
+  'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
