@@ -641,6 +641,50 @@ test('getChatVirtualDOm should render selected session messages in detail mode',
   expect(messageNodes).toHaveLength(2)
 })
 
+test('getChatVirtualDOm should keep ChatSendArea outside assistant message content for nested ordered list', async () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: [
+            'Here are some interesting facts about the Colosseum in Rome:',
+            '',
+            '1. The Colosseum is an ancient amphitheater in central Rome.',
+            '2. Construction began in AD 72 and completed in AD 80.',
+            '3. It could hold up to about 80,000 spectators.',
+            '',
+            "If you'd like, I can provide more details.",
+          ].join('\n'),
+          time: '10:31',
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+
+  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
+  const result = renderChatView({
+    parsedMessages,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
+
+  const chatSendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
+  const assistantMessageContentIndex = result.findIndex((node) => node.className === ClassNames.ChatMessageContent)
+  const assistantMessageContentNode = result[assistantMessageContentIndex]
+  expect(chatSendAreaIndex).toBeGreaterThan(-1)
+  expect(assistantMessageContentIndex).toBeGreaterThan(-1)
+  expect(assistantMessageContentNode).toMatchObject({
+    childCount: 3,
+    className: ClassNames.ChatMessageContent,
+  })
+  expect(chatSendAreaIndex).toBeGreaterThan(assistantMessageContentIndex + assistantMessageContentNode.childCount)
+})
+
 test('getChatVirtualDOm should render assistant tool call lines', () => {
   const uri = 'file:///workspace/index.html'
   const sessions = [

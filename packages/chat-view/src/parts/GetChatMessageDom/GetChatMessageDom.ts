@@ -23,6 +23,23 @@ export const getChatMessageDom = (
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
+  const getDirectMessageChildCount = (): number => {
+    let count = parsedMessageContent.length
+    if (message.role === 'assistant' && message.toolCalls && message.toolCalls.length > 0) {
+      count += 1
+    }
+    if (
+      message.role === 'assistant' &&
+      (message.text === openApiApiKeyRequiredMessage ||
+        message.text === openRouterApiKeyRequiredMessage ||
+        message.text === openRouterRequestFailedMessage ||
+        message.text.startsWith(openRouterTooManyRequestsMessage))
+    ) {
+      count += 1
+    }
+    return count
+  }
+
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
@@ -30,12 +47,7 @@ export const getChatMessageDom = (
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
   const messageDom = getMessageContentDom(parsedMessageContent, useChatMathWorker)
   const toolCallsDom = getToolCallsDom(message)
-  const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
-  const messageDomChildCount = messageDom.filter((node) => node.type !== VirtualDomElements.Text).length
-  const extraChildCount =
-    isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageDomChildCount + 1 + toolCallsChildCount
-      : messageDomChildCount + toolCallsChildCount
+  const directChildCount = getDirectMessageChildCount()
   return [
     {
       childCount: 1,
@@ -43,7 +55,7 @@ export const getChatMessageDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: extraChildCount,
+      childCount: directChildCount,
       className: ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
