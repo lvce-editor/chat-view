@@ -25,6 +25,7 @@ import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
+import * as HandleContextMenuChatSendAreaBottom from '../HandleContextMenuChatSendAreaBottom/HandleContextMenuChatSendAreaBottom.ts'
 import * as HandleDragEnter from '../HandleDragEnter/HandleDragEnter.ts'
 import * as HandleDragLeave from '../HandleDragLeave/HandleDragLeave.ts'
 import * as HandleDragOver from '../HandleDragOver/HandleDragOver.ts'
@@ -110,6 +111,7 @@ export const commandMap = {
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
+  'Chat.handleContextMenuChatSendAreaBottom': wrapCommand(HandleContextMenuChatSendAreaBottom.handleContextMenuChatSendAreaBottom),
   'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
   'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
   'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),

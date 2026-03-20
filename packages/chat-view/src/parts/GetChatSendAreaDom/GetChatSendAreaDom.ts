@@ -98,6 +98,7 @@ export const getChatSendAreaDom = (
     {
       childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
       className: ClassNames.ChatSendAreaBottom,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
     ...(newChatModelPickerEnabled
