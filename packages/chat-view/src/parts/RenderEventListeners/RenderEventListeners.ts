@@ -180,6 +180,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleChatWelcomeContextMenu,
+      params: ['handleChatWelcomeContextMenu'],
+    },
+    {
       name: DomEventListenersFunctions.HandleChatHeaderContextMenu,
       params: ['handleChatHeaderContextMenu'],
       preventDefault: true,
