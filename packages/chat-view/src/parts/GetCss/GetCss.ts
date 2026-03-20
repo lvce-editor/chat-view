@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export const getCss = (
   composerHeight: number,
   listItemHeight: number,
@@ -38,6 +39,10 @@ export const getCss = (
 
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
+}
+
+.ChatSendArea:focus-within{
+  border-color: darkcyan;
 }
 `
 
