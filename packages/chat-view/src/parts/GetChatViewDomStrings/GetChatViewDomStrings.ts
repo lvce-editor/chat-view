@@ -5,7 +5,7 @@ export const chatTitle = (): string => {
 }
 
 export const chats = (): string => {
-  return i18nString('Chats')
+  return i18nString('Chat')
 }
 
 export const newChat = (): string => {
