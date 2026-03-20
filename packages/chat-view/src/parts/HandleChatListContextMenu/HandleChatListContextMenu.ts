@@ -1,6 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getListIndex } from '../GetListIndex/GetListIndex.ts'
+import { MenuChatList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const handleChatListContextMenu = async (state: ChatState, eventX: number, eventY: number): Promise<ChatState> => {
@@ -14,8 +15,8 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
   if (!item) {
     return state
   }
-  await RendererWorker.showContextMenu2(uid, -1, eventX, eventY, {
-    menuId: -1,
+  await RendererWorker.showContextMenu2(uid, MenuChatList, eventX, eventY, {
+    menuId: MenuChatList,
     sessionId: item.id,
   })
   return state

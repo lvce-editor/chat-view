@@ -1,7 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-context-menu-entries'
-export const skip = 1
+// export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
@@ -19,10 +19,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute('Chat.handleChatListContextMenu', 0, 70)
 
   // assert
-  const renameMenuItem = Locator('.MenuItem').nth(1)
+  const renameMenuItem = Locator('.MenuItem').nth(0)
   await expect(renameMenuItem).toBeVisible()
   await expect(renameMenuItem).toHaveText('Rename')
-  const archiveMenuItem = Locator('.MenuItem').nth(2)
+  const archiveMenuItem = Locator('.MenuItem').nth(1)
   await expect(archiveMenuItem).toBeVisible()
   await expect(archiveMenuItem).toHaveText('Archive')
 }
