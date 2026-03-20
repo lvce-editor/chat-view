@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -29,7 +29,7 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
     },
     {
       childCount: 1,
-      className: ClassNames.IconButton,
+      className: mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton),
       'data-id': session.id,
       name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
@@ -37,6 +37,6 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       title: Strings.deleteChatSession(),
       type: VirtualDomElements.Button,
     },
-    text('🗑'),
+    text('Archive'),
   ]
 }
