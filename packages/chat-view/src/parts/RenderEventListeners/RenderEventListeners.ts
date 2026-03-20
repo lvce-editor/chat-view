@@ -181,7 +181,8 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleChatWelcomeContextMenu,
-      params: ['handleChatWelcomeContextMenu'],
+      params: ['handleChatDetailWelcomeContextMenu'],
+      preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleChatHeaderContextMenu,
