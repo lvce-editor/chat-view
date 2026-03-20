@@ -7,8 +7,8 @@ test('cutInput should copy composer value and clear composer', async () => {
   ClipBoardWorker.reset()
   const state = {
     ...createDefaultState(),
-    composerLineHeight: 24,
     composerHeight: 96,
+    composerLineHeight: 24,
     composerValue: 'hello cut',
   }
   const result = await CutInput.cutInput(state)
