@@ -39,6 +39,10 @@ export const getCss = (
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
 }
+
+.ChatSendArea:focus-within{
+  border-color: darkcyan;
+}
 `
 
   return `${baseCss}
