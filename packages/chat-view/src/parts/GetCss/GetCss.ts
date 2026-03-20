@@ -44,6 +44,15 @@ export const getCss = (
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
+
+.ChatListItem .SessionArchiveButton{
+  opacity: 0;
+}
+
+.ChatListItem:hover .SessionArchiveButton,
+.ChatListItem:focus-within .SessionArchiveButton{
+  opacity: 1;
+}
 `
 
   return `${baseCss}
