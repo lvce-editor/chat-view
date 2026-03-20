@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
 
   await Chat.handleClickNew()

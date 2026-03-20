@@ -13,6 +13,6 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await Chat.handleClickNew()
 
   // assert
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeFocused()
 }

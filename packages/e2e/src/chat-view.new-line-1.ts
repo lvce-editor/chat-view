@@ -6,14 +6,14 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
 
   // act
   await Chat.enterNewLine()
 
   // assert
-  const input = Locator('.Chat .MultilineInputBox')
+  const input = Locator('.Chat .ChatInputBox')
   await expect(input).toHaveCSS('height', '54px')
   const sendArea = Locator('.ChatSendArea')
   await expect(sendArea).toHaveCSS('height', '124px')

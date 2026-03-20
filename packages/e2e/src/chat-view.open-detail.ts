@@ -5,7 +5,7 @@ export const name = 'chat-view.open-detail'
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
   await Chat.reset()
 

@@ -86,7 +86,7 @@ export const getChatSendAreaDom = (
       : []),
     {
       childCount: 0,
-      className: ClassNames.MultilineInputBox,
+      className: ClassNames.ChatInputBox,
       name: InputName.Composer,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,

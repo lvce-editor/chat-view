@@ -10,7 +10,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(messages).toHaveCount(2)
 
   // act
