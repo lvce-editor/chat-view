@@ -25,7 +25,7 @@ export const getChatHeaderListModeDom = (
     },
     {
       childCount: 1,
-      className: ClassNames.Label,
+      className: ClassNames.ChatHeaderLabel,
       type: VirtualDomElements.H2,
     },
     text(Strings.chats()),

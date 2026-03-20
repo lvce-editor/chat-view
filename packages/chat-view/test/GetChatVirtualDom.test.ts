@@ -229,9 +229,10 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(sessionLabel).toBeDefined()
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
-  expect(sessionButton).toMatchObject({
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  expect(chatList).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
-    type: VirtualDomElements.Div,
+    type: VirtualDomElements.Ul,
   })
   expect(deleteButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickDelete,
@@ -275,6 +276,7 @@ test('getChatVirtualDOm should restore chat list scroll position', () => {
   })
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
     onScroll: DomEventListenerFunctions.HandleChatListScroll,
     scrollTop: 90,
     type: VirtualDomElements.Ul,

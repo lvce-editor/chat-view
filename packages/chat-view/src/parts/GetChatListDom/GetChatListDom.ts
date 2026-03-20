@@ -14,6 +14,7 @@ export const getChatListDom = (sessions: readonly ChatSession[], selectedSession
       childCount: sessions.length,
       className: ClassNames.ChatList,
       onClick: DomEventListenerFunctions.HandleClickList,
+      onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onScroll: DomEventListenerFunctions.HandleChatListScroll,
       scrollTop: chatListScrollTop,
       type: VirtualDomElements.Ul,
