@@ -220,9 +220,13 @@ test('getChatVirtualDOm should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
+  const sessionStatusRow = result.find((node) => node.className === ClassNames.ChatListItemStatusRow)
+  const sessionStatusIcon = result.find((node) => node.className?.includes(`${ClassNames.ChatListItemStatusIcon} codicon codicon-circle-filled`))
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
   expect(sessionLabel).toBeDefined()
+  expect(sessionStatusRow).toBeDefined()
+  expect(sessionStatusIcon).toBeDefined()
   expect(sessionButton).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
     type: VirtualDomElements.Div,
@@ -230,6 +234,31 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(deleteButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
+})
+
+test('getChatVirtualDOm should render stopped/in progress/finished session status icons', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    {
+      id: 'session-2',
+      messages: [{ id: 'm-1', inProgress: true, role: 'assistant' as const, text: '', time: '10:00' }],
+      title: 'Chat 2',
+    },
+    {
+      id: 'session-3',
+      messages: [{ id: 'm-2', role: 'assistant' as const, text: 'done', time: '10:01' }],
+      title: 'Chat 3',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+  })
+  const statusIcons = result.filter((node) => node.className?.includes(ClassNames.ChatListItemStatusIcon))
+  expect(statusIcons).toHaveLength(3)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusStopped))).toBe(true)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusInProgress))).toBe(true)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusFinished))).toBe(true)
 })
 
 test('getChatVirtualDOm should restore chat list scroll position', () => {
