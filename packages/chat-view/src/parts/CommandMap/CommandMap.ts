@@ -92,7 +92,7 @@ export const commandMap = {
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
-  'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
+  'Chat.handleChatListContextMenu': wrapCommand(HandleChatListContextMenu.handleChatListContextMenu),
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleChatWelcomeContextMenu': wrapCommand(HandleChatWelcomeContextMenu.handleChatWelcomeContextMenu),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
