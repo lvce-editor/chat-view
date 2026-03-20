@@ -41,7 +41,6 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       className: ClassNames.ChatListItemLabel,
       name: InputName.getSessionInputName(session.id),
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
-      tabIndex: 0,
       type: VirtualDomElements.Div,
     },
     text(session.title),
