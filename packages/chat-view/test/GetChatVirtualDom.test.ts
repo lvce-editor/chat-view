@@ -221,9 +221,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
   const sessionStatusRow = result.find((node) => node.className === ClassNames.ChatListItemStatusRow)
-  const sessionStatusIcon = result.find((node) =>
-    node.className?.includes(`${ClassNames.ChatListItemStatusIcon} codicon codicon-circle-filled`),
-  )
+  const sessionStatusIcon = result.find((node) => node.className?.includes(`${ClassNames.ChatListItemStatusIcon} codicon codicon-circle-filled`))
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
   expect(sessionLabel).toBeDefined()
