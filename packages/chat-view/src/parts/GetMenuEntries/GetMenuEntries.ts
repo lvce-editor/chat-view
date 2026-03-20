@@ -1,8 +1,10 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
+import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEntriesChatHeader.ts'
+import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
-import { MenuChatList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+import { MenuChatHeader, MenuChatInput, MenuChatList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.ts'
 
 const menuEntryOpenContainingFolder: MenuEntry = {
@@ -95,6 +97,10 @@ const getMenuEntriesFile = (): readonly MenuEntry[] => {
 
 export const getMenuEntries = (menuId: number): readonly MenuEntry[] => {
   switch (menuId) {
+    case MenuChatHeader:
+      return getMenuEntriesChatHeader()
+    case MenuChatInput:
+      return getMenuEntriesChatInput()
     case MenuChatList:
       return getMenuEntriesChatList()
     default:
