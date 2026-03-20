@@ -180,6 +180,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleChatHeaderContextMenu,
+      params: ['handleChatHeaderContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleFocus,
       params: ['handleInputFocus', EventExpression.TargetName],
     },
