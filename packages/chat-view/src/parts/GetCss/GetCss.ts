@@ -72,6 +72,13 @@ export const getCss = (
 
 .ChatListItemStatusFinished{
   color: var(--vscode-testing-iconPassed);
+.ChatListItem .SessionArchiveButton{
+  opacity: 0;
+}
+
+.ChatListItem:hover .SessionArchiveButton,
+.ChatListItem:focus-within .SessionArchiveButton{
+  opacity: 1;
 }
 `
 
