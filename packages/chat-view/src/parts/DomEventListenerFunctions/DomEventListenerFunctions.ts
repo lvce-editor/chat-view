@@ -39,3 +39,4 @@ export const HandleSearchInput = 37
 export const HandleChatWelcomeContextMenu = 39
 export const HandleChatHeaderContextMenu = 40
 export const HandleChatInputContextMenu = 41
+export const HandleContextMenuChatSendAreaBottom = 42
