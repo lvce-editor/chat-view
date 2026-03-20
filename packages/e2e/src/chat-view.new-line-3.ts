@@ -8,11 +8,11 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.reset()
   const composer = Locator('.MultilineInputBox[name="composer"]')
   await expect(composer).toBeVisible()
-  await Chat.enterNewLine()
-  await Chat.enterNewLine()
 
   // act
-  await Chat.enterNewLine()
+  for (let i = 0; i < 3; i++) {
+    await Chat.enterNewLine()
+  }
 
   // assert
   const input = Locator('.Chat .MultilineInputBox')
