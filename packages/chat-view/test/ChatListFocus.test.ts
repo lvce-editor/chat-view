@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
-import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as ChatListFocusFirst from '../src/parts/ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../src/parts/ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../src/parts/ChatListFocusNext/ChatListFocusNext.ts'
 import * as ChatListFocusPrevious from '../src/parts/ChatListFocusPrevious/ChatListFocusPrevious.ts'
+import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 
 test('chatListFocusNext should focus first item from container focus', async () => {
   const state = { ...createDefaultState(), listFocusedIndex: -1 }

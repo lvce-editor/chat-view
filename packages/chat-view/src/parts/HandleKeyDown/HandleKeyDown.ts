@@ -14,10 +14,10 @@ export const handleKeyDown = async (state: ChatState, key: string, shiftKey: boo
         return ChatListFocusNext.chatListFocusNext(state)
       case 'ArrowUp':
         return ChatListFocusPrevious.chatListFocusPrevious(state)
-      case 'Home':
-        return ChatListFocusFirst.chatListFocusFirst(state)
       case 'End':
         return ChatListFocusLast.chatListFocusLast(state)
+      case 'Home':
+        return ChatListFocusFirst.chatListFocusFirst(state)
       default:
         break
     }
