@@ -198,6 +198,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleContextMenuChatSendAreaBottom,
+      params: ['handleContextMenuChatSendAreaBottom'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleKeyDown,
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
     },
