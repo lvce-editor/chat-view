@@ -37,6 +37,10 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       title: Strings.deleteChatSession(),
       type: VirtualDomElements.Button,
     },
-    text('Archive'),
+    {
+      childCount: 0,
+      className: 'MaskIcon MaskIconTrash',
+      type: VirtualDomElements.Div,
+    },
   ]
 }
