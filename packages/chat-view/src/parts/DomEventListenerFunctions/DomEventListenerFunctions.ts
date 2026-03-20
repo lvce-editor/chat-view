@@ -36,3 +36,4 @@ export const HandleClickDictationButton = 34
 export const HandleMissingApiKeySubmit = 35
 export const HandleRunModeChange = 36
 export const HandleSearchInput = 37
+export const HandleChatInputContextMenu = 39
