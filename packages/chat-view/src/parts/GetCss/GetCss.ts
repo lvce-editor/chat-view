@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export const getCss = (
   composerHeight: number,
   listItemHeight: number,
@@ -38,6 +39,19 @@ export const getCss = (
 
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
+}
+
+.ChatSendArea:focus-within{
+  border-color: darkcyan;
+}
+
+.ChatListItem .SessionArchiveButton{
+  opacity: 0;
+}
+
+.ChatListItem:hover .SessionArchiveButton,
+.ChatListItem:focus-within .SessionArchiveButton{
+  opacity: 1;
 }
 `
 

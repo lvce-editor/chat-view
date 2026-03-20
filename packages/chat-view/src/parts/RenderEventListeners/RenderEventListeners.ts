@@ -189,6 +189,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInputFocus', EventExpression.TargetName],
     },
     {
+      name: DomEventListenersFunctions.HandleChatInputContextMenu,
+      params: ['handleChatInputContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleKeyDown,
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
     },
