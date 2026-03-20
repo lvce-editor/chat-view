@@ -10,8 +10,13 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(composer).toBeVisible()
 
   // act
-  await Chat.enterNewLine()
+  for (let i = 0; i < 4; i++) {
+    await Chat.enterNewLine()
+  }
 
   // assert
+
+  const sendArea = Locator('.ChatSendArea')
+  await expect(sendArea).toHaveCSS('height', '178px')
   // TODO verify height
 }
