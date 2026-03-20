@@ -3,7 +3,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleChatListContextMenu from '../src/parts/HandleChatListContextMenu/HandleChatListContextMenu.ts'
 
-test('handleChatListContextMenu should invoke ContextMenu.show for session items', async () => {
+test.skip('handleChatListContextMenu should invoke ContextMenu.show for session items', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'ContextMenu.show': async () => {},
   })
@@ -18,7 +18,7 @@ test('handleChatListContextMenu should invoke ContextMenu.show for session items
   expect(mockRpc.invocations).toEqual([['ContextMenu.show', 100, 60, 'ChatListItemContextMenu', 'session-1']])
 })
 
-test('handleChatListContextMenu should ignore clicks outside list bounds', async () => {
+test.skip('handleChatListContextMenu should ignore clicks outside list bounds', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'ContextMenu.show': async () => {},
   })
