@@ -50,6 +50,10 @@ export const getCss = (
   align-items:center;
 }
 
+.ChatMessageContent p + p{
+  margin-top: 0.75em;
+}
+
 .ChatListItemStatusRow{
   width: 16px;
   min-width: 16px;
