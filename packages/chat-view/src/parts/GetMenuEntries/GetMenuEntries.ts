@@ -95,8 +95,13 @@ const getMenuEntriesFile = (): readonly MenuEntry[] => {
   ]
 }
 
-export const getMenuEntries = (menuId: number): readonly MenuEntry[] => {
-  switch (menuId) {
+export interface ContextMenuProps {
+  readonly menuId: number
+  readonly [key: string]: any
+}
+
+export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonly MenuEntry[] => {
+  switch (props.menuId) {
     case MenuChatHeader:
       return getMenuEntriesChatHeader()
     case MenuChatInput:

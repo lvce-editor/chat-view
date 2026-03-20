@@ -26,7 +26,7 @@ export const getChatHeaderListModeDom = (
     {
       childCount: 1,
       className: ClassNames.Label,
-      type: VirtualDomElements.Span,
+      type: VirtualDomElements.H2,
     },
     text(Strings.chats()),
     ...getChatHeaderActionsDom('list', authEnabled, authStatus, searchEnabled),
