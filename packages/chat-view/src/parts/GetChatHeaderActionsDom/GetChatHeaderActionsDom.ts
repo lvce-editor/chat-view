@@ -80,6 +80,7 @@ export const getChatHeaderActionsDom = (
     {
       childCount: items.length,
       className: ClassNames.ChatActions,
+      role: 'toolbar',
       type: VirtualDomElements.Div,
     },
     ...items.flatMap(getHeaderActionVirtualDom),
