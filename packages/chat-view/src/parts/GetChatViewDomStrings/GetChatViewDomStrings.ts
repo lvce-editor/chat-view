@@ -133,7 +133,7 @@ export const getOpenApiApiKey = (): string => {
 }
 
 export const deleteChatSession = (): string => {
-  return i18nString('Archive chat session')
+  return i18nString('Archive')
 }
 
 export const defaultSessionTitle = (): string => {
