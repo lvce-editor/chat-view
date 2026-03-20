@@ -26,7 +26,7 @@ export const getChatHeaderDomDetailMode = (
     ...getBackButtonVirtualDom(),
     {
       childCount: 1,
-      className: ClassNames.Label,
+      className: ClassNames.ChatHeaderLabel,
       type: VirtualDomElements.H2,
     },
     text(selectedSessionTitle),

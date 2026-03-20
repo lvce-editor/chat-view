@@ -54,6 +54,11 @@ export const getCss = (
   margin-top: 0.75em;
 }
 
+.ChatHeaderLabel{
+  margin: 0;
+  font-size: 14px;
+}
+
 .ChatListItemStatusRow{
   width: 16px;
   min-width: 16px;
