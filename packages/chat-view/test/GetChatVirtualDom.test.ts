@@ -77,11 +77,13 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     type: VirtualDomElements.Div,
   })
   const chatListEmpty = result.find((node) => node.className === ClassNames.ChatListEmpty)
+  const chatWelcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(chatListEmpty).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatListEmpty,
     type: VirtualDomElements.Div,
   })
+  expect(chatWelcomeMessage).toBeUndefined()
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
   expect(emptyStateMessage).toBeDefined()
   const composer = result.find((node) => node.name === 'composer')
