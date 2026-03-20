@@ -44,6 +44,35 @@ export const getCss = (
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
+
+.ChatListItem{
+  display:flex;
+  align-items:center;
+}
+
+.ChatListItemStatusRow{
+  width: 16px;
+  min-width: 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.ChatListItemStatusIcon{
+  font-size: 10px;
+}
+
+.ChatListItemStatusStopped{
+  color: var(--vscode-disabledForeground);
+}
+
+.ChatListItemStatusInProgress{
+  color: var(--vscode-charts-blue);
+}
+
+.ChatListItemStatusFinished{
+  color: var(--vscode-testing-iconPassed);
+}
 `
 
   return `${baseCss}
