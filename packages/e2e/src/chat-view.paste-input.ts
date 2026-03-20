@@ -1,0 +1,16 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
+export const name = 'chat-view.paste-input'
+
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+  await Chat.show()
+  const composer = Locator('.MultilineInputBox[name="composer"]')
+  await expect(composer).toBeVisible()
+  await Chat.handleInput('from clipboard')
+  await Command.execute('Chat.copyInput')
+  await Command.execute('Chat.clearInput')
+
+  await Command.execute('Chat.pasteInput')
+
+  await expect(composer).toHaveValue('from clipboard')
+}
