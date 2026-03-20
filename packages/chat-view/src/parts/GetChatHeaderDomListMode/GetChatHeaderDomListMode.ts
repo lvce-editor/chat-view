@@ -20,6 +20,7 @@ export const getChatHeaderListModeDom = (
     {
       childCount: headerChildCount,
       className: ClassNames.ChatHeader,
+      onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Div,
     },
     {
