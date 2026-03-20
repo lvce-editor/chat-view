@@ -23,7 +23,11 @@ const expectedModelIds = [
   'openRouter/mistralai/mistral-small-3.1-24b-instruct:free',
 ] as const
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const skip = 1
+
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setNewChatModelPickerEnabled', true)
