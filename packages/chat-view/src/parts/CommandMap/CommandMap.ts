@@ -10,6 +10,7 @@ import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
+import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
@@ -87,6 +88,7 @@ export const commandMap = {
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
+  'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
