@@ -21,7 +21,11 @@ export const getChatListDom = (
       className: ClassNames.ChatList,
       name: InputName.ChatList,
       onClick: DomEventListenerFunctions.HandleClickList,
+<<<<<<< HEAD
       onFocus: DomEventListenerFunctions.HandleFocus,
+=======
+      onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
+>>>>>>> origin/main
       onScroll: DomEventListenerFunctions.HandleChatListScroll,
       scrollTop: chatListScrollTop,
       tabIndex: 0,

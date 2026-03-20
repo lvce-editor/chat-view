@@ -40,9 +40,12 @@ export const getSessionDom = (session: ChatSession, focused = false): readonly V
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
       name: InputName.getSessionInputName(session.id),
+<<<<<<< HEAD
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       tabIndex: 0,
+=======
+>>>>>>> origin/main
       type: VirtualDomElements.Div,
     },
     text(session.title),
