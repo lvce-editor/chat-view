@@ -567,6 +567,21 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   expect(betaLabel).toBeUndefined()
 })
 
+test('getChatVirtualDOm should render focused chat list item highlight', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const focusedItems = result.filter((node) => node.className === `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused}`)
+  expect(focusedItems).toHaveLength(1)
+})
+
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,

@@ -41,6 +41,7 @@ export interface GetChatVirtualDomOptions {
   readonly composerHeight: number
   readonly composerLineHeight: number
   readonly composerValue: string
+  readonly listFocusedIndex?: number
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -85,6 +86,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerHeight,
     composerLineHeight,
     composerValue,
+    listFocusedIndex = -1,
     messagesScrollTop,
     modelPickerOpen = false,
     modelPickerSearchValue = '',
@@ -207,6 +209,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerHeight,
         composerLineHeight,
         composerValue,
+        listFocusedIndex,
         modelPickerOpen,
         modelPickerSearchValue,
         models,

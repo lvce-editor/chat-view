@@ -1,5 +1,9 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
 import * as ClearInput from '../ClearInput/ClearInput.ts'
+import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
+import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
+import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
+import * as ChatListFocusPrevious from '../ChatListFocusPrevious/ChatListFocusPrevious.ts'
 import * as CopyInput from '../CopyInput/CopyInput.ts'
 import * as StatusBar from '../Create/Create.ts'
 import * as CutInput from '../CutInput/CutInput.ts'
@@ -82,6 +86,10 @@ import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
+  'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
+  'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
+  'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
+  'Chat.chatListFocusPrevious': wrapCommand(ChatListFocusPrevious.chatListFocusPrevious),
   'Chat.copyInput': wrapCommand(CopyInput.copyInput),
   'Chat.create': StatusBar.create,
   'Chat.cutInput': wrapCommand(CutInput.cutInput),

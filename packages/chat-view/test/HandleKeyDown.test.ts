@@ -50,3 +50,15 @@ test('handleKeyDown should ignore non-enter keys', async () => {
   const result = await HandleKeyDown.handleKeyDown(state, 'Escape', false)
   expect(result).toBe(state)
 })
+
+test('handleKeyDown should focus next chat list item on ArrowDown', async () => {
+  const state = { ...createDefaultState(), focus: 'list', focused: true, listFocusedIndex: -1 }
+  const result = await HandleKeyDown.handleKeyDown(state, 'ArrowDown', false)
+  expect(result.listFocusedIndex).toBe(0)
+})
+
+test('handleKeyDown should focus previous chat list item on ArrowUp', async () => {
+  const state = { ...createDefaultState(), focus: 'list', focused: true, listFocusedIndex: -1 }
+  const result = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
+  expect(result.listFocusedIndex).toBe(0)
+})
