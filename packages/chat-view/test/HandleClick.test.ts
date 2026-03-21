@@ -461,7 +461,12 @@ test('handleClickList should keep state when click index has no session', async 
     y: 20,
   }
   const result = await HandleClick.handleClickList(state, 10, 120)
-  expect(result).toBe(state)
+  expect(result).toEqual({
+    ...state,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: -1,
+  })
 })
 
 test('handleClickList should ignore clicks in header area', async () => {
@@ -477,7 +482,12 @@ test('handleClickList should ignore clicks in header area', async () => {
     y: 200,
   }
   const result = await HandleClick.handleClickList(state, 120, 220)
-  expect(result).toBe(state)
+  expect(result).toEqual({
+    ...state,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: -1,
+  })
 })
 
 test('handleClickList should ignore clicks outside chat bounds', async () => {
@@ -493,5 +503,10 @@ test('handleClickList should ignore clicks outside chat bounds', async () => {
     y: 200,
   }
   const result = await HandleClick.handleClickList(state, 99, 250)
-  expect(result).toBe(state)
+  expect(result).toEqual({
+    ...state,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: -1,
+  })
 })

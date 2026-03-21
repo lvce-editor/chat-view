@@ -50,6 +50,11 @@ export const getCss = (
   align-items:center;
 }
 
+.ChatListItemFocused{
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
 .ChatMessageContent p + p{
   margin-top: 0.75em;
 }
@@ -85,6 +90,8 @@ export const getCss = (
 
 .ChatListItemStatusFinished{
   color: var(--vscode-testing-iconPassed);
+}
+
 .ChatListItem .SessionArchiveButton{
   opacity: 0;
 }

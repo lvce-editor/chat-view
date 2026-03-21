@@ -17,8 +17,8 @@ const getSessionStatusClassName = (session: ChatSession): string => {
   return ClassNames.ChatListItemStatusStopped
 }
 
-export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] => {
-  const sessionClassName = ClassNames.ChatListItem
+export const getSessionDom = (session: ChatSession, focused = false): readonly VirtualDomNode[] => {
+  const sessionClassName = focused ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused) : ClassNames.ChatListItem
   const sessionStatusClassName = getSessionStatusClassName(session)
   return [
     {
@@ -40,6 +40,9 @@ export const getSessionDom = (session: ChatSession): readonly VirtualDomNode[] =
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
       name: InputName.getSessionInputName(session.id),
+      onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
+      onFocus: DomEventListenerFunctions.HandleFocus,
+      tabIndex: 0,
       type: VirtualDomElements.Div,
     },
     text(session.title),

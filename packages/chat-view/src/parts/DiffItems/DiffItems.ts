@@ -25,6 +25,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.modelPickerOpen === newState.modelPickerOpen &&
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
     oldState.newChatModelPickerEnabled === newState.newChatModelPickerEnabled &&
+    oldState.listFocusedIndex === newState.listFocusedIndex &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     oldState.projectListScrollTop === newState.projectListScrollTop &&
     oldState.renamingSessionId === newState.renamingSessionId &&
