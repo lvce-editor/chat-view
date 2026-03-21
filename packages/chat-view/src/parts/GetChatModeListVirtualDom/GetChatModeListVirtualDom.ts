@@ -77,10 +77,6 @@ export const getChatModeListVirtualDom = ({
   usageOverviewEnabled,
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
-  void composerHeight
-  void composerFontSize
-  void composerFontFamily
-  void composerLineHeight
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
