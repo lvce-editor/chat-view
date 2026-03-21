@@ -10,6 +10,7 @@ export const getMissingApiKeyDom = ({
   inputPattern,
   inputRequired = false,
   openSettingsButtonName,
+  openSettingsUrl,
   placeholder,
   saveButtonDisabled = false,
   saveButtonName,
@@ -54,10 +55,11 @@ export const getMissingApiKeyDom = ({
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
-      inputType: 'button',
+      href: openSettingsUrl,
       name: openSettingsButtonName,
-      onClick: DomEventListenerFunctions.HandleClick,
-      type: VirtualDomElements.Button,
+      rel: 'noopener noreferrer',
+      target: '_blank',
+      type: VirtualDomElements.A,
     },
     text(getApiKeyText),
   ]
