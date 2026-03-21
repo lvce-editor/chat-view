@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
@@ -53,6 +53,23 @@ export const getAddContextButtonDom = (): readonly VirtualDomNode[] => {
     },
     {
       text: Strings.addContext(),
+      type: VirtualDomElements.Text,
+    },
+  ]
+}
+
+export const getBackToChatsButtonDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      inputType: 'button',
+      name: InputName.Back,
+      onClick: DomEventListenerFunctions.HandleClickBack,
+      type: VirtualDomElements.Button,
+    },
+    {
+      text: Strings.backToChats(),
       type: VirtualDomElements.Text,
     },
   ]
