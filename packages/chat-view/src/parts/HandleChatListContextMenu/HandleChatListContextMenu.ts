@@ -19,5 +19,10 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
     menuId: MenuChatList,
     sessionId: item.id,
   })
-  return state
+  return {
+    ...state,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: index,
+  }
 }
