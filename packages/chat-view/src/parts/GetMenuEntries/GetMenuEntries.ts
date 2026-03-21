@@ -4,13 +4,9 @@ import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
 import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEntriesChatHeader.ts'
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
-<<<<<<< HEAD
 import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
-import { MenuChatHeader, MenuChatInput, MenuChatList, MenuProjectAddButton } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
-=======
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
-import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
->>>>>>> origin/main
+import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList, MenuProjectAddButton } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.ts'
 
 const menuEntryOpenContainingFolder: MenuEntry = {
@@ -114,13 +110,10 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
       return getMenuEntriesChatInput()
     case MenuChatList:
       return getMenuEntriesChatList()
-<<<<<<< HEAD
     case MenuProjectAddButton:
       return getMenuEntriesProjectAddButton()
-=======
     case MenuChatProjectList:
       return getMenuEntriesChatProjectList(props.projectId)
->>>>>>> origin/main
     default:
       return getMenuEntriesFile()
   }

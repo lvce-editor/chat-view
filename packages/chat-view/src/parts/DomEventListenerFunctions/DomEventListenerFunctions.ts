@@ -40,3 +40,4 @@ export const HandleChatHeaderContextMenu = 40
 export const HandleChatInputContextMenu = 41
 export const HandleContextMenuChatSendAreaBottom = 42
 export const HandleProjectAddButtonContextMenu = 43
+export const HandleProjectListContextMenu = 44

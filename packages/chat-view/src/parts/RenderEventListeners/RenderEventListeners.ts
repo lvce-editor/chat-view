@@ -175,6 +175,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleProjectListContextMenu,
+      params: ['handleProjectListContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleMessagesContextMenu,
       params: ['handleMessagesContextMenu'],
       preventDefault: true,
