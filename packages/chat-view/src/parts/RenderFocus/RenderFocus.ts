@@ -1,6 +1,5 @@
 import { ViewletCommand } from '@lvce-editor/constants'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
