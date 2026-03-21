@@ -956,12 +956,17 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const openRouterButton = result.find((node) => node.name === 'open-openrouter-api-key-settings')
   expect(apiKeyForm).toMatchObject({
+    className: ClassNames.MissingApiKeyForm,
     method: 'GET',
     onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
+    autocapitalize: 'off',
+    autocomplete: 'off',
+    autocorrect: 'off',
     onInput: DomEventListenerFunctions.HandleInput,
+    spellcheck: false,
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
@@ -1020,14 +1025,19 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
   const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-website')
   expect(apiKeyForm).toMatchObject({
+    className: ClassNames.MissingApiKeyForm,
     method: 'GET',
     onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
+    autocapitalize: 'off',
+    autocomplete: 'off',
+    autocorrect: 'off',
     onInput: DomEventListenerFunctions.HandleInput,
     pattern: '^sk-.+',
     required: true,
+    spellcheck: false,
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
