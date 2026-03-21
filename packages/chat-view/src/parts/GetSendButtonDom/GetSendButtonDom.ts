@@ -66,10 +66,11 @@ export const getBackToChatsButtonDom = (): readonly VirtualDomNode[] => {
       inputType: 'button',
       name: InputName.Back,
       onClick: DomEventListenerFunctions.HandleClickBack,
+      title: Strings.backToChatList(),
       type: VirtualDomElements.Button,
     },
     {
-      text: Strings.backToChats(),
+      text: Strings.backToChatList(),
       type: VirtualDomElements.Text,
     },
   ]
