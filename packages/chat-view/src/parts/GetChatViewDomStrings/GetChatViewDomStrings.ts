@@ -12,6 +12,10 @@ export const newChat = (): string => {
   return i18nString('New Chat')
 }
 
+export const addProject = (): string => {
+  return i18nString('Add Project')
+}
+
 export const debug = (): string => {
   return i18nString('Debug')
 }
