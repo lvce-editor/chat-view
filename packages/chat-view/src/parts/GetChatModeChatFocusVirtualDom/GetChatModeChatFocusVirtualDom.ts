@@ -133,6 +133,7 @@ export const getChatModeChatFocusVirtualDom = ({
       todoListToolEnabled,
       todoListItems,
       voiceDictationEnabled,
+      true,
     ),
     ...(isDropOverlayVisible
       ? [
