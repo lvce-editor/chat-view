@@ -197,7 +197,9 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
-  expect(projectSidebar).toBeDefined()
+  expect(projectSidebar).toMatchObject({
+    childCount: 3,
+  })
   expect(chatHeader).toBeUndefined()
   expect(projectList).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
@@ -214,6 +216,10 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
     title: 'Back to chat list',
     type: VirtualDomElements.Button,
   })
+  expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
+  expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(
+    result.indexOf(backToChatListButton as (typeof result)[number]),
+  )
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
