@@ -89,6 +89,13 @@ export const getCss = (
 .ChatListItem:focus-within .SessionArchiveButton{
   opacity: 1;
 }
+
+.ChatHeaderLabel{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 `
 
   return `${baseCss}
