@@ -115,7 +115,6 @@ export const getProjectListDom = (
     {
       childCount: projects.length,
       className: ClassNames.ProjectList,
-      onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
       onScroll: DomEventListenerFunctions.HandleProjectListScroll,
       scrollTop: projectListScrollTop,
       type: VirtualDomElements.Div,
@@ -126,6 +125,7 @@ export const getProjectListDom = (
       className: ClassNames.ProjectAddButton,
       name: InputName.CreateProject,
       onClick: DomEventListenerFunctions.HandleClick,
+      onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
       tabIndex: 0,
       type: VirtualDomElements.Button,
     },

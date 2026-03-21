@@ -198,10 +198,10 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(projectSidebar).toBeDefined()
   expect(chatHeader).toBeUndefined()
-  expect(projectList).toMatchObject({
-    onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
+  expect(projectList).toBeDefined()
+  expect(addProjectButton).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
   })
-  expect(addProjectButton).toBeDefined()
   expect(chatList).toBeUndefined()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()

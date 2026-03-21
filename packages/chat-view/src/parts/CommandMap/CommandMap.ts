@@ -37,7 +37,7 @@ import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleM
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
-import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
+import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSearchValueChange from '../HandleSearchValueChange/HandleSearchValueChange.ts'
@@ -123,7 +123,7 @@ export const commandMap = {
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingApiKeySubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingApiKeySubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
-  'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
+  'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
   'Chat.handleSearchValueChange': wrapCommand(HandleSearchValueChange.handleSearchValueChange),
