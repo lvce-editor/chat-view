@@ -954,8 +954,10 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://openrouter.ai/settings/keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 
@@ -1020,8 +1022,10 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://platform.openai.com/api-keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 

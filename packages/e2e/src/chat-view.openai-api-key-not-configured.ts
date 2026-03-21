@@ -19,4 +19,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(messages).toHaveCount(4)
   await expect(messages.nth(1)).toContainText('OpenAI API key is not configured')
   await expect(messages.nth(3)).toContainText('OpenAI API key is not configured')
+  const getApiKeyLink = Locator('[name="open-openapi-api-key-website"]')
+  await expect(getApiKeyLink).toHaveAttribute('href', 'https://platform.openai.com/api-keys')
+  await expect(getApiKeyLink).toHaveAttribute('target', '_blank')
+  await expect(getApiKeyLink).toHaveAttribute('rel', 'noopener noreferrer')
 }

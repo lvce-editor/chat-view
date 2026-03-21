@@ -10,6 +10,7 @@ export const getMissingOpenApiApiKeyDom = (): readonly VirtualDomNode[] => {
     inputPattern: '^sk-.+',
     inputRequired: true,
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
+    openSettingsUrl: 'https://platform.openai.com/api-keys',
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonName: SaveOpenApiApiKey,
   })
