@@ -63,6 +63,10 @@ export const getCss = (
   padding-top: 10px;
 }
 
+a.Button{
+  text-decoration: none;
+}
+
 .ChatHeaderLabel{
   margin: 0;
   font-size: 14px;
