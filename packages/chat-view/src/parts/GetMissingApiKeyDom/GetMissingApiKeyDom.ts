@@ -18,11 +18,15 @@ export const getMissingApiKeyDom = ({
   return [
     {
       childCount: 2,
+      className: ClassNames.MissingApiKeyForm,
       method: 'GET',
       onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
       type: VirtualDomElements.Form,
     },
     {
+      autocapitalize: 'off',
+      autocomplete: 'off',
+      autocorrect: 'off',
       childCount: 0,
       className: ClassNames.InputBox,
       name: inputName,
@@ -30,6 +34,7 @@ export const getMissingApiKeyDom = ({
       ...(inputPattern ? { pattern: inputPattern } : {}),
       placeholder,
       required: inputRequired,
+      spellcheck: false,
       type: VirtualDomElements.Input,
     },
     {
