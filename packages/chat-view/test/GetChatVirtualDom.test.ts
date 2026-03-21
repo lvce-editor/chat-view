@@ -217,9 +217,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
     type: VirtualDomElements.Button,
   })
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
-  expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(
-    result.indexOf(backToChatListButton as (typeof result)[number]),
-  )
+  expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
