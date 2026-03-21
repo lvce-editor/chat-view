@@ -54,6 +54,10 @@ export const getCss = (
   margin-top: 0.75em;
 }
 
+.MissingApiKeyForm{
+  padding-top: 10px;
+}
+
 .ChatHeaderLabel{
   margin: 0;
   font-size: 14px;
@@ -89,6 +93,13 @@ export const getCss = (
 .ChatListItem:focus-within .SessionArchiveButton{
   opacity: 1;
 }
+
+.ChatHeaderLabel{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 `
 
   return `${baseCss}
