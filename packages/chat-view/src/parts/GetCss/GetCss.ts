@@ -54,6 +54,10 @@ export const getCss = (
   margin-top: 0.75em;
 }
 
+.MissingApiKeyForm{
+  padding-top: 10px;
+}
+
 .ChatHeaderLabel{
   margin: 0;
   font-size: 14px;
