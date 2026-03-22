@@ -1,6 +1,6 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
-import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
+import * as ViewletExplorerStrings from '../ChatStrings/ChatStrings.ts'
 
 export const getMenuEntriesChatInput = (): readonly MenuEntry[] => {
   return [
