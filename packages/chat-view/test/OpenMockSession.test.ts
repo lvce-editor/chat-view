@@ -2,8 +2,11 @@ import { expect, test } from '@jest/globals'
 import type { ChatMessage, ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as OpenMockSession from '../src/parts/OpenMockSession/OpenMockSession.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('openMockSession should create a mock session and switch to detail mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const mockChatMessages: readonly ChatMessage[] = [
     {
@@ -33,6 +36,8 @@ test('openMockSession should create a mock session and switch to detail mode', a
 })
 
 test('openMockSession should replace messages for existing session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     sessions: [
@@ -70,6 +75,8 @@ test('openMockSession should replace messages for existing session', async () =>
 })
 
 test('openMockSession should return same state for empty mockSessionId', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await OpenMockSession.openMockSession(state, '', [])
   expect(result).toBe(state)

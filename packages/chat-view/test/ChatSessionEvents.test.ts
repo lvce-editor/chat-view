@@ -6,8 +6,11 @@ import {
   getChatViewEvents,
   saveChatSession,
 } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('saveChatSession should append session creation and message events', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   await saveChatSession({
     id: 'session-1',
     messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }],
@@ -29,6 +32,8 @@ test('saveChatSession should append session creation and message events', async 
 })
 
 test('saveChatSession should append message update events for changed message text', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   await saveChatSession({
     id: 'session-1',
     messages: [{ id: 'message-1', inProgress: true, role: 'assistant', text: 'hel', time: '10:00' }],
@@ -56,6 +61,8 @@ test('saveChatSession should append message update events for changed message te
 })
 
 test('deleteChatSession should append delete event and hide session from reads', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   await saveChatSession({
     id: 'session-1',
     messages: [],
@@ -75,6 +82,8 @@ test('deleteChatSession should append delete event and hide session from reads',
 })
 
 test('appendChatViewEvent stores attachment events including blob payload', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const blob = new Blob(['bytes'], { type: 'image/png' })
 
   await appendChatViewEvent({

@@ -4,6 +4,7 @@ import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const expectInvocations = (actual: readonly (readonly [string, string])[], expected: readonly (readonly [string, string])[]): void => {
   expect(actual.length).toBeGreaterThanOrEqual(expected.length)
@@ -11,6 +12,8 @@ const expectInvocations = (actual: readonly (readonly [string, string])[], expec
 }
 
 test('loadContent should initialize view and keep existing session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = { ...createDefaultState(), initial: true, uid: 1 }
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.initial).toBe(false)
@@ -20,6 +23,8 @@ test('loadContent should initialize view and keep existing session', async () =>
 })
 
 test('loadContent should preserve existing state properties', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState & { disposed?: boolean } = {
     ...createDefaultState(),
     disposed: true,
@@ -32,6 +37,8 @@ test('loadContent should preserve existing state properties', async () => {
 })
 
 test('loadContent should keep sessions empty when sessions are empty', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: '',
@@ -46,6 +53,8 @@ test('loadContent should keep sessions empty when sessions are empty', async () 
 })
 
 test('loadContent should recover selectedSessionId when it does not exist', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'missing',
@@ -60,6 +69,8 @@ test('loadContent should recover selectedSessionId when it does not exist', asyn
 })
 
 test('loadContent should restore chat list items from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -78,6 +89,8 @@ test('loadContent should restore chat list items from savedState', async () => {
 })
 
 test('loadContent should restore sessions from savedState and recover invalid selected session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -93,6 +106,8 @@ test('loadContent should restore sessions from savedState and recover invalid se
 })
 
 test('loadContent should load only selected session messages from async storage', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   await saveChatSession({
     id: 'session-a',
     messages: [{ id: 'message-a', role: 'user', text: 'A', time: '10:00' }],
@@ -124,6 +139,8 @@ test('loadContent should load only selected session messages from async storage'
 })
 
 test('loadContent should keep window bounds from current state', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     height: 40,
@@ -145,6 +162,8 @@ test('loadContent should keep window bounds from current state', async () => {
 })
 
 test('loadContent should restore selectedModelId from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedModelId: 'test',
@@ -157,6 +176,8 @@ test('loadContent should restore selectedModelId from savedState', async () => {
 })
 
 test('loadContent should restore detail view from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     viewMode: 'list',
@@ -169,6 +190,8 @@ test('loadContent should restore detail view from savedState', async () => {
 })
 
 test('loadContent should restore scroll positions from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     chatListScrollTop: 1,
@@ -184,6 +207,8 @@ test('loadContent should restore scroll positions from savedState', async () => 
 })
 
 test('loadContent should restore composerValue from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'draft from state',
@@ -196,6 +221,8 @@ test('loadContent should restore composerValue from savedState', async () => {
 })
 
 test('loadContent should ignore invalid saved composerValue', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'draft from state',
@@ -208,6 +235,8 @@ test('loadContent should ignore invalid saved composerValue', async () => {
 })
 
 test('loadContent should ignore invalid saved scroll positions', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     chatListScrollTop: 33,
@@ -223,6 +252,8 @@ test('loadContent should ignore invalid saved scroll positions', async () => {
 })
 
 test('loadContent should restore selected detail session with messages from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -248,6 +279,8 @@ test('loadContent should restore selected detail session with messages from save
 })
 
 test('loadContent should load openRouterApiKey from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -286,6 +319,8 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
 })
 
 test('loadContent should load openApiApiKey from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -322,6 +357,8 @@ test('loadContent should load openApiApiKey from preferences', async () => {
 })
 
 test('loadContent should load emitStreamingFunctionCallEvents from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -359,6 +396,8 @@ test('loadContent should load emitStreamingFunctionCallEvents from preferences',
 })
 
 test('loadContent should load streamingEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -396,6 +435,8 @@ test('loadContent should load streamingEnabled from preferences', async () => {
 })
 
 test('loadContent should load passIncludeObfuscation from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -433,6 +474,8 @@ test('loadContent should load passIncludeObfuscation from preferences', async ()
 })
 
 test('loadContent should load composerDropEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'secrets.openApiKey') {
@@ -471,6 +514,8 @@ test('loadContent should load composerDropEnabled from preferences', async () =>
 })
 
 test('loadContent should load aiSessionTitleGenerationEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.aiSessionTitleGenerationEnabled') {
@@ -508,6 +553,8 @@ test('loadContent should load aiSessionTitleGenerationEnabled from preferences',
 })
 
 test('loadContent should load useChatNetworkWorkerForRequests from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.useChatNetworkWorkerForRequests') {
@@ -545,6 +592,8 @@ test('loadContent should load useChatNetworkWorkerForRequests from preferences',
 })
 
 test('loadContent should load useChatCoordinatorWorker from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.useChatCoordinatorWorker') {
@@ -582,6 +631,8 @@ test('loadContent should load useChatCoordinatorWorker from preferences', async 
 })
 
 test('loadContent should load useChatMathWorker from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.useChatMathWorker') {
@@ -619,6 +670,8 @@ test('loadContent should load useChatMathWorker from preferences', async () => {
 })
 
 test('loadContent should load useChatToolWorker from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.useChatToolWorker') {
@@ -655,6 +708,8 @@ test('loadContent should load useChatToolWorker from preferences', async () => {
 })
 
 test('loadContent should load voiceDictationEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.voiceDictationEnabled') {
@@ -691,6 +746,8 @@ test('loadContent should load voiceDictationEnabled from preferences', async () 
 })
 
 test('loadContent should load todoListToolEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.todoListToolEnabled') {
@@ -729,6 +786,8 @@ test('loadContent should load todoListToolEnabled from preferences', async () =>
 })
 
 test('loadContent should load searchEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chatView.searchEnabled') {

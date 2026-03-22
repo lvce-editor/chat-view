@@ -142,7 +142,7 @@ test('getAiResponse should use mock api command for OpenRouter models when enabl
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
   })
-  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
     'ExtensionHostCommand.executeCommand': async (_id: string, _payload: unknown) => {
       return {
         text: 'Mocked OpenRouter response from command',
@@ -202,7 +202,7 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
   })
-  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
     'ExtensionHostCommand.executeCommand': async (_id: string, _payload: unknown) => {
       return {
         details: 'too-many-requests',
