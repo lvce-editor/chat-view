@@ -33,6 +33,7 @@ const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOption
   messagesScrollTop: 0,
   models,
   openApiApiKeyInput: '',
+  openApiApiKeyState: 'idle',
   openRouterApiKeyInput: '',
   openRouterApiKeyState: 'idle',
   runMode: 'local',
