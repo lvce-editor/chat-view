@@ -1,5 +1,6 @@
 import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.ts'
 
 const sendMessagePortToChatStorageWorker = async (port: MessagePort): Promise<void> => {
   // @ts-ignore
@@ -11,5 +12,5 @@ export const initializeChatStorageWorker = async (): Promise<void> => {
     commandMap: {},
     send: sendMessagePortToChatStorageWorker,
   })
-  OpenerWorker.set(rpc)
+  ChatStorageWorker.set(rpc)
 }

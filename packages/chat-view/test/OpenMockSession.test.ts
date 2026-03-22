@@ -1,12 +1,7 @@
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import type { ChatMessage, ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as OpenMockSession from '../src/parts/OpenMockSession/OpenMockSession.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 test('openMockSession should create a mock session and switch to detail mode', async () => {
   const state: ChatState = createDefaultState()

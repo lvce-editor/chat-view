@@ -1,13 +1,9 @@
 // cspell:ignore openrouter
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 test('handleSubmit should add a user message from composer value', async () => {
   using mockRpc = RendererWorker.registerMockRpc({

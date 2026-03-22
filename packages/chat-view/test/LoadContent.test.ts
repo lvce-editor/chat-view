@@ -1,13 +1,9 @@
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { resetChatSessionStorage, saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 const expectInvocations = (actual: readonly (readonly [string, string])[], expected: readonly (readonly [string, string])[]): void => {
   expect(actual.length).toBeGreaterThanOrEqual(expected.length)

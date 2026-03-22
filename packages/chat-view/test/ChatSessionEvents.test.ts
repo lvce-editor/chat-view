@@ -1,16 +1,11 @@
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import {
   appendChatViewEvent,
   deleteChatSession,
   getChatSession,
   getChatViewEvents,
-  resetChatSessionStorage,
   saveChatSession,
 } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 test('saveChatSession should append session creation and message events', async () => {
   await saveChatSession({

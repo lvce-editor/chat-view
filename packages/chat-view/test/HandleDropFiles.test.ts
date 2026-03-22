@@ -1,13 +1,9 @@
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleDropFiles from '../src/parts/HandleDropFiles/HandleDropFiles.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 const createFile = (name: string, type: string, content: string): File => {
   const blob = new Blob([content], { type })
