@@ -1,4 +1,5 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.ts'
 import { OpenApiApiKeyInput, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
@@ -9,6 +10,7 @@ export const getMissingOpenApiApiKeyDom = (): readonly VirtualDomNode[] => {
     inputName: OpenApiApiKeyInput,
     inputPattern: '^sk-.+',
     inputRequired: true,
+    onSubmit: DomEventListenerFunctions.HandleMissingOpenAiApiKeyFormSubmit,
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
     openSettingsUrl: 'https://platform.openai.com/api-keys',
     placeholder: Strings.openApiApiKeyPlaceholder(),
