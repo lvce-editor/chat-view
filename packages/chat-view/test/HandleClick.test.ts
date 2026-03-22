@@ -364,6 +364,7 @@ test('handleClick should save openapi api key to user settings', async () => {
 
 test('handleClick should retry previous prompt after saving openapi api key', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
   })
   const originalFetch = globalThis.fetch
@@ -407,7 +408,7 @@ test('handleClick should retry previous prompt after saving openapi api key', as
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('Recovered OpenAI response')
-    expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
+    expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
   } finally {
     globalThis.fetch = originalFetch
   }
