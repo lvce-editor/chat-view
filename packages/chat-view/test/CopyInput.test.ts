@@ -12,6 +12,6 @@ test('copyInput should copy composer value to clipboard and keep state', async (
     composerValue: 'hello copy',
   }
   const result = await CopyInput.copyInput(state)
-  expect(mockRpc.invocations).toEqual([[]])
+  expect(mockRpc.invocations).toEqual([])
   expect(result).toBe(state)
 })
