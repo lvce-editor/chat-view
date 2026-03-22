@@ -3,7 +3,6 @@ import { loadAuthEnabled } from '../LoadAuthEnabled/LoadAuthEnabled.ts'
 import { loadBackendAccessToken } from '../LoadBackendAccessToken/LoadBackendAccessToken.ts'
 import { loadBackendRefreshToken } from '../LoadBackendRefreshToken/LoadBackendRefreshToken.ts'
 import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
-import { loadChatStorageWorkerEnabled } from '../LoadChatStorageWorkerEnabled/LoadChatStorageWorkerEnabled.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
 import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctionCallEvents/LoadEmitStreamingFunctionCallEvents.ts'
 import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
@@ -24,7 +23,6 @@ export const loadPreferences = async (): Promise<{
   authEnabled: boolean
   authRefreshToken: string
   backendUrl: string
-  chatStorageWorkerEnabled: boolean
   composerDropEnabled: boolean
   emitStreamingFunctionCallEvents: boolean
   openApiApiKey: string
@@ -45,7 +43,6 @@ export const loadPreferences = async (): Promise<{
     authEnabled,
     authRefreshToken,
     backendUrl,
-    chatStorageWorkerEnabled,
     composerDropEnabled,
     openApiApiKey,
     openRouterApiKey,
@@ -65,7 +62,6 @@ export const loadPreferences = async (): Promise<{
     loadAuthEnabled(),
     loadBackendRefreshToken(),
     loadBackendUrl(),
-    loadChatStorageWorkerEnabled(),
     loadComposerDropEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
@@ -87,7 +83,6 @@ export const loadPreferences = async (): Promise<{
     authEnabled,
     authRefreshToken,
     backendUrl,
-    chatStorageWorkerEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
     openApiApiKey,

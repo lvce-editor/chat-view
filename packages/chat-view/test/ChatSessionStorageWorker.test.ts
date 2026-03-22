@@ -8,7 +8,6 @@ import {
   listChatSessions,
   resetChatSessionStorage,
   saveChatSession,
-  setChatStorageWorkerEnabled,
 } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatStorageWorker from '../src/parts/ChatStorageWorker/ChatStorageWorker.ts'
 
@@ -16,7 +15,7 @@ beforeEach(() => {
   resetChatSessionStorage()
 })
 
-test('chat session storage should delegate to ChatStorageWorker when enabled', async () => {
+test('chat session storage should delegate to ChatStorageWorker', async () => {
   const invocations: unknown[][] = []
   ChatStorageWorker.set({
     invoke: async (method: string, ...params: readonly unknown[]): Promise<unknown> => {
@@ -33,8 +32,6 @@ test('chat session storage should delegate to ChatStorageWorker when enabled', a
       }
     },
   })
-  setChatStorageWorkerEnabled(true)
-
   const sessions = await listChatSessions()
   const session = await getChatSession('worker-session')
   await saveChatSession({ id: 'worker-session', messages: [], title: 'New Title' })
