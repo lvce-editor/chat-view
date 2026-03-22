@@ -1,103 +1,35 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-
-const getImageAltText = (alt: string): string => {
-  if (!alt.trim()) {
-    return 'image could not be loaded'
-  }
-  return `${alt} (image could not be loaded)`
-}
-
-const isFileReferenceUri = (href: string): boolean => {
-  const normalized = href.trim().toLowerCase()
-  return normalized.startsWith('file://') || normalized.startsWith('vscode-references://')
-}
+import { getBoldInlineNodeDom } from './GetBoldInlineNodeDom.ts'
+import { getImageInlineNodeDom } from './GetImageInlineNodeDom.ts'
+import { getInlineCodeInlineNodeDom } from './GetInlineCodeInlineNodeDom.ts'
+import { getItalicInlineNodeDom } from './GetItalicInlineNodeDom.ts'
+import { getLinkInlineNodeDom } from './GetLinkInlineNodeDom.ts'
+import { getMathInlineNodeDom } from './GetMathInlineNodeDom.ts'
+import { getStrikethroughInlineNodeDom } from './GetStrikethroughInlineNodeDom.ts'
+import { getTextInlineNodeDom } from './GetTextInlineNodeDom.ts'
 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
-  if (inlineNode.type === 'text') {
-    return [text(inlineNode.text)]
+  switch (inlineNode.type) {
+    case 'bold':
+      return getBoldInlineNodeDom(inlineNode, useChatMathWorker, getInlineNodeDom)
+    case 'image':
+      return getImageInlineNodeDom(inlineNode)
+    case 'inline-code':
+      return getInlineCodeInlineNodeDom(inlineNode)
+    case 'italic':
+      return getItalicInlineNodeDom(inlineNode, useChatMathWorker, getInlineNodeDom)
+    case 'link':
+      return getLinkInlineNodeDom(inlineNode)
+    case 'math-inline':
+      return getMathInlineNodeDom(inlineNode)
+    case 'math-inline-dom':
+      return inlineNode.dom
+    case 'strikethrough':
+      return getStrikethroughInlineNodeDom(inlineNode, useChatMathWorker, getInlineNodeDom)
+    case 'text':
+      return getTextInlineNodeDom(inlineNode)
   }
-  if (inlineNode.type === 'image') {
-    return [
-      {
-        alt: getImageAltText(inlineNode.alt),
-        childCount: 0,
-        className: ClassNames.ImageElement,
-        src: inlineNode.src,
-        type: VirtualDomElements.Img,
-      },
-    ]
-  }
-  if (inlineNode.type === 'bold') {
-    return [
-      {
-        childCount: inlineNode.children.length,
-        type: VirtualDomElements.Strong,
-      },
-      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
-    ]
-  }
-  if (inlineNode.type === 'italic') {
-    return [
-      {
-        childCount: inlineNode.children.length,
-        type: VirtualDomElements.Em,
-      },
-      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
-    ]
-  }
-  if (inlineNode.type === 'strikethrough') {
-    return [
-      {
-        childCount: inlineNode.children.length,
-        className: ClassNames.StrikeThrough,
-        type: VirtualDomElements.Span,
-      },
-      ...inlineNode.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
-    ]
-  }
-  if (inlineNode.type === 'inline-code') {
-    return [
-      {
-        childCount: 1,
-        type: VirtualDomElements.Code,
-      },
-      text(inlineNode.text),
-    ]
-  }
-  if (inlineNode.type === 'math-inline') {
-    const fallback = inlineNode.displayMode ? `$$${inlineNode.text}$$` : `$${inlineNode.text}$`
-    return [text(fallback)]
-  }
-  if (inlineNode.type === 'math-inline-dom') {
-    return inlineNode.dom
-  }
-  if (isFileReferenceUri(inlineNode.href)) {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.ChatMessageLink,
-        'data-uri': inlineNode.href,
-        href: '#',
-        onClick: DomEventListenerFunctions.HandleClickReadFile,
-        title: inlineNode.href,
-        type: VirtualDomElements.A,
-      },
-      text(inlineNode.text),
-    ]
-  }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatMessageLink,
-      href: inlineNode.href,
-      rel: 'noopener noreferrer',
-      target: '_blank',
-      title: inlineNode.href,
-      type: VirtualDomElements.A,
-    },
-    text(inlineNode.text),
-  ]
+  const exhaustiveCheck: never = inlineNode
+  return exhaustiveCheck
 }
