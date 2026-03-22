@@ -162,7 +162,9 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(pickerContainers).toHaveLength(1)
   const absolutePickerContainer = pickerContainers.find((node) => node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toBeDefined()
+  expect(absolutePickerContainer).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+  })
   const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
   const absolutePickerContainerIndex = result.findIndex(
     (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
