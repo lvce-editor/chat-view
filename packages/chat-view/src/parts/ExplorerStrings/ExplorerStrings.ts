@@ -21,6 +21,10 @@ export const cut = (): string => {
   return I18nString.i18nString(UiStrings.Cut)
 }
 
+export const showIcons = (): string => {
+  return I18nString.i18nString(UiStrings.ShowIcon)
+}
+
 export const copy = (): string => {
   return I18nString.i18nString(UiStrings.Copy)
 }
