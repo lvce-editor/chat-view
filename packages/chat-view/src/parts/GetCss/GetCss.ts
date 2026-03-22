@@ -117,6 +117,38 @@ a.Button{
   text-overflow: ellipsis;
 }
 
+.ChatModelPickerList{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+.ChatModelPickerList::-webkit-scrollbar{
+  width: 10px;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb{
+  background: var(--vscode-scrollbarSlider-background);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb:hover{
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb:active{
+  background: var(--vscode-scrollbarSlider-activeBackground);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
 .ChatModelPickerItem{
   display: block;
   width: 100%;
