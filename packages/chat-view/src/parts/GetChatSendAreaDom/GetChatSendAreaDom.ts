@@ -6,7 +6,6 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
-import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
 import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassName.ts'
@@ -16,9 +15,7 @@ import * as InputName from '../InputName/InputName.ts'
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
-  modelPickerSearchValue: string,
   models: readonly ChatModel[],
-  newChatModelPickerEnabled: boolean,
   selectedModelId: string,
   usageOverviewEnabled: boolean,
   tokensUsed: number,
@@ -94,9 +91,7 @@ export const getChatSendAreaDom = (
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
-    ...(newChatModelPickerEnabled
-      ? getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen)
-      : getChatSelectVirtualDom(models, selectedModelId)),
+    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
     ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),

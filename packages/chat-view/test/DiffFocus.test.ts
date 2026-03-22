@@ -25,12 +25,10 @@ test('diffFocus should return false when opening new model picker', () => {
   const oldState: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: false,
-    newChatModelPickerEnabled: true,
   }
   const newState: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
   }
   expect(DiffFocus.diffFocus(oldState, newState)).toBe(false)
 })
