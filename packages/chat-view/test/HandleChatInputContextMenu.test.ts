@@ -4,6 +4,6 @@ import * as HandleChatInputContextMenu from '../src/parts/HandleChatInputContext
 
 test('handleChatInputContextMenu should return state unchanged', async () => {
   const state = createDefaultState()
-  const result = await HandleChatInputContextMenu.handleChatInputContextMenu(state)
+  const result = await HandleChatInputContextMenu.handleChatInputContextMenu(state, 0, 0)
   expect(result).toBe(state)
 })
