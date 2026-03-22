@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -43,11 +44,17 @@ test('handleDropFiles is no-op when no session is selected', async () => {
     composerDropActive: true,
     selectedSessionId: '',
   }
-  const files = [createFile('note.txt', 'text/plain', 'hello')]
 
+  const files = [createFile('note.txt', 'text/plain', 'hello')]
+  using mockRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getEvents'() {
+      return []
+    },
+  })
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
   expect(newState.composerDropActive).toBe(false)
   const events = await getChatViewEvents()
   expect(events).toHaveLength(0)
+  expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])
 })
