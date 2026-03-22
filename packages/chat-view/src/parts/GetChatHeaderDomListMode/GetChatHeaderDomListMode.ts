@@ -20,12 +20,13 @@ export const getChatHeaderListModeDom = (
     {
       childCount: headerChildCount,
       className: ClassNames.ChatHeader,
+      onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Div,
     },
     {
       childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
+      className: ClassNames.ChatHeaderLabel,
+      type: VirtualDomElements.H2,
     },
     text(Strings.chats()),
     ...getChatHeaderActionsDom('list', authEnabled, authStatus, searchEnabled),

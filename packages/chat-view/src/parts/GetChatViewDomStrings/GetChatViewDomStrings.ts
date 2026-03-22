@@ -5,11 +5,15 @@ export const chatTitle = (): string => {
 }
 
 export const chats = (): string => {
-  return i18nString('Chats')
+  return i18nString('Chat')
 }
 
 export const newChat = (): string => {
   return i18nString('New Chat')
+}
+
+export const addProject = (): string => {
+  return i18nString('Add Project')
 }
 
 export const debug = (): string => {
@@ -18,6 +22,10 @@ export const debug = (): string => {
 
 export const backToChats = (): string => {
   return i18nString('Back to chats')
+}
+
+export const backToChatList = (): string => {
+  return i18nString('Back to chat list')
 }
 
 export const settings = (): string => {
@@ -133,7 +141,7 @@ export const getOpenApiApiKey = (): string => {
 }
 
 export const deleteChatSession = (): string => {
-  return i18nString('Delete chat session')
+  return i18nString('Archive')
 }
 
 export const defaultSessionTitle = (): string => {

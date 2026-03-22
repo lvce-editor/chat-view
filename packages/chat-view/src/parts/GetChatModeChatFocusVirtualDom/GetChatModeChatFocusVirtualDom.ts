@@ -106,7 +106,7 @@ export const getChatModeChatFocusVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop),
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getMessagesDom(
       messages,
       parsedMessages,

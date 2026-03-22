@@ -170,6 +170,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleProjectListScroll', 'event.target.scrollTop'],
     },
     {
+      name: DomEventListenersFunctions.HandleProjectAddButtonContextMenu,
+      params: ['handleProjectAddButtonContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleProjectListContextMenu,
       params: ['handleProjectListContextMenu'],
       preventDefault: true,
@@ -180,8 +185,28 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleChatWelcomeContextMenu,
+      params: ['handleChatDetailWelcomeContextMenu'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleChatHeaderContextMenu,
+      params: ['handleChatHeaderContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleFocus,
       params: ['handleInputFocus', EventExpression.TargetName],
+    },
+    {
+      name: DomEventListenersFunctions.HandleChatInputContextMenu,
+      params: ['handleChatInputContextMenu'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleContextMenuChatSendAreaBottom,
+      params: ['handleContextMenuChatSendAreaBottom'],
+      preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleKeyDown,

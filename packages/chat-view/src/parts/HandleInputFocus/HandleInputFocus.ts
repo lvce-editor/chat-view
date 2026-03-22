@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleInputFocus = async (state: ChatState, name: string): Promise<ChatState> => {
@@ -11,13 +12,31 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'send-button',
       focused: true,
+      listFocusedIndex: -1,
     }
   }
-  if (InputName.isSessionInputName(name) || name === InputName.SessionDelete) {
+  if (name === InputName.ChatList) {
     return {
       ...state,
       focus: 'list',
       focused: true,
+      listFocusedIndex: -1,
+    }
+  }
+  if (InputName.isSessionInputName(name) || name === InputName.SessionDelete) {
+    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+    const sessionId = InputName.isSessionInputName(name) ? InputName.getSessionIdFromInputName(name) : ''
+    const focusedIndex =
+      sessionId === ''
+        ? -1
+        : visibleSessions.findIndex((session) => {
+            return session.id === sessionId
+          })
+    return {
+      ...state,
+      focus: 'list',
+      focused: true,
+      listFocusedIndex: focusedIndex,
     }
   }
   if (
@@ -31,6 +50,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'header',
       focused: true,
+      listFocusedIndex: -1,
     }
   }
   return {

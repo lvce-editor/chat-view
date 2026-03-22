@@ -1,5 +1,6 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 
@@ -14,6 +15,7 @@ export const getChatHeaderDomDetailMode = (
     {
       childCount: hasAuthError ? 3 : 2,
       className: ClassNames.ChatHeader,
+      onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Div,
     },
     {
@@ -24,8 +26,8 @@ export const getChatHeaderDomDetailMode = (
     ...getBackButtonVirtualDom(),
     {
       childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
+      className: ClassNames.ChatHeaderLabel,
+      type: VirtualDomElements.H2,
     },
     text(selectedSessionTitle),
     ...getChatHeaderActionsDom('detail', authEnabled, authStatus),

@@ -12,6 +12,16 @@ import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/Ge
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const getTodoItemClassName = (status: TodoListItem['status']): string => {
+  if (status === 'completed') {
+    return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemCompleted} completed`
+  }
+  if (status === 'inProgress') {
+    return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemInProgress} inProgress`
+  }
+  return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemTodo} todo`
+}
+
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
@@ -33,15 +43,7 @@ export const getChatSendAreaDom = (
   const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0) + (addContextButtonEnabled ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
-  const getTodoItemClassName = (status: TodoListItem['status']): string => {
-    if (status === 'completed') {
-      return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemCompleted} completed`
-    }
-    if (status === 'inProgress') {
-      return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemInProgress} inProgress`
-    }
-    return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemTodo} todo`
-  }
+
   return [
     {
       childCount: 1,
@@ -88,6 +90,7 @@ export const getChatSendAreaDom = (
       childCount: 0,
       className: ClassNames.ChatInputBox,
       name: InputName.Composer,
+      onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.composePlaceholder(),
@@ -97,6 +100,7 @@ export const getChatSendAreaDom = (
     {
       childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
       className: ClassNames.ChatSendAreaBottom,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
     ...(newChatModelPickerEnabled

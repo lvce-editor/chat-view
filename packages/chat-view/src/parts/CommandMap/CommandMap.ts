@@ -1,6 +1,12 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
+import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
+import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
+import * as ChatListFocusPrevious from '../ChatListFocusPrevious/ChatListFocusPrevious.ts'
 import * as ClearInput from '../ClearInput/ClearInput.ts'
+import * as CopyInput from '../CopyInput/CopyInput.ts'
 import * as StatusBar from '../Create/Create.ts'
+import * as CutInput from '../CutInput/CutInput.ts'
 import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
@@ -9,6 +15,9 @@ import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
+import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
+import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
+import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
 import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleChatListContextMenu.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
@@ -20,6 +29,7 @@ import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
+import * as HandleContextMenuChatSendAreaBottom from '../HandleContextMenuChatSendAreaBottom/HandleContextMenuChatSendAreaBottom.ts'
 import * as HandleDragEnter from '../HandleDragEnter/HandleDragEnter.ts'
 import * as HandleDragLeave from '../HandleDragLeave/HandleDragLeave.ts'
 import * as HandleDragOver from '../HandleDragOver/HandleDragOver.ts'
@@ -31,6 +41,7 @@ import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleM
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
+import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
@@ -47,6 +58,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
+import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
@@ -74,8 +86,14 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
+  'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
+  'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
+  'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
+  'Chat.chatListFocusPrevious': wrapCommand(ChatListFocusPrevious.chatListFocusPrevious),
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
+  'Chat.copyInput': wrapCommand(CopyInput.copyInput),
   'Chat.create': StatusBar.create,
+  'Chat.cutInput': wrapCommand(CutInput.cutInput),
   'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
@@ -86,7 +104,10 @@ export const commandMap = {
   'Chat.getMenuEntryIds': getMenuEntryIds,
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
-  'Chat.handleChatListContextMenu': HandleChatListContextMenu.handleChatListContextMenu,
+  'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
+  'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
+  'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
+  'Chat.handleChatListContextMenu': wrapCommand(HandleChatListContextMenu.handleChatListContextMenu),
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
@@ -99,6 +120,7 @@ export const commandMap = {
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
+  'Chat.handleContextMenuChatSendAreaBottom': wrapCommand(HandleContextMenuChatSendAreaBottom.handleContextMenuChatSendAreaBottom),
   'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
   'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
   'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),
@@ -110,6 +132,7 @@ export const commandMap = {
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingApiKeySubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingApiKeySubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
+  'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
   'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
@@ -127,6 +150,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
+  'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,

@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
@@ -36,7 +36,8 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconSend',
+      className: 'MaskIcon MaskIconArrowUp',
+      role: 'none',
       type: VirtualDomElements.Div,
     },
   ]
@@ -53,6 +54,24 @@ export const getAddContextButtonDom = (): readonly VirtualDomNode[] => {
     },
     {
       text: Strings.addContext(),
+      type: VirtualDomElements.Text,
+    },
+  ]
+}
+
+export const getBackToChatsButtonDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      inputType: 'button',
+      name: InputName.Back,
+      onClick: DomEventListenerFunctions.HandleClickBack,
+      title: Strings.backToChatList(),
+      type: VirtualDomElements.Button,
+    },
+    {
+      text: Strings.backToChatList(),
       type: VirtualDomElements.Text,
     },
   ]

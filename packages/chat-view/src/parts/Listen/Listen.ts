@@ -6,6 +6,7 @@ import { initializeChatMathWorker } from '../InitializeChatMathWorker/Initialize
 import { initializeChatNetworkWorker } from '../InitializeChatNetworkWorker/InitializeChatNetworkWorker.ts'
 import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/InitializeChatStorageWorker.ts'
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
+import { initializeClipBoardWorker } from '../InitializeClipBoardWorker/InitializeClipBoardWorker.ts'
 import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -16,11 +17,12 @@ export const listen = async (): Promise<void> => {
   })
   RendererWorker.set(rpc)
   await Promise.all([
-    initializeChatNetworkWorker(),
-    initializeChatMathWorker(),
     initializeChatCoordinatorWorker(),
-    initializeChatToolWorker(),
-    initializeOpenerWorker(),
+    initializeChatMathWorker(),
+    initializeChatNetworkWorker(),
     initializeChatStorageWorker(),
+    initializeChatToolWorker(),
+    initializeClipBoardWorker(),
+    initializeOpenerWorker(),
   ])
 }

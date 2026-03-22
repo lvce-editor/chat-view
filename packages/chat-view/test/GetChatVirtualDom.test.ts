@@ -74,14 +74,17 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(result[1]).toMatchObject({
     childCount: 2,
     className: ClassNames.ChatHeader,
+    onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
     type: VirtualDomElements.Div,
   })
   const chatListEmpty = result.find((node) => node.className === ClassNames.ChatListEmpty)
+  const chatWelcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(chatListEmpty).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatListEmpty,
     type: VirtualDomElements.Div,
   })
+  expect(chatWelcomeMessage).toBeUndefined()
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
   expect(emptyStateMessage).toBeDefined()
   const composer = result.find((node) => node.name === 'composer')
@@ -112,7 +115,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(chatFocusButton).toBeDefined()
 })
 
-test('getChatVirtualDOm should render model picker button instead of select when experimental picker is enabled', () => {
+test('getChatVirtualDOm should render model picker toggle div instead of select when experimental picker is enabled', () => {
   const result = renderChatView({
     newChatModelPickerEnabled: true,
   })
@@ -123,7 +126,7 @@ test('getChatVirtualDOm should render model picker button instead of select when
   expect(modelPickerToggle).toMatchObject({
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    type: VirtualDomElements.Div,
   })
   expect(modelPicker).toBeUndefined()
 })
@@ -139,6 +142,7 @@ test('getChatVirtualDOm should render open model picker with search input and se
   const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
   expect(modelPicker).toBeDefined()
   expect(modelPickerSearchInput).toMatchObject({
+    inputType: 'search',
     onInput: DomEventListenerFunctions.HandleInput,
     placeholder: 'Search models',
     type: VirtualDomElements.Input,
@@ -192,17 +196,29 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
+  const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
-  expect(projectSidebar).toBeDefined()
-  expect(chatHeader).toBeUndefined()
-  expect(projectList).toMatchObject({
-    onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
+  expect(projectSidebar).toMatchObject({
+    childCount: 3,
   })
-  expect(addProjectButton).toBeDefined()
+  expect(chatHeader).toBeUndefined()
+  expect(projectList).toBeDefined()
+  expect(addProjectButton).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
+  })
   expect(chatList).toBeUndefined()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
+  expect(backToChatListButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'back',
+    onClick: DomEventListenerFunctions.HandleClickBack,
+    title: 'Back to chat list',
+    type: VirtualDomElements.Button,
+  })
+  expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
+  expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
@@ -219,16 +235,46 @@ test('getChatVirtualDOm should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
+  const sessionStatusRow = result.find((node) => node.className === ClassNames.ChatListItemStatusRow)
+  const sessionStatusIcon = result.find((node) => node.className?.includes(`${ClassNames.ChatListItemStatusIcon} codicon codicon-circle-filled`))
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
   expect(sessionLabel).toBeDefined()
-  expect(sessionButton).toMatchObject({
+  expect(sessionStatusRow).toBeDefined()
+  expect(sessionStatusIcon).toBeDefined()
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  expect(chatList).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
-    type: VirtualDomElements.Div,
+    type: VirtualDomElements.Ul,
   })
   expect(deleteButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
+})
+
+test('getChatVirtualDOm should render stopped/in progress/finished session status icons', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    {
+      id: 'session-2',
+      messages: [{ id: 'm-1', inProgress: true, role: 'assistant' as const, text: '', time: '10:00' }],
+      title: 'Chat 2',
+    },
+    {
+      id: 'session-3',
+      messages: [{ id: 'm-2', role: 'assistant' as const, text: 'done', time: '10:01' }],
+      title: 'Chat 3',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+  })
+  const statusIcons = result.filter((node) => node.className?.includes(ClassNames.ChatListItemStatusIcon))
+  expect(statusIcons).toHaveLength(3)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusStopped))).toBe(true)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusInProgress))).toBe(true)
+  expect(statusIcons.some((node) => node.className?.includes(ClassNames.ChatListItemStatusFinished))).toBe(true)
 })
 
 test('getChatVirtualDOm should restore chat list scroll position', () => {
@@ -243,6 +289,7 @@ test('getChatVirtualDOm should restore chat list scroll position', () => {
   })
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
     onScroll: DomEventListenerFunctions.HandleChatListScroll,
     scrollTop: 90,
     type: VirtualDomElements.Ul,
@@ -264,7 +311,12 @@ test('getChatVirtualDOm should render composer textarea', () => {
   expect(sendButton).toBeDefined()
   expect(composeForm).toBeDefined()
   expect(composer).toMatchObject({
+<<<<<<< HEAD
     className: ClassNames.ChatInputBox,
+=======
+    className: ClassNames.MultilineInputBox,
+    onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
+>>>>>>> origin/main
     onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.TextArea,
     value: 'hello',
@@ -532,6 +584,21 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   expect(alphaLabel).toBeDefined()
   expect(alphabetLabel).toBeDefined()
   expect(betaLabel).toBeUndefined()
+})
+
+test('getChatVirtualDOm should render focused chat list item highlight', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const focusedItems = result.filter((node) => node.className === `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused}`)
+  expect(focusedItems).toHaveLength(1)
 })
 
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
@@ -906,12 +973,17 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
   const saveButton = result.find((node) => node.name === 'save-openrouter-api-key')
   const openRouterButton = result.find((node) => node.name === 'open-openrouter-api-key-settings')
   expect(apiKeyForm).toMatchObject({
+    className: ClassNames.MissingApiKeyForm,
     method: 'GET',
     onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
+    autocapitalize: 'off',
+    autocomplete: 'off',
+    autocorrect: 'off',
     onInput: DomEventListenerFunctions.HandleInput,
+    spellcheck: false,
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
@@ -919,8 +991,10 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://openrouter.ai/settings/keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 
@@ -970,14 +1044,19 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   const saveButton = result.find((node) => node.name === 'save-openapi-api-key')
   const openApiButton = result.find((node) => node.name === 'open-openapi-api-key-website')
   expect(apiKeyForm).toMatchObject({
+    className: ClassNames.MissingApiKeyForm,
     method: 'GET',
     onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
+    autocapitalize: 'off',
+    autocomplete: 'off',
+    autocorrect: 'off',
     onInput: DomEventListenerFunctions.HandleInput,
     pattern: '^sk-.+',
     required: true,
+    spellcheck: false,
     type: VirtualDomElements.Input,
   })
   expect(saveButton).toMatchObject({
@@ -985,8 +1064,10 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://platform.openai.com/api-keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 
@@ -1102,6 +1183,10 @@ test('getChatVirtualDOm should render selected chat title in detail mode', () =>
   })
   const backButtonIndex = result.findIndex((node) => node.name === 'back')
   expect(backButtonIndex).toBeGreaterThan(-1)
+  const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
+  expect(chatHeader).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
+  })
   const titleNode = result[backButtonIndex + 3]
   expect(titleNode).toMatchObject({ text: 'Project Plan' })
   expect(titleNode).toBeDefined()

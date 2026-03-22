@@ -9,6 +9,7 @@ export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyState: 'idle' | 's
     getApiKeyText: Strings.getOpenRouterApiKey(),
     inputName: OpenRouterApiKeyInput,
     openSettingsButtonName: OpenOpenRouterApiKeySettings,
+    openSettingsUrl: 'https://openrouter.ai/settings/keys',
     placeholder: Strings.openRouterApiKeyPlaceholder(),
     saveButtonDisabled: isSaving,
     saveButtonName: SaveOpenRouterApiKey,

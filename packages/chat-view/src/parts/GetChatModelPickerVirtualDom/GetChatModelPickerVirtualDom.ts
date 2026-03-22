@@ -27,14 +27,14 @@ export const getChatModelPickerVirtualDom = (
       name: InputName.ModelPickerToggle,
       onClick: DomEventListenerFunctions.HandleClick,
       title: selectedModelLabel,
-      type: VirtualDomElements.Button,
-    },
-    {
-      childCount: 0,
-      className: 'MaskIcon MaskIconChevronUp',
       type: VirtualDomElements.Div,
     },
     text(selectedModelLabel),
+    {
+      childCount: 0,
+      className: modelPickerOpen ? 'MaskIcon MaskIconChevronUp' : 'MaskIcon MaskIconChevronDown',
+      type: VirtualDomElements.Div,
+    },
     ...(modelPickerOpen
       ? [
           {
@@ -50,6 +50,7 @@ export const getChatModelPickerVirtualDom = (
           {
             childCount: 0,
             className: ClassNames.InputBox,
+            inputType: 'search',
             name: InputName.ModelPickerSearch,
             onInput: DomEventListenerFunctions.HandleInput,
             placeholder: 'Search models',
@@ -72,7 +73,7 @@ export const getChatModelPickerVirtualDom = (
           {
             childCount: visibleModels.length,
             className: ClassNames.ChatModelPickerList,
-            type: VirtualDomElements.Div,
+            type: VirtualDomElements.Ul,
           },
           ...visibleModels.flatMap((model) => [
             {
@@ -80,7 +81,7 @@ export const getChatModelPickerVirtualDom = (
               className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
               name: InputName.getModelPickerItemInputName(model.id),
               onClick: DomEventListenerFunctions.HandleClick,
-              type: VirtualDomElements.Button,
+              type: VirtualDomElements.Li,
             },
             text(getModelLabel(model)),
           ]),

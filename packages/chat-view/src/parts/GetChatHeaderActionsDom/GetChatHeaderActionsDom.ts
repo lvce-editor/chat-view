@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -18,7 +18,7 @@ export const getChatHeaderActionsDom = (
     authEnabled && authStatus !== 'signed-in'
       ? ({
           disabled: isSigningIn,
-          icon: 'MaskIcon MaskIconAccount',
+          icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAccount),
           name: InputName.Login,
           onClick: DomEventListenerFunctions.HandleClick,
           title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
@@ -26,7 +26,7 @@ export const getChatHeaderActionsDom = (
       : authEnabled
         ? ({
             disabled: false,
-            icon: 'MaskIcon MaskIconSignOut',
+            icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSignOut),
             name: InputName.Logout,
             onClick: DomEventListenerFunctions.HandleClick,
             title: Strings.logoutFromBackend(),
@@ -34,7 +34,7 @@ export const getChatHeaderActionsDom = (
         : undefined
   const items = [
     {
-      icon: 'MaskIcon MaskIconLayoutPanelLeft',
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconLayoutPanelLeft),
       name: InputName.ToggleChatFocus,
       onClick: DomEventListenerFunctions.HandleClick,
       title: toggleTitle,
@@ -42,7 +42,7 @@ export const getChatHeaderActionsDom = (
     ...(searchEnabled
       ? [
           {
-            icon: 'MaskIcon MaskIconSearch',
+            icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSearch),
             name: InputName.ToggleSearch,
             onClick: DomEventListenerFunctions.HandleClick,
             title: Strings.search(),
@@ -50,26 +50,26 @@ export const getChatHeaderActionsDom = (
         ]
       : []),
     {
-      icon: 'MaskIcon MaskIconDebugPause',
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDebugPause),
       name: InputName.SessionDebug,
       onClick: DomEventListenerFunctions.HandleClickSessionDebug,
       title: Strings.debug(),
     },
     {
-      icon: 'MaskIcon MaskIconAdd',
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd),
       name: InputName.CreateSession,
       onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat(),
     },
     {
-      icon: 'MaskIcon MaskIconSettingsGear',
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSettingsGear),
       name: InputName.Settings,
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
     ...(authAction ? [authAction] : []),
     {
-      icon: 'MaskIcon MaskIconClose',
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconClose),
       name: InputName.CloseChat,
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat(),
@@ -80,6 +80,7 @@ export const getChatHeaderActionsDom = (
     {
       childCount: items.length,
       className: ClassNames.ChatActions,
+      role: 'toolbar',
       type: VirtualDomElements.Div,
     },
     ...items.flatMap(getHeaderActionVirtualDom),

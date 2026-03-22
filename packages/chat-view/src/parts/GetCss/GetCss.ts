@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 export const getCss = (
   composerHeight: number,
   listItemHeight: number,
@@ -40,6 +41,7 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+<<<<<<< HEAD
 .ChatInputBox{
   width: 100%;
   margin: 0;
@@ -57,6 +59,124 @@ export const getCss = (
   white-space: pre;
   text-overflow: ellipsis;
 }
+=======
+.ChatSendArea:focus-within{
+  border-color: darkcyan;
+}
+
+.ChatModelPicker{
+  border: 1px solid white;
+}
+
+.ChatListItem{
+  display:flex;
+  align-items:center;
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+.ChatListItemFocused{
+  background: var(--vscode-list-activeSelectionBackground);
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.ChatMessageContent p + p{
+  margin-top: 0.75em;
+}
+
+.MissingApiKeyForm{
+  padding-top: 10px;
+}
+
+a.Button{
+  text-decoration: none;
+}
+
+.ChatHeaderLabel{
+  margin: 0;
+  font-size: 14px;
+}
+
+.ChatListItemStatusRow{
+  width: 16px;
+  min-width: 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.ChatListItemStatusIcon{
+  font-size: 10px;
+}
+
+.ChatListItemStatusStopped{
+  color: var(--vscode-disabledForeground);
+}
+
+.ChatListItemStatusInProgress{
+  color: var(--vscode-charts-blue);
+}
+
+.ChatListItemStatusFinished{
+  color: var(--vscode-testing-iconPassed);
+}
+
+.ChatListItem .SessionArchiveButton{
+  opacity: 0;
+}
+
+.ChatListItem:hover .SessionArchiveButton,
+.ChatListItem:focus-within .SessionArchiveButton{
+  opacity: 1;
+}
+
+.ChatHeaderLabel{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ChatModelPickerList{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+.ChatModelPickerList::-webkit-scrollbar{
+  width: 10px;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb{
+  background: var(--vscode-scrollbarSlider-background);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb:hover{
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ChatModelPickerList::-webkit-scrollbar-thumb:active{
+  background: var(--vscode-scrollbarSlider-activeBackground);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ChatModelPickerItem{
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+>>>>>>> origin/main
 `
 
   return `${baseCss}

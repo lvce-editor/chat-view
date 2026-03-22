@@ -15,6 +15,7 @@ export const ModelPickerSettings = 'model-picker-settings'
 export const RunMode = 'runMode'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const ToggleSearch = 'toggle-search'
+export const ChatList = 'chat-list'
 export const CreateProject = 'create-project'
 export const CreateSession = 'create-session'
 export const CreateSessionInProjectPrefix = 'create-session-in-project:'
@@ -46,6 +47,7 @@ export type InputName =
   | typeof RunMode
   | typeof ToggleChatFocus
   | typeof ToggleSearch
+  | typeof ChatList
   | typeof CreateProject
   | typeof CreateSession
   | `${typeof CreateSessionInProjectPrefix}${string}`

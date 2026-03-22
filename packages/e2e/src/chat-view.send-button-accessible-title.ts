@@ -9,6 +9,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   // assert
   const sendButton = Locator('.IconButton[name="send"]')
+  const sendIcon = Locator('.IconButton[name="send"] .MaskIconArrowUp')
   await expect(sendButton).toBeVisible()
   await expect(sendButton).toHaveAttribute('title', 'Send message')
+  await expect(sendIcon).toHaveAttribute('role', 'none')
 }
