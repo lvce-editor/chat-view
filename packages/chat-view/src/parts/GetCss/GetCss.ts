@@ -147,6 +147,8 @@ a.Button{
   background: var(--vscode-scrollbarSlider-activeBackground);
   border: 2px solid transparent;
   background-clip: content-box;
+}
+
 .ChatModelPickerItem{
   display: block;
   width: 100%;
