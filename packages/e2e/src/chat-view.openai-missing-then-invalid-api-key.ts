@@ -28,7 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toHaveText('hello from e2e')
-  await expect(messages.nth(1)).toContainText('OpenAI API key is not configured')
+  await expect(messages.nth(1)).toHaveText('OpenAI API key is not configured')
   await expect(Locator('[name="open-api-api-key"]')).toBeVisible()
   await expect(Locator('[name="save-openapi-api-key"]')).toBeVisible()
 
