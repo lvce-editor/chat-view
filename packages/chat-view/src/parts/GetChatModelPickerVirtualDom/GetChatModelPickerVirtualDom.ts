@@ -27,14 +27,14 @@ export const getChatModelPickerVirtualDom = (
       name: InputName.ModelPickerToggle,
       onClick: DomEventListenerFunctions.HandleClick,
       title: selectedModelLabel,
-      type: VirtualDomElements.Button,
-    },
-    {
-      childCount: 0,
-      className: 'MaskIcon MaskIconChevronUp',
       type: VirtualDomElements.Div,
     },
     text(selectedModelLabel),
+    {
+      childCount: 0,
+      className: modelPickerOpen ? 'MaskIcon MaskIconChevronUp' : 'MaskIcon MaskIconChevronDown',
+      type: VirtualDomElements.Div,
+    },
     ...(modelPickerOpen
       ? [
           {

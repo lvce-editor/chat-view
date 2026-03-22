@@ -115,7 +115,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(chatFocusButton).toBeDefined()
 })
 
-test('getChatVirtualDOm should render model picker button instead of select when experimental picker is enabled', () => {
+test('getChatVirtualDOm should render model picker toggle div instead of select when experimental picker is enabled', () => {
   const result = renderChatView({
     newChatModelPickerEnabled: true,
   })
@@ -126,7 +126,7 @@ test('getChatVirtualDOm should render model picker button instead of select when
   expect(modelPickerToggle).toMatchObject({
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    type: VirtualDomElements.Div,
   })
   expect(modelPicker).toBeUndefined()
 })
