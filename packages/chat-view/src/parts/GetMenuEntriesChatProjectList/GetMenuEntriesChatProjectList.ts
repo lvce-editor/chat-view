@@ -1,6 +1,6 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
-import * as GetChatViewDomStrings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as GetChatViewDomStrings from '../ChatStrings/ChatStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const menuEntryAddProject: MenuEntry = {

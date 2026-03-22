@@ -1,10 +1,11 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.ts'
 import { OpenApiApiKeyInput, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 
-export const getMissingOpenApiApiKeyDom = (): readonly VirtualDomNode[] => {
+export const getMissingOpenApiApiKeyDom = (openApiApiKeyState: 'idle' | 'saving' = 'idle'): readonly VirtualDomNode[] => {
+  const isSaving = openApiApiKeyState === 'saving'
   return getMissingApiKeyDom({
     getApiKeyText: Strings.getOpenApiApiKey(),
     inputName: OpenApiApiKeyInput,
@@ -14,6 +15,8 @@ export const getMissingOpenApiApiKeyDom = (): readonly VirtualDomNode[] => {
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
     openSettingsUrl: 'https://platform.openai.com/api-keys',
     placeholder: Strings.openApiApiKeyPlaceholder(),
+    saveButtonDisabled: isSaving,
     saveButtonName: SaveOpenApiApiKey,
+    saveButtonText: isSaving ? Strings.saving() : Strings.save(),
   })
 }

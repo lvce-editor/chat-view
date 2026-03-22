@@ -100,6 +100,7 @@ export interface MessageUnorderedListNode {
 export interface MessageListItemNode {
   readonly children: readonly MessageInlineNode[]
   readonly nestedItems?: readonly MessageListItemNode[]
+  readonly nestedListType?: 'ordered-list' | 'unordered-list'
   readonly type: 'list-item'
 }
 

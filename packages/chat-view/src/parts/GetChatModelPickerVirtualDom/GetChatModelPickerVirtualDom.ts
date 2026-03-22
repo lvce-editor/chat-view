@@ -1,5 +1,6 @@
 import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
@@ -17,11 +18,6 @@ export const getChatModelPickerToggleVirtualDom = (
   const selectedModel = models.find((model) => model.id === selectedModelId)
   const selectedModelLabel = selectedModel ? selectedModel.name : selectedModelId
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerContainer,
-      type: VirtualDomElements.Div,
-    },
     {
       childCount: 2,
       className: ClassNames.Select,
@@ -55,6 +51,7 @@ export const getChatModelPickerPopOverVirtualDom = (
     {
       childCount: 2,
       className: ClassNames.ChatModelPickerContainer,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       style: 'position:absolute;',
       type: VirtualDomElements.Div,
     },
@@ -92,10 +89,11 @@ export const getChatModelPickerPopOverVirtualDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: visibleModels.length,
+      childCount: Math.max(visibleModels.length, 1),
       className: ClassNames.ChatModelPickerList,
       type: VirtualDomElements.Ul,
     },
+<<<<<<< HEAD
     ...visibleModels.flatMap((model) => [
       {
         childCount: 2,
@@ -117,6 +115,27 @@ export const getChatModelPickerPopOverVirtualDom = (
       },
       text(getUsageCostLabel(model)),
     ]),
+=======
+    ...(visibleModels.length === 0
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItem,
+            type: VirtualDomElements.Li,
+          },
+          text(Strings.noMatchingModelsFound()),
+        ]
+      : visibleModels.flatMap((model) => [
+          {
+            childCount: 1,
+            className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
+            name: InputName.getModelPickerItemInputName(model.id),
+            onClick: DomEventListenerFunctions.HandleClick,
+            type: VirtualDomElements.Li,
+          },
+          text(getModelLabel(model)),
+        ])),
+>>>>>>> origin/main
   ]
 }
 

@@ -1,5 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 
 export const createDefaultState = (): ChatState => {
@@ -62,6 +62,7 @@ export const createDefaultState = (): ChatState => {
     openApiApiKey: '',
     openApiApiKeyInput: '',
     openApiApiKeysSettingsUrl: 'https://platform.openai.com/api-keys',
+    openApiApiKeyState: 'idle',
     openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
     openRouterApiKey: '',
     openRouterApiKeyInput: '',

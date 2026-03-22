@@ -33,6 +33,7 @@ const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOption
   messagesScrollTop: 0,
   models,
   openApiApiKeyInput: '',
+  openApiApiKeyState: 'idle',
   openRouterApiKeyInput: '',
   openRouterApiKeyState: 'idle',
   runMode: 'local',
@@ -164,9 +165,11 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
     childCount: 4,
   })
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
-  expect(pickerContainers).toHaveLength(2)
+  expect(pickerContainers).toHaveLength(1)
   const absolutePickerContainer = pickerContainers.find((node) => node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toBeDefined()
+  expect(absolutePickerContainer).toMatchObject({
+    onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+  })
   const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
   const absolutePickerContainerIndex = result.findIndex(
     (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
@@ -218,6 +221,7 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
   expect(testLabel).toBeUndefined()
 })
 
+<<<<<<< HEAD
 test('getChatVirtualDom should render model picker usage cost text with subdued class', () => {
   const result = renderChatView({
     modelPickerOpen: true,
@@ -233,6 +237,21 @@ test('getChatVirtualDom should render model picker usage cost text with subdued 
     type: VirtualDomElements.Span,
   })
   expect(freeUsageText).toBeDefined()
+=======
+test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    modelPickerSearchValue: 'not-found-query',
+    models,
+    newChatModelPickerEnabled: true,
+    selectedModelId: 'codex-5.3',
+    viewMode: 'detail',
+  })
+  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
+  const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')
+  expect(modelPickerItems).toHaveLength(1)
+  expect(emptyStateLabel).toBeDefined()
+>>>>>>> origin/main
 })
 
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {

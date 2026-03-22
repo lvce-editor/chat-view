@@ -2,13 +2,13 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-
 import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeListVirtualDomOptions {

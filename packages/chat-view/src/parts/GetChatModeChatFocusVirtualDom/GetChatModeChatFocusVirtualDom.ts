@@ -3,11 +3,11 @@ import type { ChatMessage, ChatModel, ChatSession, Project } from '../ChatState/
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -30,6 +30,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly models: readonly ChatModel[]
   readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
@@ -69,6 +70,7 @@ export const getChatModeChatFocusVirtualDom = ({
   models,
   newChatModelPickerEnabled = false,
   openApiApiKeyInput,
+  openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
@@ -115,6 +117,7 @@ export const getChatModeChatFocusVirtualDom = ({
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
+      openApiApiKeyState,
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,

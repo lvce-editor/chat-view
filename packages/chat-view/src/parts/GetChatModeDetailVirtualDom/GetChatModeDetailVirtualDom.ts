@@ -3,12 +3,12 @@ import type { ChatMessage, ChatModel, ChatSession } from '../ChatState/ChatState
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -30,6 +30,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly models: readonly ChatModel[]
   readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
@@ -65,6 +66,7 @@ export const getChatModeDetailVirtualDom = ({
   models,
   newChatModelPickerEnabled = false,
   openApiApiKeyInput,
+  openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
@@ -101,6 +103,7 @@ export const getChatModeDetailVirtualDom = ({
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
+      openApiApiKeyState,
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,

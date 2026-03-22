@@ -5,6 +5,10 @@
 - Applies to the whole monorepo.
 - Follow these rules for all changes unless a deeper folder introduces a more specific `AGENTS.md`.
 
+## Project Setup
+
+Most likely when you start in a fresh project, node_modules are not yet installed. Run `nice npm ci` to install dependencies.
+
 ## Reducing memory usage
 
 In order to reduce memory usage while running commands, wrap them in `nice`. e.g. instead of `npm ci`, run `nice npm ci`. Similarly, instead of `npm run lint`, use `nice npm run lint` and so on.
@@ -23,6 +27,10 @@ In order to reduce memory usage while running commands, wrap them in `nice`. e.g
   1. `nice npm run format`
   2. `nice npm run lint`
   3. `nice npm run type-check`
+
+## E2e test
+
+When running e2e tests, run them in headless mode
 
 ## Test
 

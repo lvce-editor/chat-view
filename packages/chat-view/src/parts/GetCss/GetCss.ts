@@ -69,7 +69,35 @@ export const getCss = (
 }
 
 .ChatModelPicker{
-  border: 1px solid white;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+}
+
+button.Select[name='model-picker-toggle']{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  max-width: 100%;
+  padding: 0 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+  appearance: none;
+}
+
+button.Select[name='model-picker-toggle']:hover{
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+  color: var(--vscode-foreground);
+}
+
+button.Select[name='model-picker-toggle'] span{
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .ChatListItem{
@@ -143,7 +171,7 @@ a.Button{
 .ChatModelPickerList{
   margin:0;
   scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
 }
 
 .ChatModelPickerList::-webkit-scrollbar{
@@ -151,11 +179,11 @@ a.Button{
 }
 
 .ChatModelPickerList::-webkit-scrollbar-track{
-  background: transparent;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
 }
 
 .ChatModelPickerList::-webkit-scrollbar-thumb{
-  background: var(--vscode-scrollbarSlider-background);
+  background: var(--vscode-scrollbarSlider-hoverBackground);
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: content-box;
@@ -188,10 +216,16 @@ a.Button{
   text-overflow: ellipsis;
 }
 
+<<<<<<< HEAD
 .ChatModelPickerItemUsageCost{
   margin-left: auto;
   color: var(--vscode-descriptionForeground);
   opacity: 0.8;
+=======
+.ChatModelPickerItem:hover{
+  background: var(--vscode-list-hoverBackground);
+  color: var(--vscode-list-hoverForeground);
+>>>>>>> origin/main
 }
 
 .ChatModelPickerContainer{
@@ -204,10 +238,18 @@ a.Button{
 
 .ChatModelPicker {
   position: static;
-  background: black;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  max-width: 300px;
+  margin-left: 8px;
   margin-top: auto;
   margin-bottom: 90px;
   pointer-events: auto;
+}
+
+@media (max-width: 320px) {
+  .ChatModelPicker {
+    margin-left: 0;
+  }
 }
 
 `
