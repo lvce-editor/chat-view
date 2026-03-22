@@ -1,6 +1,6 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
-import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
 import {
   backendAccessTokenRequiredMessage,
@@ -573,6 +573,73 @@ test('getAiResponse should include OpenAI http error details for non-429 respons
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should show a helpful message when OpenAI tool-call iterations are exhausted', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => '{"uri":"file:///workspace"}',
+    'ChatTool.getTools': async () => [],
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"type":"response.output_item.added","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"get_workspace_uri","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","item_id":"fc_1","delta":"{}"}\n\n',
+      'data: {"type":"response.output_item.done","item_id":"fc_1","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"get_workspace_uri","arguments":"{}"}}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_loop","output":[{"type":"function_call","id":"fc_1","call_id":"call_1","name":"get_workspace_uri","arguments":"{}"}],"status":"completed"}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: 'oa-key-123',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toContain('OpenAI request ended after 5 tool-call rounds without a final assistant response.')
+    expect(result.text).toContain('model got stuck in a tool loop')
+    const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
+    expect(executeInvocations).toHaveLength(5)
   } finally {
     globalThis.fetch = originalFetch
   }
