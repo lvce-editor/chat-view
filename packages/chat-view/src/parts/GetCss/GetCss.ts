@@ -72,6 +72,34 @@ export const getCss = (
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
 }
 
+button.Select[name='model-picker-toggle']{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  max-width: 100%;
+  padding: 0 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+  appearance: none;
+}
+
+button.Select[name='model-picker-toggle']:hover{
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+  color: var(--vscode-foreground);
+}
+
+button.Select[name='model-picker-toggle'] span{
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .ChatListItem{
   display:flex;
   align-items:center;
@@ -198,9 +226,16 @@ a.Button{
   position: static;
   background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   max-width: 300px;
+  margin-left: 8px;
   margin-top: auto;
   margin-bottom: 90px;
   pointer-events: auto;
+}
+
+@media (max-width: 320px) {
+  .ChatModelPicker {
+    margin-left: 0;
+  }
 }
 
 `
