@@ -30,6 +30,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly models: readonly ChatModel[]
   readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
@@ -65,6 +66,7 @@ export const getChatModeDetailVirtualDom = ({
   models,
   newChatModelPickerEnabled = false,
   openApiApiKeyInput,
+  openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
@@ -101,6 +103,7 @@ export const getChatModeDetailVirtualDom = ({
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
+      openApiApiKeyState,
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,

@@ -30,6 +30,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly models: readonly ChatModel[]
   readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
@@ -69,6 +70,7 @@ export const getChatModeChatFocusVirtualDom = ({
   models,
   newChatModelPickerEnabled = false,
   openApiApiKeyInput,
+  openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
@@ -115,6 +117,7 @@ export const getChatModeChatFocusVirtualDom = ({
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
+      openApiApiKeyState,
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,
