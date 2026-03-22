@@ -58,6 +58,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
+import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
 import { render2 } from '../Render2/Render2.ts'
@@ -151,6 +152,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
+  'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
   'Chat.render2': render2,
