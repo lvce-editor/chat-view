@@ -117,6 +117,7 @@ a.Button{
   text-overflow: ellipsis;
 }
 
+<<<<<<< HEAD
 .ChatModelPickerList{
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
@@ -147,6 +148,14 @@ a.Button{
   background: var(--vscode-scrollbarSlider-activeBackground);
   border: 2px solid transparent;
   background-clip: content-box;
+=======
+.ChatModelPickerItem{
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+>>>>>>> origin/main
 }
 
 `
