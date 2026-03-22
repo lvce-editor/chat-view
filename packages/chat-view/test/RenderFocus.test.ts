@@ -22,12 +22,10 @@ test('renderFocus should return focusSelector command for model picker search wh
   const oldState: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: false,
-    newChatModelPickerEnabled: true,
   }
   const newState: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
   }
   const result = RenderFocus.renderFocus(oldState, newState)
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="model-picker-search"]'])
