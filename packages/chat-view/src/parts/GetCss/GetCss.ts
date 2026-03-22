@@ -48,10 +48,12 @@ export const getCss = (
 .ChatListItem{
   display:flex;
   align-items:center;
+  box-shadow: inset 0 0 0 1px transparent;
 }
 
 .ChatListItemFocused{
   background: var(--vscode-list-activeSelectionBackground);
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder);
   color: var(--vscode-list-activeSelectionForeground);
 }
 
