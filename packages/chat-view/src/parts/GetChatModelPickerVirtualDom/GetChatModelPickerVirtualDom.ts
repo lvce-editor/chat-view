@@ -50,6 +50,7 @@ export const getChatModelPickerVirtualDom = (
           {
             childCount: 0,
             className: ClassNames.InputBox,
+            inputType: 'search',
             name: InputName.ModelPickerSearch,
             onInput: DomEventListenerFunctions.HandleInput,
             placeholder: 'Search models',
