@@ -184,9 +184,7 @@ test('getChatVirtualDom should not render absolute picker chat child when new pi
   expect(result[0]).toMatchObject({
     childCount: 3,
   })
-  const absolutePickerContainer = result.find(
-    (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
-  )
+  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
   expect(absolutePickerContainer).toBeUndefined()
 })
 
@@ -199,9 +197,7 @@ test('getChatVirtualDom should not render absolute picker chat child when picker
   expect(result[0]).toMatchObject({
     childCount: 3,
   })
-  const absolutePickerContainer = result.find(
-    (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
-  )
+  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
   expect(absolutePickerContainer).toBeUndefined()
 })
 
