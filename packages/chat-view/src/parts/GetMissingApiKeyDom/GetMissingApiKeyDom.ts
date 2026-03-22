@@ -1,7 +1,7 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { type MissingApiKeyDomParams } from '../MissingApiKeyDomParams/MissingApiKeyDomParams.ts'
 
 const getMissingApiActionsDom = ({

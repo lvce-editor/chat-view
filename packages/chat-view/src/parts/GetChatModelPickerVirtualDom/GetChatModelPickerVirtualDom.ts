@@ -2,7 +2,7 @@ import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virt
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import * as InputName from '../InputName/InputName.ts'
 

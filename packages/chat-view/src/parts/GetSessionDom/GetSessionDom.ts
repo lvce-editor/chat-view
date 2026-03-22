@@ -2,7 +2,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '
 import type { ChatSession } from '../ChatState/ChatState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const getSessionStatusClassName = (session: ChatSession): string => {
