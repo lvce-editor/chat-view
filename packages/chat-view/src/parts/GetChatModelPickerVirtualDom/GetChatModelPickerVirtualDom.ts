@@ -29,10 +29,15 @@ export const getChatModelPickerVirtualDom = (
       title: selectedModelLabel,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Span,
+    },
     text(selectedModelLabel),
     {
       childCount: 0,
       className: modelPickerOpen ? 'MaskIcon MaskIconChevronUp' : 'MaskIcon MaskIconChevronDown',
+      role: 'none',
       type: VirtualDomElements.Div,
     },
     ...(modelPickerOpen
