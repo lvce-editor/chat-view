@@ -589,6 +589,7 @@ test('parseMessageContent should nest indented unordered items inside ordered li
               type: 'list-item',
             },
           ],
+          nestedListType: 'unordered-list',
           type: 'list-item',
         },
         {
@@ -609,6 +610,54 @@ test('parseMessageContent should nest indented unordered items inside ordered li
               type: 'list-item',
             },
           ],
+          nestedListType: 'unordered-list',
+          type: 'list-item',
+        },
+      ],
+      type: 'ordered-list',
+    },
+  ])
+})
+
+test('parseMessageContent should nest indented ordered items inside ordered list items', () => {
+  const rawMessage = ['1. L1', '   1. L2', '      1. L3'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'L1',
+              type: 'text',
+            },
+          ],
+          nestedItems: [
+            {
+              children: [
+                {
+                  text: 'L2',
+                  type: 'text',
+                },
+              ],
+              nestedItems: [
+                {
+                  children: [
+                    {
+                      text: 'L3',
+                      type: 'text',
+                    },
+                  ],
+                  type: 'list-item',
+                },
+              ],
+              nestedListType: 'ordered-list',
+              type: 'list-item',
+            },
+          ],
+          nestedListType: 'ordered-list',
           type: 'list-item',
         },
       ],

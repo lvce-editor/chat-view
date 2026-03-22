@@ -2,10 +2,15 @@ import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
+<<<<<<< HEAD
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+=======
+import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
+>>>>>>> origin/main
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
 import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassName.ts'

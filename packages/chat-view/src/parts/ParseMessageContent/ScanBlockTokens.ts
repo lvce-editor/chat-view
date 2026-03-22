@@ -31,6 +31,7 @@ interface BlockHeadingLineToken {
 }
 
 interface BlockOrderedListItemLineToken {
+  readonly indentation: number
   readonly text: string
   readonly type: 'ordered-list-item-line'
 }
@@ -68,6 +69,7 @@ interface ParsedHeadingLine {
 }
 
 interface ParsedOrderedListItemLine {
+  readonly indentation: number
   readonly text: string
 }
 
@@ -124,10 +126,11 @@ const parseHeadingLine = (line: string): ParsedHeadingLine | undefined => {
 }
 
 const parseOrderedListItemLine = (line: string): ParsedOrderedListItemLine | undefined => {
-  let index = 0
-  while (index < line.length && line[index] === ' ') {
-    index++
+  let indentation = 0
+  while (indentation < line.length && line[indentation] === ' ') {
+    indentation++
   }
+  let index = indentation
   const firstDigit = index
   while (index < line.length && line[index] >= '0' && line[index] <= '9') {
     index++
@@ -143,6 +146,7 @@ const parseOrderedListItemLine = (line: string): ParsedOrderedListItemLine | und
     index++
   }
   return {
+    indentation,
     text: line.slice(index),
   }
 }
@@ -316,6 +320,7 @@ export const scanBlockTokens = (rawMessage: string): readonly BlockToken[] => {
     const ordered = parseOrderedListItemLine(line)
     if (ordered) {
       tokens.push({
+        indentation: ordered.indentation,
         text: ordered.text,
         type: 'ordered-list-item-line',
       })
