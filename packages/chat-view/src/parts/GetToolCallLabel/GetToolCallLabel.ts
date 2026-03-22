@@ -9,6 +9,9 @@ export const getToolCallLabel = (toolCall: ChatToolCall): string => {
   if (toolCall.name === 'write_file' && !toolCall.status && hasIncompleteJsonArguments(toolCall.arguments)) {
     return `${displayName} (in progress)`
   }
+  if (toolCall.name === 'list_files' && !toolCall.status && hasIncompleteJsonArguments(toolCall.arguments)) {
+    return displayName
+  }
   const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
   const statusLabel = getToolCallStatusLabel(toolCall)
   if (argumentPreview === '{}') {
