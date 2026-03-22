@@ -8,5 +8,11 @@ export const selectListIndex = async (state: ChatState, index: number): Promise<
     return state
   }
   const session = visibleSessions[index]
-  return selectSession(state, session.id)
+  const nextState = await selectSession(state, session.id)
+  return {
+    ...nextState,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: index,
+  }
 }

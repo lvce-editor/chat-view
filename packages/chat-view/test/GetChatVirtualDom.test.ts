@@ -195,8 +195,11 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
+  const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
-  expect(projectSidebar).toBeDefined()
+  expect(projectSidebar).toMatchObject({
+    childCount: 3,
+  })
   expect(chatHeader).toBeUndefined()
   expect(projectList).toBeDefined()
   expect(addProjectButton).toMatchObject({
@@ -206,6 +209,15 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
+  expect(backToChatListButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'back',
+    onClick: DomEventListenerFunctions.HandleClickBack,
+    title: 'Back to chat list',
+    type: VirtualDomElements.Button,
+  })
+  expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
+  expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
@@ -567,6 +579,21 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   expect(alphaLabel).toBeDefined()
   expect(alphabetLabel).toBeDefined()
   expect(betaLabel).toBeUndefined()
+})
+
+test('getChatVirtualDOm should render focused chat list item highlight', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const focusedItems = result.filter((node) => node.className === `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused}`)
+  expect(focusedItems).toHaveLength(1)
 })
 
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
@@ -959,8 +986,10 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     type: VirtualDomElements.Button,
   })
   expect(openRouterButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://openrouter.ai/settings/keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 
@@ -1030,8 +1059,10 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     type: VirtualDomElements.Button,
   })
   expect(openApiButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
+    href: 'https://platform.openai.com/api-keys',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
   })
 })
 

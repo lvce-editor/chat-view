@@ -1,11 +1,10 @@
-import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
-import * as ViewletExplorerStrings from '../ExplorerStrings/ExplorerStrings.ts'
 import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEntriesChatHeader.ts'
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
 import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
+<<<<<<< HEAD
 import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList, MenuProjectAddButton } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.ts'
 
@@ -96,6 +95,9 @@ const getMenuEntriesFile = (): readonly MenuEntry[] => {
     menuEntryDelete,
   ]
 }
+=======
+import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+>>>>>>> origin/main
 
 export interface ContextMenuProps {
   readonly menuId: number
@@ -115,6 +117,6 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
     case MenuChatProjectList:
       return getMenuEntriesChatProjectList(props.projectId)
     default:
-      return getMenuEntriesFile()
+      return []
   }
 }

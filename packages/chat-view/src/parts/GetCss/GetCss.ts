@@ -50,12 +50,21 @@ export const getCss = (
   align-items:center;
 }
 
+.ChatListItemFocused{
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
 .ChatMessageContent p + p{
   margin-top: 0.75em;
 }
 
 .MissingApiKeyForm{
   padding-top: 10px;
+}
+
+a.Button{
+  text-decoration: none;
 }
 
 .ChatHeaderLabel{
@@ -85,6 +94,8 @@ export const getCss = (
 
 .ChatListItemStatusFinished{
   color: var(--vscode-testing-iconPassed);
+}
+
 .ChatListItem .SessionArchiveButton{
   opacity: 0;
 }

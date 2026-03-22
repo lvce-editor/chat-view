@@ -24,6 +24,10 @@ export const backToChats = (): string => {
   return i18nString('Back to chats')
 }
 
+export const backToChatList = (): string => {
+  return i18nString('Back to chat list')
+}
+
 export const settings = (): string => {
   return i18nString('Settings')
 }

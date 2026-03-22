@@ -20,4 +20,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const openRouterApiKeyInput = Locator('[name="open-router-api-key"]')
   await expect(openRouterApiKeyInput).toBeVisible()
   await expect(openRouterApiKeyInput).toHaveAttribute('pattern', null)
+  const getApiKeyLink = Locator('[name="open-openrouter-api-key-settings"]')
+  await expect(getApiKeyLink).toHaveAttribute('href', 'https://openrouter.ai/settings/keys')
+  await expect(getApiKeyLink).toHaveAttribute('target', '_blank')
+  await expect(getApiKeyLink).toHaveAttribute('rel', 'noopener noreferrer')
 }

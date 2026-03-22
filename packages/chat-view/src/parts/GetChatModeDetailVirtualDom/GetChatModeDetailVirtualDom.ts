@@ -80,10 +80,6 @@ export const getChatModeDetailVirtualDom = ({
   useChatMathWorker = false,
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
-  void composerHeight
-  void composerFontSize
-  void composerFontFamily
-  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []

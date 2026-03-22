@@ -37,6 +37,7 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
     {
       childCount: 0,
       className: 'MaskIcon MaskIconSend',
+      role: 'none',
       type: VirtualDomElements.Div,
     },
   ]
@@ -66,10 +67,11 @@ export const getBackToChatsButtonDom = (): readonly VirtualDomNode[] => {
       inputType: 'button',
       name: InputName.Back,
       onClick: DomEventListenerFunctions.HandleClickBack,
+      title: Strings.backToChatList(),
       type: VirtualDomElements.Button,
     },
     {
-      text: Strings.backToChats(),
+      text: Strings.backToChatList(),
       type: VirtualDomElements.Text,
     },
   ]

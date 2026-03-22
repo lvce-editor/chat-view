@@ -4,6 +4,7 @@ export interface MissingApiKeyDomParams {
   readonly inputPattern?: string
   readonly inputRequired?: boolean
   readonly openSettingsButtonName: string
+  readonly openSettingsUrl: string
   readonly placeholder: string
   readonly saveButtonDisabled?: boolean
   readonly saveButtonName: string
