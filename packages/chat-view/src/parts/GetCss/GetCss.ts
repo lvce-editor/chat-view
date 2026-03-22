@@ -222,9 +222,16 @@ a.Button{
   position: static;
   background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   max-width: 300px;
+  margin-left: 8px;
   margin-top: auto;
   margin-bottom: 90px;
   pointer-events: auto;
+}
+
+@media (max-width: 320px) {
+  .ChatModelPicker {
+    margin-left: 0;
+  }
 }
 
 `
