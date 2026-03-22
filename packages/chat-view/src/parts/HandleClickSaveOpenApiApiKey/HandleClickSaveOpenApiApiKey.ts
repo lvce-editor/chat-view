@@ -17,7 +17,6 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     openApiApiKeyState: 'saving' as const,
   }
   set(state.uid, state, optimisticState)
-  // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
   const persistedState = await setOpenApiApiKey(optimisticState, openApiApiKey)

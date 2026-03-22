@@ -17,7 +17,6 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     openRouterApiKeyState: 'saving' as const,
   }
   set(state.uid, state, optimisticState)
-  // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
   const persistedState = await setOpenRouterApiKey(optimisticState, openRouterApiKey)

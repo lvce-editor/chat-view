@@ -92,7 +92,6 @@ export const handleTextChunkFunction = async (
     sessions: updated.sessions,
   }
   set(uid, handleTextChunkState.previousState, nextState)
-  // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
   return {
     latestState: nextState,
