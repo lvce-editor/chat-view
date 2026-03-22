@@ -14,11 +14,6 @@ export const getChatModelPickerToggleVirtualDom = (
   const selectedModelLabel = selectedModel ? selectedModel.name : selectedModelId
   return [
     {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerContainer,
-      type: VirtualDomElements.Div,
-    },
-    {
       childCount: 2,
       className: ClassNames.Select,
       name: InputName.ModelPickerToggle,

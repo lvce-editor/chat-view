@@ -164,7 +164,7 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
     childCount: 4,
   })
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
-  expect(pickerContainers).toHaveLength(2)
+  expect(pickerContainers).toHaveLength(1)
   const absolutePickerContainer = pickerContainers.find((node) => node.style === 'position:absolute;')
   expect(absolutePickerContainer).toBeDefined()
   const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
