@@ -9,18 +9,9 @@ import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelec
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
 import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
+import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassName.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
-
-const getTodoItemClassName = (status: TodoListItem['status']): string => {
-  if (status === 'completed') {
-    return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemCompleted} completed`
-  }
-  if (status === 'inProgress') {
-    return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemInProgress} inProgress`
-  }
-  return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemTodo} todo`
-}
 
 export const getChatSendAreaDom = (
   composerValue: string,
