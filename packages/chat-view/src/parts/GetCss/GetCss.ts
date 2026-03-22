@@ -141,6 +141,7 @@ a.Button{
 }
 
 .ChatModelPickerList{
+  margin:0;
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
 }
@@ -178,6 +179,22 @@ a.Button{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.ChatModelPickerContainer{
+  position: absolute;
+  inset:0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.ChatModelPicker {
+  position: static;
+  background: black;
+  margin-top: auto;
+  margin-bottom: 90px;
+  pointer-events: auto;
 }
 
 `
