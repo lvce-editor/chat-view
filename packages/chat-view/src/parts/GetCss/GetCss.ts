@@ -174,11 +174,24 @@ a.Button{
 }
 
 .ChatModelPickerItem{
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
+}
+
+.ChatModelPickerItemLabel{
+  min-width: 0;
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.ChatModelPickerItemUsageCost{
+  margin-left: auto;
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.8;
 }
 
 .ChatModelPickerContainer{

@@ -13,8 +13,8 @@ import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import { parseAndStoreMessagesContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 
 const models = [
-  { id: 'test', name: 'test' },
-  { id: 'codex-5.3', name: 'Codex 5.3' },
+  { id: 'test', name: 'test', usageCost: 0 },
+  { id: 'codex-5.3', name: 'Codex 5.3', usageCost: 1 },
 ] as const
 
 const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
@@ -216,6 +216,23 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
   expect(modelPickerItems).toHaveLength(1)
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
+})
+
+test('getChatVirtualDom should render model picker usage cost text with subdued class', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    models,
+    newChatModelPickerEnabled: true,
+    selectedModelId: 'test',
+    viewMode: 'detail',
+  })
+  const usageCostNode = result.find((node) => node.className === ClassNames.ChatModelPickerItemUsageCost)
+  const freeUsageText = result.find((node) => node.text === '0x')
+  expect(usageCostNode).toMatchObject({
+    className: ClassNames.ChatModelPickerItemUsageCost,
+    type: VirtualDomElements.Span,
+  })
+  expect(freeUsageText).toBeDefined()
 })
 
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
