@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   const sendButton = Locator('.IconButton[name="send"]')
   await expect(composer).toBeVisible()
   await expect(sendButton).toBeVisible()
