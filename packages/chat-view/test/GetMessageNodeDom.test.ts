@@ -366,7 +366,7 @@ test('getMessageNodeDom should render unordered list nodes as ul and li dom node
   })
 })
 
-test('getMessageNodeDom should render nested unordered list inside ordered list item', () => {
+test('getMessageNodeDom should render nested list inside ordered list item', () => {
   const result = getMessageNodeDom({
     items: [
       {
@@ -418,6 +418,87 @@ test('getMessageNodeDom should render nested unordered list inside ordered list 
   })
   expect(result[5]).toMatchObject({
     text: 'Inhabited since prehistoric times.',
+  })
+})
+
+test('getMessageNodeDom should render nested ordered list inside ordered list item', () => {
+  const result = getMessageNodeDom({
+    items: [
+      {
+        children: [
+          {
+            text: 'L1',
+            type: 'text',
+          },
+        ],
+        nestedItems: [
+          {
+            children: [
+              {
+                text: 'L2',
+                type: 'text',
+              },
+            ],
+            nestedItems: [
+              {
+                children: [
+                  {
+                    text: 'L3',
+                    type: 'text',
+                  },
+                ],
+                type: 'list-item',
+              },
+            ],
+            nestedListType: 'ordered-list',
+            type: 'list-item',
+          },
+        ],
+        nestedListType: 'ordered-list',
+        type: 'list-item',
+      },
+    ],
+    type: 'ordered-list',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatOrderedList,
+    type: VirtualDomElements.Ol,
+  })
+  expect(result[1]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatOrderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'L1',
+  })
+  expect(result[3]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatOrderedList,
+    type: VirtualDomElements.Ol,
+  })
+  expect(result[4]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatOrderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[5]).toMatchObject({
+    text: 'L2',
+  })
+  expect(result[6]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatOrderedList,
+    type: VirtualDomElements.Ol,
+  })
+  expect(result[7]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatOrderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[8]).toMatchObject({
+    text: 'L3',
   })
 })
 
