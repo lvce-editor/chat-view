@@ -74,6 +74,72 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
   }
 })
 
+test('getOpenApiAssistantText should return tool-iterations-exhausted when model keeps requesting tools', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => '{"error":"Unknown tool: invalid_tool"}',
+  })
+  const originalFetch = globalThis.fetch
+  const fetchInvocations: Array<readonly unknown[]> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocations.push(args)
+    const chunks = [
+      'data: {"type":"response.output_item.added","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"invalid_tool","arguments":""}}\n\n',
+      'data: {"type":"response.function_call_arguments.delta","item_id":"fc_1","delta":"{}"}\n\n',
+      'data: {"type":"response.output_item.done","item_id":"fc_1","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"invalid_tool","arguments":"{}"}}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_loop","output":[{"type":"function_call","id":"fc_1","call_id":"call_1","name":"invalid_tool","arguments":"{}"}],"status":"completed"}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'loop',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: true,
+      },
+    )
+
+    expect(result).toEqual({
+      details: 'tool-iterations-exhausted',
+      iterationLimit: 5,
+      type: 'error',
+    })
+    expect(fetchInvocations).toHaveLength(5)
+    const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
+    expect(executeInvocations).toHaveLength(5)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should send follow-up request when streaming function-call argument events use item_id', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.execute': async () => JSON.stringify({ error: 'Unknown tool: invalid_tool' }),
