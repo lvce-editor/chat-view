@@ -218,6 +218,21 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
   expect(testLabel).toBeUndefined()
 })
 
+test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    modelPickerSearchValue: 'not-found-query',
+    models,
+    newChatModelPickerEnabled: true,
+    selectedModelId: 'codex-5.3',
+    viewMode: 'detail',
+  })
+  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
+  const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')
+  expect(modelPickerItems).toHaveLength(1)
+  expect(emptyStateLabel).toBeDefined()
+})
+
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
   const projects = [{ id: 'project-1', name: '_blank', uri: '' }]

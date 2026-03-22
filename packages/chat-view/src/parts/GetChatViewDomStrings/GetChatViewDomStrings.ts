@@ -80,6 +80,10 @@ export const startConversation = (): string => {
   return i18nString('Start a conversation by typing below.')
 }
 
+export const noMatchingModelsFound = (): string => {
+  return i18nString('No matching models have been found.')
+}
+
 export const you = (): string => {
   return i18nString('You')
 }

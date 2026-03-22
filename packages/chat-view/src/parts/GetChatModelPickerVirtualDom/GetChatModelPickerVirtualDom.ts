@@ -3,6 +3,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
+import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModelPickerToggleVirtualDom = (
@@ -88,20 +89,29 @@ export const getChatModelPickerPopOverVirtualDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: visibleModels.length,
+      childCount: Math.max(visibleModels.length, 1),
       className: ClassNames.ChatModelPickerList,
       type: VirtualDomElements.Ul,
     },
-    ...visibleModels.flatMap((model) => [
-      {
-        childCount: 1,
-        className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
-        name: InputName.getModelPickerItemInputName(model.id),
-        onClick: DomEventListenerFunctions.HandleClick,
-        type: VirtualDomElements.Li,
-      },
-      text(getModelLabel(model)),
-    ]),
+    ...(visibleModels.length === 0
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItem,
+            type: VirtualDomElements.Li,
+          },
+          text(Strings.noMatchingModelsFound()),
+        ]
+      : visibleModels.flatMap((model) => [
+          {
+            childCount: 1,
+            className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
+            name: InputName.getModelPickerItemInputName(model.id),
+            onClick: DomEventListenerFunctions.HandleClick,
+            type: VirtualDomElements.Li,
+          },
+          text(getModelLabel(model)),
+        ])),
   ]
 }
 
