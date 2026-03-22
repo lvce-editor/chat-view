@@ -36,7 +36,7 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconSend',
+      className: 'MaskIcon MaskIconArrowUp',
       role: 'none',
       type: VirtualDomElements.Div,
     },
