@@ -6,7 +6,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.setNewChatModelPickerEnabled', true)
 
   // act
   await Command.execute('Chat.openModelPicker')

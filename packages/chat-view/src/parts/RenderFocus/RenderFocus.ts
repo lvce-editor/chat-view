@@ -30,7 +30,7 @@ const getFocusSelector = (state: ChatState): string => {
 }
 
 export const renderFocus = (oldState: ChatState, newState: ChatState): readonly [string, string] => {
-  if (newState.newChatModelPickerEnabled && newState.modelPickerOpen && !oldState.modelPickerOpen) {
+  if (newState.modelPickerOpen && !oldState.modelPickerOpen) {
     return [ViewletCommand.FocusSelector, `[name="${InputName.ModelPickerSearch}"]`]
   }
   const selector = getFocusSelector(newState)
