@@ -94,6 +94,10 @@ button.Select[name='model-picker-toggle']:hover{
 button.Select[name='model-picker-toggle'] span{
   width: auto;
   max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .ChatListItem{
