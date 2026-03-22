@@ -48,6 +48,7 @@ export const getMissingApiKeyDom = ({
   inputName,
   inputPattern,
   inputRequired = false,
+  onSubmit,
   openSettingsButtonName,
   openSettingsUrl,
   placeholder,
@@ -60,7 +61,7 @@ export const getMissingApiKeyDom = ({
       childCount: 2,
       className: ClassNames.MissingApiKeyForm,
       method: 'GET',
-      onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+      onSubmit,
       type: VirtualDomElements.Form,
     },
     {

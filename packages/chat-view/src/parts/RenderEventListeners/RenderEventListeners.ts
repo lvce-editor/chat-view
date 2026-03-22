@@ -218,8 +218,13 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
-      name: DomEventListenersFunctions.HandleMissingApiKeySubmit,
-      params: ['handleMissingApiKeySubmit', 'event.submitter?.name || ""'],
+      name: DomEventListenersFunctions.HandleMissingOpenAiApiKeyFormSubmit,
+      params: ['handleMissingOpenAiApiKeyFormSubmit'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleMissingOpenRouterApiKeyFormSubmit,
+      params: ['handleMissingOpenRouterApiKeyFormSubmit'],
       preventDefault: true,
     },
   ]

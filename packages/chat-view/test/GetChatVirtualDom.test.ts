@@ -971,7 +971,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
   expect(apiKeyForm).toMatchObject({
     className: ClassNames.MissingApiKeyForm,
     method: 'GET',
-    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+    onSubmit: DomEventListenerFunctions.HandleMissingOpenRouterApiKeyFormSubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
@@ -1042,7 +1042,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   expect(apiKeyForm).toMatchObject({
     className: ClassNames.MissingApiKeyForm,
     method: 'GET',
-    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+    onSubmit: DomEventListenerFunctions.HandleMissingOpenAiApiKeyFormSubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
