@@ -69,7 +69,7 @@ export const getCss = (
 }
 
 .ChatModelPicker{
-  border: 1px solid white;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
 }
 
 .ChatListItem{
@@ -143,7 +143,7 @@ a.Button{
 .ChatModelPickerList{
   margin:0;
   scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
 }
 
 .ChatModelPickerList::-webkit-scrollbar{
@@ -151,11 +151,11 @@ a.Button{
 }
 
 .ChatModelPickerList::-webkit-scrollbar-track{
-  background: transparent;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
 }
 
 .ChatModelPickerList::-webkit-scrollbar-thumb{
-  background: var(--vscode-scrollbarSlider-background);
+  background: var(--vscode-scrollbarSlider-hoverBackground);
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: content-box;
@@ -191,7 +191,7 @@ a.Button{
 
 .ChatModelPicker {
   position: static;
-  background: black;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   margin-top: auto;
   margin-bottom: 90px;
   pointer-events: auto;
