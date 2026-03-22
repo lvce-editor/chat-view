@@ -62,6 +62,12 @@ export const getCss = (
   border-color: darkcyan;
 }
 
+.SendButtonDisabled{
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-disabledForeground);
+  cursor: default;
+}
+
 .ChatModelPicker{
   border: 1px solid white;
 }
