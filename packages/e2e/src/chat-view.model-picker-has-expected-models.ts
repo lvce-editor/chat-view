@@ -31,7 +31,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setNewChatModelPickerEnabled', true)
-  await Locator('.ChatSendArea div.Select[name="model-picker-toggle"]').click()
+  await Locator('.ChatSendArea button.Select[name="model-picker-toggle"]').click()
 
   for (const modelId of expectedModelIds) {
     await expect(Locator(`.ChatModelPicker .ChatModelPickerItem[name="model-picker-item:${modelId}"]`)).toHaveCount(1)

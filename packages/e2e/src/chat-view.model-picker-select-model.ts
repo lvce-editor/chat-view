@@ -9,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Command.execute('Chat.setNewChatModelPickerEnabled', true)
 
-  const toggleButton = Locator('.ChatSendArea div.Select[name="model-picker-toggle"]')
+  const toggleButton = Locator('.ChatSendArea button.Select[name="model-picker-toggle"]')
   await toggleButton.click()
   await Locator('.ChatModelPicker .ChatModelPickerItem[name="model-picker-item:openapi/gpt-4.1-mini"]').click()
 
