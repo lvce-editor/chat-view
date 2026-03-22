@@ -5,6 +5,7 @@ import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
@@ -84,9 +85,11 @@ export const getChatModeDetailVirtualDom = ({
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const isNewModelPickerVisible = newChatModelPickerEnabled && modelPickerOpen
+  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
   return [
     {
-      childCount: isDropOverlayVisible ? 4 : 3,
+      childCount: chatRootChildCount,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
@@ -136,5 +139,6 @@ export const getChatModeDetailVirtualDom = ({
           },
         ]
       : []),
+    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
   ]
 }
