@@ -1,10 +1,12 @@
 import { expect, test } from '@jest/globals'
-import * as ClipBoardWorker from '../src/parts/ClipBoardWorker/ClipBoardWorker.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as CutInput from '../src/parts/CutInput/CutInput.ts'
+import { ClipBoardWorker } from '@lvce-editor/rpc-registry'
 
 test('cutInput should copy composer value and clear composer', async () => {
-  ClipBoardWorker.reset()
+  using mockRpc = ClipBoardWorker.registerMockRpc({
+    'ClipBoard.writeText': async (text: string) => {},
+  })
   const state = {
     ...createDefaultState(),
     composerHeight: 96,
