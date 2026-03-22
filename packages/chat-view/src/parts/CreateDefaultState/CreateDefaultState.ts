@@ -56,7 +56,6 @@ export const createDefaultState = (): ChatState => {
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     models: getDefaultModels(),
-    newChatModelPickerEnabled: false,
     nextMessageId: 1,
     openApiApiBaseUrl: 'https://api.openai.com/v1',
     openApiApiKey: '',

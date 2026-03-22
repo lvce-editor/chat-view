@@ -28,7 +28,6 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
-  readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
@@ -63,7 +62,6 @@ export const getChatModeDetailVirtualDom = ({
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
-  newChatModelPickerEnabled = false,
   openApiApiKeyInput,
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
@@ -85,7 +83,7 @@ export const getChatModeDetailVirtualDom = ({
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
-  const isNewModelPickerVisible = newChatModelPickerEnabled && modelPickerOpen
+  const isNewModelPickerVisible = modelPickerOpen
   const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
   return [
     {
@@ -108,9 +106,7 @@ export const getChatModeDetailVirtualDom = ({
     ...getChatSendAreaDom(
       composerValue,
       modelPickerOpen,
-      modelPickerSearchValue,
       models,
-      newChatModelPickerEnabled,
       selectedModelId,
       usageOverviewEnabled,
       tokensUsed,

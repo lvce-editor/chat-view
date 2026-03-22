@@ -89,14 +89,14 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(emptyStateMessage).toBeDefined()
   const composer = result.find((node) => node.name === 'composer')
   const modelSelect = result.find((node) => node.name === 'model')
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const sendButton = result.find((node) => node.name === 'send')
   expect(composer).toBeDefined()
-  expect(modelSelect).toBeDefined()
-  expect(modelSelect).toMatchObject({
+  expect(modelSelect).toBeUndefined()
+  expect(modelPickerToggle).toMatchObject({
     className: ClassNames.Select,
-    onInput: DomEventListenerFunctions.HandleModelChange,
-    type: VirtualDomElements.Select,
-    value: 'test',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
   })
   expect(sendButton).toBeDefined()
   expect(sendButton).toMatchObject({
@@ -115,10 +115,8 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(chatFocusButton).toBeDefined()
 })
 
-test('getChatVirtualDOm should render model picker toggle button instead of select when experimental picker is enabled', () => {
-  const result = renderChatView({
-    newChatModelPickerEnabled: true,
-  })
+test('getChatVirtualDOm should render model picker toggle button instead of select', () => {
+  const result = renderChatView()
   const modelSelect = result.find((node) => node.name === 'model')
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
@@ -134,7 +132,6 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
 test('getChatVirtualDOm should render open model picker with search input and settings button', () => {
   const result = renderChatView({
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
     viewMode: 'detail',
   })
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
@@ -157,7 +154,6 @@ test('getChatVirtualDOm should render open model picker with search input and se
 test('getChatVirtualDom should render open new model picker as absolute chat child and update chat childCount', () => {
   const result = renderChatView({
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
     viewMode: 'detail',
   })
   expect(result[0]).toMatchObject({
@@ -175,23 +171,9 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   expect(absolutePickerContainerIndex).toBeGreaterThan(sendAreaIndex)
 })
 
-test('getChatVirtualDom should not render absolute picker chat child when new picker is disabled', () => {
-  const result = renderChatView({
-    modelPickerOpen: true,
-    newChatModelPickerEnabled: false,
-    viewMode: 'detail',
-  })
-  expect(result[0]).toMatchObject({
-    childCount: 3,
-  })
-  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toBeUndefined()
-})
-
 test('getChatVirtualDom should not render absolute picker chat child when picker is not open', () => {
   const result = renderChatView({
     modelPickerOpen: false,
-    newChatModelPickerEnabled: true,
     viewMode: 'detail',
   })
   expect(result[0]).toMatchObject({
@@ -206,7 +188,6 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     modelPickerOpen: true,
     modelPickerSearchValue: 'codex',
     models,
-    newChatModelPickerEnabled: true,
     selectedModelId: 'codex-5.3',
     viewMode: 'detail',
   })
@@ -223,7 +204,6 @@ test('getChatVirtualDOm should show model picker empty-state message when search
     modelPickerOpen: true,
     modelPickerSearchValue: 'not-found-query',
     models,
-    newChatModelPickerEnabled: true,
     selectedModelId: 'codex-5.3',
     viewMode: 'detail',
   })
