@@ -72,7 +72,7 @@ export const getChatModelPickerVirtualDom = (
           {
             childCount: visibleModels.length,
             className: ClassNames.ChatModelPickerList,
-            type: VirtualDomElements.Div,
+            type: VirtualDomElements.Ul,
           },
           ...visibleModels.flatMap((model) => [
             {
@@ -80,7 +80,7 @@ export const getChatModelPickerVirtualDom = (
               className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
               name: InputName.getModelPickerItemInputName(model.id),
               onClick: DomEventListenerFunctions.HandleClick,
-              type: VirtualDomElements.Button,
+              type: VirtualDomElements.Li,
             },
             text(getModelLabel(model)),
           ]),
