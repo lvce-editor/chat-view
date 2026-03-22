@@ -8,6 +8,6 @@ test('getMenuEntriesProjectAddButton should invoke Chat.handleClick for add proj
     args: ['create-project'],
     command: 'Chat.handleClick',
     id: 'addProject',
-    label: 'Add Project...',
+    label: 'Add Project',
   })
 })
