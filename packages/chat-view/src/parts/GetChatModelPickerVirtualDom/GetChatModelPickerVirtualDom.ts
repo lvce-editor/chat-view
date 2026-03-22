@@ -1,8 +1,8 @@
 import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import * as InputName from '../InputName/InputName.ts'
 
