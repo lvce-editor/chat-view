@@ -11,13 +11,15 @@ test('handleChatInputContextMenu should return state unchanged', async () => {
   const result = await HandleChatInputContextMenu.handleChatInputContextMenu(state, 0, 0)
   expect(result).toBe(state)
   expect(mockRpc.invocations).toEqual([
-    'ContextMenu.show2',
-    0,
-    2180,
-    0,
-    0,
-    {
-      menuId: 2180,
-    },
+    [
+      'ContextMenu.show2',
+      0,
+      2180,
+      0,
+      0,
+      {
+        menuId: 2180,
+      },
+    ],
   ])
 })
