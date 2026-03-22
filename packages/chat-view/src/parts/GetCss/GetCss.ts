@@ -45,6 +45,10 @@ export const getCss = (
   border-color: darkcyan;
 }
 
+.ChatModelPicker{
+  border: 1px solid white;
+}
+
 .ChatListItem{
   display:flex;
   align-items:center;
