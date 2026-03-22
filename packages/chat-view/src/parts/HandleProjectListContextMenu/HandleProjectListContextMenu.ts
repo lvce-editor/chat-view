@@ -1,45 +1,43 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { MenuChatProjectList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
-const getProjectRowIds = (
-  projects: ChatState['projects'],
-  sessions: readonly ChatSession[],
-  projectExpandedIds: readonly string[],
-): readonly string[] => {
+const getProjectIdAtIndex = (state: ChatState, index: number): string => {
+  const { projectExpandedIds, projects, sessions } = state
   const blankProjectId = projects.find((project) => project.name === '_blank')?.id || projects[0]?.id || ''
-  const projectRowIds: string[] = []
+  let currentIndex = 0
   for (const project of projects) {
-    projectRowIds.push(project.id)
-    if (!projectExpandedIds.includes(project.id)) {
-      continue
+    if (currentIndex === index) {
+      return project.id
     }
-    for (const session of sessions) {
-      const sessionProjectId = session.projectId || blankProjectId
-      if (sessionProjectId === project.id) {
-        projectRowIds.push(project.id)
+    currentIndex++
+    if (projectExpandedIds.includes(project.id)) {
+      for (const session of sessions) {
+        const sessionProjectId = session.projectId || blankProjectId
+        if (sessionProjectId !== project.id) {
+          continue
+        }
+        if (currentIndex === index) {
+          return project.id
+        }
+        currentIndex++
       }
     }
   }
-  return projectRowIds
+  return ''
 }
 
-const getProjectIdAtPosition = (state: ChatState, eventY: number): string => {
-  const { headerHeight, listItemHeight, projectExpandedIds, projectListScrollTop, projects, sessions, y } = state
-  const relativeY = eventY - y - headerHeight + projectListScrollTop
-  if (relativeY < 0) {
-    return ''
+export const handleProjectListContextMenu = async (state: ChatState, button: number, x: number, y: number): Promise<ChatState> => {
+  const { headerHeight, listItemHeight, projectListScrollTop, uid } = state
+  const index = Math.floor((y - headerHeight + projectListScrollTop) / listItemHeight)
+  if (index < 0) {
+    return state
   }
-  const index = Math.floor(relativeY / listItemHeight)
-  const projectRowIds = getProjectRowIds(projects, sessions, projectExpandedIds)
-  return projectRowIds[index] || ''
-}
-
-export const handleProjectListContextMenu = async (state: ChatState, button: number, eventX: number, eventY: number): Promise<ChatState> => {
-  const { uid } = state
-  const projectId = getProjectIdAtPosition(state, eventY)
-  await RendererWorker.showContextMenu2(uid, MenuChatProjectList, eventX, eventY, {
+  const projectId = getProjectIdAtIndex(state, index)
+  if (!projectId) {
+    return state
+  }
+  await RendererWorker.showContextMenu2(uid, MenuChatProjectList, x, y, {
     menuId: MenuChatProjectList,
     projectId,
   })

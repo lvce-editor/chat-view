@@ -170,6 +170,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleProjectListScroll', 'event.target.scrollTop'],
     },
     {
+      name: DomEventListenersFunctions.HandleProjectAddButtonContextMenu,
+      params: ['handleProjectAddButtonContextMenu'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleProjectListContextMenu,
       params: ['handleProjectListContextMenu'],
       preventDefault: true,

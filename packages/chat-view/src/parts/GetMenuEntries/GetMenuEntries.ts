@@ -3,7 +3,8 @@ import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEnt
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
-import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
+import { MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList, MenuProjectAddButton } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
 export interface ContextMenuProps {
   readonly menuId: number
@@ -20,6 +21,8 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
       return getMenuEntriesChatList()
     case MenuChatProjectList:
       return getMenuEntriesChatProjectList(props.projectId)
+    case MenuProjectAddButton:
+      return getMenuEntriesProjectAddButton()
     default:
       return []
   }

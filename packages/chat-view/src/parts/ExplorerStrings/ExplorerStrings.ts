@@ -52,6 +52,10 @@ export const archive = (): string => {
   return I18nString.i18nString(UiStrings.Archive)
 }
 
+export const addProject = (): string => {
+  return I18nString.i18nString(UiStrings.AddProject)
+}
+
 export const deleteItem = (): string => {
   return I18nString.i18nString(UiStrings.Delete)
 }
