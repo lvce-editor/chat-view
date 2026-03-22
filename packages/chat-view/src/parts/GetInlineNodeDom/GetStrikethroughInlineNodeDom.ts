@@ -1,7 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { MessageInlineStrikethroughNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
 import type { InlineNodeDomRenderer } from './GetInlineNodeDomTypes.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getStrikethroughInlineNodeDom = (
   inlineNode: MessageInlineStrikethroughNode,
