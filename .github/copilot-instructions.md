@@ -28,6 +28,10 @@ In order to reduce memory usage while running commands, wrap them in `nice`. e.g
   2. `nice npm run lint`
   3. `nice npm run type-check`
 
+## E2e test
+
+When running e2e tests, run them in headless mode
+
 ## Test
 
 When running single tests, you can ignore possible jest coverage errors.
