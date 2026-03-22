@@ -10,7 +10,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem,
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
   await Chat.handleInput('abc')
 

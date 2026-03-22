@@ -1,4 +1,4 @@
-import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -79,7 +79,7 @@ export const getChatSendAreaDom = (
       : []),
     {
       childCount: 0,
-      className: ClassNames.MultilineInputBox,
+      className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
       name: InputName.Composer,
       onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,

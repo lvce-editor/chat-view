@@ -4,7 +4,7 @@ export const name = 'chat-view.cut-input'
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
   await Chat.handleInput('cut text')
 

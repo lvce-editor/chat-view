@@ -7,7 +7,7 @@ export const skip = 1
 export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Chat.setChatList', 1)
 
-  const composer = Locator('.MultilineInputBox[name="composer"]')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   const createSessionButton = Locator('.IconButton[name="create-session"]')
   const backButton = Locator('.ChatHeader .IconButton[name="back"]')
   const chatListItems = Locator('.ChatList .ChatListItem')

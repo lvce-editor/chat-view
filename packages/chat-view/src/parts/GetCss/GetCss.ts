@@ -41,6 +41,23 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.ChatInputBox{
+  width: 100%;
+  margin: 0;
+  border: none;
+  outline: none;
+  flex: 1;
+  background: var(--InputBoxBackground);
+  padding: 4px 6px;
+  color: var(--InputBoxForeground);
+  font-size: 13px;
+  height: 24px;
+  contain: strict;
+  resize: none;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+}
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
