@@ -1,9 +1,11 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { handleClick } from '../HandleClick/HandleClick.ts'
+import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
+import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 
-export const handleMissingApiKeySubmit = async (state: ChatState, submitterName = ''): Promise<ChatState> => {
-  if (!submitterName) {
-    return state
-  }
-  return handleClick(state, submitterName)
+export const handleMissingOpenAiApiKeyFormSubmit = async (state: ChatState): Promise<ChatState> => {
+  return handleClickSaveOpenApiApiKey(state)
+}
+
+export const handleMissingOpenRouterApiKeyFormSubmit = async (state: ChatState): Promise<ChatState> => {
+  return handleClickSaveOpenRouterApiKey(state)
 }

@@ -154,6 +154,53 @@ test('getChatVirtualDOm should render open model picker with search input and se
   })
 })
 
+test('getChatVirtualDom should render open new model picker as absolute chat child and update chat childCount', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    newChatModelPickerEnabled: true,
+    viewMode: 'detail',
+  })
+  expect(result[0]).toMatchObject({
+    childCount: 4,
+  })
+  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  expect(pickerContainers).toHaveLength(2)
+  const absolutePickerContainer = pickerContainers.find((node) => node.style === 'position:absolute;')
+  expect(absolutePickerContainer).toBeDefined()
+  const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
+  const absolutePickerContainerIndex = result.findIndex(
+    (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
+  )
+  expect(sendAreaIndex).toBeGreaterThan(-1)
+  expect(absolutePickerContainerIndex).toBeGreaterThan(sendAreaIndex)
+})
+
+test('getChatVirtualDom should not render absolute picker chat child when new picker is disabled', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    newChatModelPickerEnabled: false,
+    viewMode: 'detail',
+  })
+  expect(result[0]).toMatchObject({
+    childCount: 3,
+  })
+  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
+  expect(absolutePickerContainer).toBeUndefined()
+})
+
+test('getChatVirtualDom should not render absolute picker chat child when picker is not open', () => {
+  const result = renderChatView({
+    modelPickerOpen: false,
+    newChatModelPickerEnabled: true,
+    viewMode: 'detail',
+  })
+  expect(result[0]).toMatchObject({
+    childCount: 3,
+  })
+  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
+  expect(absolutePickerContainer).toBeUndefined()
+})
+
 test('getChatVirtualDOm should filter model picker entries by search', () => {
   const result = renderChatView({
     modelPickerOpen: true,
@@ -971,7 +1018,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
   expect(apiKeyForm).toMatchObject({
     className: ClassNames.MissingApiKeyForm,
     method: 'GET',
-    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+    onSubmit: DomEventListenerFunctions.HandleMissingOpenRouterApiKeyFormSubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
@@ -1042,7 +1089,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
   expect(apiKeyForm).toMatchObject({
     className: ClassNames.MissingApiKeyForm,
     method: 'GET',
-    onSubmit: DomEventListenerFunctions.HandleMissingApiKeySubmit,
+    onSubmit: DomEventListenerFunctions.HandleMissingOpenAiApiKeyFormSubmit,
     type: VirtualDomElements.Form,
   })
   expect(apiKeyInput).toMatchObject({
