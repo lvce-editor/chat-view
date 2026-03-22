@@ -20,6 +20,7 @@ export const getChatMessageDom = (
   parsedMessageContent: readonly MessageIntermediateNode[],
   _openRouterApiKeyInput: string,
   _openApiApiKeyInput = '',
+  openApiApiKeyState: 'idle' | 'saving' = 'idle',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
@@ -49,7 +50,7 @@ export const getChatMessageDom = (
     },
     ...toolCallsDom,
     ...messageDom,
-    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom() : []),
+    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),

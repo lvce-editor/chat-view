@@ -61,5 +61,9 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
         return openApiRequestFailedOfflineMessage
       }
       return openApiRequestFailedMessage
+    case 'tool-iterations-exhausted': {
+      const rounds = typeof errorResult.iterationLimit === 'number' ? errorResult.iterationLimit : 5
+      return `OpenAI request ended after ${rounds} tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop. Please try rephrasing your request, reducing scope, or switching to a different model.`
+    }
   }
 }
