@@ -142,6 +142,7 @@ test('getChatVirtualDOm should render open model picker with search input and se
   const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
   expect(modelPicker).toBeDefined()
   expect(modelPickerSearchInput).toMatchObject({
+    inputType: 'search',
     onInput: DomEventListenerFunctions.HandleInput,
     placeholder: 'Search models',
     type: VirtualDomElements.Input,
