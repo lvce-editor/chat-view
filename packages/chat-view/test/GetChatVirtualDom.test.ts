@@ -311,12 +311,8 @@ test('getChatVirtualDOm should render composer textarea', () => {
   expect(sendButton).toBeDefined()
   expect(composeForm).toBeDefined()
   expect(composer).toMatchObject({
-<<<<<<< HEAD
     className: ClassNames.ChatInputBox,
-=======
-    className: ClassNames.MultilineInputBox,
     onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
->>>>>>> origin/main
     onInput: DomEventListenerFunctions.HandleInput,
     type: VirtualDomElements.TextArea,
     value: 'hello',
