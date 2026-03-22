@@ -10,13 +10,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Command.execute('Chat.setNewChatModelPickerEnabled', true)
 
-<<<<<<< HEAD
-  const modelPickerToggle = Locator('.ChatSendArea button.Select[name="model-picker-toggle"]')
-  await modelPickerToggle.click()
-=======
   // act
   await Command.execute('Chat.openModelPicker')
->>>>>>> origin/main
 
   // assert
   const modelPicker = Locator('.ChatModelPicker')
