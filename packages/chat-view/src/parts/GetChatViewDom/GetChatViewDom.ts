@@ -46,7 +46,6 @@ export interface GetChatVirtualDomOptions {
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
-  readonly newChatModelPickerEnabled?: boolean
   readonly openApiApiKeyInput: string
   readonly openApiApiKeyState: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
@@ -92,7 +91,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     modelPickerOpen = false,
     modelPickerSearchValue = '',
     models,
-    newChatModelPickerEnabled = false,
     openApiApiKeyInput,
     openApiApiKeyState,
     openRouterApiKeyInput,
@@ -140,7 +138,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerOpen,
         modelPickerSearchValue,
         models,
-        newChatModelPickerEnabled,
         openApiApiKeyInput,
         openApiApiKeyState,
         openRouterApiKeyInput,
@@ -180,7 +177,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerOpen,
         modelPickerSearchValue,
         models,
-        newChatModelPickerEnabled,
         openApiApiKeyInput,
         openApiApiKeyState,
         openRouterApiKeyInput,
@@ -217,7 +213,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerOpen,
         modelPickerSearchValue,
         models,
-        newChatModelPickerEnabled,
         runMode,
         searchEnabled,
         searchFieldVisible,

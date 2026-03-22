@@ -4,10 +4,9 @@ export const name = 'chat-view.model-picker-select-model'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.setNewChatModelPickerEnabled', true)
 
   const toggleButton = Locator('.ChatSendArea button.Select[name="model-picker-toggle"]')
   await toggleButton.click()
