@@ -7,7 +7,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.reset()
 
   const modelSelect = Locator('.ChatSendArea .Select[name="model"]')
-  const modelPickerToggle = Locator('.ChatSendArea .Select[name="model-picker-toggle"]')
+  const modelPickerToggle = Locator('.ChatSendArea div.Select[name="model-picker-toggle"]')
 
   await expect(modelSelect).toBeVisible()
   await expect(modelPickerToggle).toHaveCount(0)
