@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
+import type { ChatViewEvent } from '../src/parts/ChatViewEvent/ChatViewEvent.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleDropFiles from '../src/parts/HandleDropFiles/HandleDropFiles.ts'
@@ -18,6 +19,15 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     selectedSessionId: 'session-1',
   }
   const files = [createFile('photo.png', 'image/png', 'image-bytes')]
+  const storedEvents: ChatViewEvent[] = []
+  using mockRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.appendEvent'(event: ChatViewEvent) {
+      storedEvents.push(event)
+    },
+    'ChatStorage.getEvents'(sessionId: string) {
+      return storedEvents.filter((event) => event.sessionId === sessionId)
+    },
+  })
 
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
@@ -36,6 +46,10 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     throw new TypeError('Expected chat-attachment-added event')
   }
   expect(events[0].blob).toBeInstanceOf(Blob)
+  expect(mockRpc.invocations).toEqual([
+    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.png', sessionId: 'session-1' })],
+    ['ChatStorage.getEvents', 'session-1'],
+  ])
 })
 
 test('handleDropFiles is no-op when no session is selected', async () => {
