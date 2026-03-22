@@ -1,5 +1,5 @@
 import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 
 export const getChatModeUnsupportedVirtualDom = (): readonly VirtualDomNode[] => {
   return [

@@ -1,6 +1,6 @@
 import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 
 export const getEmptyChatSessionsDom = (): readonly VirtualDomNode[] => {
   return [
