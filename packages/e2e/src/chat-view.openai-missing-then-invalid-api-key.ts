@@ -34,7 +34,12 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   // act + assert invalid key message after save/retry
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-invalid-key-for-e2e')
-  await Command.execute('Chat.handleClick', 'save-openapi-api-key')
+
+  const saveButton = Locator('[name="save-openapi-api-key"]')
+  const clickPromise = saveButton.click()
+  await expect(saveButton).toHaveAttribute('disabled', '')
+  await expect(saveButton).toHaveText('Saving...')
+  await clickPromise
 
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(1)).toHaveText('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')

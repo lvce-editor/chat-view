@@ -1,8 +1,10 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openApiApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { setOpenApiApiKey } from '../SetOpenApiApiKey/SetOpenApiApiKey.ts'
+import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<ChatState> => {
   const { openApiApiKeyInput } = state
@@ -10,7 +12,19 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
   if (!openApiApiKey) {
     return state
   }
-  const updatedState = await setOpenApiApiKey(state, openApiApiKey)
+  const optimisticState = {
+    ...state,
+    openApiApiKeyState: 'saving' as const,
+  }
+  set(state.uid, state, optimisticState)
+  // @ts-ignore
+  await RendererWorker.invoke('Chat.rerender')
+
+  const persistedState = await setOpenApiApiKey(optimisticState, openApiApiKey)
+  const updatedState = {
+    ...persistedState,
+    openApiApiKeyState: 'idle' as const,
+  }
 
   const session = updatedState.sessions.find((item) => item.id === updatedState.selectedSessionId)
   if (!session) {
@@ -68,6 +82,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
   return {
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
+    openApiApiKeyState: 'idle',
     sessions: updatedSessions,
   }
 }
