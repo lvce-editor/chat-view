@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem,
   await Chat.handleInput('abc')
 
   // act
-  await Command.execute('Chat.handleInputCopy')
+  await Command.execute('Chat.copyInput')
 
   // assert
   await ClipBoard.shouldHaveText('abc')
