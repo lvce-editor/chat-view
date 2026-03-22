@@ -1,6 +1,39 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
+<<<<<<< Updated upstream
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.ts'
+=======
+import { IndexedDbChatSessionStorage } from '../IndexedDbChatSessionStorage/IndexedDbChatSessionStorage.ts'
+import { InMemoryChatSessionStorage } from '../InMemoryChatSessionStorage/InMemoryChatSessionStorage.ts'
+
+export interface ChatSessionStorage {
+  appendEvent(event: ChatViewEvent): Promise<void>
+  clear(): Promise<void>
+  deleteSession(id: string): Promise<void>
+  getEvents(sessionId?: string): Promise<readonly ChatViewEvent[]>
+  getSession(id: string): Promise<ChatSession | undefined>
+  listSessions(): Promise<readonly ChatSession[]>
+  setSession(session: ChatSession): Promise<void>
+}
+
+const createDefaultStorage = (): Readonly<ChatSessionStorage> => {
+  if (typeof indexedDB === 'undefined') {
+    return new InMemoryChatSessionStorage()
+  }
+  return new IndexedDbChatSessionStorage()
+}
+
+let chatSessionStorage: Readonly<ChatSessionStorage> = createDefaultStorage()
+let chatStorageWorkerEnabled = false
+
+export const setChatStorageWorkerEnabled = (enabled: boolean): void => {
+  chatStorageWorkerEnabled = enabled
+}
+
+export const setChatSessionStorage = (storage: Readonly<ChatSessionStorage>): void => {
+  chatSessionStorage = storage
+}
+>>>>>>> Stashed changes
 
 export const resetChatSessionStorage = (): void => {
   // no-op: chat session storage always goes through ChatStorageWorker
