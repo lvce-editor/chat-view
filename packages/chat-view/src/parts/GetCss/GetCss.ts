@@ -216,16 +216,15 @@ a.Button{
   text-overflow: ellipsis;
 }
 
-<<<<<<< HEAD
 .ChatModelPickerItemUsageCost{
   margin-left: auto;
   color: var(--vscode-descriptionForeground);
   opacity: 0.8;
-=======
+}
+
 .ChatModelPickerItem:hover{
   background: var(--vscode-list-hoverBackground);
   color: var(--vscode-list-hoverForeground);
->>>>>>> origin/main
 }
 
 .ChatModelPickerContainer{

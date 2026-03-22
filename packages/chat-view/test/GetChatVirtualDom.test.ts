@@ -221,7 +221,6 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
   expect(testLabel).toBeUndefined()
 })
 
-<<<<<<< HEAD
 test('getChatVirtualDom should render model picker usage cost text with subdued class', () => {
   const result = renderChatView({
     modelPickerOpen: true,
@@ -237,7 +236,8 @@ test('getChatVirtualDom should render model picker usage cost text with subdued 
     type: VirtualDomElements.Span,
   })
   expect(freeUsageText).toBeDefined()
-=======
+})
+
 test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {
   const result = renderChatView({
     modelPickerOpen: true,
@@ -251,7 +251,6 @@ test('getChatVirtualDOm should show model picker empty-state message when search
   const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')
   expect(modelPickerItems).toHaveLength(1)
   expect(emptyStateLabel).toBeDefined()
->>>>>>> origin/main
 })
 
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {

@@ -93,29 +93,6 @@ export const getChatModelPickerPopOverVirtualDom = (
       className: ClassNames.ChatModelPickerList,
       type: VirtualDomElements.Ul,
     },
-<<<<<<< HEAD
-    ...visibleModels.flatMap((model) => [
-      {
-        childCount: 2,
-        className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
-        name: InputName.getModelPickerItemInputName(model.id),
-        onClick: DomEventListenerFunctions.HandleClick,
-        type: VirtualDomElements.Li,
-      },
-      {
-        childCount: 1,
-        className: ClassNames.ChatModelPickerItemLabel,
-        type: VirtualDomElements.Span,
-      },
-      text(getModelLabel(model)),
-      {
-        childCount: 1,
-        className: ClassNames.ChatModelPickerItemUsageCost,
-        type: VirtualDomElements.Span,
-      },
-      text(getUsageCostLabel(model)),
-    ]),
-=======
     ...(visibleModels.length === 0
       ? [
           {
@@ -127,15 +104,25 @@ export const getChatModelPickerPopOverVirtualDom = (
         ]
       : visibleModels.flatMap((model) => [
           {
-            childCount: 1,
+            childCount: 2,
             className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
             name: InputName.getModelPickerItemInputName(model.id),
             onClick: DomEventListenerFunctions.HandleClick,
             type: VirtualDomElements.Li,
           },
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItemLabel,
+            type: VirtualDomElements.Span,
+          },
           text(getModelLabel(model)),
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItemUsageCost,
+            type: VirtualDomElements.Span,
+          },
+          text(getUsageCostLabel(model)),
         ])),
->>>>>>> origin/main
   ]
 }
 
