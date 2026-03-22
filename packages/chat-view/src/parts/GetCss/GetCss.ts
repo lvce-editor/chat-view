@@ -181,6 +181,11 @@ a.Button{
   text-overflow: ellipsis;
 }
 
+.ChatModelPickerItem:hover{
+  background: var(--vscode-list-hoverBackground);
+  color: var(--vscode-list-hoverForeground);
+}
+
 .ChatModelPickerContainer{
   position: absolute;
   inset:0;
