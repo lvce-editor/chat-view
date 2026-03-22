@@ -76,6 +76,44 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
   let paragraphLines: string[] = []
   let listItems: MessageListItemNode[] = []
   let listType: 'ordered-list' | 'unordered-list' | '' = ''
+  let orderedListPathStack: Array<{ readonly indentation: number; readonly path: readonly number[] }> = []
+
+  const getListItemAtPath = (items: readonly MessageListItemNode[], path: readonly number[]): MessageListItemNode | undefined => {
+    let currentItems = items
+    let currentItem: MessageListItemNode | undefined
+    for (const index of path) {
+      currentItem = currentItems[index]
+      if (!currentItem) {
+        return undefined
+      }
+      currentItems = currentItem.nestedItems || []
+    }
+    return currentItem
+  }
+
+  const appendNestedItemAtPath = (
+    items: readonly MessageListItemNode[],
+    path: readonly number[],
+    item: MessageListItemNode,
+    nestedListType: 'ordered-list' | 'unordered-list',
+  ): MessageListItemNode[] => {
+    if (path.length === 0) {
+      return [...items, item]
+    }
+    const [index, ...rest] = path
+    const current = items[index]
+    if (!current) {
+      return [...items]
+    }
+    const nextNestedItems =
+      rest.length > 0 ? appendNestedItemAtPath(current.nestedItems || [], rest, item, nestedListType) : [...(current.nestedItems || []), item]
+    const nextItem = {
+      ...current,
+      nestedItems: nextNestedItems,
+      nestedListType,
+    }
+    return [...items.slice(0, index), nextItem, ...items.slice(index + 1)]
+  }
 
   const flushParagraph = (): void => {
     if (paragraphLines.length === 0) {
@@ -98,6 +136,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
     })
     listItems = []
     listType = ''
+    orderedListPathStack = []
   }
 
   for (let i = 0; i < tokens.length; i++) {
@@ -195,31 +234,53 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
     }
 
     if (token.type === 'ordered-list-item-line') {
+      if (listType === 'ordered-list' && listItems.length > 0 && token.indentation > 0 && orderedListPathStack.length > 0) {
+        const parentEntry = orderedListPathStack.toReversed().find((entry) => entry.indentation < token.indentation)
+        if (parentEntry) {
+          const parentItem = getListItemAtPath(listItems, parentEntry.path)
+          if (parentItem) {
+            const nextItem: MessageListItemNode = {
+              children: parseInlineNodes(token.text),
+              type: 'list-item',
+            }
+            const nextIndex = parentItem.nestedItems?.length || 0
+            listItems = appendNestedItemAtPath(listItems, parentEntry.path, nextItem, 'ordered-list')
+            const nextPath = [...parentEntry.path, nextIndex]
+            orderedListPathStack = [
+              ...orderedListPathStack.filter((entry) => entry.indentation < token.indentation),
+              { indentation: token.indentation, path: nextPath },
+            ]
+            continue
+          }
+        }
+      }
       if (listType && listType !== 'ordered-list') {
         flushList()
       }
       flushParagraph()
       listType = 'ordered-list'
-      listItems.push({
+      const nextItem: MessageListItemNode = {
         children: parseInlineNodes(token.text),
         type: 'list-item',
-      })
+      }
+      listItems.push(nextItem)
+      const nextIndex = listItems.length - 1
+      orderedListPathStack = [
+        ...orderedListPathStack.filter((entry) => entry.indentation < token.indentation),
+        { indentation: token.indentation, path: [nextIndex] },
+      ]
       continue
     }
 
     if (token.type === 'unordered-list-item-line') {
-      if (listType === 'ordered-list' && listItems.length > 0 && token.indentation > 0) {
-        const previousItem = listItems.at(-1)
-        if (previousItem) {
-          const nestedItems = previousItem.nestedItems ? [...previousItem.nestedItems] : []
-          nestedItems.push({
+      if (listType === 'ordered-list' && listItems.length > 0 && token.indentation > 0 && orderedListPathStack.length > 0) {
+        const parentEntry = orderedListPathStack.toReversed().find((entry) => entry.indentation < token.indentation)
+        if (parentEntry) {
+          const nextItem: MessageListItemNode = {
             children: parseInlineNodes(token.text),
             type: 'list-item',
-          })
-          listItems[listItems.length - 1] = {
-            ...previousItem,
-            nestedItems,
           }
+          listItems = appendNestedItemAtPath(listItems, parentEntry.path, nextItem, 'unordered-list')
           continue
         }
       }

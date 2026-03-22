@@ -49,25 +49,30 @@ const getCodeBlockDom = (node: MessageCodeBlockNode): readonly VirtualDomNode[] 
 }
 
 const getOrderedListItemDom = (item: MessageListItemNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
-  const hasNestedUnorderedList = (item.nestedItems?.length || 0) > 0
-  const nestedUnorderedListDom = hasNestedUnorderedList
+  const hasNestedList = (item.nestedItems?.length || 0) > 0
+  const nestedListType = item.nestedListType || 'unordered-list'
+  const nestedListDom = hasNestedList
     ? [
         {
           childCount: item.nestedItems?.length || 0,
-          className: ClassNames.ChatUnorderedList,
-          type: VirtualDomElements.Ul,
+          className: nestedListType === 'ordered-list' ? ClassNames.ChatOrderedList : ClassNames.ChatUnorderedList,
+          type: nestedListType === 'ordered-list' ? VirtualDomElements.Ol : VirtualDomElements.Ul,
         },
-        ...(item.nestedItems || []).flatMap((nestedItem) => getUnorderedListItemDom(nestedItem, useChatMathWorker)),
+        ...(item.nestedItems || []).flatMap((nestedItem) =>
+          nestedListType === 'ordered-list'
+            ? getOrderedListItemDom(nestedItem, useChatMathWorker)
+            : getUnorderedListItemDom(nestedItem, useChatMathWorker),
+        ),
       ]
     : []
   return [
     {
-      childCount: item.children.length + (hasNestedUnorderedList ? 1 : 0),
+      childCount: item.children.length + (hasNestedList ? 1 : 0),
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
     ...item.children.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
-    ...nestedUnorderedListDom,
+    ...nestedListDom,
   ]
 }
 
