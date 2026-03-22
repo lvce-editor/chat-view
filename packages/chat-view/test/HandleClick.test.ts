@@ -351,6 +351,7 @@ test('handleClick should open OpenRouter API keys website', async () => {
 
 test('handleClick should save openapi api key to user settings', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
   })
   const state: ChatState = {
@@ -359,7 +360,7 @@ test('handleClick should save openapi api key to user settings', async () => {
   }
   const result = await HandleClick.handleClick(state, 'save-openapi-api-key')
   expect(result.openApiApiKey).toBe('oa-key-999')
-  expect(mockRpc.invocations).toEqual([['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
+  expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
 })
 
 test('handleClick should retry previous prompt after saving openapi api key', async () => {
