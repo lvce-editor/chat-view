@@ -65,6 +65,7 @@ export interface ChatState {
   readonly openApiApiKey: string
   readonly openApiApiKeyInput: string
   readonly openApiApiKeysSettingsUrl: string
+  readonly openApiApiKeyState: 'idle' | 'saving'
   readonly openRouterApiBaseUrl: string
   readonly openRouterApiKey: string
   readonly openRouterApiKeyInput: string

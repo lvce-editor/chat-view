@@ -47,6 +47,7 @@ export interface GetChatVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyState: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
@@ -91,6 +92,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     modelPickerSearchValue = '',
     models,
     openApiApiKeyInput,
+    openApiApiKeyState,
     openRouterApiKeyInput,
     openRouterApiKeyState,
     parsedMessages: parsedMessagesInput,
@@ -137,6 +139,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerSearchValue,
         models,
         openApiApiKeyInput,
+        openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,
         parsedMessages,
@@ -175,6 +178,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerSearchValue,
         models,
         openApiApiKeyInput,
+        openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,
         parsedMessages,

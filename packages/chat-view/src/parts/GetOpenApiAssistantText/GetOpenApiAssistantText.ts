@@ -1188,7 +1188,8 @@ export const getOpenApiAssistantText = async (
   }
 
   return {
-    details: 'request-failed',
+    details: 'tool-iterations-exhausted',
+    iterationLimit: maxToolIterations + 1,
     type: 'error',
   }
 }
