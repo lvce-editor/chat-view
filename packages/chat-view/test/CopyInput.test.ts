@@ -5,7 +5,7 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 
 test('copyInput should copy composer value to clipboard and keep state', async () => {
   using mockRpc = ClipBoardWorker.registerMockRpc({
-    'ClipBoardWorker.writeText': async (text: string) => {},
+    'ClipBoard.writeText': async (text: string) => {},
   })
   const state = {
     ...createDefaultState(),
@@ -13,5 +13,5 @@ test('copyInput should copy composer value to clipboard and keep state', async (
   }
   const result = await CopyInput.copyInput(state)
   expect(result).toBe(state)
-  expect(mockRpc.invocations).toEqual([])
+  expect(mockRpc.invocations).toEqual([['ClipBoard.writeText', 'hello copy']])
 })
