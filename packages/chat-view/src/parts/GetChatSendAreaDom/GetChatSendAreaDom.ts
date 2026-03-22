@@ -4,7 +4,7 @@ import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getChatModelPickerVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
+import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
 import { getChatSelectVirtualDom } from '../GetChatSelectVirtualDom/GetChatSelectVirtualDom.ts'
 import * as Strings from '../GetChatViewDomStrings/GetChatViewDomStrings.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
@@ -104,7 +104,7 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...(newChatModelPickerEnabled
-      ? getChatModelPickerVirtualDom(models, selectedModelId, modelPickerOpen, modelPickerSearchValue)
+      ? getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen)
       : getChatSelectVirtualDom(models, selectedModelId)),
     ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
