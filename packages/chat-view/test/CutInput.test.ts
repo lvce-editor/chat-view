@@ -17,5 +17,5 @@ test('cutInput should copy composer value and clear composer', async () => {
   const result = await CutInput.cutInput(state)
   expect(result.composerValue).toBe('')
   expect(result.composerHeight).toBe(32)
-  expect(mockRpc.invocations).toEqual([[]])
+  expect(mockRpc.invocations).toEqual([[['ClipBoard.writeText', 'hello cut']]])
 })
