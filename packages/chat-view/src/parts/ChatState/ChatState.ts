@@ -59,7 +59,6 @@ export interface ChatState {
   readonly modelPickerOpen: boolean
   readonly modelPickerSearchValue: string
   readonly models: readonly ChatModel[]
-  readonly newChatModelPickerEnabled: boolean
   readonly nextMessageId: number
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string

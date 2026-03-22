@@ -25,12 +25,11 @@ const expectedModelIds = [
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.setNewChatModelPickerEnabled', true)
   await Locator('.ChatSendArea button.Select[name="model-picker-toggle"]').click()
 
   for (const modelId of expectedModelIds) {

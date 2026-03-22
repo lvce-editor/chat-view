@@ -106,7 +106,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     messagesScrollTop,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
-    newChatModelPickerEnabled: state.newChatModelPickerEnabled,
     openApiApiKey,
     openApiApiKeyInput: openApiApiKey,
     openRouterApiKey,

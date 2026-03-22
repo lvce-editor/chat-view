@@ -28,7 +28,6 @@ export interface GetChatModeListVirtualDomOptions {
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
-  readonly newChatModelPickerEnabled?: boolean
   readonly runMode: RunMode
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
@@ -62,7 +61,6 @@ export const getChatModeListVirtualDom = ({
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
-  newChatModelPickerEnabled = false,
   runMode,
   searchEnabled = false,
   searchFieldVisible = false,
@@ -79,7 +77,7 @@ export const getChatModeListVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
-  const isNewModelPickerVisible = newChatModelPickerEnabled && modelPickerOpen
+  const isNewModelPickerVisible = modelPickerOpen
   const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
@@ -97,9 +95,7 @@ export const getChatModeListVirtualDom = ({
     ...getChatSendAreaDom(
       composerValue,
       modelPickerOpen,
-      modelPickerSearchValue,
       models,
-      newChatModelPickerEnabled,
       selectedModelId,
       usageOverviewEnabled,
       tokensUsed,
