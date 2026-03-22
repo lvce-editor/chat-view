@@ -41,7 +41,6 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
-<<<<<<< HEAD
 .ChatInputBox{
   width: 100%;
   margin: 0;
@@ -59,7 +58,6 @@ export const getCss = (
   white-space: pre;
   text-overflow: ellipsis;
 }
-=======
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
@@ -176,7 +174,6 @@ a.Button{
   text-overflow: ellipsis;
 }
 
->>>>>>> origin/main
 `
 
   return `${baseCss}
