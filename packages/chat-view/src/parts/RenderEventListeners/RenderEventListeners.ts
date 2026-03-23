@@ -96,6 +96,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickSettings'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickModelPickerToggle,
+      params: ['handleClickModelPickerToggle'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickNew,
       params: ['handleClickNew'],
     },

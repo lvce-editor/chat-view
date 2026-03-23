@@ -13,6 +13,11 @@ test('renderEventListeners should return expected listeners', () => {
     params: ['handleChatInputContextMenu'],
     preventDefault: true,
   })
+  const modelPickerToggleListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickModelPickerToggle)
+  expect(modelPickerToggleListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickModelPickerToggle,
+    params: ['handleClickModelPickerToggle'],
+  })
   const projectAddButtonContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleProjectAddButtonContextMenu)
   expect(projectAddButtonContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,

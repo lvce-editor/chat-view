@@ -23,7 +23,7 @@ export const getChatModelPickerToggleVirtualDom = (
       childCount: 2,
       className: ClassNames.Select,
       name: InputName.ModelPickerToggle,
-      onClick: DomEventListenerFunctions.HandleClick,
+      onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
       title: selectedModelLabel,
       type: VirtualDomElements.Button,
     },
