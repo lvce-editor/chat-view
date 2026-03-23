@@ -55,21 +55,6 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         visibleModels: state.models,
       }
     }
-    case name === InputName.ModelPickerList: {
-      const { visibleModels } = state
-      const index = getModelPickerClickIndex(state.y, state.height, eventY)
-      if (index < 0 || index >= visibleModels.length) {
-        return state
-      }
-      return {
-        ...state,
-        modelPickerHeight: getModelPickerHeight(state.models.length),
-        modelPickerOpen: false,
-        modelPickerSearchValue: '',
-        selectedModelId: visibleModels[index].id,
-        visibleModels: state.models,
-      }
-    }
     case InputName.isProjectInputName(name): {
       const projectId = InputName.getProjectIdFromInputName(name)
       if (state.viewMode === 'chat-focus') {
