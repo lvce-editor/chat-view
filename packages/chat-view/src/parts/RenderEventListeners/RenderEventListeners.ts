@@ -178,5 +178,9 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleMissingOpenRouterApiKeyFormSubmit'],
       preventDefault: true,
     },
+    {
+      name: DomEventListenersFunctions.HandleClickModelPickerList,
+      params: ['handleClickModelPickerList', EventExpression.ClientY],
+    },
   ]
 }
