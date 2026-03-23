@@ -1,6 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
 import { getSlashCommandHandler } from '../SlashCommandRegistry/SlashCommandRegistry.ts'
+import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
 
 export const executeSlashCommand = async (state: ChatState, command: string): Promise<ChatState> => {
   const slashCommandHandler = getSlashCommandHandler(command)
