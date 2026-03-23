@@ -1,6 +1,5 @@
-import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
-
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
 
 export type SlashCommandHandler = (state: ChatState) => Promise<ChatState>
 
