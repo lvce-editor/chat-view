@@ -27,7 +27,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     subscriptionPlan: 'pro',
     type: 'success',
     usedTokens: 42,
-    userName: 'simon',
+    userName: 'test',
   })
 
   const loginButton = Locator('.IconButton[name="login"]')
