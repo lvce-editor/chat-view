@@ -5,7 +5,10 @@ export const name = 'chat-view.search-no-items-found'
 export const skip = 1
 
 export const test: Test = async ({ Command, expect, Locator }) => {
-  await Command.execute('Chat.setChatList', 1)
+  await Command.execute('Chat.openMockSession', 'Dummy Chat A', [])
+  await Command.execute('Chat.openMockSession', 'Dummy Chat B', [])
+  await Command.execute('Chat.openMockSession', 'Dummy Chat C', [])
+  await Command.execute('Chat.handleClickBack')
   await Command.execute('Chat.setSearchEnabled', true)
 
   const searchButton = Locator('.ChatHeader .IconButton[name="toggle-search"]')

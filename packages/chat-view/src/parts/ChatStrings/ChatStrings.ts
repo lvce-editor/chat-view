@@ -157,18 +157,6 @@ export const defaultSessionTitle = (): string => {
   return i18nString('Chat 1')
 }
 
-export const dummyChatA = (): string => {
-  return i18nString('Dummy Chat A')
-}
-
-export const dummyChatB = (): string => {
-  return i18nString('Dummy Chat B')
-}
-
-export const dummyChatC = (): string => {
-  return i18nString('Dummy Chat C')
-}
-
 export const unknownViewMode = (): string => {
   return i18nString('Unknown view mode')
 }

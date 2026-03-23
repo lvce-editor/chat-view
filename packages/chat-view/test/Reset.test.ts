@@ -1,13 +1,36 @@
 import { expect, test } from '@jest/globals'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as Reset from '../src/parts/Reset/Reset.ts'
-import * as SetChatList from '../src/parts/SetChatList/SetChatList.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('reset should clear sessions and composer and switch to list mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  const withChatList = SetChatList.setChatList(createDefaultState())
+  const withChatList = {
+    ...createDefaultState(),
+    searchEnabled: true,
+    searchFieldVisible: false,
+    searchValue: '',
+    selectedSessionId: 'session-a',
+    sessions: [
+      {
+        id: 'session-a',
+        messages: [],
+        title: 'Dummy Chat A',
+      },
+      {
+        id: 'session-b',
+        messages: [],
+        title: 'Dummy Chat B',
+      },
+      {
+        id: 'session-c',
+        messages: [],
+        title: 'Dummy Chat C',
+      },
+    ],
+    viewMode: 'list' as const,
+  }
   const state = {
     ...withChatList,
     composerValue: 'hello',
