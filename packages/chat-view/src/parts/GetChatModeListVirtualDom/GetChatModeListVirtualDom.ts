@@ -67,6 +67,7 @@ const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly Virtu
   ]
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatModeListVirtualDom = ({
   addContextButtonEnabled,
   authEnabled = false,
