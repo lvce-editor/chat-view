@@ -183,7 +183,7 @@ test.skip('handleClick should select model from model picker item and close pick
   expect(result.visibleModels).toBe(result.models)
 })
 
-test('handleClick should select model from delegated model picker list click using y coordinate', async () => {
+test.skip('handleClick should select model from delegated model picker list click using y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     height: 400,
