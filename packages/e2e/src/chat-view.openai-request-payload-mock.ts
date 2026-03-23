@@ -3,6 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-request-payload-mock'
 
 interface MockOpenApiRequest {
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   readonly headers: Readonly<Record<string, string>>
   readonly method: string
   readonly payload: unknown
@@ -11,12 +12,14 @@ interface MockOpenApiRequest {
 
 const assert = (condition: boolean, message: string): void => {
   if (!condition) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(message)
   }
 }
 
 const assertEqual = <T>(actual: T, expected: T, context: string): void => {
   if (actual !== expected) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }
@@ -25,6 +28,7 @@ const assertDeepEqual = (actual: unknown, expected: unknown, context: string): v
   const actualJson = JSON.stringify(actual)
   const expectedJson = JSON.stringify(expected)
   if (actualJson !== expectedJson) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(`${context}: expected ${expectedJson}, got ${actualJson}`)
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { expect, test } from '@jest/globals'
 import { ChatToolWorker } from '@lvce-editor/rpc-registry'
 import { getBasicChatTools } from '../src/parts/ChatTools/ChatTools.ts'
