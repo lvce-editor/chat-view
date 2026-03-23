@@ -1,7 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
-import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
