@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatSession, Project } from '../ChatState/ChatState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { Project } from '../Project/Project.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getBackToChatsButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'

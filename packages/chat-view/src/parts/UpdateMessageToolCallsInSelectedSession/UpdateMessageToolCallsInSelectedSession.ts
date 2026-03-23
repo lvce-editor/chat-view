@@ -1,4 +1,4 @@
-import type { ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { mergeToolCalls } from '../MergeToolCalls/MergeToolCalls.ts'

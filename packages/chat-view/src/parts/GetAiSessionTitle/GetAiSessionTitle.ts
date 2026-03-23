@@ -5,6 +5,11 @@ import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import { sanitizeGeneratedTitle } from '../SanitizeGeneratedTitle/SanitizeGeneratedTitle.ts'
 
+const getTitlePrompt = (userText: string, assistantText: string): string =>
+  `Create a concise title (max 6 words) for this conversation. Respond only with the title, no punctuation at the end.
+User: ${userText}
+Assistant: ${assistantText}`
+
 export const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
   const {
     authAccessToken,
@@ -33,9 +38,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     return ''
   }
 
-  const titlePrompt = `Create a concise title (max 6 words) for this conversation. Respond only with the title, no punctuation at the end.
-User: ${userText}
-Assistant: ${assistantText}`
+  const titlePrompt = getTitlePrompt(userText, assistantText)
   const promptMessage = {
     id: crypto.randomUUID(),
     role: 'user' as const,
