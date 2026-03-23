@@ -86,6 +86,7 @@ import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWor
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
+import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 
 export const commandMap = {
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
@@ -175,6 +176,7 @@ export const commandMap = {
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
+  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
