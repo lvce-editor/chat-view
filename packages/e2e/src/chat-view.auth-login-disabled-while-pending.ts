@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     refreshToken: 'refresh-token-delayed',
     type: 'success',
     usedTokens: 1,
-    userName: 'simon',
+    userName: 'test',
   })
 
   const loginButton = Locator('.IconButton[name="login"]')

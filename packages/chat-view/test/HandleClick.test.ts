@@ -212,7 +212,7 @@ test('handleClick should login via auth bridge and persist backend access token'
         refreshToken: 'backend-refresh-token-1',
         subscriptionPlan: 'pro',
         usedTokens: 321,
-        userName: 'simon',
+        userName: 'test',
       }
     },
     'Preferences.update': async () => {},
@@ -226,7 +226,7 @@ test('handleClick should login via auth bridge and persist backend access token'
   expect(result.authAccessToken).toBe('backend-token-1')
   expect(result.authRefreshToken).toBe('backend-refresh-token-1')
   expect(result.authStatus).toBe('signed-in')
-  expect(result.userName).toBe('simon')
+  expect(result.userName).toBe('test')
   expect(result.userSubscriptionPlan).toBe('pro')
   expect(result.userUsedTokens).toBe(321)
   expect(mockRpc.invocations).toEqual([
@@ -255,7 +255,7 @@ test('handleClick should logout and clear persisted backend access token', async
     authRefreshToken: 'backend-refresh-token-1',
     authStatus: 'signed-in',
     backendUrl: 'https://backend.example.com',
-    userName: 'simon',
+    userName: 'test',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 321,
   }
