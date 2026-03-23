@@ -1,5 +1,5 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import { openRouterRequestFailureReasons } from '../chatViewStrings/chatViewStrings.ts'
+import { openRouterRequestFailureReasons } from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 export const getOpenRouterRequestFailedDom = (): readonly VirtualDomNode[] => {
