@@ -83,7 +83,6 @@ export const getChatSendAreaDom = (
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.composePlaceholder(),
       type: VirtualDomElements.TextArea,
-      value: composerValue,
     },
     {
       childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
