@@ -1,7 +1,10 @@
-const modelPickerBottomOffset = 90
-const modelPickerItemHeight = 28
-
-export const getModelPickerClickIndex = (y: number, height: number, eventY: number): number => {
+export const getModelPickerClickIndex = (
+  y: number,
+  height: number,
+  eventY: number,
+  modelPickerBottomOffset: number,
+  modelPickerItemHeight: number,
+): number => {
   const modelPickerTop = y + height - modelPickerBottomOffset
   const relativeY = eventY - modelPickerTop
   if (relativeY < 0) {
