@@ -72,6 +72,10 @@ export const getCss = (
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
 }
 
+.Select:hover{
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+}
+
 button.Select[name='model-picker-toggle']{
   display: inline-flex;
   align-items: center;
