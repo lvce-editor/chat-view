@@ -6,6 +6,10 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const getUsageCostLabel = (model: ChatModel): string => {
+  return `${model.usageCost ?? 1}x`
+}
+
 export const getChatModelPickerToggleVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -100,13 +104,24 @@ export const getChatModelPickerPopOverVirtualDom = (
         ]
       : visibleModels.flatMap((model) => [
           {
-            childCount: 1,
+            childCount: 2,
             className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
             name: InputName.getModelPickerItemInputName(model.id),
             onClick: DomEventListenerFunctions.HandleClick,
             type: VirtualDomElements.Li,
           },
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItemLabel,
+            type: VirtualDomElements.Span,
+          },
           text(getModelLabel(model)),
+          {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerItemUsageCost,
+            type: VirtualDomElements.Span,
+          },
+          text(getUsageCostLabel(model)),
         ])),
   ]
 }
