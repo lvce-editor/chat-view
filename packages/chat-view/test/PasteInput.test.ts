@@ -17,5 +17,15 @@ test('pasteInput should paste clipboard text into composer', async () => {
   expect(result.composerValue).toBe('test')
   expect(result.inputSource).toBe('script')
   expect(mockRpc.invocations).toEqual([['ClipBoard.readText']])
-  expect(mockRpc2.invocations).toEqual([])
+  expect(mockRpc2.invocations).toEqual([
+    [
+      'ChatStorage.appendEvent',
+      {
+        sessionId: 'session-1',
+        timestamp: expect.any(String),
+        type: 'handle-input',
+        value: 'test',
+      },
+    ],
+  ])
 })
