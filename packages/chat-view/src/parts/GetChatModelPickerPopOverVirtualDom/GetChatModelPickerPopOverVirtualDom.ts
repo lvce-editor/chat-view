@@ -40,7 +40,7 @@ export const getChatModelPickerPopOverVirtualDom = (
       inputType: 'search',
       name: InputName.ModelPickerSearch,
       onInput: DomEventListenerFunctions.HandleInput,
-      placeholder: 'Search models',
+      placeholder: Strings.searchModels(),
       type: VirtualDomElements.Input,
       value: modelPickerSearchValue,
     },
