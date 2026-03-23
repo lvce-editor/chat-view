@@ -1,7 +1,6 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
-import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import * as ChatCoordinatorWorker from '../src/parts/ChatCoordinatorWorker/ChatCoordinatorWorker.ts'
+import { ChatCoordinatorWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import {
   backendAccessTokenRequiredMessage,
   backendCompletionFailedMessage,
@@ -16,10 +15,9 @@ import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiSt
 test('getAiResponse should use chat coordinator worker when enabled', async () => {
   const chunks: string[] = []
   let streamFinished = 0
-  const invocations: unknown[][] = []
-  using mockRpc = {
-    invoke: async (method: string, options: unknown): Promise<{ id: string; role: 'assistant'; text: string; time: string }> => {
-      invocations.push([method, options])
+
+  using mockRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.getAiResponse'() {
       return {
         id: 'assistant-1',
         role: 'assistant',
@@ -27,11 +25,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
         time: '10:01',
       }
     },
-    [Symbol.dispose]: (): void => {
-      // noop
-    },
-  }
-  ChatCoordinatorWorker.set(mockRpc)
+  })
 
   const result = await getAiResponse({
     assetDir: '',
@@ -65,7 +59,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
     userText: 'hello',
   })
 
-  expect(invocations).toEqual([
+  expect(mockRpc.invocations).toEqual([
     [
       'ChatCoordinator.getAiResponse',
       expect.objectContaining({
