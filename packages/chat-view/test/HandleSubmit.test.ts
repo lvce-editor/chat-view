@@ -1,10 +1,13 @@
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { registerSlashCommands } from '../src/parts/Listen/Listen.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+
+registerSlashCommands()
 
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
