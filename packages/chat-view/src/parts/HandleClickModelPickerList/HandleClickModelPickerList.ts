@@ -4,7 +4,9 @@ import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeig
 
 export const handleClickModelPickerList = async (state: ChatState, eventY = 0): Promise<ChatState> => {
   const { height, models, visibleModels, y } = state
-  const index = getModelPickerClickIndex(y, height, eventY)
+  const itemHeight = 28
+  const offset = 90
+  const index = getModelPickerClickIndex(y, height, eventY, offset, itemHeight)
   if (index < 0 || index >= visibleModels.length) {
     return state
   }
