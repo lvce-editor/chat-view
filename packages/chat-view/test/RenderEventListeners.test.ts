@@ -24,4 +24,10 @@ test('renderEventListeners should return expected listeners', () => {
     params: ['handleProjectAddButtonContextMenu'],
     preventDefault: true,
   })
+  const modelPickerContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleContextMenuChatModelPicker)
+  expect(modelPickerContextMenuListener).toEqual({
+    name: DomEventListenerFunctions.HandleContextMenuChatModelPicker,
+    params: ['handleContextMenuChatModelPicker'],
+    preventDefault: true,
+  })
 })
