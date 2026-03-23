@@ -9,7 +9,7 @@ import {
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
   openRouterTooManyRequestsMessage,
-} from '../src/parts/chatViewStrings/chatViewStrings.ts'
+} from '../src/parts/ChatStrings/ChatStrings.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 

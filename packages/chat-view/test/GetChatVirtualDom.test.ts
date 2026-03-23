@@ -6,7 +6,7 @@ import {
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
   openRouterTooManyRequestsMessage,
-} from '../src/parts/chatViewStrings/chatViewStrings.ts'
+} from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'

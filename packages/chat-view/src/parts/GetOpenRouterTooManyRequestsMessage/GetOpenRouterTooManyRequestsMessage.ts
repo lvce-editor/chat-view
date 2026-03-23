@@ -1,5 +1,5 @@
 import type { GetOpenRouterAssistantTextErrorResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
-import { openRouterTooManyRequestsMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openRouterTooManyRequestsMessage } from '../ChatStrings/ChatStrings.ts'
 
 export const getOpenRouterTooManyRequestsMessage = (errorResult: GetOpenRouterAssistantTextErrorResult): string => {
   const details: string[] = []

@@ -2,14 +2,14 @@
 import type { ChatMessage } from '../ChatState/ChatState.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
-import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import {
   backendAccessTokenRequiredMessage,
   backendCompletionFailedMessage,
   backendUrlRequiredMessage,
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
-} from '../chatViewStrings/chatViewStrings.ts'
+} from '../ChatStrings/ChatStrings.ts'
+import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'

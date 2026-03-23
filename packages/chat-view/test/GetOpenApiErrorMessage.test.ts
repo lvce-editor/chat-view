@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import type { GetOpenApiAssistantTextErrorResult } from '../src/parts/GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
-import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../src/parts/chatViewStrings/chatViewStrings.ts'
+import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../src/parts/ChatStrings/ChatStrings.ts'
 import { getOpenApiErrorMessage } from '../src/parts/GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 
 const createHttpError = (overrides: Partial<GetOpenApiAssistantTextErrorResult> = {}): GetOpenApiAssistantTextErrorResult => ({
