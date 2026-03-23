@@ -258,6 +258,10 @@ a.Button{
   }
 }
 
+
+.ChatModelPickerList{
+  padding:0;
+}
 `
 
   return `${baseCss}
