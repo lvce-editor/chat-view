@@ -13,8 +13,8 @@ import { getMissingOpenApiApiKeyDom } from '../GetMissingOpenApiApiKeyDom/GetMis
 import { getMissingOpenRouterApiKeyDom } from '../GetMissingOpenRouterApiKeyDom/GetMissingOpenRouterApiKeyDom.ts'
 import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/GetOpenRouterRequestFailedDom.ts'
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
-import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
+import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
 export const getChatMessageDom = (
   message: ChatMessage,
