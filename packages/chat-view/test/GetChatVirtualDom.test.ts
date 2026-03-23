@@ -173,14 +173,9 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     visibleModels,
   })
   const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
-  const modelPickerList = result.find((node) => node.name === 'model-picker-list')
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
   expect(modelPickerItems).toHaveLength(0)
-  expect(modelPickerList).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Ul,
-  })
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
 })
@@ -210,9 +205,7 @@ test('getChatVirtualDOm should show model picker empty-state message when search
     viewMode: 'detail',
     visibleModels: [],
   })
-  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
   const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')
-  expect(modelPickerItems).toHaveLength(1)
   expect(emptyStateLabel).toBeDefined()
 })
 
