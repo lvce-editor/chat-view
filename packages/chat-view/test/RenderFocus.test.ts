@@ -169,14 +169,12 @@ test('renderFocus should use normal focus selector when model picker was already
   const oldState: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
   }
   const newState: ChatState = {
     ...createDefaultState(),
     focus: 'send-button',
     focused: true,
     modelPickerOpen: true,
-    newChatModelPickerEnabled: true,
   }
   const result = RenderFocus.renderFocus(oldState, newState)
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="send"]'])
