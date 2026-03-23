@@ -9,8 +9,6 @@ export const getMenuEntriesChatHeader = (): readonly MenuEntry[] => {
       command: 'Chat.showIcons',
       flags: MenuItemFlags.None,
       id: 'showIcons',
-      label: ViewletExplorerStrings.cut(),
-      id: 'cut',
       label: ViewletChatStrings.cut(),
     },
     {
