@@ -4,9 +4,11 @@ export const getModelPickerClickIndex = (
   eventY: number,
   modelPickerBottomOffset: number,
   modelPickerItemHeight: number,
+  modelPickerHeight: number,
+  headerHeight: number,
 ): number => {
-  const modelPickerTop = y + height - modelPickerBottomOffset
-  const relativeY = eventY - modelPickerTop
+  const modelPickerTop = y + height - modelPickerBottomOffset - modelPickerHeight
+  const relativeY = eventY - modelPickerTop - headerHeight
   if (relativeY < 0) {
     return -1
   }
