@@ -221,7 +221,7 @@ const isTableRow = (line: string): boolean => {
   if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) {
     return false
   }
-  return trimmed.length > 2 && trimmed.slice(1, -1).includes('|')
+  return trimmed.length > 2
 }
 
 const getTableCells = (line: string): readonly string[] => {

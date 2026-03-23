@@ -917,6 +917,45 @@ test('parseMessageContent should parse markdown table blocks', () => {
   ])
 })
 
+test('parseMessageContent should parse single-column markdown table and keep heading marker text in cells', () => {
+  const rawMessage = ['| Section |', '|---|', '| ### Nested heading |'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      headers: [
+        {
+          children: [
+            {
+              text: 'Section',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+      ],
+      rows: [
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: '### Nested heading',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+      ],
+      type: 'table',
+    },
+  ])
+})
+
 test('parseMessageContent should parse one-line markdown table rows', () => {
   const rawMessage =
     '| Item | Quantity | Price (per unit) | Category | |--------------|----------|------------------|-------------| | Apples | 4 | $0.50 | Fruits | | Bread | 1 | $2.00 | Bakery |'
