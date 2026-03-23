@@ -9,6 +9,7 @@ import {
   openRouterTooManyRequestsMessage,
 } from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
+import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
@@ -19,44 +20,19 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3', usageCost: 1 },
 ] as const
 
-const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
-  addContextButtonEnabled: false,
-  authEnabled: false,
-  authErrorMessage: '',
-  authStatus: 'signed-out',
-  chatListScrollTop: 0,
-  composerDropActive: false,
-  composerDropEnabled: true,
-  composerFontFamily: 'system-ui',
-  composerFontSize: 13,
-  composerHeight: 28,
-  composerLineHeight: 20,
-  composerValue: '',
-  messagesScrollTop: 0,
-  models,
-  openApiApiKeyInput: '',
-  openApiApiKeyState: 'idle',
-  openRouterApiKeyInput: '',
-  openRouterApiKeyState: 'idle',
-  runMode: 'local',
-  selectedModelId: 'test',
-  selectedProjectId: '',
-  selectedSessionId: '',
-  sessions: [],
-  showRunMode: false,
-  todoListToolEnabled: false,
-  tokensMax: 0,
-  tokensUsed: 0,
-  usageOverviewEnabled: false,
-  viewMode: 'list',
-  visibleModels: models,
-  voiceDictationEnabled: false,
-  ...overrides,
-})
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
-  return GetChatViewDom.getChatVirtualDom(createOptions(overrides))
+  const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
+  return GetChatViewDom.getChatVirtualDom({
+    ...defaultState,
+    models,
+    selectedModelId: 'test',
+    selectedProjectId: '',
+    selectedSessionId: '',
+    sessions: [],
+    visibleModels: models,
+    ...overrides,
+  })
 }
 
 test('getChatVirtualDOm should render root chat container', () => {
