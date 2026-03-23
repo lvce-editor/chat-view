@@ -12,6 +12,21 @@ const isEqualProjectExpandedIds = (a: readonly string[], b: readonly string[]): 
   return true
 }
 
+const isEqualVisibleModels = (a: ChatState['visibleModels'], b: ChatState['visibleModels']): boolean => {
+  if (a === b) {
+    return true
+  }
+  if (a.length !== b.length) {
+    return false
+  }
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].id !== b[i].id) {
+      return false
+    }
+  }
+  return true
+}
+
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
@@ -24,6 +39,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.initial === newState.initial &&
     oldState.modelPickerOpen === newState.modelPickerOpen &&
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
+    isEqualVisibleModels(oldState.visibleModels, newState.visibleModels) &&
     oldState.listFocusedIndex === newState.listFocusedIndex &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     oldState.projectListScrollTop === newState.projectListScrollTop &&

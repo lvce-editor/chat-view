@@ -180,6 +180,7 @@ test('handleClick should select model from model picker item and close picker', 
   expect(result.selectedModelId).toBe('openapi/gpt-4.1-mini')
   expect(result.modelPickerOpen).toBe(false)
   expect(result.modelPickerSearchValue).toBe('')
+  expect(result.visibleModels).toBe(result.models)
 })
 
 test('handleClick should select model from delegated model picker list click using y coordinate', async () => {
@@ -194,12 +195,14 @@ test('handleClick should select model from delegated model picker list click usi
       { id: 'codex-5.3', name: 'Codex 5.3' },
     ],
     selectedModelId: 'test',
+    visibleModels: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini' }],
     y: 20,
   }
-  const result = await HandleClick.handleClick(state, 'model-picker-list', '', 10, 358)
+  const result = await HandleClick.handleClick(state, 'model-picker-list', '', 10, 340)
   expect(result.selectedModelId).toBe('openapi/gpt-4.1-mini')
   expect(result.modelPickerOpen).toBe(false)
   expect(result.modelPickerSearchValue).toBe('')
+  expect(result.visibleModels).toBe(result.models)
 })
 
 test('handleClick should login via auth bridge and persist backend access token', async () => {

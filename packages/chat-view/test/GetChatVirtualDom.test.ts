@@ -11,6 +11,7 @@ import {
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
+import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
 import { parseAndStoreMessagesContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 
 const models = [
@@ -48,6 +49,7 @@ const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOption
   tokensUsed: 0,
   usageOverviewEnabled: false,
   viewMode: 'list',
+  visibleModels: models,
   voiceDictationEnabled: false,
   ...overrides,
 })
@@ -182,12 +184,14 @@ test('getChatVirtualDom should not render absolute picker chat child when picker
 })
 
 test('getChatVirtualDOm should filter model picker entries by search', () => {
+  const visibleModels = getVisibleModels(models, 'codex')
   const result = renderChatView({
     modelPickerOpen: true,
     modelPickerSearchValue: 'codex',
     models,
     selectedModelId: 'codex-5.3',
     viewMode: 'detail',
+    visibleModels,
   })
   const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
   const modelPickerList = result.find((node) => node.name === 'model-picker-list')
@@ -225,6 +229,7 @@ test('getChatVirtualDOm should show model picker empty-state message when search
     models,
     selectedModelId: 'codex-5.3',
     viewMode: 'detail',
+    visibleModels: [],
   })
   const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
   const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')

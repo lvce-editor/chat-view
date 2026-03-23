@@ -107,6 +107,7 @@ export interface ChatState {
   readonly userSubscriptionPlan: string
   readonly userUsedTokens: number
   readonly viewMode: ChatViewMode
+  readonly visibleModels: readonly ChatModel[]
   readonly voiceDictationEnabled: boolean
   readonly warningCount: number
   readonly webSearchEnabled: boolean

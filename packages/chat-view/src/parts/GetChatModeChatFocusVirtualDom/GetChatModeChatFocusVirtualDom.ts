@@ -48,6 +48,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -87,6 +88,7 @@ export const getChatModeChatFocusVirtualDom = ({
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
+  visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
@@ -97,7 +99,7 @@ export const getChatModeChatFocusVirtualDom = ({
   return [
     {
       childCount: chatRootChildCount,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, 'ChatFocus'),
+      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
@@ -146,6 +148,6 @@ export const getChatModeChatFocusVirtualDom = ({
           },
         ]
       : []),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
+    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
   ]
 }

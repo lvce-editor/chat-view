@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
+import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { handleSearchValueChange } from '../HandleSearchValueChange/HandleSearchValueChange.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenApiApiKeyInput } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
@@ -27,6 +28,7 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     return {
       ...state,
       modelPickerSearchValue: value,
+      visibleModels: getVisibleModels(state.models, value),
     }
   }
   if (name !== InputName.Composer) {
