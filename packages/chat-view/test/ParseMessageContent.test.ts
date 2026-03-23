@@ -497,6 +497,42 @@ test('parseMessageContent should parse markdown bold nested inside italic', () =
   ])
 })
 
+test('parseMessageContent should parse markdown bold+italic with triple asterisks', () => {
+  const rawMessage = 'This should be ***both*** styles'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'This should be ',
+          type: 'text',
+        },
+        {
+          children: [
+            {
+              children: [
+                {
+                  text: 'both',
+                  type: 'text',
+                },
+              ],
+              type: 'italic',
+            },
+          ],
+          type: 'bold',
+        },
+        {
+          text: ' styles',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown unordered list blocks', () => {
   const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
