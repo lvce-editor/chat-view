@@ -23,12 +23,79 @@ test('getToolCallsDom should render one list item per tool call', () => {
     ],
   })
 
-  const orderedList = result.find((node) => node.type === VirtualDomElements.Ol)
-  const listItems = result.filter((node) => node.className === ClassNames.ChatOrderedListItem && node.type === VirtualDomElements.Li)
-
-  expect(orderedList).toMatchObject({
-    childCount: 2,
-    className: ClassNames.ChatOrderedList,
-  })
-  expect(listItems).toHaveLength(2)
+  expect(result).toEqual([
+    {
+      childCount: 2,
+      className: ClassNames.ChatToolCalls,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallsLabel,
+      type: VirtualDomElements.Div,
+    },
+    expect.objectContaining({
+      text: 'tools',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 2,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: 'a.txt',
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'read_file ',
+    }),
+    expect.objectContaining({
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': 'a.txt',
+      onClick: expect.any(Number),
+      type: VirtualDomElements.Span,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': 'a.txt',
+      onClick: expect.any(Number),
+      type: VirtualDomElements.Span,
+    }),
+    expect.objectContaining({
+      text: 'a.txt',
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: 'b.txt',
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'read_file ',
+    }),
+    expect.objectContaining({
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': 'b.txt',
+      onClick: expect.any(Number),
+      type: VirtualDomElements.Span,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': 'b.txt',
+      onClick: expect.any(Number),
+      type: VirtualDomElements.Span,
+    }),
+    expect.objectContaining({
+      text: 'b.txt',
+    }),
+  ])
 })
