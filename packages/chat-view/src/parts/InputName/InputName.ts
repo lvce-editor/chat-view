@@ -12,6 +12,7 @@ export const Model = 'model'
 export const ModelPickerToggle = 'model-picker-toggle'
 export const ModelPickerSearch = 'model-picker-search'
 export const ModelPickerSettings = 'model-picker-settings'
+export const ModelPickerList = 'model-picker-list'
 export const RunMode = 'runMode'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const ToggleSearch = 'toggle-search'
@@ -44,6 +45,7 @@ export type InputName =
   | typeof ModelPickerToggle
   | typeof ModelPickerSearch
   | typeof ModelPickerSettings
+  | typeof ModelPickerList
   | typeof RunMode
   | typeof ToggleChatFocus
   | typeof ToggleSearch

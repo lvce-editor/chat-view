@@ -4,6 +4,7 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
+import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const getUsageCostLabel = (model: ChatModel): string => {
@@ -46,8 +47,7 @@ export const getChatModelPickerPopOverVirtualDom = (
   selectedModelId: string,
   modelPickerSearchValue: string,
 ): readonly VirtualDomNode[] => {
-  const normalizedSearch = modelPickerSearchValue.trim().toLowerCase()
-  const visibleModels = normalizedSearch ? models.filter((model) => getModelLabel(model).toLowerCase().includes(normalizedSearch)) : models
+  const visibleModels = getVisibleModels(models, modelPickerSearchValue)
   return [
     {
       childCount: 2,
@@ -92,6 +92,8 @@ export const getChatModelPickerPopOverVirtualDom = (
     {
       childCount: Math.max(visibleModels.length, 1),
       className: ClassNames.ChatModelPickerList,
+      name: InputName.ModelPickerList,
+      onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Ul,
     },
     ...(visibleModels.length === 0
@@ -107,8 +109,6 @@ export const getChatModelPickerPopOverVirtualDom = (
           {
             childCount: 2,
             className: `${ClassNames.ChatModelPickerItem}${model.id === selectedModelId ? ` ${ClassNames.ChatModelPickerItemSelected}` : ''}`,
-            name: InputName.getModelPickerItemInputName(model.id),
-            onClick: DomEventListenerFunctions.HandleClick,
             type: VirtualDomElements.Li,
           },
           {
