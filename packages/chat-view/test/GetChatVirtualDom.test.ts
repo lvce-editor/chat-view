@@ -1238,6 +1238,54 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
   expect(listFilesReason).toBeDefined()
 })
 
+test('getChatVirtualDom should keep send area outside message when assistant markdown has nested blocks', async () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'assistant' as const,
+          text: [
+            'I can do that, but I need file contents first.',
+            '',
+            'Two quick questions:',
+            '',
+            '1. Keep exact duplicates only?',
+            '   - Exact is safest.',
+            '   - Normalized is more aggressive.',
+            '2. Paste the file or upload it.',
+            '',
+            '# keep name, value and priority (!important)',
+            '',
+            'How to run:',
+            '- Install the dependency',
+            '- Run script',
+          ].join('\n'),
+          time: '10:31',
+        },
+      ],
+      title: 'Chat 1',
+    },
+  ]
+  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
+  const result = renderChatView({
+    parsedMessages,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
+
+  const chatMessageContent = result.find((node) => node.className === ClassNames.ChatMessageContent)
+  const chatSendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
+  expect(chatMessageContent).toMatchObject({
+    childCount: 6,
+    className: ClassNames.ChatMessageContent,
+    type: VirtualDomElements.Div,
+  })
+  expect(chatSendAreaIndex).toBeGreaterThan(-1)
+})
+
 test('getChatVirtualDOm should render selected chat title in detail mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
   const result = renderChatView({
