@@ -2,7 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 
 export const handleClickModelPickerListIndex = async (state: ChatState, index: number): Promise<ChatState> => {
-  const { models, visibleModels, y } = state
+  const { models, visibleModels } = state
   if (index < 0 || index >= visibleModels.length) {
     return state
   }
