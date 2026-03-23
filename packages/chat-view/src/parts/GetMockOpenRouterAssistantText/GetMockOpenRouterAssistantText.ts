@@ -1,4 +1,4 @@
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
 import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
 import {

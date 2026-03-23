@@ -6,13 +6,6 @@ import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 
-export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-export type { ChatModel } from '../ChatModel/ChatModel.ts'
-export type { Project } from '../Project/Project.ts'
-export type { ChatSession } from '../ChatSession/ChatSession.ts'
-export type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
-export type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
-
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
   readonly aiSessionTitleGenerationEnabled: boolean

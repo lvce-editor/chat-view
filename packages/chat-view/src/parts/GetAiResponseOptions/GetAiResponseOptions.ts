@@ -1,4 +1,5 @@
-import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {

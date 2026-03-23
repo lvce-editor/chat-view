@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import type { ChatSession } from '../src/parts/ChatState/ChatState.ts'
+import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
 import { updateMessageToolCallsInSelectedSession } from '../src/parts/HandleTextChunkFunction/HandleTextChunkFunction.ts'
 
 test('updateMessageToolCallsInSelectedSession should append multiple tool calls across chunks', () => {
