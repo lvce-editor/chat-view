@@ -12,6 +12,41 @@ import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassNa
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const getTodoListDom = (hasTodoList: boolean, todoListItems: readonly TodoListItem[]): readonly VirtualDomNode[] => {
+  if (!hasTodoList) {
+    return []
+  }
+  const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
+  return [
+    {
+      childCount: 2,
+      className: ClassNames.ChatTodoList,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatTodoListHeader,
+      type: VirtualDomElements.Div,
+    },
+    {
+      ...text(todoHeaderText),
+    },
+    {
+      childCount: todoListItems.length,
+      className: ClassNames.ChatTodoListItems,
+      type: VirtualDomElements.Ul,
+    },
+    ...todoListItems.flatMap((item) => [
+      {
+        childCount: 1,
+        className: getTodoItemClassName(item.status),
+        type: VirtualDomElements.Li,
+      },
+      text(item.text),
+    ]),
+  ]
+}
+
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
@@ -30,7 +65,6 @@ export const getChatSendAreaDom = (
   const isSendDisabled = composerValue.trim() === ''
   const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0) + (addContextButtonEnabled ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
-  const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
 
   return [
     {
@@ -44,36 +78,7 @@ export const getChatSendAreaDom = (
       className: ClassNames.ChatSendAreaContent,
       type: VirtualDomElements.Div,
     },
-    ...(hasTodoList
-      ? [
-          {
-            childCount: 2,
-            className: ClassNames.ChatTodoList,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: 1,
-            className: ClassNames.ChatTodoListHeader,
-            type: VirtualDomElements.Div,
-          },
-          {
-            ...text(todoHeaderText),
-          },
-          {
-            childCount: todoListItems.length,
-            className: ClassNames.ChatTodoListItems,
-            type: VirtualDomElements.Ul,
-          },
-          ...todoListItems.flatMap((item) => [
-            {
-              childCount: 1,
-              className: getTodoItemClassName(item.status),
-              type: VirtualDomElements.Li,
-            },
-            text(item.text),
-          ]),
-        ]
-      : []),
+    ...getTodoListDom(hasTodoList, todoListItems),
     {
       childCount: 0,
       className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
