@@ -1,4 +1,4 @@
-import { hasSlashCommand } from '../ExecuteSlashCommand/SlashCommandRegistry/SlashCommandRegistry.ts'
+import { hasSlashCommand } from '../SlashCommandRegistry/SlashCommandRegistry.ts'
 
 const slashCommandRegex = /^\/([a-z][a-z0-9-]*)(?:\s+.*)?$/i
 
