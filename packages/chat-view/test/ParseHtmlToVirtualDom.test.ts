@@ -5,25 +5,27 @@ import * as ParseHtmlToVirtualDom from '../src/parts/ParseHtmlToVirtualDom/Parse
 test('parseHtmlToVirtualDom should parse block and inline nodes', () => {
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<div class="card"><p>Hello <strong>World</strong></p></div>')
 
-  expect(result[0]).toEqual({
-    childCount: 1,
-    className: 'card',
-    type: VirtualDomElements.Div,
-  })
-  expect(result[1]).toEqual({
-    childCount: 2,
-    type: VirtualDomElements.P,
-  })
-  expect(result[2]).toMatchObject({
-    text: 'Hello ',
-  })
-  expect(result[3]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Strong,
-  })
-  expect(result[4]).toMatchObject({
-    text: 'World',
-  })
+  expect(result).toEqual([
+    {
+      childCount: 1,
+      className: 'card',
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 2,
+      type: VirtualDomElements.P,
+    },
+    expect.objectContaining({
+      text: 'Hello ',
+    }),
+    {
+      childCount: 1,
+      type: VirtualDomElements.Strong,
+    },
+    expect.objectContaining({
+      text: 'World',
+    }),
+  ])
 })
 
 test('parseHtmlToVirtualDom should sanitize non-http href', () => {
@@ -99,57 +101,73 @@ test('parseHtmlToVirtualDom should map table elements to virtual dom table types
     '<table><thead><tr><th>H</th></tr></thead><tbody><tr><td>C</td></tr></tbody><tfoot><tr><td>F</td></tr></tfoot></table>',
   )
 
-  expect(result[0]).toEqual({
-    childCount: 3,
-    type: VirtualDomElements.Table,
-  })
-  expect(result[1]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.THead,
-  })
-  expect(result[2]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Tr,
-  })
-  expect(result[3]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Th,
-  })
-  expect(result[5]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.TBody,
-  })
-  expect(result[6]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Tr,
-  })
-  expect(result[7]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Td,
-  })
-  expect(result[9]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Tfoot,
-  })
-  expect(result[10]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Tr,
-  })
-  expect(result[11]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Td,
-  })
+  expect(result).toEqual([
+    {
+      childCount: 3,
+      type: VirtualDomElements.Table,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.THead,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Tr,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Th,
+    },
+    expect.objectContaining({
+      text: 'H',
+    }),
+    {
+      childCount: 1,
+      type: VirtualDomElements.TBody,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Tr,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Td,
+    },
+    expect.objectContaining({
+      text: 'C',
+    }),
+    {
+      childCount: 1,
+      type: VirtualDomElements.Tfoot,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Tr,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Td,
+    },
+    expect.objectContaining({
+      text: 'F',
+    }),
+  ])
 })
 
 test('parseHtmlToVirtualDom should map ul to ul type', () => {
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom('<ul><li>Item</li></ul>')
 
-  expect(result[0]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Ul,
-  })
-  expect(result[1]).toEqual({
-    childCount: 1,
-    type: VirtualDomElements.Li,
-  })
+  expect(result).toEqual([
+    {
+      childCount: 1,
+      type: VirtualDomElements.Ul,
+    },
+    {
+      childCount: 1,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      text: 'Item',
+    }),
+  ])
 })

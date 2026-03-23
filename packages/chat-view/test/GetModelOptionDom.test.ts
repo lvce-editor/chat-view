@@ -12,16 +12,18 @@ test('getModelOptionDOm should append OpenRouter to openRouter model labels', ()
 
   const result = GetModelOptionDom.getModelOptionDOm(model, '')
 
-  expect(result[0]).toMatchObject({
-    childCount: 1,
-    className: ClassNames.Option,
-    selected: false,
-    type: VirtualDomElements.Option,
-    value: 'claude-code',
-  })
-  expect(result[1]).toMatchObject({
-    text: 'Claude Code (OpenRouter)',
-  })
+  expect(result).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.Option,
+      selected: false,
+      type: VirtualDomElements.Option,
+      value: 'claude-code',
+    },
+    expect.objectContaining({
+      text: 'Claude Code (OpenRouter)',
+    }),
+  ])
 })
 
 test('getModelOptionDOm should keep non-openRouter model labels unchanged', () => {
@@ -33,12 +35,14 @@ test('getModelOptionDOm should keep non-openRouter model labels unchanged', () =
 
   const result = GetModelOptionDom.getModelOptionDOm(model, 'test')
 
-  expect(result[0]).toMatchObject({
-    selected: true,
-  })
-  expect(result[1]).toMatchObject({
-    text: 'test',
-  })
+  expect(result).toEqual([
+    expect.objectContaining({
+      selected: true,
+    }),
+    expect.objectContaining({
+      text: 'test',
+    }),
+  ])
 })
 
 test('getModelOptionDOm should append OpenAI to openApi model labels', () => {
@@ -50,7 +54,12 @@ test('getModelOptionDOm should append OpenAI to openApi model labels', () => {
 
   const result = GetModelOptionDom.getModelOptionDOm(model, '')
 
-  expect(result[1]).toMatchObject({
-    text: 'GPT-4o Mini (OpenAI)',
-  })
+  expect(result).toEqual([
+    expect.objectContaining({
+      value: 'openapi/gpt-4o-mini',
+    }),
+    expect.objectContaining({
+      text: 'GPT-4o Mini (OpenAI)',
+    }),
+  ])
 })

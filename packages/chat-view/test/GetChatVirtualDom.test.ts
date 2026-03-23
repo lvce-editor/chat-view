@@ -759,31 +759,46 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
     sessions,
     viewMode: 'detail',
   })
-  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
-  const fileIconNode = result.find((node) => node.className === ClassNames.FileIcon)
-  const toolPrefixNode = result.find((node) => node.text === 'read_file ')
-  const fileNameNode = result.find((node) => node.text === 'index.html')
-  const fileNameLinkNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink)
-  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
-
-  expect(toolCallItem).toMatchObject({
-    title: uri,
-    type: VirtualDomElements.Li,
-  })
-  expect(fileIconNode).toBeDefined()
-  expect(toolPrefixNode).toBeDefined()
-  expect(fileNameNode).toBeDefined()
-  expect(fileNameSpanNode).toBeDefined()
-  expect(fileNameLinkNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
-  expect(fileNameSpanNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
+  const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
+  expect(toolCallDomStart).toBeGreaterThan(-1)
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: uri,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'read_file ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'index.html',
+      type: VirtualDomElements.Text,
+    }),
+  ])
 })
 
 test('getChatVirtualDOm should render assistant read_file path as clickable filename', () => {
@@ -818,18 +833,47 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
   const fileNameLinkNode = result.find(
     (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === path,
   )
-  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
-
-  expect(fileNameLinkNode).toMatchObject({
-    'data-uri': path,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
-  expect(fileNameSpanNode).toMatchObject({
-    'data-uri': path,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
+  expect(fileNameLinkNode).toBeDefined()
+  const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
+  expect(toolCallDomStart).toBeGreaterThan(-1)
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: path,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'read_file ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': path,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': path,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'index.html',
+      type: VirtualDomElements.Text,
+    }),
+  ])
 })
 
 test('getChatVirtualDOm should render assistant list_files uri as clickable filename', () => {
@@ -861,31 +905,46 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
     sessions,
     viewMode: 'detail',
   })
-  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
-  const toolPrefixNode = result.find((node) => node.text === 'list_files ')
-  const fileNameNode = result.find((node) => node.text === 'src')
-  const fileNameLinkNode = result.find(
-    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
-  )
-  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
-
-  expect(toolCallItem).toMatchObject({
-    title: uri,
-    type: VirtualDomElements.Li,
-  })
-  expect(toolPrefixNode).toBeDefined()
-  expect(fileNameNode).toBeDefined()
-  expect(fileNameSpanNode).toBeDefined()
-  expect(fileNameLinkNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
-  expect(fileNameSpanNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
+  const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
+  expect(toolCallDomStart).toBeGreaterThan(-1)
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: uri,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'list_files ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'src',
+      type: VirtualDomElements.Text,
+    }),
+  ])
 })
 
 test('getChatVirtualDOm should render assistant list_file uri as clickable filename', () => {
@@ -917,26 +976,46 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     sessions,
     viewMode: 'detail',
   })
-  const toolCallItem = result.find((node) => node.className === ClassNames.ChatOrderedListItem && node.title === uri)
-  const fileNameLinkNode = result.find(
-    (node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallReadFileLink && node['data-uri'] === uri,
-  )
-  const fileNameSpanNode = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.ChatToolCallFileName)
-
-  expect(toolCallItem).toMatchObject({
-    title: uri,
-    type: VirtualDomElements.Li,
-  })
-  expect(fileNameLinkNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
-  expect(fileNameSpanNode).toMatchObject({
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
-  })
+  const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
+  expect(toolCallDomStart).toBeGreaterThan(-1)
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedList,
+      type: VirtualDomElements.Ol,
+    },
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItem,
+      title: uri,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      text: 'list_file ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': uri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'package.json',
+      type: VirtualDomElements.Text,
+    }),
+  ])
 })
 
 test('getChatVirtualDOm should render read_file not-found status', () => {
