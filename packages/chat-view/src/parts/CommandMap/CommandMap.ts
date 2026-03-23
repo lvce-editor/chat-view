@@ -71,6 +71,7 @@ import { saveState } from '../SaveState/SaveState.ts'
 import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAddContextButtonEnabled.ts'
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
+import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
@@ -164,6 +165,7 @@ export const commandMap = {
   'Chat.setAddContextButtonEnabled': wrapCommand(SetAddContextButtonEnabled.setAddContextButtonEnabled),
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
+  'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),

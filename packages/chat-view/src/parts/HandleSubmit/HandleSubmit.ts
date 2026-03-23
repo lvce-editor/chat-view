@@ -23,6 +23,7 @@ import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/Is
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
+import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
 const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   if (!state.messagesAutoScrollEnabled) {
@@ -140,6 +141,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         viewMode: 'detail',
       }),
     )
+    optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   } else {
     await appendChatViewEvent({
       sessionId: selectedSessionId,
@@ -167,6 +169,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         sessions: updatedSessions,
       }),
     )
+    optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   }
 
   set(state.uid, state, optimisticState)
