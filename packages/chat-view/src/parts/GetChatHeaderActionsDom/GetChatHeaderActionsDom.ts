@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -80,7 +80,7 @@ export const getChatHeaderActionsDom = (
     {
       childCount: items.length,
       className: ClassNames.ChatActions,
-      role: 'toolbar',
+      role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
     ...items.flatMap(getHeaderActionVirtualDom),
