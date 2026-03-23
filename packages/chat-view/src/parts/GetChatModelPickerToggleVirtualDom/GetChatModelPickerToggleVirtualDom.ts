@@ -4,6 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatModelPickerToggleVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,

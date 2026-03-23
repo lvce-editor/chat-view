@@ -93,6 +93,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   const newContent = await FileSystem.readFile(`${tmpDir}/index.html`)
   if (newContent !== 'hello updated') {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(`Expected updated file content to be "hello updated", got "${newContent}"`)
   }
 }

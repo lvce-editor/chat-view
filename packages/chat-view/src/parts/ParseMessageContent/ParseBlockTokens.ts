@@ -67,6 +67,7 @@ const getEmptyTextNode = (): readonly MessageIntermediateNode[] => {
   ]
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly MessageIntermediateNode[] => {
   if (tokens.length === 0) {
     return getEmptyTextNode()

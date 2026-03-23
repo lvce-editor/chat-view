@@ -100,6 +100,7 @@ export const getProjectListDom = (
   selectedProjectId: string,
   selectedSessionId: string,
   projectListScrollTop: number,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   showBackToChatsButton = false,
 ): readonly VirtualDomNode[] => {
   const blankProjectId = projects.find((project) => project.name === '_blank')?.id || projects[0]?.id || ''

@@ -19,6 +19,7 @@ export const updateMessageTextInSelectedSession = async (
   selectedSessionId: string,
   messageId: string,
   text: string,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   inProgress: boolean,
 ): Promise<{ readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] }> => {
   let updatedMessage: ChatSession['messages'][number] | undefined
