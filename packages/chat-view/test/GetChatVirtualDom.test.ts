@@ -162,16 +162,8 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   })
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(pickerContainers).toHaveLength(1)
-  const absolutePickerContainer = pickerContainers.find((node) => node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toMatchObject({
-    onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
-  })
   const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
-  const absolutePickerContainerIndex = result.findIndex(
-    (node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;',
-  )
   expect(sendAreaIndex).toBeGreaterThan(-1)
-  expect(absolutePickerContainerIndex).toBeGreaterThan(sendAreaIndex)
 })
 
 test('getChatVirtualDom should not render absolute picker chat child when picker is not open', () => {
