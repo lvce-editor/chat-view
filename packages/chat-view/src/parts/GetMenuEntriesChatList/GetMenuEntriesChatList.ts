@@ -1,6 +1,6 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
-import * as ViewletExplorerStrings from '../ChatStrings/ChatStrings.ts'
+import * as ViewletChatStrings from '../ChatStrings/ChatStrings.ts'
 
 export const getMenuEntriesChatList = (sessionId: string = ''): readonly MenuEntry[] => {
   return [
@@ -9,14 +9,14 @@ export const getMenuEntriesChatList = (sessionId: string = ''): readonly MenuEnt
       command: 'Chat.handleClickRename',
       flags: MenuItemFlags.None,
       id: 'rename',
-      label: ViewletExplorerStrings.rename(),
+      label: ViewletChatStrings.rename(),
     },
     {
       args: [sessionId],
       command: 'Chat.handleClickDelete',
       flags: MenuItemFlags.None,
       id: 'archive',
-      label: ViewletExplorerStrings.archive(),
+      label: ViewletChatStrings.archive(),
     },
   ]
 }

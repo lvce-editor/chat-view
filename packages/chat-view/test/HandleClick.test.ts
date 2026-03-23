@@ -193,6 +193,26 @@ test('handleClick should select model from model picker item and close picker', 
   expect(result.modelPickerSearchValue).toBe('')
 })
 
+test('handleClick should select model from delegated model picker list click using y coordinate', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    height: 400,
+    modelPickerOpen: true,
+    modelPickerSearchValue: '',
+    models: [
+      { id: 'test', name: 'Test' },
+      { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini' },
+      { id: 'codex-5.3', name: 'Codex 5.3' },
+    ],
+    selectedModelId: 'test',
+    y: 20,
+  }
+  const result = await HandleClick.handleClick(state, 'model-picker-list', '', 10, 358)
+  expect(result.selectedModelId).toBe('openapi/gpt-4.1-mini')
+  expect(result.modelPickerOpen).toBe(false)
+  expect(result.modelPickerSearchValue).toBe('')
+})
+
 test('handleClick should login via auth bridge and persist backend access token', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
