@@ -18,6 +18,7 @@ export interface GetAiResponseRequestOptions {
   readonly questionToolEnabled?: boolean
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
+  readonly systemPrompt?: string
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
   readonly useMockApi: boolean

@@ -88,6 +88,7 @@ export interface ChatState {
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
   readonly streamingEnabled: boolean
+  readonly systemPrompt: string
   readonly textAreaPaddingBottom: number
   readonly textAreaPaddingLeft: number
   readonly textAreaPaddingRight: number

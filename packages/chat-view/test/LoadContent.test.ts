@@ -175,6 +175,20 @@ test('loadContent should restore selectedModelId from savedState', async () => {
   expect(result.selectedModelId).toBe('claude-code')
 })
 
+test('loadContent should restore systemPrompt from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    systemPrompt: '',
+  }
+  const savedState = {
+    systemPrompt: 'You are an expert TypeScript coding assistant.',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.systemPrompt).toBe('You are an expert TypeScript coding assistant.')
+})
+
 test('loadContent should restore detail view from savedState', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

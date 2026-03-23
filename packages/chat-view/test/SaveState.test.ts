@@ -18,12 +18,14 @@ test('saveState should persist global state without session payloads', () => {
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
     ],
+    systemPrompt: 'You are a helpful coding assistant.',
   }
   const result = SaveState.saveState(state)
   expect(result.composerValue).toBe('draft')
   expect(result.nextMessageId).toBe(4)
   expect('sessions' in result).toBe(false)
   expect(result.selectedModelId).toBe('codex-5.3')
+  expect(result.systemPrompt).toBe('You are a helpful coding assistant.')
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.renamingSessionId).toBe('session-1')
   expect(result.searchFieldVisible).toBe(true)

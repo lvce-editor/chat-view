@@ -57,11 +57,17 @@ export const getOpenAiParams = (
   includeObfuscation: boolean,
   tools: readonly unknown[],
   webSearchEnabled: boolean,
+  systemPrompt = '',
   previousResponseId?: string,
 ): object => {
   const openAiTools = getOpenAiTools(tools)
   return {
     input,
+    ...(systemPrompt
+      ? {
+          instructions: systemPrompt,
+        }
+      : {}),
     model: modelId,
     ...(stream
       ? {
@@ -762,6 +768,7 @@ export const getOpenApiAssistantText = async (
     onToolCallsChunk,
     questionToolEnabled = false,
     stream,
+    systemPrompt = '',
     useChatNetworkWorkerForRequests = false,
     useChatToolWorker = true,
     webSearchEnabled = false,
@@ -774,7 +781,7 @@ export const getOpenApiAssistantText = async (
   const maxToolIterations = 4
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
-    const postBody = getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, previousResponseId)
+    const postBody = getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, systemPrompt, previousResponseId)
 
     if (stream) {
       const streamResult = useChatNetworkWorkerForRequests

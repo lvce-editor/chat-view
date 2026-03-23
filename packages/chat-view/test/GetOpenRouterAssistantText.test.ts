@@ -89,6 +89,52 @@ test('getOpenRouterAssistantText should return success result when response is o
   }
 })
 
+test('getOpenRouterAssistantText should prepend system message when systemPrompt is provided', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+      '',
+      0,
+      false,
+      true,
+      false,
+      'Respond as a code reviewer.',
+    )
+    expect(result).toEqual({
+      text: 'hello from openrouter',
+      type: 'success',
+    })
+    const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
+    expect(payload.messages).toEqual([
+      { content: 'Respond as a code reviewer.', role: 'system' },
+      { content: 'hello', role: 'user' },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenRouterAssistantText should return request-failed error result when fetch throws', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {

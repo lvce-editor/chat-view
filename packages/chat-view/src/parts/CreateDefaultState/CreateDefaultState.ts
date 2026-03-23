@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
+import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
@@ -97,6 +98,7 @@ export const createDefaultState = (): ChatState => {
     ],
     showRunMode: false,
     streamingEnabled: true,
+    systemPrompt: getDefaultSystemPrompt(),
     textAreaPaddingBottom: 0,
     textAreaPaddingLeft: 12,
     textAreaPaddingRight: 12,
