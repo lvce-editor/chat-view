@@ -1,15 +1,14 @@
 // cspell:ignore openrouter
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('handleSubmit should add a user message from composer value', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -27,6 +26,8 @@ test('handleSubmit should add a user message from composer value', async () => {
 })
 
 test('handleSubmit should create a new session and switch to detail mode from list mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -50,6 +51,8 @@ test('handleSubmit should create a new session and switch to detail mode from li
 })
 
 test('handleSubmit should ignore blank composer value', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = { ...createDefaultState(), composerValue: '   ' }
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions[0].messages).toHaveLength(0)
@@ -57,6 +60,8 @@ test('handleSubmit should ignore blank composer value', async () => {
 })
 
 test('handleSubmit should use OpenRouter response for openRouter models', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -88,6 +93,8 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
 })
 
 test('handleSubmit should not fall back to mock response for openRouter models when api key is missing', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -107,6 +114,8 @@ test('handleSubmit should not fall back to mock response for openRouter models w
 })
 
 test('handleSubmit should not fall back to mock response for openRouter models when request fails', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -135,6 +144,8 @@ test('handleSubmit should not fall back to mock response for openRouter models w
 })
 
 test('handleSubmit should show too many requests message for OpenRouter 429 responses', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -166,6 +177,8 @@ test('handleSubmit should show too many requests message for OpenRouter 429 resp
 })
 
 test('handleSubmit should use OpenAPI response for openApi models', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -199,6 +212,8 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
 })
 
 test('handleSubmit should not fall back to mock response for openApi models when api key is missing', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -219,6 +234,8 @@ test('handleSubmit should not fall back to mock response for openApi models when
 })
 
 test('handleSubmit should include OpenRouter limit reset and usage details in 429 message when available', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -272,6 +289,8 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
 })
 
 test('handleSubmit should update assistant message incrementally when streaming is enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -323,6 +342,8 @@ test('handleSubmit should update assistant message incrementally when streaming 
 })
 
 test('handleSubmit should suppress streaming function call data events by default', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -422,6 +443,8 @@ test('handleSubmit should suppress streaming function call data events by defaul
 })
 
 test('handleSubmit should emit streaming function call data events when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -488,6 +511,8 @@ test('handleSubmit should emit streaming function call data events when enabled'
 })
 
 test('handleSubmit should clear selected session messages for /clear', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = {
     ...createDefaultState(),
     composerValue: '/clear',
@@ -522,6 +547,8 @@ test('handleSubmit should clear selected session messages for /clear', async () 
 })
 
 test('handleSubmit should create a new session for /new', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = {
     ...createDefaultState(),
     composerValue: '/new',
@@ -536,6 +563,8 @@ test('handleSubmit should create a new session for /new', async () => {
 })
 
 test('handleSubmit should append help response for /help', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = {
     ...createDefaultState(),
     composerValue: '/help',
@@ -550,6 +579,8 @@ test('handleSubmit should append help response for /help', async () => {
 })
 
 test('handleSubmit should append markdown export for /export', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = {
     ...createDefaultState(),
     composerValue: '/export',
@@ -580,12 +611,14 @@ test('handleSubmit should append markdown export for /export', async () => {
 })
 
 test('handleSubmit should inject mentioned file context into ai request messages', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
     'ExtensionHostManagement.activateByEvent': async () => {},
     'FileSystem.readFile': async () => 'const value = 1',
   })
-  const mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
     'ExtensionHostCommand.executeCommand': async (_id: string, payload: any) => {
       expect(payload.messages).toHaveLength(2)
       expect(payload.messages[1].text).toContain('Referenced file context:')
@@ -614,6 +647,8 @@ test('handleSubmit should inject mentioned file context into ai request messages
 })
 
 test('handleSubmit should generate ai session title for new session when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
