@@ -7,6 +7,7 @@ import { getNextChatHistoryState } from '../GetNextChatHistoryState/GetNextChatH
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
 import * as SubmitRename from '../SubmitRename/SubmitRename.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const handleKeyDown = async (state: ChatState, key: string, shiftKey: boolean): Promise<ChatState> => {
   const { composerValue, renamingSessionId, selectedSessionId, sessions, viewMode } = state
   if (state.focus === 'list' && viewMode === 'list') {

@@ -31,6 +31,7 @@ export const SessionPrefix = 'session:'
 export const RenamePrefix = 'session-rename:'
 export const ModelPickerItemPrefix = 'model-picker-item:'
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type InputName =
   | typeof Notifications
   | typeof Problems

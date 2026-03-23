@@ -5,6 +5,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled: boolean): readonly VirtualDomNode[] => {
   const sendButtonClassName = getSendButtonClassName(isSendDisabled)
   return [

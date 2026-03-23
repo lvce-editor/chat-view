@@ -25,6 +25,7 @@ export const getRenderer = (diffType: number): Renderer => {
     case DiffType.RenderValue:
       return RenderValue.renderValue
     default:
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw new Error('unknown renderer')
   }
 }
