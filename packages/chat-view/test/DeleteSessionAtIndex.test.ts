@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { deleteSessionAtIndex } from '../src/parts/DeleteSession/DeleteSession.ts'
+import { deleteSessionAtIndex } from '../src/parts/DeleteSessionAtIndex/DeleteSessionAtIndex.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('deleteSessionAtIndex should delete a session at the given index', async () => {
