@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openRouterApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
@@ -17,7 +17,6 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     openRouterApiKeyState: 'saving' as const,
   }
   set(state.uid, state, optimisticState)
-  // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
   const persistedState = await setOpenRouterApiKey(optimisticState, openRouterApiKey)

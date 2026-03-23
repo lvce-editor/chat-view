@@ -1,13 +1,11 @@
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
+import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { getChatViewEvents, resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import type { ChatViewEvent } from '../src/parts/ChatViewEvent/ChatViewEvent.ts'
+import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleDropFiles from '../src/parts/HandleDropFiles/HandleDropFiles.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
-
-beforeEach(() => {
-  resetChatSessionStorage()
-})
 
 const createFile = (name: string, type: string, content: string): File => {
   const blob = new Blob([content], { type })
@@ -21,6 +19,15 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     selectedSessionId: 'session-1',
   }
   const files = [createFile('photo.png', 'image/png', 'image-bytes')]
+  const storedEvents: ChatViewEvent[] = []
+  using mockRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.appendEvent'(event: ChatViewEvent) {
+      storedEvents.push(event)
+    },
+    'ChatStorage.getEvents'(sessionId: string) {
+      return storedEvents.filter((event) => event.sessionId === sessionId)
+    },
+  })
 
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
@@ -39,6 +46,10 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     throw new TypeError('Expected chat-attachment-added event')
   }
   expect(events[0].blob).toBeInstanceOf(Blob)
+  expect(mockRpc.invocations).toEqual([
+    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.png', sessionId: 'session-1' })],
+    ['ChatStorage.getEvents', 'session-1'],
+  ])
 })
 
 test('handleDropFiles is no-op when no session is selected', async () => {
@@ -47,11 +58,17 @@ test('handleDropFiles is no-op when no session is selected', async () => {
     composerDropActive: true,
     selectedSessionId: '',
   }
-  const files = [createFile('note.txt', 'text/plain', 'hello')]
 
+  const files = [createFile('note.txt', 'text/plain', 'hello')]
+  using mockRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getEvents'() {
+      return []
+    },
+  })
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
   expect(newState.composerDropActive).toBe(false)
   const events = await getChatViewEvents()
   expect(events).toHaveLength(0)
+  expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])
 })

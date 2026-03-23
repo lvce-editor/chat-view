@@ -1,8 +1,11 @@
 import { expect, test } from '@jest/globals'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { handleClickNew } from '../src/parts/HandleClickNew/HandleClickNew.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('handleClickNew should create and select a new session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state = {
     ...createDefaultState(),
     composerValue: 'draft message',

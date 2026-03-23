@@ -301,3 +301,33 @@ export const theNameIsNotValid = (): string => {
 export const leadingOrTrailingWhitespaceDetected = (): string => {
   return i18nString(UiStrings.LeadingOrTrailingWhitespaceDetected)
 }
+
+export const openApiApiKeyRequiredMessage = i18nString('OpenAI API key is not configured. Enter your OpenAI API key below and click Save.')
+
+export const openApiRequestFailedMessage = i18nString('OpenAI request failed.')
+
+export const openApiRequestFailedOfflineMessage = i18nString('OpenAI request failed because you are offline. Please check your internet connection.')
+
+export const openRouterApiKeyRequiredMessage = i18nString('OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.')
+
+export const openRouterRequestFailedMessage = i18nString('OpenRouter request failed. Possible reasons:')
+
+export const openRouterTooManyRequestsMessage = i18nString('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
+
+export const openRouterRequestFailureReasons = [
+  i18nString('ContentSecurityPolicyViolation: Check DevTools for details.'),
+  i18nString('OpenRouter server offline: Check DevTools for details.'),
+  i18nString('Check your internet connection.'),
+] as const
+
+export const openRouterTooManyRequestsReasons = [
+  i18nString('Wait a short time and retry your request.'),
+  i18nString('Reduce request frequency to avoid rate limits.'),
+  i18nString('Use a different model if this one is saturated.'),
+] as const
+
+export const backendUrlRequiredMessage = i18nString('Backend URL is not configured. Configure your backend URL and try again.')
+
+export const backendAccessTokenRequiredMessage = i18nString('You are not logged in. Click Login to continue.')
+
+export const backendCompletionFailedMessage = i18nString('Backend completion request failed.')

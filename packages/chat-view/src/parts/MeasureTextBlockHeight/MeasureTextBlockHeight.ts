@@ -9,6 +9,5 @@ export const measureTextBlockHeight = async (
 ): Promise<number> => {
   // Upstream renderer types currently require number, but runtime accepts px strings.
   // Keep forwarding the string to preserve chat-view behavior until upstream is updated.
-  // @ts-ignore
   return RendererWorker.measureTextBlockHeight(text, fontFamily, fontSize, lineHeight, width)
 }

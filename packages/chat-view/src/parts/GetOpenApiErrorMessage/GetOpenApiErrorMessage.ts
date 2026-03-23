@@ -1,5 +1,5 @@
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
-import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../chatViewStrings/chatViewStrings.ts'
+import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../ChatStrings/ChatStrings.ts'
 
 const isOffline = (): boolean => {
   if (!globalThis.navigator) {

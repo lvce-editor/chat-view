@@ -1,18 +1,16 @@
 // cspell:ignore openrouter
-import { beforeEach, expect, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { resetChatSessionStorage } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-beforeEach(() => {
-  resetChatSessionStorage()
-})
-
 test('handleClick should create a new session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'create-session')
   expect(result.sessions).toHaveLength(2)
@@ -21,6 +19,8 @@ test('handleClick should create a new session', async () => {
 })
 
 test('handleClick should create a new session in the selected project from project action button', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     projectExpandedIds: ['project-1'],
@@ -39,6 +39,8 @@ test('handleClick should create a new session in the selected project from proje
 })
 
 test('handleClick should select a session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     sessions: [
@@ -52,6 +54,8 @@ test('handleClick should select a session', async () => {
 })
 
 test('handleClick should switch from normal mode to chat-focus mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     viewMode: 'detail',
@@ -62,6 +66,8 @@ test('handleClick should switch from normal mode to chat-focus mode', async () =
 })
 
 test('handleClick should switch from chat-focus mode back to remembered normal mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     lastNormalViewMode: 'detail',
@@ -72,6 +78,8 @@ test('handleClick should switch from chat-focus mode back to remembered normal m
 })
 
 test('handleClick should toggle search field visibility on', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     searchEnabled: true,
@@ -82,6 +90,8 @@ test('handleClick should toggle search field visibility on', async () => {
 })
 
 test('handleClick should clear search value when toggling search field visibility off', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     searchEnabled: true,
@@ -94,6 +104,8 @@ test('handleClick should clear search value when toggling search field visibilit
 })
 
 test('handleClick should mark session for rename and prefill composer', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'session-rename:session-1')
   expect(result.renamingSessionId).toBe('session-1')
@@ -101,6 +113,8 @@ test('handleClick should mark session for rename and prefill composer', async ()
 })
 
 test('handleClick should delete a session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     sessions: [
@@ -115,18 +129,24 @@ test('handleClick should delete a session', async () => {
 })
 
 test('handleClick should ignore empty action name', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, '')
   expect(result).toBe(state)
 })
 
 test('handleClick should ignore selecting unknown session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'session:missing')
   expect(result).toBe(state)
 })
 
 test('handleClick should allow deleting last session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     renamingSessionId: 'session-1',
@@ -140,12 +160,16 @@ test('handleClick should allow deleting last session', async () => {
 })
 
 test('handleClick should keep state for unknown action', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'unknown-action')
   expect(result).toBe(state)
 })
 
 test('handleClick should toggle model picker open state', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: false,
@@ -155,6 +179,8 @@ test('handleClick should toggle model picker open state', async () => {
 })
 
 test('handleClick should select model from model picker item and close picker', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     modelPickerOpen: true,
@@ -188,6 +214,8 @@ test('handleClick should select model from delegated model picker list click usi
 })
 
 test('handleClick should login via auth bridge and persist backend access token', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Auth.login': async () => {
       return {
@@ -225,6 +253,8 @@ test('handleClick should login via auth bridge and persist backend access token'
 })
 
 test('handleClick should logout and clear persisted backend access token', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Auth.logout': async () => {},
     'Preferences.update': async () => {},
@@ -254,6 +284,8 @@ test('handleClick should logout and clear persisted backend access token', async
 })
 
 test('handleClick should submit message when clicking send', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -270,6 +302,8 @@ test('handleClick should submit message when clicking send', async () => {
 })
 
 test('handleClickSend should submit message', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
@@ -286,6 +320,8 @@ test('handleClickSend should submit message', async () => {
 })
 
 test('handleClick should save openrouter api key to user settings', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
@@ -300,6 +336,8 @@ test('handleClick should save openrouter api key to user settings', async () => 
 })
 
 test('handleClick should retry previous prompt after saving openrouter api key', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
@@ -350,6 +388,8 @@ test('handleClick should retry previous prompt after saving openrouter api key',
 })
 
 test('handleClick should open OpenRouter API keys settings', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
@@ -360,6 +400,8 @@ test('handleClick should open OpenRouter API keys settings', async () => {
 })
 
 test('handleClick should open OpenRouter API keys website', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openExternal': async () => {},
   })
@@ -370,6 +412,8 @@ test('handleClick should open OpenRouter API keys website', async () => {
 })
 
 test('handleClick should save openapi api key to user settings', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
@@ -384,6 +428,8 @@ test('handleClick should save openapi api key to user settings', async () => {
 })
 
 test('handleClick should retry previous prompt after saving openapi api key', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
     'Preferences.update': async () => {},
@@ -436,6 +482,8 @@ test('handleClick should retry previous prompt after saving openapi api key', as
 })
 
 test('handleClick should open OpenAPI API keys settings', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = RendererWorker.registerMockRpc({
     'Main.openUri': async () => {},
   })
@@ -446,6 +494,8 @@ test('handleClick should open OpenAPI API keys settings', async () => {
 })
 
 test('handleClick should open OpenAPI API keys website', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openExternal': async () => {},
   })
@@ -456,6 +506,8 @@ test('handleClick should open OpenAPI API keys website', async () => {
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     height: 400,
@@ -474,6 +526,8 @@ test('handleClickList should open detail for session index from y coordinate', a
 })
 
 test('handleClickList should keep state when click index has no session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     height: 120,
@@ -492,6 +546,8 @@ test('handleClickList should keep state when click index has no session', async 
 })
 
 test('handleClickList should ignore clicks in header area', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     height: 300,
@@ -513,6 +569,8 @@ test('handleClickList should ignore clicks in header area', async () => {
 })
 
 test('handleClickList should ignore clicks outside chat bounds', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     height: 300,

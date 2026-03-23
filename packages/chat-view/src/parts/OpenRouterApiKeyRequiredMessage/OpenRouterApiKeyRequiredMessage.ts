@@ -1,1 +1,1 @@
-export { openRouterApiKeyRequiredMessage } from '../chatViewStrings/chatViewStrings.ts'
+export { openRouterApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'

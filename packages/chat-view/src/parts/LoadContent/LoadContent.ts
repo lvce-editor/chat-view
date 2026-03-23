@@ -1,6 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { listChatSessions, saveChatSession, setChatStorageWorkerEnabled } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
@@ -30,7 +30,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     authEnabled,
     authRefreshToken,
     backendUrl,
-    chatStorageWorkerEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
     openApiApiKey,
@@ -45,7 +44,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
-  setChatStorageWorkerEnabled(chatStorageWorkerEnabled)
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -99,7 +97,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     authStatus: authAccessToken ? 'signed-in' : 'signed-out',
     backendUrl,
     chatListScrollTop,
-    chatStorageWorkerEnabled,
     composerDropActive: false,
     composerDropEnabled,
     composerValue: savedComposerValue ?? state.composerValue,
