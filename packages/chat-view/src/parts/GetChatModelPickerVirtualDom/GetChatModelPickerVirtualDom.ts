@@ -28,6 +28,7 @@ export const getChatModelPickerToggleVirtualDom = (
     },
     {
       childCount: 1,
+      className: ClassNames.SelectLabel,
       type: VirtualDomElements.Span,
     },
     text(selectedModelLabel),
