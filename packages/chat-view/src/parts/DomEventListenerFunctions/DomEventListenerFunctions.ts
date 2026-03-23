@@ -44,3 +44,4 @@ export const HandleProjectListContextMenu = 44
 export const HandleMissingOpenRouterApiKeyFormSubmit = 45
 export const HandleClickModelPickerToggle = 46
 export const HandleContextMenuChatModelPicker = 47
+export const HandleClickModelPickerList = 48
