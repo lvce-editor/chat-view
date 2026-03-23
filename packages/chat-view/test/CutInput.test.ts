@@ -5,7 +5,8 @@ import * as CutInput from '../src/parts/CutInput/CutInput.ts'
 
 test('cutInput should copy composer value and clear composer', async () => {
   using mockRpc = ClipBoardWorker.registerMockRpc({
-    'ClipBoard.writeText'() {},
+    'ClipBoard.readText': async (text: string) => {},
+    'ClipBoard.writeText': async (text: string) => {},
   })
   const state = {
     ...createDefaultState(),
@@ -16,5 +17,5 @@ test('cutInput should copy composer value and clear composer', async () => {
   const result = await CutInput.cutInput(state)
   expect(result.composerValue).toBe('')
   expect(result.composerHeight).toBe(32)
-  expect(mockRpc.invocations).toEqual([])
+  expect(mockRpc.invocations).toEqual([['ClipBoard.writeText', 'hello cut']])
 })
