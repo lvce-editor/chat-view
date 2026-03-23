@@ -4,6 +4,20 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 
+const getAuthErrorDom = (hasAuthError: boolean, authErrorMessage: string): readonly VirtualDomNode[] => {
+  if (!hasAuthError) {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatAuthError,
+      type: VirtualDomElements.Span,
+    },
+    text(authErrorMessage),
+  ]
+}
+
 export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   authEnabled = false,
@@ -31,15 +45,6 @@ export const getChatHeaderDomDetailMode = (
     },
     text(selectedSessionTitle),
     ...getChatHeaderActionsDom('detail', authEnabled, authStatus),
-    ...(hasAuthError
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatAuthError,
-            type: VirtualDomElements.Span,
-          },
-          text(authErrorMessage),
-        ]
-      : []),
+    ...getAuthErrorDom(hasAuthError, authErrorMessage),
   ]
 }

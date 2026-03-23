@@ -11,6 +11,20 @@ const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly Virtu
   return [
     {
       childCount: 2,
+<<<<<<< HEAD
+=======
+      className: ClassNames.ChatModelPickerContainer,
+      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatModelPicker,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 3 + visibleModels.length,
+      className: ClassNames.ChatModelPicker,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 2,
+>>>>>>> origin/main
       className: ClassNames.ChatModelPickerHeader,
       type: VirtualDomElements.Div,
     },
