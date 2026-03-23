@@ -206,7 +206,6 @@ test('getChatVirtualDom should render model picker usage cost text with subdued 
   const result = renderChatView({
     modelPickerOpen: true,
     models,
-    newChatModelPickerEnabled: true,
     selectedModelId: 'test',
     viewMode: 'detail',
   })
