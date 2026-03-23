@@ -41,6 +41,10 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.Select .MaskIcon {
+  width: 20px;
+}
+
 .ChatInputBox{
   width: 100%;
   margin: 0;
@@ -73,17 +77,14 @@ export const getCss = (
 }
 
 button.Select[name='model-picker-toggle']{
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   gap: 4px;
-  width: auto;
-  max-width: 100%;
-  padding: 0 6px;
   border: none;
   border-radius: 4px;
   background: transparent;
   color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
-  appearance: none;
+  padding:0 !important;
+  min-width: 0;
 }
 
 button.Select[name='model-picker-toggle']:hover{
