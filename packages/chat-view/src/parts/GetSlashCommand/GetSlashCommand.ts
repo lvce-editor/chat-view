@@ -1,10 +1,16 @@
-const slashCommandRegex = /^\/(clear|export|help|new)(?:\s+.*)?$/
+import { hasSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 
-export const getSlashCommand = (value: string): 'clear' | 'export' | 'help' | 'new' | undefined => {
+const slashCommandRegex = /^\/([a-z][a-z0-9-]*)(?:\s+.*)?$/i
+
+export const getSlashCommand = (value: string): string | undefined => {
   const trimmed = value.trim()
   const match = trimmed.match(slashCommandRegex)
   if (!match) {
     return undefined
   }
-  return match[1] as 'clear' | 'export' | 'help' | 'new'
+  const command = match[1].toLowerCase()
+  if (!hasSlashCommand(command)) {
+    return undefined
+  }
+  return command
 }
