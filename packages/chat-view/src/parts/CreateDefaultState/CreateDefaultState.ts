@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
+import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
@@ -11,6 +12,7 @@ export const createDefaultState = (): ChatState => {
   const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
+  const models = getDefaultModels()
   return {
     addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
@@ -55,7 +57,7 @@ export const createDefaultState = (): ChatState => {
     mockApiCommandId: '',
     modelPickerOpen: false,
     modelPickerSearchValue: '',
-    models: getDefaultModels(),
+    models,
     nextMessageId: 1,
     openApiApiBaseUrl: 'https://api.openai.com/v1',
     openApiApiKey: '',
@@ -117,6 +119,7 @@ export const createDefaultState = (): ChatState => {
     userSubscriptionPlan: '',
     userUsedTokens: 0,
     viewMode: 'list',
+    visibleModels: getVisibleModels(models, ''),
     voiceDictationEnabled: false,
     warningCount: 0,
     webSearchEnabled: true,

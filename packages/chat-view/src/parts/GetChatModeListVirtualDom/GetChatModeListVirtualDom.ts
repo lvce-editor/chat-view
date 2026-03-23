@@ -41,6 +41,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
+  readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -95,6 +96,7 @@ export const getChatModeListVirtualDom = ({
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
+  visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
@@ -129,6 +131,6 @@ export const getChatModeListVirtualDom = ({
       voiceDictationEnabled,
     ),
     ...getDropOverlayVirtualDom(isDropOverlayVisible),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
+    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
   ]
 }

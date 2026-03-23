@@ -5,12 +5,13 @@ import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleV
 
 export const getChatModelPickerVirtualDom = (
   models: readonly ChatModel[],
+  visibleModels: readonly ChatModel[],
   selectedModelId: string,
   modelPickerOpen: boolean,
   modelPickerSearchValue: string,
 ): readonly VirtualDomNode[] => {
   return [
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
-    ...(modelPickerOpen ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
+    ...(modelPickerOpen ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
   ]
 }

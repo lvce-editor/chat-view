@@ -69,6 +69,7 @@ export interface GetChatVirtualDomOptions {
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
   readonly viewMode: ChatViewMode
+  readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -114,6 +115,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     usageOverviewEnabled,
     useChatMathWorker = false,
     viewMode,
+    visibleModels = models,
     voiceDictationEnabled = false,
   } = options
 
@@ -158,6 +160,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensUsed,
         usageOverviewEnabled,
         useChatMathWorker,
+        visibleModels,
         voiceDictationEnabled,
       })
     case 'detail':
@@ -193,6 +196,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensUsed,
         usageOverviewEnabled,
         useChatMathWorker,
+        visibleModels,
         voiceDictationEnabled,
       })
     case 'list':
@@ -226,6 +230,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensMax,
         tokensUsed,
         usageOverviewEnabled,
+        visibleModels,
         voiceDictationEnabled,
       })
     default:

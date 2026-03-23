@@ -46,6 +46,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     usageOverviewEnabled,
     useChatMathWorker,
     viewMode,
+    visibleModels,
     voiceDictationEnabled,
   } = newState
   if (initial) {
@@ -92,6 +93,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     usageOverviewEnabled,
     useChatMathWorker,
     viewMode,
+    visibleModels,
     voiceDictationEnabled,
   })
   return [ViewletCommand.SetDom2, uid, dom]

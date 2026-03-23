@@ -17,4 +17,5 @@ test('handleModelChange should close and clear model picker state', async () => 
   const result = await HandleModelChange.handleModelChange(state, 'claude-code')
   expect(result.modelPickerOpen).toBe(false)
   expect(result.modelPickerSearchValue).toBe('')
+  expect(result.visibleModels).toBe(result.models)
 })
