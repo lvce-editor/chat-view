@@ -2,175 +2,175 @@ import { i18nString } from '@lvce-editor/i18n'
 import * as UiStrings from '../UiStrings/UiStrings.ts'
 
 export const chatTitle = (): string => {
-  return i18nString('Chat')
+  return i18nString(UiStrings.Chat)
 }
 
 export const chats = (): string => {
-  return i18nString('Chat')
+  return i18nString(UiStrings.Chat)
 }
 
 export const newChat = (): string => {
-  return i18nString('New Chat')
+  return i18nString(UiStrings.NewChat)
 }
 
 export const addProject = (): string => {
-  return i18nString('Add Project')
+  return i18nString(UiStrings.AddProjectChat)
 }
 
 export const debug = (): string => {
-  return i18nString('Debug')
+  return i18nString(UiStrings.Debug)
 }
 
 export const backToChats = (): string => {
-  return i18nString('Back to chats')
+  return i18nString(UiStrings.BackToChats)
 }
 
 export const backToChatList = (): string => {
-  return i18nString('Back to chat list')
+  return i18nString(UiStrings.BackToChatList)
 }
 
 export const settings = (): string => {
-  return i18nString('Settings')
+  return i18nString(UiStrings.Settings)
 }
 
 export const search = (): string => {
-  return i18nString('Search')
+  return i18nString(UiStrings.Search)
 }
 
 export const searchModels = (): string => {
-  return i18nString('Search models')
+  return i18nString(UiStrings.SearchModels)
 }
 
 export const searchChats = (): string => {
-  return i18nString('Search chats')
+  return i18nString(UiStrings.SearchChats)
 }
 
 export const login = (): string => {
-  return i18nString('Login')
+  return i18nString(UiStrings.Login)
 }
 
 export const logout = (): string => {
-  return i18nString('Logout')
+  return i18nString(UiStrings.Logout)
 }
 
 export const loginToBackend = (): string => {
-  return i18nString('Login to backend')
+  return i18nString(UiStrings.LoginToBackend)
 }
 
 export const logoutFromBackend = (): string => {
-  return i18nString('Logout from backend')
+  return i18nString(UiStrings.LogoutFromBackend)
 }
 
 export const loggingInToBackend = (): string => {
-  return i18nString('Logging in to backend')
+  return i18nString(UiStrings.LoggingInToBackend)
 }
 
 export const chatFocusMode = (): string => {
-  return i18nString('Switch to chat focus mode')
+  return i18nString(UiStrings.SwitchToChatFocusMode)
 }
 
 export const normalChatMode = (): string => {
-  return i18nString('Switch to normal chat mode')
+  return i18nString(UiStrings.SwitchToNormalChatMode)
 }
 
 export const closeChat = (): string => {
-  return i18nString('Close Chat')
+  return i18nString(UiStrings.CloseChat)
 }
 
 export const clickToOpenNewChat = (): string => {
-  return i18nString('Click the + button to open a new chat.')
+  return i18nString(UiStrings.ClickTheAddButtonToOpenANewChat)
 }
 
 export const startConversation = (): string => {
-  return i18nString('Start a conversation by typing below.')
+  return i18nString(UiStrings.StartConversationByTypingBelow)
 }
 
 export const noMatchingModelsFound = (): string => {
-  return i18nString('No matching models have been found.')
+  return i18nString(UiStrings.NoMatchingModelsFound)
 }
 
 export const you = (): string => {
-  return i18nString('You')
+  return i18nString(UiStrings.You)
 }
 
 export const assistant = (): string => {
-  return i18nString('Assistant')
+  return i18nString(UiStrings.Assistant)
 }
 
 export const composePlaceholder = (): string => {
-  return i18nString('Type your message. Enter to send.')
+  return i18nString(UiStrings.ComposePlaceholder)
 }
 
 export const attachImageAsContext = (): string => {
-  return i18nString('Attach Image as Context')
+  return i18nString(UiStrings.AttachImageAsContext)
 }
 
 export const openRouterApiKeyPlaceholder = (): string => {
-  return i18nString('Enter OpenRouter API key')
+  return i18nString(UiStrings.OpenRouterApiKeyPlaceholder)
 }
 
 export const openApiApiKeyPlaceholder = (): string => {
-  return i18nString('Enter OpenAI API key')
+  return i18nString(UiStrings.OpenApiApiKeyPlaceholder)
 }
 
 export const sendMessage = (): string => {
-  return i18nString('Send message')
+  return i18nString(UiStrings.SendMessage)
 }
 
 export const startVoiceDictation = (): string => {
-  return i18nString('Start voice dictation')
+  return i18nString(UiStrings.StartVoiceDictation)
 }
 
 export const addContext = (): string => {
-  return i18nString('Add Context')
+  return i18nString(UiStrings.AddContext)
 }
 
 export const send = (): string => {
-  return i18nString('Send')
+  return i18nString(UiStrings.Send)
 }
 
 export const save = (): string => {
-  return i18nString('Save')
+  return i18nString(UiStrings.Save)
 }
 
 export const saving = (): string => {
-  return i18nString('Saving...')
+  return i18nString(UiStrings.Saving)
 }
 
 export const working = (): string => {
-  return i18nString('Working')
+  return i18nString(UiStrings.Working)
 }
 
 export const getOpenRouterApiKey = (): string => {
-  return i18nString('Get API Key')
+  return i18nString(UiStrings.GetApiKey)
 }
 
 export const getOpenApiApiKey = (): string => {
-  return i18nString('Get API Key')
+  return i18nString(UiStrings.GetApiKey)
 }
 
 export const deleteChatSession = (): string => {
-  return i18nString('Archive')
+  return i18nString(UiStrings.Archive)
 }
 
 export const defaultSessionTitle = (): string => {
-  return i18nString('Chat 1')
+  return i18nString(UiStrings.Chat1)
 }
 
 export const dummyChatA = (): string => {
-  return i18nString('Dummy Chat A')
+  return i18nString(UiStrings.DummyChatA)
 }
 
 export const dummyChatB = (): string => {
-  return i18nString('Dummy Chat B')
+  return i18nString(UiStrings.DummyChatB)
 }
 
 export const dummyChatC = (): string => {
-  return i18nString('Dummy Chat C')
+  return i18nString(UiStrings.DummyChatC)
 }
 
 export const unknownViewMode = (): string => {
-  return i18nString('Unknown view mode')
+  return i18nString(UiStrings.UnknownViewMode)
 }
 
 export const newFile = (): string => {
@@ -306,32 +306,32 @@ export const leadingOrTrailingWhitespaceDetected = (): string => {
   return i18nString(UiStrings.LeadingOrTrailingWhitespaceDetected)
 }
 
-export const openApiApiKeyRequiredMessage = i18nString('OpenAI API key is not configured. Enter your OpenAI API key below and click Save.')
+export const openApiApiKeyRequiredMessage = i18nString(UiStrings.OpenApiApiKeyRequiredMessage)
 
-export const openApiRequestFailedMessage = i18nString('OpenAI request failed.')
+export const openApiRequestFailedMessage = i18nString(UiStrings.OpenApiRequestFailedMessage)
 
-export const openApiRequestFailedOfflineMessage = i18nString('OpenAI request failed because you are offline. Please check your internet connection.')
+export const openApiRequestFailedOfflineMessage = i18nString(UiStrings.OpenApiRequestFailedOfflineMessage)
 
-export const openRouterApiKeyRequiredMessage = i18nString('OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.')
+export const openRouterApiKeyRequiredMessage = i18nString(UiStrings.OpenRouterApiKeyRequiredMessage)
 
-export const openRouterRequestFailedMessage = i18nString('OpenRouter request failed. Possible reasons:')
+export const openRouterRequestFailedMessage = i18nString(UiStrings.OpenRouterRequestFailedMessage)
 
-export const openRouterTooManyRequestsMessage = i18nString('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
+export const openRouterTooManyRequestsMessage = i18nString(UiStrings.OpenRouterTooManyRequestsMessage)
 
 export const openRouterRequestFailureReasons = [
-  i18nString('ContentSecurityPolicyViolation: Check DevTools for details.'),
-  i18nString('OpenRouter server offline: Check DevTools for details.'),
-  i18nString('Check your internet connection.'),
+  i18nString(UiStrings.OpenRouterRequestFailureReasonContentSecurityPolicyViolation),
+  i18nString(UiStrings.OpenRouterRequestFailureReasonServerOffline),
+  i18nString(UiStrings.CheckYourInternetConnection),
 ] as const
 
 export const openRouterTooManyRequestsReasons = [
-  i18nString('Wait a short time and retry your request.'),
-  i18nString('Reduce request frequency to avoid rate limits.'),
-  i18nString('Use a different model if this one is saturated.'),
+  i18nString(UiStrings.WaitAShortTimeAndRetryYourRequest),
+  i18nString(UiStrings.ReduceRequestFrequencyToAvoidRateLimits),
+  i18nString(UiStrings.UseADifferentModelIfThisOneIsSaturated),
 ] as const
 
-export const backendUrlRequiredMessage = i18nString('Backend URL is not configured. Configure your backend URL and try again.')
+export const backendUrlRequiredMessage = i18nString(UiStrings.BackendUrlRequiredMessage)
 
-export const backendAccessTokenRequiredMessage = i18nString('You are not logged in. Click Login to continue.')
+export const backendAccessTokenRequiredMessage = i18nString(UiStrings.BackendAccessTokenRequiredMessage)
 
-export const backendCompletionFailedMessage = i18nString('Backend completion request failed.')
+export const backendCompletionFailedMessage = i18nString(UiStrings.BackendCompletionFailedMessage)
