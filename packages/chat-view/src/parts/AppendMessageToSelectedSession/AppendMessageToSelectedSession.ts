@@ -1,5 +1,5 @@
-import type { ChatMessage, ChatSession } from '../ChatState/ChatState.ts'
-
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 export const appendMessageToSelectedSession = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,

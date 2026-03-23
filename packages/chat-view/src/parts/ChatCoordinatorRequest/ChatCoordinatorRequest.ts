@@ -1,6 +1,6 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
-
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 export interface GetAiResponseRequestOptions {
   readonly assetDir: string
   readonly messageId?: string

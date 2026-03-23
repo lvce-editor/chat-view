@@ -1,4 +1,4 @@
-import type { ChatState } from '../../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 export type SlashCommandHandler = (state: ChatState) => Promise<ChatState>
 

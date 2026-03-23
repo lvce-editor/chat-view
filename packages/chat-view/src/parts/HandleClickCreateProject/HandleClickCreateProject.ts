@@ -1,4 +1,5 @@
-import type { ChatState, Project } from '../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
+import type { Project } from '../Project/Project.ts'
 import { openFolder } from '../OpenFolder/OpenFolder.ts'
 import { selectProject } from '../SelectProject/SelectProject.ts'
 

@@ -1,6 +1,6 @@
 import { VirtualDomElements } from '@lvce-editor/constants'
 import { text, type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallDom } from '../GetToolCallDom/GetToolCallDom.ts'
 

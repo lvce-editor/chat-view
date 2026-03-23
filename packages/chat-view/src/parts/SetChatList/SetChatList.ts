@@ -1,4 +1,5 @@
-import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 
 const dummySessions: readonly ChatSession[] = [

@@ -1,5 +1,4 @@
-import type { ChatModel } from '../ChatState/ChatState.ts'
-
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 export const isOpenApiModel = (selectedModelId: string, models: readonly ChatModel[]): boolean => {
   const selectedModel = models.find((model) => model.id === selectedModelId)
   const normalizedProvider = selectedModel?.provider?.toLowerCase()
