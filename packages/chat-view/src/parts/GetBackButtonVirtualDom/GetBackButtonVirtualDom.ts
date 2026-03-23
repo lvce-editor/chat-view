@@ -1,4 +1,4 @@
-import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -17,7 +17,7 @@ export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconArrowLeft',
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowLeft),
       type: VirtualDomElements.Div,
     },
   ]
