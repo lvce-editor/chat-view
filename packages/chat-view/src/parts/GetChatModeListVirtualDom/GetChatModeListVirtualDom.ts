@@ -44,6 +44,27 @@ export interface GetChatModeListVirtualDomOptions {
   readonly voiceDictationEnabled?: boolean
 }
 
+const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly VirtualDomNode[] => {
+  if (!isDropOverlayVisible) {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
+      name: InputName.ComposerDropTarget,
+      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
+      onDragOver: DomEventListenerFunctions.HandleDragOver,
+      onDrop: DomEventListenerFunctions.HandleDrop,
+      type: VirtualDomElements.Div,
+    },
+    {
+      text: Strings.attachImageAsContext(),
+      type: VirtualDomElements.Text,
+    },
+  ]
+}
+
 export const getChatModeListVirtualDom = ({
   addContextButtonEnabled,
   authEnabled = false,
@@ -107,23 +128,7 @@ export const getChatModeListVirtualDom = ({
       todoListItems,
       voiceDictationEnabled,
     ),
-    ...(isDropOverlayVisible
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
-            name: InputName.ComposerDropTarget,
-            onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-            onDragOver: DomEventListenerFunctions.HandleDragOver,
-            onDrop: DomEventListenerFunctions.HandleDrop,
-            type: VirtualDomElements.Div,
-          },
-          {
-            text: Strings.attachImageAsContext(),
-            type: VirtualDomElements.Text,
-          },
-        ]
-      : []),
+    ...getDropOverlayVirtualDom(isDropOverlayVisible),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
   ]
 }
