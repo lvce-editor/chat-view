@@ -14,7 +14,7 @@ test('create should store state with the given uid', () => {
   expect(newStateTyped).toBeDefined()
   expect(newStateTyped.uid).toBe(uid)
   expect(newStateTyped.models.length).toBeGreaterThan(0)
-  expect(newStateTyped.models).toContainEqual({ id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi', usageCost: 1 })
+  expect(newStateTyped.models).toContainEqual({ id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi' })
   expect(newStateTyped.selectedModelId).toBe('test')
   expect(newStateTyped.sessions).toHaveLength(1)
   expect(newStateTyped.selectedSessionId).toBe('session-1')
