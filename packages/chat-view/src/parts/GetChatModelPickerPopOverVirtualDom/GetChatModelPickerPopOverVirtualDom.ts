@@ -4,12 +4,9 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
+import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import * as InputName from '../InputName/InputName.ts'
-
-const getUsageCostLabel = (model: ChatModel): string => {
-  return `${model.usageCost ?? 1}x`
-}
 
 export const getChatModelPickerPopOverVirtualDom = (
   models: readonly ChatModel[],
