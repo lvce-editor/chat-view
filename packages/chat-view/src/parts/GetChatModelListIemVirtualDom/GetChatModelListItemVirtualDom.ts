@@ -1,4 +1,5 @@
-import { text, VirtualDomElements, VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker';
+import { text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
