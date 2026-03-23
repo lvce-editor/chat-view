@@ -155,6 +155,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandleContextMenuChatModelPicker,
+      params: ['handleContextMenuChatModelPicker'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleKeyDown,
       params: ['handleKeyDown', EventExpression.Key, EventExpression.ShiftKey],
     },
