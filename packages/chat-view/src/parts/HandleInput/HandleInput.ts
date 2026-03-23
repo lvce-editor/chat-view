@@ -45,6 +45,7 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   const composerHeight = await getComposerHeight(state, value)
   return {
     ...state,
+    chatInputHistoryDraft: state.chatInputHistoryIndex === -1 ? value : state.chatInputHistoryDraft,
     composerHeight,
     composerValue: value,
     inputSource,

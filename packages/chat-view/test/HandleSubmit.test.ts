@@ -23,8 +23,27 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.sessions[0].messages[1].text).toBe('Mock AI response: I received "hello".')
   expect(result.composerValue).toBe('')
+  expect(result.chatInputHistory).toEqual(['hello'])
+  expect(result.chatInputHistoryIndex).toBe(-1)
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleSubmit should dedupe consecutive history entries', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const firstState = {
+    ...createDefaultState(),
+    chatInputHistory: ['hello'],
+    composerValue: 'hello',
+    viewMode: 'detail' as const,
+  }
+  const first = await HandleSubmit.handleSubmit(firstState)
+  expect(first.chatInputHistory).toEqual(['hello'])
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 

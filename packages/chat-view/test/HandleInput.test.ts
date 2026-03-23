@@ -22,6 +22,27 @@ test('handleInput should mark script input source', async () => {
   expect(result.inputSource).toBe('script')
 })
 
+test('handleInput should update history draft when not browsing history', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'composer', 'draft text', 'user')
+  expect(result.chatInputHistoryDraft).toBe('draft text')
+})
+
+test('handleInput should keep history draft while browsing history', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state = {
+    ...createDefaultState(),
+    chatInputHistory: ['first', 'second'],
+    chatInputHistoryDraft: 'my unsent draft',
+    chatInputHistoryIndex: 0,
+  }
+  const result = await HandleInput.handleInput(state, 'composer', 'second edited', 'user')
+  expect(result.chatInputHistoryDraft).toBe('my unsent draft')
+})
+
 test('handleInput should cap composer height based on maxComposerRows', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
