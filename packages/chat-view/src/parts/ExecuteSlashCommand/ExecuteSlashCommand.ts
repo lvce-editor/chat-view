@@ -1,26 +1,9 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
-
-export type SlashCommandHandler = (state: ChatState) => Promise<ChatState>
-
-const slashCommandRegistry: Record<string, SlashCommandHandler> = Object.create(null)
-
-export const registerSlashCommand = (command: string, handler: SlashCommandHandler): void => {
-  slashCommandRegistry[command] = handler
-}
-
-export const clearSlashCommands = (): void => {
-  for (const command of Object.keys(slashCommandRegistry)) {
-    delete slashCommandRegistry[command]
-  }
-}
-
-export const hasSlashCommand = (command: string): boolean => {
-  return command in slashCommandRegistry
-}
+import { getSlashCommandHandler } from './SlashCommandRegistry/SlashCommandRegistry.ts'
 
 export const executeSlashCommand = async (state: ChatState, command: string): Promise<ChatState> => {
-  const slashCommandHandler = slashCommandRegistry[command]
+  const slashCommandHandler = getSlashCommandHandler(command)
   if (!slashCommandHandler) {
     return withClearedComposer(state)
   }

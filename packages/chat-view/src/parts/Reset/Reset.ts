@@ -19,5 +19,6 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     sessions: [],
     streamingEnabled: false,
     viewMode: 'list',
+    visibleModels: state.models,
   }
 }

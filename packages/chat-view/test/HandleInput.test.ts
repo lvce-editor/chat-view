@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
 import * as HandleInput from '../src/parts/HandleInput/HandleInput.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
@@ -19,6 +20,27 @@ test('handleInput should mark script input source', async () => {
   const result = await HandleInput.handleInput(state, 'composer', 'hello', 'script')
   expect(result.composerValue).toBe('hello')
   expect(result.inputSource).toBe('script')
+})
+
+test('handleInput should update history draft when not browsing history', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state = createDefaultState()
+  const result = await HandleInput.handleInput(state, 'composer', 'draft text', 'user')
+  expect(result.chatInputHistoryDraft).toBe('draft text')
+})
+
+test('handleInput should keep history draft while browsing history', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state = {
+    ...createDefaultState(),
+    chatInputHistory: ['first', 'second'],
+    chatInputHistoryDraft: 'my unsent draft',
+    chatInputHistoryIndex: 0,
+  }
+  const result = await HandleInput.handleInput(state, 'composer', 'second edited', 'user')
+  expect(result.chatInputHistoryDraft).toBe('my unsent draft')
 })
 
 test('handleInput should cap composer height based on maxComposerRows', async () => {
@@ -67,4 +89,5 @@ test('handleInput should update modelPickerSearchValue when editing model picker
   const state = createDefaultState()
   const result = await HandleInput.handleInput(state, 'model-picker-search', 'gpt')
   expect(result.modelPickerSearchValue).toBe('gpt')
+  expect(result.visibleModels).toEqual(getVisibleModels(state.models, 'gpt'))
 })

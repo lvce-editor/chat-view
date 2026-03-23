@@ -23,6 +23,10 @@ export interface ChatState {
   readonly authRefreshToken: string
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
+  readonly chatHistoryEnabled: boolean
+  readonly chatInputHistory: readonly string[]
+  readonly chatInputHistoryDraft: string
+  readonly chatInputHistoryIndex: number
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
@@ -107,6 +111,7 @@ export interface ChatState {
   readonly userSubscriptionPlan: string
   readonly userUsedTokens: number
   readonly viewMode: ChatViewMode
+  readonly visibleModels: readonly ChatModel[]
   readonly voiceDictationEnabled: boolean
   readonly warningCount: number
   readonly webSearchEnabled: boolean

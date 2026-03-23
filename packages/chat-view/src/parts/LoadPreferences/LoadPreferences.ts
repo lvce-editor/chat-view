@@ -3,6 +3,7 @@ import { loadAuthEnabled } from '../LoadAuthEnabled/LoadAuthEnabled.ts'
 import { loadBackendAccessToken } from '../LoadBackendAccessToken/LoadBackendAccessToken.ts'
 import { loadBackendRefreshToken } from '../LoadBackendRefreshToken/LoadBackendRefreshToken.ts'
 import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
+import { loadChatHistoryEnabled } from '../LoadChatHistoryEnabled/LoadChatHistoryEnabled.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
 import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctionCallEvents/LoadEmitStreamingFunctionCallEvents.ts'
 import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
@@ -17,12 +18,13 @@ import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorker
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
-export const loadPreferences = async (): Promise<{
+export interface LoadedPreferences {
   aiSessionTitleGenerationEnabled: boolean
   authAccessToken: string
   authEnabled: boolean
   authRefreshToken: string
   backendUrl: string
+  chatHistoryEnabled: boolean
   composerDropEnabled: boolean
   emitStreamingFunctionCallEvents: boolean
   openApiApiKey: string
@@ -36,13 +38,16 @@ export const loadPreferences = async (): Promise<{
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
   voiceDictationEnabled: boolean
-}> => {
+}
+
+export const loadPreferences = async (): Promise<LoadedPreferences> => {
   const [
     aiSessionTitleGenerationEnabled,
     authAccessToken,
     authEnabled,
     authRefreshToken,
     backendUrl,
+    chatHistoryEnabled,
     composerDropEnabled,
     openApiApiKey,
     openRouterApiKey,
@@ -62,6 +67,7 @@ export const loadPreferences = async (): Promise<{
     loadAuthEnabled(),
     loadBackendRefreshToken(),
     loadBackendUrl(),
+    loadChatHistoryEnabled(),
     loadComposerDropEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
@@ -83,6 +89,7 @@ export const loadPreferences = async (): Promise<{
     authEnabled,
     authRefreshToken,
     backendUrl,
+    chatHistoryEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
     openApiApiKey,

@@ -4,6 +4,12 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const arrowLeft: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowLeft),
+  type: VirtualDomElements.Div,
+}
+
 export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
   return [
     {
@@ -15,10 +21,6 @@ export const getBackButtonVirtualDom = (): readonly VirtualDomNode[] => {
       title: Strings.backToChats(),
       type: VirtualDomElements.Button,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowLeft),
-      type: VirtualDomElements.Div,
-    },
+    arrowLeft,
   ]
 }

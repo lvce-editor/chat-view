@@ -65,6 +65,50 @@ test('handleKeyDown should ignore non-enter keys', async () => {
   expect(result).toBe(state)
 })
 
+test('handleKeyDown should navigate composer history with ArrowUp and ArrowDown', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatInputHistory: ['first', 'second'],
+    chatInputHistoryDraft: 'draft',
+    chatInputHistoryIndex: -1,
+    composerValue: 'draft',
+    focus: 'composer',
+  }
+  const up1 = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
+  expect(up1.composerValue).toBe('second')
+  expect(up1.chatInputHistoryIndex).toBe(0)
+  expect(up1.chatInputHistoryDraft).toBe('draft')
+  expect(up1.inputSource).toBe('script')
+
+  const up2 = await HandleKeyDown.handleKeyDown(up1, 'ArrowUp', false)
+  expect(up2.composerValue).toBe('first')
+  expect(up2.chatInputHistoryIndex).toBe(1)
+
+  const down1 = await HandleKeyDown.handleKeyDown(up2, 'ArrowDown', false)
+  expect(down1.composerValue).toBe('second')
+  expect(down1.chatInputHistoryIndex).toBe(0)
+
+  const down2 = await HandleKeyDown.handleKeyDown(down1, 'ArrowDown', false)
+  expect(down2.composerValue).toBe('draft')
+  expect(down2.chatInputHistoryIndex).toBe(-1)
+})
+
+test('handleKeyDown should not navigate history when chat history is disabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatHistoryEnabled: false,
+    chatInputHistory: ['first'],
+    composerValue: 'draft',
+    focus: 'composer',
+  }
+  const result = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
+  expect(result).toBe(state)
+})
+
 test('handleKeyDown should focus next chat list item on ArrowDown', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

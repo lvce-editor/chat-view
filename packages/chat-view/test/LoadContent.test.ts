@@ -839,3 +839,26 @@ test('loadContent should load searchEnabled from preferences', async () => {
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
   ])
 })
+
+test('loadContent should load chatHistoryEnabled from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.chatHistoryEnabled') {
+        return false
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.chatHistoryEnabled).toBe(false)
+  expectInvocations(mockRpc.invocations, [['Preferences.get', 'chat.chatHistoryEnabled']])
+})

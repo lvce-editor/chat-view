@@ -1,13 +1,12 @@
-import { type VirtualDomNode, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
-import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
-import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
+import { getChatModelListVirtualDom } from '../GetChatModelListVirtualDom/GetChatModelListVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+<<<<<<< HEAD
 const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], selectedModelId: string): readonly VirtualDomNode[] => {
   return [
     {
@@ -49,6 +48,13 @@ const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], selecte
 }
 
 const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly VirtualDomNode[] => {
+=======
+export const getChatModelPickerPopOverVirtualDom = (
+  visibleModels: readonly ChatModel[],
+  selectedModelId: string,
+  modelPickerSearchValue: string,
+): readonly VirtualDomNode[] => {
+>>>>>>> origin/main
   return [
     {
       childCount: 2,

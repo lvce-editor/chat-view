@@ -44,6 +44,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -79,6 +80,7 @@ export const getChatModeDetailVirtualDom = ({
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
+  visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
@@ -138,6 +140,6 @@ export const getChatModeDetailVirtualDom = ({
           },
         ]
       : []),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
+    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
   ]
 }

@@ -59,17 +59,17 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
 }
 
 export const deleteChatSession = async (id: string): Promise<void> => {
-  await ChatStorageWorker.invoke('ChatStorage.deleteSession', id)
+  await ChatStorageWorker.deleteSession(id)
 }
 
 export const clearChatSessions = async (): Promise<void> => {
-  await ChatStorageWorker.invoke('ChatStorage.clear')
+  await ChatStorageWorker.clear()
 }
 
 export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
-  await ChatStorageWorker.invoke('ChatStorage.appendEvent', event)
+  await ChatStorageWorker.appendEvent(event)
 }
 
 export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {
-  return ChatStorageWorker.invoke('ChatStorage.getEvents', sessionId) as Promise<readonly ChatViewEvent[]>
+  return ChatStorageWorker.getEvents(sessionId) as Promise<readonly ChatViewEvent[]>
 }

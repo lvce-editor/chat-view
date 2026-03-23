@@ -7,7 +7,7 @@ import * as ClearInput from '../ClearInput/ClearInput.ts'
 import * as CopyInput from '../CopyInput/CopyInput.ts'
 import * as StatusBar from '../Create/Create.ts'
 import * as CutInput from '../CutInput/CutInput.ts'
-import { deleteSessionAtIndex } from '../DeleteSession/DeleteSession.ts'
+import { deleteSessionAtIndex } from '../DeleteSessionAtIndex/DeleteSessionAtIndex.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
@@ -71,6 +71,7 @@ import { saveState } from '../SaveState/SaveState.ts'
 import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAddContextButtonEnabled.ts'
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
+import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
@@ -164,6 +165,7 @@ export const commandMap = {
   'Chat.setAddContextButtonEnabled': wrapCommand(SetAddContextButtonEnabled.setAddContextButtonEnabled),
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
+  'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
