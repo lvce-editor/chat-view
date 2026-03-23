@@ -44,12 +44,6 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         searchFieldVisible: !state.searchFieldVisible,
         searchValue: state.searchFieldVisible ? '' : state.searchValue,
       }
-    case name === InputName.ModelPickerToggle:
-      return {
-        ...state,
-        modelPickerOpen: !state.modelPickerOpen,
-        modelPickerSearchValue: state.modelPickerOpen ? '' : state.modelPickerSearchValue,
-      }
     case InputName.isModelPickerItemInputName(name): {
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
       return {

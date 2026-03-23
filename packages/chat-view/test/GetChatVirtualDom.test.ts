@@ -96,7 +96,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
     className: ClassNames.Select,
-    onClick: DomEventListenerFunctions.HandleClick,
+    onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
   })
   expect(sendButton).toBeDefined()
@@ -124,7 +124,7 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
     className: ClassNames.Select,
-    onClick: DomEventListenerFunctions.HandleClick,
+    onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
   })
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)

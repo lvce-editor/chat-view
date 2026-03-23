@@ -8,7 +8,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
-import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerVirtualDom/GetChatModelPickerVirtualDom.ts'
+import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeListVirtualDomOptions {
@@ -42,6 +42,27 @@ export interface GetChatModeListVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly voiceDictationEnabled?: boolean
+}
+
+const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly VirtualDomNode[] => {
+  if (!isDropOverlayVisible) {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
+      name: InputName.ComposerDropTarget,
+      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
+      onDragOver: DomEventListenerFunctions.HandleDragOver,
+      onDrop: DomEventListenerFunctions.HandleDrop,
+      type: VirtualDomElements.Div,
+    },
+    {
+      text: Strings.attachImageAsContext(),
+      type: VirtualDomElements.Text,
+    },
+  ]
 }
 
 export const getChatModeListVirtualDom = ({
@@ -107,23 +128,7 @@ export const getChatModeListVirtualDom = ({
       todoListItems,
       voiceDictationEnabled,
     ),
-    ...(isDropOverlayVisible
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
-            name: InputName.ComposerDropTarget,
-            onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-            onDragOver: DomEventListenerFunctions.HandleDragOver,
-            onDrop: DomEventListenerFunctions.HandleDrop,
-            type: VirtualDomElements.Div,
-          },
-          {
-            text: Strings.attachImageAsContext(),
-            type: VirtualDomElements.Text,
-          },
-        ]
-      : []),
+    ...getDropOverlayVirtualDom(isDropOverlayVisible),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(models, selectedModelId, modelPickerSearchValue) : []),
   ]
 }
