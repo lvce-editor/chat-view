@@ -13,6 +13,7 @@ import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSele
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
+import { getSavedSystemPrompt } from '../GetSavedSystemPrompt/GetSavedSystemPrompt.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
@@ -77,6 +78,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
   )
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
+  const systemPrompt = getSavedSystemPrompt(savedState) ?? state.systemPrompt
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
@@ -123,6 +125,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     streamingEnabled,
+    systemPrompt,
     todoListToolEnabled,
     useChatCoordinatorWorker,
     useChatMathWorker,

@@ -382,6 +382,45 @@ test('getOpenApiAssistantText should not include web_search tool when webSearchE
   }
 })
 
+test('getOpenApiAssistantText should include instructions when systemPrompt is provided', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'hello from openai' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: false,
+        systemPrompt: 'Always answer in concise bullet points.',
+      },
+    )
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestBody.instructions).toBe('Always answer in concise bullet points.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should execute streaming tool calls and send automatic follow-up requests', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.execute': async () => JSON.stringify({ error: 'Unknown tool: invalid_tool' }),

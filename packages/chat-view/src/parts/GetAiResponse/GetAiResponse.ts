@@ -46,15 +46,26 @@ const getBackendAssistantText = async (
   selectedModelId: string,
   backendUrl: string,
   authAccessToken: string,
+  systemPrompt: string,
 ): Promise<string> => {
   let response: Response
   try {
     response = await fetch(getBackendCompletionsEndpoint(backendUrl), {
       body: JSON.stringify({
-        messages: messages.map((message) => ({
-          content: message.text,
-          role: message.role,
-        })),
+        messages: [
+          ...(systemPrompt
+            ? [
+                {
+                  content: systemPrompt,
+                  role: 'system',
+                },
+              ]
+            : []),
+          ...messages.map((message) => ({
+            content: message.text,
+            role: message.role,
+          })),
+        ],
         model: getEffectiveBackendModelId(selectedModelId),
         stream: false,
       }),
@@ -106,6 +117,7 @@ export const getAiResponse = async ({
   questionToolEnabled = false,
   selectedModelId,
   streamingEnabled = true,
+  systemPrompt = '',
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
@@ -136,6 +148,7 @@ export const getAiResponse = async ({
         questionToolEnabled,
         selectedModelId,
         streamingEnabled,
+        systemPrompt,
         useChatNetworkWorkerForRequests,
         useChatToolWorker,
         useMockApi,
@@ -161,7 +174,7 @@ export const getAiResponse = async ({
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {
-      text = await getBackendAssistantText(messages, selectedModelId, backendUrl, authAccessToken)
+      text = await getBackendAssistantText(messages, selectedModelId, backendUrl, authAccessToken, systemPrompt)
     } else {
       text = backendAccessTokenRequiredMessage
     }
@@ -193,6 +206,7 @@ export const getAiResponse = async ({
             passIncludeObfuscation,
             await getBasicChatTools(questionToolEnabled),
             webSearchEnabled,
+            systemPrompt,
             previousResponseId,
           ),
           url: getOpenApiApiEndpoint(openApiApiBaseUrl),
@@ -251,6 +265,7 @@ export const getAiResponse = async ({
             : {}),
           questionToolEnabled,
           stream: streamingEnabled,
+          systemPrompt,
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
           webSearchEnabled,
@@ -294,6 +309,7 @@ export const getAiResponse = async ({
         useChatNetworkWorkerForRequests,
         useChatToolWorker,
         questionToolEnabled,
+        systemPrompt,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

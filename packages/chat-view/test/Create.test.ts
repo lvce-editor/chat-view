@@ -20,6 +20,7 @@ test('create should store state with the given uid', () => {
   expect(newStateTyped.selectedSessionId).toBe('session-1')
   expect(newStateTyped.listItemHeight).toBe(40)
   expect(newStateTyped.maxComposerRows).toBe(5)
+  expect(newStateTyped.systemPrompt).toBe('')
   expect(newStateTyped.tokensUsed).toBe(0)
   expect(newStateTyped.tokensMax).toBe(0)
   expect(newStateTyped.usageOverviewEnabled).toBe(false)

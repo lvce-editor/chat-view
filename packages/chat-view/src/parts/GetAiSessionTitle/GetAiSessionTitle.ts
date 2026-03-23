@@ -60,6 +60,7 @@ Assistant: ${assistantText}`
     platform: state.platform,
     selectedModelId,
     streamingEnabled: false,
+    systemPrompt: state.systemPrompt,
     useChatCoordinatorWorker: state.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useChatToolWorker: state.useChatToolWorker,
