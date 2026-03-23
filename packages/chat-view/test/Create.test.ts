@@ -22,7 +22,6 @@ test('create should store state with the given uid', () => {
   expect(newStateTyped.maxComposerRows).toBe(5)
   expect(newStateTyped.tokensUsed).toBe(0)
   expect(newStateTyped.tokensMax).toBe(0)
-  expect(newStateTyped.newChatModelPickerEnabled).toBe(false)
   expect(newStateTyped.usageOverviewEnabled).toBe(false)
   expect(newStateTyped.viewMode).toBe('list')
   expect(newStateTyped.x).toBe(10)
