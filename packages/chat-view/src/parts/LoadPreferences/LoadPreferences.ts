@@ -18,7 +18,7 @@ import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorker
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
-export const loadPreferences = async (): Promise<{
+export interface LoadedPreferences {
   aiSessionTitleGenerationEnabled: boolean
   authAccessToken: string
   authEnabled: boolean
@@ -38,7 +38,9 @@ export const loadPreferences = async (): Promise<{
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
   voiceDictationEnabled: boolean
-}> => {
+}
+
+export const loadPreferences = async (): Promise<LoadedPreferences> => {
   const [
     aiSessionTitleGenerationEnabled,
     authAccessToken,
