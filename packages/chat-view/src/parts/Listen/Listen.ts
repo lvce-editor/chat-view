@@ -5,7 +5,7 @@ import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSessio
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as CommandMap from '../CommandMap/CommandMap.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
-import { clearSlashCommands, registerSlashCommand } from '../ExecuteSlashCommand/SlashCommandRegistry/SlashCommandRegistry.ts'
+import { clearSlashCommands, registerSlashCommand } from '../SlashCommandRegistry/SlashCommandRegistry.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { initializeChatCoordinatorWorker } from '../InitializeChatCoordinatorWorker/InitializeChatCoordinatorWorker.ts'
 import { initializeChatMathWorker } from '../InitializeChatMathWorker/InitializeChatMathWorker.ts'
