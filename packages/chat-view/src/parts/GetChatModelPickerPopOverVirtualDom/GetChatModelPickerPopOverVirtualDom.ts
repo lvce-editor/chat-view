@@ -46,7 +46,7 @@ export const getChatModelPickerPopOverVirtualDom = (
       className: ClassNames.IconButton,
       name: InputName.ModelPickerSettings,
       onClick: DomEventListenerFunctions.HandleClick,
-      title: 'Settings',
+      title: Strings.settings(),
       type: VirtualDomElements.Button,
     },
     {
