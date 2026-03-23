@@ -89,13 +89,6 @@ export const getChatModeChatFocusVirtualDom = ({
   useChatMathWorker = false,
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
-  void authEnabled
-  void authStatus
-  void authErrorMessage
-  void composerHeight
-  void composerFontSize
-  void composerFontFamily
-  void composerLineHeight
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
