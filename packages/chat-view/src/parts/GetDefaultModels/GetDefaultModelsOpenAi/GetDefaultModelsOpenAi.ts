@@ -1,4 +1,3 @@
- 
 import type { ChatModel } from '../../ChatModel/ChatModel.ts'
 
 export const getDefaultModelsOpenAi = (): readonly ChatModel[] => {
