@@ -96,7 +96,7 @@ button.Select[name='model-picker-toggle']:hover{
   color: var(--vscode-foreground);
 }
 
-button.Select[name='model-picker-toggle'] span{
+button.Select[name='model-picker-toggle'] .SelectLabel{
   width: auto;
   max-width: 100%;
   min-width: 0;
