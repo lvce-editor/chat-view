@@ -25,6 +25,7 @@ import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
+import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
@@ -86,7 +87,6 @@ import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWor
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
-import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 
 export const commandMap = {
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
@@ -119,6 +119,7 @@ export const commandMap = {
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': HandleClickFileName.handleClickFileName,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
+  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
@@ -176,7 +177,6 @@ export const commandMap = {
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
-  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
