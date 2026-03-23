@@ -99,7 +99,7 @@ export const getChatModeChatFocusVirtualDom = ({
   return [
     {
       childCount: chatRootChildCount,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, 'ChatFocus'),
+      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
