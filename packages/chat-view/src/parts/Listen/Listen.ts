@@ -1,6 +1,7 @@
 import { WebWorkerRpcClient } from '@lvce-editor/rpc'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage, ChatState } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as CommandMap from '../CommandMap/CommandMap.ts'

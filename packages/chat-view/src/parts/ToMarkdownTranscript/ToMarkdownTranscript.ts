@@ -1,5 +1,4 @@
-import type { ChatSession } from '../ChatState/ChatState.ts'
-
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 export const toMarkdownTranscript = (session: ChatSession): string => {
   const lines = [`# ${session.title}`, '']
   for (const message of session.messages) {

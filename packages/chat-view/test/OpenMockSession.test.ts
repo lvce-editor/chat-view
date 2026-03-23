@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
-import type { ChatMessage, ChatState } from '../src/parts/ChatState/ChatState.ts'
+import type { ChatMessage } from '../src/parts/ChatMessage/ChatMessage.ts'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as OpenMockSession from '../src/parts/OpenMockSession/OpenMockSession.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
