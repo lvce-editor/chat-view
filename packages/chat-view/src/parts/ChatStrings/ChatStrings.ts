@@ -37,6 +37,10 @@ export const search = (): string => {
   return i18nString('Search')
 }
 
+export const searchModels = (): string => {
+  return i18nString('Search models')
+}
+
 export const searchChats = (): string => {
   return i18nString('Search chats')
 }

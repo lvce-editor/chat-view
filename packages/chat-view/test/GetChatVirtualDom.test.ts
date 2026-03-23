@@ -5,6 +5,7 @@ import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
   openRouterRequestFailedMessage,
+  searchModels,
   openRouterTooManyRequestsMessage,
 } from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
@@ -144,7 +145,7 @@ test('getChatVirtualDOm should render open model picker with search input and se
   expect(modelPickerSearchInput).toMatchObject({
     inputType: 'search',
     onInput: DomEventListenerFunctions.HandleInput,
-    placeholder: 'Search models',
+    placeholder: searchModels(),
     type: VirtualDomElements.Input,
   })
   expect(modelPickerSettingsButton).toMatchObject({
