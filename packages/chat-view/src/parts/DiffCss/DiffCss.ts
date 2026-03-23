@@ -15,6 +15,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.chatSendAreaPaddingRight === newState.chatSendAreaPaddingRight &&
     oldState.chatSendAreaPaddingBottom === newState.chatSendAreaPaddingBottom &&
     oldState.composerHeight === newState.composerHeight &&
+    oldState.modelPickerHeight === newState.modelPickerHeight &&
     oldState.composerLineHeight === newState.composerLineHeight &&
     oldState.composerFontFamily === newState.composerFontFamily &&
     oldState.composerFontSize === newState.composerFontSize &&

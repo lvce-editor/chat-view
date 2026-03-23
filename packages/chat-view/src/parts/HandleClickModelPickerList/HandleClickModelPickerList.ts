@@ -1,17 +1,12 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
+import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 
 export const handleClickModelPickerList = async (state: ChatState, eventY = 0): Promise<ChatState> => {
-  const { height, modelPickerBottomOffset, modelPickerItemHeight, models, visibleModels, y } = state
-  const index = getModelPickerClickIndex(y, height, eventY, modelPickerBottomOffset, modelPickerItemHeight)
-  if (index < 0 || index >= visibleModels.length) {
-    return state
-  }
-  return {
-    ...state,
-    modelPickerOpen: false,
-    modelPickerSearchValue: '',
-    selectedModelId: visibleModels[index].id,
-    visibleModels: models,
-  }
+  const { height, modelPickerHeight, y } = state
+  const itemHeight = 28
+  const bottomOffset = 90
+  const headerHeight = 40
+  const index = getModelPickerClickIndex(y, height, eventY, bottomOffset, itemHeight, modelPickerHeight, headerHeight)
+  return handleClickModelPickerListIndex(state, index)
 }
