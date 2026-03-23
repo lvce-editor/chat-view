@@ -224,7 +224,7 @@ a.Button{
 .ChatModelPickerItemUsageCost{
   margin-left: auto;
   color: var(--vscode-descriptionForeground);
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .ChatModelPickerItem:hover{
