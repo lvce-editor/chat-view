@@ -5,7 +5,6 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
-import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], selectedModelId: string): readonly VirtualDomNode[] => {
@@ -49,11 +48,10 @@ const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], selecte
 }
 
 export const getChatModelPickerPopOverVirtualDom = (
-  models: readonly ChatModel[],
+  visibleModels: readonly ChatModel[],
   selectedModelId: string,
   modelPickerSearchValue: string,
 ): readonly VirtualDomNode[] => {
-  const visibleModels = getVisibleModels(models, modelPickerSearchValue)
   return [
     {
       childCount: 2,
