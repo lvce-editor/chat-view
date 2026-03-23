@@ -25,6 +25,7 @@ import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
+import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
@@ -118,6 +119,7 @@ export const commandMap = {
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': HandleClickFileName.handleClickFileName,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
+  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
