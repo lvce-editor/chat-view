@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 
 export const createDefaultState = (): ChatState => {
@@ -13,6 +14,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   const models = getDefaultModels()
+  const visibleModels = getVisibleModels(models, '')
   return {
     addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
@@ -59,8 +61,7 @@ export const createDefaultState = (): ChatState => {
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,
     mockApiCommandId: '',
-    modelPickerBottomOffset: 90,
-    modelPickerItemHeight: 28,
+    modelPickerHeight: getModelPickerHeight(visibleModels.length),
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     models,
@@ -125,7 +126,7 @@ export const createDefaultState = (): ChatState => {
     userSubscriptionPlan: '',
     userUsedTokens: 0,
     viewMode: 'list',
-    visibleModels: getVisibleModels(models, ''),
+    visibleModels,
     voiceDictationEnabled: false,
     warningCount: 0,
     webSearchEnabled: true,

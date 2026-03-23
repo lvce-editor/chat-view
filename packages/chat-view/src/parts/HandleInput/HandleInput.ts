@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { handleSearchValueChange } from '../HandleSearchValueChange/HandleSearchValueChange.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -25,10 +26,12 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     return handleSearchValueChange(state, value)
   }
   if (name === InputName.ModelPickerSearch) {
+    const visibleModels = getVisibleModels(state.models, value)
     return {
       ...state,
+      modelPickerHeight: getModelPickerHeight(visibleModels.length),
       modelPickerSearchValue: value,
-      visibleModels: getVisibleModels(state.models, value),
+      visibleModels,
     }
   }
   if (name !== InputName.Composer) {

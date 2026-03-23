@@ -53,8 +53,7 @@ export interface ChatState {
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number
   readonly mockApiCommandId: string
-  readonly modelPickerBottomOffset: number
-  readonly modelPickerItemHeight: number
+  readonly modelPickerHeight: number
   readonly modelPickerOpen: boolean
   readonly modelPickerSearchValue: string
   readonly models: readonly ChatModel[]

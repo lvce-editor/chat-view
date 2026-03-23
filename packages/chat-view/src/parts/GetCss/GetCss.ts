@@ -1,6 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
 export const getCss = (
   composerHeight: number,
+  modelPickerHeight: number,
   listItemHeight: number,
   chatMessageFontSize: number,
   chatMessageLineHeight: number,
@@ -31,6 +32,7 @@ export const getCss = (
   --ChatSendAreaPaddingLeft: ${chatSendAreaPaddingLeft}px;
   --ChatSendAreaPaddingRight: ${chatSendAreaPaddingRight}px;
   --ChatSendAreaPaddingBottom: ${chatSendAreaPaddingBottom}px;
+  --ChatModelPickerHeight: ${modelPickerHeight}px;
   --ChatListItemHeight: ${listItemHeight}px;
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
@@ -174,7 +176,10 @@ a.Button{
 }
 
 .ChatModelPickerList{
+  flex: 1;
+  min-height: 0;
   margin:0;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
 }
@@ -210,6 +215,7 @@ a.Button{
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 28px;
   width: 100%;
 }
 
@@ -244,11 +250,16 @@ a.Button{
 
 .ChatModelPicker {
   position: static;
+  display: flex;
+  flex-direction: column;
   background: var(--MainBackground) !important;
+  height: var(--ChatModelPickerHeight);
+  max-height: 240px;
   max-width: 300px;
   margin-left: 8px;
   margin-top: auto;
   margin-bottom: 90px;
+  contain: strict;
   pointer-events: auto;
 }
 

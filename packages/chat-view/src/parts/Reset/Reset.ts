@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { clearChatSessions } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 
 export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
@@ -9,6 +10,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     composerHeight: getMinComposerHeightForState(state),
     composerValue: '',
     mockAiResponseDelay: 0,
+    modelPickerHeight: getModelPickerHeight(state.models.length),
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     openApiApiKey: '',
