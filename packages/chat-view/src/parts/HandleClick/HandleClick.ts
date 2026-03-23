@@ -55,7 +55,7 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     }
     case name === InputName.ModelPickerList: {
       const { visibleModels } = state
-      const index = getModelPickerClickIndex(state.y, state.height, eventY)
+      const index = getModelPickerClickIndex(state.y, state.height, eventY, state.modelPickerBottomOffset, state.modelPickerItemHeight)
       if (index < 0 || index >= visibleModels.length) {
         return state
       }
