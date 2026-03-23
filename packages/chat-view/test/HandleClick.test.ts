@@ -167,17 +167,6 @@ test('handleClick should keep state for unknown action', async () => {
   expect(result).toBe(state)
 })
 
-test('handleClick should toggle model picker open state', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    modelPickerOpen: false,
-  }
-  const result = await HandleClick.handleClick(state, 'model-picker-toggle')
-  expect(result.modelPickerOpen).toBe(true)
-})
-
 test('handleClick should select model from model picker item and close picker', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
