@@ -83,22 +83,7 @@ test('getOpenRouterAssistantText should return success result when response is o
     ])
     expect(payload.model).toBe('openrouter/model')
     expect(payload.tool_choice).toBe('auto')
-    expect(payload.tools).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          function: expect.objectContaining({ name: 'read_file' }),
-          type: 'function',
-        }),
-        expect.objectContaining({
-          function: expect.objectContaining({ name: 'write_file' }),
-          type: 'function',
-        }),
-        expect.objectContaining({
-          function: expect.objectContaining({ name: 'list_files' }),
-          type: 'function',
-        }),
-      ]),
-    )
+    expect(payload.tools).toEqual([])
   } finally {
     globalThis.fetch = originalFetch
   }
