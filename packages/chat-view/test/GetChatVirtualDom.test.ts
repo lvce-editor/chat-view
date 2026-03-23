@@ -197,9 +197,14 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     viewMode: 'detail',
   })
   const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
+  const modelPickerList = result.find((node) => node.name === 'model-picker-list')
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
-  expect(modelPickerItems).toHaveLength(1)
+  expect(modelPickerItems).toHaveLength(0)
+  expect(modelPickerList).toMatchObject({
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Ul,
+  })
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
 })
