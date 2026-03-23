@@ -273,6 +273,28 @@ a.Button{
 .ChatModelPickerList{
   padding:0;
 }
+
+.Chat .Select {
+  align-items: center;
+  padding-left: 7px;
+  padding-right: 1px;
+}
+
+.Chat .Select:hover{
+  background: blue !important;
+}
+
+.SelectLabel{
+  font-size: 11px;
+  display: flex;
+  contain:content;
+  align-items: center;
+}
+
+.Select .MaskIcon {
+  width: 10px !important;
+  height: 10px !important;
+}
 `
 
   return `${baseCss}
