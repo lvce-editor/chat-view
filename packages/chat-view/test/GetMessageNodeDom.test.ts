@@ -318,6 +318,46 @@ test('getMessageNodeDom should render markdown table nodes as table dom nodes', 
   })
 })
 
+test('getMessageNodeDom should render heading markers in table cells as plain text', () => {
+  const result = getMessageNodeDom({
+    headers: [
+      {
+        children: [
+          {
+            text: 'Section',
+            type: 'text',
+          },
+        ],
+        type: 'table-cell',
+      },
+    ],
+    rows: [
+      {
+        cells: [
+          {
+            children: [
+              {
+                text: '### Nested heading',
+                type: 'text',
+              },
+            ],
+            type: 'table-cell',
+          },
+        ],
+        type: 'table-row',
+      },
+    ],
+    type: 'table',
+  })
+
+  expect(result[5]).toMatchObject({
+    text: 'Section',
+  })
+  expect(result[9]).toMatchObject({
+    text: '### Nested heading',
+  })
+})
+
 test('getMessageNodeDom should render unordered list nodes as ul and li dom nodes', () => {
   const result = getMessageNodeDom({
     items: [

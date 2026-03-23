@@ -229,6 +229,32 @@ const parseBoldToken = (value: string, start: number): ParsedInlineToken | undef
   }
 }
 
+const parseBoldItalicToken = (value: string, start: number): ParsedInlineToken | undefined => {
+  if (value[start] !== '*' || value[start + 1] !== '*' || value[start + 2] !== '*') {
+    return undefined
+  }
+  const end = value.indexOf('***', start + 3)
+  if (end === -1) {
+    return undefined
+  }
+  const text = value.slice(start + 3, end)
+  if (!text || text.includes('\n')) {
+    return undefined
+  }
+  return {
+    length: end - start + 3,
+    node: {
+      children: [
+        {
+          children: parseInlineNodes(text),
+          type: 'italic',
+        },
+      ],
+      type: 'bold',
+    },
+  }
+}
+
 const findItalicEnd = (value: string, start: number): number => {
   let index = start + 1
   while (index < value.length) {
@@ -363,9 +389,11 @@ const parseInlineToken = (value: string, start: number): ParsedInlineToken | und
     parseImageToken(value, start) ||
     parseLinkToken(value, start) ||
     parseRawLinkToken(value, start) ||
+    parseBoldItalicToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseLinkToken(value, start) ||
+    parseBoldItalicToken(value, start) ||
     parseBoldToken(value, start) ||
     parseItalicToken(value, start) ||
     parseStrikethroughToken(value, start) ||

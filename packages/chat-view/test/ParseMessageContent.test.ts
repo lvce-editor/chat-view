@@ -497,6 +497,42 @@ test('parseMessageContent should parse markdown bold nested inside italic', () =
   ])
 })
 
+test('parseMessageContent should parse markdown bold+italic with triple asterisks', () => {
+  const rawMessage = 'This should be ***both*** styles'
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'This should be ',
+          type: 'text',
+        },
+        {
+          children: [
+            {
+              children: [
+                {
+                  text: 'both',
+                  type: 'text',
+                },
+              ],
+              type: 'italic',
+            },
+          ],
+          type: 'bold',
+        },
+        {
+          text: ' styles',
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown unordered list blocks', () => {
   const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
@@ -903,6 +939,45 @@ test('parseMessageContent should parse markdown table blocks', () => {
               children: [
                 {
                   text: '$2.00',
+                  type: 'text',
+                },
+              ],
+              type: 'table-cell',
+            },
+          ],
+          type: 'table-row',
+        },
+      ],
+      type: 'table',
+    },
+  ])
+})
+
+test('parseMessageContent should parse single-column markdown table and keep heading marker text in cells', () => {
+  const rawMessage = ['| Section |', '|---|', '| ### Nested heading |'].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      headers: [
+        {
+          children: [
+            {
+              text: 'Section',
+              type: 'text',
+            },
+          ],
+          type: 'table-cell',
+        },
+      ],
+      rows: [
+        {
+          cells: [
+            {
+              children: [
+                {
+                  text: '### Nested heading',
                   type: 'text',
                 },
               ],

@@ -1,5 +1,5 @@
 import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ClipBoardWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const sendMessagePortToClipBoardWorker = async (port: MessagePort): Promise<void> => {
   await RendererWorker.sendMessagePortToClipBoardWorker(port, 0)
@@ -10,5 +10,5 @@ export const initializeClipBoardWorker = async (): Promise<void> => {
     commandMap: {},
     send: sendMessagePortToClipBoardWorker,
   })
-  OpenerWorker.set(rpc)
+  ClipBoardWorker.set(rpc)
 }

@@ -13,8 +13,8 @@ import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import { parseAndStoreMessagesContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 
 const models = [
-  { id: 'test', name: 'test' },
-  { id: 'codex-5.3', name: 'Codex 5.3' },
+  { id: 'test', name: 'test', usageCost: 0 },
+  { id: 'codex-5.3', name: 'Codex 5.3', usageCost: 1 },
 ] as const
 
 const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
@@ -127,6 +127,8 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
+  const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
+  expect(modelPickerToggleLabel).toBeDefined()
   expect(modelPicker).toBeUndefined()
 })
 
@@ -194,12 +196,28 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     selectedModelId: 'codex-5.3',
     viewMode: 'detail',
   })
-  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
+  const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
   expect(modelPickerItems).toHaveLength(1)
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
+})
+
+test('getChatVirtualDom should render model picker usage cost text with subdued class', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    models,
+    selectedModelId: 'test',
+    viewMode: 'detail',
+  })
+  const usageCostNode = result.find((node) => node.className === ClassNames.ChatModelPickerItemUsageCost)
+  const freeUsageText = result.find((node) => node.text === '0x')
+  expect(usageCostNode).toMatchObject({
+    className: ClassNames.ChatModelPickerItemUsageCost,
+    type: VirtualDomElements.Span,
+  })
+  expect(freeUsageText).toBeDefined()
 })
 
 test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {

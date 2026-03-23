@@ -41,6 +41,10 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.Select .MaskIcon {
+  width: 20px;
+}
+
 .ChatInputBox{
   width: 100%;
   margin: 0;
@@ -72,18 +76,19 @@ export const getCss = (
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
 }
 
+.Select:hover{
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+}
+
 button.Select[name='model-picker-toggle']{
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   gap: 4px;
-  width: auto;
-  max-width: 100%;
-  padding: 0 6px;
   border: none;
   border-radius: 4px;
   background: transparent;
   color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
-  appearance: none;
+  padding:0 !important;
+  min-width: 0;
 }
 
 button.Select[name='model-picker-toggle']:hover{
@@ -91,7 +96,7 @@ button.Select[name='model-picker-toggle']:hover{
   color: var(--vscode-foreground);
 }
 
-button.Select[name='model-picker-toggle'] span{
+button.Select[name='model-picker-toggle'] .SelectLabel{
   width: auto;
   max-width: 100%;
   min-width: 0;
@@ -202,11 +207,24 @@ a.Button{
 }
 
 .ChatModelPickerItem{
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
+}
+
+.ChatModelPickerItemLabel{
+  min-width: 0;
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.ChatModelPickerItemUsageCost{
+  margin-left: auto;
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.6;
 }
 
 .ChatModelPickerItem:hover{
