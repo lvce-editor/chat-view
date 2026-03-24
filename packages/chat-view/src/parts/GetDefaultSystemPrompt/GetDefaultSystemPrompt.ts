@@ -8,7 +8,7 @@ When asked to create or update code, read relevant files first and apply changes
 Only provide raw code snippets when explicitly requested or when file editing tools are unavailable.
 When displaying code blocks in responses, use markdown triple backticks (\`\`\`) fences.
 When referencing workspace files in responses (including "files added/changed" lists), use markdown links so users can click them.
-Prefer file links like [src/index.ts](file:///workspace/src/index.ts) and avoid plain text file paths when a link is appropriate.
+Prefer file links like [src/index.ts]({{workspaceUri}}/src/index.ts) and avoid plain text file paths when a link is appropriate.
 
 Environment:
 - Editor: LVCE Chat View
