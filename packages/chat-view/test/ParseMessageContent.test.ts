@@ -246,6 +246,84 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
   ])
 })
 
+test('parseMessageContent should map relative markdown file links to workspace file uris', () => {
+  const result = ParseMessageContent.parseMessageContent('Files: [index.ts](src/index.ts), [app.ts](./src/app.ts), [main.ts](src\\\\main.ts)')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Files: ',
+          type: 'text',
+        },
+        {
+          href: 'file:///workspace/src/index.ts',
+          text: 'index.ts',
+          type: 'link',
+        },
+        {
+          text: ', ',
+          type: 'text',
+        },
+        {
+          href: 'file:///workspace/src/app.ts',
+          text: 'app.ts',
+          type: 'link',
+        },
+        {
+          text: ', ',
+          type: 'text',
+        },
+        {
+          href: 'file:///workspace/src/main.ts',
+          text: 'main.ts',
+          type: 'link',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
+test('parseMessageContent should sanitize unsafe relative markdown file links', () => {
+  const result = ParseMessageContent.parseMessageContent('Unsafe: [p](../secret.ts), [q](/etc/passwd), [r](mailto:user@example.com)')
+
+  expect(result).toEqual([
+    {
+      children: [
+        {
+          text: 'Unsafe: ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'p',
+          type: 'link',
+        },
+        {
+          text: ', ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'q',
+          type: 'link',
+        },
+        {
+          text: ', ',
+          type: 'text',
+        },
+        {
+          href: '#',
+          text: 'r',
+          type: 'link',
+        },
+      ],
+      type: 'text',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown links with parentheses in urls', () => {
   const result = ParseMessageContent.parseMessageContent('Reference: [API](https://example.com/query(arg))')
 
