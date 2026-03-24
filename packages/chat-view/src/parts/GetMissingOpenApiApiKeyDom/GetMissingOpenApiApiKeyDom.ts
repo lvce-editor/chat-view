@@ -5,16 +5,20 @@ import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.
 import { OpenApiApiKeyInput, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export const getMissingOpenApiApiKeyDom = (openApiApiKeyState: 'idle' | 'saving' = 'idle'): readonly VirtualDomNode[] => {
+export const getMissingOpenApiApiKeyDom = (
+  openApiApiKeyState: 'idle' | 'saving' = 'idle',
+  openSettingsUrl = 'https://platform.openai.com/api-keys',
+  inputPattern = '^sk-.+',
+): readonly VirtualDomNode[] => {
   const isSaving = openApiApiKeyState === 'saving'
   return getMissingApiKeyDom({
     getApiKeyText: Strings.getOpenApiApiKey(),
     inputName: OpenApiApiKeyInput,
-    inputPattern: '^sk-.+',
+    inputPattern,
     inputRequired: true,
     onSubmit: DomEventListenerFunctions.HandleMissingOpenAiApiKeyFormSubmit,
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
-    openSettingsUrl: 'https://platform.openai.com/api-keys',
+    openSettingsUrl,
     placeholder: Strings.openApiApiKeyPlaceholder(),
     saveButtonDisabled: isSaving,
     saveButtonName: SaveOpenApiApiKey,

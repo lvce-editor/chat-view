@@ -31,6 +31,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyInputPattern?: string
+  readonly openApiApiKeysSettingsUrl?: string
   readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
@@ -67,6 +69,8 @@ export const getChatModeDetailVirtualDom = ({
   modelPickerSearchValue = '',
   models,
   openApiApiKeyInput,
+  openApiApiKeyInputPattern = '^sk-.+',
+  openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
   openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
@@ -106,6 +110,8 @@ export const getChatModeDetailVirtualDom = ({
       openRouterApiKeyInput,
       openApiApiKeyInput,
       openApiApiKeyState,
+      openApiApiKeysSettingsUrl,
+      openApiApiKeyInputPattern,
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,

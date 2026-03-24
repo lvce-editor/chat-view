@@ -23,6 +23,8 @@ export const getChatMessageDom = (
   _openRouterApiKeyInput: string,
   _openApiApiKeyInput = '',
   openApiApiKeyState: 'idle' | 'saving' = 'idle',
+  openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
+  openApiApiKeyInputPattern = '^sk-.+',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
@@ -52,7 +54,7 @@ export const getChatMessageDom = (
     },
     ...toolCallsDom,
     ...messageDom,
-    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState) : []),
+    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
