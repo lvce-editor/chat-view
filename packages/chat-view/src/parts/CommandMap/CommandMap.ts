@@ -17,6 +17,7 @@ import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
+import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
 import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
 import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
@@ -84,6 +85,7 @@ import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionTo
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
+import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
 import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
@@ -112,6 +114,7 @@ export const commandMap = {
   'Chat.getMenuEntryIds': getMenuEntryIds,
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
+  'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),
   'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
@@ -184,6 +187,7 @@ export const commandMap = {
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
+  'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
