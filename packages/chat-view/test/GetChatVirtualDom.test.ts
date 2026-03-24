@@ -74,6 +74,8 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(composer).toBeDefined()
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'false',
+    'aria-haspopup': 'true',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
@@ -102,6 +104,8 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'false',
+    'aria-haspopup': 'true',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
@@ -117,9 +121,14 @@ test('getChatVirtualDOm should render open model picker with search input and se
     viewMode: 'detail',
   })
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
   const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
   expect(modelPicker).toBeDefined()
+  expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'true',
+    'aria-haspopup': 'true',
+  })
   expect(modelPickerSearchInput).toMatchObject({
     inputType: 'search',
     onInput: DomEventListenerFunctions.HandleInput,
