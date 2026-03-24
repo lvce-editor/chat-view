@@ -51,6 +51,7 @@ export interface ChatState {
   readonly listFocusedIndex: number
   readonly listItemHeight: number
   readonly maxComposerRows: number
+  readonly maxToolCalls: number
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number
