@@ -11,11 +11,12 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Locator('.ChatSendArea button.Select[name="model-picker-toggle"]').click()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
-  await expect(items).toHaveCount(17)
+  await expect(items).toHaveCount(19)
 
   const searchInput = Locator('.ChatModelPicker [name="model-picker-search"]')
   await searchInput.type('codex')
 
-  await expect(items).toHaveCount(1)
+  await expect(items).toHaveCount(2)
   await expect(items.nth(0)).toContainText('Codex 5.3')
+  await expect(items.nth(1)).toContainText('Codex 5.3')
 }
