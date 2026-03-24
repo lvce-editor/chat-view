@@ -10,6 +10,8 @@ test('handleInput should update composer value', async () => {
   const state = createDefaultState()
   const result = await HandleInput.handleInput(state, 'composer', 'hello', 'user')
   expect(result.composerValue).toBe('hello')
+  expect(result.composerSelectionStart).toBe(5)
+  expect(result.composerSelectionEnd).toBe(5)
   expect(result.inputSource).toBe('user')
 })
 
@@ -19,6 +21,8 @@ test('handleInput should mark script input source', async () => {
   const state = createDefaultState()
   const result = await HandleInput.handleInput(state, 'composer', 'hello', 'script')
   expect(result.composerValue).toBe('hello')
+  expect(result.composerSelectionStart).toBe(5)
+  expect(result.composerSelectionEnd).toBe(5)
   expect(result.inputSource).toBe('script')
 })
 

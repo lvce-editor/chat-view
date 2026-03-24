@@ -7,6 +7,7 @@ import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 import * as RenderFocus from '../src/parts/RenderFocus/RenderFocus.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
 import * as RenderScrollTop from '../src/parts/RenderScrollTop/RenderScrollTop.ts'
+import * as RenderSelection from '../src/parts/RenderSelection/RenderSelection.ts'
 import * as RenderValue from '../src/parts/RenderValue/RenderValue.ts'
 
 test('getRenderer should return RenderItems.renderItems for RenderItems diff type', () => {
@@ -39,6 +40,11 @@ test('getRenderer should return RenderScrollTop.renderScrollTop for RenderScroll
   expect(renderer).toBe(RenderScrollTop.renderScrollTop)
 })
 
+test('getRenderer should return RenderSelection.renderSelection for RenderSelection diff type', () => {
+  const renderer = GetRenderer.getRenderer(DiffType.RenderSelection)
+  expect(renderer).toBe(RenderSelection.renderSelection)
+})
+
 test('getRenderer should throw error for unknown diff type', () => {
   expect(() => {
     GetRenderer.getRenderer(999)
@@ -60,14 +66,6 @@ test('getRenderer should throw error for zero diff type', () => {
 test('getRenderer should throw error for other known diff types not implemented', () => {
   expect(() => {
     GetRenderer.getRenderer(DiffType.RenderEditingIndex)
-  }).toThrow('unknown renderer')
-
-  // expect(() => {
-  //   GetRenderer.getRenderer(DiffType.RenderFocusContext)
-  // }).toThrow('unknown renderer')
-
-  expect(() => {
-    GetRenderer.getRenderer(DiffType.RenderSelection)
   }).toThrow('unknown renderer')
 })
 

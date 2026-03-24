@@ -10,6 +10,8 @@ test('diff2 should return diff results for stored status bar states', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),
+    composerSelectionEnd: 5,
+    composerSelectionStart: 5,
     composerValue: 'hello',
     inputSource: 'script',
   }
@@ -17,5 +19,5 @@ test('diff2 should return diff results for stored status bar states', () => {
   StatusBarStates.set(uid, oldState, newState)
 
   const result = Diff2.diff2(uid)
-  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue])
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue, DiffType.RenderSelection])
 })

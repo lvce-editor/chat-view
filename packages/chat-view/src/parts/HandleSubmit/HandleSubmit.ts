@@ -133,6 +133,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       FocusInput.focusInput({
         ...state,
         composerHeight: getMinComposerHeightForState(state),
+        composerSelectionEnd: 0,
+        composerSelectionStart: 0,
         composerValue: '',
         inputSource: 'script',
         lastSubmittedSessionId: newSessionId,
@@ -163,6 +165,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       FocusInput.focusInput({
         ...state,
         composerHeight: getMinComposerHeightForState(state),
+        composerSelectionEnd: 0,
+        composerSelectionStart: 0,
         composerValue: '',
         inputSource: 'script',
         lastSubmittedSessionId: selectedSessionId,

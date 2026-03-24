@@ -24,6 +24,11 @@ test('renderEventListeners should return expected listeners', () => {
     params: ['handleProjectAddButtonContextMenu'],
     preventDefault: true,
   })
+  const composerSelectionListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleComposerSelectionChange)
+  expect(composerSelectionListener).toEqual({
+    name: DomEventListenerFunctions.HandleComposerSelectionChange,
+    params: ['setComposerSelection', 'event.target.selectionStart', 'event.target.selectionEnd'],
+  })
   const modelPickerContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleContextMenuChatModelPicker)
   expect(modelPickerContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleContextMenuChatModelPicker,
