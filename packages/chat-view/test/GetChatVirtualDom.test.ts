@@ -760,7 +760,7 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -774,6 +774,10 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'read_file ',
@@ -835,7 +839,7 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
   expect(fileNameLinkNode).toBeDefined()
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -849,6 +853,10 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'read_file ',
@@ -906,7 +914,7 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -920,6 +928,10 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'list_files ',
@@ -977,7 +989,7 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -991,6 +1003,10 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'list_file ',

@@ -9,6 +9,8 @@ import { getToolCallReadFileVirtualDom } from '../GetToolCallReadFileVirtualDom/
 import { getToolCallRenderHtmlVirtualDom } from '../GetToolCallRenderHtmlVirtualDom/GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallWriteFileVirtualDom } from '../GetToolCallWriteFileVirtualDom/GetToolCallWriteFileVirtualDom.ts'
 
+const RE_TOOL_NAME_PREFIX = /^([^ :]+)/
+
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'getWorkspaceUri') {
     const virtualDom = getToolCallGetWorkspaceUriVirtualDom(toolCall)
@@ -53,12 +55,22 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
   }
 
   const label = getToolCallLabel(toolCall)
+  const match = RE_TOOL_NAME_PREFIX.exec(label)
+  const toolNamePrefix = match ? match[1] : label
+  const suffix = label.slice(toolNamePrefix.length)
+  const hasSuffix = suffix.length > 0
   return [
     {
-      childCount: 1,
+      childCount: hasSuffix ? 2 : 1,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    text(label),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    text(toolNamePrefix),
+    ...(hasSuffix ? [text(suffix)] : []),
   ]
 }

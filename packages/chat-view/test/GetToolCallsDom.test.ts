@@ -53,6 +53,10 @@ test('getToolCallsDom should render one list item per tool call', () => {
       className: ClassNames.FileIcon,
     }),
     expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    }),
+    expect.objectContaining({
       text: 'read_file ',
     }),
     expect.objectContaining({
@@ -78,6 +82,10 @@ test('getToolCallsDom should render one list item per tool call', () => {
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'read_file ',

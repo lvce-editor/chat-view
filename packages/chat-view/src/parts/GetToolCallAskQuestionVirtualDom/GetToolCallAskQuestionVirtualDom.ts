@@ -17,11 +17,17 @@ export const getToolCallAskQuestionVirtualDom = (toolCall: ChatToolCall): readon
       type: VirtualDomElements.Li,
     },
     {
-      childCount: 1,
+      childCount: 2,
       className: ClassNames.ChatToolCallQuestionText,
       type: VirtualDomElements.Div,
     },
-    text(`ask_question: ${questionLabel}${statusLabel}`),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    text(`ask_question`),
+    text(`: ${questionLabel}${statusLabel}`),
     {
       childCount: answers.length,
       className: ClassNames.ChatToolCallQuestionOptions,

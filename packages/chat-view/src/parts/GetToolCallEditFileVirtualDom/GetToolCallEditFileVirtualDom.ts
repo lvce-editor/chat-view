@@ -29,6 +29,11 @@ export const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly 
       className: ClassNames.FileIcon,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
     text('edit_file '),
     {
       childCount: 1,

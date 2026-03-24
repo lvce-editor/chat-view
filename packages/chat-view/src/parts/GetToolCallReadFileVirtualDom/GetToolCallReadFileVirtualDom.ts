@@ -32,6 +32,11 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
       className: ClassNames.FileIcon,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
     text(toolNameLabel),
     {
       childCount: 1,

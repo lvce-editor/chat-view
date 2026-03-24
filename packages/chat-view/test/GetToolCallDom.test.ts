@@ -15,36 +15,44 @@ test('getToolCallDom should render render_html tool calls as native virtual dom 
     status: 'success',
   })
 
-  expect(result).toHaveLength(7)
+  expect(result).toHaveLength(9)
   expect(result[0]).toEqual({
     childCount: 2,
     className: ClassNames.ChatOrderedListItem,
     type: VirtualDomElements.Li,
   })
   expect(result[1]).toEqual({
-    childCount: 1,
+    childCount: 2,
     className: ClassNames.ChatToolCallRenderHtmlLabel,
     type: VirtualDomElements.Div,
   })
-  expect(result[2]).toMatchObject({
-    text: 'render_html: Paris Weather',
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
   })
-  expect(result[3]).toEqual({
+  expect(result[3]).toMatchObject({
+    text: 'render_html',
+  })
+  expect(result[4]).toMatchObject({
+    text: ': Paris Weather',
+  })
+  expect(result[5]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallRenderHtmlContent,
     type: VirtualDomElements.Div,
   })
-  expect(result[4]).toEqual({
+  expect(result[6]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallRenderHtmlBody,
     type: VirtualDomElements.Div,
   })
-  expect(result[5]).toEqual({
+  expect(result[7]).toEqual({
     childCount: 1,
     className: 'card',
     type: VirtualDomElements.Div,
   })
-  expect(result[6]).toMatchObject({
+  expect(result[8]).toMatchObject({
     text: 'Sunny',
   })
 })
@@ -60,8 +68,8 @@ test('getToolCallDom should include img src from render_html tool calls', () => 
     status: 'success',
   })
 
-  expect(result).toHaveLength(6)
-  expect(result[5]).toEqual({
+  expect(result).toHaveLength(8)
+  expect(result[7]).toEqual({
     childCount: 0,
     src: 'https://example.com/pic.png',
     type: VirtualDomElements.Img,
@@ -75,48 +83,38 @@ test('getToolCallDom should display getWorkspaceUri as get_workspace_uri', () =>
     status: 'success',
   })
 
-  expect(result).toHaveLength(2)
-  expect(result[1]).toMatchObject({
-    text: 'get_workspace_uri',
+  expect(result).toHaveLength(3)
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
   })
 })
 
-test('getToolCallDom should display getWorkspaceUri result value', () => {
-  const uri = 'file:///home/user/some-folder'
+test('getToolCallDom should render unknown tool name in ToolCallName span', () => {
   const result = getToolCallDom({
     arguments: '{}',
-    name: 'getWorkspaceUri',
-    result: uri,
+    name: 'unknown_tool',
     status: 'success',
   })
 
-  expect(result).toHaveLength(6)
-  expect(result[0]).toEqual({
-    childCount: 3,
-    className: ClassNames.ChatOrderedListItem,
-    title: uri,
-    type: VirtualDomElements.Li,
-  })
-  expect(result[2]).toMatchObject({
-    text: 'get_workspace_uri ',
-  })
-  expect(result[3]).toEqual({
+  expect(result).toHaveLength(3)
+  expect(result[1]).toEqual({
     childCount: 1,
-    className: ClassNames.ChatToolCallReadFileLink,
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
+    className: ClassNames.ToolCallName,
     type: VirtualDomElements.Span,
   })
-  expect(result[4]).toEqual({
-    childCount: 1,
-    className: ClassNames.ChatToolCallFileName,
-    'data-uri': uri,
-    onClick: DomEventListenerFunctions.HandleClickFileName,
-    type: VirtualDomElements.Span,
+  expect(result.find((node) => node.text === 'unknown_tool')).toBeDefined()
+})
+
+test('getToolCallDom should render getWorkspaceUri tool name text inside ToolCallName span', () => {
+  const result = getToolCallDom({
+    arguments: '{}',
+    name: 'getWorkspaceUri',
+    status: 'success',
   })
-  expect(result[5]).toMatchObject({
-    text: 'some-folder',
-  })
+
+  expect(result.find((node) => node.text === 'get_workspace_uri')).toBeDefined()
 })
 
 test('getToolCallDom should not display empty object arguments', () => {
@@ -126,10 +124,8 @@ test('getToolCallDom should not display empty object arguments', () => {
     status: 'success',
   })
 
-  expect(result).toHaveLength(2)
-  expect(result[1]).toMatchObject({
-    text: 'unknown_tool',
-  })
+  expect(result).toHaveLength(3)
+  expect(result.find((node) => node.text === 'unknown_tool')).toBeDefined()
 })
 
 test('getToolCallDom should render ask_question tool calls', () => {
@@ -141,14 +137,27 @@ test('getToolCallDom should render ask_question tool calls', () => {
     name: 'ask_question',
   })
 
-  expect(result).toHaveLength(8)
-  expect(result[2]).toMatchObject({
-    text: 'ask_question: Which option?',
+  expect(result).toHaveLength(10)
+  expect(result[1]).toEqual({
+    childCount: 2,
+    className: ClassNames.ChatToolCallQuestionText,
+    type: VirtualDomElements.Div,
   })
-  expect(result[5]).toMatchObject({
-    text: 'Option A',
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
+    text: 'ask_question',
+  })
+  expect(result[4]).toMatchObject({
+    text: ': Which option?',
   })
   expect(result[7]).toMatchObject({
+    text: 'Option A',
+  })
+  expect(result[9]).toMatchObject({
     text: 'Option B',
   })
 })
@@ -162,8 +171,8 @@ test('getToolCallDom should render ask_question with empty question', () => {
     name: 'ask_question',
   })
 
-  expect(result[2]).toMatchObject({
-    text: 'ask_question: (empty question)',
+  expect(result[4]).toMatchObject({
+    text: ': (empty question)',
   })
 })
 
@@ -176,7 +185,7 @@ test('getToolCallDom should render ask_question with no answers', () => {
     name: 'ask_question',
   })
 
-  expect(result[5]).toMatchObject({
+  expect(result[7]).toMatchObject({
     text: '(no answers)',
   })
 })
@@ -203,33 +212,38 @@ test('getToolCallDom should render write_file as filename with line count badges
     title: 'src/main.ts',
     type: VirtualDomElements.Li,
   })
-  expect(result[2]).toMatchObject({
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
     text: 'write_file ',
   })
-  expect(result[4]).toEqual({
+  expect(result[5]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallFileName,
     'data-uri': 'src/main.ts',
     onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
-  expect(result[5]).toMatchObject({
+  expect(result[6]).toMatchObject({
     text: 'main.ts',
   })
-  expect(result[6]).toEqual({
+  expect(result[7]).toEqual({
     childCount: 1,
     className: ClassNames.Insertion,
     type: VirtualDomElements.Span,
   })
-  expect(result[7]).toMatchObject({
+  expect(result[8]).toMatchObject({
     text: ' +1',
   })
-  expect(result[8]).toEqual({
+  expect(result[9]).toEqual({
     childCount: 1,
     className: ClassNames.Deletion,
     type: VirtualDomElements.Span,
   })
-  expect(result[9]).toMatchObject({
+  expect(result[10]).toMatchObject({
     text: ' -1',
   })
   expect(result.find((node) => node.text === '"const value = 2\\n"')).toBeUndefined()
@@ -241,9 +255,17 @@ test('getToolCallDom should show write_file in progress for incomplete json argu
     name: 'write_file',
   })
 
-  expect(result).toHaveLength(2)
-  expect(result[1]).toMatchObject({
-    text: 'write_file (in progress)',
+  expect(result).toHaveLength(4)
+  expect(result[1]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[2]).toMatchObject({
+    text: 'write_file',
+  })
+  expect(result[3]).toMatchObject({
+    text: ' (in progress)',
   })
 })
 
@@ -259,20 +281,25 @@ test('getToolCallDom should not render write_file diff badges when tool call fai
     status: 'error',
   })
 
-  expect(result).toHaveLength(7)
+  expect(result).toHaveLength(8)
   expect(result[0]).toEqual({
     childCount: 4,
     className: ClassNames.ChatOrderedListItem,
     title: 'index.html',
     type: VirtualDomElements.Li,
   })
-  expect(result[2]).toMatchObject({
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
     text: 'write_file ',
   })
-  expect(result[5]).toMatchObject({
+  expect(result[6]).toMatchObject({
     text: 'index.html',
   })
-  expect(result[6]).toMatchObject({
+  expect(result[7]).toMatchObject({
     text: ' (error: Failed to save file: DOMException: A requested file or directory could not be found at the time an operation was processed.)',
   })
   expect(result.find((node) => node.text === ' +0')).toBeUndefined()
@@ -291,17 +318,22 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     status: 'success',
   })
 
-  expect(result).toHaveLength(6)
+  expect(result).toHaveLength(7)
   expect(result[0]).toEqual({
     childCount: 3,
     className: ClassNames.ChatOrderedListItem,
     title: uri,
     type: VirtualDomElements.Li,
   })
-  expect(result[2]).toMatchObject({
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
     text: 'edit_file ',
   })
-  expect(result[3]).toEqual({
+  expect(result[4]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallReadFileLink,
     'data-uri': uri,
@@ -309,14 +341,14 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     title: uri,
     type: VirtualDomElements.Span,
   })
-  expect(result[4]).toEqual({
+  expect(result[5]).toEqual({
     childCount: 1,
     className: ClassNames.ChatToolCallFileName,
     'data-uri': uri,
     onClick: DomEventListenerFunctions.HandleClickFileName,
     type: VirtualDomElements.Span,
   })
-  expect(result[5]).toMatchObject({
+  expect(result[6]).toMatchObject({
     text: 'main.ts',
   })
 })
