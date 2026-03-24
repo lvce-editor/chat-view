@@ -81,7 +81,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     },
   ]
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     for (const responsePart of loopingResponseSseParts) {
       await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
     }
@@ -94,6 +94,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request ended after 5 tool-call rounds without a final assistant response.')
+  await expect(messages.nth(1)).toContainText('OpenAI request ended after 10 tool-call rounds without a final assistant response.')
   await expect(messages.nth(1)).toContainText('model got stuck in a tool loop')
 }

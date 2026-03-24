@@ -50,6 +50,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     authAccessToken,
     authEnabled,
     backendUrl,
+    maxToolCalls: state.maxToolCalls,
     messages: [promptMessage],
     mockAiResponseDelay: state.mockAiResponseDelay,
     mockApiCommandId: state.mockApiCommandId,

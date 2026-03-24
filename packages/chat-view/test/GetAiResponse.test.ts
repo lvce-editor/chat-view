@@ -630,10 +630,10 @@ test('getAiResponse should show a helpful message when OpenAI tool-call iteratio
     })
 
     expect(result.role).toBe('assistant')
-    expect(result.text).toContain('OpenAI request ended after 5 tool-call rounds without a final assistant response.')
+    expect(result.text).toContain('OpenAI request ended after 10 tool-call rounds without a final assistant response.')
     expect(result.text).toContain('model got stuck in a tool loop')
     const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
-    expect(executeInvocations).toHaveLength(5)
+    expect(executeInvocations).toHaveLength(10)
   } finally {
     globalThis.fetch = originalFetch
   }

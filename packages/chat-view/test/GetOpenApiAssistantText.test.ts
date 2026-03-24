@@ -129,12 +129,12 @@ test('getOpenApiAssistantText should return tool-iterations-exhausted when model
 
     expect(result).toEqual({
       details: 'tool-iterations-exhausted',
-      iterationLimit: 5,
+      iterationLimit: 10,
       type: 'error',
     })
-    expect(fetchInvocations).toHaveLength(5)
+    expect(fetchInvocations).toHaveLength(10)
     const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
-    expect(executeInvocations).toHaveLength(5)
+    expect(executeInvocations).toHaveLength(10)
   } finally {
     globalThis.fetch = originalFetch
   }

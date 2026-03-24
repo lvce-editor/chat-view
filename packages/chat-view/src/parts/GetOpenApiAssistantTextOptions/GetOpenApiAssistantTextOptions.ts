@@ -2,6 +2,7 @@ import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.t
 
 export interface GetOpenApiAssistantTextOptions {
   readonly includeObfuscation?: boolean
+  readonly maxToolCalls?: number
   readonly onDataEvent?: (value: unknown) => Promise<void>
   readonly onEventStreamFinished?: () => Promise<void>
   readonly onTextChunk?: (chunk: string) => Promise<void>

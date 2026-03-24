@@ -59,6 +59,7 @@ export const createDefaultState = (): ChatState => {
     listFocusedIndex: -1,
     listItemHeight: 40,
     maxComposerRows: 5,
+    maxToolCalls: 10,
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,
