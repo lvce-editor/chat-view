@@ -30,7 +30,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
   const events: ChatViewEvent[] = []
 
   return ChatStorageWorker.registerMockRpc({
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+     
     'ChatStorage.appendEvent': (event: ChatViewEvent) => {
       events.push(event)
     },
@@ -52,7 +52,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
       }
       return events.filter((event) => event.sessionId === sessionId)
     },
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+     
     'ChatStorage.getSession': (id: string) => {
       const session = sessions.get(id)
       return session ? cloneSession(session) : undefined

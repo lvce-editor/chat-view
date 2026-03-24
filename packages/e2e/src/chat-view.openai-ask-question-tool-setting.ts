@@ -3,7 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-ask-question-tool-setting'
 
 interface MockOpenApiRequest {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+   
   readonly payload: {
     readonly tools?: readonly {
       readonly name?: string

@@ -17,7 +17,7 @@ const getSessionStatusClassName = (session: ChatSession): string => {
   return ClassNames.ChatListItemStatusStopped
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getSessionDom = (session: ChatSession, focused = false): readonly VirtualDomNode[] => {
   const sessionClassName = focused ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused) : ClassNames.ChatListItem
   const sessionStatusClassName = getSessionStatusClassName(session)

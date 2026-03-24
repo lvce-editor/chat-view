@@ -4,7 +4,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.ts'
 import { OpenApiApiKeyInput, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getMissingOpenApiApiKeyDom = (openApiApiKeyState: 'idle' | 'saving' = 'idle'): readonly VirtualDomNode[] => {
   const isSaving = openApiApiKeyState === 'saving'
   return getMissingApiKeyDom({

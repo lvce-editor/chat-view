@@ -39,7 +39,7 @@ export const setHttpErrorResponse = (statusCode: number, body: unknown): void =>
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const setRequestFailedResponse = (isOffline: boolean = false): void => {
   errorResult = {
     details: 'request-failed',

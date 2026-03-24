@@ -47,7 +47,7 @@ const getTodoListDom = (hasTodoList: boolean, todoListItems: readonly TodoListIt
   ]
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
