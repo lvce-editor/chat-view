@@ -161,8 +161,6 @@ export const defaultSessionTitle = (): string => {
   return i18nString(UiStrings.Chat1)
 }
 
-<<<<<<< HEAD
-=======
 export const dummyChatA = (): string => {
   return i18nString(UiStrings.DummyChatA)
 }
@@ -175,7 +173,6 @@ export const dummyChatC = (): string => {
   return i18nString(UiStrings.DummyChatC)
 }
 
->>>>>>> origin/main
 export const unknownViewMode = (): string => {
   return i18nString(UiStrings.UnknownViewMode)
 }

@@ -77,11 +77,7 @@ import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAd
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
-<<<<<<< HEAD
-=======
-import * as SetChatList from '../SetChatList/SetChatList.ts'
 import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
->>>>>>> origin/main
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
@@ -181,11 +177,7 @@ export const commandMap = {
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
-<<<<<<< HEAD
-=======
-  'Chat.setChatList': wrapCommand(SetChatList.setChatList),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
->>>>>>> origin/main
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
