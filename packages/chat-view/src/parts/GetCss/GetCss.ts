@@ -276,8 +276,8 @@ a.Button{
 
 .Chat .Select {
   align-items: center;
-  padding-left: 7px;
-  padding-right: 1px;
+  padding-left: 7px !important;
+  padding-right: 1px !important;
 }
 
 .Chat .Select:hover{
@@ -294,6 +294,15 @@ a.Button{
 .Select .MaskIcon {
   width: 10px !important;
   height: 10px !important;
+}
+
+.ChatInputBox{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.ChatModelPickerItemSelected{
+  background: var(--ListHoverBackground) !important;
 }
 `
 
