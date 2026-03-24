@@ -1,4 +1,5 @@
 import type {
+  MessageInlineNode,
   MessageIntermediateNode,
   MessageListItemNode,
   MessageTableCellNode,
@@ -78,6 +79,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
   let listItems: MessageListItemNode[] = []
   let listType: 'ordered-list' | 'unordered-list' | '' = ''
   let orderedListPathStack: Array<{ readonly indentation: number; readonly path: readonly number[] }> = []
+  let canContinueOrderedListItemParagraph = false
 
   const getListItemAtPath = (items: readonly MessageListItemNode[], path: readonly number[]): MessageListItemNode | undefined => {
     let currentItems = items
@@ -116,6 +118,37 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
     return [...items.slice(0, index), nextItem, ...items.slice(index + 1)]
   }
 
+  const appendInlineChildrenAtPath = (
+    items: readonly MessageListItemNode[],
+    path: readonly number[],
+    children: MessageListItemNode['children'],
+  ): MessageListItemNode[] => {
+    if (path.length === 0) {
+      return [...items]
+    }
+    const [index, ...rest] = path
+    const current = items[index]
+    if (!current) {
+      return [...items]
+    }
+    const lineBreakNode: MessageInlineNode = {
+      text: '\n',
+      type: 'text',
+    }
+    const nextChildren: MessageInlineNode[] = [...current.children, lineBreakNode, ...children]
+    const nextItem =
+      rest.length > 0
+        ? {
+            ...current,
+            nestedItems: appendInlineChildrenAtPath(current.nestedItems || [], rest, children),
+          }
+        : {
+            ...current,
+            children: nextChildren,
+          }
+    return [...items.slice(0, index), nextItem, ...items.slice(index + 1)]
+  }
+
   const flushParagraph = (): void => {
     if (paragraphLines.length === 0) {
       return
@@ -138,6 +171,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
     listItems = []
     listType = ''
     orderedListPathStack = []
+    canContinueOrderedListItemParagraph = false
   }
 
   for (let i = 0; i < tokens.length; i++) {
@@ -145,6 +179,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
 
     if (token.type === 'blank-line') {
       flushParagraph()
+      canContinueOrderedListItemParagraph = false
       continue
     }
 
@@ -251,6 +286,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
               ...orderedListPathStack.filter((entry) => entry.indentation < token.indentation),
               { indentation: token.indentation, path: nextPath },
             ]
+            canContinueOrderedListItemParagraph = true
             continue
           }
         }
@@ -270,6 +306,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
         ...orderedListPathStack.filter((entry) => entry.indentation < token.indentation),
         { indentation: token.indentation, path: [nextIndex] },
       ]
+      canContinueOrderedListItemParagraph = true
       continue
     }
 
@@ -282,6 +319,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
             type: 'list-item',
           }
           listItems = appendNestedItemAtPath(listItems, parentEntry.path, nextItem, 'unordered-list')
+          canContinueOrderedListItemParagraph = false
           continue
         }
       }
@@ -294,6 +332,7 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
         children: parseInlineNodes(token.text),
         type: 'list-item',
       })
+      canContinueOrderedListItemParagraph = false
       continue
     }
 
@@ -308,8 +347,17 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
       continue
     }
 
+    if (token.type === 'paragraph-line' && listType === 'ordered-list' && listItems.length > 0 && canContinueOrderedListItemParagraph) {
+      const currentPath = orderedListPathStack.at(-1)?.path
+      if (currentPath) {
+        listItems = appendInlineChildrenAtPath(listItems, currentPath, parseInlineNodes(token.text))
+        continue
+      }
+    }
+
     flushList()
     paragraphLines.push(token.text)
+    canContinueOrderedListItemParagraph = false
   }
 
   flushList()
