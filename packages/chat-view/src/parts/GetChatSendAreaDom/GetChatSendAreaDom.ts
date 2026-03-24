@@ -87,6 +87,7 @@ export const getChatSendAreaDom = (
       onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
+      onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
       placeholder: Strings.composePlaceholder(),
       type: VirtualDomElements.TextArea,
     },

@@ -8,6 +8,8 @@ export const startRename = (state: ChatState, id: string): ChatState => {
   }
   return {
     ...state,
+    composerSelectionEnd: session.title.length,
+    composerSelectionStart: session.title.length,
     composerValue: session.title,
     inputSource: 'script',
     renamingSessionId: id,

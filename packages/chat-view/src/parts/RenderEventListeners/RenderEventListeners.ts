@@ -62,6 +62,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleComposerSelectionChange,
+      params: ['setComposerSelection', EventExpression.TargetSelectionStart, EventExpression.TargetSelectionEnd],
+    },
+    {
       name: DomEventListenersFunctions.HandleSearchInput,
       params: ['handleSearchValueChange', EventExpression.TargetValue],
     },

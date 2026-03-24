@@ -43,6 +43,8 @@ export const createDefaultState = (): ChatState => {
     composerFontSize,
     composerHeight: composerLineHeight + 8,
     composerLineHeight,
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
     composerValue: '',
     emitStreamingFunctionCallEvents: false,
     errorCount: 0,

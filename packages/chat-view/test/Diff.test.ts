@@ -14,18 +14,54 @@ test('diff should return empty array when chat states are equal', () => {
 
 test('diff should return RenderValue when composer changes from script input', () => {
   const { sessions } = createDefaultState()
-  const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
-  const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'script', sessions }
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
+    composerValue: '',
+    inputSource: 'script',
+    sessions,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 5,
+    composerSelectionStart: 5,
+    composerValue: 'hello',
+    inputSource: 'script',
+    sessions,
+  }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue])
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue, DiffType.RenderSelection])
 })
 
 test('diff should not return RenderValue when composer changes from user input', () => {
   const { sessions } = createDefaultState()
-  const oldState: ChatState = { ...createDefaultState(), composerValue: '', inputSource: 'script', sessions }
-  const newState: ChatState = { ...createDefaultState(), composerValue: 'hello', inputSource: 'user', sessions }
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
+    composerValue: '',
+    inputSource: 'script',
+    sessions,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 5,
+    composerSelectionStart: 5,
+    composerValue: 'hello',
+    inputSource: 'user',
+    sessions,
+  }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([DiffType.RenderIncremental])
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderSelection])
+})
+
+test('diff should return RenderSelection when composer selection changes', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = { ...createDefaultState(), composerSelectionEnd: 0, composerSelectionStart: 0, sessions }
+  const newState: ChatState = { ...createDefaultState(), composerSelectionEnd: 4, composerSelectionStart: 2, sessions }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderSelection])
 })
 
 test('diff should return RenderIncremental when selected session changes', () => {

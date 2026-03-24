@@ -6,6 +6,8 @@ export const withClearedComposer = (state: ChatState): ChatState => {
   return FocusInput.focusInput({
     ...state,
     composerHeight: getMinComposerHeightForState(state),
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
     composerValue: '',
     inputSource: 'script',
   })

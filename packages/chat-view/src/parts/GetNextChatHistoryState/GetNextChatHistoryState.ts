@@ -24,6 +24,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
       chatInputHistoryDraft: nextDraft,
       chatInputHistoryIndex: nextIndex,
       composerHeight,
+      composerSelectionEnd: nextComposerValue.length,
+      composerSelectionStart: nextComposerValue.length,
       composerValue: nextComposerValue,
       inputSource: 'script',
     }
@@ -38,6 +40,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
       ...state,
       chatInputHistoryIndex: -1,
       composerHeight,
+      composerSelectionEnd: state.chatInputHistoryDraft.length,
+      composerSelectionStart: state.chatInputHistoryDraft.length,
       composerValue: state.chatInputHistoryDraft,
       inputSource: 'script',
     }
@@ -48,6 +52,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
     ...state,
     chatInputHistoryIndex: nextIndex,
     composerHeight,
+    composerSelectionEnd: nextComposerValue.length,
+    composerSelectionStart: nextComposerValue.length,
     composerValue: nextComposerValue,
     inputSource: 'script',
   }

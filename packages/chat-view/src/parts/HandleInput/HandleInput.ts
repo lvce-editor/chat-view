@@ -51,6 +51,8 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     ...state,
     chatInputHistoryDraft: state.chatInputHistoryIndex === -1 ? value : state.chatInputHistoryDraft,
     composerHeight,
+    composerSelectionEnd: value.length,
+    composerSelectionStart: value.length,
     composerValue: value,
     inputSource,
   }

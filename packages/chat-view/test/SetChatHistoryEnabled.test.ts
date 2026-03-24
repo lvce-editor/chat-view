@@ -15,10 +15,14 @@ test('setChatHistoryEnabled should reset active history navigation when disablin
     chatInputHistory: ['first', 'second'],
     chatInputHistoryDraft: 'draft',
     chatInputHistoryIndex: 1,
+    composerSelectionEnd: 5,
+    composerSelectionStart: 2,
   }
   const result = SetChatHistoryEnabled.setChatHistoryEnabled(state, false)
   expect(result.chatHistoryEnabled).toBe(false)
   expect(result.chatInputHistory).toEqual(['first', 'second'])
   expect(result.chatInputHistoryDraft).toBe('')
   expect(result.chatInputHistoryIndex).toBe(-1)
+  expect(result.composerSelectionStart).toBe(0)
+  expect(result.composerSelectionEnd).toBe(0)
 })

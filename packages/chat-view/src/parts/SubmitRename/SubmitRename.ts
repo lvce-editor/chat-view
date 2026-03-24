@@ -28,6 +28,8 @@ export const submitRename = async (state: ChatState): Promise<ChatState> => {
   return {
     ...state,
     composerHeight: getMinComposerHeightForState(state),
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
     composerValue: '',
     inputSource: 'script',
     renamingSessionId: '',
