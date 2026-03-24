@@ -3,7 +3,7 @@ import * as ParseMessageContent from '../src/parts/ParseMessageContent/ParseMess
 
 // cspell:ignore Clawpack
 
-test('parseMessageContent should parse mixed paragraph and ordered list blocks', () => {
+test('parseMessageContent should parse mixed paragraph and ordered list blocks', async () => {
   const rawMessage = [
     'I have access to the following tools:',
     '',
@@ -14,7 +14,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
     'I can also use these tools in parallel when appropriate.',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -70,10 +70,10 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
   ])
 })
 
-test('parseMessageContent should keep ordered list items together across blank lines', () => {
+test('parseMessageContent should keep ordered list items together across blank lines', async () => {
   const rawMessage = ['1. First item', '', '2. Second item', '', '3. Third item'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -111,7 +111,7 @@ test('parseMessageContent should keep ordered list items together across blank l
   ])
 })
 
-test('parseMessageContent should keep loose ordered list sections together when items have continuation paragraphs', () => {
+test('parseMessageContent should keep loose ordered list sections together when items have continuation paragraphs', async () => {
   const rawMessage = [
     '1. Numerical Methods:',
     'OpenClaw uses finite volume methods for solving systems of hyperbolic PDEs.',
@@ -128,7 +128,7 @@ test('parseMessageContent should keep loose ordered list sections together when 
     'OpenClaw helps researchers accurately model wave propagation.',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -220,8 +220,8 @@ test('parseMessageContent should keep loose ordered list sections together when 
   ])
 })
 
-test('parseMessageContent should return a text node for empty messages', () => {
-  const result = ParseMessageContent.parseMessageContent('')
+test('parseMessageContent should return a text node for empty messages', async () => {
+  const result = await ParseMessageContent.parseMessageContent('')
 
   expect(result).toEqual([
     {
@@ -236,14 +236,14 @@ test('parseMessageContent should return a text node for empty messages', () => {
   ])
 })
 
-test('parseMessageContent should parse markdown links in paragraphs and lists', () => {
+test('parseMessageContent should parse markdown links in paragraphs and lists', async () => {
   const rawMessage = [
     'Forecast source: [source one](https://example.com/forecast?location=paris)',
     '',
     '1. Climate normals: [source two](https://example.org/climate/paris-march)',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -282,7 +282,7 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
   ])
 })
 
-test('parseMessageContent should sanitize non-http markdown links', () => {
+test('parseMessageContent should sanitize non-http markdown links', async () => {
   const rawMessage = [
     'Unsafe script: [click](javascript:alert(1))',
     'Inline data: [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)',
@@ -292,7 +292,7 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
     'Allowed: [safe](https://example.com/docs)',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -357,8 +357,8 @@ test('parseMessageContent should sanitize non-http markdown links', () => {
   ])
 })
 
-test('parseMessageContent should map relative markdown file links to workspace file uris', () => {
-  const result = ParseMessageContent.parseMessageContent('Files: [index.ts](src/index.ts), [app.ts](./src/app.ts), [main.ts](src\\\\main.ts)')
+test('parseMessageContent should map relative markdown file links to workspace file uris', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Files: [index.ts](src/index.ts), [app.ts](./src/app.ts), [main.ts](src\\\\main.ts)')
 
   expect(result).toEqual([
     {
@@ -396,8 +396,8 @@ test('parseMessageContent should map relative markdown file links to workspace f
   ])
 })
 
-test('parseMessageContent should sanitize unsafe relative markdown file links', () => {
-  const result = ParseMessageContent.parseMessageContent('Unsafe: [p](../secret.ts), [q](/etc/passwd), [r](mailto:user@example.com)')
+test('parseMessageContent should sanitize unsafe relative markdown file links', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Unsafe: [p](../secret.ts), [q](/etc/passwd), [r](mailto:user@example.com)')
 
   expect(result).toEqual([
     {
@@ -435,8 +435,8 @@ test('parseMessageContent should sanitize unsafe relative markdown file links', 
   ])
 })
 
-test('parseMessageContent should parse markdown links with parentheses in urls', () => {
-  const result = ParseMessageContent.parseMessageContent('Reference: [API](https://example.com/query(arg))')
+test('parseMessageContent should parse markdown links with parentheses in urls', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Reference: [API](https://example.com/query(arg))')
 
   expect(result).toEqual([
     {
@@ -456,8 +456,8 @@ test('parseMessageContent should parse markdown links with parentheses in urls',
   ])
 })
 
-test('parseMessageContent should parse raw https urls followed by quote and parenthesis', () => {
-  const result = ParseMessageContent.parseMessageContent('Service notice: https://www.protezionecivile.gov.it")BE AWARE')
+test('parseMessageContent should parse raw https urls followed by quote and parenthesis', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Service notice: https://www.protezionecivile.gov.it")BE AWARE')
 
   expect(result).toEqual([
     {
@@ -481,8 +481,8 @@ test('parseMessageContent should parse raw https urls followed by quote and pare
   ])
 })
 
-test('parseMessageContent should not parse markdown link with empty text', () => {
-  const result = ParseMessageContent.parseMessageContent('[](https://example.com)')
+test('parseMessageContent should not parse markdown link with empty text', async () => {
+  const result = await ParseMessageContent.parseMessageContent('[](https://example.com)')
 
   expect(result).toEqual([
     {
@@ -497,8 +497,8 @@ test('parseMessageContent should not parse markdown link with empty text', () =>
   ])
 })
 
-test('parseMessageContent should not parse raw url inside unclosed markdown link destination', () => {
-  const result = ParseMessageContent.parseMessageContent('See [documentation](https://example.com/docs')
+test('parseMessageContent should not parse raw url inside unclosed markdown link destination', async () => {
+  const result = await ParseMessageContent.parseMessageContent('See [documentation](https://example.com/docs')
 
   expect(result).toEqual([
     {
@@ -513,8 +513,8 @@ test('parseMessageContent should not parse raw url inside unclosed markdown link
   ])
 })
 
-test('parseMessageContent should parse markdown images', () => {
-  const result = ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
+test('parseMessageContent should parse markdown images', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Preview: ![This is an image](http://invalid-url)')
 
   expect(result).toEqual([
     {
@@ -534,10 +534,10 @@ test('parseMessageContent should parse markdown images', () => {
   ])
 })
 
-test('parseMessageContent should parse markdown bold text in paragraphs', () => {
+test('parseMessageContent should parse markdown bold text in paragraphs', async () => {
   const rawMessage = 'For **Transport Agnostic**: It can work over various transport protocols, including HTTP, WebSocket, and others.'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -565,10 +565,10 @@ test('parseMessageContent should parse markdown bold text in paragraphs', () => 
   ])
 })
 
-test('parseMessageContent should parse markdown italic text in paragraphs', () => {
+test('parseMessageContent should parse markdown italic text in paragraphs', async () => {
   const rawMessage = 'For *asynchronous*: Supports both synchronous and asynchronous communication.'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -596,10 +596,10 @@ test('parseMessageContent should parse markdown italic text in paragraphs', () =
   ])
 })
 
-test('parseMessageContent should parse markdown italic text across multiple lines in paragraphs', () => {
+test('parseMessageContent should parse markdown italic text across multiple lines in paragraphs', async () => {
   const rawMessage = '*line one\nline two*'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -619,10 +619,10 @@ test('parseMessageContent should parse markdown italic text across multiple line
   ])
 })
 
-test('parseMessageContent should parse markdown strikethrough text in paragraphs', () => {
+test('parseMessageContent should parse markdown strikethrough text in paragraphs', async () => {
   const rawMessage = 'Please use ~~strikethrough~~ formatting.'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -650,10 +650,10 @@ test('parseMessageContent should parse markdown strikethrough text in paragraphs
   ])
 })
 
-test('parseMessageContent should parse markdown bold nested inside italic', () => {
+test('parseMessageContent should parse markdown bold nested inside italic', async () => {
   const rawMessage = '*italic with **bold** inside*'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -686,10 +686,10 @@ test('parseMessageContent should parse markdown bold nested inside italic', () =
   ])
 })
 
-test('parseMessageContent should parse markdown bold+italic with triple asterisks', () => {
+test('parseMessageContent should parse markdown bold+italic with triple asterisks', async () => {
   const rawMessage = 'This should be ***both*** styles'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -722,10 +722,10 @@ test('parseMessageContent should parse markdown bold+italic with triple asterisk
   ])
 })
 
-test('parseMessageContent should parse markdown unordered list blocks', () => {
+test('parseMessageContent should parse markdown unordered list blocks', async () => {
   const rawMessage = ['I can help with:', '', '- Reading project files', '- Running tests', '- Explaining errors'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -772,7 +772,7 @@ test('parseMessageContent should parse markdown unordered list blocks', () => {
   ])
 })
 
-test('parseMessageContent should nest indented unordered items inside ordered list items', () => {
+test('parseMessageContent should nest indented unordered items inside ordered list items', async () => {
   const rawMessage = [
     // cspell:ignore Ligurians
     '1. Ancient and Medieval Periods:',
@@ -782,7 +782,7 @@ test('parseMessageContent should nest indented unordered items inside ordered li
     ' - Captured the fortress in 1297.',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -844,10 +844,10 @@ test('parseMessageContent should nest indented unordered items inside ordered li
   ])
 })
 
-test('parseMessageContent should nest indented ordered items inside ordered list items', () => {
+test('parseMessageContent should nest indented ordered items inside ordered list items', async () => {
   const rawMessage = ['1. L1', '   1. L2', '      1. L3'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -891,10 +891,10 @@ test('parseMessageContent should nest indented ordered items inside ordered list
   ])
 })
 
-test('parseMessageContent should parse markdown unordered list blocks with star markers', () => {
+test('parseMessageContent should parse markdown unordered list blocks with star markers', async () => {
   const rawMessage = ['I can help with:', '', '* Reading project files', '* Running tests', '* Explaining errors'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -941,11 +941,11 @@ test('parseMessageContent should parse markdown unordered list blocks with star 
   ])
 })
 
-test('parseMessageContent should parse unordered list blocks from escaped newlines', () => {
+test('parseMessageContent should parse unordered list blocks from escaped newlines', async () => {
   const rawMessage =
     "The Python file is a program to display the Fibonacci sequence up to the n-th term specified by the user.\\n\\nHere's a summary of what it does:\\n- It prompts the user to enter how many terms of the Fibonacci sequence they want to see.\\n- It checks if the input is a positive integer.\\n- If the input is 1, it prints the first term (0).\\n- If the input is greater than 1, it generates and prints the Fibonacci sequence up to the specified number of terms. The sequence starts with 0 and 1, and each subsequent term is the sum of the previous two.\\n\\nWould you like me to explain the code line-by-line?"
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1019,7 +1019,7 @@ test('parseMessageContent should parse unordered list blocks from escaped newlin
   ])
 })
 
-test('parseMessageContent should parse markdown table blocks', () => {
+test('parseMessageContent should parse markdown table blocks', async () => {
   const rawMessage = [
     'Here is the latest inventory:',
     '',
@@ -1029,7 +1029,7 @@ test('parseMessageContent should parse markdown table blocks', () => {
     '| Bread | 1 | $2.00 |',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1142,10 +1142,10 @@ test('parseMessageContent should parse markdown table blocks', () => {
   ])
 })
 
-test('parseMessageContent should parse single-column markdown table and keep heading marker text in cells', () => {
+test('parseMessageContent should parse single-column markdown table and keep heading marker text in cells', async () => {
   const rawMessage = ['| Section |', '|---|', '| ### Nested heading |'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1181,11 +1181,11 @@ test('parseMessageContent should parse single-column markdown table and keep hea
   ])
 })
 
-test('parseMessageContent should parse one-line markdown table rows', () => {
+test('parseMessageContent should parse one-line markdown table rows', async () => {
   const rawMessage =
     '| Item | Quantity | Price (per unit) | Category | |--------------|----------|------------------|-------------| | Apples | 4 | $0.50 | Fruits | | Bread | 1 | $2.00 | Bakery |'
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1316,7 +1316,7 @@ test('parseMessageContent should parse one-line markdown table rows', () => {
   ])
 })
 
-test('parseMessageContent should parse fenced code blocks', () => {
+test('parseMessageContent should parse fenced code blocks', async () => {
   const rawMessage = [
     'Here is JSON-RPC request body:',
     '',
@@ -1325,7 +1325,7 @@ test('parseMessageContent should parse fenced code blocks', () => {
     '```',
   ].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1345,10 +1345,10 @@ test('parseMessageContent should parse fenced code blocks', () => {
   ])
 })
 
-test('parseMessageContent should parse markdown heading blocks', () => {
+test('parseMessageContent should parse markdown heading blocks', async () => {
   const rawMessage = ['# Heading 1', '## Heading 2', '### Heading 3', '#### Heading 4', '##### Heading 5', '###### Heading 6'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1415,10 +1415,10 @@ test('parseMessageContent should parse markdown heading blocks', () => {
 })
 
 // eslint-disable-next-line @cspell/spellchecker
-test('parseMessageContent should parse markdown blockquotes with nested list and inline formatting', () => {
+test('parseMessageContent should parse markdown blockquotes with nested list and inline formatting', async () => {
   const rawMessage = ['> This is a quote.', '> ', '> - It can contain lists.', '> - **Bold text**', '> - `Inline code`'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1475,8 +1475,8 @@ test('parseMessageContent should parse markdown blockquotes with nested list and
   ])
 })
 
-test('parseMessageContent should parse markdown inline math', () => {
-  const result = ParseMessageContent.parseMessageContent('Quadratic roots are $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.')
+test('parseMessageContent should parse markdown inline math', async () => {
+  const result = await ParseMessageContent.parseMessageContent('Quadratic roots are $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$.')
 
   expect(result).toEqual([
     {
@@ -1500,10 +1500,10 @@ test('parseMessageContent should parse markdown inline math', () => {
   ])
 })
 
-test('parseMessageContent should parse markdown block math with double dollar delimiters', () => {
+test('parseMessageContent should parse markdown block math with double dollar delimiters', async () => {
   const rawMessage = ['For ax^2 + bx + c = 0:', '', '$$', 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', '$$'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
@@ -1522,10 +1522,10 @@ test('parseMessageContent should parse markdown block math with double dollar de
   ])
 })
 
-test('parseMessageContent should not parse math inside fenced code blocks', () => {
+test('parseMessageContent should not parse math inside fenced code blocks', async () => {
   const rawMessage = ['```ts', 'const value = "$x$"', '```'].join('\n')
 
-  const result = ParseMessageContent.parseMessageContent(rawMessage)
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
 
   expect(result).toEqual([
     {
