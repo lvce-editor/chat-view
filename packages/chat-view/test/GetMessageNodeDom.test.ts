@@ -123,6 +123,33 @@ test('getMessageNodeDom should render markdown vscode file links with data-uri a
   })
 })
 
+test('getMessageNodeDom should render workspace file links as read-file anchors', () => {
+  const result = getMessageNodeDom({
+    children: [
+      {
+        text: 'Files: ',
+        type: 'text',
+      },
+      {
+        href: 'file:///workspace/src/index.ts',
+        text: 'src/index.ts',
+        type: 'link',
+      },
+    ],
+    type: 'text',
+  })
+
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatMessageLink,
+    'data-uri': 'file:///workspace/src/index.ts',
+    href: '#',
+    onClick: DomEventListenerFunctions.HandleClickReadFile,
+    title: 'file:///workspace/src/index.ts',
+    type: VirtualDomElements.A,
+  })
+})
+
 test('getMessageNodeDom should render markdown bold inline nodes as strong dom nodes', () => {
   const result = getMessageNodeDom({
     children: [

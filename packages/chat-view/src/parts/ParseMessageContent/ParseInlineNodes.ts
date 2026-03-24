@@ -1,4 +1,6 @@
 import type { MessageInlineNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
+import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 
 const isAlphaNumeric = (value: string | undefined): boolean => {
   if (!value) {
@@ -15,6 +17,7 @@ const isAlphaNumeric = (value: string | undefined): boolean => {
 }
 
 const sanitizeLinkUrl = (url: string): string => {
+  const trimmedUrl = url.trim()
   const normalized = url.trim().toLowerCase()
   if (
     normalized.startsWith('http://') ||
@@ -22,9 +25,22 @@ const sanitizeLinkUrl = (url: string): string => {
     normalized.startsWith('file://') ||
     normalized.startsWith('vscode-references://')
   ) {
-    return url
+    return trimmedUrl
   }
-  return '#'
+  if (!trimmedUrl || trimmedUrl.startsWith('#') || trimmedUrl.startsWith('?') || trimmedUrl.startsWith('/') || trimmedUrl.startsWith('\\')) {
+    return '#'
+  }
+  if (trimmedUrl.includes('://') || trimmedUrl.includes(':')) {
+    return '#'
+  }
+  if (isPathTraversalAttempt(trimmedUrl)) {
+    return '#'
+  }
+  const normalizedPath = normalizeRelativePath(trimmedUrl)
+  if (normalizedPath === '.') {
+    return '#'
+  }
+  return `file:///workspace/${normalizedPath}`
 }
 
 const sanitizeImageUrl = (url: string): string => {
