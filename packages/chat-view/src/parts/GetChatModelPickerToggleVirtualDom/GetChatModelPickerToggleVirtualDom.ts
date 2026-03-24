@@ -14,6 +14,8 @@ export const getChatModelPickerToggleVirtualDom = (
   const selectedModelLabel = selectedModel ? selectedModel.name : selectedModelId
   return [
     {
+      'aria-expanded': modelPickerOpen ? 'true' : 'false',
+      'aria-haspopup': 'true',
       childCount: 2,
       className: ClassNames.Select,
       name: InputName.ModelPickerToggle,
