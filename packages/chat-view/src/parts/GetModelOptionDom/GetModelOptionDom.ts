@@ -3,7 +3,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 
-export const getModelOptionDOm = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
+export const getModelOptionDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
