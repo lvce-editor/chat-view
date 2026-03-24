@@ -67,10 +67,12 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
   const toolNamePrefix = match ? match[1] : label
   const suffix = label.slice(toolNamePrefix.length)
   const hasSuffix = suffix.length > 0
+  const hoverTitle = hasSuffix && toolCall.arguments.trim() ? toolCall.arguments : undefined
   return [
     {
       childCount: hasSuffix ? 2 : 1,
       className: ClassNames.ChatOrderedListItem,
+      ...(hoverTitle ? { title: hoverTitle } : {}),
       type: VirtualDomElements.Li,
     },
     {
