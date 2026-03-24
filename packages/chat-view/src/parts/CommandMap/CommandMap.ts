@@ -1,4 +1,6 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
+import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
@@ -90,6 +92,8 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
+  'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
+  'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
   'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
