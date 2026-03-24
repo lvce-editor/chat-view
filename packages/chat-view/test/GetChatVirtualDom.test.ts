@@ -107,7 +107,11 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
     type: VirtualDomElements.Button,
   })
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
-  expect(modelPickerToggleLabel).toBeDefined()
+  expect(modelPickerToggleLabel).toMatchObject({
+    className: ClassNames.SelectLabel,
+    role: 'none',
+    type: VirtualDomElements.Span,
+  })
   expect(modelPicker).toBeUndefined()
 })
 
