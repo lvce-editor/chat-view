@@ -105,6 +105,10 @@ export const attachImageAsContext = (): string => {
   return i18nString(UiStrings.AttachImageAsContext)
 }
 
+export const imageCouldNotBeLoaded = (): string => {
+  return i18nString(UiStrings.ImageCouldNotBeLoaded)
+}
+
 export const openRouterApiKeyPlaceholder = (): string => {
   return i18nString(UiStrings.OpenRouterApiKeyPlaceholder)
 }
