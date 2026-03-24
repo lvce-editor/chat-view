@@ -3,6 +3,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openRouterApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -65,6 +66,8 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     userText: previousUserMessage.text,
   })
 
+  const parsedMessages = await parseAndStoreMessageContent(updatedState.parsedMessages, assistantMessage)
+
   const updatedSession = {
     ...session,
     messages: [...session.messages.slice(0, -1), assistantMessage],
@@ -83,6 +86,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
     openRouterApiKeyState: 'idle',
+    parsedMessages,
     sessions: updatedSessions,
   }
 }

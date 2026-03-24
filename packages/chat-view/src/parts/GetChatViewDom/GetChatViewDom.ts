@@ -11,7 +11,6 @@ import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatM
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
 import { getTodoListItems } from '../GetTodoListItems/GetTodoListItems.ts'
 import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly ParsedMessage[] => {
   const parsedMessages: ParsedMessage[] = []
@@ -22,7 +21,7 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
       }
       parsedMessages.push({
         id: message.id,
-        parsedContent: message.text === '' ? getEmptyMessageContent() : parseMessageContent(message.text),
+        parsedContent: getEmptyMessageContent(),
         text: message.text,
       })
     }
