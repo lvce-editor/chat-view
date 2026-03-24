@@ -352,3 +352,47 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
     text: 'main.ts',
   })
 })
+
+test('getToolCallDom should render create_directory as folder name with uri title', () => {
+  const uri = 'file:///workspace/src/components'
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      uri,
+    }),
+    name: 'create_directory',
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(7)
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.ChatOrderedListItem,
+    title: uri,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[2]).toEqual({
+    childCount: 1,
+    className: ClassNames.ToolCallName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
+    text: 'create_directory ',
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallReadFileLink,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[5]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallFileName,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[6]).toMatchObject({
+    text: 'components',
+  })
+})

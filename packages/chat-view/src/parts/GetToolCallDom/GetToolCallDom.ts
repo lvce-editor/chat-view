@@ -2,6 +2,7 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallAskQuestionVirtualDom } from '../GetToolCallAskQuestionVirtualDom/GetToolCallAskQuestionVirtualDom.ts'
+import { getToolCallCreateDirectoryVirtualDom } from '../GetToolCallCreateDirectoryVirtualDom/GetToolCallCreateDirectoryVirtualDom.ts'
 import { getToolCallEditFileVirtualDom } from '../GetToolCallEditFileVirtualDom/GetToolCallEditFileVirtualDom.ts'
 import { getToolCallGetWorkspaceUriVirtualDom } from '../GetToolCallGetWorkspaceUriVirtualDom/GetToolCallGetWorkspaceUriVirtualDom.ts'
 import { getToolCallLabel } from '../GetToolCallLabel/GetToolCallLabel.ts'
@@ -28,6 +29,13 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
 
   if (toolCall.name === 'write_file') {
     const virtualDom = getToolCallWriteFileVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'create_directory') {
+    const virtualDom = getToolCallCreateDirectoryVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }
