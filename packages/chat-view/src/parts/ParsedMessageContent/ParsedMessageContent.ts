@@ -145,7 +145,7 @@ const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageInte
 }
 
 export const parseMessage = async (rawMessage: string): Promise<readonly MessageIntermediateNode[]> => {
-  const parsedContent = parseMessageContent(rawMessage)
+  const parsedContent = await parseMessageContent(rawMessage)
   const nextParsedContent: MessageIntermediateNode[] = []
   for (const node of parsedContent) {
     nextParsedContent.push(await parseMathNode(node))
