@@ -1,6 +1,8 @@
 import { expect, test } from '@jest/globals'
 import * as ParseMessageContent from '../src/parts/ParseMessageContent/ParseMessageContent.ts'
 
+// cspell:ignore Clawpack
+
 test('parseMessageContent should parse mixed paragraph and ordered list blocks', () => {
   const rawMessage = [
     'I have access to the following tools:',
@@ -105,6 +107,115 @@ test('parseMessageContent should keep ordered list items together across blank l
         },
       ],
       type: 'ordered-list',
+    },
+  ])
+})
+
+test('parseMessageContent should keep loose ordered list sections together when items have continuation paragraphs', () => {
+  const rawMessage = [
+    '1. Numerical Methods:',
+    'OpenClaw uses finite volume methods for solving systems of hyperbolic PDEs.',
+    '',
+    '1. Supported Equations:',
+    'It supports a wide range of hyperbolic systems:',
+    ' - Shallow water equations',
+    ' - Compressible Euler equations',
+    '',
+    '1. Community & Documentation:',
+    'OpenClaw is part of the Clawpack project.',
+    '',
+    'Summary',
+    'OpenClaw helps researchers accurately model wave propagation.',
+  ].join('\n')
+
+  const result = ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      items: [
+        {
+          children: [
+            {
+              text: 'Numerical Methods:',
+              type: 'text',
+            },
+            {
+              text: '\n',
+              type: 'text',
+            },
+            {
+              text: 'OpenClaw uses finite volume methods for solving systems of hyperbolic PDEs.',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Supported Equations:',
+              type: 'text',
+            },
+            {
+              text: '\n',
+              type: 'text',
+            },
+            {
+              text: 'It supports a wide range of hyperbolic systems:',
+              type: 'text',
+            },
+          ],
+          nestedItems: [
+            {
+              children: [
+                {
+                  text: 'Shallow water equations',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+            {
+              children: [
+                {
+                  text: 'Compressible Euler equations',
+                  type: 'text',
+                },
+              ],
+              type: 'list-item',
+            },
+          ],
+          nestedListType: 'unordered-list',
+          type: 'list-item',
+        },
+        {
+          children: [
+            {
+              text: 'Community & Documentation:',
+              type: 'text',
+            },
+            {
+              text: '\n',
+              type: 'text',
+            },
+            {
+              text: 'OpenClaw is part of the Clawpack project.',
+              type: 'text',
+            },
+          ],
+          type: 'list-item',
+        },
+      ],
+      type: 'ordered-list',
+    },
+    {
+      children: [
+        {
+          text: 'Summary\nOpenClaw helps researchers accurately model wave propagation.',
+          type: 'text',
+        },
+      ],
+      type: 'text',
     },
   ])
 })
