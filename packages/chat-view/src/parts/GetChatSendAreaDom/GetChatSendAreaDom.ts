@@ -55,6 +55,7 @@ export const getChatSendAreaDom = (
       onInput: DomEventListenerFunctions.HandleInput,
       onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
       placeholder: Strings.composePlaceholder(),
+      spellcheck: false,
       type: VirtualDomElements.TextArea,
     },
     {
