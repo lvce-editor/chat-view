@@ -10,7 +10,7 @@ test('getModelOptionDOm should append OpenRouter to openRouter model labels', ()
     provider: 'openRouter' as const,
   }
 
-  const result = GetModelOptionDom.getModelOptionDOm(model, '')
+  const result = GetModelOptionDom.getModelOptionDom(model, '')
 
   expect(result).toEqual([
     {
@@ -33,7 +33,7 @@ test('getModelOptionDOm should keep non-openRouter model labels unchanged', () =
     provider: 'test' as const,
   }
 
-  const result = GetModelOptionDom.getModelOptionDOm(model, 'test')
+  const result = GetModelOptionDom.getModelOptionDom(model, 'test')
 
   expect(result).toEqual([
     expect.objectContaining({
@@ -52,7 +52,7 @@ test('getModelOptionDOm should append OpenAI to openApi model labels', () => {
     provider: 'openApi' as const,
   }
 
-  const result = GetModelOptionDom.getModelOptionDOm(model, '')
+  const result = GetModelOptionDom.getModelOptionDom(model, '')
 
   expect(result).toEqual([
     expect.objectContaining({

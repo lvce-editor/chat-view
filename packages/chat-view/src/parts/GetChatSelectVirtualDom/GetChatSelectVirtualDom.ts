@@ -2,11 +2,11 @@ import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-do
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getModelOptionDOm } from '../GetModelOptionDom/GetModelOptionDom.ts'
+import { getModelOptionDom } from '../GetModelOptionDom/GetModelOptionDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatSelectVirtualDom = (models: readonly ChatModel[], selectedModelId: string): readonly VirtualDomNode[] => {
-  const modelOptions = models.flatMap((model) => getModelOptionDOm(model, selectedModelId))
+  const modelOptions = models.flatMap((model) => getModelOptionDom(model, selectedModelId))
   return [
     {
       childCount: models.length,
