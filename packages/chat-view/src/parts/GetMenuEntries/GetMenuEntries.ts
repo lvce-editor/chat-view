@@ -1,5 +1,5 @@
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
-import type { ContextMenuProps } from './ContextMenuProps/ContextMenuProps.ts'
+import type { ContextMenuProps } from '../ContextMenuProps/ContextMenuProps.ts'
 import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEntriesChatHeader.ts'
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
