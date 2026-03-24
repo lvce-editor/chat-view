@@ -146,6 +146,7 @@ export const commandMap = {
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
   'Chat.handleMissingOpenRouterApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenRouterApiKeyFormSubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
+  'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),

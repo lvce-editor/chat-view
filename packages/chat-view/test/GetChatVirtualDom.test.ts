@@ -128,6 +128,7 @@ test('getChatVirtualDOm should render open model picker with search input and se
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
   const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
+  const modelPickerList = result.find((node) => node.className === ClassNames.ChatModelPickerList)
   expect(modelPicker).toBeDefined()
   expect(modelPickerToggle).toMatchObject({
     'aria-expanded': 'true',
@@ -143,6 +144,11 @@ test('getChatVirtualDOm should render open model picker with search input and se
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
+  })
+  expect(modelPickerList).toMatchObject({
+    className: ClassNames.ChatModelPickerList,
+    onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
+    type: VirtualDomElements.Ul,
   })
 })
 

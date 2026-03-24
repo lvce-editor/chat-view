@@ -9,6 +9,7 @@ export const handleClickModelPickerListIndex = async (state: ChatState, index: n
   return {
     ...state,
     modelPickerHeight: getModelPickerHeight(models.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     selectedModelId: visibleModels[index].id,

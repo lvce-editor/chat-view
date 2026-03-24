@@ -35,4 +35,10 @@ test('renderEventListeners should return expected listeners', () => {
     params: ['handleContextMenuChatModelPicker'],
     preventDefault: true,
   })
+  const modelPickerListScrollListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleModelPickerListScroll)
+  expect(modelPickerListScrollListener).toEqual({
+    name: DomEventListenerFunctions.HandleModelPickerListScroll,
+    params: ['handleModelPickerListScroll', 'event.target.scrollTop'],
+    passive: true,
+  })
 })

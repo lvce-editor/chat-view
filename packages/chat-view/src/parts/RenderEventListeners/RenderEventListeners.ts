@@ -120,6 +120,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleProjectListScroll', 'event.target.scrollTop'],
     },
     {
+      name: DomEventListenersFunctions.HandleModelPickerListScroll,
+      params: ['handleModelPickerListScroll', 'event.target.scrollTop'],
+      passive: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleProjectAddButtonContextMenu,
       params: ['handleProjectAddButtonContextMenu'],
       preventDefault: true,

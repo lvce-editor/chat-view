@@ -5,6 +5,7 @@ export const handleModelChange = async (state: ChatState, value: string): Promis
   return {
     ...state,
     modelPickerHeight: getModelPickerHeight(state.models.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     selectedModelId: value,
