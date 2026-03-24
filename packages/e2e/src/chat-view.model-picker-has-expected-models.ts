@@ -5,6 +5,8 @@ export const name = 'chat-view.model-picker-has-expected-models'
 
 const expectedModelIds = [
   'test',
+  'openapi/codex-5.3',
+  'openapi/gpt-5.4-mini',
   'openapi/gpt-5-mini',
   'openapi/gpt-4o-mini',
   'openapi/gpt-4o',
