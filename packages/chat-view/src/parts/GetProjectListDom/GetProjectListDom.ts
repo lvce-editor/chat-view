@@ -3,7 +3,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { Project } from '../Project/Project.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getBackToChatsButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
+import { getBackToChatsButtonDom } from '../GetBackToChatsButtonDom/GetBackToChatsButtonDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const getProjectSessionDom = (session: ChatSession, selectedSessionId: string): readonly VirtualDomNode[] => {
