@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -26,14 +26,14 @@ export const getChatModelPickerToggleVirtualDom = (
     {
       childCount: 1,
       className: ClassNames.SelectLabel,
-      role: 'none',
+      role: AriaRoles.None,
       type: VirtualDomElements.Span,
     },
     text(selectedModelLabel),
     {
       childCount: 0,
       className: mergeClassNames(ClassNames.MaskIcon, modelPickerOpen ? ClassNames.MaskIconChevronUp : ClassNames.MaskIconChevronDown),
-      role: 'none',
+      role: AriaRoles.None,
       type: VirtualDomElements.Div,
     },
   ]
