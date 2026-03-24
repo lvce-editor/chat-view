@@ -7,6 +7,7 @@ export const openModelPicker = (state: ChatState): ChatState => {
   return {
     ...state,
     modelPickerHeight: getModelPickerHeight(visibleModels.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen,
     modelPickerSearchValue: state.modelPickerOpen ? '' : state.modelPickerSearchValue,
     visibleModels,

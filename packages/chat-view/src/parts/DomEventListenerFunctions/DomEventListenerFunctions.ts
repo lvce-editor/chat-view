@@ -46,3 +46,4 @@ export const HandleClickModelPickerToggle = 46
 export const HandleContextMenuChatModelPicker = 47
 export const HandleClickModelPickerList = 48
 export const HandleComposerSelectionChange = 49
+export const HandleModelPickerListScroll = 50

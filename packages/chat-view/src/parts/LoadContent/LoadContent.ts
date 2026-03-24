@@ -112,6 +112,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     lastNormalViewMode,
     messagesScrollTop,
     modelPickerHeight: getModelPickerHeight(visibleModels.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     openApiApiKey,

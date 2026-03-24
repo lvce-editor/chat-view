@@ -31,6 +31,7 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     return {
       ...state,
       modelPickerHeight: getModelPickerHeight(visibleModels.length),
+      modelPickerListScrollTop: 0,
       modelPickerSearchValue: value,
       visibleModels,
     }

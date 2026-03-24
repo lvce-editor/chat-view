@@ -36,3 +36,13 @@ export const handleProjectListScroll = async (state: ChatState, projectListScrol
     projectListScrollTop,
   }
 }
+
+export const handleModelPickerListScroll = async (state: ChatState, modelPickerListScrollTop: number): Promise<ChatState> => {
+  if (state.modelPickerListScrollTop === modelPickerListScrollTop) {
+    return state
+  }
+  return {
+    ...state,
+    modelPickerListScrollTop,
+  }
+}
