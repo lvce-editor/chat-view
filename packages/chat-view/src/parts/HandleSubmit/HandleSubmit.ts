@@ -37,6 +37,13 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   }
 }
 
+const workspaceUriPlaceholder = '{{workspaceUri}}'
+
+const getEffectiveSystemPrompt = (state: ChatState): string => {
+  const selectedProjectUri = state.projects.find((project) => project.id === state.selectedProjectId)?.uri || ''
+  return state.systemPrompt.replaceAll(workspaceUriPlaceholder, selectedProjectUri || 'unknown')
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     aiSessionTitleGenerationEnabled,
@@ -61,7 +68,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     selectedSessionId,
     sessions,
     streamingEnabled,
-    systemPrompt,
     useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
@@ -69,6 +75,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     viewMode,
     webSearchEnabled,
   } = state
+  const systemPrompt = getEffectiveSystemPrompt(state)
   const userText = composerValue.trim()
   if (!userText) {
     return state
