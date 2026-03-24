@@ -27,3 +27,21 @@ test('getToolCallLabel should render run_in_terminal with options command only',
 
   expect(result).toBe('run_in_terminal "node -v"')
 })
+
+test('getToolCallLabel should render grep_search query only', () => {
+  const result = getToolCallLabel({
+    arguments: '{"includeIgnoredFiles":false,"includePattern":"**","isRegexp":false,"maxResults":10,"query":"hello"}',
+    name: 'grep_search',
+  })
+
+  expect(result).toBe('grep_search "hello"')
+})
+
+test('getToolCallLabel should render grep_search without partial json when arguments are incomplete', () => {
+  const result = getToolCallLabel({
+    arguments: '{"includeIgnoredFiles":false,"query":"hel',
+    name: 'grep_search',
+  })
+
+  expect(result).toBe('grep_search')
+})
