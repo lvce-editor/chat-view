@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel, ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
@@ -66,6 +67,7 @@ const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly Virtu
   ]
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatModeListVirtualDom = ({
   addContextButtonEnabled,
   authEnabled = false,

@@ -13,6 +13,8 @@ import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
 
+const defaultMaxToolCalls = 10
+
 const errorPrefixRegex = /^Error:\s*/
 const notFoundErrorRegex = /not[\s_-]?found|enoent/i
 
@@ -57,6 +59,7 @@ export const getOpenAiParams = (
   includeObfuscation: boolean,
   tools: readonly unknown[],
   webSearchEnabled: boolean,
+  maxToolCalls: number,
   systemPrompt = '',
   previousResponseId?: string,
 ): object => {
@@ -86,6 +89,7 @@ export const getOpenAiParams = (
           previous_response_id: previousResponseId,
         }
       : {}),
+    max_tool_calls: maxToolCalls,
     tool_choice: 'auto',
     tools: webSearchEnabled ? [...openAiTools, { type: 'web_search' }] : openAiTools,
   }
@@ -762,6 +766,7 @@ export const getOpenApiAssistantText = async (
 ): Promise<GetOpenApiAssistantTextResult> => {
   const {
     includeObfuscation = false,
+    maxToolCalls = defaultMaxToolCalls,
     onDataEvent,
     onEventStreamFinished,
     onTextChunk,
@@ -778,10 +783,21 @@ export const getOpenApiAssistantText = async (
     role: message.role,
   }))
   const tools = await getBasicChatTools(questionToolEnabled)
-  const maxToolIterations = 4
+  const safeMaxToolCalls = Math.max(1, maxToolCalls)
+  const maxToolIterations = safeMaxToolCalls - 1
   let previousResponseId: string | undefined
   for (let i = 0; i <= maxToolIterations; i++) {
-    const postBody = getOpenAiParams(openAiInput, modelId, stream, includeObfuscation, tools, webSearchEnabled, systemPrompt, previousResponseId)
+    const postBody = getOpenAiParams(
+      openAiInput,
+      modelId,
+      stream,
+      includeObfuscation,
+      tools,
+      webSearchEnabled,
+      safeMaxToolCalls,
+      systemPrompt,
+      previousResponseId,
+    )
 
     if (stream) {
       const streamResult = useChatNetworkWorkerForRequests
@@ -1196,7 +1212,7 @@ export const getOpenApiAssistantText = async (
 
   return {
     details: 'tool-iterations-exhausted',
-    iterationLimit: maxToolIterations + 1,
+    iterationLimit: safeMaxToolCalls,
     type: 'error',
   }
 }

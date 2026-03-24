@@ -10,6 +10,7 @@ export const createExtensionHostRpc = async (): Promise<Rpc> => {
     })
     return rpc
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new VError(error, `Failed to create extension host rpc`)
   }
 }

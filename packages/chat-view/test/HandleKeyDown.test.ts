@@ -65,7 +65,7 @@ test('handleKeyDown should ignore non-enter keys', async () => {
   expect(result).toBe(state)
 })
 
-test('handleKeyDown should navigate composer history with ArrowUp and ArrowDown', async () => {
+test('handleKeyDown should ignore ArrowUp because navigation is command-keybinding based', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
@@ -76,23 +76,8 @@ test('handleKeyDown should navigate composer history with ArrowUp and ArrowDown'
     composerValue: 'draft',
     focus: 'composer',
   }
-  const up1 = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
-  expect(up1.composerValue).toBe('second')
-  expect(up1.chatInputHistoryIndex).toBe(0)
-  expect(up1.chatInputHistoryDraft).toBe('draft')
-  expect(up1.inputSource).toBe('script')
-
-  const up2 = await HandleKeyDown.handleKeyDown(up1, 'ArrowUp', false)
-  expect(up2.composerValue).toBe('first')
-  expect(up2.chatInputHistoryIndex).toBe(1)
-
-  const down1 = await HandleKeyDown.handleKeyDown(up2, 'ArrowDown', false)
-  expect(down1.composerValue).toBe('second')
-  expect(down1.chatInputHistoryIndex).toBe(0)
-
-  const down2 = await HandleKeyDown.handleKeyDown(down1, 'ArrowDown', false)
-  expect(down2.composerValue).toBe('draft')
-  expect(down2.chatInputHistoryIndex).toBe(-1)
+  const result = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
+  expect(result).toBe(state)
 })
 
 test('handleKeyDown should not navigate history when chat history is disabled', async () => {
@@ -109,18 +94,10 @@ test('handleKeyDown should not navigate history when chat history is disabled', 
   expect(result).toBe(state)
 })
 
-test('handleKeyDown should focus next chat list item on ArrowDown', async () => {
+test('handleKeyDown should ignore ArrowDown in list focus because navigation is command-keybinding based', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = { ...createDefaultState(), focus: 'list', focused: true, listFocusedIndex: -1 }
   const result = await HandleKeyDown.handleKeyDown(state, 'ArrowDown', false)
-  expect(result.listFocusedIndex).toBe(0)
-})
-
-test('handleKeyDown should focus previous chat list item on ArrowUp', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = { ...createDefaultState(), focus: 'list', focused: true, listFocusedIndex: -1 }
-  const result = await HandleKeyDown.handleKeyDown(state, 'ArrowUp', false)
-  expect(result.listFocusedIndex).toBe(0)
+  expect(result).toBe(state)
 })

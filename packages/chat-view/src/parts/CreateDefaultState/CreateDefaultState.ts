@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 
 export const createDefaultState = (): ChatState => {
@@ -13,6 +14,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   const models = getDefaultModels()
+  const visibleModels = getVisibleModels(models, '')
   return {
     addContextButtonEnabled: false,
     aiSessionTitleGenerationEnabled: false,
@@ -41,6 +43,8 @@ export const createDefaultState = (): ChatState => {
     composerFontSize,
     composerHeight: composerLineHeight + 8,
     composerLineHeight,
+    composerSelectionEnd: 0,
+    composerSelectionStart: 0,
     composerValue: '',
     emitStreamingFunctionCallEvents: false,
     errorCount: 0,
@@ -55,10 +59,13 @@ export const createDefaultState = (): ChatState => {
     listFocusedIndex: -1,
     listItemHeight: 40,
     maxComposerRows: 5,
+    maxToolCalls: 10,
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,
     mockApiCommandId: '',
+    modelPickerHeight: getModelPickerHeight(visibleModels.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     models,
@@ -66,6 +73,7 @@ export const createDefaultState = (): ChatState => {
     openApiApiBaseUrl: 'https://api.openai.com/v1',
     openApiApiKey: '',
     openApiApiKeyInput: '',
+    openApiApiKeyInputPattern: '^sk-.+',
     openApiApiKeysSettingsUrl: 'https://platform.openai.com/api-keys',
     openApiApiKeyState: 'idle',
     openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
@@ -123,7 +131,7 @@ export const createDefaultState = (): ChatState => {
     userSubscriptionPlan: '',
     userUsedTokens: 0,
     viewMode: 'list',
-    visibleModels: getVisibleModels(models, ''),
+    visibleModels,
     voiceDictationEnabled: false,
     warningCount: 0,
     webSearchEnabled: true,

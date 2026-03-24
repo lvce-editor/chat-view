@@ -2,12 +2,15 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallAskQuestionVirtualDom } from '../GetToolCallAskQuestionVirtualDom/GetToolCallAskQuestionVirtualDom.ts'
+import { getToolCallCreateDirectoryVirtualDom } from '../GetToolCallCreateDirectoryVirtualDom/GetToolCallCreateDirectoryVirtualDom.ts'
 import { getToolCallEditFileVirtualDom } from '../GetToolCallEditFileVirtualDom/GetToolCallEditFileVirtualDom.ts'
 import { getToolCallGetWorkspaceUriVirtualDom } from '../GetToolCallGetWorkspaceUriVirtualDom/GetToolCallGetWorkspaceUriVirtualDom.ts'
 import { getToolCallLabel } from '../GetToolCallLabel/GetToolCallLabel.ts'
 import { getToolCallReadFileVirtualDom } from '../GetToolCallReadFileVirtualDom/GetToolCallReadFileVirtualDom.ts'
 import { getToolCallRenderHtmlVirtualDom } from '../GetToolCallRenderHtmlVirtualDom/GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallWriteFileVirtualDom } from '../GetToolCallWriteFileVirtualDom/GetToolCallWriteFileVirtualDom.ts'
+
+const RE_TOOL_NAME_PREFIX = /^([^ :]+)/
 
 export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'getWorkspaceUri') {
@@ -26,6 +29,13 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
 
   if (toolCall.name === 'write_file') {
     const virtualDom = getToolCallWriteFileVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'create_directory') {
+    const virtualDom = getToolCallCreateDirectoryVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }
@@ -53,12 +63,22 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
   }
 
   const label = getToolCallLabel(toolCall)
+  const match = RE_TOOL_NAME_PREFIX.exec(label)
+  const toolNamePrefix = match ? match[1] : label
+  const suffix = label.slice(toolNamePrefix.length)
+  const hasSuffix = suffix.length > 0
   return [
     {
-      childCount: 1,
+      childCount: hasSuffix ? 2 : 1,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    text(label),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    text(toolNamePrefix),
+    ...(hasSuffix ? [text(suffix)] : []),
   ]
 }

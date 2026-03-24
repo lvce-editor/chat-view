@@ -3,6 +3,7 @@ import type { MessageInlineStrikethroughNode } from '../ParseMessageContentTypes
 import type { InlineNodeDomRenderer } from './GetInlineNodeDomTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getStrikethroughInlineNodeDom = (
   inlineNode: MessageInlineStrikethroughNode,
   useChatMathWorker: boolean,

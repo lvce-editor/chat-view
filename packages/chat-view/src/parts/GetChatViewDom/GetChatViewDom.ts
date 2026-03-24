@@ -1,7 +1,9 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { ChatModel, ChatSession, Project } from '../ChatState/ChatState.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { Project } from '../Project/Project.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
@@ -47,6 +49,8 @@ export interface GetChatVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly openApiApiKeyInput: string
+  readonly openApiApiKeyInputPattern: string
+  readonly openApiApiKeysSettingsUrl: string
   readonly openApiApiKeyState: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
@@ -93,6 +97,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     modelPickerSearchValue = '',
     models,
     openApiApiKeyInput,
+    openApiApiKeyInputPattern,
+    openApiApiKeysSettingsUrl,
     openApiApiKeyState,
     openRouterApiKeyInput,
     openRouterApiKeyState,
@@ -141,6 +147,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerSearchValue,
         models,
         openApiApiKeyInput,
+        openApiApiKeyInputPattern,
+        openApiApiKeysSettingsUrl,
         openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,
@@ -181,6 +189,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerSearchValue,
         models,
         openApiApiKeyInput,
+        openApiApiKeyInputPattern,
+        openApiApiKeysSettingsUrl,
         openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,

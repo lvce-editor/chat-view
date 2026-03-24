@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/HandleToolCallsChunkFunction.ts'
 export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
@@ -18,6 +19,7 @@ export const updateMessageTextInSelectedSession = async (
   selectedSessionId: string,
   messageId: string,
   text: string,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   inProgress: boolean,
 ): Promise<{ readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] }> => {
   let updatedMessage: ChatSession['messages'][number] | undefined

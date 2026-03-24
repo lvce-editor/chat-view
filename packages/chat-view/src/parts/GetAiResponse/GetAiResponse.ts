@@ -1,5 +1,5 @@
 /* eslint-disable prefer-destructuring */
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import {
@@ -98,6 +98,7 @@ export const getAiResponse = async ({
   authAccessToken,
   authEnabled = false,
   backendUrl = '',
+  maxToolCalls = 10,
   messageId,
   messages,
   mockAiResponseDelay = 800,
@@ -134,6 +135,7 @@ export const getAiResponse = async ({
               messageId,
             }
           : {}),
+        maxToolCalls,
         messages,
         mockAiResponseDelay,
         mockApiCommandId,
@@ -182,6 +184,7 @@ export const getAiResponse = async ({
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   if (!text && usesOpenApiModel) {
+    const safeMaxToolCalls = Math.max(1, maxToolCalls)
     if (useMockApi) {
       const openAiInput: any[] = messages.map((message) => ({
         content: message.text,
@@ -193,7 +196,7 @@ export const getAiResponse = async ({
         'Content-Type': 'application/json',
         ...getClientRequestIdHeader(),
       }
-      const maxToolIterations = 4
+      const maxToolIterations = safeMaxToolCalls - 1
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
         MockOpenApiRequest.capture({
@@ -206,6 +209,7 @@ export const getAiResponse = async ({
             passIncludeObfuscation,
             await getBasicChatTools(questionToolEnabled),
             webSearchEnabled,
+            safeMaxToolCalls,
             systemPrompt,
             previousResponseId,
           ),
@@ -243,6 +247,7 @@ export const getAiResponse = async ({
         platform,
         {
           includeObfuscation: passIncludeObfuscation,
+          maxToolCalls: safeMaxToolCalls,
           ...(onDataEvent
             ? {
                 onDataEvent,

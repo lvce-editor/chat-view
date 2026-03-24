@@ -1,10 +1,11 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled: boolean): readonly VirtualDomNode[] => {
   const sendButtonClassName = getSendButtonClassName(isSendDisabled)
   return [
@@ -39,40 +40,6 @@ export const getSendButtonDom = (isSendDisabled: boolean, voiceDictationEnabled:
       className: 'MaskIcon MaskIconArrowUp',
       role: 'none',
       type: VirtualDomElements.Div,
-    },
-  ]
-}
-
-export const getAddContextButtonDom = (): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      name: InputName.AddContext,
-      title: Strings.addContext(),
-      type: VirtualDomElements.Button,
-    },
-    {
-      text: Strings.addContext(),
-      type: VirtualDomElements.Text,
-    },
-  ]
-}
-
-export const getBackToChatsButtonDom = (): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
-      inputType: 'button',
-      name: InputName.Back,
-      onClick: DomEventListenerFunctions.HandleClickBack,
-      title: Strings.backToChatList(),
-      type: VirtualDomElements.Button,
-    },
-    {
-      text: Strings.backToChatList(),
-      type: VirtualDomElements.Text,
     },
   ]
 }

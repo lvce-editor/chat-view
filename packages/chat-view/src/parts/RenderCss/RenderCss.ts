@@ -17,6 +17,7 @@ export const renderCss = (oldState: ChatState, newState: ChatState): readonly [s
     chatSendAreaPaddingTop,
     composerHeight,
     listItemHeight,
+    modelPickerHeight,
     selectedSessionId,
     sessions,
     textAreaPaddingBottom,
@@ -28,6 +29,7 @@ export const renderCss = (oldState: ChatState, newState: ChatState): readonly [s
   const renderHtmlCss = getRenderHtmlCss(sessions, selectedSessionId)
   const css = getCss(
     composerHeight,
+    modelPickerHeight,
     listItemHeight,
     chatMessageFontSize,
     chatMessageLineHeight,

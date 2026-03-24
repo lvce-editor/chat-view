@@ -1,4 +1,5 @@
-import type { ChatMessage, ChatModel } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {
@@ -6,6 +7,7 @@ export interface GetAiResponseOptions {
   readonly authAccessToken?: string
   readonly authEnabled?: boolean
   readonly backendUrl?: string
+  readonly maxToolCalls?: number
   readonly messageId?: string
   readonly messages: readonly ChatMessage[]
   readonly mockAiResponseDelay?: number

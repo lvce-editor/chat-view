@@ -62,6 +62,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
     },
     {
+      name: DomEventListenersFunctions.HandleComposerSelectionChange,
+      params: ['setComposerSelection', EventExpression.TargetSelectionStart, EventExpression.TargetSelectionEnd],
+    },
+    {
       name: DomEventListenersFunctions.HandleSearchInput,
       params: ['handleSearchValueChange', EventExpression.TargetValue],
     },
@@ -114,6 +118,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     {
       name: DomEventListenersFunctions.HandleProjectListScroll,
       params: ['handleProjectListScroll', 'event.target.scrollTop'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleModelPickerListScroll,
+      params: ['handleModelPickerListScroll', 'event.target.scrollTop'],
+      passive: true,
     },
     {
       name: DomEventListenersFunctions.HandleProjectAddButtonContextMenu,
@@ -177,6 +186,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleMissingOpenRouterApiKeyFormSubmit,
       params: ['handleMissingOpenRouterApiKeyFormSubmit'],
       preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickModelPickerList,
+      params: ['handleClickModelPickerList', EventExpression.ClientY],
     },
   ]
 }

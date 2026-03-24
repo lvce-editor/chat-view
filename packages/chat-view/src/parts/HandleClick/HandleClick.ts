@@ -1,7 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
-import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
 import { handleClickLogout } from '../HandleClickLogout/HandleClickLogout.ts'
@@ -25,7 +25,6 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
   if (!name) {
     return state
   }
-  void eventX
   switch (true) {
     case name === InputName.CreateSession:
       return createSession(state)
@@ -47,23 +46,11 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
       return {
         ...state,
+        modelPickerHeight: getModelPickerHeight(state.models.length),
+        modelPickerListScrollTop: 0,
         modelPickerOpen: false,
         modelPickerSearchValue: '',
         selectedModelId: modelId,
-        visibleModels: state.models,
-      }
-    }
-    case name === InputName.ModelPickerList: {
-      const { visibleModels } = state
-      const index = getModelPickerClickIndex(state.y, state.height, eventY)
-      if (index < 0 || index >= visibleModels.length) {
-        return state
-      }
-      return {
-        ...state,
-        modelPickerOpen: false,
-        modelPickerSearchValue: '',
-        selectedModelId: visibleModels[index].id,
         visibleModels: state.models,
       }
     }

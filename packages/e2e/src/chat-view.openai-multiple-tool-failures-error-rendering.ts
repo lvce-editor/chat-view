@@ -61,10 +61,14 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(messages.nth(1)).toContainText('OpenAI request failed.')
 
   await expect(messages.nth(1)).toContainText('get_workspace_uri')
-  await expect(messages.nth(1)).toContainText('create_directory "html:///html-playground-2/tetris"')
+  await expect(messages.nth(1)).toContainText('create_directory tetris')
   await expect(messages.nth(1)).toContainText('(error: TypeError: fileSystem.mkdir is not a function)')
-  await expect(messages.nth(1)).toContainText('create_directory "file:///tetris"')
+  await expect(messages.nth(1)).toContainText('create_directory tetris')
   await expect(messages.nth(1)).toContainText("(error: TypeError: Cannot read properties of undefined (reading 'invoke'))")
+  const toolCalls = messages.nth(1).locator('.ChatOrderedListItem')
+  await expect(toolCalls).toHaveCount(4)
+  await expect(toolCalls.nth(1)).toHaveAttribute('title', 'html:///html-playground-2/tetris')
+  await expect(toolCalls.nth(2)).toHaveAttribute('title', 'file:///tetris')
   await expect(messages.nth(1)).toContainText('write_file index.html')
   await expect(messages.nth(1)).toContainText(
     '(error: Failed to save file: DOMException: A requested file or directory could not be found at the time an operation was processed.)',

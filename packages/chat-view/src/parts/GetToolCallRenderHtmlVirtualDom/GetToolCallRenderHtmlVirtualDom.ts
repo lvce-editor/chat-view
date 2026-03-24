@@ -12,7 +12,7 @@ export const getToolCallRenderHtmlVirtualDom = (toolCall: ChatToolCall): readonl
   }
 
   const statusLabel = getToolCallStatusLabel(toolCall)
-  const label = `${toolCall.name}: ${parsed.title}${statusLabel}`
+  const suffix = `: ${parsed.title}${statusLabel}`
   const parsedHtml = parseHtmlToVirtualDomWithRootCount(parsed.html)
   const { rootChildCount } = parsedHtml
 
@@ -23,11 +23,17 @@ export const getToolCallRenderHtmlVirtualDom = (toolCall: ChatToolCall): readonl
       type: VirtualDomElements.Li,
     },
     {
-      childCount: 1,
+      childCount: 2,
       className: ClassNames.ChatToolCallRenderHtmlLabel,
       type: VirtualDomElements.Div,
     },
-    text(label),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    text(toolCall.name),
+    text(suffix),
     {
       childCount: 1,
       className: ClassNames.ChatToolCallRenderHtmlContent,

@@ -11,6 +11,17 @@ export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!parsed || typeof parsed !== 'object') {
     return rawArguments
   }
+  const command = Reflect.get(parsed, 'command')
+  if (typeof command === 'string') {
+    return `"${command}"`
+  }
+  const options = Reflect.get(parsed, 'options')
+  if (options && typeof options === 'object') {
+    const optionsCommand = Reflect.get(options, 'command')
+    if (typeof optionsCommand === 'string') {
+      return `"${optionsCommand}"`
+    }
+  }
   const path = Reflect.get(parsed, 'path')
   if (typeof path === 'string') {
     return `"${path}"`

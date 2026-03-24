@@ -1,5 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage, ChatSession, ChatState } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -35,6 +37,13 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
   }
 }
 
+const workspaceUriPlaceholder = '{{workspaceUri}}'
+
+const getEffectiveSystemPrompt = (state: ChatState): string => {
+  const selectedProjectUri = state.projects.find((project) => project.id === state.selectedProjectId)?.uri || ''
+  return state.systemPrompt.replaceAll(workspaceUriPlaceholder, selectedProjectUri || 'unknown')
+}
+
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
     aiSessionTitleGenerationEnabled,
@@ -44,6 +53,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     backendUrl,
     composerValue,
     emitStreamingFunctionCallEvents,
+    maxToolCalls,
     mockAiResponseDelay,
     mockApiCommandId,
     models,
@@ -59,7 +69,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     selectedSessionId,
     sessions,
     streamingEnabled,
-    systemPrompt,
     useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
@@ -67,6 +76,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     viewMode,
     webSearchEnabled,
   } = state
+  const systemPrompt = getEffectiveSystemPrompt(state)
   const userText = composerValue.trim()
   if (!userText) {
     return state
@@ -131,6 +141,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       FocusInput.focusInput({
         ...state,
         composerHeight: getMinComposerHeightForState(state),
+        composerSelectionEnd: 0,
+        composerSelectionStart: 0,
         composerValue: '',
         inputSource: 'script',
         lastSubmittedSessionId: newSessionId,
@@ -161,6 +173,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       FocusInput.focusInput({
         ...state,
         composerHeight: getMinComposerHeightForState(state),
+        composerSelectionEnd: 0,
+        composerSelectionStart: 0,
         composerValue: '',
         inputSource: 'script',
         lastSubmittedSessionId: selectedSessionId,
@@ -196,6 +210,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     authAccessToken,
     authEnabled,
     backendUrl,
+    maxToolCalls,
     messageId: assistantMessageId,
     messages: messagesWithMentionContext,
     mockAiResponseDelay,

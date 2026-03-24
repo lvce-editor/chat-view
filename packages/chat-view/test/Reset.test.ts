@@ -33,6 +33,8 @@ test('reset should clear sessions and composer and switch to list mode', async (
   }
   const state = {
     ...withChatList,
+    composerSelectionEnd: 5,
+    composerSelectionStart: 2,
     composerValue: 'hello',
   }
 
@@ -42,6 +44,8 @@ test('reset should clear sessions and composer and switch to list mode', async (
   expect(result.sessions).toEqual([])
   expect(result.selectedSessionId).toBe('')
   expect(result.composerValue).toBe('')
+  expect(result.composerSelectionStart).toBe(0)
+  expect(result.composerSelectionEnd).toBe(0)
   expect(result.mockAiResponseDelay).toBe(0)
   expect(result.streamingEnabled).toBe(false)
   expect(result.modelPickerOpen).toBe(false)

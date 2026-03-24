@@ -203,13 +203,13 @@ test('getOpenApiErrorMessage should format tool-iterations-exhausted with zero i
   )
 })
 
-test('getOpenApiErrorMessage should default tool-iterations-exhausted to 5 rounds', () => {
+test('getOpenApiErrorMessage should default tool-iterations-exhausted to 10 rounds', () => {
   const result = getOpenApiErrorMessage({
     details: 'tool-iterations-exhausted',
     type: 'error',
   })
 
   expect(result).toBe(
-    'OpenAI request ended after 5 tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop. Please try rephrasing your request, reducing scope, or switching to a different model.',
+    'OpenAI request ended after 10 tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop. Please try rephrasing your request, reducing scope, or switching to a different model.',
   )
 })

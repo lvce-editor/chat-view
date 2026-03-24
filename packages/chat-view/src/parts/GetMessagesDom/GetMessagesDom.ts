@@ -1,5 +1,5 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -49,12 +49,15 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
   return displayMessages
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getMessagesDom = (
   messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
   openRouterApiKeyInput: string,
   openApiApiKeyInput = '',
   openApiApiKeyState: 'idle' | 'saving' = 'idle',
+  openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
+  openApiApiKeyInputPattern = '^sk-.+',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   messagesScrollTop = 0,
   useChatMathWorker = false,
@@ -80,6 +83,8 @@ export const getMessagesDom = (
         openRouterApiKeyInput,
         openApiApiKeyInput,
         openApiApiKeyState,
+        openApiApiKeysSettingsUrl,
+        openApiApiKeyInputPattern,
         openRouterApiKeyState,
         useChatMathWorker,
       ),

@@ -1,5 +1,5 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { ChatMessage } from '../ChatState/ChatState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -16,12 +16,15 @@ import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequests
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatMessageDom = (
   message: ChatMessage,
   parsedMessageContent: readonly MessageIntermediateNode[],
   _openRouterApiKeyInput: string,
   _openApiApiKeyInput = '',
   openApiApiKeyState: 'idle' | 'saving' = 'idle',
+  openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
+  openApiApiKeyInputPattern = '^sk-.+',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
 ): readonly VirtualDomNode[] => {
@@ -51,7 +54,7 @@ export const getChatMessageDom = (
     },
     ...toolCallsDom,
     ...messageDom,
-    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState) : []),
+    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),

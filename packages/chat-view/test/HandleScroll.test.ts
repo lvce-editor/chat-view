@@ -42,3 +42,18 @@ test('handleMessagesScroll should re-enable auto scroll when at bottom', async (
   const result = await HandleScroll.handleMessagesScroll(state, 100, 200, 100)
   expect(result.messagesAutoScrollEnabled).toBe(true)
 })
+
+test('handleModelPickerListScroll should update modelPickerListScrollTop', async () => {
+  const state = createDefaultState()
+  const result = await HandleScroll.handleModelPickerListScroll(state, 64)
+  expect(result.modelPickerListScrollTop).toBe(64)
+})
+
+test('handleModelPickerListScroll should return same state when unchanged', async () => {
+  const state = {
+    ...createDefaultState(),
+    modelPickerListScrollTop: 64,
+  }
+  const result = await HandleScroll.handleModelPickerListScroll(state, 64)
+  expect(result).toBe(state)
+})

@@ -1,12 +1,14 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { handleSearchValueChange } from '../HandleSearchValueChange/HandleSearchValueChange.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenApiApiKeyInput } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenRouterApiKeyInput } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const handleInput = async (state: ChatState, name: string, value: string, inputSource: 'user' | 'script' = 'user'): Promise<ChatState> => {
   const { selectedSessionId } = state
   if (name === OpenApiApiKeyInput) {
@@ -25,10 +27,13 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     return handleSearchValueChange(state, value)
   }
   if (name === InputName.ModelPickerSearch) {
+    const visibleModels = getVisibleModels(state.models, value)
     return {
       ...state,
+      modelPickerHeight: getModelPickerHeight(visibleModels.length),
+      modelPickerListScrollTop: 0,
       modelPickerSearchValue: value,
-      visibleModels: getVisibleModels(state.models, value),
+      visibleModels,
     }
   }
   if (name !== InputName.Composer) {
@@ -47,6 +52,8 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     ...state,
     chatInputHistoryDraft: state.chatInputHistoryIndex === -1 ? value : state.chatInputHistoryDraft,
     composerHeight,
+    composerSelectionEnd: value.length,
+    composerSelectionStart: value.length,
     composerValue: value,
     inputSource,
   }

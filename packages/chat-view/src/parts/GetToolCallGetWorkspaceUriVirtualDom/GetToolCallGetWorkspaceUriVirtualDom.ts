@@ -27,6 +27,11 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
       className: ClassNames.FileIcon,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
     text('get_workspace_uri '),
     {
       childCount: 1,

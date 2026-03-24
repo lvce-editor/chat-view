@@ -12,10 +12,28 @@ test('cutInput should copy composer value and clear composer', async () => {
     ...createDefaultState(),
     composerHeight: 96,
     composerLineHeight: 24,
+    composerSelectionEnd: 9,
+    composerSelectionStart: 0,
     composerValue: 'hello cut',
   }
   const result = await CutInput.cutInput(state)
   expect(result.composerValue).toBe('')
   expect(result.composerHeight).toBe(32)
   expect(mockRpc.invocations).toEqual([['ClipBoard.writeText', 'hello cut']])
+})
+
+test('cutInput should copy selected composer range', async () => {
+  using mockRpc = ClipBoardWorker.registerMockRpc({
+    'ClipBoard.readText': async (text: string) => {},
+    'ClipBoard.writeText': async (text: string) => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerSelectionEnd: 5,
+    composerSelectionStart: 0,
+    composerValue: 'hello cut',
+  }
+  const result = await CutInput.cutInput(state)
+  expect(result.composerValue).toBe('')
+  expect(mockRpc.invocations).toEqual([['ClipBoard.writeText', 'hello']])
 })

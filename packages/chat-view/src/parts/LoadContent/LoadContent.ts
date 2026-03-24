@@ -2,6 +2,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
+import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
 import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
@@ -81,6 +82,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   )
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const systemPrompt = getSavedSystemPrompt(savedState) ?? state.systemPrompt
+  const visibleModels = getVisibleModels(state.models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
@@ -109,6 +111,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     initial: false,
     lastNormalViewMode,
     messagesScrollTop,
+    modelPickerHeight: getModelPickerHeight(visibleModels.length),
+    modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     openApiApiKey,
@@ -135,7 +139,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     viewMode,
-    visibleModels: getVisibleModels(state.models, ''),
+    visibleModels,
     voiceDictationEnabled,
   }
 }

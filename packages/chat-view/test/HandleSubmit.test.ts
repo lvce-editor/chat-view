@@ -518,9 +518,12 @@ test('handleSubmit should emit streaming function call data events when enabled'
       streamingEnabled: true,
       viewMode: 'detail' as const,
     }
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
     expect(dataEvents).toHaveLength(3)
@@ -666,6 +669,56 @@ test('handleSubmit should inject mentioned file context into ai request messages
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(mockRendererRpc.invocations).toContainEqual(['FileSystem.readFile', 'src/main.ts'])
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+})
+
+test('handleSubmit should resolve workspaceUri placeholder in system prompt from selected project', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  let capturedBody: Record<string, unknown> | undefined
+  globalThis.fetch = (async (_input: unknown, init?: RequestInit) => {
+    const body = init?.body
+    if (typeof body === 'string') {
+      capturedBody = JSON.parse(body) as Record<string, unknown>
+    }
+    return {
+      json: async () => ({ choices: [{ message: { content: 'OpenRouter response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    openRouterApiKey: 'or-key-123',
+    projects: [
+      {
+        id: 'project-1',
+        name: 'app',
+        uri: 'file:///workspace/app',
+      },
+    ],
+    selectedModelId: 'claude-code',
+    selectedProjectId: 'project-1',
+    systemPrompt: 'Environment:\n- Current workspace URI: {{workspaceUri}}',
+    useMockApi: false,
+    viewMode: 'detail' as const,
+  }
+
+  try {
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
+    const messages = capturedBody?.messages as readonly { readonly role: string; readonly content: string }[] | undefined
+    expect(messages?.[0]?.role).toBe('system')
+    expect(messages?.[0]?.content).toContain('Current workspace URI: file:///workspace/app')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('handleSubmit should generate ai session title for new session when enabled', async () => {

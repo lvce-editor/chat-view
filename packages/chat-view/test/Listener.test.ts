@@ -109,6 +109,7 @@ test('register should return unique IDs', () => {
 })
 
 let receivedArgs: ReadonlyArray<any> = []
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 const multiArgListener = (a: string, b: number, c: boolean): void => {
   receivedArgs = [a, b, c]
 }

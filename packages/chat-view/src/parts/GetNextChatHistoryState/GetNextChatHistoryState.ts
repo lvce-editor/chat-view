@@ -8,6 +8,7 @@ const getHistoryValueForIndex = (history: readonly string[], index: number): str
   return history[history.length - 1 - index] ?? ''
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getNextChatHistoryState = async (state: ChatState, direction: 'up' | 'down'): Promise<ChatState> => {
   if (!state.chatHistoryEnabled || state.chatInputHistory.length === 0) {
     return state
@@ -23,6 +24,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
       chatInputHistoryDraft: nextDraft,
       chatInputHistoryIndex: nextIndex,
       composerHeight,
+      composerSelectionEnd: nextComposerValue.length,
+      composerSelectionStart: nextComposerValue.length,
       composerValue: nextComposerValue,
       inputSource: 'script',
     }
@@ -37,6 +40,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
       ...state,
       chatInputHistoryIndex: -1,
       composerHeight,
+      composerSelectionEnd: state.chatInputHistoryDraft.length,
+      composerSelectionStart: state.chatInputHistoryDraft.length,
       composerValue: state.chatInputHistoryDraft,
       inputSource: 'script',
     }
@@ -47,6 +52,8 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
     ...state,
     chatInputHistoryIndex: nextIndex,
     composerHeight,
+    composerSelectionEnd: nextComposerValue.length,
+    composerSelectionStart: nextComposerValue.length,
     composerValue: nextComposerValue,
     inputSource: 'script',
   }

@@ -1,4 +1,6 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
+import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
@@ -25,6 +27,8 @@ import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
+import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
+import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
@@ -73,6 +77,11 @@ import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAd
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
+<<<<<<< HEAD
+=======
+import * as SetChatList from '../SetChatList/SetChatList.ts'
+import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
+>>>>>>> origin/main
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
@@ -87,6 +96,8 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
+  'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
+  'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
   'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
@@ -117,6 +128,8 @@ export const commandMap = {
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': HandleClickFileName.handleClickFileName,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
+  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
+  'Chat.handleClickModelPickerListIndex': wrapCommand(handleClickModelPickerListIndex),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
@@ -136,6 +149,7 @@ export const commandMap = {
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
   'Chat.handleMissingOpenRouterApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenRouterApiKeyFormSubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
+  'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
@@ -167,6 +181,11 @@ export const commandMap = {
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
+<<<<<<< HEAD
+=======
+  'Chat.setChatList': wrapCommand(SetChatList.setChatList),
+  'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
+>>>>>>> origin/main
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),

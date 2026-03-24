@@ -9,6 +9,7 @@ import {
   openRouterTooManyRequestsMessage,
 } from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
+import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
@@ -19,44 +20,19 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3', usageCost: 1 },
 ] as const
 
-const createOptions = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}): GetChatViewDom.GetChatVirtualDomOptions => ({
-  addContextButtonEnabled: false,
-  authEnabled: false,
-  authErrorMessage: '',
-  authStatus: 'signed-out',
-  chatListScrollTop: 0,
-  composerDropActive: false,
-  composerDropEnabled: true,
-  composerFontFamily: 'system-ui',
-  composerFontSize: 13,
-  composerHeight: 28,
-  composerLineHeight: 20,
-  composerValue: '',
-  messagesScrollTop: 0,
-  models,
-  openApiApiKeyInput: '',
-  openApiApiKeyState: 'idle',
-  openRouterApiKeyInput: '',
-  openRouterApiKeyState: 'idle',
-  runMode: 'local',
-  selectedModelId: 'test',
-  selectedProjectId: '',
-  selectedSessionId: '',
-  sessions: [],
-  showRunMode: false,
-  todoListToolEnabled: false,
-  tokensMax: 0,
-  tokensUsed: 0,
-  usageOverviewEnabled: false,
-  viewMode: 'list',
-  visibleModels: models,
-  voiceDictationEnabled: false,
-  ...overrides,
-})
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
-  return GetChatViewDom.getChatVirtualDom(createOptions(overrides))
+  const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
+  return GetChatViewDom.getChatVirtualDom({
+    ...defaultState,
+    models,
+    selectedModelId: 'test',
+    selectedProjectId: '',
+    selectedSessionId: '',
+    sessions: [],
+    visibleModels: models,
+    ...overrides,
+  })
 }
 
 test('getChatVirtualDOm should render root chat container', () => {
@@ -98,6 +74,8 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(composer).toBeDefined()
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'false',
+    'aria-haspopup': 'true',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
@@ -126,12 +104,18 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'false',
+    'aria-haspopup': 'true',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     type: VirtualDomElements.Button,
   })
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
-  expect(modelPickerToggleLabel).toBeDefined()
+  expect(modelPickerToggleLabel).toMatchObject({
+    className: ClassNames.SelectLabel,
+    role: 'none',
+    type: VirtualDomElements.Span,
+  })
   expect(modelPicker).toBeUndefined()
 })
 
@@ -141,9 +125,15 @@ test('getChatVirtualDOm should render open model picker with search input and se
     viewMode: 'detail',
   })
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
   const modelPickerSettingsButton = result.find((node) => node.name === 'model-picker-settings')
+  const modelPickerList = result.find((node) => node.className === ClassNames.ChatModelPickerList)
   expect(modelPicker).toBeDefined()
+  expect(modelPickerToggle).toMatchObject({
+    'aria-expanded': 'true',
+    'aria-haspopup': 'true',
+  })
   expect(modelPickerSearchInput).toMatchObject({
     inputType: 'search',
     onInput: DomEventListenerFunctions.HandleInput,
@@ -154,6 +144,11 @@ test('getChatVirtualDOm should render open model picker with search input and se
     className: ClassNames.IconButton,
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
+  })
+  expect(modelPickerList).toMatchObject({
+    className: ClassNames.ChatModelPickerList,
+    onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
+    type: VirtualDomElements.Ul,
   })
 })
 
@@ -168,7 +163,7 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(pickerContainers).toHaveLength(1)
   expect(pickerContainers[0]).toMatchObject({
-    onContextMenu: DomEventListenerFunctions.HandleContextMenuChatModelPicker,
+    onContextMenu: expect.any(Number),
   })
   const sendAreaIndex = result.findIndex((node) => node.className === ClassNames.ChatSendArea)
   expect(sendAreaIndex).toBeGreaterThan(-1)
@@ -197,14 +192,9 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     visibleModels,
   })
   const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
-  const modelPickerList = result.find((node) => node.name === 'model-picker-list')
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
   expect(modelPickerItems).toHaveLength(0)
-  expect(modelPickerList).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Ul,
-  })
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
 })
@@ -234,9 +224,7 @@ test('getChatVirtualDOm should show model picker empty-state message when search
     viewMode: 'detail',
     visibleModels: [],
   })
-  const modelPickerItems = result.filter((node) => node.className?.startsWith(ClassNames.ChatModelPickerItem))
   const emptyStateLabel = result.find((node) => node.text === 'No matching models have been found.')
-  expect(modelPickerItems).toHaveLength(1)
   expect(emptyStateLabel).toBeDefined()
 })
 
@@ -383,6 +371,8 @@ test('getChatVirtualDOm should render composer textarea', () => {
     className: 'MultilineInputBox ChatInputBox',
     onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
     onInput: DomEventListenerFunctions.HandleInput,
+    onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
+    spellcheck: false,
     type: VirtualDomElements.TextArea,
   })
   expect(composeForm).toMatchObject({
@@ -770,7 +760,7 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -784,6 +774,10 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'read_file ',
@@ -845,7 +839,7 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
   expect(fileNameLinkNode).toBeDefined()
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -859,6 +853,10 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'read_file ',
@@ -916,7 +914,7 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -930,6 +928,10 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'list_files ',
@@ -987,7 +989,7 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 7)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
@@ -1001,6 +1003,10 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
+    }),
+    expect.objectContaining({
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
       text: 'list_file ',

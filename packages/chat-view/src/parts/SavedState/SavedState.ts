@@ -4,6 +4,7 @@ export interface SavedState {
   readonly chatListScrollTop: number
   readonly composerValue: string
   readonly lastNormalViewMode: 'list' | 'detail'
+  readonly maxToolCalls: number
   readonly messagesScrollTop: number
   readonly nextMessageId: number
   readonly projectExpandedIds: readonly string[]

@@ -14,6 +14,7 @@ type MockBackendAuthResponse = MockBackendAuthSuccess | MockBackendAuthError
 
 let nextLoginResponse: MockBackendAuthResponse | undefined
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const setNextLoginResponse = (response: MockBackendAuthResponse): void => {
   nextLoginResponse = response
 }
@@ -36,6 +37,7 @@ export const consumeNextLoginResponse = async (): Promise<unknown> => {
     await new Promise((resolve) => setTimeout(resolve, response.delay))
   }
   if (response.type === 'error') {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(response.message)
   }
   return response.response

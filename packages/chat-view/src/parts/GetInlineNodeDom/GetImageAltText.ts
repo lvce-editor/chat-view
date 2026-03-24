@@ -1,6 +1,8 @@
+import * as ChatStrings from '../ChatStrings/ChatStrings.ts'
+
 export const getImageAltText = (alt: string): string => {
   if (!alt.trim()) {
-    return 'image could not be loaded'
+    return ChatStrings.imageCouldNotBeLoaded()
   }
-  return `${alt} (image could not be loaded)`
+  return `${alt} (${ChatStrings.imageCouldNotBeLoaded()})`
 }

@@ -34,6 +34,11 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
       className: ClassNames.FileIcon,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
     text('write_file '),
     {
       childCount: 1,

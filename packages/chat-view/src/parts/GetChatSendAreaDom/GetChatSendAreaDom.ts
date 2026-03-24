@@ -1,52 +1,19 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
-import { getAddContextButtonDom, getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
-import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassName.ts'
+import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
+import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-const getTodoListDom = (hasTodoList: boolean, todoListItems: readonly TodoListItem[]): readonly VirtualDomNode[] => {
-  if (!hasTodoList) {
-    return []
-  }
-  const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
-  return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatTodoList,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatTodoListHeader,
-      type: VirtualDomElements.Div,
-    },
-    {
-      ...text(todoHeaderText),
-    },
-    {
-      childCount: todoListItems.length,
-      className: ClassNames.ChatTodoListItems,
-      type: VirtualDomElements.Ul,
-    },
-    ...todoListItems.flatMap((item) => [
-      {
-        childCount: 1,
-        className: getTodoItemClassName(item.status),
-        type: VirtualDomElements.Li,
-      },
-      text(item.text),
-    ]),
-  ]
-}
-
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
@@ -86,7 +53,9 @@ export const getChatSendAreaDom = (
       onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onInput: DomEventListenerFunctions.HandleInput,
+      onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
       placeholder: Strings.composePlaceholder(),
+      spellcheck: false,
       type: VirtualDomElements.TextArea,
     },
     {

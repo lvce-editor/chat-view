@@ -1,6 +1,5 @@
 export const Notifications = 'Notifications'
 export const Problems = 'Problems'
-
 export const Composer = 'composer'
 export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
@@ -30,39 +29,6 @@ export const ProjectPrefix = 'project:'
 export const SessionPrefix = 'session:'
 export const RenamePrefix = 'session-rename:'
 export const ModelPickerItemPrefix = 'model-picker-item:'
-
-export type InputName =
-  | typeof Notifications
-  | typeof Problems
-  | typeof Composer
-  | typeof Search
-  | typeof ComposerDropTarget
-  | typeof AddContext
-  | typeof Dictate
-  | typeof Send
-  | typeof Back
-  | typeof Model
-  | typeof ModelPickerToggle
-  | typeof ModelPickerSearch
-  | typeof ModelPickerSettings
-  | typeof ModelPickerList
-  | typeof RunMode
-  | typeof ToggleChatFocus
-  | typeof ToggleSearch
-  | typeof ChatList
-  | typeof CreateProject
-  | typeof CreateSession
-  | `${typeof CreateSessionInProjectPrefix}${string}`
-  | typeof SessionDebug
-  | typeof Settings
-  | typeof Login
-  | typeof Logout
-  | typeof CloseChat
-  | typeof SessionDelete
-  | `${typeof ProjectPrefix}${string}`
-  | `${typeof SessionPrefix}${string}`
-  | `${typeof RenamePrefix}${string}`
-  | `${typeof ModelPickerItemPrefix}${string}`
 
 export const getProjectInputName = (projectId: string): `${typeof ProjectPrefix}${string}` => {
   return `${ProjectPrefix}${projectId}`

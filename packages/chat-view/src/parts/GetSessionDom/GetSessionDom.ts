@@ -1,22 +1,12 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
-import type { ChatSession } from '../ChatState/ChatState.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-const getSessionStatusClassName = (session: ChatSession): string => {
-  const hasInProgressAssistantMessage = session.messages.some((message) => message.role === 'assistant' && message.inProgress)
-  if (hasInProgressAssistantMessage) {
-    return ClassNames.ChatListItemStatusInProgress
-  }
-  const hasAssistantMessage = session.messages.some((message) => message.role === 'assistant')
-  if (hasAssistantMessage) {
-    return ClassNames.ChatListItemStatusFinished
-  }
-  return ClassNames.ChatListItemStatusStopped
-}
-
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getSessionDom = (session: ChatSession, focused = false): readonly VirtualDomNode[] => {
   const sessionClassName = focused ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused) : ClassNames.ChatListItem
   const sessionStatusClassName = getSessionStatusClassName(session)
