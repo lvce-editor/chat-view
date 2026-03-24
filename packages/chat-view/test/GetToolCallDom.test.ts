@@ -128,6 +128,37 @@ test('getToolCallDom should not display empty object arguments', () => {
   expect(result.find((node) => node.text === 'unknown_tool')).toBeDefined()
 })
 
+test('getToolCallDom should render grep_search query and expose raw arguments on hover', () => {
+  const argumentsString = '{"includeIgnoredFiles":false,"includePattern":"**","isRegexp":false,"maxResults":10,"query":"hello"}'
+  const result = getToolCallDom({
+    arguments: argumentsString,
+    name: 'grep_search',
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 2,
+      className: ClassNames.ChatOrderedListItem,
+      title: argumentsString,
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'grep_search',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ' "hello"',
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})
+
 test('getToolCallDom should render ask_question tool calls', () => {
   const result = getToolCallDom({
     arguments: JSON.stringify({

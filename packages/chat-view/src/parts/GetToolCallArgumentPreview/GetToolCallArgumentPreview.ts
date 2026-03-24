@@ -22,6 +22,10 @@ export const getToolCallArgumentPreview = (rawArguments: string): string => {
       return `"${optionsCommand}"`
     }
   }
+  const query = Reflect.get(parsed, 'query')
+  if (typeof query === 'string') {
+    return `"${query}"`
+  }
   const path = Reflect.get(parsed, 'path')
   if (typeof path === 'string') {
     return `"${path}"`
