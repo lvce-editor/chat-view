@@ -69,6 +69,7 @@ export const createDefaultState = (): ChatState => {
     openApiApiBaseUrl: 'https://api.openai.com/v1',
     openApiApiKey: '',
     openApiApiKeyInput: '',
+    openApiApiKeyInputPattern: '^sk-.+',
     openApiApiKeysSettingsUrl: 'https://platform.openai.com/api-keys',
     openApiApiKeyState: 'idle',
     openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
