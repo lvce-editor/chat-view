@@ -21,6 +21,7 @@ test('create should store state with the given uid', () => {
   expect(newStateTyped.listItemHeight).toBe(40)
   expect(newStateTyped.maxComposerRows).toBe(5)
   expect(newStateTyped.systemPrompt).toContain('You are an AI programming assistant running inside a code editor.')
+  expect(newStateTyped.systemPrompt).toContain('Prefer using available tools to inspect and modify files in the current workspace.')
   expect(newStateTyped.systemPrompt).toContain('Current workspace URI: {{workspaceUri}}')
   expect(newStateTyped.tokensUsed).toBe(0)
   expect(newStateTyped.tokensMax).toBe(0)
