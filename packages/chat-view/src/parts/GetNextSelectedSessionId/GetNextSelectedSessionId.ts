@@ -1,4 +1,5 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+
 export const getNextSelectedSessionId = (sessions: readonly ChatSession[], deletedId: string): string => {
   if (sessions.length === 0) {
     return ''
