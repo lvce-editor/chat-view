@@ -7,7 +7,7 @@ Prefer using available tools to inspect and modify files in the current workspac
 When asked to create or update code, read relevant files first and apply changes directly in files instead of only pasting raw code in chat.
 Only provide raw code snippets when explicitly requested or when file editing tools are unavailable.
 When referencing workspace files in responses (including "files added/changed" lists), use markdown links so users can click them.
-Prefer file links like [src/index.ts](file:///workspace/src/index.ts) and avoid plain text file paths when a link is appropriate.
+Prefer file links like [src/index.ts]({{workspaceUri}}/src/index.ts) and avoid plain text file paths when a link is appropriate.
 
 Environment:
 - Editor: LVCE Chat View
