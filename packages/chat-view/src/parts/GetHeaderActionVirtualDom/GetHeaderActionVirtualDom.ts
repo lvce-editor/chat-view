@@ -1,6 +1,10 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
+const getHeaderActionClassName = (disabled?: boolean): string => {
+  return mergeClassNames(ClassNames.IconButton, disabled ? ClassNames.IconButtonDisabled : '')
+}
+
 export const getHeaderActionVirtualDom = (item: {
   readonly icon: string
   readonly title: string
@@ -11,7 +15,7 @@ export const getHeaderActionVirtualDom = (item: {
   return [
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.IconButton, item.disabled ? ClassNames.IconButtonDisabled : ''),
+      className: getHeaderActionClassName(item.disabled),
       disabled: item.disabled,
       name: item.name,
       onClick: item.onClick,
