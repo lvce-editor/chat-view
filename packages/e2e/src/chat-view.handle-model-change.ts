@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-  const modelSelect = Locator('.ChatSendArea .Select')
+  const modelSelect = Locator(`.ChatSendArea .Select[name="model-picker-toggle"]`)
 
   // act
   await Chat.handleModelChange('abc')
