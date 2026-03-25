@@ -177,6 +177,14 @@ button.Select[name='run-mode-picker-toggle'] .SelectLabel{
   margin-top: 0.75em;
 }
 
+.ChatOrderedList{
+  list-style: none;
+}
+
+.ChatOrderedListMarker{
+  margin-right: 0.5ch;
+}
+
 .ChatFocus .ChatMessages > .Message,
 .ChatFocus .ChatSendAreaContent{
   width: min(100%, var(--ChatFocusContentMaxWidth));

@@ -10,8 +10,12 @@ import { getTableDom } from './GetTableDom.ts'
 import { getUnorderedListItemDom } from './GetUnorderedListItemDom.ts'
 import { hasVisibleInlineContent } from './HasVisibleInlineContent.ts'
 
-const getOrderedListItemDomWithNesting = (item: MessageListItemNode, useChatMathWorker: boolean): readonly VirtualDomNode[] => {
-  return getOrderedListItemDom(item, useChatMathWorker, getOrderedListItemDomWithNesting, getUnorderedListItemDom)
+const getOrderedListItemDomWithNesting = (
+  item: MessageListItemNode,
+  useChatMathWorker: boolean,
+  fallbackIndex: number,
+): readonly VirtualDomNode[] => {
+  return getOrderedListItemDom(item, useChatMathWorker, fallbackIndex, getOrderedListItemDomWithNesting, getUnorderedListItemDom)
 }
 
 export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
@@ -68,7 +72,7 @@ export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWork
         className: ClassNames.ChatOrderedList,
         type: VirtualDomElements.Ol,
       },
-      ...node.items.flatMap((item) => getOrderedListItemDomWithNesting(item, useChatMathWorker)),
+      ...node.items.flatMap((item, index) => getOrderedListItemDomWithNesting(item, useChatMathWorker, index + 1)),
     ]
   }
   return [
