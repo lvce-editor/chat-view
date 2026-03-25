@@ -191,5 +191,9 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleClickModelPickerList,
       params: ['handleClickModelPickerList', EventExpression.ClientY],
     },
+    {
+      name: DomEventListenersFunctions.HandleModelInputBlur,
+      params: ['handleModelInputBlur'],
+    },
   ]
 }

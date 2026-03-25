@@ -19,6 +19,7 @@ const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly Virtu
       className: ClassNames.InputBox,
       inputType: 'search',
       name: InputName.ModelPickerSearch,
+      onBlur: DomEventListenerFunctions.HandleModelInputBlur,
       onInput: DomEventListenerFunctions.HandleInput,
       placeholder: Strings.searchModels(),
       type: VirtualDomElements.Input,
