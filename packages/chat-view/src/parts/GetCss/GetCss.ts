@@ -41,6 +41,17 @@ export const getCss = (
 
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.ChatSendAreaPrimaryControls{
+  min-width: 0;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  margin-right:auto;
 }
 
 .Select .MaskIcon {

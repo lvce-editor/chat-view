@@ -119,6 +119,20 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   expect(modelPicker).toBeUndefined()
 })
 
+test('getChatVirtualDom should wrap model picker and run mode controls together', () => {
+  const result = renderChatView()
+  const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const runModeSelect = result.find((node) => node.name === 'runMode')
+  expect(primaryControls).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatSendAreaPrimaryControls,
+    type: VirtualDomElements.Div,
+  })
+  expect(modelPickerToggle).toBeDefined()
+  expect(runModeSelect).toBeDefined()
+})
+
 test('getChatVirtualDOm should render open model picker with search input', () => {
   const result = renderChatView({
     modelPickerOpen: true,
