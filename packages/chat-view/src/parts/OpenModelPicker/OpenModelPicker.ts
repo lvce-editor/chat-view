@@ -1,6 +1,8 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 
+export const FocusModelPicker = 912444
+
 export const openModelPicker = (state: ChatState): ChatState => {
   const { modelPickerOpen: currentModelPickerOpen, modelPickerSearchValue, models, visibleModels: currentVisibleModels } = state
   const modelPickerOpen = !currentModelPickerOpen
@@ -12,5 +14,6 @@ export const openModelPicker = (state: ChatState): ChatState => {
     modelPickerOpen,
     modelPickerSearchValue: currentModelPickerOpen ? '' : modelPickerSearchValue,
     visibleModels,
+    focus: 'model-picker-input',
   }
 }
