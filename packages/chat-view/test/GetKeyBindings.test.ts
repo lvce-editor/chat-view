@@ -53,4 +53,9 @@ test('getKeyBindings should keep enter and shift-enter bindings', () => {
     key: KeyModifier.Shift | KeyCode.Enter,
     when: WhenExpression.FocusChatInput,
   })
+  expect(result).toContainEqual({
+    command: 'Chat.handleModelInputBlur',
+    key: KeyCode.Escape,
+    when: WhenExpression.FocusChatInput,
+  })
 })
