@@ -6,6 +6,8 @@ import * as InputName from '../InputName/InputName.ts'
 const getFocusSelector = (state: ChatState): string => {
   const { focus, listFocusedIndex } = state
   switch (focus) {
+    case 'model-picker-input':
+      return `[name="${InputName.ModelPickerSearch}"]`
     case 'composer':
     case 'input':
       return '[name="composer"]'
