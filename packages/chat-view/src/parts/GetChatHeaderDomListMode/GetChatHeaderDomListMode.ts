@@ -28,7 +28,6 @@ const getChatSearchDom = (hasSearchField: boolean, searchValue: string): readonl
   ]
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatHeaderListModeDom = (
   authEnabled = false,
   authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',

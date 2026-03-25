@@ -18,7 +18,6 @@ const getAuthErrorDom = (hasAuthError: boolean, authErrorMessage: string): reado
   ]
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   authEnabled = false,

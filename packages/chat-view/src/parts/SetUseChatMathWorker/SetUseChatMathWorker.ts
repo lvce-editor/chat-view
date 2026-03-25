@@ -1,7 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const setUseChatMathWorker = async (state: ChatState, useChatMathWorker: boolean, persist = true): Promise<ChatState> => {
   if (persist) {
     await Preferences.update({

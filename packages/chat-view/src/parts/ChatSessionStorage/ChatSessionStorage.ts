@@ -66,7 +66,6 @@ export const clearChatSessions = async (): Promise<void> => {
   await ChatStorageWorker.clear()
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
   await ChatStorageWorker.appendEvent(event)
 }

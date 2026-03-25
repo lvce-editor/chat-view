@@ -518,12 +518,12 @@ test('handleSubmit should emit streaming function call data events when enabled'
       streamingEnabled: true,
       viewMode: 'detail' as const,
     }
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
     expect(dataEvents).toHaveLength(3)

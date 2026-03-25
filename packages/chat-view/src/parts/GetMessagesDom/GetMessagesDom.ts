@@ -49,7 +49,6 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
   return displayMessages
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getMessagesDom = (
   messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
