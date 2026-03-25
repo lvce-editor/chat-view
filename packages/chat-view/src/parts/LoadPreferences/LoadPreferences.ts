@@ -14,6 +14,7 @@ import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabl
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
+import { loadUseChatMessageParsingWorker } from '../LoadUseChatMessageParsingWorker/LoadUseChatMessageParsingWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
@@ -35,6 +36,7 @@ export interface LoadedPreferences {
   todoListToolEnabled: boolean
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
+  useChatMessageParsingWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
   voiceDictationEnabled: boolean
@@ -58,6 +60,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     passIncludeObfuscation,
     useChatCoordinatorWorker,
     useChatMathWorker,
+    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,
@@ -78,6 +81,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadPassIncludeObfuscation(),
     loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
+    loadUseChatMessageParsingWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadUseChatToolWorker(),
     loadVoiceDictationEnabled(),
@@ -100,6 +104,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     todoListToolEnabled,
     useChatCoordinatorWorker,
     useChatMathWorker,
+    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,
