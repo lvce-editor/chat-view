@@ -321,7 +321,6 @@ const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unk
   return attributes
 }
 
- 
 const toVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [text(node.value)]

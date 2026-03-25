@@ -1,5 +1,3 @@
- 
-
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.very-long-message'

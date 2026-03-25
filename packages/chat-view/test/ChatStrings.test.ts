@@ -77,7 +77,6 @@ const zeroArgCases = [
   ['leadingOrTrailingWhitespaceDetected', 'Leading or trailing whitespace detected in file or folder name.'],
 ] as const
 
- 
 test.each(zeroArgCases)('%s should return expected text', (name, expected) => {
   const result = ChatStrings[name]()
   expect(result).toBe(expected)
