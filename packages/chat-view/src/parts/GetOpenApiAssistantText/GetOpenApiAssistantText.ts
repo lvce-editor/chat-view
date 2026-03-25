@@ -148,6 +148,7 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
   const errorMessage = getShortToolErrorMessage(rawError)
   if (notFoundErrorRegex.test(errorMessage)) {
     return {
+      errorMessage,
       ...(errorStack
         ? {
             errorStack,
