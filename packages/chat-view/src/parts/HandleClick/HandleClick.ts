@@ -46,7 +46,7 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
       return {
         ...state,
-        modelPickerHeight: getModelPickerHeight(state.models.length),
+        modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
         modelPickerListScrollTop: 0,
         modelPickerOpen: false,
         modelPickerSearchValue: '',
