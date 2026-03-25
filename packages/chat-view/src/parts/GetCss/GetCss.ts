@@ -278,6 +278,7 @@ a.Button{
   align-items: center;
   padding-left: 7px !important;
   padding-right: 1px !important;
+  max-width: 300px !important;
 }
 
 .Chat .Select:hover{
