@@ -344,6 +344,14 @@ a.Button{
 .ChatModelPickerItem > *{
   pointer-events: none;
 }
+
+.ChatInputBox::selection{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection{
+  background: rgba(255, 255, 255, 0.2);
+}
 `
 
   return `${baseCss}
