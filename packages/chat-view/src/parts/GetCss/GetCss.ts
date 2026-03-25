@@ -39,6 +39,39 @@ export const getCss = (
   --ChatMessageFontFamily: ${chatMessageFontFamily};
 }
 
+*{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+*::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+*::-webkit-scrollbar-corner{
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb{
+  background: var(--vscode-scrollbarSlider-background);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+*::-webkit-scrollbar-thumb:active{
+  background: var(--vscode-scrollbarSlider-activeBackground);
+}
+
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
   display:flex;
@@ -199,35 +232,6 @@ a.Button{
   min-height: 0;
   margin:0;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar{
-  width: 10px;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-track{
-  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb{
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:hover{
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:active{
-  background: var(--vscode-scrollbarSlider-activeBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
 }
 
 .ChatModelPickerItem{
