@@ -13,8 +13,6 @@ import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-<<<<<<< HEAD
-=======
 const getComposerTextAreaDom = (): VirtualDomNode => {
   return {
     childCount: 0,
@@ -31,7 +29,6 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
 }
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
->>>>>>> origin/main
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
