@@ -5,7 +5,6 @@ import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatSendAreaDom/GetChatSendAreaDom.ts'
 
- 
 export const getChatDetailsDom = (
   selectedSessionTitle: string,
   messagesNodes: readonly VirtualDomNode[],

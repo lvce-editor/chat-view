@@ -16,7 +16,6 @@ import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequests
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
- 
 export const getChatMessageDom = (
   message: ChatMessage,
   parsedMessageContent: readonly MessageIntermediateNode[],

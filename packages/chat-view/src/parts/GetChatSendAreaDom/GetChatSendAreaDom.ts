@@ -13,7 +13,6 @@ import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
- 
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,

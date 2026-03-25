@@ -4,7 +4,6 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getMissingApiKeyDom } from '../GetMissingApiKeyDom/GetMissingApiKeyDom.ts'
 import { OpenOpenRouterApiKeySettings, OpenRouterApiKeyInput, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 
- 
 export const getMissingOpenRouterApiKeyDom = (openRouterApiKeyState: 'idle' | 'saving' = 'idle'): readonly VirtualDomNode[] => {
   const isSaving = openRouterApiKeyState === 'saving'
   return getMissingApiKeyDom({

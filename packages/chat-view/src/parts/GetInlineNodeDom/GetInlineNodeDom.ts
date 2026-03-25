@@ -9,7 +9,6 @@ import { getMathInlineNodeDom } from './GetMathInlineNodeDom.ts'
 import { getStrikethroughInlineNodeDom } from './GetStrikethroughInlineNodeDom.ts'
 import { getTextInlineNodeDom } from './GetTextInlineNodeDom.ts'
 
- 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   switch (inlineNode.type) {
     case 'bold':
