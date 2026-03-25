@@ -58,6 +58,7 @@ export interface GetChatVirtualDomOptions {
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
   readonly runMode: RunMode
+  readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
@@ -106,6 +107,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     projectListScrollTop = 0,
     projects = [],
     runMode,
+    runModePickerOpen = false,
     searchEnabled = false,
     searchFieldVisible = false,
     searchValue = '',
@@ -156,6 +158,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         projectListScrollTop,
         projects,
         runMode,
+        runModePickerOpen,
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
@@ -195,6 +198,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openRouterApiKeyState,
         parsedMessages,
         runMode,
+        runModePickerOpen,
         selectedModelId,
         selectedSessionId,
         sessions,
@@ -227,6 +231,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerSearchValue,
         models,
         runMode,
+        runModePickerOpen,
         searchEnabled,
         searchFieldVisible,
         searchValue,

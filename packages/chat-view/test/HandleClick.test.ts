@@ -167,6 +167,26 @@ test('handleClick should keep state for unknown action', async () => {
   expect(result).toBe(state)
 })
 
+test('handleClick should toggle run mode picker open', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    runModePickerOpen: false,
+  }
+  const result = await HandleClick.handleClick(state, 'run-mode-picker-toggle')
+  expect(result.runModePickerOpen).toBe(true)
+})
+
+test('handleClick should select run mode from picker item and close picker', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    runMode: 'local',
+    runModePickerOpen: true,
+  }
+  const result = await HandleClick.handleClick(state, 'run-mode-picker-item:background')
+  expect(result.runMode).toBe('background')
+  expect(result.runModePickerOpen).toBe(false)
+})
+
 test.skip('handleClick should select model from model picker item and close picker', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

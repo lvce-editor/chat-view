@@ -42,6 +42,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickModelPickerToggle'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickRunModePickerToggle,
+      params: ['openRunModePicker'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerOverlay,
       params: ['handleClickModelPickerOverlay'],
     },

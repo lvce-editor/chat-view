@@ -23,6 +23,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.selectedSessionId === newState.selectedSessionId &&
     oldState.showRunMode === newState.showRunMode &&
     oldState.runMode === newState.runMode &&
+    oldState.runModePickerOpen === newState.runModePickerOpen &&
     oldState.sessions === newState.sessions &&
     oldState.tokensMax === newState.tokensMax &&
     oldState.tokensUsed === newState.tokensUsed &&

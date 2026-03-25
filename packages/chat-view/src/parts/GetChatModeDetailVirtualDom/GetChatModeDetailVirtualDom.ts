@@ -38,6 +38,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
   readonly runMode: RunMode
+  readonly runModePickerOpen?: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -76,6 +77,7 @@ export const getChatModeDetailVirtualDom = ({
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
   runMode,
+  runModePickerOpen = false,
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -127,6 +129,7 @@ export const getChatModeDetailVirtualDom = ({
       addContextButtonEnabled,
       showRunMode,
       runMode,
+      runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
       voiceDictationEnabled,

@@ -19,6 +19,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     openApiApiKey: '',
     openRouterApiKey: '',
     openRouterApiKeyInput: '',
+    runModePickerOpen: false,
     selectedModelId: 'test',
     selectedSessionId: '',
     sessions: [],

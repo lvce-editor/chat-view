@@ -30,6 +30,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly runMode: RunMode
+  readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
@@ -85,6 +86,7 @@ export const getChatModeListVirtualDom = ({
   modelPickerSearchValue = '',
   models,
   runMode,
+  runModePickerOpen = false,
   searchEnabled = false,
   searchFieldVisible = false,
   searchValue = '',
@@ -127,6 +129,7 @@ export const getChatModeListVirtualDom = ({
       addContextButtonEnabled,
       showRunMode,
       runMode,
+      runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
       voiceDictationEnabled,

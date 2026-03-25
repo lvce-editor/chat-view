@@ -49,6 +49,7 @@ test('reset should clear sessions and composer and switch to list mode', async (
   expect(result.mockAiResponseDelay).toBe(0)
   expect(result.streamingEnabled).toBe(false)
   expect(result.modelPickerOpen).toBe(false)
+  expect(result.runModePickerOpen).toBe(false)
   expect(result.modelPickerSearchValue).toBe('')
   expect(result.visibleModels).toBe(result.models)
 })
