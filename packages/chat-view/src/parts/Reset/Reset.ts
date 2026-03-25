@@ -12,7 +12,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     composerSelectionStart: 0,
     composerValue: '',
     mockAiResponseDelay: 0,
-    modelPickerHeight: getModelPickerHeight(state.models.length),
+    modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
