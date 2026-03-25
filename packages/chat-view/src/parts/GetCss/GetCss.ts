@@ -254,7 +254,8 @@ a.Button{
   inset:0;
   display: flex;
   flex-direction: column;
-  pointer-events: none;
+  pointer-events: auto;
+  z-index: 1;
 }
 
 
