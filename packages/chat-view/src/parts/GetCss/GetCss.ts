@@ -352,6 +352,10 @@ a.Button{
 .ChatInputBox::-moz-selection{
   background: rgba(255, 255, 255, 0.2);
 }
+
+.SendButtonDisabled {
+  color: rgba(204, 204, 204, 0.5) !important;
+}
 `
 
   return `${baseCss}
