@@ -13,7 +13,7 @@ test('handleClickModelPickerOverlay should close model picker and focus composer
     modelPickerOpen: true,
     modelPickerSearchValue: 'gpt',
   }
-  const result = await handleClickModelPickerOverlay(state)
+  const result = await handleClickModelPickerOverlay(state, false)
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
   expect(result.listFocusedIndex).toBe(-1)
