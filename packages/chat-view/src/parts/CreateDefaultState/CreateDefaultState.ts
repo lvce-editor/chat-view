@@ -126,6 +126,7 @@ export const createDefaultState = (): ChatState => {
     usageOverviewEnabled: false,
     useChatCoordinatorWorker: false,
     useChatMathWorker: true,
+    useChatMessageParsingWorker: false,
     useChatNetworkWorkerForRequests: false,
     useChatToolWorker: true,
     useMockApi: false,
