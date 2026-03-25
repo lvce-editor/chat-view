@@ -84,7 +84,6 @@ const parseMathTableCell = async (cell: MessageTableCellNode): Promise<MessageTa
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageIntermediateNode> => {
   if (node.type === 'math-block') {
     const dom = await ChatMathWorker.getMathBlockDom(node)

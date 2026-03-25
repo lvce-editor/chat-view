@@ -2,7 +2,6 @@ import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-do
 import type { MessageInlineItalicNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import type { InlineNodeDomRenderer } from './GetInlineNodeDomTypes.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getItalicInlineNodeDom = (
   inlineNode: MessageInlineItalicNode,
   useChatMathWorker: boolean,

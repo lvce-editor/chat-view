@@ -1,7 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const handleDragOver = async (state: ChatState, name: string, hasFiles = true): Promise<ChatState> => {
   if (name !== InputName.ComposerDropTarget) {
     return state

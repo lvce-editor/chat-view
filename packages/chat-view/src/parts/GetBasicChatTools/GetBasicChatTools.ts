@@ -30,7 +30,6 @@ const getAskQuestionTool = (): ChatTool => {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boolean): readonly ChatTool[] => {
   if (!questionToolEnabled) {
     return tools
@@ -43,7 +42,6 @@ const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boole
   return [...tools, getAskQuestionTool()]
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getBasicChatTools = async (questionToolEnabled = false): Promise<readonly ChatTool[]> => {
   try {
     return withQuestionTool(await ChatToolRequest.getTools(), questionToolEnabled)

@@ -155,7 +155,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleChatInputContextMenu,
-      params: ['handleChatInputContextMenu'],
+      params: ['handleChatInputContextMenu', EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
     },
     {
