@@ -18,8 +18,10 @@ export const getChatDetailsDom = (
   addContextButtonEnabled: boolean,
   showRunMode: boolean,
   runMode: RunMode,
+  runModePickerOpen: boolean,
   todoListToolEnabled: boolean,
   todoListItems: readonly TodoListItem[],
+  showCreatePullRequestButton = false,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -44,8 +46,10 @@ export const getChatDetailsDom = (
       addContextButtonEnabled,
       showRunMode,
       runMode,
+      runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
+      showCreatePullRequestButton,
     ),
   ]
 }

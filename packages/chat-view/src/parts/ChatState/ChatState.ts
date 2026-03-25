@@ -16,6 +16,7 @@ export interface ChatState {
   readonly authRefreshToken: string
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
+  readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string
@@ -83,6 +84,7 @@ export interface ChatState {
   readonly questionToolEnabled?: boolean
   readonly renamingSessionId: string
   readonly runMode: RunMode
+  readonly runModePickerOpen: boolean
   readonly searchEnabled: boolean
   readonly searchFieldVisible: boolean
   readonly searchValue: string

@@ -1,9 +1,12 @@
+/* cspell:words worktrees */
+
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
@@ -39,9 +42,37 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
 
 const workspaceUriPlaceholder = '{{workspaceUri}}'
 
-const getEffectiveSystemPrompt = (state: ChatState): string => {
-  const selectedProjectUri = state.projects.find((project) => project.id === state.selectedProjectId)?.uri || ''
-  return state.systemPrompt.replaceAll(workspaceUriPlaceholder, selectedProjectUri || 'unknown')
+const getProjectUri = (state: ChatState, projectId: string): string => {
+  return state.projects.find((project) => project.id === projectId)?.uri || ''
+}
+
+const getWorkspaceUri = (state: ChatState, session: ChatSession | undefined): string => {
+  if (session?.workspaceUri) {
+    return session.workspaceUri
+  }
+  return getProjectUri(state, session?.projectId || state.selectedProjectId)
+}
+
+const getEffectiveSystemPrompt = (state: ChatState, session: ChatSession | undefined): string => {
+  return state.systemPrompt.replaceAll(workspaceUriPlaceholder, getWorkspaceUri(state, session) || 'unknown')
+}
+
+const withProvisionedBackgroundSession = async (state: ChatState, session: ChatSession): Promise<ChatSession> => {
+  if (state.runMode !== 'background' || session.workspaceUri) {
+    return session
+  }
+  const { branchName, workspaceUri } = await createBackgroundChatWorktree({
+    assetDir: state.assetDir,
+    platform: state.platform,
+    projectUri: getProjectUri(state, session.projectId || state.selectedProjectId),
+    sessionId: session.id,
+    title: session.title,
+  })
+  return {
+    ...session,
+    branchName,
+    workspaceUri,
+  }
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
@@ -76,7 +107,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     viewMode,
     webSearchEnabled,
   } = state
-  const systemPrompt = getEffectiveSystemPrompt(state)
   const userText = composerValue.trim()
   if (!userText) {
     return state
@@ -134,9 +164,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     const newSession: ChatSession = {
       id: newSessionId,
       messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
+      projectId: state.selectedProjectId,
       title: `Chat ${workingSessions.length + 1}`,
     }
-    await saveChatSession(newSession)
+    const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
+    await saveChatSession(provisionedSession)
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...state,
@@ -148,8 +180,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
+        selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
         selectedSessionId: newSessionId,
-        sessions: [...workingSessions, newSession],
+        sessions: [...workingSessions, provisionedSession],
         viewMode: 'detail',
       }),
     )
@@ -161,7 +194,17 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       type: 'handle-submit',
       value: userText,
     })
-    const updatedWithUser = appendMessageToSelectedSession(workingSessions, selectedSessionId, userMessage)
+    const loadedSelectedSession = workingSessions.find((session) => session.id === selectedSessionId)
+    const provisionedSelectedSession = loadedSelectedSession ? await withProvisionedBackgroundSession(state, loadedSelectedSession) : undefined
+    const workingSessionsWithProvisionedSession = provisionedSelectedSession
+      ? workingSessions.map((session) => {
+          if (session.id !== selectedSessionId) {
+            return session
+          }
+          return provisionedSelectedSession
+        })
+      : workingSessions
+    const updatedWithUser = appendMessageToSelectedSession(workingSessionsWithProvisionedSession, selectedSessionId, userMessage)
     const updatedSessions = streamingEnabled
       ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)
       : updatedWithUser
@@ -195,6 +238,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     previousState: optimisticState,
   }
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
+  const systemPrompt = getEffectiveSystemPrompt(optimisticState, selectedOptimisticSession)
+  const workspaceUri = getWorkspaceUri(optimisticState, selectedOptimisticSession)
   const messages = (selectedOptimisticSession?.messages ?? []).filter((message) => !message.inProgress)
   const mentionContextMessage = await getMentionContextMessage(userText)
   const messagesWithMentionContext = mentionContextMessage ? [...messages, mentionContextMessage] : messages
@@ -265,6 +310,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     useMockApi,
     userText,
     webSearchEnabled,
+    workspaceUri,
   })
 
   const { latestState } = handleTextChunkState

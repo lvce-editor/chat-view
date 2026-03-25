@@ -6,6 +6,7 @@ export const getCss = (
   chatMessageFontSize: number,
   chatMessageLineHeight: number,
   chatMessageFontFamily: string,
+  chatFocusContentMaxWidth: number,
   textAreaPaddingTop: number,
   textAreaPaddingLeft: number,
   textAreaPaddingRight: number,
@@ -37,6 +38,40 @@ export const getCss = (
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
+  --ChatFocusContentMaxWidth: ${chatFocusContentMaxWidth}px;
+}
+
+*{
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+*::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+*::-webkit-scrollbar-corner{
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb{
+  background: var(--vscode-scrollbarSlider-background);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+*::-webkit-scrollbar-thumb:active{
+  background: var(--vscode-scrollbarSlider-activeBackground);
 }
 
 .ChatSendAreaBottom{
@@ -52,6 +87,11 @@ export const getCss = (
   align-items:center;
   gap: 8px;
   margin-right:auto;
+}
+
+.CustomSelectContainer{
+  position: relative;
+  min-width: 0;
 }
 
 .Select .MaskIcon {
@@ -75,15 +115,6 @@ export const getCss = (
   white-space: pre;
   text-overflow: ellipsis;
 }
-
-.ChatInputBox::selection{
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.ChatInputBox::-moz-selection{
-  background: rgba(255, 255, 255, 0.2);
-}
-
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
@@ -102,7 +133,8 @@ export const getCss = (
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
 }
 
-button.Select[name='model-picker-toggle']{
+button.Select[name='model-picker-toggle'],
+button.Select[name='run-mode-picker-toggle']{
   display: flex;
   gap: 4px;
   border: none;
@@ -113,12 +145,14 @@ button.Select[name='model-picker-toggle']{
   min-width: 0;
 }
 
-button.Select[name='model-picker-toggle']:hover{
+button.Select[name='model-picker-toggle']:hover,
+button.Select[name='run-mode-picker-toggle']:hover{
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
   color: var(--vscode-foreground);
 }
 
-button.Select[name='model-picker-toggle'] .SelectLabel{
+button.Select[name='model-picker-toggle'] .SelectLabel,
+button.Select[name='run-mode-picker-toggle'] .SelectLabel{
   width: auto;
   max-width: 100%;
   min-width: 0;
@@ -141,6 +175,13 @@ button.Select[name='model-picker-toggle'] .SelectLabel{
 
 .ChatMessageContent p + p{
   margin-top: 0.75em;
+}
+
+.ChatFocus .ChatMessages > .Message,
+.ChatFocus .ChatSendAreaContent{
+  width: min(100%, var(--ChatFocusContentMaxWidth));
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .MissingApiKeyForm{
@@ -200,35 +241,6 @@ a.Button{
   min-height: 0;
   margin:0;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-hoverBackground) var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar{
-  width: 10px;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-track{
-  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb{
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:hover{
-  background: var(--vscode-scrollbarSlider-hoverBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.ChatModelPickerList::-webkit-scrollbar-thumb:active{
-  background: var(--vscode-scrollbarSlider-activeBackground);
-  border: 2px solid transparent;
-  background-clip: content-box;
 }
 
 .ChatModelPickerItem{
@@ -237,6 +249,12 @@ a.Button{
   gap: 8px;
   height: 28px;
   width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0 8px;
+  text-align: left;
 }
 
 .ChatModelPickerItemLabel{
@@ -263,8 +281,7 @@ a.Button{
   inset:0;
   display: flex;
   flex-direction: column;
-  pointer-events: auto;
-  z-index: 1;
+  pointer-events: none;
 }
 
 
@@ -290,6 +307,14 @@ a.Button{
   }
 }
 
+.CustomSelectPopOver{
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  margin: 0;
+  z-index: 1;
+}
+
 
 .ChatModelPickerList{
   padding:0;
@@ -311,11 +336,13 @@ a.Button{
   display: flex;
   contain:content;
   align-items: center;
+  pointer-events: none;
 }
 
 .Select .MaskIcon {
   width: 10px !important;
   height: 10px !important;
+  pointer-events: none;
 }
 
 .ChatInputBox{
@@ -325,6 +352,18 @@ a.Button{
 
 .ChatModelPickerItemSelected{
   background: var(--ListHoverBackground) !important;
+}
+
+.ChatModelPickerItem > *{
+  pointer-events: none;
+}
+
+.ChatInputBox::selection{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection{
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .SendButtonDisabled {

@@ -1,3 +1,5 @@
+import type { RunMode as RunModeType } from '../RunMode/RunMode.ts'
+
 export const Notifications = 'Notifications'
 export const Problems = 'Problems'
 export const Composer = 'composer'
@@ -5,6 +7,7 @@ export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
+export const CreatePullRequest = 'create-pull-request'
 export const Send = 'send'
 export const Back = 'back'
 export const Model = 'model'
@@ -12,6 +15,8 @@ export const ModelPickerToggle = 'model-picker-toggle'
 export const ModelPickerSearch = 'model-picker-search'
 export const ModelPickerList = 'model-picker-list'
 export const RunMode = 'runMode'
+export const RunModePickerToggle = 'run-mode-picker-toggle'
+export const RunModePickerItemPrefix = 'run-mode-picker-item:'
 export const ToggleChatFocus = 'toggle-chat-focus'
 export const ToggleSearch = 'toggle-search'
 export const ChatList = 'chat-list'
@@ -87,4 +92,16 @@ export const isModelPickerItemInputName = (name: string): name is `${typeof Mode
 
 export const getModelIdFromModelPickerItemInputName = (name: `${typeof ModelPickerItemPrefix}${string}`): string => {
   return name.slice(ModelPickerItemPrefix.length)
+}
+
+export const getRunModePickerItemInputName = (runMode: RunModeType): `${typeof RunModePickerItemPrefix}${RunModeType}` => {
+  return `${RunModePickerItemPrefix}${runMode}`
+}
+
+export const isRunModePickerItemInputName = (name: string): name is `${typeof RunModePickerItemPrefix}${RunModeType}` => {
+  return name.startsWith(RunModePickerItemPrefix)
+}
+
+export const getRunModeFromRunModePickerItemInputName = (name: `${typeof RunModePickerItemPrefix}${RunModeType}`): RunModeType => {
+  return name.slice(RunModePickerItemPrefix.length) as RunModeType
 }

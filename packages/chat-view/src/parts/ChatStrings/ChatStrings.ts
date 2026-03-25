@@ -129,6 +129,10 @@ export const addContext = (): string => {
   return i18nString(UiStrings.AddContext)
 }
 
+export const createPullRequest = (): string => {
+  return i18nString(UiStrings.CreatePullRequest)
+}
+
 export const send = (): string => {
   return i18nString(UiStrings.Send)
 }

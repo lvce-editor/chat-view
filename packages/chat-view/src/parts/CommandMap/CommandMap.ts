@@ -25,6 +25,7 @@ import * as HandleChatListContextMenu from '../HandleChatListContextMenu/HandleC
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
+import * as HandleClickCreatePullRequest from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
@@ -50,6 +51,8 @@ import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleM
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import { handleModelInputBlur } from '../HandleModelInputBlur/HandleModelInputBlur.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
+import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPickerList/HandlePointerDownModelPickerList.ts'
+import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
 import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
@@ -68,6 +71,7 @@ import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockO
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
+import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
 import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
 import { render2 } from '../Render2/Render2.ts'
@@ -126,6 +130,7 @@ export const commandMap = {
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
+  'Chat.handleClickCreatePullRequest': wrapCommand(HandleClickCreatePullRequest.handleClickCreatePullRequest),
   'Chat.handleClickDelete': wrapCommand(HandleClickDelete.handleClickDelete),
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': HandleClickFileName.handleClickFileName,
@@ -154,6 +159,8 @@ export const commandMap = {
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleModelInputBlur': wrapCommand(handleModelInputBlur),
   'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
+  'Chat.handlePointerDownModelPickerList': wrapCommand(HandlePointerDownModelPickerList.handlePointerDownModelPickerList),
+  'Chat.handlePointerUpModelPickerList': wrapCommand(handlePointerUpModelPickerList),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
@@ -173,6 +180,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
+  'Chat.openRunModePicker': wrapCommand(openRunModePicker),
   'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
   'Chat.render2': render2,

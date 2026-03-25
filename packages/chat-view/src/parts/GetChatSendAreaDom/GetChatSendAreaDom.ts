@@ -7,7 +7,8 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
-import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
+import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
+import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
@@ -39,12 +40,15 @@ export const getChatSendAreaDom = (
   addContextButtonEnabled: boolean,
   showRunMode: boolean,
   runMode: RunMode,
+  runModePickerOpen: boolean,
   todoListToolEnabled: boolean,
   todoListItems: readonly TodoListItem[],
+  showCreatePullRequestButton = false,
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-  const bottomControlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+  const bottomControlsCount =
+    2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
   const primaryControlsCount = 1 + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
 
@@ -74,9 +78,10 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
-    ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
+    ...(showRunMode ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
+    ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

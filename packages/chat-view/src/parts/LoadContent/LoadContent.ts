@@ -125,6 +125,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projectExpandedIds,
     projectListScrollTop,
     projects,
+    runModePickerOpen: false,
     searchEnabled,
     searchFieldVisible: false,
     searchValue: '',

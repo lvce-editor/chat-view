@@ -42,8 +42,12 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickModelPickerToggle'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickRunModePickerToggle,
+      params: ['openRunModePicker'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerOverlay,
-      params: ['handleClickModelPickerOverlay'],
+      params: ['handleClickModelPickerOverlay', EventExpression.DefaultPrevented],
     },
     {
       name: DomEventListenersFunctions.HandleClickNew,
@@ -192,8 +196,19 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandlePointerDownModelPickerList,
+      params: ['handlePointerDownModelPickerList'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerUpModelPickerList,
+      params: ['handlePointerUpModelPickerList', EventExpression.ClientY],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerList,
       params: ['handleClickModelPickerList', EventExpression.ClientY],
+      preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleModelInputBlur,

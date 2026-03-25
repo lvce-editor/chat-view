@@ -8,6 +8,7 @@ import { getRenderHtmlCss } from '../GetRenderHtmlCss/GetRenderHtmlCss.ts'
 
 export const renderCss = (oldState: ChatState, newState: ChatState): readonly [string, number, string] => {
   const {
+    chatFocusContentMaxWidth,
     chatMessageFontFamily,
     chatMessageFontSize,
     chatMessageLineHeight,
@@ -34,6 +35,7 @@ export const renderCss = (oldState: ChatState, newState: ChatState): readonly [s
     chatMessageFontSize,
     chatMessageLineHeight,
     chatMessageFontFamily,
+    chatFocusContentMaxWidth,
     textAreaPaddingTop,
     textAreaPaddingLeft,
     textAreaPaddingRight,

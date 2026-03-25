@@ -13,4 +13,5 @@ export interface GetOpenApiAssistantTextOptions {
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
   readonly webSearchEnabled?: boolean
+  readonly workspaceUri?: string
 }

@@ -1,6 +1,6 @@
-// cspell:ignore openrouter
+// cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
-import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
@@ -167,7 +167,27 @@ test('handleClick should keep state for unknown action', async () => {
   expect(result).toBe(state)
 })
 
-test.skip('handleClick should select model from model picker item and close picker', async () => {
+test('handleClick should toggle run mode picker open', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    runModePickerOpen: false,
+  }
+  const result = await HandleClick.handleClick(state, 'run-mode-picker-toggle')
+  expect(result.runModePickerOpen).toBe(true)
+})
+
+test('handleClick should select run mode from picker item and close picker', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    runMode: 'local',
+    runModePickerOpen: true,
+  }
+  const result = await HandleClick.handleClick(state, 'run-mode-picker-item:background')
+  expect(result.runMode).toBe('background')
+  expect(result.runModePickerOpen).toBe(false)
+})
+
+test('handleClick should select model from model picker item and close picker', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
@@ -183,6 +203,7 @@ test.skip('handleClick should select model from model picker item and close pick
   expect(result.visibleModels).toBe(result.models)
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClick should select model from delegated model picker list click using y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),
@@ -495,6 +516,52 @@ test('handleClick should open OpenAPI API keys website', async () => {
   const result = await HandleClick.handleClick(state, 'open-openapi-api-key-website')
   expect(result).toBe(state)
   expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://platform.openai.com/api-keys']])
+})
+
+test('handleClick should create pull request for completed background session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'ExtensionHostManagement.activateByEvent': async () => {},
+    'Main.openUri': async () => {},
+  })
+  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+    'ExtensionHostCommand.executeCommand': async (id: string, payload: any) => {
+      expect(id).toBe('Chat.createPullRequest')
+      expect(payload).toEqual({
+        branchName: 'chat/session-1',
+        title: 'Chat 1',
+        workspaceUri: 'file:///workspace/app.worktrees/chat-session-1',
+      })
+      return {
+        pullRequestUrl: 'https://github.com/lvce-editor/chat-view/pull/123',
+      }
+    },
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        branchName: 'chat/session-1',
+        id: 'session-1',
+        messages: [
+          { id: 'message-1', role: 'user', text: 'hello', time: '10:00' },
+          { id: 'message-2', role: 'assistant', text: 'done', time: '10:01' },
+        ],
+        projectId: 'project-1',
+        title: 'Chat 1',
+        workspaceUri: 'file:///workspace/app.worktrees/chat-session-1',
+      },
+    ],
+  }
+  const result = await HandleClick.handleClick(state, 'create-pull-request')
+  expect(result.sessions[0].pullRequestUrl).toBe('https://github.com/lvce-editor/chat-view/pull/123')
+  expect(mockRendererRpc.invocations).toEqual([
+    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.createPullRequest', '', 0],
+    ['Main.openUri', 'https://github.com/lvce-editor/chat-view/pull/123'],
+  ])
+  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })
 
 test('handleClickList should open detail for session index from y coordinate', async () => {
