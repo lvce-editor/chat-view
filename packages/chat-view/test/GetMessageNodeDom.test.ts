@@ -571,6 +571,12 @@ test('getMessageNodeDom should render nested ordered list inside ordered list it
 
 test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
   const result = getMessageNodeDom({
+    codeTokens: [
+      {
+        className: '',
+        text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
+      },
+    ],
     text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
     type: 'code-block',
   })
