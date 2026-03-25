@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { highlightCode } from '../src/parts/HighlightCode/HighlightCode.ts'
 import * as ParseMessageContent from '../src/parts/ParseMessageContent/ParseMessageContent.ts'
 
 // cspell:ignore Clawpack
@@ -1338,6 +1339,7 @@ test('parseMessageContent should parse fenced code blocks', async () => {
       type: 'text',
     },
     {
+      codeTokens: highlightCode('{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }', 'json'),
       language: 'json',
       text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
       type: 'code-block',
@@ -1529,6 +1531,7 @@ test('parseMessageContent should not parse math inside fenced code blocks', asyn
 
   expect(result).toEqual([
     {
+      codeTokens: highlightCode('const value = "$x$"', 'ts'),
       language: 'ts',
       text: 'const value = "$x$"',
       type: 'code-block',
