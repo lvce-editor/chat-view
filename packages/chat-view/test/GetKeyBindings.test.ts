@@ -2,6 +2,7 @@ import { expect, test } from '@jest/globals'
 import { WhenExpression } from '@lvce-editor/constants'
 import { KeyCode, KeyModifier } from '@lvce-editor/virtual-dom-worker'
 import { getKeyBindings } from '../src/parts/GetKeyBindings/GetKeyBindings.ts'
+import { FocusModelPickerInput } from '../src/parts/OpenModelPicker/OpenModelPicker.ts'
 
 test('getKeyBindings should include chat list navigation keybindings', () => {
   const result = getKeyBindings()
@@ -56,6 +57,6 @@ test('getKeyBindings should keep enter and shift-enter bindings', () => {
   expect(result).toContainEqual({
     command: 'Chat.handleModelInputBlur',
     key: KeyCode.Escape,
-    when: WhenExpression.FocusChatInput,
+    when: FocusModelPickerInput,
   })
 })
