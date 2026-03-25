@@ -220,6 +220,21 @@ test('loadContent should restore scroll positions from savedState', async () => 
   expect(result.messagesScrollTop).toBe(260)
 })
 
+test('loadContent should restore chat focus sidebar width from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    width: 1000,
+  }
+  const savedState = {
+    chatFocusSidebarWidth: 360,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.chatFocusSidebarWidth).toBe(360)
+  expect(result.chatFocusSidebarResizeActive).toBe(false)
+})
+
 test('loadContent should restore composerValue from savedState', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

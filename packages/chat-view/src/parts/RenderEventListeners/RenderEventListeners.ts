@@ -206,6 +206,21 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandlePointerDownChatFocusSash,
+      params: ['handlePointerDownChatFocusSash', EventExpression.ClientX],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerMoveChatFocusSash,
+      params: ['handlePointerMoveChatFocusSash', EventExpression.ClientX],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerUpChatFocusSash,
+      params: ['handlePointerUpChatFocusSash', EventExpression.ClientX],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerList,
       params: ['handleClickModelPickerList', EventExpression.ClientY],
       preventDefault: true,

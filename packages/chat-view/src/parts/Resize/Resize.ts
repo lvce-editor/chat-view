@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getClampedChatFocusSidebarWidth } from '../GetClampedChatFocusSidebarWidth/GetClampedChatFocusSidebarWidth.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
@@ -7,6 +8,10 @@ export const resize = async (state: ChatState, dimensions: any, getComposerHeigh
   const nextState = {
     ...state,
     ...dimensions,
+    chatFocusSidebarWidth: getClampedChatFocusSidebarWidth(
+      dimensions.chatFocusSidebarWidth ?? state.chatFocusSidebarWidth,
+      dimensions.width ?? state.width,
+    ),
   }
   if (dimensions.width !== undefined && dimensions.width !== state.width && nextState.composerValue) {
     return {

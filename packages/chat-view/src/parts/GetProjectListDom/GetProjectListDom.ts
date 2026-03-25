@@ -15,6 +15,7 @@ export const getProjectListDom = (
   selectedSessionId: string,
   projectListScrollTop: number,
   showBackToChatsButton = false,
+  style = '',
 ): readonly VirtualDomNode[] => {
   const blankProjectId = projects.find((project) => project.name === '_blank')?.id || projects[0]?.id || ''
   const projectGroups = projects.map((project) => {
@@ -29,6 +30,7 @@ export const getProjectListDom = (
     {
       childCount: 2 + (showBackToChatsButton ? 1 : 0),
       className: ClassNames.ProjectSidebar,
+      style,
       type: VirtualDomElements.Div,
     },
     {

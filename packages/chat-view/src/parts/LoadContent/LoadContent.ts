@@ -2,7 +2,9 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
+import { getClampedChatFocusSidebarWidth } from '../GetClampedChatFocusSidebarWidth/GetClampedChatFocusSidebarWidth.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { getSavedChatFocusSidebarWidth } from '../GetSavedChatFocusSidebarWidth/GetSavedChatFocusSidebarWidth.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
 import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
@@ -74,6 +76,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     ? preferredProjectId
     : projects[0]?.id || ''
   const preferredModelId = savedSelectedModelId || state.selectedModelId
+  const chatFocusSidebarWidth = getClampedChatFocusSidebarWidth(getSavedChatFocusSidebarWidth(savedState) ?? state.chatFocusSidebarWidth, state.width)
   const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
   const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
   const projectListScrollTop = getSavedProjectListScrollTop(savedState) ?? state.projectListScrollTop
@@ -103,6 +106,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     authRefreshToken,
     authStatus: authAccessToken ? 'signed-in' : 'signed-out',
     backendUrl,
+    chatFocusSidebarResizeActive: false,
+    chatFocusSidebarResizeStartWidth: chatFocusSidebarWidth,
+    chatFocusSidebarResizeStartX: 0,
+    chatFocusSidebarWidth,
     chatHistoryEnabled,
     chatListScrollTop,
     composerDropActive: false,

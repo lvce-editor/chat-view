@@ -1,6 +1,7 @@
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 
 export interface SavedState {
+  readonly chatFocusSidebarWidth: number
   readonly chatListScrollTop: number
   readonly composerValue: string
   readonly lastNormalViewMode: 'list' | 'detail'

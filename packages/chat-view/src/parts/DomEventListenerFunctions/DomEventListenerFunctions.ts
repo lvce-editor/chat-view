@@ -52,3 +52,6 @@ export const HandleClickRunModePickerToggle = 52
 export const HandleClickModelPickerOverlay = 53
 export const HandlePointerDownModelPickerList = 54
 export const HandlePointerUpModelPickerList = 55
+export const HandlePointerDownChatFocusSash = 56
+export const HandlePointerMoveChatFocusSash = 57
+export const HandlePointerUpChatFocusSash = 58

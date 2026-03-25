@@ -6,6 +6,7 @@ import * as SaveState from '../src/parts/SaveState/SaveState.ts'
 test('saveState should persist global state without session payloads', () => {
   const state: ChatState = {
     ...createDefaultState(),
+    chatFocusSidebarWidth: 312,
     chatListScrollTop: 80,
     composerValue: 'draft',
     messagesScrollTop: 120,
@@ -21,6 +22,7 @@ test('saveState should persist global state without session payloads', () => {
     systemPrompt: 'You are a helpful coding assistant.',
   }
   const result = SaveState.saveState(state)
+  expect(result.chatFocusSidebarWidth).toBe(312)
   expect(result.composerValue).toBe('draft')
   expect(result.nextMessageId).toBe(4)
   expect('sessions' in result).toBe(false)

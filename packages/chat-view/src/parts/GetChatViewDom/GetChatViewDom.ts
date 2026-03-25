@@ -34,6 +34,8 @@ export interface GetChatVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly chatFocusSidebarResizeActive?: boolean
+  readonly chatFocusSidebarWidth?: number
   readonly chatListScrollTop: number
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
@@ -83,6 +85,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     authEnabled = false,
     authErrorMessage = '',
     authStatus = 'signed-out',
+    chatFocusSidebarResizeActive = false,
+    chatFocusSidebarWidth = 280,
     chatListScrollTop,
     composerDropActive = false,
     composerDropEnabled = true,
@@ -136,6 +140,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authEnabled,
         authErrorMessage,
         authStatus,
+        chatFocusSidebarResizeActive,
+        chatFocusSidebarWidth,
         composerDropActive,
         composerDropEnabled,
         composerFontFamily,

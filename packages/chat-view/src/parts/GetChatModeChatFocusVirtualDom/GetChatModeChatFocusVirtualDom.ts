@@ -20,6 +20,8 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly chatFocusSidebarResizeActive?: boolean
+  readonly chatFocusSidebarWidth?: number
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
   readonly composerFontFamily?: string
@@ -63,6 +65,8 @@ export const getChatModeChatFocusVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
+  chatFocusSidebarResizeActive = false,
+  chatFocusSidebarWidth = 280,
   composerDropActive = false,
   composerDropEnabled = true,
   composerFontFamily = 'system-ui',
@@ -102,9 +106,39 @@ export const getChatModeChatFocusVirtualDom = ({
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
+  const messagesDom = getMessagesDom(
+    messages,
+    parsedMessages,
+    openRouterApiKeyInput,
+    openApiApiKeyInput,
+    openApiApiKeyState,
+    openApiApiKeysSettingsUrl,
+    openApiApiKeyInputPattern,
+    openRouterApiKeyState,
+    messagesScrollTop,
+    useChatMathWorker,
+    true,
+  )
+  const sendAreaDom = getChatSendAreaDom(
+    composerValue,
+    modelPickerOpen,
+    models,
+    selectedModelId,
+    usageOverviewEnabled,
+    tokensUsed,
+    tokensMax,
+    addContextButtonEnabled,
+    showRunMode,
+    runMode,
+    runModePickerOpen,
+    todoListToolEnabled,
+    todoListItems,
+    voiceDictationEnabled,
+  )
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isNewModelPickerVisible = modelPickerOpen
-  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
+  const rightPaneChildCount = (messagesDom.length > 0 ? 1 : 0) + 1
+  const chatRootChildCount = 1 + (chatFocusSidebarResizeActive ? 1 : 0) + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
@@ -113,36 +147,46 @@ export const getChatModeChatFocusVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
-    ...getMessagesDom(
-      messages,
-      parsedMessages,
-      openRouterApiKeyInput,
-      openApiApiKeyInput,
-      openApiApiKeyState,
-      openApiApiKeysSettingsUrl,
-      openApiApiKeyInputPattern,
-      openRouterApiKeyState,
-      messagesScrollTop,
-      useChatMathWorker,
+    {
+      childCount: 3,
+      className: ClassNames.ChatFocusSplit,
+      type: VirtualDomElements.Div,
+    },
+    ...getProjectListDom(
+      projects,
+      sessions,
+      projectExpandedIds,
+      selectedProjectId,
+      selectedSessionId,
+      projectListScrollTop,
       true,
+      `flex: 0 0 ${chatFocusSidebarWidth}px; width: ${chatFocusSidebarWidth}px;`,
     ),
-    ...getChatSendAreaDom(
-      composerValue,
-      modelPickerOpen,
-      models,
-      selectedModelId,
-      usageOverviewEnabled,
-      tokensUsed,
-      tokensMax,
-      addContextButtonEnabled,
-      showRunMode,
-      runMode,
-      runModePickerOpen,
-      todoListToolEnabled,
-      todoListItems,
-      voiceDictationEnabled,
-    ),
+    {
+      childCount: 0,
+      className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
+      name: InputName.ChatFocusSash,
+      onPointerDown: DomEventListenerFunctions.HandlePointerDownChatFocusSash,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: rightPaneChildCount,
+      className: ClassNames.ChatFocusContent,
+      type: VirtualDomElements.Div,
+    },
+    ...messagesDom,
+    ...sendAreaDom,
+    ...(chatFocusSidebarResizeActive
+      ? [
+          {
+            childCount: 0,
+            className: ClassNames.ChatFocusResizeOverlay,
+            onPointerMove: DomEventListenerFunctions.HandlePointerMoveChatFocusSash,
+            onPointerUp: DomEventListenerFunctions.HandlePointerUpChatFocusSash,
+            type: VirtualDomElements.Div,
+          } satisfies VirtualDomNode,
+        ]
+      : []),
     ...(isDropOverlayVisible
       ? [
           {

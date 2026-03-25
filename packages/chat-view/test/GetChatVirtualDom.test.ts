@@ -192,6 +192,64 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   })
 })
 
+test('getChatVirtualDom should render chat focus split with resizable sash', () => {
+  const result = renderChatView({
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], projectId: 'project-1', title: 'Chat 1' }],
+    viewMode: 'chat-focus',
+  })
+  expect(result[0]).toMatchObject({
+    childCount: 1,
+    className: `${ClassNames.Viewlet} Chat ${ClassNames.ChatFocus}`,
+  })
+  const splitNode = result.find((node) => node.className === ClassNames.ChatFocusSplit)
+  const sidebarNode = result.find((node) => node.className === ClassNames.ProjectSidebar)
+  const sashNode = result.find((node) => node.name === 'chat-focus-sash')
+  const contentNode = result.find((node) => node.className === ClassNames.ChatFocusContent)
+  expect(splitNode).toMatchObject({
+    childCount: 3,
+    className: ClassNames.ChatFocusSplit,
+    type: VirtualDomElements.Div,
+  })
+  expect(sidebarNode).toMatchObject({
+    className: ClassNames.ProjectSidebar,
+    style: 'flex: 0 0 280px; width: 280px;',
+    type: VirtualDomElements.Div,
+  })
+  expect(sashNode).toMatchObject({
+    className: `${ClassNames.Sash} ${ClassNames.SashVertical}`,
+    name: 'chat-focus-sash',
+    onPointerDown: DomEventListenerFunctions.HandlePointerDownChatFocusSash,
+    type: VirtualDomElements.Div,
+  })
+  expect(contentNode).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatFocusContent,
+    type: VirtualDomElements.Div,
+  })
+})
+
+test('getChatVirtualDom should render resize overlay while dragging chat focus sash', () => {
+  const result = renderChatView({
+    chatFocusSidebarResizeActive: true,
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], projectId: 'project-1', title: 'Chat 1' }],
+    viewMode: 'chat-focus',
+  })
+  expect(result[0]).toMatchObject({
+    childCount: 2,
+  })
+  const resizeOverlay = result.find((node) => node.className === ClassNames.ChatFocusResizeOverlay)
+  expect(resizeOverlay).toMatchObject({
+    className: ClassNames.ChatFocusResizeOverlay,
+    onPointerMove: DomEventListenerFunctions.HandlePointerMoveChatFocusSash,
+    onPointerUp: DomEventListenerFunctions.HandlePointerUpChatFocusSash,
+    type: VirtualDomElements.Div,
+  })
+})
+
 test('getChatVirtualDom should render open new model picker as absolute chat child and update chat childCount', () => {
   const result = renderChatView({
     modelPickerOpen: true,
@@ -288,7 +346,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   })
 
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 1,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)

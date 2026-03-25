@@ -79,6 +79,81 @@ export const getCss = (
   gap: 8px;
 }
 
+.ChatFocus{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ChatFocusSplit{
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.ChatFocusContent{
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ChatFocusContent .ChatMessages{
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.ChatFocusContent .ChatSendArea{
+  flex: 0 0 auto;
+}
+
+.ProjectSidebar{
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ProjectList{
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.SashVertical{
+  position: relative;
+  flex: 0 0 4px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.SashVertical::after{
+  position: absolute;
+  top: 0;
+  right: 1px;
+  bottom: 0;
+  left: 1px;
+  content: '';
+  background: var(--vscode-panel-border, var(--vscode-editorWidget-border, rgba(255, 255, 255, 0.12)));
+}
+
+.SashVertical:hover::after{
+  background: var(--vscode-focusBorder, var(--vscode-panel-border));
+}
+
+.ChatFocusResizeOverlay{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: col-resize;
+}
+
 .ChatSendAreaPrimaryControls{
   min-width: 0;
   display:flex;

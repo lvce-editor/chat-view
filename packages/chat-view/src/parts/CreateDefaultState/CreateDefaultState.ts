@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
+import { defaultChatFocusSidebarWidth } from '../GetClampedChatFocusSidebarWidth/GetClampedChatFocusSidebarWidth.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
@@ -26,6 +27,10 @@ export const createDefaultState = (): ChatState => {
     authRefreshToken: '',
     authStatus: 'signed-out',
     backendUrl: '',
+    chatFocusSidebarResizeActive: false,
+    chatFocusSidebarResizeStartWidth: defaultChatFocusSidebarWidth,
+    chatFocusSidebarResizeStartX: 0,
+    chatFocusSidebarWidth: defaultChatFocusSidebarWidth,
     chatHistoryEnabled: true,
     chatInputHistory: [],
     chatInputHistoryDraft: '',
