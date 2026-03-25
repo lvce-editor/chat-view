@@ -108,7 +108,6 @@ export const getChatModeChatFocusVirtualDom = ({
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-<<<<<<< HEAD
   const messagesDom = getMessagesDom(
     messages,
     parsedMessages,
@@ -122,6 +121,7 @@ export const getChatModeChatFocusVirtualDom = ({
     useChatMathWorker,
     true,
   )
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const sendAreaDom = getChatSendAreaDom(
     composerValue,
     modelPickerOpen,
@@ -136,19 +136,15 @@ export const getChatModeChatFocusVirtualDom = ({
     runModePickerOpen,
     todoListToolEnabled,
     todoListItems,
+    showCreatePullRequestButton,
     voiceDictationEnabled,
   )
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isNewModelPickerVisible = modelPickerOpen
-  const rightPaneChildCount = (messagesDom.length > 0 ? 1 : 0) + 1
-  const chatRootChildCount = 1 + (chatFocusSidebarResizeActive ? 1 : 0) + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
-=======
-  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
-  const isDropOverlayVisible = composerDropEnabled && composerDropActive
-  const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && runModePickerOpen
-  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
->>>>>>> origin/main
+  const rightPaneChildCount = (messagesDom.length > 0 ? 1 : 0) + 1
+  const chatRootChildCount =
+    1 + (chatFocusSidebarResizeActive ? 1 : 0) + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
@@ -172,7 +168,6 @@ export const getChatModeChatFocusVirtualDom = ({
       true,
       `flex: 0 0 ${chatFocusSidebarWidth}px; width: ${chatFocusSidebarWidth}px;`,
     ),
-<<<<<<< HEAD
     {
       childCount: 0,
       className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
@@ -198,25 +193,6 @@ export const getChatModeChatFocusVirtualDom = ({
           } satisfies VirtualDomNode,
         ]
       : []),
-=======
-    ...getChatSendAreaDom(
-      composerValue,
-      modelPickerOpen,
-      models,
-      selectedModelId,
-      usageOverviewEnabled,
-      tokensUsed,
-      tokensMax,
-      addContextButtonEnabled,
-      showRunMode,
-      runMode,
-      runModePickerOpen,
-      todoListToolEnabled,
-      todoListItems,
-      showCreatePullRequestButton,
-      voiceDictationEnabled,
-    ),
->>>>>>> origin/main
     ...(isDropOverlayVisible
       ? [
           {
