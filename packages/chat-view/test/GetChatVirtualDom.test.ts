@@ -143,11 +143,13 @@ test('getChatVirtualDom should render open run mode picker without search input'
   const result = renderChatView({
     runModePickerOpen: true,
   })
-  const runModePicker = result.find((node) => node.className === `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`)
+  const runModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   const runModeBackgroundOption = result.find((node) => node.name === 'run-mode-picker-item:background')
   const runModeSearchInput = result.find((node) => node.name === 'model-picker-search')
+  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(runModePicker).toMatchObject({
-    className: `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`,
+    className: ClassNames.ChatModelPicker,
+    style: 'height: 84px;',
     type: VirtualDomElements.Div,
   })
   expect(runModeBackgroundOption).toMatchObject({
@@ -155,6 +157,10 @@ test('getChatVirtualDom should render open run mode picker without search input'
     type: VirtualDomElements.Button,
   })
   expect(runModeSearchInput).toBeUndefined()
+  expect(result[0]).toMatchObject({
+    childCount: 4,
+  })
+  expect(pickerContainers).toHaveLength(1)
 })
 
 test('getChatVirtualDom should render create pr button for completed background session', () => {
