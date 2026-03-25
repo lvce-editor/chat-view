@@ -1,6 +1,7 @@
-import { cp, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { bundleJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
 const sharedProcessPath = join(root, 'packages', 'server', 'node_modules', '@lvce-editor', 'shared-process', 'index.js')
@@ -8,6 +9,8 @@ const sharedProcessPath = join(root, 'packages', 'server', 'node_modules', '@lvc
 const sharedProcessUrl = pathToFileURL(sharedProcessPath).toString()
 
 const sharedProcess = await import(sharedProcessUrl)
+
+await bundleJs()
 
 process.env.PATH_PREFIX = '/chat-view'
 const { commitHash } = await sharedProcess.exportStatic({
@@ -17,6 +20,7 @@ const { commitHash } = await sharedProcess.exportStatic({
 })
 
 const rendererWorkerPath = join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js')
+const builtinChatViewWorkerPath = join(root, 'dist', commitHash, 'packages', 'chat-view', 'dist', 'chatViewWorkerMain.js')
 
 export const getRemoteUrl = (path: string): string => {
   const url = pathToFileURL(path).toString().slice(8)
@@ -50,5 +54,8 @@ if (newContent === content) {
   throw new Error('occurrence not found')
 }
 await writeFile(rendererWorkerPath, newContent)
+
+await mkdir(dirname(builtinChatViewWorkerPath), { recursive: true })
+await cp(chatViewWorkerPath, builtinChatViewWorkerPath)
 
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })
