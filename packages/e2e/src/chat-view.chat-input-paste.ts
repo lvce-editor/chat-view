@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-input-paste'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, ClipBoard, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   await ClipBoard.enableMemoryClipBoard()
   await ClipBoard.writeText('abc')
@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem,
   await expect(composer).toBeVisible()
 
   // act
-  await Command.execute('Chat.handleInputPaste')
+  await Chat.handleInputPaste()
 
   // assert
   await expect(composer).toHaveValue('abc')
