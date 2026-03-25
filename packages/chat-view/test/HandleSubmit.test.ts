@@ -1,5 +1,5 @@
 // cspell:ignore openrouter worktree worktrees
-import { expect, test } from '@jest/globals'
+import { afterEach, expect, jest, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -8,6 +8,10 @@ import { registerSlashCommands } from '../src/parts/Listen/Listen.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 registerSlashCommands()
+
+afterEach(() => {
+  jest.useRealTimers()
+})
 
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
@@ -673,6 +677,8 @@ test('handleSubmit should inject mentioned file context into ai request messages
 })
 
 test('handleSubmit should resolve workspaceUri placeholder in system prompt from selected project', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(new Date('2026-03-25T12:00:00.000Z'))
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -717,6 +723,8 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
     const messages = capturedBody?.messages as readonly { readonly role: string; readonly content: string }[] | undefined
     expect(messages?.[0]?.role).toBe('system')
     expect(messages?.[0]?.content).toContain('Current workspace URI: file:///workspace/app')
+    expect(messages?.[0]?.content).toContain('Current date: 2026-03-25')
+    expect(messages?.[0]?.content).toContain('Do not assume your knowledge cutoff is the same as the current date.')
   } finally {
     globalThis.fetch = originalFetch
   }
