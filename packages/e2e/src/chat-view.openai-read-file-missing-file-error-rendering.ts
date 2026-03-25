@@ -1,4 +1,3 @@
- 
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-read-file-missing-file-error-rendering'
