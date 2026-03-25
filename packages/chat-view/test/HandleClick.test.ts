@@ -305,6 +305,7 @@ test('handleClick should submit message when clicking send', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
+    viewMode: 'detail',
   }
   const result = await HandleClick.handleClick(state, 'send')
   expect(result.sessions[0].messages).toHaveLength(2)
@@ -323,12 +324,37 @@ test('handleClickSend should submit message', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
+    viewMode: 'detail',
   }
   const result = await HandleClick.handleClickSend(state)
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleClickSend should create a new session from list mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    lastNormalViewMode: 'detail',
+    viewMode: 'list',
+  }
+
+  const result = await HandleClick.handleClickSend(state)
+
+  expect(result.sessions).toHaveLength(state.sessions.length + 1)
+  const newSession = result.sessions.at(-1)
+  expect(newSession?.id).toBe(result.selectedSessionId)
+  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
+  expect(newSession?.messages[0]?.text).toBe('hello')
+  expect(result.viewMode).toBe('detail')
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 

@@ -6,6 +6,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   const composer = Locator('.ChatInputBox[name="composer"]')
+  const title = Locator('.ChatListItemLabel')
   await expect(composer).toBeVisible()
   await Chat.reset()
 
@@ -13,7 +14,13 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.handleClickNew()
 
   // assert
-  const title = Locator('.ChatListItemLabel')
-  await expect(title).toHaveText('Chat 1')
   await expect(composer).toBeVisible()
+  await expect(composer).toBeFocused()
+  await expect(title).toHaveCount(0)
+
+  await Chat.handleInput('hello from first message')
+  await Chat.handleSubmit()
+  await Chat.handleClickBack()
+
+  await expect(title).toHaveText('Chat 1')
 }
