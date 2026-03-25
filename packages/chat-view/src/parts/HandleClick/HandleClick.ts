@@ -1,10 +1,13 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
+import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
+import { handleClickCreatePullRequest } from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
 import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
 import { handleClickLogout } from '../HandleClickLogout/HandleClickLogout.ts'
+import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySettings/HandleClickOpenApiApiKeySettings.ts'
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
@@ -31,6 +34,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       return createSession(state)
     case name === InputName.CreateProject:
       return handleClickCreateProject(state)
+    case name === InputName.CreatePullRequest:
+      return handleClickCreatePullRequest(state)
     case InputName.isCreateSessionInProjectInputName(name): {
       const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
       return createSession(state, projectId)
@@ -64,6 +69,22 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         runMode,
         runModePickerOpen: false,
       }
+    }
+    case name === InputName.ModelPickerList: {
+      const itemHeight = 28
+      const bottomOffset = 90
+      const headerHeight = 40
+      const index = getModelPickerClickIndex(
+        state.y,
+        state.height,
+        eventY,
+        bottomOffset,
+        itemHeight,
+        state.modelPickerHeight,
+        headerHeight,
+        state.modelPickerListScrollTop,
+      )
+      return handleClickModelPickerListIndex(state, index)
     }
     case InputName.isProjectInputName(name): {
       const projectId = InputName.getProjectIdFromInputName(name)

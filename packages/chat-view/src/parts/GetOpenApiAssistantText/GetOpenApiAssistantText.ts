@@ -777,6 +777,7 @@ export const getOpenApiAssistantText = async (
     useChatNetworkWorkerForRequests = false,
     useChatToolWorker = true,
     webSearchEnabled = false,
+    workspaceUri = '',
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
     content: message.text,
@@ -900,7 +901,7 @@ export const getOpenApiAssistantText = async (
         openAiInput.length = 0
         const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of streamResult.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker, workspaceUri })
           const executionStatus = getToolCallExecutionStatus(content)
           const toolCallResult = getToolCallResult(toolCall.name, content)
           executedToolCalls.push({
@@ -1067,7 +1068,7 @@ export const getOpenApiAssistantText = async (
       openAiInput.length = 0
       const executedToolCalls: StreamingToolCall[] = []
       for (const toolCall of responseFunctionCalls) {
-        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
+        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker, workspaceUri })
         const executionStatus = getToolCallExecutionStatus(content)
         const toolCallResult = getToolCallResult(toolCall.name, content)
         executedToolCalls.push({
@@ -1151,7 +1152,8 @@ export const getOpenApiAssistantText = async (
           }
           const name = Reflect.get(toolFunction, 'name')
           const rawArguments = Reflect.get(toolFunction, 'arguments')
-          const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker }) : '{}'
+          const content =
+            typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker, workspaceUri }) : '{}'
           if (typeof name === 'string') {
             const executionStatus = getToolCallExecutionStatus(content)
             const toolCallResult = getToolCallResult(name, content)

@@ -191,6 +191,7 @@ export const getOpenRouterAssistantText = async (
   useChatToolWorker = true,
   questionToolEnabled = false,
   systemPrompt = '',
+  workspaceUri = '',
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const completionMessages: any[] = [
     ...(systemPrompt
@@ -372,7 +373,8 @@ export const getOpenRouterAssistantText = async (
         }
         const name = Reflect.get(toolFunction, 'name')
         const rawArguments = Reflect.get(toolFunction, 'arguments')
-        const content = typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker }) : '{}'
+        const content =
+          typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker, workspaceUri }) : '{}'
         completionMessages.push({
           content,
           role: 'tool',

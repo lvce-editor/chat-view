@@ -5,6 +5,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -94,6 +95,7 @@ export const getChatModeDetailVirtualDom = ({
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isNewModelPickerVisible = modelPickerOpen
   const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
@@ -132,6 +134,7 @@ export const getChatModeDetailVirtualDom = ({
       runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
+      showCreatePullRequestButton,
       voiceDictationEnabled,
     ),
     ...(isDropOverlayVisible

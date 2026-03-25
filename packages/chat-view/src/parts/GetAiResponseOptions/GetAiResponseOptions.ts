@@ -34,4 +34,5 @@ export interface GetAiResponseOptions {
   readonly useMockApi: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean
+  readonly workspaceUri?: string
 }

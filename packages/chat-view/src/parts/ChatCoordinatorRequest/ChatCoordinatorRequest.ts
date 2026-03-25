@@ -25,6 +25,7 @@ export interface GetAiResponseRequestOptions {
   readonly useMockApi: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean
+  readonly workspaceUri?: string
 }
 
 export const getAiResponse = async (options: Readonly<GetAiResponseRequestOptions>): Promise<ChatMessage> => {
