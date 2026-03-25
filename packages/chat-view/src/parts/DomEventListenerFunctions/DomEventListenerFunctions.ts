@@ -48,5 +48,11 @@ export const HandleClickModelPickerList = 48
 export const HandleComposerSelectionChange = 49
 export const HandleModelPickerListScroll = 50
 export const HandleModelInputBlur = 51
+<<<<<<< HEAD
 export const HandleClickRunModePickerToggle = 52
 export const HandleClickModelPickerOverlay = 53
+=======
+export const HandleClickModelPickerOverlay = 52
+export const HandlePointerDownModelPickerList = 53
+export const HandlePointerUpModelPickerList = 54
+>>>>>>> origin/main
