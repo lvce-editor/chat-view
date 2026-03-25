@@ -65,9 +65,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toHaveText('add one line to notes.txt')
-  await expect(messages.nth(1)).toContainText('write_file notes.txt +1 -0')
-
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  await expect(messages.nth(1)).toHaveText('write_file notes.txt +1 -0')
 
   const newContent = await FileSystem.readFile(`${tmpDir}/notes.txt`)
   if (newContent !== 'alpha\nbeta\ngamma') {
