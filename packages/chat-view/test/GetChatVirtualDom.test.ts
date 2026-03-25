@@ -224,7 +224,9 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     visibleModels,
   })
   const modelPickerItems = result.filter(
-    (node) => node.className === ClassNames.ChatModelPickerItem || node.className === `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
+    (node) =>
+      node.className === ClassNames.ChatModelPickerItem ||
+      node.className === `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
   )
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
