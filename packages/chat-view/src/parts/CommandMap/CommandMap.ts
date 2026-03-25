@@ -90,6 +90,7 @@ import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
 import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
+import * as SetUseChatMessageParsingWorker from '../SetUseChatMessageParsingWorker/SetUseChatMessageParsingWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
@@ -193,6 +194,7 @@ export const commandMap = {
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
+  'Chat.setUseChatMessageParsingWorker': wrapCommand(SetUseChatMessageParsingWorker.setUseChatMessageParsingWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),

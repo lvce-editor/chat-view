@@ -104,6 +104,7 @@ export interface ChatState {
   readonly usageOverviewEnabled: boolean
   readonly useChatCoordinatorWorker: boolean
   readonly useChatMathWorker: boolean
+  readonly useChatMessageParsingWorker: boolean
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
