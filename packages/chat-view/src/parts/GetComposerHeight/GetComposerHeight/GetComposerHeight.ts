@@ -1,9 +1,9 @@
 import type { ChatState } from '../../ChatState/ChatState.ts'
+import { estimateComposerHeight } from '../../EstimateComposerHeight/EstimateComposerHeight.ts'
+import { getComposerWidth } from '../../GetComposerWidth/GetComposerWidth.ts'
+import { getMaxComposerHeight } from '../../GetMaxComposerHeight/GetMaxComposerHeight.ts'
+import { getMinComposerHeight } from '../../GetMinComposerHeight/GetMinComposerHeight.ts'
 import { measureTextBlockHeight } from '../../MeasureTextBlockHeight/MeasureTextBlockHeight.ts'
-import { estimateComposerHeight } from '../EstimateComposerHeight/EstimateComposerHeight.ts'
-import { getComposerWidth } from '../GetComposerWidth/GetComposerWidth.ts'
-import { getMaxComposerHeight } from '../GetMaxComposerHeight/GetMaxComposerHeight.ts'
-import { getMinComposerHeight } from '../GetMinComposerHeight/GetMinComposerHeight.ts'
 
 export const getComposerHeight = async (state: ChatState, value: string, width = state.width): Promise<number> => {
   const { composerFontFamily, composerFontSize, composerLineHeight, maxComposerRows } = state
