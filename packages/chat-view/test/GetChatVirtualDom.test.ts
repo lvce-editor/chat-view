@@ -1041,6 +1041,7 @@ test('getChatVirtualDOm should render read_file not-found status', () => {
           toolCalls: [
             {
               arguments: `{"path":"${path}"}`,
+              errorMessage: `File not found: ${path}`,
               id: 'call_1',
               name: 'read_file',
               status: 'not-found' as const,
@@ -1057,7 +1058,7 @@ test('getChatVirtualDOm should render read_file not-found status', () => {
     sessions,
     viewMode: 'detail',
   })
-  const statusNode = result.find((node) => node.text === ' (not-found)')
+  const statusNode = result.find((node) => node.text === ` (error: File not found: ${path})`)
   expect(statusNode).toBeDefined()
 })
 
