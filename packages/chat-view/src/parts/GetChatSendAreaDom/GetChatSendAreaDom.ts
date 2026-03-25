@@ -13,6 +13,25 @@ import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+<<<<<<< HEAD
+=======
+const getComposerTextAreaDom = (): VirtualDomNode => {
+  return {
+    childCount: 0,
+    className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
+    name: InputName.Composer,
+    onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
+    onFocus: DomEventListenerFunctions.HandleFocus,
+    onInput: DomEventListenerFunctions.HandleInput,
+    onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
+    placeholder: Strings.composePlaceholder(),
+    spellcheck: false,
+    type: VirtualDomElements.TextArea,
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+>>>>>>> origin/main
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
@@ -45,18 +64,7 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...getTodoListDom(hasTodoList, todoListItems),
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
-      name: InputName.Composer,
-      onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
-      onFocus: DomEventListenerFunctions.HandleFocus,
-      onInput: DomEventListenerFunctions.HandleInput,
-      onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
-      placeholder: Strings.composePlaceholder(),
-      spellcheck: false,
-      type: VirtualDomElements.TextArea,
-    },
+    getComposerTextAreaDom(),
     {
       childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
       className: ClassNames.ChatSendAreaBottom,

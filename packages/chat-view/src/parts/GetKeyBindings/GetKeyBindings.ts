@@ -44,5 +44,10 @@ export const getKeyBindings = (): readonly KeyBinding[] => {
       key: KeyModifier.Shift | KeyCode.Enter,
       when: WhenExpression.FocusChatInput,
     },
+    {
+      command: 'Chat.handleModelInputBlur',
+      key: KeyCode.Escape,
+      when: WhenExpression.FocusChatInput,
+    },
   ]
 }

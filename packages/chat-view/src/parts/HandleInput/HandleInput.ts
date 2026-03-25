@@ -29,7 +29,7 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     const visibleModels = getVisibleModels(state.models, value)
     return {
       ...state,
-      modelPickerHeight: getModelPickerHeight(visibleModels.length),
+      modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
       modelPickerListScrollTop: 0,
       modelPickerSearchValue: value,
       visibleModels,

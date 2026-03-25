@@ -10,7 +10,7 @@ import * as InputName from '../InputName/InputName.ts'
 const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly VirtualDomNode[] => {
   return [
     {
-      childCount: 2,
+      childCount: 1,
       className: ClassNames.ChatModelPickerHeader,
       type: VirtualDomElements.Div,
     },
@@ -24,19 +24,6 @@ const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly Virtu
       placeholder: Strings.searchModels(),
       type: VirtualDomElements.Input,
       value: modelPickerSearchValue,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.IconButton,
-      name: InputName.ModelPickerSettings,
-      onClick: DomEventListenerFunctions.HandleClick,
-      title: Strings.settings(),
-      type: VirtualDomElements.Button,
-    },
-    {
-      childCount: 0,
-      className: 'MaskIcon MaskIconSettingsGear',
-      type: VirtualDomElements.Div,
     },
   ]
 }
@@ -55,7 +42,7 @@ export const getChatModelPickerPopOverVirtualDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 3 + visibleModels.length,
+      childCount: 2 + visibleModels.length,
       className: ClassNames.ChatModelPicker,
       type: VirtualDomElements.Div,
     },

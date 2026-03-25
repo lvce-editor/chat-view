@@ -9,6 +9,7 @@ export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
   const defaultSessionId = 'session-1'
   const defaultModelId = 'test'
+  const modelPickerHeaderHeight = 40
   const chatMessageFontSize = 13
   const chatMessageLineHeight = 20
   const composerFontSize = 13
@@ -64,7 +65,8 @@ export const createDefaultState = (): ChatState => {
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,
     mockApiCommandId: '',
-    modelPickerHeight: getModelPickerHeight(visibleModels.length),
+    modelPickerHeaderHeight,
+    modelPickerHeight: getModelPickerHeight(modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
