@@ -48,9 +48,9 @@ import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleM
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import { handleModelInputBlur } from '../HandleModelInputBlur/HandleModelInputBlur.ts'
+import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPickerList/HandlePointerDownModelPickerList.ts'
 import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
-import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
@@ -153,9 +153,9 @@ export const commandMap = {
   'Chat.handleMissingOpenRouterApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenRouterApiKeyFormSubmit),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleModelInputBlur': wrapCommand(handleModelInputBlur),
+  'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
   'Chat.handlePointerDownModelPickerList': wrapCommand(HandlePointerDownModelPickerList.handlePointerDownModelPickerList),
   'Chat.handlePointerUpModelPickerList': wrapCommand(handlePointerUpModelPickerList),
-  'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
