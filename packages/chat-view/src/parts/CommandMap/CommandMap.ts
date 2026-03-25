@@ -28,7 +28,6 @@ import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
-import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay/HandleClickModelPickerOverlay.ts'
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
@@ -50,6 +49,8 @@ import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleM
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import { handleModelInputBlur } from '../HandleModelInputBlur/HandleModelInputBlur.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
+import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPickerList/HandlePointerDownModelPickerList.ts'
+import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
 import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
@@ -130,7 +131,6 @@ export const commandMap = {
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': HandleClickFileName.handleClickFileName,
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
-  'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.handleClickModelPickerListIndex': wrapCommand(handleClickModelPickerListIndex),
   'Chat.handleClickModelPickerOverlay': wrapCommand(HandleClickModelPickerOverlay.handleClickModelPickerOverlay),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
@@ -154,6 +154,8 @@ export const commandMap = {
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleModelInputBlur': wrapCommand(handleModelInputBlur),
   'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
+  'Chat.handlePointerDownModelPickerList': wrapCommand(HandlePointerDownModelPickerList.handlePointerDownModelPickerList),
+  'Chat.handlePointerUpModelPickerList': wrapCommand(handlePointerUpModelPickerList),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
