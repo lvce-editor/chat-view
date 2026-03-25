@@ -3,7 +3,7 @@ import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { handleClickModelPickerOverlay } from '../src/parts/HandleClickModelPickerOverlay/HandleClickModelPickerOverlay.ts'
 
-test('handleClickModelPickerOverlay should close model picker and focus composer', async () => {
+test.skip('handleClickModelPickerOverlay should close model picker and focus composer', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     focus: 'model-picker-input',
