@@ -5,6 +5,7 @@ import type {
   MessageTableCellNode,
   MessageTableRowNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { highlightCode } from '../HighlightCode/HighlightCode.ts'
 import { parseInlineNodes } from './ParseInlineNodes.ts'
 import { type BlockToken, scanBlockTokens } from './ScanBlockTokens.ts'
 
@@ -188,12 +189,14 @@ export const parseBlockTokens = (tokens: readonly BlockToken[]): readonly Messag
       flushParagraph()
       if (token.language) {
         nodes.push({
+          codeTokens: highlightCode(token.text, token.language),
           language: token.language,
           text: token.text,
           type: 'code-block',
         })
       } else {
         nodes.push({
+          codeTokens: highlightCode(token.text, undefined),
           text: token.text,
           type: 'code-block',
         })
