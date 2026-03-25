@@ -4,6 +4,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   const className = mergeClassNames(ClassNames.ChatModelPickerItem, model.id === selectedModelId ? ClassNames.ChatModelPickerItemSelected : '')
@@ -12,6 +13,7 @@ export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId
     {
       childCount: 2,
       className,
+      name: InputName.getModelPickerItemInputName(model.id),
       type: VirtualDomElements.Li,
     },
     {

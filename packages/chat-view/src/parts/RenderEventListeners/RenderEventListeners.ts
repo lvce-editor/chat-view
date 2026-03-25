@@ -192,7 +192,12 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
-      name: DomEventListenersFunctions.HandleClickModelPickerList,
+      name: DomEventListenersFunctions.HandlePointerDownModelPickerList,
+      params: ['handlePointerDownModelPickerList'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerUpModelPickerList,
       params: ['handleClickModelPickerList', EventExpression.ClientY],
     },
     {
