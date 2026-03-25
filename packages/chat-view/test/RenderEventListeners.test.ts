@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as RenderEventListeners from '../src/parts/RenderEventListeners/RenderEventListeners.ts'
+import { EventExpression } from '@lvce-editor/constants'
 
 test('renderEventListeners should return expected listeners', () => {
   const result = RenderEventListeners.renderEventListeners()
@@ -10,7 +11,7 @@ test('renderEventListeners should return expected listeners', () => {
   const chatInputContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleChatInputContextMenu)
   expect(chatInputContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleChatInputContextMenu,
-    params: ['handleChatInputContextMenu'],
+    params: ['handleChatInputContextMenu', EventExpression.ClientX, EventExpression.ClientY],
     preventDefault: true,
   })
   const modelPickerToggleListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickModelPickerToggle)
