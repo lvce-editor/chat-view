@@ -16,6 +16,7 @@ export interface ChatState {
   readonly authRefreshToken: string
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
+  readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string

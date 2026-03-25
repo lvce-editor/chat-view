@@ -6,6 +6,7 @@ export const getCss = (
   chatMessageFontSize: number,
   chatMessageLineHeight: number,
   chatMessageFontFamily: string,
+  chatFocusContentMaxWidth: number,
   textAreaPaddingTop: number,
   textAreaPaddingLeft: number,
   textAreaPaddingRight: number,
@@ -37,6 +38,7 @@ export const getCss = (
   --ChatMessageFontSize: ${chatMessageFontSize}px;
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
+  --ChatFocusContentMaxWidth: ${chatFocusContentMaxWidth}px;
 }
 
 *{
@@ -173,6 +175,13 @@ button.Select[name='run-mode-picker-toggle'] .SelectLabel{
 
 .ChatMessageContent p + p{
   margin-top: 0.75em;
+}
+
+.ChatFocus .ChatMessages > .Message,
+.ChatFocus .ChatSendAreaContent{
+  width: min(100%, var(--ChatFocusContentMaxWidth));
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .MissingApiKeyForm{
