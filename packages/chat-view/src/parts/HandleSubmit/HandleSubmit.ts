@@ -42,6 +42,10 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
 
 const workspaceUriPlaceholder = '{{workspaceUri}}'
 
+const getCurrentDate = (): string => {
+  return new Date().toISOString().slice(0, 10)
+}
+
 const getProjectUri = (state: ChatState, projectId: string): string => {
   return state.projects.find((project) => project.id === projectId)?.uri || ''
 }
@@ -54,7 +58,16 @@ const getWorkspaceUri = (state: ChatState, session: ChatSession | undefined): st
 }
 
 const getEffectiveSystemPrompt = (state: ChatState, session: ChatSession | undefined): string => {
-  return state.systemPrompt.replaceAll(workspaceUriPlaceholder, getWorkspaceUri(state, session) || 'unknown')
+  const resolvedSystemPrompt = state.systemPrompt.replaceAll(workspaceUriPlaceholder, getWorkspaceUri(state, session) || 'unknown')
+  const currentDateInstructions = `Current date: ${getCurrentDate()}.
+
+Do not assume your knowledge cutoff is the same as the current date.`
+  if (!resolvedSystemPrompt) {
+    return currentDateInstructions
+  }
+  return `${resolvedSystemPrompt}
+
+${currentDateInstructions}`
 }
 
 const withProvisionedBackgroundSession = async (state: ChatState, session: ChatSession): Promise<ChatSession> => {
