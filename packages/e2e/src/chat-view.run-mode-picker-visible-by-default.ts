@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(nativeRunModePicker).toHaveCount(0)
 
   await Command.execute('Chat.handleClick', 'run-mode-picker-toggle')
-  const backgroundOption = Locator('.ChatSendArea .ChatModelPickerItem[name="run-mode-picker-item:background"]')
+  const backgroundOption = Locator('.Chat .ChatModelPickerItem[name="run-mode-picker-item:background"]')
   await expect(backgroundOption).toBeVisible()
   await backgroundOption.click()
 
