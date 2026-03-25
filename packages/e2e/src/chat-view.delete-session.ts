@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.delete-session'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(chatListItems).toHaveCount(1)
 
   // act
-  await Command.execute('Chat.deleteSessionAtIndex', 0)
+  await Chat.deleteSessionAtIndex(0)
 
   // assert
   await expect(chatListItems).toHaveCount(0)

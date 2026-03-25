@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.deleteSessionAtIndex', 0)
+  await Chat.deleteSessionAtIndex(0)
   await Command.execute('Chat.chatListFocusFirst')
   await Command.execute('Chat.chatListFocusNext')
   await Command.execute('Chat.chatListFocusPrevious')

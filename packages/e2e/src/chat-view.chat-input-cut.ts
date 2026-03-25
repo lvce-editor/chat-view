@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-input-cut'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, ClipBoard, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   await ClipBoard.enableMemoryClipBoard()
   const tmpDir = await FileSystem.getTmpDir()
@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, FileSystem,
   await Chat.handleInput('abc')
 
   // act
-  await Command.execute('Chat.handleInputCut')
+  await Chat.handleInputCut()
 
   // assert
   await ClipBoard.shouldHaveText('abc')
