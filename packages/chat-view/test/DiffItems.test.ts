@@ -61,3 +61,9 @@ test('isEqual should return false when model picker open state changes', () => {
   const state2: ChatState = { ...createDefaultState(), modelPickerOpen: true }
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
+
+test('isEqual should return false when run mode picker open state changes', () => {
+  const state1: ChatState = { ...createDefaultState(), runModePickerOpen: false }
+  const state2: ChatState = { ...createDefaultState(), runModePickerOpen: true }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})

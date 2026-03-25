@@ -98,6 +98,7 @@ export const createDefaultState = (): ChatState => {
     questionToolEnabled: false,
     renamingSessionId: '',
     runMode: 'local',
+    runModePickerOpen: false,
     searchEnabled: false,
     searchFieldVisible: false,
     searchValue: '',

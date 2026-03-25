@@ -54,6 +54,11 @@ export const getCss = (
   margin-right:auto;
 }
 
+.CustomSelectContainer{
+  position: relative;
+  min-width: 0;
+}
+
 .Select .MaskIcon {
   width: 20px;
 }
@@ -75,15 +80,6 @@ export const getCss = (
   white-space: pre;
   text-overflow: ellipsis;
 }
-
-.ChatInputBox::selection{
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.ChatInputBox::-moz-selection{
-  background: rgba(255, 255, 255, 0.2);
-}
-
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
@@ -102,7 +98,8 @@ export const getCss = (
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
 }
 
-button.Select[name='model-picker-toggle']{
+button.Select[name='model-picker-toggle'],
+button.Select[name='run-mode-picker-toggle']{
   display: flex;
   gap: 4px;
   border: none;
@@ -113,12 +110,14 @@ button.Select[name='model-picker-toggle']{
   min-width: 0;
 }
 
-button.Select[name='model-picker-toggle']:hover{
+button.Select[name='model-picker-toggle']:hover,
+button.Select[name='run-mode-picker-toggle']:hover{
   background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
   color: var(--vscode-foreground);
 }
 
-button.Select[name='model-picker-toggle'] .SelectLabel{
+button.Select[name='model-picker-toggle'] .SelectLabel,
+button.Select[name='run-mode-picker-toggle'] .SelectLabel{
   width: auto;
   max-width: 100%;
   min-width: 0;
@@ -237,6 +236,12 @@ a.Button{
   gap: 8px;
   height: 28px;
   width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0 8px;
+  text-align: left;
 }
 
 .ChatModelPickerItemLabel{
@@ -263,8 +268,7 @@ a.Button{
   inset:0;
   display: flex;
   flex-direction: column;
-  pointer-events: auto;
-  z-index: 1;
+  pointer-events: none;
 }
 
 
@@ -290,6 +294,14 @@ a.Button{
   }
 }
 
+.CustomSelectPopOver{
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  margin: 0;
+  z-index: 1;
+}
+
 
 .ChatModelPickerList{
   padding:0;
@@ -311,11 +323,13 @@ a.Button{
   display: flex;
   contain:content;
   align-items: center;
+  pointer-events: none;
 }
 
 .Select .MaskIcon {
   width: 10px !important;
   height: 10px !important;
+  pointer-events: none;
 }
 
 .ChatInputBox{
@@ -325,6 +339,18 @@ a.Button{
 
 .ChatModelPickerItemSelected{
   background: var(--ListHoverBackground) !important;
+}
+
+.ChatModelPickerItem > *{
+  pointer-events: none;
+}
+
+.ChatInputBox::selection{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection{
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .SendButtonDisabled {

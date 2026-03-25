@@ -123,14 +123,38 @@ test('getChatVirtualDom should wrap model picker and run mode controls together'
   const result = renderChatView()
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
-  const runModeSelect = result.find((node) => node.name === 'runMode')
+  const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
     childCount: 2,
     className: ClassNames.ChatSendAreaPrimaryControls,
     type: VirtualDomElements.Div,
   })
   expect(modelPickerToggle).toBeDefined()
-  expect(runModeSelect).toBeDefined()
+  expect(runModePickerToggle).toMatchObject({
+    'aria-expanded': 'false',
+    'aria-haspopup': 'true',
+    className: ClassNames.Select,
+    onClick: DomEventListenerFunctions.HandleClickRunModePickerToggle,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDom should render open run mode picker without search input', () => {
+  const result = renderChatView({
+    runModePickerOpen: true,
+  })
+  const runModePicker = result.find((node) => node.className === `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`)
+  const runModeBackgroundOption = result.find((node) => node.name === 'run-mode-picker-item:background')
+  const runModeSearchInput = result.find((node) => node.name === 'model-picker-search')
+  expect(runModePicker).toMatchObject({
+    className: `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`,
+    type: VirtualDomElements.Div,
+  })
+  expect(runModeBackgroundOption).toMatchObject({
+    className: ClassNames.ChatModelPickerItem,
+    type: VirtualDomElements.Button,
+  })
+  expect(runModeSearchInput).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render open model picker with search input', () => {
@@ -164,7 +188,7 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   expect(modelPickerItem).toMatchObject({
     className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
     name: 'model-picker-item:test',
-    type: VirtualDomElements.Li,
+    type: VirtualDomElements.Button,
   })
 })
 
@@ -207,7 +231,11 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
     viewMode: 'detail',
     visibleModels,
   })
-  const modelPickerItems = result.filter((node) => node.name?.startsWith('model-picker-item:'))
+  const modelPickerItems = result.filter(
+    (node) =>
+      node.className === ClassNames.ChatModelPickerItem ||
+      node.className === `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
+  )
   const codexLabel = result.find((node) => node.text === 'Codex 5.3')
   const testLabel = result.find((node) => node.text === 'test')
   expect(modelPickerItems).toHaveLength(1)

@@ -14,6 +14,7 @@ export const openModelPicker = (state: ChatState): ChatState => {
     modelPickerListScrollTop: 0,
     modelPickerOpen,
     modelPickerSearchValue: currentModelPickerOpen ? '' : modelPickerSearchValue,
+    runModePickerOpen: false,
     visibleModels,
   }
 }

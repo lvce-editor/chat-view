@@ -7,7 +7,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
-import { getRunModeSelectVirtualDom } from '../GetRunModeSelectVirtualDom/GetRunModeSelectVirtualDom.ts'
+import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
@@ -39,6 +39,7 @@ export const getChatSendAreaDom = (
   addContextButtonEnabled: boolean,
   showRunMode: boolean,
   runMode: RunMode,
+  runModePickerOpen: boolean,
   todoListToolEnabled: boolean,
   todoListItems: readonly TodoListItem[],
   voiceDictationEnabled = false,
@@ -74,7 +75,7 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
-    ...(showRunMode ? getRunModeSelectVirtualDom(runMode) : []),
+    ...(showRunMode ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),

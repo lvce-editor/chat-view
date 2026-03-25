@@ -42,6 +42,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
   readonly runMode: RunMode
+  readonly runModePickerOpen?: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -84,6 +85,7 @@ export const getChatModeChatFocusVirtualDom = ({
   projectListScrollTop = 0,
   projects = [],
   runMode,
+  runModePickerOpen = false,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
@@ -136,6 +138,7 @@ export const getChatModeChatFocusVirtualDom = ({
       addContextButtonEnabled,
       showRunMode,
       runMode,
+      runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
       voiceDictationEnabled,

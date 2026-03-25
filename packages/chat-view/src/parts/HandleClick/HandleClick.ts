@@ -15,6 +15,7 @@ import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
+import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
 import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
@@ -42,6 +43,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         searchFieldVisible: !state.searchFieldVisible,
         searchValue: state.searchFieldVisible ? '' : state.searchValue,
       }
+    case name === InputName.RunModePickerToggle:
+      return openRunModePicker(state)
     case InputName.isModelPickerItemInputName(name): {
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
       return {
@@ -52,6 +55,14 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         modelPickerSearchValue: '',
         selectedModelId: modelId,
         visibleModels: state.models,
+      }
+    }
+    case InputName.isRunModePickerItemInputName(name): {
+      const runMode = InputName.getRunModeFromRunModePickerItemInputName(name)
+      return {
+        ...state,
+        runMode,
+        runModePickerOpen: false,
       }
     }
     case InputName.isProjectInputName(name): {
