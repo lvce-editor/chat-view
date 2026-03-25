@@ -11,7 +11,7 @@ test('handleKeyDown should submit on Enter', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
-  const state = { ...createDefaultState(), composerValue: 'hello' }
+  const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].text).toBe('hello')
@@ -19,6 +19,30 @@ test('handleKeyDown should submit on Enter', async () => {
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleKeyDown should create a new session on Enter from list mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    lastNormalViewMode: 'detail' as const,
+    viewMode: 'list' as const,
+  }
+
+  const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
+
+  expect(result.sessions).toHaveLength(state.sessions.length + 1)
+  const newSession = result.sessions.at(-1)
+  expect(newSession?.id).toBe(result.selectedSessionId)
+  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
+  expect(newSession?.messages[0]?.text).toBe('hello')
+  expect(result.viewMode).toBe('detail')
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
