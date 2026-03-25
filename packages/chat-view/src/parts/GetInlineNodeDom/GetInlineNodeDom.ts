@@ -9,7 +9,7 @@ import { getMathInlineNodeDom } from './GetMathInlineNodeDom.ts'
 import { getStrikethroughInlineNodeDom } from './GetStrikethroughInlineNodeDom.ts'
 import { getTextInlineNodeDom } from './GetTextInlineNodeDom.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getInlineNodeDom = (inlineNode: MessageInlineNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   switch (inlineNode.type) {
     case 'bold':

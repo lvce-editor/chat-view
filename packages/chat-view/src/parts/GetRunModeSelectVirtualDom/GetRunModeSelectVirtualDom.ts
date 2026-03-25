@@ -7,7 +7,7 @@ import * as InputName from '../InputName/InputName.ts'
 
 const runModes: readonly RunMode[] = ['local', 'background', 'cloud']
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getRunModeSelectVirtualDom = (selectedRunMode: RunMode): readonly VirtualDomNode[] => {
   const runModeOptions = runModes.flatMap((runMode) => getRunModeOptionDom(runMode, selectedRunMode))
   return [

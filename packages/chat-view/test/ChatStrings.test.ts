@@ -77,7 +77,7 @@ const zeroArgCases = [
   ['leadingOrTrailingWhitespaceDetected', 'Leading or trailing whitespace detected in file or folder name.'],
 ] as const
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 test.each(zeroArgCases)('%s should return expected text', (name, expected) => {
   const result = ChatStrings[name]()
   expect(result).toBe(expected)

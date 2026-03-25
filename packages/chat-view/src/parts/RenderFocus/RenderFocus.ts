@@ -6,8 +6,6 @@ import * as InputName from '../InputName/InputName.ts'
 const getFocusSelector = (state: ChatState): string => {
   const { focus, listFocusedIndex } = state
   switch (focus) {
-    case 'model-picker-input':
-      return `[name="${InputName.ModelPickerSearch}"]`
     case 'composer':
     case 'input':
       return '[name="composer"]'
@@ -24,6 +22,8 @@ const getFocusSelector = (state: ChatState): string => {
       }
       return `[name="${InputName.getSessionInputName(session.id)}"]`
     }
+    case 'model-picker-input':
+      return `[name="${InputName.ModelPickerSearch}"]`
     case 'send-button':
       return '[name="send"]'
     default:
