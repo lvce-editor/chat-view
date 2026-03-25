@@ -44,7 +44,8 @@ export const getChatSendAreaDom = (
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-  const controlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (showRunMode ? 1 : 0) + (addContextButtonEnabled ? 1 : 0)
+  const bottomControlsCount = 2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+  const primaryControlsCount = 1 + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
 
   return [
@@ -62,9 +63,14 @@ export const getChatSendAreaDom = (
     ...getTodoListDom(hasTodoList, todoListItems),
     getComposerTextAreaDom(),
     {
-      childCount: voiceDictationEnabled ? controlsCount + 1 : controlsCount,
+      childCount: bottomControlsCount,
       className: ClassNames.ChatSendAreaBottom,
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: primaryControlsCount,
+      className: ClassNames.ChatSendAreaPrimaryControls,
       type: VirtualDomElements.Div,
     },
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
