@@ -75,6 +75,15 @@ export const getCss = (
   white-space: pre;
   text-overflow: ellipsis;
 }
+
+.ChatInputBox::selection{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection{
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .ChatSendArea:focus-within{
   border-color: darkcyan;
 }
