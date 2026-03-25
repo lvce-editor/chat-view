@@ -112,7 +112,7 @@ export const createDefaultState = (): ChatState => {
         title: Strings.defaultSessionTitle(),
       },
     ],
-    showRunMode: false,
+    showRunMode: true,
     streamingEnabled: true,
     systemPrompt: getDefaultSystemPrompt(),
     textAreaPaddingBottom: 0,
