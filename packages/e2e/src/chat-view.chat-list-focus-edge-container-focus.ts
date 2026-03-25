@@ -6,6 +6,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.handleClickNew()
+  await Chat.handleInput('first session message')
+  await Chat.handleSubmit()
   await Chat.handleClickBack()
 
   await Command.execute('Chat.handleInputFocus', 'chat-list')
