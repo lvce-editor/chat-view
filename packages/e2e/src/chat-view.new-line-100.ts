@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.new-line-1'
+export const name = 'chat-view.new-line-100'
 
 export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
@@ -10,13 +10,9 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(composer).toBeVisible()
 
   // act
-  for (let i = 0; i < 100; i++) {
-    await Chat.enterNewLine()
-  }
+  await Chat.handleInput('\n'.repeat(100))
 
   // assert
-
   const sendArea = Locator('.ChatSendArea')
   await expect(sendArea).toHaveCSS('height', '178px')
-  // TODO verify height
 }
