@@ -4,6 +4,7 @@ import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
+import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
@@ -97,6 +98,9 @@ export const createDefaultState = (): ChatState => {
       },
     ],
     questionToolEnabled: false,
+    reasoningEffort: defaultReasoningEffort,
+    reasoningEffortPickerOpen: false,
+    reasoningPickerEnabled: false,
     renamingSessionId: '',
     runMode: 'local',
     runModePickerOpen: false,

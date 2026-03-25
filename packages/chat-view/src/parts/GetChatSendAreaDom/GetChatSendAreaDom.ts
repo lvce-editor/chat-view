@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
@@ -8,6 +9,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
+import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
@@ -34,6 +36,9 @@ export const getChatSendAreaDom = (
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
+  reasoningPickerEnabled: boolean,
+  reasoningEffort: ReasoningEffort,
+  reasoningEffortPickerOpen: boolean,
   usageOverviewEnabled: boolean,
   tokensUsed: number,
   tokensMax: number,
@@ -49,7 +54,7 @@ export const getChatSendAreaDom = (
   const isSendDisabled = composerValue.trim() === ''
   const bottomControlsCount =
     2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
-  const primaryControlsCount = 1 + (showRunMode ? 1 : 0)
+  const primaryControlsCount = 1 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
 
   return [
@@ -78,6 +83,7 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
+    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen) : []),
     ...(showRunMode ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),

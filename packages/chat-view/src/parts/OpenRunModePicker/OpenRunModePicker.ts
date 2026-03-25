@@ -6,6 +6,7 @@ export const openRunModePicker = (state: ChatState): ChatState => {
     ...state,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
+    reasoningEffortPickerOpen: false,
     runModePickerOpen,
     visibleModels: state.models,
   }

@@ -8,6 +8,7 @@ export const handleModelChange = async (state: ChatState, value: string): Promis
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
+    reasoningEffortPickerOpen: false,
     selectedModelId: value,
     visibleModels: state.models,
   }

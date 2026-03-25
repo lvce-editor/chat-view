@@ -3,6 +3,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
@@ -39,6 +40,9 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
+  readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerOpen?: boolean
+  readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly selectedModelId: string
@@ -78,6 +82,9 @@ export const getChatModeDetailVirtualDom = ({
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
+  reasoningEffort,
+  reasoningEffortPickerOpen = false,
+  reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
   selectedModelId,
@@ -127,6 +134,9 @@ export const getChatModeDetailVirtualDom = ({
       modelPickerOpen,
       models,
       selectedModelId,
+      reasoningPickerEnabled,
+      reasoningEffort,
+      reasoningEffortPickerOpen,
       usageOverviewEnabled,
       tokensUsed,
       tokensMax,

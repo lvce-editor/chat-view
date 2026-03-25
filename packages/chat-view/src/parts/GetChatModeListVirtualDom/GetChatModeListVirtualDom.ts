@@ -1,6 +1,7 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
@@ -30,6 +31,9 @@ export interface GetChatModeListVirtualDomOptions {
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
+  readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerOpen?: boolean
+  readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
@@ -86,6 +90,9 @@ export const getChatModeListVirtualDom = ({
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
+  reasoningEffort,
+  reasoningEffortPickerOpen = false,
+  reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
   searchEnabled = false,
@@ -125,6 +132,9 @@ export const getChatModeListVirtualDom = ({
       modelPickerOpen,
       models,
       selectedModelId,
+      reasoningPickerEnabled,
+      reasoningEffort,
+      reasoningEffortPickerOpen,
       usageOverviewEnabled,
       tokensUsed,
       tokensMax,

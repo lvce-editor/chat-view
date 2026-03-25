@@ -116,6 +116,7 @@ export const getAiResponse = async ({
   passIncludeObfuscation = false,
   platform,
   questionToolEnabled = false,
+  reasoningEffort,
   selectedModelId,
   streamingEnabled = true,
   systemPrompt = '',
@@ -149,6 +150,11 @@ export const getAiResponse = async ({
         passIncludeObfuscation,
         platform,
         questionToolEnabled,
+        ...(reasoningEffort
+          ? {
+              reasoningEffort,
+            }
+          : {}),
         selectedModelId,
         streamingEnabled,
         systemPrompt,
@@ -218,6 +224,7 @@ export const getAiResponse = async ({
             safeMaxToolCalls,
             systemPrompt,
             previousResponseId,
+            reasoningEffort,
           ),
           url: getOpenApiApiEndpoint(openApiApiBaseUrl),
         })
@@ -284,6 +291,11 @@ export const getAiResponse = async ({
               }
             : {}),
           questionToolEnabled,
+          ...(reasoningEffort
+            ? {
+                reasoningEffort,
+              }
+            : {}),
           stream: streamingEnabled,
           systemPrompt,
           useChatNetworkWorkerForRequests,

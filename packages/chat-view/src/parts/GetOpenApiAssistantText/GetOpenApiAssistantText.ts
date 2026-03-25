@@ -2,6 +2,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import type { GetOpenApiAssistantTextOptions } from '../GetOpenApiAssistantTextOptions/GetOpenApiAssistantTextOptions.ts'
 import type { GetOpenApiAssistantTextSuccessResult } from '../GetOpenApiAssistantTextSuccessResult/GetOpenApiAssistantTextSuccessResult.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { makeApiRequest, makeStreamingApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
@@ -61,6 +62,7 @@ export const getOpenAiParams = (
   maxToolCalls: number,
   systemPrompt = '',
   previousResponseId?: string,
+  reasoningEffort?: ReasoningEffort,
 ): object => {
   const openAiTools = getOpenAiTools(tools)
   return {
@@ -86,6 +88,13 @@ export const getOpenAiParams = (
     ...(previousResponseId
       ? {
           previous_response_id: previousResponseId,
+        }
+      : {}),
+    ...(reasoningEffort
+      ? {
+          reasoning: {
+            effort: reasoningEffort,
+          },
         }
       : {}),
     max_tool_calls: maxToolCalls,
@@ -772,6 +781,7 @@ export const getOpenApiAssistantText = async (
     onTextChunk,
     onToolCallsChunk,
     questionToolEnabled = false,
+    reasoningEffort,
     stream,
     systemPrompt = '',
     useChatNetworkWorkerForRequests = false,
@@ -798,6 +808,7 @@ export const getOpenApiAssistantText = async (
       safeMaxToolCalls,
       systemPrompt,
       previousResponseId,
+      reasoningEffort,
     )
 
     if (stream) {

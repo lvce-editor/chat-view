@@ -1,5 +1,6 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {
@@ -25,6 +26,7 @@ export interface GetAiResponseOptions {
   readonly passIncludeObfuscation?: boolean
   readonly platform: number
   readonly questionToolEnabled?: boolean
+  readonly reasoningEffort?: ReasoningEffort
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
   readonly systemPrompt?: string

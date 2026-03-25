@@ -1,3 +1,4 @@
+import type { ReasoningEffort as ReasoningEffortType } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode as RunModeType } from '../RunMode/RunMode.ts'
 
 export const Notifications = 'Notifications'
@@ -14,6 +15,8 @@ export const Model = 'model'
 export const ModelPickerToggle = 'model-picker-toggle'
 export const ModelPickerSearch = 'model-picker-search'
 export const ModelPickerList = 'model-picker-list'
+export const ReasoningEffortPickerToggle = 'reasoning-effort-picker-toggle'
+export const ReasoningEffortPickerItemPrefix = 'reasoning-effort-picker-item:'
 export const RunMode = 'runMode'
 export const RunModePickerToggle = 'run-mode-picker-toggle'
 export const RunModePickerItemPrefix = 'run-mode-picker-item:'
@@ -104,4 +107,20 @@ export const isRunModePickerItemInputName = (name: string): name is `${typeof Ru
 
 export const getRunModeFromRunModePickerItemInputName = (name: `${typeof RunModePickerItemPrefix}${RunModeType}`): RunModeType => {
   return name.slice(RunModePickerItemPrefix.length) as RunModeType
+}
+
+export const getReasoningEffortPickerItemInputName = (
+  reasoningEffort: ReasoningEffortType,
+): `${typeof ReasoningEffortPickerItemPrefix}${ReasoningEffortType}` => {
+  return `${ReasoningEffortPickerItemPrefix}${reasoningEffort}`
+}
+
+export const isReasoningEffortPickerItemInputName = (name: string): name is `${typeof ReasoningEffortPickerItemPrefix}${ReasoningEffortType}` => {
+  return name.startsWith(ReasoningEffortPickerItemPrefix)
+}
+
+export const getReasoningEffortFromReasoningEffortPickerItemInputName = (
+  name: `${typeof ReasoningEffortPickerItemPrefix}${ReasoningEffortType}`,
+): ReasoningEffortType => {
+  return name.slice(ReasoningEffortPickerItemPrefix.length) as ReasoningEffortType
 }
