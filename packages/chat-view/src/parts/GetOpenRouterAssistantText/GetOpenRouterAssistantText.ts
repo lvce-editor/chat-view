@@ -180,7 +180,7 @@ const getOpenRouterLimitInfo = async (
   return normalizedLimitInfo
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getOpenRouterAssistantText = async (
   messages: readonly ChatMessage[],
   modelId: string,

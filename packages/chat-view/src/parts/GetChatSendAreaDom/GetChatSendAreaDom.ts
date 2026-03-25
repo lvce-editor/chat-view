@@ -13,7 +13,7 @@ import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,

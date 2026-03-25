@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
+import { EventExpression } from '@lvce-editor/constants'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as RenderEventListeners from '../src/parts/RenderEventListeners/RenderEventListeners.ts'
-import { EventExpression } from '@lvce-editor/constants'
 
 test('renderEventListeners should return expected listeners', () => {
   const result = RenderEventListeners.renderEventListeners()

@@ -5,7 +5,7 @@ import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatSendAreaDom/GetChatSendAreaDom.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getChatDetailsDom = (
   selectedSessionTitle: string,
   messagesNodes: readonly VirtualDomNode[],
