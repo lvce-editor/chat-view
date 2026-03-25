@@ -4,6 +4,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
@@ -57,6 +58,9 @@ export interface GetChatVirtualDomOptions {
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
+  readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerOpen?: boolean
+  readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
@@ -106,6 +110,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     projectExpandedIds = [],
     projectListScrollTop = 0,
     projects = [],
+    reasoningEffort,
+    reasoningEffortPickerOpen = false,
+    reasoningPickerEnabled,
     runMode,
     runModePickerOpen = false,
     searchEnabled = false,
@@ -157,6 +164,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         projectExpandedIds,
         projectListScrollTop,
         projects,
+        reasoningEffort,
+        reasoningEffortPickerOpen,
+        reasoningPickerEnabled,
         runMode,
         runModePickerOpen,
         selectedModelId,
@@ -197,6 +207,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openRouterApiKeyInput,
         openRouterApiKeyState,
         parsedMessages,
+        reasoningEffort,
+        reasoningEffortPickerOpen,
+        reasoningPickerEnabled,
         runMode,
         runModePickerOpen,
         selectedModelId,
@@ -230,6 +243,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         modelPickerOpen,
         modelPickerSearchValue,
         models,
+        reasoningEffort,
+        reasoningEffortPickerOpen,
+        reasoningPickerEnabled,
         runMode,
         runModePickerOpen,
         searchEnabled,

@@ -1,4 +1,5 @@
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 
 export interface SavedState {
   readonly chatListScrollTop: number
@@ -10,6 +11,7 @@ export interface SavedState {
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly { id: string; name: string; uri: string }[]
+  readonly reasoningEffort: ReasoningEffort
   readonly renamingSessionId: string
   readonly searchFieldVisible: boolean
   readonly searchValue: string

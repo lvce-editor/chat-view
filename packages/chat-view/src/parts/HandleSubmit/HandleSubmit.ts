@@ -96,6 +96,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     passIncludeObfuscation,
     platform,
     questionToolEnabled,
+    reasoningEffort,
     selectedModelId,
     selectedSessionId,
     sessions,
@@ -301,6 +302,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
           questionToolEnabled,
         }
       : {}),
+    reasoningEffort,
     selectedModelId,
     streamingEnabled,
     systemPrompt,

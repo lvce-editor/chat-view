@@ -11,6 +11,7 @@ export const handleRunModeChange = async (state: ChatState, value: string): Prom
   }
   return {
     ...state,
+    reasoningEffortPickerOpen: false,
     runMode: value,
     runModePickerOpen: false,
   }

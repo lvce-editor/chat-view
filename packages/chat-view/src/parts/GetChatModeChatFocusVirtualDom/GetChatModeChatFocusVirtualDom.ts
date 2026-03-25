@@ -4,6 +4,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
@@ -43,6 +44,9 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
+  readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerOpen?: boolean
+  readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly selectedModelId: string
@@ -86,6 +90,9 @@ export const getChatModeChatFocusVirtualDom = ({
   projectExpandedIds = [],
   projectListScrollTop = 0,
   projects = [],
+  reasoningEffort,
+  reasoningEffortPickerOpen = false,
+  reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
   selectedModelId,
@@ -136,6 +143,9 @@ export const getChatModeChatFocusVirtualDom = ({
       modelPickerOpen,
       models,
       selectedModelId,
+      reasoningPickerEnabled,
+      reasoningEffort,
+      reasoningEffortPickerOpen,
       usageOverviewEnabled,
       tokensUsed,
       tokensMax,

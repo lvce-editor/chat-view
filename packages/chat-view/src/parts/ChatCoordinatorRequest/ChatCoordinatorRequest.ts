@@ -1,6 +1,7 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 export interface GetAiResponseRequestOptions {
   readonly assetDir: string
   readonly maxToolCalls?: number
@@ -17,6 +18,7 @@ export interface GetAiResponseRequestOptions {
   readonly passIncludeObfuscation?: boolean
   readonly platform: number
   readonly questionToolEnabled?: boolean
+  readonly reasoningEffort?: ReasoningEffort
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
   readonly systemPrompt?: string

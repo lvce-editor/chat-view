@@ -55,6 +55,7 @@ import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPick
 import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
 import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
+import * as HandleReasoningEffortChange from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
 import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange.ts'
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSearchValueChange from '../HandleSearchValueChange/HandleSearchValueChange.ts'
@@ -71,6 +72,7 @@ import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockO
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
+import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
 import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
 import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
@@ -88,6 +90,8 @@ import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelect
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
+import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
+import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
@@ -164,6 +168,7 @@ export const commandMap = {
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),
+  'Chat.handleReasoningEffortChange': wrapCommand(HandleReasoningEffortChange.handleReasoningEffortChange),
   'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
   'Chat.handleSearchValueChange': wrapCommand(HandleSearchValueChange.handleSearchValueChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
@@ -180,6 +185,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
+  'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),
   'Chat.openRunModePicker': wrapCommand(openRunModePicker),
   'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
@@ -197,6 +203,8 @@ export const commandMap = {
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
+  'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
+  'Chat.setReasoningPickerEnabled': wrapCommand(SetReasoningPickerEnabled.setReasoningPickerEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),

@@ -4,6 +4,7 @@ import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 
 export interface ChatState {
@@ -81,6 +82,9 @@ export interface ChatState {
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
   readonly questionToolEnabled?: boolean
+  readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerOpen: boolean
+  readonly reasoningPickerEnabled: boolean
   readonly renamingSessionId: string
   readonly runMode: RunMode
   readonly runModePickerOpen: boolean

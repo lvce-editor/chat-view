@@ -1,3 +1,4 @@
+import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetOpenApiAssistantTextOptions {
@@ -8,6 +9,7 @@ export interface GetOpenApiAssistantTextOptions {
   readonly onTextChunk?: (chunk: string) => Promise<void>
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly questionToolEnabled?: boolean
+  readonly reasoningEffort?: ReasoningEffort
   readonly stream: boolean
   readonly systemPrompt?: string
   readonly useChatNetworkWorkerForRequests?: boolean

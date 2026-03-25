@@ -10,6 +10,7 @@ import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSaved
 import { getSavedProjectExpandedIds } from '../GetSavedProjectExpandedIds/GetSavedProjectExpandedIds.ts'
 import { getSavedProjectListScrollTop } from '../GetSavedProjectListScrollTop/GetSavedProjectListScrollTop.ts'
 import { getSavedProjects } from '../GetSavedProjects/GetSavedProjects.ts'
+import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReasoningEffort.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
@@ -39,6 +40,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,
+    reasoningPickerEnabled,
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
@@ -81,6 +83,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) =>
     projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
   )
+  const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const systemPrompt = getSavedSystemPrompt(savedState) ?? state.systemPrompt
   const visibleModels = getVisibleModels(state.models, '')
@@ -125,6 +128,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projectExpandedIds,
     projectListScrollTop,
     projects,
+    reasoningEffort,
+    reasoningEffortPickerOpen: false,
+    reasoningPickerEnabled,
     runModePickerOpen: false,
     searchEnabled,
     searchFieldVisible: false,

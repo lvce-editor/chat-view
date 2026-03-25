@@ -9,6 +9,7 @@ import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctio
 import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
+import { loadReasoningPickerEnabled } from '../LoadReasoningPickerEnabled/LoadReasoningPickerEnabled.ts'
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
@@ -31,6 +32,7 @@ export interface LoadedPreferences {
   openApiApiKey: string
   openRouterApiKey: string
   passIncludeObfuscation: boolean
+  reasoningPickerEnabled: boolean
   searchEnabled: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
@@ -54,6 +56,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openApiApiKey,
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
+    reasoningPickerEnabled,
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
@@ -75,6 +78,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
+    loadReasoningPickerEnabled(),
     loadSearchEnabled(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
@@ -99,6 +103,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,
+    reasoningPickerEnabled,
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
