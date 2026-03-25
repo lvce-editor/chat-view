@@ -22,6 +22,8 @@ const getFocusSelector = (state: ChatState): string => {
       }
       return `[name="${InputName.getSessionInputName(session.id)}"]`
     }
+    case 'model-picker-input':
+      return `[name="${InputName.ModelPickerSearch}"]`
     case 'send-button':
       return '[name="send"]'
     default:

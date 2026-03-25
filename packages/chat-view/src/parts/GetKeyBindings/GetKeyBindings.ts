@@ -1,6 +1,7 @@
 import { WhenExpression } from '@lvce-editor/constants'
 import { KeyCode, KeyModifier } from '@lvce-editor/virtual-dom-worker'
 import type { KeyBinding } from '../KeyBinding/KeyBinding.ts'
+import { FocusModelPickerInput } from '../OpenModelPicker/OpenModelPicker.ts'
 
 export const getKeyBindings = (): readonly KeyBinding[] => {
   return [
@@ -47,7 +48,12 @@ export const getKeyBindings = (): readonly KeyBinding[] => {
     {
       command: 'Chat.handleModelInputBlur',
       key: KeyCode.Escape,
-      when: WhenExpression.FocusChatInput,
+      when: FocusModelPickerInput,
+    },
+    {
+      command: 'Chat.modelPickerAccept',
+      key: KeyCode.Enter,
+      when: FocusModelPickerInput,
     },
   ]
 }

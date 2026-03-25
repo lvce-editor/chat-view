@@ -28,7 +28,6 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,
