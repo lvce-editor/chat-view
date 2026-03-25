@@ -36,6 +36,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
               type: 'text',
             },
           ],
+          index: 1,
           type: 'list-item',
         },
         {
@@ -45,6 +46,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
               type: 'text',
             },
           ],
+          index: 2,
           type: 'list-item',
         },
         {
@@ -54,6 +56,7 @@ test('parseMessageContent should parse mixed paragraph and ordered list blocks',
               type: 'text',
             },
           ],
+          index: 3,
           type: 'list-item',
         },
       ],
@@ -86,6 +89,7 @@ test('parseMessageContent should keep ordered list items together across blank l
               type: 'text',
             },
           ],
+          index: 1,
           type: 'list-item',
         },
         {
@@ -95,6 +99,7 @@ test('parseMessageContent should keep ordered list items together across blank l
               type: 'text',
             },
           ],
+          index: 2,
           type: 'list-item',
         },
         {
@@ -104,6 +109,7 @@ test('parseMessageContent should keep ordered list items together across blank l
               type: 'text',
             },
           ],
+          index: 3,
           type: 'list-item',
         },
       ],
@@ -149,6 +155,7 @@ test('parseMessageContent should keep loose ordered list sections together when 
               type: 'text',
             },
           ],
+          index: 1,
           type: 'list-item',
         },
         {
@@ -166,6 +173,7 @@ test('parseMessageContent should keep loose ordered list sections together when 
               type: 'text',
             },
           ],
+          index: 2,
           nestedItems: [
             {
               children: [
@@ -204,6 +212,7 @@ test('parseMessageContent should keep loose ordered list sections together when 
               type: 'text',
             },
           ],
+          index: 3,
           type: 'list-item',
         },
       ],
@@ -275,6 +284,7 @@ test('parseMessageContent should parse markdown links in paragraphs and lists', 
               type: 'link',
             },
           ],
+          index: 1,
           type: 'list-item',
         },
       ],
@@ -795,6 +805,7 @@ test('parseMessageContent should nest indented unordered items inside ordered li
               type: 'text',
             },
           ],
+          index: 1,
           nestedItems: [
             {
               children: [
@@ -825,6 +836,7 @@ test('parseMessageContent should nest indented unordered items inside ordered li
               type: 'text',
             },
           ],
+          index: 2,
           nestedItems: [
             {
               children: [
@@ -860,6 +872,7 @@ test('parseMessageContent should nest indented ordered items inside ordered list
               type: 'text',
             },
           ],
+          index: 1,
           nestedItems: [
             {
               children: [
@@ -868,6 +881,7 @@ test('parseMessageContent should nest indented ordered items inside ordered list
                   type: 'text',
                 },
               ],
+              index: 1,
               nestedItems: [
                 {
                   children: [
@@ -876,6 +890,7 @@ test('parseMessageContent should nest indented ordered items inside ordered list
                       type: 'text',
                     },
                   ],
+                  index: 1,
                   type: 'list-item',
                 },
               ],
