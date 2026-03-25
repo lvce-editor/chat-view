@@ -326,6 +326,10 @@ a.Button{
 .ChatModelPickerItemSelected{
   background: var(--ListHoverBackground) !important;
 }
+
+.SendButtonDisabled {
+  color: rgba(204, 204, 204, 0.5) !important;
+}
 `
 
   return `${baseCss}
