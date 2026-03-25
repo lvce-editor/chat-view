@@ -4,7 +4,7 @@ import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeig
 export const handleModelChange = async (state: ChatState, value: string): Promise<ChatState> => {
   return {
     ...state,
-    modelPickerHeight: getModelPickerHeight(state.models.length),
+    modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
