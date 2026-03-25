@@ -518,12 +518,12 @@ test('handleSubmit should emit streaming function call data events when enabled'
       streamingEnabled: true,
       viewMode: 'detail' as const,
     }
-     
+
     const result = await HandleSubmit.handleSubmit(state)
     const events = await getChatViewEvents(result.selectedSessionId)
-     
+
     const dataEvents = events.filter((event) => event.type === 'sse-response-part')
-     
+
     const responseCompletedEvents = events.filter((event) => event.type === 'sse-response-completed')
 
     expect(dataEvents).toHaveLength(3)

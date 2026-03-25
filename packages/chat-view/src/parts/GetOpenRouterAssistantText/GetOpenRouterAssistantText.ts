@@ -180,7 +180,6 @@ const getOpenRouterLimitInfo = async (
   return normalizedLimitInfo
 }
 
- 
 export const getOpenRouterAssistantText = async (
   messages: readonly ChatMessage[],
   modelId: string,

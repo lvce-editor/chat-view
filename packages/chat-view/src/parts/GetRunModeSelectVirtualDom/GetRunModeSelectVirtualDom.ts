@@ -7,7 +7,6 @@ import * as InputName from '../InputName/InputName.ts'
 
 const runModes: readonly RunMode[] = ['local', 'background', 'cloud']
 
- 
 export const getRunModeSelectVirtualDom = (selectedRunMode: RunMode): readonly VirtualDomNode[] => {
   const runModeOptions = runModes.flatMap((runMode) => getRunModeOptionDom(runMode, selectedRunMode))
   return [

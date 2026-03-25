@@ -14,7 +14,6 @@ type MockBackendAuthResponse = MockBackendAuthSuccess | MockBackendAuthError
 
 let nextLoginResponse: MockBackendAuthResponse | undefined
 
- 
 export const setNextLoginResponse = (response: MockBackendAuthResponse): void => {
   nextLoginResponse = response
 }

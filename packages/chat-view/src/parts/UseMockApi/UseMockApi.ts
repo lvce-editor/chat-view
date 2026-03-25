@@ -2,7 +2,6 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 
 const defaultMockApiCommandId = 'ChatE2e.mockApi'
 
- 
 export const useMockApi = (state: ChatState, value: boolean, mockApiCommandId: string = defaultMockApiCommandId): ChatState => {
   if (!value) {
     return {

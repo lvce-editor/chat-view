@@ -84,7 +84,6 @@ const parseMathTableCell = async (cell: MessageTableCellNode): Promise<MessageTa
   }
 }
 
- 
 const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageIntermediateNode> => {
   if (node.type === 'math-block') {
     const dom = await ChatMathWorker.getMathBlockDom(node)

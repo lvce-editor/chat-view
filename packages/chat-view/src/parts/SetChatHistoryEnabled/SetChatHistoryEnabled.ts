@@ -1,6 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 
- 
 export const setChatHistoryEnabled = (state: ChatState, chatHistoryEnabled: boolean): ChatState => {
   return {
     ...state,

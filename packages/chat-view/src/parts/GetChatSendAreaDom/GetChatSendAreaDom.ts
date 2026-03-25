@@ -28,7 +28,6 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
   }
 }
 
- 
 export const getChatSendAreaDom = (
   composerValue: string,
   modelPickerOpen: boolean,

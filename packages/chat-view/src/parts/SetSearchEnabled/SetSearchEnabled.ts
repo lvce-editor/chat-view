@@ -1,6 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 
- 
 export const setSearchEnabled = (state: ChatState, searchEnabled: boolean): ChatState => {
   return {
     ...state,

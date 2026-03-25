@@ -2,7 +2,6 @@ import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-do
 import type { MessageInlineBoldNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import type { InlineNodeDomRenderer } from './GetInlineNodeDomTypes.ts'
 
- 
 export const getBoldInlineNodeDom = (
   inlineNode: MessageInlineBoldNode,
   useChatMathWorker: boolean,

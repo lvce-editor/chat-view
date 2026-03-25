@@ -18,7 +18,6 @@ const getAuthErrorDom = (hasAuthError: boolean, authErrorMessage: string): reado
   ]
 }
 
- 
 export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   authEnabled = false,

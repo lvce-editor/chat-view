@@ -109,7 +109,7 @@ test('register should return unique IDs', () => {
 })
 
 let receivedArgs: ReadonlyArray<any> = []
- 
+
 const multiArgListener = (a: string, b: number, c: boolean): void => {
   receivedArgs = [a, b, c]
 }

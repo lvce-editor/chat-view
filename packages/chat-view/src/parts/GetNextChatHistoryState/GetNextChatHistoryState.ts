@@ -8,7 +8,6 @@ const getHistoryValueForIndex = (history: readonly string[], index: number): str
   return history[history.length - 1 - index] ?? ''
 }
 
- 
 export const getNextChatHistoryState = async (state: ChatState, direction: 'up' | 'down'): Promise<ChatState> => {
   if (!state.chatHistoryEnabled || state.chatInputHistory.length === 0) {
     return state

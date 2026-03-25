@@ -67,7 +67,6 @@ const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly Virtu
   ]
 }
 
- 
 export const getChatModeListVirtualDom = ({
   addContextButtonEnabled,
   authEnabled = false,

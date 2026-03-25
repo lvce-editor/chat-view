@@ -21,11 +21,10 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
   const files = [createFile('photo.png', 'image/png', 'image-bytes')]
   const storedEvents: ChatViewEvent[] = []
   using mockRpc = ChatStorageWorker.registerMockRpc({
-     
     'ChatStorage.appendEvent'(event: ChatViewEvent) {
       storedEvents.push(event)
     },
-     
+
     'ChatStorage.getEvents'(sessionId: string) {
       return storedEvents.filter((event) => event.sessionId === sessionId)
     },

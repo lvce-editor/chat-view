@@ -3,7 +3,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-ask-question-tool-setting'
 
 interface MockOpenApiRequest {
-   
   readonly payload: {
     readonly tools?: readonly {
       readonly name?: string

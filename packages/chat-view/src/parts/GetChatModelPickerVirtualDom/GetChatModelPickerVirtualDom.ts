@@ -3,7 +3,6 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 
- 
 export const getChatModelPickerVirtualDom = (
   models: readonly ChatModel[],
   visibleModels: readonly ChatModel[],

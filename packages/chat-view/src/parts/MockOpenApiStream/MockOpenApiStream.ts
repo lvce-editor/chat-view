@@ -39,7 +39,6 @@ export const setHttpErrorResponse = (statusCode: number, body: unknown): void =>
   }
 }
 
- 
 export const setRequestFailedResponse = (isOffline: boolean = false): void => {
   errorResult = {
     details: 'request-failed',

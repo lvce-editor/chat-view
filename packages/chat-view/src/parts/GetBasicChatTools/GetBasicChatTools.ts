@@ -30,7 +30,6 @@ const getAskQuestionTool = (): ChatTool => {
   }
 }
 
- 
 const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boolean): readonly ChatTool[] => {
   if (!questionToolEnabled) {
     return tools
@@ -43,7 +42,6 @@ const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boole
   return [...tools, getAskQuestionTool()]
 }
 
- 
 export const getBasicChatTools = async (questionToolEnabled = false): Promise<readonly ChatTool[]> => {
   try {
     return withQuestionTool(await ChatToolRequest.getTools(), questionToolEnabled)

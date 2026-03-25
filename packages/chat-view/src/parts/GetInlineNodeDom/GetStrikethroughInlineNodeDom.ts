@@ -3,7 +3,6 @@ import type { MessageInlineStrikethroughNode } from '../ParseMessageContentTypes
 import type { InlineNodeDomRenderer } from './GetInlineNodeDomTypes.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
- 
 export const getStrikethroughInlineNodeDom = (
   inlineNode: MessageInlineStrikethroughNode,
   useChatMathWorker: boolean,

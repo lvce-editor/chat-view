@@ -6,7 +6,6 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
- 
 export const getChatHeaderActionsDom = (
   viewMode: ChatViewMode,
   authEnabled = false,

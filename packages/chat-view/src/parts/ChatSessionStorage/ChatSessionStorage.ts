@@ -66,7 +66,6 @@ export const clearChatSessions = async (): Promise<void> => {
   await ChatStorageWorker.clear()
 }
 
- 
 export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
   await ChatStorageWorker.appendEvent(event)
 }

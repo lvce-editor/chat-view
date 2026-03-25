@@ -1,7 +1,6 @@
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
- 
 export const getTodoItemClassName = (status: TodoListItem['status']): string => {
   if (status === 'completed') {
     return `${ClassNames.ChatTodoListItem} ${ClassNames.ChatTodoListItemCompleted} completed`

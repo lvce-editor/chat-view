@@ -49,7 +49,6 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
   return displayMessages
 }
 
- 
 export const getMessagesDom = (
   messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
