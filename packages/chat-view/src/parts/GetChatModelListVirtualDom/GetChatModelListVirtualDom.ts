@@ -13,6 +13,7 @@ export const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], 
     {
       childCount: visibleModels.length,
       className: ClassNames.ChatModelPickerList,
+      onClick: DomEventListenerFunctions.HandleClickModelPickerList,
       onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpModelPickerList,
       onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
