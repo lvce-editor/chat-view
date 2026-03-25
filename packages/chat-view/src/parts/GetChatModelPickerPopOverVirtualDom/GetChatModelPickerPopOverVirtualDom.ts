@@ -38,6 +38,7 @@ export const getChatModelPickerPopOverVirtualDom = (
     {
       childCount: 2,
       className: ClassNames.ChatModelPickerContainer,
+      onClick: DomEventListenerFunctions.HandleClickModelPickerOverlay,
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
