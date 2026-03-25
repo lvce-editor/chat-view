@@ -125,6 +125,7 @@ export const getAiResponse = async ({
   useMockApi,
   userText,
   webSearchEnabled = false,
+  workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   if (useChatCoordinatorWorker && !authEnabled) {
     try {
@@ -156,6 +157,11 @@ export const getAiResponse = async ({
         useMockApi,
         userText,
         webSearchEnabled,
+        ...(workspaceUri
+          ? {
+              workspaceUri,
+            }
+          : {}),
       })
       if (streamingEnabled) {
         if (onTextChunk) {
@@ -229,7 +235,16 @@ export const getAiResponse = async ({
         }
         openAiInput.length = 0
         for (const toolCall of result.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker })
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, {
+            assetDir,
+            platform,
+            useChatToolWorker,
+            ...(workspaceUri
+              ? {
+                  workspaceUri,
+                }
+              : {}),
+          })
           openAiInput.push({
             call_id: toolCall.callId,
             output: content,
@@ -274,6 +289,11 @@ export const getAiResponse = async ({
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
           webSearchEnabled,
+          ...(workspaceUri
+            ? {
+                workspaceUri,
+              }
+            : {}),
         },
       )
       if (result.type === 'success') {
@@ -315,6 +335,7 @@ export const getAiResponse = async ({
         useChatToolWorker,
         questionToolEnabled,
         systemPrompt,
+        workspaceUri,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

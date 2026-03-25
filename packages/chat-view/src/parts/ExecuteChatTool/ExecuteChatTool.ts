@@ -10,6 +10,11 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
   const workerOutput = await ChatToolRequest.execute(name, rawArguments, {
     assetDir: options.assetDir,
     platform: options.platform,
+    ...(options.workspaceUri
+      ? {
+          workspaceUri: options.workspaceUri,
+        }
+      : {}),
   })
   return stringifyToolOutput(workerOutput)
 }

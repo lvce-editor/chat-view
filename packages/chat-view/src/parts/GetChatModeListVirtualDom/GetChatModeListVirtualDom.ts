@@ -132,6 +132,7 @@ export const getChatModeListVirtualDom = ({
       runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
+      false,
       voiceDictationEnabled,
     ),
     ...getDropOverlayVirtualDom(isDropOverlayVisible),
