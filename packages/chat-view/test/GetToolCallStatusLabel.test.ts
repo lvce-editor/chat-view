@@ -18,7 +18,18 @@ test('getToolCallStatusLabel should return empty label when status is undefined'
   expect(result).toBe('')
 })
 
-test('getToolCallStatusLabel should return not-found label', () => {
+test('getToolCallStatusLabel should return not-found error message when available', () => {
+  const toolCall = createToolCall({
+    errorMessage: 'File not found: src/missing.html',
+    status: 'not-found',
+  })
+
+  const result = getToolCallStatusLabel(toolCall)
+
+  expect(result).toBe(' (error: File not found: src/missing.html)')
+})
+
+test('getToolCallStatusLabel should return not-found label without message', () => {
   const toolCall = createToolCall({ status: 'not-found' })
 
   const result = getToolCallStatusLabel(toolCall)
