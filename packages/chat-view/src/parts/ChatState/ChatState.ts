@@ -16,10 +16,14 @@ export interface ChatState {
   readonly authRefreshToken: string
   readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
+<<<<<<< HEAD
   readonly chatFocusSidebarResizeActive: boolean
   readonly chatFocusSidebarResizeStartWidth: number
   readonly chatFocusSidebarResizeStartX: number
   readonly chatFocusSidebarWidth: number
+=======
+  readonly chatFocusContentMaxWidth: number
+>>>>>>> origin/main
   readonly chatHistoryEnabled: boolean
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string

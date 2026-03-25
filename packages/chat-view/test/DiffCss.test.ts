@@ -78,3 +78,9 @@ test('isEqual should return false when chatSendAreaPaddingTop changes', () => {
   const newState: ChatState = { ...createDefaultState(), chatSendAreaPaddingTop: 11 }
   expect(DiffCss.isEqual(oldState, newState)).toBe(false)
 })
+
+test('isEqual should return false when chatFocusContentMaxWidth changes', () => {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), chatFocusContentMaxWidth: 840 }
+  expect(DiffCss.isEqual(oldState, newState)).toBe(false)
+})

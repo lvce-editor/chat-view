@@ -10,6 +10,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
+import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeListVirtualDomOptions {
@@ -104,7 +105,8 @@ export const getChatModeListVirtualDom = ({
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isNewModelPickerVisible = modelPickerOpen
-  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
+  const isRunModePickerVisible = showRunMode && runModePickerOpen
+  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
     searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
@@ -132,9 +134,11 @@ export const getChatModeListVirtualDom = ({
       runModePickerOpen,
       todoListToolEnabled,
       todoListItems,
+      false,
       voiceDictationEnabled,
     ),
     ...getDropOverlayVirtualDom(isDropOverlayVisible),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
+    ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
   ]
 }

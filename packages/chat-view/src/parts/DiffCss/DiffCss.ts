@@ -10,6 +10,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.chatMessageFontFamily === newState.chatMessageFontFamily &&
     oldState.chatMessageFontSize === newState.chatMessageFontSize &&
     oldState.chatMessageLineHeight === newState.chatMessageLineHeight &&
+    oldState.chatFocusContentMaxWidth === newState.chatFocusContentMaxWidth &&
     oldState.chatSendAreaPaddingTop === newState.chatSendAreaPaddingTop &&
     oldState.chatSendAreaPaddingLeft === newState.chatSendAreaPaddingLeft &&
     oldState.chatSendAreaPaddingRight === newState.chatSendAreaPaddingRight &&

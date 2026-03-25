@@ -6,6 +6,7 @@ import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
+import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -13,6 +14,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
+import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeChatFocusVirtualDomOptions {
@@ -106,6 +108,7 @@ export const getChatModeChatFocusVirtualDom = ({
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
+<<<<<<< HEAD
   const messagesDom = getMessagesDom(
     messages,
     parsedMessages,
@@ -139,6 +142,13 @@ export const getChatModeChatFocusVirtualDom = ({
   const isNewModelPickerVisible = modelPickerOpen
   const rightPaneChildCount = (messagesDom.length > 0 ? 1 : 0) + 1
   const chatRootChildCount = 1 + (chatFocusSidebarResizeActive ? 1 : 0) + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0)
+=======
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
+  const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const isNewModelPickerVisible = modelPickerOpen
+  const isRunModePickerVisible = showRunMode && runModePickerOpen
+  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
+>>>>>>> origin/main
   return [
     {
       childCount: chatRootChildCount,
@@ -162,6 +172,7 @@ export const getChatModeChatFocusVirtualDom = ({
       true,
       `flex: 0 0 ${chatFocusSidebarWidth}px; width: ${chatFocusSidebarWidth}px;`,
     ),
+<<<<<<< HEAD
     {
       childCount: 0,
       className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
@@ -187,6 +198,25 @@ export const getChatModeChatFocusVirtualDom = ({
           } satisfies VirtualDomNode,
         ]
       : []),
+=======
+    ...getChatSendAreaDom(
+      composerValue,
+      modelPickerOpen,
+      models,
+      selectedModelId,
+      usageOverviewEnabled,
+      tokensUsed,
+      tokensMax,
+      addContextButtonEnabled,
+      showRunMode,
+      runMode,
+      runModePickerOpen,
+      todoListToolEnabled,
+      todoListItems,
+      showCreatePullRequestButton,
+      voiceDictationEnabled,
+    ),
+>>>>>>> origin/main
     ...(isDropOverlayVisible
       ? [
           {
@@ -205,5 +235,6 @@ export const getChatModeChatFocusVirtualDom = ({
         ]
       : []),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
+    ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
   ]
 }

@@ -1,4 +1,4 @@
-// cspell:ignore openrouter
+// cspell:ignore openrouter worktree worktrees
 import { expect, test } from '@jest/globals'
 import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
@@ -766,4 +766,50 @@ test('handleSubmit should generate ai session title for new session when enabled
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('handleSubmit should provision a background worktree for a new background session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+    'ExtensionHostManagement.activateByEvent': async () => {},
+  })
+  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
+    'ExtensionHostCommand.executeCommand': async (id: string, payload: any) => {
+      expect(id).toBe('Chat.createBackgroundWorktree')
+      expect(payload.projectUri).toBe('file:///workspace/app')
+      expect(payload.title).toBe('Chat 2')
+      return {
+        branchName: 'chat/session-2',
+        workspaceUri: 'file:///workspace/app.worktrees/chat-session-2',
+      }
+    },
+  })
+
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'first background message',
+    projects: [
+      {
+        id: 'project-1',
+        name: 'app',
+        uri: 'file:///workspace/app',
+      },
+    ],
+    runMode: 'background' as const,
+    selectedProjectId: 'project-1',
+    viewMode: 'list' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  const newSession = result.sessions.at(-1)
+  expect(newSession?.branchName).toBe('chat/session-2')
+  expect(newSession?.workspaceUri).toBe('file:///workspace/app.worktrees/chat-session-2')
+  expect(newSession?.projectId).toBe('project-1')
+  expect(mockRendererRpc.invocations).toEqual([
+    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.createBackgroundWorktree', '', 0],
+    ['Chat.rerender'],
+  ])
+  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })

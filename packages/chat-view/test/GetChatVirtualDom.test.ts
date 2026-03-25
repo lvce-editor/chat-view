@@ -1,4 +1,4 @@
-// cspell:ignore openrouter
+// cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
@@ -143,11 +143,13 @@ test('getChatVirtualDom should render open run mode picker without search input'
   const result = renderChatView({
     runModePickerOpen: true,
   })
-  const runModePicker = result.find((node) => node.className === `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`)
+  const runModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   const runModeBackgroundOption = result.find((node) => node.name === 'run-mode-picker-item:background')
   const runModeSearchInput = result.find((node) => node.name === 'model-picker-search')
+  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(runModePicker).toMatchObject({
-    className: `${ClassNames.ChatModelPicker} ${ClassNames.CustomSelectPopOver}`,
+    className: ClassNames.ChatModelPicker,
+    style: 'height: 84px;',
     type: VirtualDomElements.Div,
   })
   expect(runModeBackgroundOption).toMatchObject({
@@ -155,6 +157,59 @@ test('getChatVirtualDom should render open run mode picker without search input'
     type: VirtualDomElements.Button,
   })
   expect(runModeSearchInput).toBeUndefined()
+  expect(result[0]).toMatchObject({
+    childCount: 4,
+  })
+  expect(pickerContainers).toHaveLength(1)
+})
+
+test('getChatVirtualDom should render create pr button for completed background session', () => {
+  const result = renderChatView({
+    runMode: 'background',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        branchName: 'chat/session-1',
+        id: 'session-1',
+        messages: [
+          { id: 'message-1', role: 'user' as const, text: 'hello', time: '10:00' },
+          { id: 'message-2', role: 'assistant' as const, text: 'done', time: '10:01' },
+        ],
+        title: 'Chat 1',
+        workspaceUri: 'file:///workspace/app.worktrees/chat-session-1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+  const createPrButton = result.find((node) => node.name === 'create-pull-request')
+  expect(createPrButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'create-pull-request',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDom should not render create pr button while assistant is still in progress', () => {
+  const result = renderChatView({
+    runMode: 'background',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        branchName: 'chat/session-1',
+        id: 'session-1',
+        messages: [
+          { id: 'message-1', role: 'user' as const, text: 'hello', time: '10:00' },
+          { id: 'message-2', inProgress: true, role: 'assistant' as const, text: '', time: '10:01' },
+        ],
+        title: 'Chat 1',
+        workspaceUri: 'file:///workspace/app.worktrees/chat-session-1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+  const createPrButton = result.find((node) => node.name === 'create-pull-request')
+  expect(createPrButton).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render open model picker with search input', () => {

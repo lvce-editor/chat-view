@@ -10,9 +10,24 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
   const sessions = (await ChatStorageWorker.invoke('ChatStorage.listSessions')) as readonly ChatSession[]
   return sessions.map((session) => {
     const summary: ChatSession = {
+      ...(session.branchName
+        ? {
+            branchName: session.branchName,
+          }
+        : {}),
       id: session.id,
       messages: [],
+      ...(session.pullRequestUrl
+        ? {
+            pullRequestUrl: session.pullRequestUrl,
+          }
+        : {}),
       title: session.title,
+      ...(session.workspaceUri
+        ? {
+            workspaceUri: session.workspaceUri,
+          }
+        : {}),
     }
     if (!session.projectId) {
       return summary
@@ -30,9 +45,24 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
     return undefined
   }
   const resultBase: ChatSession = {
+    ...(session.branchName
+      ? {
+          branchName: session.branchName,
+        }
+      : {}),
     id: session.id,
     messages: [...session.messages],
+    ...(session.pullRequestUrl
+      ? {
+          pullRequestUrl: session.pullRequestUrl,
+        }
+      : {}),
     title: session.title,
+    ...(session.workspaceUri
+      ? {
+          workspaceUri: session.workspaceUri,
+        }
+      : {}),
   }
   const result = session.projectId
     ? {
@@ -45,9 +75,24 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
 
 export const saveChatSession = async (session: ChatSession): Promise<void> => {
   const value: ChatSession = {
+    ...(session.branchName
+      ? {
+          branchName: session.branchName,
+        }
+      : {}),
     id: session.id,
     messages: [...session.messages],
+    ...(session.pullRequestUrl
+      ? {
+          pullRequestUrl: session.pullRequestUrl,
+        }
+      : {}),
     title: session.title,
+    ...(session.workspaceUri
+      ? {
+          workspaceUri: session.workspaceUri,
+        }
+      : {}),
   }
   const sessionValue = session.projectId
     ? {
