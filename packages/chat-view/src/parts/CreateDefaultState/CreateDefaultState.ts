@@ -26,6 +26,7 @@ export const createDefaultState = (): ChatState => {
     authRefreshToken: '',
     authStatus: 'signed-out',
     backendUrl: '',
+    chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,
     chatInputHistory: [],
     chatInputHistoryDraft: '',
