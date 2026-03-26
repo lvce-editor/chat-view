@@ -2,13 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-line-added'
 
-<<<<<<< HEAD
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
-=======
-export const skip = 1
-
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
->>>>>>> origin/main
   const tmpDir = await FileSystem.getTmpDir()
   const notesUri = encodeURI(`file://${tmpDir}/notes.txt`)
   await FileSystem.writeFile(`${tmpDir}/notes.txt`, 'alpha\nbeta')
