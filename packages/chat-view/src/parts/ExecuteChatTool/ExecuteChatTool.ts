@@ -4,6 +4,7 @@ import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 import { stringifyToolOutput } from '../StringifyToolOutput/StringifyToolOutput.ts'
+import { isToolEnabled } from '../ToolEnablement/ToolEnablement.ts'
 
 const hasWriteFileLineCounts = (value: object): boolean => {
   const linesAdded = Reflect.get(value, 'linesAdded')
@@ -115,6 +116,10 @@ const withWriteFileLineCounts = async (workerOutput: unknown, rawArguments: unkn
 }
 
 export const executeChatTool = async (name: string, rawArguments: unknown, options: ExecuteToolOptions): Promise<string> => {
+  if (!isToolEnabled(options.toolEnablement, name)) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
+    throw new Error(`Tool "${name}" is disabled in chat.toolEnablement preferences.`)
+  }
   if (!options.useChatToolWorker) {
     // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error('Chat tools must be executed in a web worker environment. Please set useChatToolWorker to true in the options.')

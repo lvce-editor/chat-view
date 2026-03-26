@@ -1,6 +1,7 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export interface GetOpenApiAssistantTextOptions {
   readonly agentMode?: AgentMode
@@ -14,6 +15,7 @@ export interface GetOpenApiAssistantTextOptions {
   readonly reasoningEffort?: ReasoningEffort
   readonly stream: boolean
   readonly systemPrompt?: string
+  readonly toolEnablement?: ToolEnablement
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
   readonly webSearchEnabled?: boolean

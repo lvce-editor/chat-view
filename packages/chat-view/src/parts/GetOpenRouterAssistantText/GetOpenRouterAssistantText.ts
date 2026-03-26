@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
@@ -194,6 +195,7 @@ export const getOpenRouterAssistantText = async (
   systemPrompt = '',
   workspaceUri = '',
   agentMode: AgentMode | boolean = defaultAgentMode,
+  toolEnablement?: ToolEnablement,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const effectiveAgentMode = typeof agentMode === 'boolean' ? defaultAgentMode : agentMode
   const completionMessages: any[] = [
@@ -210,7 +212,7 @@ export const getOpenRouterAssistantText = async (
       role: message.role,
     })),
   ]
-  const tools = await getBasicChatTools(effectiveAgentMode, questionToolEnabled)
+  const tools = await getBasicChatTools(effectiveAgentMode, questionToolEnabled, toolEnablement)
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
     let parsed: unknown
@@ -377,7 +379,19 @@ export const getOpenRouterAssistantText = async (
         const name = Reflect.get(toolFunction, 'name')
         const rawArguments = Reflect.get(toolFunction, 'arguments')
         const content =
-          typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker, workspaceUri }) : '{}'
+          typeof name === 'string'
+            ? await executeChatTool(name, rawArguments, {
+                assetDir,
+                platform,
+                ...(toolEnablement
+                  ? {
+                      toolEnablement,
+                    }
+                  : {}),
+                useChatToolWorker,
+                workspaceUri,
+              })
+            : '{}'
         completionMessages.push({
           content,
           role: 'tool',

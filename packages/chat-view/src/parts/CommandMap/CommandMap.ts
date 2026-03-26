@@ -99,6 +99,7 @@ import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
 import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
+import * as SetToolEnablement from '../SetToolEnablement/SetToolEnablement.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
 import * as SetUseChatMessageParsingWorker from '../SetUseChatMessageParsingWorker/SetUseChatMessageParsingWorker.ts'
@@ -214,6 +215,7 @@ export const commandMap = {
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
+  'Chat.setToolEnablement': wrapCommand(SetToolEnablement.setToolEnablement),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
   'Chat.setUseChatMessageParsingWorker': wrapCommand(SetUseChatMessageParsingWorker.setUseChatMessageParsingWorker),

@@ -13,6 +13,7 @@ import { loadReasoningPickerEnabled } from '../LoadReasoningPickerEnabled/LoadRe
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
+import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatMessageParsingWorker } from '../LoadUseChatMessageParsingWorker/LoadUseChatMessageParsingWorker.ts'
@@ -36,6 +37,7 @@ export interface LoadedPreferences {
   searchEnabled: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
+  toolEnablement: Record<string, boolean>
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatMessageParsingWorker: boolean
@@ -60,6 +62,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
+    toolEnablement,
     passIncludeObfuscation,
     useChatCoordinatorWorker,
     useChatMathWorker,
@@ -82,6 +85,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadSearchEnabled(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
+    loadToolEnablement(),
     loadPassIncludeObfuscation(),
     loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
@@ -107,6 +111,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
+    toolEnablement,
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatMessageParsingWorker,

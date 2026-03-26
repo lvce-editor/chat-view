@@ -5,6 +5,7 @@ import type { GetOpenApiAssistantTextSuccessResult } from '../GetOpenApiAssistan
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest, makeStreamingApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
@@ -791,6 +792,7 @@ export const getOpenApiAssistantText = async (
   options?: GetOpenApiAssistantTextOptions,
 ): Promise<GetOpenApiAssistantTextResult> => {
   const {
+    agentMode = defaultAgentMode,
     includeObfuscation = false,
     maxToolCalls = defaultMaxToolCalls,
     onDataEvent,
@@ -801,6 +803,7 @@ export const getOpenApiAssistantText = async (
     reasoningEffort,
     stream,
     systemPrompt = '',
+    toolEnablement,
     useChatNetworkWorkerForRequests = false,
     useChatToolWorker = true,
     webSearchEnabled = false,
@@ -810,7 +813,7 @@ export const getOpenApiAssistantText = async (
     content: message.text,
     role: message.role,
   }))
-  const tools = await getBasicChatTools(questionToolEnabled)
+  const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
   const safeMaxToolCalls = Math.max(1, maxToolCalls)
   const maxToolIterations = safeMaxToolCalls - 1
   let previousResponseId: string | undefined
@@ -929,7 +932,17 @@ export const getOpenApiAssistantText = async (
         openAiInput.length = 0
         const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of streamResult.responseFunctionCalls) {
-          const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker, workspaceUri })
+          const content = await executeChatTool(toolCall.name, toolCall.arguments, {
+            assetDir,
+            platform,
+            ...(toolEnablement
+              ? {
+                  toolEnablement,
+                }
+              : {}),
+            useChatToolWorker,
+            workspaceUri,
+          })
           const executionStatus = getToolCallExecutionStatus(content)
           const toolCallResult = getToolCallResult(toolCall.name, content)
           executedToolCalls.push({
@@ -1096,7 +1109,17 @@ export const getOpenApiAssistantText = async (
       openAiInput.length = 0
       const executedToolCalls: StreamingToolCall[] = []
       for (const toolCall of responseFunctionCalls) {
-        const content = await executeChatTool(toolCall.name, toolCall.arguments, { assetDir, platform, useChatToolWorker, workspaceUri })
+        const content = await executeChatTool(toolCall.name, toolCall.arguments, {
+          assetDir,
+          platform,
+          ...(toolEnablement
+            ? {
+                toolEnablement,
+              }
+            : {}),
+          useChatToolWorker,
+          workspaceUri,
+        })
         const executionStatus = getToolCallExecutionStatus(content)
         const toolCallResult = getToolCallResult(toolCall.name, content)
         executedToolCalls.push({

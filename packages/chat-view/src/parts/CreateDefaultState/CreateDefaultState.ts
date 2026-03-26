@@ -6,6 +6,7 @@ import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSyst
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
+import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
@@ -132,6 +133,7 @@ export const createDefaultState = (): ChatState => {
     todoListToolEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
+    toolEnablement: parseToolEnablement(undefined),
     uid: 0,
     usageOverviewEnabled: false,
     useChatCoordinatorWorker: false,

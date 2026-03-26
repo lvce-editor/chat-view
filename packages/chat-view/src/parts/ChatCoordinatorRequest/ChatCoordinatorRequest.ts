@@ -3,6 +3,7 @@ import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 export interface GetAiResponseRequestOptions {
   readonly agentMode?: AgentMode
   readonly assetDir: string
@@ -24,6 +25,7 @@ export interface GetAiResponseRequestOptions {
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
   readonly systemPrompt?: string
+  readonly toolEnablement?: ToolEnablement
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
   readonly useMockApi: boolean

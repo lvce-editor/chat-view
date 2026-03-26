@@ -84,3 +84,22 @@ test('executeChatTool should treat a missing pre-write file as an empty file', a
     ['ChatTool.execute', 'write_file', '{"content":"alpha\\nbeta\\ngamma","path":"notes.txt"}', { assetDir: '', platform: 0 }],
   ])
 })
+
+test('executeChatTool should reject disabled tools before invoking the worker', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => ({
+      ok: true,
+    }),
+  })
+
+  await expect(
+    executeChatTool('read_file', JSON.stringify({ path: 'README.md' }), {
+      ...executeToolOptions,
+      toolEnablement: {
+        read_file: false,
+      },
+    }),
+  ).rejects.toThrow('Tool "read_file" is disabled in chat.toolEnablement preferences.')
+
+  expect(mockChatToolRpc.invocations).toEqual([])
+})

@@ -8,6 +8,7 @@ import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
@@ -111,6 +112,7 @@ export interface ChatState {
   readonly todoListToolEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
+  readonly toolEnablement: ToolEnablement
   readonly uid: number
   readonly usageOverviewEnabled: boolean
   readonly useChatCoordinatorWorker: boolean

@@ -74,6 +74,92 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
   }
 })
 
+test('getOpenApiAssistantText should omit disabled tools from request payload', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+      {
+        function: {
+          description: 'Write file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'ok' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: false,
+        toolEnablement: {
+          read_file: false,
+        },
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'ok',
+      type: 'success',
+    })
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestBody.tools).toEqual([
+      {
+        description: 'Write file',
+        name: 'write_file',
+        parameters: {
+          additionalProperties: false,
+          properties: {},
+          type: 'object',
+        },
+        type: 'function',
+      },
+    ])
+    expect(mockChatToolRpc.invocations).toEqual([['ChatTool.getTools']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should return tool-iterations-exhausted when model keeps requesting tools', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.execute': async () => '{"error":"Unknown tool: invalid_tool"}',

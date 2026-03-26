@@ -53,6 +53,9 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
     streamingEnabled: true,
+    toolEnablement: {
+      read_file: false,
+    },
     useChatCoordinatorWorker: true,
     useChatNetworkWorkerForRequests: false,
     useMockApi: false,
@@ -64,6 +67,9 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
       'ChatCoordinator.getAiResponse',
       expect.objectContaining({
         selectedModelId: 'openapi/gpt-4o-mini',
+        toolEnablement: {
+          read_file: false,
+        },
         useChatNetworkWorkerForRequests: false,
         useChatToolWorker: true,
         userText: 'hello',
