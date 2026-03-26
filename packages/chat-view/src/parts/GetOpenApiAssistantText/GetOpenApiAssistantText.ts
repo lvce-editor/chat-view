@@ -130,7 +130,7 @@ const getShortToolErrorMessage = (error: string): string => {
   return `${firstLine.slice(0, 77)}...`
 }
 
-const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'errorStack' | 'status'> => {
+export const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'errorStack' | 'status'> => {
   let parsed: unknown
   try {
     parsed = JSON.parse(content) as unknown
@@ -177,7 +177,24 @@ const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'e
   }
 }
 
-const getToolCallResult = (name: string, content: string): string | undefined => {
+export const getToolCallResult = (name: string, content: string): string | undefined => {
+  if (name === 'write_file') {
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(content) as unknown
+    } catch {
+      return undefined
+    }
+    if (!parsed || typeof parsed !== 'object') {
+      return undefined
+    }
+    const linesAdded = Reflect.get(parsed, 'linesAdded')
+    const linesDeleted = Reflect.get(parsed, 'linesDeleted')
+    if (typeof linesAdded !== 'number' && typeof linesDeleted !== 'number') {
+      return undefined
+    }
+    return content
+  }
   if (name !== 'getWorkspaceUri') {
     return undefined
   }
