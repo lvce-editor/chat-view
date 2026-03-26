@@ -17,7 +17,6 @@ export const getAgentModePickerVirtualDom = (selectedAgentMode: AgentMode, agent
       InputName.AgentModePickerToggle,
       agentModePickerOpen,
       DomEventListenerFunctions.HandleClickAgentModePickerToggle,
-      'Mode',
     ),
   ]
 }
