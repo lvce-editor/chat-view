@@ -1,4 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatState } from '../ChatState/ChatState.ts'
 
 const normalizeFileReferenceUri = (uri: string): string => {
   if (uri.startsWith('vscode-references://')) {
@@ -7,10 +8,11 @@ const normalizeFileReferenceUri = (uri: string): string => {
   return uri
 }
 
-export const handleClickFileName = async (uri: string): Promise<void> => {
+export const handleClickFileName = async (state: ChatState, uri: string): Promise<ChatState> => {
   if (!uri) {
-    return
+    return state
   }
   const normalizedUri = normalizeFileReferenceUri(uri)
   await RendererWorker.invoke('Main.openUri', normalizedUri)
+  return state
 }
