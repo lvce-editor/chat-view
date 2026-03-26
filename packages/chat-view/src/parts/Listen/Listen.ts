@@ -9,6 +9,7 @@ import { createSession } from '../CreateSession/CreateSession.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { initializeChatCoordinatorWorker } from '../InitializeChatCoordinatorWorker/InitializeChatCoordinatorWorker.ts'
 import { initializeChatMathWorker } from '../InitializeChatMathWorker/InitializeChatMathWorker.ts'
+import { initializeChatMessageParsingWorker } from '../InitializeChatMessageParsingWorker/InitializeChatMessageParsingWorker.ts'
 import { initializeChatNetworkWorker } from '../InitializeChatNetworkWorker/InitializeChatNetworkWorker.ts'
 import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/InitializeChatStorageWorker.ts'
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
@@ -98,6 +99,7 @@ export const listen = async (): Promise<void> => {
   await Promise.all([
     initializeChatCoordinatorWorker(),
     initializeChatMathWorker(),
+    initializeChatMessageParsingWorker(),
     initializeChatNetworkWorker(),
     initializeChatStorageWorker(),
     initializeChatToolWorker(),
