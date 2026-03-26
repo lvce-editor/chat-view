@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { ChatState } from '../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 const normalizeFileReferenceUri = (uri: string): string => {
   if (uri.startsWith('vscode-references://')) {

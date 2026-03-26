@@ -147,7 +147,7 @@ export const commandMap = {
   'Chat.handleClickModelPickerOverlay': wrapCommand(HandleClickModelPickerOverlay.handleClickModelPickerOverlay),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
-  'Chat.handleClickReadFile': HandleClickReadFile.handleClickReadFile,
+  'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleContextMenuChatModelPicker': wrapCommand(HandleContextMenuChatModelPicker.handleContextMenuChatModelPicker),
