@@ -898,6 +898,35 @@ test('loadContent should load todoListToolEnabled from preferences', async () =>
   ])
 })
 
+test('loadContent should load toolEnablement from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.toolEnablement') {
+        return {
+          read_file: false,
+          write_file: true,
+        }
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.toolEnablement).toEqual({
+    read_file: false,
+    write_file: true,
+  })
+  expectInvocations(mockRpc.invocations, [['Preferences.get', 'chat.toolEnablement']])
+})
+
 test('loadContent should load searchEnabled from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

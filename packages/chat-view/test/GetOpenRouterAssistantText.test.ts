@@ -135,6 +135,71 @@ test('getOpenRouterAssistantText should prepend system message when systemPrompt
   }
 })
 
+test('getOpenRouterAssistantText should omit disabled tools from request payload', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenRouterAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'openrouter/model',
+      'or-key-123',
+      'https://openrouter.ai/api/v1',
+      '',
+      0,
+      false,
+      true,
+      false,
+      '',
+      '',
+      'agent',
+      {
+        read_file: false,
+      },
+    )
+    expect(result).toEqual({
+      text: 'hello from openrouter',
+      type: 'success',
+    })
+    const payload = parseJsonRequestBody((fetchInvocation?.[1] as RequestInit | undefined)?.body)
+    expect(payload.tools).toEqual([])
+    expect(mockChatToolRpc.invocations).toEqual([['ChatTool.getTools']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenRouterAssistantText should return request-failed error result when fetch throws', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {

@@ -1,6 +1,8 @@
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 import type { ChatTool } from '../Types/Types.ts'
 import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
+import { filterEnabledTools } from '../ToolEnablement/ToolEnablement.ts'
 
 const getAskQuestionTool = (): ChatTool => {
   return {
@@ -55,12 +57,16 @@ const withAgentMode = (tools: readonly ChatTool[], agentMode: AgentMode): readon
 export const getBasicChatTools = async (
   agentMode: AgentMode | boolean = defaultAgentMode,
   questionToolEnabled = false,
+  toolEnablement?: ToolEnablement,
 ): Promise<readonly ChatTool[]> => {
   const effectiveAgentMode = typeof agentMode === 'boolean' ? defaultAgentMode : agentMode
   const effectiveQuestionToolEnabled = typeof agentMode === 'boolean' ? agentMode : questionToolEnabled
   try {
-    return withAgentMode(withQuestionTool(await ChatToolRequest.getTools(), effectiveQuestionToolEnabled), effectiveAgentMode)
+    return withAgentMode(
+      filterEnabledTools(withQuestionTool(await ChatToolRequest.getTools(), effectiveQuestionToolEnabled), toolEnablement),
+      effectiveAgentMode,
+    )
   } catch {
-    return withAgentMode(withQuestionTool([], effectiveQuestionToolEnabled), effectiveAgentMode)
+    return withAgentMode(filterEnabledTools(withQuestionTool([], effectiveQuestionToolEnabled), toolEnablement), effectiveAgentMode)
   }
 }

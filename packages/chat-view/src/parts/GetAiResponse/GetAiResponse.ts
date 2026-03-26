@@ -125,6 +125,7 @@ export const getAiResponse = async ({
   selectedModelId,
   streamingEnabled = true,
   systemPrompt = '',
+  toolEnablement,
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
@@ -164,6 +165,11 @@ export const getAiResponse = async ({
         selectedModelId,
         streamingEnabled,
         systemPrompt,
+        ...(toolEnablement
+          ? {
+              toolEnablement,
+            }
+          : {}),
         useChatNetworkWorkerForRequests,
         useChatToolWorker,
         useMockApi,
@@ -225,7 +231,7 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
-            await getBasicChatTools(agentMode, questionToolEnabled),
+            await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement),
             agentMode === 'plan' ? false : webSearchEnabled,
             safeMaxToolCalls,
             systemPrompt,
@@ -252,6 +258,11 @@ export const getAiResponse = async ({
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
             platform,
+            ...(toolEnablement
+              ? {
+                  toolEnablement,
+                }
+              : {}),
             useChatToolWorker,
             ...(workspaceUri
               ? {
@@ -336,6 +347,11 @@ export const getAiResponse = async ({
             : {}),
           stream: streamingEnabled,
           systemPrompt,
+          ...(toolEnablement
+            ? {
+                toolEnablement,
+              }
+            : {}),
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
           webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
@@ -387,6 +403,7 @@ export const getAiResponse = async ({
         systemPrompt,
         workspaceUri,
         agentMode,
+        toolEnablement,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

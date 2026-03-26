@@ -3,6 +3,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export interface GetAiResponseOptions {
   readonly agentMode?: AgentMode
@@ -32,6 +33,7 @@ export interface GetAiResponseOptions {
   readonly selectedModelId: string
   readonly streamingEnabled?: boolean
   readonly systemPrompt?: string
+  readonly toolEnablement?: ToolEnablement
   readonly useChatCoordinatorWorker?: boolean
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean

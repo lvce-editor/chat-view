@@ -105,3 +105,43 @@ test('getBasicChatTools should restrict plan mode to read-only workspace tools',
   expect(names).toEqual(['read_file', 'list_files', 'get_workspace_uri'])
   expect(mockRpc.invocations).toEqual([['ChatTool.getTools']])
 })
+
+test('getBasicChatTools should filter disabled tools from tool enablement preferences', async () => {
+  using mockRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+      {
+        function: {
+          description: 'Write file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+
+  const tools = await getBasicChatTools('agent', false, {
+    read_file: false,
+  })
+
+  const names = tools.map((tool) => tool.function.name)
+
+  expect(names).toEqual(['write_file'])
+  expect(mockRpc.invocations).toEqual([['ChatTool.getTools']])
+})
