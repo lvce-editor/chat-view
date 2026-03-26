@@ -2,10 +2,11 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-line-added-item-clicked'
 
-export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+  // arrange
   const tmpDir = await FileSystem.getTmpDir()
-  const notesUri = encodeURI(`file://${tmpDir}/notes.txt`)
-  await FileSystem.writeFile(`${tmpDir}/notes.txt`, 'alpha\nbeta')
+  const notesUri = encodeURI(`${tmpDir}/notes.txt`)
+  await FileSystem.writeFile(notesUri, 'alpha\nbeta')
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -13,7 +14,6 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiStreamReset()
-
   const sseResponseParts = [
     {
       response: {
@@ -45,18 +45,18 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
       type: 'response.completed',
     },
   ]
-
   for (const responsePart of sseResponseParts) {
     await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
   await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
   await Chat.mockOpenApiStreamFinish()
-
   await Chat.handleInput('add one line to notes.txt')
   await Chat.handleSubmit()
 
-  const messages = Locator('.ChatMessages .Message')
-  await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('add one line to notes.txt')
-  await expect(messages.nth(1)).toContainText('write_file notes.txt')
+  // act
+  await Command.execute('Chat.handleClickFileName', notesUri)
+
+  // assert
+  const tab = Locator(`.MainTab[title="${notesUri}"]`)
+  await expect(tab).toBeVisible()
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 export const getCss = (
   composerHeight: number,
   modelPickerHeight: number,
