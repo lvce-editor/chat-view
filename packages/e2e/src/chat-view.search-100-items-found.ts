@@ -4,8 +4,8 @@ export const name = 'chat-view.search-100-items-found'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
-  await Command.execute('Chat.setSearchEnabled', true)
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+  await Chat.setSearchEnabled(true)
 
   const mockMessages = Array.from({ length: 100 }, (_, index) => ({
     id: `m-${index + 1}`,
@@ -18,7 +18,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     await Command.execute('Chat.openMockSession', `searchable-${i + 1}`, mockMessages)
   }
 
-  await Command.execute('Chat.handleClickBack')
+  await Chat.handleClickBack()
 
   const searchButton = Locator('.ChatHeader .IconButton[name="toggle-search"]')
   await searchButton.click()

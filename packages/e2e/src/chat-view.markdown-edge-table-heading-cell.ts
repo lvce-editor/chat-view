@@ -16,7 +16,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleInput('table heading cell')
 
   await Chat.handleSubmit()
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   const messages = Locator('.ChatMessages .Message')
   const table = Locator('.ChatMessages .Message .MarkdownTable')

@@ -20,7 +20,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute('Chat.registerMockResponse', { text: htmlBlocks })
   await Chat.handleInput('show me 500 different html code blocks')
   await Chat.handleSubmit()
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   const messages = Locator('.ChatMessages .Message')
   const codeBlocks = Locator('.ChatMessages .Message pre code')

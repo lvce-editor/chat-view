@@ -17,7 +17,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleInput('mixed inline and block math')
 
   await Chat.handleSubmit()
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   const messages = Locator('.ChatMessages .Message')
   const inlineMath = Locator('.ChatMessages .Message .MarkdownMathInline')

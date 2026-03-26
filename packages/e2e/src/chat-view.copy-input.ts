@@ -10,9 +10,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(composer).toBeVisible()
   await Chat.handleInput('copied text')
 
-  await Command.execute('Chat.copyInput')
+  await Chat.handleInputCopy()
   await Command.execute('Chat.clearInput')
-  await Command.execute('Chat.pasteInput')
+  await Chat.handleInputPaste()
 
   await expect(composer).toHaveValue('copied text')
 }

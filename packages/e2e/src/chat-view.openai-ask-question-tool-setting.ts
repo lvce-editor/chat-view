@@ -29,26 +29,26 @@ export const test: Test = async ({ Chat, Command }) => {
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
 
-  await Command.execute('Chat.mockOpenApiRequestReset')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'ok')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiRequestReset()
+  await Chat.mockOpenApiStreamReset()
+  await Chat.mockOpenApiStreamPushChunk('ok')
+  await Chat.mockOpenApiStreamFinish()
   await Chat.handleInput('first request')
   await Chat.handleSubmit()
 
-  const initialRequests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as readonly MockOpenApiRequest[]
+  const initialRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const initialTools = initialRequests[0]?.payload.tools || []
   assert(!initialTools.some((tool) => tool.type === 'function' && tool.name === 'ask_question'), 'ask_question should be disabled by default')
 
   await Command.execute('Chat.setQuestionToolEnabled', true)
-  await Command.execute('Chat.mockOpenApiRequestReset')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'ok')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiRequestReset()
+  await Chat.mockOpenApiStreamReset()
+  await Chat.mockOpenApiStreamPushChunk('ok')
+  await Chat.mockOpenApiStreamFinish()
   await Chat.handleInput('second request')
   await Chat.handleSubmit()
 
-  const enabledRequests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as readonly MockOpenApiRequest[]
+  const enabledRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const enabledTools = enabledRequests[0]?.payload.tools || []
   assert(
     enabledTools.some((tool) => tool.type === 'function' && tool.name === 'ask_question'),

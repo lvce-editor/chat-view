@@ -4,11 +4,11 @@ export const name = 'chat-view.create-session-behavior'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Command.execute('Chat.openMockSession', 'Dummy Chat A', [])
   await Command.execute('Chat.openMockSession', 'Dummy Chat B', [])
   await Command.execute('Chat.openMockSession', 'Dummy Chat C', [])
-  await Command.execute('Chat.handleClickBack')
+  await Chat.handleClickBack()
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const createSessionButton = Locator('.IconButton[name="create-session"]')

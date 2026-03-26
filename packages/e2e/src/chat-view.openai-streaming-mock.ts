@@ -4,14 +4,14 @@ export const name = 'chat-view.openai-streaming-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'First')
+  await Chat.mockOpenApiStreamReset()
+  await Chat.mockOpenApiStreamPushChunk('First')
   await Chat.handleInput('hello from e2e')
 
   const submitPromise = Chat.handleSubmit()
@@ -20,10 +20,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(1)).toContainText('First')
 
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', ' chunk')
+  await Chat.mockOpenApiStreamPushChunk(' chunk')
   await expect(messages.nth(1)).toContainText('First chunk')
 
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamFinish()
   await submitPromise
   await expect(messages.nth(1)).toContainText('First chunk')
 }
