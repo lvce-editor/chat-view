@@ -57,8 +57,8 @@ export const getChatSendAreaDom = (
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const bottomControlsCount =
-    2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
-  const primaryControlsCount = 2 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
+    3 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+  const primaryControlsCount = 1 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
 
   return [
@@ -81,12 +81,12 @@ export const getChatSendAreaDom = (
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
+    ...getAgentModePickerVirtualDom(agentMode, agentModePickerOpen),
     {
       childCount: primaryControlsCount,
       className: ClassNames.ChatSendAreaPrimaryControls,
       type: VirtualDomElements.Div,
     },
-    ...getAgentModePickerVirtualDom(agentMode, agentModePickerOpen),
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
     ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen) : []),
     ...(showRunMode ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
