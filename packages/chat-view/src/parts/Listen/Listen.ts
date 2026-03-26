@@ -19,6 +19,7 @@ import { clearSlashCommands, registerSlashCommand } from '../SlashCommandRegistr
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
+import { initializeChatMessageParsingWorker } from '../InitializeChatMessageParsingWorker/InitializeChatMessageParsingWorker.ts'
 
 const appendAssistantMessage = async (state: ChatState, assistantText: string): Promise<ChatState> => {
   const assistantMessage: ChatMessage = {
@@ -98,6 +99,7 @@ export const listen = async (): Promise<void> => {
   await Promise.all([
     initializeChatCoordinatorWorker(),
     initializeChatMathWorker(),
+    initializeChatMessageParsingWorker(),
     initializeChatNetworkWorker(),
     initializeChatStorageWorker(),
     initializeChatToolWorker(),
