@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import {
   backendAccessTokenRequiredMessage,
@@ -94,6 +95,7 @@ const getBackendAssistantText = async (
 }
 
 export const getAiResponse = async ({
+  agentMode = defaultAgentMode,
   assetDir,
   authAccessToken,
   authEnabled = false,
@@ -131,6 +133,7 @@ export const getAiResponse = async ({
   if (useChatCoordinatorWorker && !authEnabled) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
+        agentMode,
         assetDir,
         ...(messageId
           ? {
@@ -162,7 +165,7 @@ export const getAiResponse = async ({
         useChatToolWorker,
         useMockApi,
         userText,
-        webSearchEnabled,
+        webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
         ...(workspaceUri
           ? {
               workspaceUri,
@@ -219,8 +222,8 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
-            await getBasicChatTools(questionToolEnabled),
-            webSearchEnabled,
+            await getBasicChatTools(agentMode, questionToolEnabled),
+            agentMode === 'plan' ? false : webSearchEnabled,
             safeMaxToolCalls,
             systemPrompt,
             previousResponseId,
@@ -268,6 +271,7 @@ export const getAiResponse = async ({
         assetDir,
         platform,
         {
+          agentMode,
           includeObfuscation: passIncludeObfuscation,
           maxToolCalls: safeMaxToolCalls,
           ...(onDataEvent
@@ -300,7 +304,7 @@ export const getAiResponse = async ({
           systemPrompt,
           useChatNetworkWorkerForRequests,
           useChatToolWorker,
-          webSearchEnabled,
+          webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
           ...(workspaceUri
             ? {
                 workspaceUri,
@@ -348,6 +352,7 @@ export const getAiResponse = async ({
         questionToolEnabled,
         systemPrompt,
         workspaceUri,
+        agentMode,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

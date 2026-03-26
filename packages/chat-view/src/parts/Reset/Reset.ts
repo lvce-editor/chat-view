@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import { clearChatSessions } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
@@ -7,6 +8,8 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   return {
     ...state,
+    agentMode: defaultAgentMode,
+    agentModePickerOpen: false,
     composerHeight: getMinComposerHeightForState(state),
     composerSelectionEnd: 0,
     composerSelectionStart: 0,

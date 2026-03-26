@@ -90,6 +90,7 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const {
+    agentMode,
     aiSessionTitleGenerationEnabled,
     assetDir,
     authAccessToken,
@@ -265,6 +266,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     : undefined
 
   const assistantMessage = await getAiResponse({
+    agentMode,
     assetDir,
     authAccessToken,
     authEnabled,

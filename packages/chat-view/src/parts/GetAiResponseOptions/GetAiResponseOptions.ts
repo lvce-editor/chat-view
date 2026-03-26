@@ -1,9 +1,11 @@
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 
 export interface GetAiResponseOptions {
+  readonly agentMode?: AgentMode
   readonly assetDir: string
   readonly authAccessToken?: string
   readonly authEnabled?: boolean

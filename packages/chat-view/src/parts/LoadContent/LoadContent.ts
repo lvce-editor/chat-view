@@ -3,6 +3,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
 import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
@@ -72,6 +73,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const blankProject = state.projects.find((project) => project.name === '_blank') || { id: 'project-blank', name: '_blank', uri: '' }
   const projects = ensureBlankProject(baseProjects, blankProject)
   const preferredProjectId = getSavedSelectedProjectId(savedState) || state.selectedProjectId
+  const agentMode = getSavedAgentMode(savedState) ?? state.agentMode
   const selectedProjectId = projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === preferredProjectId)
     ? preferredProjectId
     : projects[0]?.id || ''
@@ -100,6 +102,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
   return {
     ...state,
+    agentMode,
+    agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled,
     authAccessToken,
     authEnabled,
