@@ -4,6 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
+import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
 export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
@@ -44,13 +45,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
       ...fileNameClickableProps,
       type: VirtualDomElements.Span,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallFileName,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    text(fileName),
+    ...getToolCallFileNameDom(fileName, fileNameClickableProps),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }
