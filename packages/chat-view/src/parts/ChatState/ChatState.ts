@@ -1,3 +1,4 @@
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
@@ -9,6 +10,8 @@ import type { RunMode } from '../RunMode/RunMode.ts'
 
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
+  readonly agentMode: AgentMode
+  readonly agentModePickerOpen: boolean
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
   readonly authAccessToken: string

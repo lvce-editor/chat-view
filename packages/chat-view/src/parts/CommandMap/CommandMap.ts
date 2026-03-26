@@ -18,6 +18,7 @@ import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
+import * as HandleAgentModeChange from '../HandleAgentModeChange/HandleAgentModeChange.ts'
 import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
 import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
@@ -70,6 +71,7 @@ import * as MockOpenApiSetRequestFailedResponse from '../MockOpenApiSetRequestFa
 import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
+import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
@@ -126,6 +128,7 @@ export const commandMap = {
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),
+  'Chat.handleAgentModeChange': wrapCommand(HandleAgentModeChange.handleAgentModeChange),
   'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
@@ -183,6 +186,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
+  'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),

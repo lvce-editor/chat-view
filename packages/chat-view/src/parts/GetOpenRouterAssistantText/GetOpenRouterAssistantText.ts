@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
@@ -192,7 +193,9 @@ export const getOpenRouterAssistantText = async (
   questionToolEnabled = false,
   systemPrompt = '',
   workspaceUri = '',
+  agentMode: AgentMode | boolean = defaultAgentMode,
 ): Promise<GetOpenRouterAssistantTextResult> => {
+  const effectiveAgentMode = typeof agentMode === 'boolean' ? defaultAgentMode : agentMode
   const completionMessages: any[] = [
     ...(systemPrompt
       ? [
@@ -207,7 +210,7 @@ export const getOpenRouterAssistantText = async (
       role: message.role,
     })),
   ]
-  const tools = await getBasicChatTools(questionToolEnabled)
+  const tools = await getBasicChatTools(effectiveAgentMode, questionToolEnabled)
   const maxToolIterations = 4
   for (let i = 0; i <= maxToolIterations; i++) {
     let parsed: unknown

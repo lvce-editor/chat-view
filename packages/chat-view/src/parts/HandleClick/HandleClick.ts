@@ -3,6 +3,7 @@ import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { handleAgentModeChange } from '../HandleAgentModeChange/HandleAgentModeChange.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickCreatePullRequest } from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
 import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
@@ -17,6 +18,7 @@ import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApi
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import { handleReasoningEffortChange } from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
 import * as InputName from '../InputName/InputName.ts'
+import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
 import { OpenOpenRouterApiKeySettings, OpenOpenRouterApiKeyWebsite, SaveOpenRouterApiKey } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
@@ -52,12 +54,15 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       }
     case name === InputName.RunModePickerToggle:
       return openRunModePicker(state)
+    case name === InputName.AgentModePickerToggle:
+      return openAgentModePicker(state)
     case name === InputName.ReasoningEffortPickerToggle:
       return openReasoningEffortPicker(state)
     case InputName.isModelPickerItemInputName(name): {
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
       return {
         ...state,
+        agentModePickerOpen: false,
         modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
         modelPickerListScrollTop: 0,
         modelPickerOpen: false,
@@ -67,6 +72,10 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         visibleModels: state.models,
       }
     }
+    case InputName.isAgentModePickerItemInputName(name): {
+      const agentMode = InputName.getAgentModeFromAgentModePickerItemInputName(name)
+      return handleAgentModeChange(state, agentMode)
+    }
     case InputName.isReasoningEffortPickerItemInputName(name): {
       const reasoningEffort = InputName.getReasoningEffortFromReasoningEffortPickerItemInputName(name)
       return handleReasoningEffortChange(state, reasoningEffort)
@@ -75,6 +84,7 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       const runMode = InputName.getRunModeFromRunModePickerItemInputName(name)
       return {
         ...state,
+        agentModePickerOpen: false,
         reasoningEffortPickerOpen: false,
         runMode,
         runModePickerOpen: false,

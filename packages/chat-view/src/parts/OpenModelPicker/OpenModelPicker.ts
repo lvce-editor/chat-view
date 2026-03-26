@@ -9,6 +9,7 @@ export const openModelPicker = (state: ChatState): ChatState => {
   const visibleModels = currentModelPickerOpen ? models : currentVisibleModels
   return {
     ...state,
+    agentModePickerOpen: false,
     focus: 'model-picker-input',
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,

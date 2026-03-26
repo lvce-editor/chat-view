@@ -1,4 +1,5 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
@@ -10,6 +11,8 @@ export const getChatDetailsDom = (
   selectedSessionTitle: string,
   messagesNodes: readonly VirtualDomNode[],
   composerValue: string,
+  agentMode: AgentMode,
+  agentModePickerOpen: boolean,
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -41,6 +44,8 @@ export const getChatDetailsDom = (
     text(selectedSessionTitle),
     ...getChatSendAreaDom(
       composerValue,
+      agentMode,
+      agentModePickerOpen,
       modelPickerOpen,
       models,
       selectedModelId,
