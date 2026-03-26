@@ -1,5 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { isEqualProjectExpandedIds, isEqualVisibleModels } from './IsEqualHelpers/IsEqualHelpers.ts'
+import { isEqualComposerAttachments, isEqualProjectExpandedIds, isEqualVisibleModels } from './IsEqualHelpers/IsEqualHelpers.ts'
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
@@ -7,7 +7,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     oldState.authStatus === newState.authStatus &&
-    oldState.composerAttachments === newState.composerAttachments &&
+    isEqualComposerAttachments(oldState.composerAttachments, newState.composerAttachments) &&
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
