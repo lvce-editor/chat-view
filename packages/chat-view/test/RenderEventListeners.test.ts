@@ -19,6 +19,11 @@ test('renderEventListeners should return expected listeners', () => {
     name: DomEventListenerFunctions.HandleClickModelPickerToggle,
     params: ['handleClickModelPickerToggle'],
   })
+  const agentModePickerToggleListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickAgentModePickerToggle)
+  expect(agentModePickerToggleListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
+    params: ['openAgentModePicker'],
+  })
   const projectAddButtonContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleProjectAddButtonContextMenu)
   expect(projectAddButtonContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
