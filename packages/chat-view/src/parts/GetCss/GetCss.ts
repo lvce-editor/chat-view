@@ -1,4 +1,3 @@
- 
 export const getCss = (
   composerHeight: number,
   modelPickerHeight: number,
