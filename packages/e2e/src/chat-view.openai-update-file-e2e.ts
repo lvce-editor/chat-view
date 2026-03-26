@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-update-file-e2e'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   // create index.html with initial content
   await FileSystem.writeFile(`${tmpDir}/index.html`, 'hello world')
@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
+  await Chat.mockOpenApiStreamReset()
 
   const workspaceUri = `file://${tmpDir}`
 
@@ -73,10 +73,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   ]
 
   for (const responsePart of sseResponseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamFinish()
 
   await Chat.handleInput('Please update index.html to say hello updated')
   await Chat.handleSubmit()

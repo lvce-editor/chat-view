@@ -20,17 +20,17 @@ const longResponseEvent = {
   type: 'chat-message-updated',
 } as const
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(longResponseEvent)}\n\n`)
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamReset()
+  await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(longResponseEvent)}\n\n`)
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamFinish()
   await Chat.handleInput('Please give me a long answer')
 
   // act

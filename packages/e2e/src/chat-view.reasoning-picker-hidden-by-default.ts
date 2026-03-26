@@ -10,7 +10,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(reasoningPickerToggle).toHaveCount(0)
 
   await Command.execute('Chat.setReasoningPickerEnabled', true)
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   await expect(reasoningPickerToggle).toBeVisible()
   await expect(reasoningPickerToggle).toContainText('High')

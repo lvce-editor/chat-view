@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.paste-input'
 
-export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, ClipBoard, expect, Locator }) => {
   // arrange
   await Chat.show()
   await ClipBoard.enableMemoryClipBoard()
@@ -11,7 +11,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) 
   await expect(composer).toBeVisible()
 
   // act
-  await Command.execute('Chat.pasteInput')
+  await Chat.handleInputPaste()
 
   // assert
   await expect(composer).toHaveValue('abc')

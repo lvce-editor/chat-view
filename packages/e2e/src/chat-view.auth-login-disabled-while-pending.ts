@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Command.execute('Chat.setAuthEnabled', true)
   await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
-  await Command.execute('Chat.mockBackendAuthResponse', {
+  await Chat.mockBackendAuthResponse({
     accessToken: 'access-token-delayed',
     delay: 900,
     refreshToken: 'refresh-token-delayed',

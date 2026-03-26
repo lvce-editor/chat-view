@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute('Chat.registerMockResponse', { text: '```json\n{"name":"chat-view","enabled":true,"count":42,"value":null}\n```' })
   await Chat.handleInput('show json code block')
   await Chat.handleSubmit()
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   const messages = Locator('.ChatMessages .Message')
   const codeBlocks = Locator('.ChatMessages .Message pre code')
