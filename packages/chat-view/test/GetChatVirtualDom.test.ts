@@ -171,6 +171,46 @@ test('getChatVirtualDom should render open run mode picker without search input'
   expect(pickerContainers).toHaveLength(1)
 })
 
+test('getChatVirtualDom should render open agent mode picker as custom select without search input', () => {
+  const result = renderChatView({
+    agentModePickerOpen: true,
+    viewMode: 'detail',
+  })
+  const agentModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const selectedAgentOption = result.find((node) => node.name === 'agent-mode-picker-item:agent')
+  const planOption = result.find((node) => node.name === 'agent-mode-picker-item:plan')
+  const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
+  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  expect(agentModePicker).toMatchObject({
+    className: ClassNames.ChatModelPicker,
+    style: 'height: 56px;',
+    type: VirtualDomElements.Div,
+  })
+  expect(agentModePickerToggle).toMatchObject({
+    'aria-expanded': 'true',
+    'aria-haspopup': 'true',
+    className: ClassNames.Select,
+    onClick: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
+    title: 'Agent',
+    type: VirtualDomElements.Button,
+  })
+  expect(selectedAgentOption).toMatchObject({
+    className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
+    name: 'agent-mode-picker-item:agent',
+    type: VirtualDomElements.Button,
+  })
+  expect(planOption).toMatchObject({
+    className: ClassNames.ChatModelPickerItem,
+    type: VirtualDomElements.Button,
+  })
+  expect(modelPickerSearchInput).toBeUndefined()
+  expect(result[0]).toMatchObject({
+    childCount: 4,
+  })
+  expect(pickerContainers).toHaveLength(1)
+})
+
 test('getChatVirtualDom should render create pr button for completed background session', () => {
   const result = renderChatView({
     runMode: 'background',
