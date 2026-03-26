@@ -1,4 +1,5 @@
 import type { ChatTool } from '../Types/Types.ts'
+import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 
 const getAskQuestionTool = (): ChatTool => {
@@ -42,10 +43,24 @@ const withQuestionTool = (tools: readonly ChatTool[], questionToolEnabled: boole
   return [...tools, getAskQuestionTool()]
 }
 
-export const getBasicChatTools = async (questionToolEnabled = false): Promise<readonly ChatTool[]> => {
+const readOnlyToolNames = new Set(['get_workspace_uri', 'list_file', 'list_files', 'read_file'])
+
+const withAgentMode = (tools: readonly ChatTool[], agentMode: AgentMode): readonly ChatTool[] => {
+  if (agentMode === 'agent') {
+    return tools
+  }
+  return tools.filter((tool) => readOnlyToolNames.has(tool.function.name))
+}
+
+export const getBasicChatTools = async (
+  agentMode: AgentMode | boolean = defaultAgentMode,
+  questionToolEnabled = false,
+): Promise<readonly ChatTool[]> => {
+  const effectiveAgentMode = typeof agentMode === 'boolean' ? defaultAgentMode : agentMode
+  const effectiveQuestionToolEnabled = typeof agentMode === 'boolean' ? agentMode : questionToolEnabled
   try {
-    return withQuestionTool(await ChatToolRequest.getTools(), questionToolEnabled)
+    return withAgentMode(withQuestionTool(await ChatToolRequest.getTools(), effectiveQuestionToolEnabled), effectiveAgentMode)
   } catch {
-    return withQuestionTool([], questionToolEnabled)
+    return withAgentMode(withQuestionTool([], effectiveQuestionToolEnabled), effectiveAgentMode)
   }
 }

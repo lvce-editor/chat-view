@@ -7,7 +7,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Command.execute('Chat.setReasoningPickerEnabled', true)
   await Command.execute('Chat.setReasoningEffort', 'extra-high')
-  await Command.execute('Chat.rerender')
+  await Chat.rerender()
 
   const reasoningPickerToggle = Locator('.ChatSendArea button.Select[name="reasoning-effort-picker-toggle"]')
   await expect(reasoningPickerToggle).toBeVisible()

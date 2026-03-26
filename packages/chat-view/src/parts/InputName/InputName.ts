@@ -1,3 +1,4 @@
+import type { AgentMode as AgentModeType } from '../AgentMode/AgentMode.ts'
 import type { ReasoningEffort as ReasoningEffortType } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode as RunModeType } from '../RunMode/RunMode.ts'
 
@@ -16,6 +17,8 @@ export const Model = 'model'
 export const ModelPickerToggle = 'model-picker-toggle'
 export const ModelPickerSearch = 'model-picker-search'
 export const ModelPickerList = 'model-picker-list'
+export const AgentModePickerToggle = 'agent-mode-picker-toggle'
+export const AgentModePickerItemPrefix = 'agent-mode-picker-item:'
 export const ReasoningEffortPickerToggle = 'reasoning-effort-picker-toggle'
 export const ReasoningEffortPickerItemPrefix = 'reasoning-effort-picker-item:'
 export const RunMode = 'runMode'
@@ -100,6 +103,18 @@ export const isModelPickerItemInputName = (name: string): name is `${typeof Mode
 
 export const getModelIdFromModelPickerItemInputName = (name: `${typeof ModelPickerItemPrefix}${string}`): string => {
   return name.slice(ModelPickerItemPrefix.length)
+}
+
+export const getAgentModePickerItemInputName = (agentMode: AgentModeType): `${typeof AgentModePickerItemPrefix}${AgentModeType}` => {
+  return `${AgentModePickerItemPrefix}${agentMode}`
+}
+
+export const isAgentModePickerItemInputName = (name: string): name is `${typeof AgentModePickerItemPrefix}${AgentModeType}` => {
+  return name.startsWith(AgentModePickerItemPrefix)
+}
+
+export const getAgentModeFromAgentModePickerItemInputName = (name: `${typeof AgentModePickerItemPrefix}${AgentModeType}`): AgentModeType => {
+  return name.slice(AgentModePickerItemPrefix.length) as AgentModeType
 }
 
 export const getRunModePickerItemInputName = (runMode: RunModeType): `${typeof RunModePickerItemPrefix}${RunModeType}` => {

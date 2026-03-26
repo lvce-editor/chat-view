@@ -1,4 +1,5 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -8,6 +9,7 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
+import { getAgentModePickerVirtualDom } from '../GetAgentModePickerVirtualDom/GetAgentModePickerVirtualDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
 import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
@@ -89,7 +91,12 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
 
 export const getChatSendAreaDom = (
   composerValue: string,
+<<<<<<< HEAD
   composerAttachments: readonly ComposerAttachment[],
+=======
+  agentMode: AgentMode,
+  agentModePickerOpen: boolean,
+>>>>>>> origin/main
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -110,7 +117,7 @@ export const getChatSendAreaDom = (
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const bottomControlsCount =
-    2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+    3 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
   const primaryControlsCount = 1 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
@@ -136,6 +143,7 @@ export const getChatSendAreaDom = (
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
       type: VirtualDomElements.Div,
     },
+    ...getAgentModePickerVirtualDom(agentMode, agentModePickerOpen),
     {
       childCount: primaryControlsCount,
       className: ClassNames.ChatSendAreaPrimaryControls,

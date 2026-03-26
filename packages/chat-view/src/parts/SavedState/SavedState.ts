@@ -1,7 +1,9 @@
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 
 export interface SavedState {
+  readonly agentMode: AgentMode
   readonly chatListScrollTop: number
   readonly composerValue: string
   readonly lastNormalViewMode: 'list' | 'detail'

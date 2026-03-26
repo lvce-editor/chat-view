@@ -43,10 +43,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
-  await Command.execute('Chat.mockOpenApiRequestReset')
-  await Command.execute('Chat.mockOpenApiStreamReset')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', '2')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiRequestReset()
+  await Chat.mockOpenApiStreamReset()
+  await Chat.mockOpenApiStreamPushChunk('2')
+  await Chat.mockOpenApiStreamFinish()
   await Chat.handleInput("what's 1+1")
 
   // act
@@ -58,7 +58,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(messages.nth(1)).toHaveText('2')
 
   // assert mocked outbound OpenAI request
-  const requests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as readonly MockOpenApiRequest[]
+  const requests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   assertEqual(requests.length, 1, 'OpenAI request count')
 
   const request = requests[0]

@@ -4,13 +4,13 @@ export const name = 'chat-view.openai-too-many-tool-calls-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
+  await Chat.mockOpenApiStreamReset()
 
   const loopingResponseSseParts = [
     {
@@ -83,11 +83,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   for (let i = 0; i < 10; i++) {
     for (const responsePart of loopingResponseSseParts) {
-      await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+      await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
     }
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
+    await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
   }
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamFinish()
 
   await Chat.handleInput('inspect workspace repeatedly')
   await Chat.handleSubmit()

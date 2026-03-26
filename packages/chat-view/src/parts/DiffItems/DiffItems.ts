@@ -4,6 +4,8 @@ import { isEqualComposerAttachments, isEqualProjectExpandedIds, isEqualVisibleMo
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
+    oldState.agentMode === newState.agentMode &&
+    oldState.agentModePickerOpen === newState.agentModePickerOpen &&
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     oldState.authStatus === newState.authStatus &&

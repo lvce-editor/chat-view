@@ -3,6 +3,7 @@ import type { SavedState } from '../SavedState/SavedState.ts'
 
 export const saveState = (state: ChatState): SavedState => {
   const {
+    agentMode,
     chatListScrollTop,
     composerValue,
     lastNormalViewMode,
@@ -23,6 +24,7 @@ export const saveState = (state: ChatState): SavedState => {
     viewMode,
   } = state
   return {
+    agentMode,
     chatListScrollTop,
     composerValue,
     lastNormalViewMode,

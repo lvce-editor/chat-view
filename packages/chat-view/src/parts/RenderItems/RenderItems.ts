@@ -5,6 +5,8 @@ import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   const {
     addContextButtonEnabled,
+    agentMode,
+    agentModePickerOpen,
     authEnabled,
     authErrorMessage,
     authStatus,
@@ -61,6 +63,8 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   }
   const dom = getChatVirtualDom({
     addContextButtonEnabled,
+    agentMode,
+    agentModePickerOpen,
     authEnabled,
     authErrorMessage,
     authStatus,

@@ -4,7 +4,7 @@ import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
-import { registerSlashCommands } from '../src/parts/Listen/Listen.ts'
+import { registerSlashCommands } from '../src/parts/RegisterSlashCommands/RegisterSlashCommands.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 registerSlashCommands()

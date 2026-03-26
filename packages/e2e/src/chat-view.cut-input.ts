@@ -4,7 +4,7 @@ export const name = 'chat-view.cut-input'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, ClipBoard, expect, Locator }) => {
   // arrange
   await ClipBoard.enableMemoryClipBoard()
   await Chat.show()
@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) 
   await Chat.handleInput('cut text')
 
   // act
-  await Command.execute('Chat.cutInput')
+  await Chat.handleInputCut()
 
   // assert
   await expect(composer).toHaveValue('')

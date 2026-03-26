@@ -1,4 +1,5 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -8,6 +9,7 @@ import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getAgentModePickerPopOverVirtualDom } from '../GetAgentModePickerPopOverVirtualDom/GetAgentModePickerPopOverVirtualDom.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
@@ -17,6 +19,8 @@ import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
+  readonly agentMode: AgentMode
+  readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -77,6 +81,8 @@ const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly Virtu
 
 export const getChatModeListVirtualDom = ({
   addContextButtonEnabled,
+  agentMode,
+  agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
@@ -114,9 +120,11 @@ export const getChatModeListVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const isAgentModePickerVisible = agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && runModePickerOpen
-  const chatRootChildCount = 3 + (isDropOverlayVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
+  const chatRootChildCount =
+    3 + (isDropOverlayVisible ? 1 : 0) + (isAgentModePickerVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
     searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
@@ -132,7 +140,12 @@ export const getChatModeListVirtualDom = ({
     ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
+<<<<<<< HEAD
       composerAttachments,
+=======
+      agentMode,
+      agentModePickerOpen,
+>>>>>>> origin/main
       modelPickerOpen,
       models,
       selectedModelId,
@@ -152,6 +165,7 @@ export const getChatModeListVirtualDom = ({
       voiceDictationEnabled,
     ),
     ...getDropOverlayVirtualDom(isDropOverlayVisible),
+    ...(isAgentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
     ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
   ]
