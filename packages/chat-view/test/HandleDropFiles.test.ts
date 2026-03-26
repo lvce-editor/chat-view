@@ -18,7 +18,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     composerDropActive: true,
     selectedSessionId: 'session-1',
   }
-  const files = [createFile('photo.png', 'image/png', 'image-bytes')]
+  const files = [createFile('photo.svg', 'image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>')]
   const storedEvents: ChatViewEvent[] = []
   using mockRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.appendEvent'(event: ChatViewEvent) {
@@ -33,11 +33,19 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
   expect(newState.composerDropActive).toBe(false)
+  expect(newState.composerAttachments).toEqual([
+    expect.objectContaining({
+      displayType: 'image',
+      mimeType: 'image/svg+xml',
+      name: 'photo.svg',
+      size: files[0].size,
+    }),
+  ])
   const events = await getChatViewEvents('session-1')
   expect(events).toHaveLength(1)
   expect(events[0]).toMatchObject({
-    mimeType: 'image/png',
-    name: 'photo.png',
+    mimeType: 'image/svg+xml',
+    name: 'photo.svg',
     sessionId: 'session-1',
     size: files[0].size,
     type: 'chat-attachment-added',
@@ -48,7 +56,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
   }
   expect(events[0].blob).toBeInstanceOf(Blob)
   expect(mockRpc.invocations).toEqual([
-    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.png', sessionId: 'session-1' })],
+    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-1' })],
     ['ChatStorage.getEvents', 'session-1'],
   ])
 })
@@ -69,6 +77,7 @@ test('handleDropFiles is no-op when no session is selected', async () => {
   const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
 
   expect(newState.composerDropActive).toBe(false)
+  expect(newState.composerAttachments).toHaveLength(0)
   const events = await getChatViewEvents()
   expect(events).toHaveLength(0)
   expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])

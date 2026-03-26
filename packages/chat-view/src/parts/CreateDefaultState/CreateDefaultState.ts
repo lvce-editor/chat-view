@@ -43,6 +43,7 @@ export const createDefaultState = (): ChatState => {
     chatSendAreaPaddingLeft: 8,
     chatSendAreaPaddingRight: 8,
     chatSendAreaPaddingTop: 10,
+    composerAttachments: [],
     composerDropActive: false,
     composerDropEnabled: true,
     composerFontFamily: 'system-ui',

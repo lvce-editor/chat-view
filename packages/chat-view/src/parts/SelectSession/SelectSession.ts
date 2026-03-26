@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const exists = state.sessions.some((session) => session.id === id)
@@ -7,6 +8,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     return state
   }
   const loadedSession = await getChatSession(id)
+  const composerAttachments = await getComposerAttachments(id)
   const sessions = state.sessions.map((session) => {
     if (session.id !== id) {
       return session
@@ -18,6 +20,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   })
   return {
     ...state,
+    composerAttachments,
     lastNormalViewMode: state.viewMode === 'chat-focus' ? state.lastNormalViewMode : 'detail',
     renamingSessionId: '',
     selectedSessionId: id,

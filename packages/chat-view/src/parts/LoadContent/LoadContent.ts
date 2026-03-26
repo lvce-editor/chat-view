@@ -2,6 +2,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
+import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
@@ -92,6 +93,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
+  const composerAttachments = await getComposerAttachments(selectedSessionId)
   let { parsedMessages } = state
   for (const session of sessions) {
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
@@ -112,6 +114,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     backendUrl,
     chatHistoryEnabled,
     chatListScrollTop,
+    composerAttachments,
     composerDropActive: false,
     composerDropEnabled,
     composerValue: savedComposerValue ?? state.composerValue,

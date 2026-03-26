@@ -56,6 +56,14 @@ test('isEqual should ignore uid when chat fields are equal', () => {
   expect(DiffItems.isEqual(state1, state2)).toBe(true)
 })
 
+test('isEqual should return true for equivalent composer attachments', () => {
+  const { sessions } = createDefaultState()
+  const composerAttachments = [{ attachmentId: '1', displayType: 'file', mimeType: 'text/plain', name: 'a.txt', size: 3 }] as const
+  const state1: ChatState = { ...createDefaultState(), composerAttachments, sessions }
+  const state2: ChatState = { ...createDefaultState(), composerAttachments: [...composerAttachments], sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(true)
+})
+
 test('isEqual should return false when model picker open state changes', () => {
   const state1: ChatState = { ...createDefaultState(), modelPickerOpen: false }
   const state2: ChatState = { ...createDefaultState(), modelPickerOpen: true }

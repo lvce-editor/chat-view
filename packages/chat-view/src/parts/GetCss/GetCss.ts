@@ -49,6 +49,45 @@ export const getCss = (
   cursor: pointer;
 }
 
+.ChatComposerAttachments{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ChatComposerAttachment{
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 999px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  padding: 4px 10px;
+  background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
+  color: var(--vscode-badge-foreground, var(--vscode-foreground));
+  font-size: 12px;
+}
+
+.ChatComposerAttachmentImage{
+  border-color: var(--vscode-charts-blue);
+}
+
+.ChatComposerAttachmentInvalidImage{
+  border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));
+  color: var(--vscode-errorForeground, var(--vscode-foreground));
+}
+
+.ChatComposerAttachmentTextFile{
+  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+}
+
+.CustomSelectContainer{
+  position: relative;
+  min-width: 0;
+
+}
+
 .ChatToolCallFileName:hover{
   color: var(--vscode-textLink-foreground);
 }

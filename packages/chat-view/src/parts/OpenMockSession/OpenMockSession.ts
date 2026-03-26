@@ -39,6 +39,7 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
 
   return {
     ...state,
+    composerAttachments: [],
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,
