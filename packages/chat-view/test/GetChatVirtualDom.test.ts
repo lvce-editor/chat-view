@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
-import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -153,12 +153,14 @@ test('getChatVirtualDom should render open run mode picker without search input'
   const result = renderChatView({
     runModePickerOpen: true,
   })
-  const runModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const runModePickerClassName = mergeClassNames(ClassNames.ChatModelPicker, ClassNames.RunModePickerPopOver)
+  const runModePickerContainerClassName = mergeClassNames(ClassNames.ChatModelPickerContainer, ClassNames.RunModePickerContainer)
+  const runModePicker = result.find((node) => node.className === runModePickerClassName)
   const runModeBackgroundOption = result.find((node) => node.name === 'run-mode-picker-item:background')
   const runModeSearchInput = result.find((node) => node.name === 'model-picker-search')
-  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  const pickerContainers = result.filter((node) => node.className === runModePickerContainerClassName)
   expect(runModePicker).toMatchObject({
-    className: ClassNames.ChatModelPicker,
+    className: runModePickerClassName,
     style: 'height: 84px;',
     type: VirtualDomElements.Div,
   })
