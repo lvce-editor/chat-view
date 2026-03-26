@@ -1,5 +1,5 @@
 import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { ChatToolWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const send = (port: MessagePort): Promise<void> => {
   // @ts-ignore
@@ -11,5 +11,5 @@ export const initializeChatMessageParsingWorker = async (): Promise<void> => {
     commandMap: {},
     send,
   })
-  ChatToolWorker.set(rpc)
+  ChatMessageParsingWorker.set(rpc)
 }

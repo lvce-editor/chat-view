@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
+import type { ParsedMessage } from '../src/parts/ParsedMessage/ParsedMessage.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
@@ -700,9 +701,13 @@ test('loadContent should load useChatMessageParsingWorker from preferences', asy
       return undefined
     },
   })
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseAndStoreMessagesContent': async (parsedMessages: readonly ParsedMessage[]) => parsedMessages,
+  })
   const state: ChatState = createDefaultState()
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.useChatMessageParsingWorker).toBe(true)
+  expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatMessageParsing.parseAndStoreMessagesContent', [], state.sessions[0].messages]])
   expectInvocations(mockRpc.invocations, [
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
@@ -720,6 +725,60 @@ test('loadContent should load useChatMessageParsingWorker from preferences', asy
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+  ])
+})
+
+test('loadContent should delegate message parsing to chat message parsing worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  await saveChatSession({
+    id: 'session-1',
+    messages: [{ id: 'message-1', role: 'assistant', text: 'Hello from worker', time: '10:01' }],
+    title: 'Chat 1',
+  })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.useChatMessageParsingWorker') {
+        return true
+      }
+      if (key === 'secrets.openApiKey' || key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const workerParsedMessages = [
+    {
+      id: 'message-1',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'parsed in worker',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'Hello from worker',
+    },
+  ]
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseAndStoreMessagesContent': async () => workerParsedMessages,
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    viewMode: 'detail',
+  }
+
+  const result = await LoadContent.loadContent(state, undefined)
+
+  expect(result.parsedMessages).toEqual(workerParsedMessages)
+  expect(mockRendererRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useChatMessageParsingWorker'])
+  expect(mockChatMessageParsingRpc.invocations).toEqual([
+    ['ChatMessageParsing.parseAndStoreMessagesContent', [], [{ id: 'message-1', role: 'assistant', text: 'Hello from worker', time: '10:01' }]],
   ])
 })
 

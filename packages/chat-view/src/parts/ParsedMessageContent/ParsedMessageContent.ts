@@ -7,6 +7,7 @@ import type {
   MessageListItemNode,
   MessageTableCellNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { parseAndStoreMessagesContent as parseAndStoreMessagesContentInWorker } from '../ChatMessageParsingRequest/ChatMessageParsingRequest.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const emptyMessageContent: readonly MessageIntermediateNode[] = [
@@ -211,6 +212,17 @@ export const parseAndStoreMessagesContent = async (
     nextParsedMessages = await parseAndStoreMessageContent(nextParsedMessages, message)
   }
   return nextParsedMessages
+}
+
+export const parseAndStoreMessagesContentWithWorkerPreference = async (
+  parsedMessages: readonly ParsedMessage[],
+  messages: readonly ChatMessage[],
+  useChatMessageParsingWorker: boolean,
+): Promise<readonly ParsedMessage[]> => {
+  if (useChatMessageParsingWorker) {
+    return parseAndStoreMessagesContentInWorker(parsedMessages, messages)
+  }
+  return parseAndStoreMessagesContent(parsedMessages, messages)
 }
 
 export const getEmptyMessageContent = (): readonly MessageIntermediateNode[] => {

@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { ChatMessageParsingWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../src/parts/ChatMessage/ChatMessage.ts'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -81,4 +82,46 @@ test('openMockSession should return same state for empty mockSessionId', async (
   const state: ChatState = createDefaultState()
   const result = await OpenMockSession.openMockSession(state, '', [])
   expect(result).toBe(state)
+})
+
+test('openMockSession should delegate parsing to chat message parsing worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    useChatMessageParsingWorker: true,
+  }
+  const mockChatMessages: readonly ChatMessage[] = [
+    {
+      id: 'message-1',
+      role: 'assistant',
+      text: 'worker',
+      time: '10:00',
+    },
+  ]
+  const workerParsedMessages = [
+    {
+      id: 'message-1',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'worker parsed',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'worker',
+    },
+  ]
+  using mockRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseAndStoreMessagesContent': async () => workerParsedMessages,
+  })
+
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
+
+  expect(result.parsedMessages).toEqual(workerParsedMessages)
+  expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseAndStoreMessagesContent', [], mockChatMessages]])
 })
