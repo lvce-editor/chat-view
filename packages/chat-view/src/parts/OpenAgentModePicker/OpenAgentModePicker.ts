@@ -1,13 +1,13 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 
-export const openReasoningEffortPicker = (state: ChatState): ChatState => {
-  const reasoningEffortPickerOpen = !state.reasoningEffortPickerOpen
+export const openAgentModePicker = (state: ChatState): ChatState => {
+  const agentModePickerOpen = !state.agentModePickerOpen
   return {
     ...state,
-    agentModePickerOpen: false,
+    agentModePickerOpen,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
-    reasoningEffortPickerOpen,
+    reasoningEffortPickerOpen: false,
     runModePickerOpen: false,
     visibleModels: state.models,
   }

@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
@@ -19,6 +20,8 @@ export const createDefaultState = (): ChatState => {
   const visibleModels = getVisibleModels(models, '')
   return {
     addContextButtonEnabled: false,
+    agentMode: defaultAgentMode,
+    agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
     authAccessToken: '',

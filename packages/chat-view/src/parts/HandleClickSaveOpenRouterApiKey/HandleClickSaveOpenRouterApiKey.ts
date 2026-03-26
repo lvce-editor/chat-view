@@ -46,6 +46,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   const retryMessages = session.messages.slice(0, -1)
 
   const assistantMessage = await getAiResponse({
+    agentMode: updatedState.agentMode,
     assetDir: updatedState.assetDir,
     maxToolCalls: updatedState.maxToolCalls,
     messages: retryMessages,

@@ -1,8 +1,10 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 export interface GetAiResponseRequestOptions {
+  readonly agentMode?: AgentMode
   readonly assetDir: string
   readonly maxToolCalls?: number
   readonly messageId?: string

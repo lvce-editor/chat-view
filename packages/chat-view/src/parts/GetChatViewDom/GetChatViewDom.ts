@@ -1,4 +1,5 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
@@ -32,6 +33,8 @@ const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly P
 
 export interface GetChatVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
+  readonly agentMode: AgentMode
+  readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
@@ -84,6 +87,8 @@ export interface GetChatVirtualDomOptions {
 export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly VirtualDomNode[] => {
   const {
     addContextButtonEnabled,
+    agentMode,
+    agentModePickerOpen = false,
     authEnabled = false,
     authErrorMessage = '',
     authStatus = 'signed-out',
@@ -140,6 +145,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
         addContextButtonEnabled,
+        agentMode,
+        agentModePickerOpen,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -186,6 +193,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     case 'detail':
       return getChatModeDetailVirtualDom({
         addContextButtonEnabled,
+        agentMode,
+        agentModePickerOpen,
         authEnabled,
         authErrorMessage,
         authStatus,
@@ -228,6 +237,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     case 'list':
       return getChatModeListVirtualDom({
         addContextButtonEnabled,
+        agentMode,
+        agentModePickerOpen,
         authEnabled,
         authErrorMessage,
         authStatus,

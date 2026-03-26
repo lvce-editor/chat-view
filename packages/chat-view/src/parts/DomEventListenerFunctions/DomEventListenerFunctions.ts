@@ -53,3 +53,4 @@ export const HandleClickModelPickerOverlay = 53
 export const HandlePointerDownModelPickerList = 54
 export const HandlePointerUpModelPickerList = 55
 export const HandleClickReasoningEffortPickerToggle = 56
+export const HandleClickAgentModePickerToggle = 57
