@@ -44,10 +44,24 @@ test('getToolCallsDom should render one list item per tool call', () => {
       type: VirtualDomElements.Ol,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: 'a.txt',
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '1.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
@@ -75,10 +89,24 @@ test('getToolCallsDom should render one list item per tool call', () => {
       text: 'a.txt',
     }),
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: 'b.txt',
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '2.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,

@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
-import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -153,12 +153,14 @@ test('getChatVirtualDom should render open run mode picker without search input'
   const result = renderChatView({
     runModePickerOpen: true,
   })
-  const runModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
+  const runModePickerClassName = mergeClassNames(ClassNames.ChatModelPicker, ClassNames.RunModePickerPopOver)
+  const runModePickerContainerClassName = mergeClassNames(ClassNames.ChatModelPickerContainer, ClassNames.RunModePickerContainer)
+  const runModePicker = result.find((node) => node.className === runModePickerClassName)
   const runModeBackgroundOption = result.find((node) => node.name === 'run-mode-picker-item:background')
   const runModeSearchInput = result.find((node) => node.name === 'model-picker-search')
-  const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  const pickerContainers = result.filter((node) => node.className === runModePickerContainerClassName)
   expect(runModePicker).toMatchObject({
-    className: ClassNames.ChatModelPicker,
+    className: runModePickerClassName,
     style: 'height: 84px;',
     type: VirtualDomElements.Div,
   })
@@ -912,17 +914,31 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 11)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: uri,
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '1.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
@@ -991,17 +1007,31 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
   expect(fileNameLinkNode).toBeDefined()
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 11)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: path,
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '1.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
@@ -1066,17 +1096,31 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 11)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: uri,
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '1.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,
@@ -1141,17 +1185,31 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
   })
   const toolCallDomStart = result.findIndex((node) => node.className === ClassNames.ChatOrderedList)
   expect(toolCallDomStart).toBeGreaterThan(-1)
-  expect(result.slice(toolCallDomStart, toolCallDomStart + 8)).toEqual([
+  expect(result.slice(toolCallDomStart, toolCallDomStart + 11)).toEqual([
     {
       childCount: 1,
       className: ClassNames.ChatOrderedList,
       type: VirtualDomElements.Ol,
     },
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.ChatOrderedListItem,
       title: uri,
       type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListMarker,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: '1.',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 3,
+      className: ClassNames.ChatOrderedListItemContent,
+      type: VirtualDomElements.Div,
     },
     expect.objectContaining({
       className: ClassNames.FileIcon,

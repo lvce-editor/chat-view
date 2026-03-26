@@ -702,12 +702,12 @@ test('loadContent should load useChatMessageParsingWorker from preferences', asy
     },
   })
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseAndStoreMessagesContent': async (parsedMessages: readonly ParsedMessage[]) => parsedMessages,
+    'ChatParser.parseMessageContent': async (parsedMessages: readonly ParsedMessage[]) => parsedMessages,
   })
   const state: ChatState = createDefaultState()
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.useChatMessageParsingWorker).toBe(true)
-  expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatMessageParsing.parseAndStoreMessagesContent', [], state.sessions[0].messages]])
+  expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatParser.parseMessageContent', [], state.sessions[0].messages]])
   expectInvocations(mockRpc.invocations, [
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
@@ -765,7 +765,7 @@ test('loadContent should delegate message parsing to chat message parsing worker
     },
   ]
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseAndStoreMessagesContent': async () => workerParsedMessages,
+    'ChatParser.parseMessageContent': async () => workerParsedMessages,
   })
   const state: ChatState = {
     ...createDefaultState(),
@@ -778,7 +778,7 @@ test('loadContent should delegate message parsing to chat message parsing worker
   expect(result.parsedMessages).toEqual(workerParsedMessages)
   expect(mockRendererRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useChatMessageParsingWorker'])
   expect(mockChatMessageParsingRpc.invocations).toEqual([
-    ['ChatMessageParsing.parseAndStoreMessagesContent', [], [{ id: 'message-1', role: 'assistant', text: 'Hello from worker', time: '10:01' }]],
+    ['ChatParser.parseMessageContent', [], [{ id: 'message-1', role: 'assistant', text: 'Hello from worker', time: '10:01' }]],
   ])
 })
 

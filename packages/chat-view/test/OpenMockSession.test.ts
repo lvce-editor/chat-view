@@ -117,11 +117,11 @@ test('openMockSession should delegate parsing to chat message parsing worker whe
     },
   ]
   using mockRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseAndStoreMessagesContent': async () => workerParsedMessages,
+    'ChatParser.parseMessageContent': async () => workerParsedMessages,
   })
 
   const result = await OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
 
   expect(result.parsedMessages).toEqual(workerParsedMessages)
-  expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseAndStoreMessagesContent', [], mockChatMessages]])
+  expect(mockRpc.invocations).toEqual([['ChatParser.parseMessageContent', [], mockChatMessages]])
 })
