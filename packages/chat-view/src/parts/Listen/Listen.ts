@@ -9,6 +9,7 @@ import { createSession } from '../CreateSession/CreateSession.ts'
 import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { initializeChatCoordinatorWorker } from '../InitializeChatCoordinatorWorker/InitializeChatCoordinatorWorker.ts'
 import { initializeChatMathWorker } from '../InitializeChatMathWorker/InitializeChatMathWorker.ts'
+import { initializeChatMessageParsingWorker } from '../InitializeChatMessageParsingWorker/InitializeChatMessageParsingWorker.ts'
 import { initializeChatNetworkWorker } from '../InitializeChatNetworkWorker/InitializeChatNetworkWorker.ts'
 import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/InitializeChatStorageWorker.ts'
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
@@ -19,7 +20,6 @@ import { clearSlashCommands, registerSlashCommand } from '../SlashCommandRegistr
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
-import { initializeChatMessageParsingWorker } from '../InitializeChatMessageParsingWorker/InitializeChatMessageParsingWorker.ts'
 
 const appendAssistantMessage = async (state: ChatState, assistantText: string): Promise<ChatState> => {
   const assistantMessage: ChatMessage = {
