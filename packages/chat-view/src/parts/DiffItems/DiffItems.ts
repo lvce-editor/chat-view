@@ -7,6 +7,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     oldState.authStatus === newState.authStatus &&
+    oldState.composerAttachments === newState.composerAttachments &&
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&

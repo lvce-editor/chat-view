@@ -6,6 +6,7 @@ export const handleClickNew = async (state: ChatState): Promise<ChatState> => {
   const clearedState = await clearInput(state)
   return focusInput({
     ...clearedState,
+    composerAttachments: [],
     lastNormalViewMode: 'list',
     renamingSessionId: '',
     viewMode: 'list',

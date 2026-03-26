@@ -1,5 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, files: readonly File[] = []): Promise<ChatState> => {
@@ -22,9 +24,11 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   if (!state.selectedSessionId || files.length === 0) {
     return nextState
   }
+  const nextAttachments: ComposerAttachment[] = []
   for (const file of files) {
+    const attachmentId = crypto.randomUUID()
     await appendChatViewEvent({
-      attachmentId: crypto.randomUUID(),
+      attachmentId,
       blob: file,
       mimeType: file.type,
       name: file.name,
@@ -33,6 +37,16 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
       timestamp: new Date().toISOString(),
       type: 'chat-attachment-added',
     })
+    nextAttachments.push({
+      attachmentId,
+      displayType: await getComposerAttachmentDisplayType(file, file.name, file.type),
+      mimeType: file.type,
+      name: file.name,
+      size: file.size,
+    })
   }
-  return nextState
+  return {
+    ...nextState,
+    composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
+  }
 }

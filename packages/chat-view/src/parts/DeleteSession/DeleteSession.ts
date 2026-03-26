@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
@@ -12,6 +13,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   if (filtered.length === 0) {
     return {
       ...state,
+      composerAttachments: [],
       renamingSessionId: '',
       selectedSessionId: '',
       sessions: [],
@@ -20,6 +22,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   }
   const nextSelectedSessionId = getNextSelectedSessionId(filtered, id)
   const loadedSession = await getChatSession(nextSelectedSessionId)
+  const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
   const hydratedSessions = filtered.map((session) => {
     if (session.id !== nextSelectedSessionId) {
       return session
@@ -31,6 +34,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   })
   return {
     ...state,
+    composerAttachments,
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,

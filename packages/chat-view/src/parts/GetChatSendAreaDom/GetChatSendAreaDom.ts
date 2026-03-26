@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -15,6 +16,61 @@ import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
 import * as InputName from '../InputName/InputName.ts'
+
+const getComposerAttachmentLabel = (displayType: ComposerAttachmentDisplayType): string => {
+  switch (displayType) {
+    case 'file':
+      return 'File'
+    case 'image':
+      return 'Image'
+    case 'invalid-image':
+      return 'Invalid image'
+    case 'text-file':
+      return 'Text file'
+    default:
+      return displayType
+  }
+}
+
+const getComposerAttachmentClassName = (displayType: ComposerAttachmentDisplayType): string => {
+  switch (displayType) {
+    case 'file':
+      return ClassNames.ChatComposerAttachment
+    case 'image':
+      return ClassNames.ChatComposerAttachmentImage
+    case 'invalid-image':
+      return ClassNames.ChatComposerAttachmentInvalidImage
+    case 'text-file':
+      return ClassNames.ChatComposerAttachmentTextFile
+    default:
+      return ClassNames.ChatComposerAttachment
+  }
+}
+
+const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachment[]): readonly VirtualDomNode[] => {
+  if (composerAttachments.length === 0) {
+    return []
+  }
+  return [
+    {
+      childCount: composerAttachments.length,
+      className: ClassNames.ChatComposerAttachments,
+      type: VirtualDomElements.Div,
+    },
+    ...composerAttachments.flatMap((attachment) => [
+      {
+        childCount: 1,
+        className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
+        name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
+        type: VirtualDomElements.Div,
+      },
+      {
+        text: `${getComposerAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
+        type: VirtualDomElements.Text,
+      },
+    ]),
+  ]
+}
 
 const getComposerTextAreaDom = (): VirtualDomNode => {
   return {
@@ -33,6 +89,7 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
 
 export const getChatSendAreaDom = (
   composerValue: string,
+  composerAttachments: readonly ComposerAttachment[],
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -56,6 +113,7 @@ export const getChatSendAreaDom = (
     2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
   const primaryControlsCount = 1 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
+  const hasComposerAttachments = composerAttachments.length > 0
 
   return [
     {
@@ -65,11 +123,12 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Form,
     },
     {
-      childCount: hasTodoList ? 3 : 2,
+      childCount: 2 + (hasTodoList ? 1 : 0) + (hasComposerAttachments ? 1 : 0),
       className: ClassNames.ChatSendAreaContent,
       type: VirtualDomElements.Div,
     },
     ...getTodoListDom(hasTodoList, todoListItems),
+    ...getComposerAttachmentsDom(composerAttachments),
     getComposerTextAreaDom(),
     {
       childCount: bottomControlsCount,

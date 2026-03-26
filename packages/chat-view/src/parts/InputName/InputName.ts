@@ -6,6 +6,7 @@ export const Problems = 'Problems'
 export const Composer = 'composer'
 export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
+export const ComposerAttachmentPrefix = 'composer-attachment:'
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
 export const CreatePullRequest = 'create-pull-request'
@@ -87,6 +88,10 @@ export const getRenameIdFromInputName = (name: `${typeof RenamePrefix}${string}`
 
 export const getModelPickerItemInputName = (modelId: string): `${typeof ModelPickerItemPrefix}${string}` => {
   return `${ModelPickerItemPrefix}${modelId}`
+}
+
+export const getComposerAttachmentInputName = (attachmentId: string): `${typeof ComposerAttachmentPrefix}${string}` => {
+  return `${ComposerAttachmentPrefix}${attachmentId}`
 }
 
 export const isModelPickerItemInputName = (name: string): name is `${typeof ModelPickerItemPrefix}${string}` => {

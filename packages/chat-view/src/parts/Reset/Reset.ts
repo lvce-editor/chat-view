@@ -7,6 +7,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   return {
     ...state,
+    composerAttachments: [],
     composerHeight: getMinComposerHeightForState(state),
     composerSelectionEnd: 0,
     composerSelectionStart: 0,

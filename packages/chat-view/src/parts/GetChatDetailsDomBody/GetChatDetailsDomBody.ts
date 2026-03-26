@@ -41,6 +41,7 @@ export const getChatDetailsDom = (
     text(selectedSessionTitle),
     ...getChatSendAreaDom(
       composerValue,
+      [],
       modelPickerOpen,
       models,
       selectedModelId,

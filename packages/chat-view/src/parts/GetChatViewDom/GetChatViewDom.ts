@@ -2,6 +2,7 @@ import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -36,6 +37,7 @@ export interface GetChatVirtualDomOptions {
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
   readonly chatListScrollTop: number
+  readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
   readonly composerFontFamily: string
@@ -88,6 +90,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     authErrorMessage = '',
     authStatus = 'signed-out',
     chatListScrollTop,
+    composerAttachments,
     composerDropActive = false,
     composerDropEnabled = true,
     composerFontFamily,
@@ -143,6 +146,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authEnabled,
         authErrorMessage,
         authStatus,
+        composerAttachments,
         composerDropActive,
         composerDropEnabled,
         composerFontFamily,
@@ -189,6 +193,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authEnabled,
         authErrorMessage,
         authStatus,
+        composerAttachments,
         composerDropActive,
         composerDropEnabled,
         composerFontFamily,
@@ -232,6 +237,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authErrorMessage,
         authStatus,
         chatListScrollTop,
+        composerAttachments,
         composerDropActive,
         composerDropEnabled,
         composerFontFamily,

@@ -1,6 +1,7 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -20,6 +21,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
   readonly chatListScrollTop?: number
+  readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
   readonly composerFontFamily?: string
@@ -79,6 +81,7 @@ export const getChatModeListVirtualDom = ({
   authErrorMessage = '',
   authStatus = 'signed-out',
   chatListScrollTop = 0,
+  composerAttachments,
   composerDropActive = false,
   composerDropEnabled = true,
   composerFontFamily = 'system-ui',
@@ -129,6 +132,7 @@ export const getChatModeListVirtualDom = ({
     ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
+      composerAttachments,
       modelPickerOpen,
       models,
       selectedModelId,
