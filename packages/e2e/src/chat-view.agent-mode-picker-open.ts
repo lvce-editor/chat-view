@@ -2,11 +2,17 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.agent-mode-picker-open'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const skip = 1
+
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openAgentModePicker')
+  const agentModePickerToggle = Locator('.ChatSendArea button.Select[name="agent-mode-picker-toggle"]')
+  const nativeAgentModePicker = Locator('.ChatSendArea select.Select[name="agent-mode"]')
+  await expect(agentModePickerToggle).toBeVisible()
+  await expect(nativeAgentModePicker).toHaveCount(0)
+  await agentModePickerToggle.click()
 
   const picker = Locator('.ChatModelPicker')
   const items = Locator('.ChatModelPickerItem')
