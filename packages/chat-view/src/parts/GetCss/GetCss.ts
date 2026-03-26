@@ -91,6 +91,28 @@ export const getCss = (
   color: var(--vscode-textLink-foreground);
 }
 
+.ChatToolCalls .ChatOrderedList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ChatToolCalls .ChatOrderedListItem{
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+}
+
+.ChatToolCalls .ChatOrderedListMarker{
+  flex: none;
+  min-width: 1.5em;
+}
+
+.ChatToolCalls .ChatOrderedListItemContent{
+  flex: 1;
+  min-width: 0;
+}
+
 `
 
   return `${baseCss}
