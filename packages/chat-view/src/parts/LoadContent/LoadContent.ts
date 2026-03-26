@@ -23,7 +23,7 @@ import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
-import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseAndStoreMessagesContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
@@ -96,7 +96,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const composerAttachments = await getComposerAttachments(selectedSessionId)
   let { parsedMessages } = state
   for (const session of sessions) {
-    parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
+    parsedMessages = await parseAndStoreMessagesContentWithWorkerPreference(parsedMessages, session.messages, useChatMessageParsingWorker)
   }
   const preferredViewMode = savedViewMode || state.viewMode
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
