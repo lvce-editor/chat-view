@@ -45,6 +45,14 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.ChatToolCallFileName{
+  cursor: pointer;
+}
+
+.ChatToolCallFileName:hover{
+  color: var(--vscode-textLink-foreground);
+}
+
 `
 
   return `${baseCss}
