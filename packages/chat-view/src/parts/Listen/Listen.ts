@@ -11,6 +11,7 @@ import { initializeClipBoardWorker } from '../InitializeClipBoardWorker/Initiali
 import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
 import { registerSlashCommands } from '../RegisterSlashCommands/RegisterSlashCommands.ts'
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
+import { initializeTextMeasurementWorker } from '../InitializeTextMeasurementWorker/InitializeTextMeasurementWorker.ts'
 
 export const listen = async (): Promise<void> => {
   registerSlashCommands()
@@ -28,5 +29,6 @@ export const listen = async (): Promise<void> => {
     initializeChatToolWorker(),
     initializeClipBoardWorker(),
     initializeOpenerWorker(),
+    initializeTextMeasurementWorker(),
   ])
 }
