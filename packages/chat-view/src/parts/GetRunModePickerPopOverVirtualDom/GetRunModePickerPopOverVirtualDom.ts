@@ -1,5 +1,6 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { RunMode } from '../RunMode/RunMode.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getCustomSelectOptionVirtualDom } from '../GetCustomSelectOptionVirtualDom/GetCustomSelectOptionVirtualDom.ts'
 import { getCustomSelectPopOverVirtualDom } from '../GetCustomSelectPopOverVirtualDom/GetCustomSelectPopOverVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -14,5 +15,11 @@ const getRunModeOptionsVirtualDom = (selectedRunMode: RunMode): readonly Virtual
 }
 
 export const getRunModePickerPopOverVirtualDom = (selectedRunMode: RunMode): readonly VirtualDomNode[] => {
-  return getCustomSelectPopOverVirtualDom(runModes.length, runModePickerHeight, getRunModeOptionsVirtualDom(selectedRunMode))
+  return getCustomSelectPopOverVirtualDom(
+    runModes.length,
+    runModePickerHeight,
+    getRunModeOptionsVirtualDom(selectedRunMode),
+    ClassNames.RunModePickerContainer,
+    ClassNames.RunModePickerPopOver,
+  )
 }

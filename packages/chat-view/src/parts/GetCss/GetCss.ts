@@ -87,6 +87,19 @@ export const getCss = (
 
 }
 
+.RunModePickerContainer{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.RunModePickerPopOver{
+  overflow: hidden;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border-radius: 8px;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--vscode-editor-background) 50%, black);
+}
+
 .ChatToolCallFileName:hover{
   color: var(--vscode-textLink-foreground);
 }
