@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { ChatToolWorker } from '@lvce-editor/rpc-registry'
+import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getOpenApiAssistantText } from '../src/parts/GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -215,12 +216,12 @@ test('getOpenApiAssistantText should return tool-iterations-exhausted when model
 
     expect(result).toEqual({
       details: 'tool-iterations-exhausted',
-      iterationLimit: 10,
+      iterationLimit: defaultMaxToolCalls,
       type: 'error',
     })
-    expect(fetchInvocations).toHaveLength(10)
+    expect(fetchInvocations).toHaveLength(defaultMaxToolCalls)
     const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
-    expect(executeInvocations).toHaveLength(10)
+    expect(executeInvocations).toHaveLength(defaultMaxToolCalls)
   } finally {
     globalThis.fetch = originalFetch
   }

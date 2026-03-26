@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import type { GetOpenApiAssistantTextErrorResult } from '../src/parts/GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../src/parts/ChatStrings/ChatStrings.ts'
+import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getOpenApiErrorMessage } from '../src/parts/GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 
 const createHttpError = (overrides: Partial<GetOpenApiAssistantTextErrorResult> = {}): GetOpenApiAssistantTextErrorResult => ({
@@ -203,13 +204,13 @@ test('getOpenApiErrorMessage should format tool-iterations-exhausted with zero i
   )
 })
 
-test('getOpenApiErrorMessage should default tool-iterations-exhausted to 10 rounds', () => {
+test('getOpenApiErrorMessage should default tool-iterations-exhausted to the default round limit', () => {
   const result = getOpenApiErrorMessage({
     details: 'tool-iterations-exhausted',
     type: 'error',
   })
 
   expect(result).toBe(
-    'OpenAI request ended after 10 tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop. Please try rephrasing your request, reducing scope, or switching to a different model.',
+    `OpenAI request ended after ${defaultMaxToolCalls} tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop. Please try rephrasing your request, reducing scope, or switching to a different model.`,
   )
 })
