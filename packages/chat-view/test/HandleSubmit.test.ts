@@ -5,6 +5,7 @@ import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionSt
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import { registerSlashCommands } from '../src/parts/Listen/Listen.ts'
+import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 registerSlashCommands()
@@ -674,6 +675,77 @@ test('handleSubmit should inject mentioned file context into ai request messages
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(mockRendererRpc.invocations).toContainEqual(['FileSystem.readFile', 'src/main.ts'])
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+})
+
+test('handleSubmit should render mock OpenAI write_file tool calls from response.completed events', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        linesAdded: 1,
+        linesDeleted: 0,
+      }),
+    'ChatTool.getTools': async () => [],
+  })
+  const notesUri = 'file:///workspace/notes.txt'
+  MockOpenApiStream.reset()
+  MockOpenApiStream.pushChunk(
+    `data: ${JSON.stringify({
+      response: {
+        id: 'resp_01',
+        output: [
+          {
+            arguments: JSON.stringify({ content: 'alpha\\nbeta\\ngamma', uri: notesUri }),
+            call_id: 'call_01',
+            id: 'fc_01',
+            name: 'write_file',
+            status: 'completed',
+            type: 'function_call',
+          },
+        ],
+        status: 'completed',
+      },
+      sequence_number: 1,
+      type: 'response.completed',
+    })}\n\n`,
+  )
+  MockOpenApiStream.pushChunk('data: [DONE]\n\n')
+  MockOpenApiStream.finish()
+
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'add one line to notes.txt',
+    models: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' as const }],
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    streamingEnabled: true,
+    useMockApi: true,
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result.sessions[0].messages).toHaveLength(2)
+  expect(result.sessions[0].messages[1].text).toBe('')
+  expect(result.sessions[0].messages[1].toolCalls).toEqual([
+    {
+      arguments: '{"content":"alpha\\\\nbeta\\\\ngamma","uri":"file:///workspace/notes.txt"}',
+      id: 'call_01',
+      name: 'write_file',
+      result: '{"linesAdded":1,"linesDeleted":0}',
+      status: 'success',
+    },
+  ])
+  expect(mockRendererRpc.invocations.length).toBeGreaterThanOrEqual(2)
+  expect(mockChatToolRpc.invocations).toContainEqual([
+    'ChatTool.execute',
+    'write_file',
+    '{"content":"alpha\\\\nbeta\\\\ngamma","uri":"file:///workspace/notes.txt"}',
+    { assetDir: '', platform: 0 },
+  ])
 })
 
 test('handleSubmit should resolve workspaceUri placeholder in system prompt from selected project', async () => {

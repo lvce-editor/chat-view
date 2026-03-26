@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import {
   backendAccessTokenRequiredMessage,
@@ -17,6 +18,8 @@ import { getMockOpenRouterAssistantText } from '../GetMockOpenRouterAssistantTex
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import { getToolCallExecutionStatus } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
+import { getToolCallResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenApiErrorMessage } from '../GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 import { getOpenApiModelId } from '../GetOpenApiModelId/GetOpenApiModelId.ts'
 import { getOpenRouterAssistantText } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
@@ -241,6 +244,7 @@ export const getAiResponse = async ({
           break
         }
         openAiInput.length = 0
+        const executedToolCalls: StreamingToolCall[] = []
         for (const toolCall of result.responseFunctionCalls) {
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
@@ -252,11 +256,41 @@ export const getAiResponse = async ({
                 }
               : {}),
           })
+          const executionStatus = getToolCallExecutionStatus(content)
+          const toolCallResult = getToolCallResult(toolCall.name, content)
+          executedToolCalls.push({
+            arguments: toolCall.arguments,
+            ...(executionStatus.errorStack
+              ? {
+                  errorStack: executionStatus.errorStack,
+                }
+              : {}),
+            ...(executionStatus.errorMessage
+              ? {
+                  errorMessage: executionStatus.errorMessage,
+                }
+              : {}),
+            id: toolCall.callId,
+            name: toolCall.name,
+            ...(toolCallResult
+              ? {
+                  result: toolCallResult,
+                }
+              : {}),
+            ...(executionStatus.status
+              ? {
+                  status: executionStatus.status,
+                }
+              : {}),
+          })
           openAiInput.push({
             call_id: toolCall.callId,
             output: content,
             type: 'function_call_output',
           })
+        }
+        if (onToolCallsChunk && executedToolCalls.length > 0) {
+          await onToolCallsChunk(executedToolCalls)
         }
       }
     } else if (openApiApiKey) {
