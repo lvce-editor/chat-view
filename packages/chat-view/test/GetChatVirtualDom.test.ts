@@ -125,6 +125,7 @@ test('getChatVirtualDom should wrap model picker and run mode controls together'
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
+  const customSelectContainers = result.filter((node) => node.className === ClassNames.CustomSelectContainer)
   expect(agentModePickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
@@ -138,6 +139,7 @@ test('getChatVirtualDom should wrap model picker and run mode controls together'
     type: VirtualDomElements.Div,
   })
   expect(modelPickerToggle).toBeDefined()
+  expect(customSelectContainers).toHaveLength(3)
   expect(runModePickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
