@@ -5,13 +5,13 @@ export const name = 'chat-view.openai-function-tool-call-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
+  await Chat.mockOpenApiStreamReset()
 
   const sseResponseParts = [
     {
@@ -42,10 +42,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   ]
 
   for (const responsePart of sseResponseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamFinish()
 
   await Chat.handleInput('show readme')
   await Chat.handleSubmit()

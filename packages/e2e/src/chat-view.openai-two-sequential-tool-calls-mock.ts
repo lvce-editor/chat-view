@@ -5,7 +5,7 @@ export const name = 'chat-view.openai-two-sequential-tool-calls-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content of file one')
   await FileSystem.writeFile(`${tmpDir}/file2.txt`, 'content of file two')
@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiStreamReset')
+  await Chat.mockOpenApiStreamReset()
 
   // First API response: AI reads file1.txt
   const firstResponseSseParts = [
@@ -227,20 +227,20 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   ]
 
   for (const responsePart of firstResponseSseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
 
   for (const responsePart of secondResponseSseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
 
   for (const responsePart of thirdResponseSseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamFinish()
 
   await Chat.handleInput('read file1.txt and file2.txt and tell me about them')
   await Chat.handleSubmit()

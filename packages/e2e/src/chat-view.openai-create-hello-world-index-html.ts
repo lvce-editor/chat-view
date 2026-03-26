@@ -15,7 +15,7 @@ const assertEqual = <T>(actual: T, expected: T, message: string): void => {
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -23,8 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.mockOpenApiRequestReset')
-  await Command.execute('Chat.mockOpenApiStreamReset')
+  await Chat.mockOpenApiRequestReset()
+  await Chat.mockOpenApiStreamReset()
 
   const indexHtmlContent = `<html>\n  <body>\n    <h1>Hello World</h1>\n  </body>\n</html>`
   const writeFileArgs = JSON.stringify({
@@ -199,15 +199,15 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   ]
 
   for (const responsePart of firstResponseSseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
 
   for (const responsePart of secondResponseSseParts) {
-    await Command.execute('Chat.mockOpenApiStreamPushChunk', `data: ${JSON.stringify(responsePart)}\n\n`)
+    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
   }
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', 'data: [DONE]\n\n')
-  await Command.execute('Chat.mockOpenApiStreamFinish')
+  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+  await Chat.mockOpenApiStreamFinish()
 
   await Chat.handleInput('create a hello world index html file')
   await Chat.handleSubmit()
@@ -221,7 +221,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const actualContent = await FileSystem.readFile(indexHtmlPath)
   assertEqual(actualContent, indexHtmlContent, 'index.html content')
 
-  const requests = (await Command.execute('Chat.mockOpenApiRequestGetAll')) as readonly MockOpenApiRequest[]
+  const requests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   assertEqual(requests.length, 2, 'OpenAI request count')
 
   const secondPayload = requests[1].payload as {
