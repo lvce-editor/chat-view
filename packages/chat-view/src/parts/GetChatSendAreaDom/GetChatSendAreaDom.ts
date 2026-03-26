@@ -91,12 +91,9 @@ const getComposerTextAreaDom = (): VirtualDomNode => {
 
 export const getChatSendAreaDom = (
   composerValue: string,
-<<<<<<< HEAD
   composerAttachments: readonly ComposerAttachment[],
-=======
   agentMode: AgentMode,
   agentModePickerOpen: boolean,
->>>>>>> origin/main
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,

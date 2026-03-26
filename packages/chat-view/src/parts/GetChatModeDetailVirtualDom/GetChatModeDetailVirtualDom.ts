@@ -142,12 +142,9 @@ export const getChatModeDetailVirtualDom = ({
     ),
     ...getChatSendAreaDom(
       composerValue,
-<<<<<<< HEAD
       composerAttachments,
-=======
       agentMode,
       agentModePickerOpen,
->>>>>>> origin/main
       modelPickerOpen,
       models,
       selectedModelId,

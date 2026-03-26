@@ -8,12 +8,9 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   return {
     ...state,
-<<<<<<< HEAD
-    composerAttachments: [],
-=======
     agentMode: defaultAgentMode,
     agentModePickerOpen: false,
->>>>>>> origin/main
+    composerAttachments: [],
     composerHeight: getMinComposerHeightForState(state),
     composerSelectionEnd: 0,
     composerSelectionStart: 0,

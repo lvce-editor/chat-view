@@ -140,12 +140,9 @@ export const getChatModeListVirtualDom = ({
     ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
-<<<<<<< HEAD
       composerAttachments,
-=======
       agentMode,
       agentModePickerOpen,
->>>>>>> origin/main
       modelPickerOpen,
       models,
       selectedModelId,
