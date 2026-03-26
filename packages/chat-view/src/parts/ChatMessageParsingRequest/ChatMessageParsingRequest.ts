@@ -6,7 +6,5 @@ export const parseAndStoreMessagesContent = async (
   parsedMessages: readonly ParsedMessage[],
   messages: readonly ChatMessage[],
 ): Promise<readonly ParsedMessage[]> => {
-  return ChatMessageParsingWorker.invoke('ChatMessageParsing.parseAndStoreMessagesContent', parsedMessages, messages) as Promise<
-    readonly ParsedMessage[]
-  >
+  return ChatMessageParsingWorker.invoke('ChatParser.parseMessageContent', parsedMessages, messages) as Promise<readonly ParsedMessage[]>
 }
