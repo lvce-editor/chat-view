@@ -9,6 +9,7 @@ import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/Init
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
 import { initializeClipBoardWorker } from '../InitializeClipBoardWorker/InitializeClipBoardWorker.ts'
 import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
+import { initializeTextMeasurementWorker } from '../InitializeTextMeasurementWorker/InitializeTextMeasurementWorker.ts'
 import { registerSlashCommands } from '../RegisterSlashCommands/RegisterSlashCommands.ts'
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -28,5 +29,6 @@ export const listen = async (): Promise<void> => {
     initializeChatToolWorker(),
     initializeClipBoardWorker(),
     initializeOpenerWorker(),
+    initializeTextMeasurementWorker(),
   ])
 }
