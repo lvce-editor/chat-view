@@ -49,7 +49,6 @@ export const getCss = (
   cursor: pointer;
 }
 
-<<<<<<< HEAD
 .ChatComposerAttachments{
   display: flex;
   flex-wrap: wrap;
@@ -86,10 +85,11 @@ export const getCss = (
 .CustomSelectContainer{
   position: relative;
   min-width: 0;
-=======
+
+}
+
 .ChatToolCallFileName:hover{
   color: var(--vscode-textLink-foreground);
->>>>>>> origin/main
 }
 
 `
