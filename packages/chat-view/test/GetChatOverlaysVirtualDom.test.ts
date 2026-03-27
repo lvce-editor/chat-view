@@ -9,6 +9,10 @@ test('getChatOverlaysVirtualDom should return empty array when no overlays are v
   const result = getChatOverlaysVirtualDom({
     agentMode: 'agent',
     agentModePickerVisible: false,
+    composerAttachmentPreviewOverlayAttachmentId: '',
+    composerAttachmentPreviewOverlayError: false,
+    composerAttachmentPreviewOverlayVisible: false,
+    composerAttachments: [],
     dropOverlayVisible: false,
     modelPickerSearchValue: '',
     modelPickerVisible: false,
@@ -25,6 +29,10 @@ test('getChatOverlaysVirtualDom should wrap all visible overlays in ChatOverlays
   const result = getChatOverlaysVirtualDom({
     agentMode: 'agent',
     agentModePickerVisible: true,
+    composerAttachmentPreviewOverlayAttachmentId: '',
+    composerAttachmentPreviewOverlayError: false,
+    composerAttachmentPreviewOverlayVisible: false,
+    composerAttachments: [],
     dropOverlayVisible: true,
     modelPickerSearchValue: '',
     modelPickerVisible: true,
