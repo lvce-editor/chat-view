@@ -4,7 +4,7 @@ import { MenuChatAttachment } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleContextMenuChatImageAttachment = async (state: ChatState, name: string, eventX: number, eventY: number): Promise<ChatState> => {
-  const getFallbackAttachment = () => {
+  const getFallbackAttachment = (): any => {
     const attachmentsWithPreview = state.composerAttachments.filter((attachment) => attachment.previewSrc)
     if (attachmentsWithPreview.length !== 1) {
       return undefined
