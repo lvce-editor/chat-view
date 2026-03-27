@@ -148,6 +148,26 @@ export const getCss = (
   color: var(--vscode-textLink-foreground);
 }
 
+.ChatOrderedListItem{
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+}
+
+.ChatOrderedListMarker{
+  flex: none;
+  min-width: 1.5em;
+}
+
+.ChatOrderedListItemContent{
+  flex: 1;
+  min-width: 0;
+}
+
+.ChatOrderedListItemPrefix{
+  white-space: nowrap;
+}
+
 .ChatToolCalls .ChatOrderedList{
   list-style: none;
   margin: 0;

@@ -39,7 +39,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const assistantMessage = messages.nth(1)
   const topLevelOrdered = assistantMessage.locator('.ChatMessageContent > ol')
   const topLevelOrderedItems = assistantMessage.locator('.ChatMessageContent > ol > li')
-  const nestedUnordered = assistantMessage.locator('.ChatMessageContent > ol > li > ul')
+  const nestedUnordered = assistantMessage.locator('.ChatMessageContent > ol > li > .ChatOrderedListItemContent > ul')
   const topLevelParagraphs = assistantMessage.locator('.ChatMessageContent > p')
   await expect(topLevelOrdered).toHaveCount(1)
   await expect(topLevelOrderedItems).toHaveCount(3)
