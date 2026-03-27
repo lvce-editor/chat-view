@@ -26,7 +26,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(2)
   await expect(imageAttachment).toHaveText('xImage · photo.svg')
-  await expect(textAttachment).toHaveText('Text file · notes.txt')
+  await expect(textAttachment).toHaveText('xText file · notes.txt')
   await expect(previews).toHaveCount(1)
   await expect(imageAttachment.locator('.ChatComposerAttachmentPreview')).toHaveCount(1)
   await expect(imageAttachment.locator('.ChatComposerAttachmentPreview')).toHaveAttribute('src', svgPreviewSrc)

@@ -182,10 +182,33 @@ test('getChatVirtualDom should render remove button before image attachment labe
     buttonType: 'button',
     className: ClassNames.ChatComposerAttachmentRemoveButton,
     onClick: DomEventListenerFunctions.HandleClick,
-    title: 'Remove image attachment',
+    title: 'Remove attachment',
     type: VirtualDomElements.Button,
   })
   expect(removeLabel).toBeDefined()
+  expect(attachmentLabel).toBeDefined()
+})
+
+test('getChatVirtualDom should render remove button for text file attachment', () => {
+  const result = renderChatView({
+    composerAttachments: [{ attachmentId: 'attachment-1', displayType: 'text-file', mimeType: 'text/plain', name: 'notes.txt', size: 5 }],
+    viewMode: 'detail',
+  })
+  const attachment = result.find((node) => node.name === 'composer-attachment:attachment-1')
+  const removeButton = result.find((node) => node.name === 'composer-attachment-remove:attachment-1')
+  const attachmentLabel = result.find((node) => node.text === 'Text file · notes.txt')
+  expect(attachment).toMatchObject({
+    childCount: 2,
+    className: `${ClassNames.ChatComposerAttachment} ${ClassNames.ChatComposerAttachmentTextFile}`,
+    type: VirtualDomElements.Div,
+  })
+  expect(removeButton).toMatchObject({
+    buttonType: 'button',
+    className: ClassNames.ChatComposerAttachmentRemoveButton,
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Remove attachment',
+    type: VirtualDomElements.Button,
+  })
   expect(attachmentLabel).toBeDefined()
 })
 
