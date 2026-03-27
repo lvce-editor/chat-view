@@ -17,6 +17,7 @@ export const createSession = async (state: ChatState, projectIdOverride = ''): P
   return {
     ...state,
     composerAttachments: [],
+    composerAttachmentsHeight: 0,
     projectExpandedIds: state.projectExpandedIds.includes(projectId) ? state.projectExpandedIds : [...state.projectExpandedIds, projectId],
     renamingSessionId: '',
     selectedProjectId: projectId,

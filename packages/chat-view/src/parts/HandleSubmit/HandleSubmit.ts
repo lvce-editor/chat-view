@@ -189,6 +189,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       FocusInput.focusInput({
         ...state,
         composerAttachments: [],
+        composerAttachmentsHeight: 0,
         composerHeight: getMinComposerHeightForState(state),
         composerSelectionEnd: 0,
         composerSelectionStart: 0,
@@ -232,6 +233,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...state,
+        composerAttachments: [],
+        composerAttachmentsHeight: 0,
         composerHeight: getMinComposerHeightForState(state),
         composerSelectionEnd: 0,
         composerSelectionStart: 0,

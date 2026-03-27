@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
@@ -14,6 +15,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
     return {
       ...state,
       composerAttachments: [],
+      composerAttachmentsHeight: 0,
       renamingSessionId: '',
       selectedSessionId: '',
       sessions: [],
@@ -35,6 +37,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   return {
     ...state,
     composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,

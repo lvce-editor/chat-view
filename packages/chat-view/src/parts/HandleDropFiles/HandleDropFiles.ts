@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, files: readonly File[] = []): Promise<ChatState> => {
@@ -48,5 +49,6 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   return {
     ...nextState,
     composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
+    composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], state.width),
   }
 }

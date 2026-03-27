@@ -3,6 +3,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
@@ -116,6 +117,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     chatHistoryEnabled,
     chatListScrollTop,
     composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
     composerDropActive: false,
     composerDropEnabled,
     composerValue: savedComposerValue ?? state.composerValue,

@@ -41,6 +41,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
       size: files[0].size,
     }),
   ])
+  expect(newState.composerAttachmentsHeight).toBeGreaterThan(0)
   const events = await getChatViewEvents('session-1')
   expect(events).toHaveLength(1)
   expect(events[0]).toMatchObject({
@@ -78,6 +79,7 @@ test('handleDropFiles is no-op when no session is selected', async () => {
 
   expect(newState.composerDropActive).toBe(false)
   expect(newState.composerAttachments).toHaveLength(0)
+  expect(newState.composerAttachmentsHeight).toBe(0)
   const events = await getChatViewEvents()
   expect(events).toHaveLength(0)
   expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])

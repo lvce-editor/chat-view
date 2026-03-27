@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
@@ -12,6 +13,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
     return {
       ...state,
       composerAttachments: [],
+      composerAttachmentsHeight: 0,
       projectExpandedIds,
       selectedProjectId: projectId,
       selectedSessionId: '',
@@ -33,6 +35,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   return {
     ...state,
     composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
     projectExpandedIds,
     selectedProjectId: projectId,
     selectedSessionId,
