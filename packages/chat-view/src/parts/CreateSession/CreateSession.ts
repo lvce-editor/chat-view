@@ -1,6 +1,7 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { focusInput } from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 
 export const createSession = async (state: ChatState, projectIdOverride = ''): Promise<ChatState> => {
@@ -14,7 +15,7 @@ export const createSession = async (state: ChatState, projectIdOverride = ''): P
     title: `Chat ${state.sessions.length + 1}`,
   }
   await saveChatSession(session)
-  return {
+  return focusInput({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
@@ -23,5 +24,5 @@ export const createSession = async (state: ChatState, projectIdOverride = ''): P
     selectedProjectId: projectId,
     selectedSessionId: id,
     sessions: [...state.sessions, session],
-  }
+  })
 }
