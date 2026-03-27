@@ -1,10 +1,12 @@
 import { ChatMessageParsingWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
-export const parseAndStoreMessagesContent = async (
-  parsedMessages: readonly ParsedMessage[],
-  messages: readonly ChatMessage[],
-): Promise<readonly ParsedMessage[]> => {
-  return ChatMessageParsingWorker.invoke('ChatParser.parseMessageContent', parsedMessages, messages) as Promise<readonly ParsedMessage[]>
+export const parseMessageContent = async (rawMessage: string): Promise<readonly MessageIntermediateNode[]> => {
+  return ChatMessageParsingWorker.invoke('ChatMessageParsing.parseMessageContent', rawMessage) as Promise<readonly MessageIntermediateNode[]>
+}
+
+export const parseMessageContents = async (rawMessages: readonly string[]): Promise<readonly (readonly MessageIntermediateNode[])[]> => {
+  return ChatMessageParsingWorker.invoke('ChatMessageParsing.parseMessageContents', rawMessages) as Promise<
+    readonly (readonly MessageIntermediateNode[])[]
+  >
 }

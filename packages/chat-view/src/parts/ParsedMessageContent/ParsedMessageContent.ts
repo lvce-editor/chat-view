@@ -7,7 +7,7 @@ import type {
   MessageListItemNode,
   MessageTableCellNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import { parseAndStoreMessagesContent as parseAndStoreMessagesContentInWorker } from '../ChatMessageParsingRequest/ChatMessageParsingRequest.ts'
+import { parseMessageContents as parseMessageContentsInWorker } from '../ChatMessageParsingRequest/ChatMessageParsingRequest.ts'
 import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const emptyMessageContent: readonly MessageIntermediateNode[] = [
@@ -210,6 +210,30 @@ export const parseAndStoreMessagesContent = async (
   let nextParsedMessages = parsedMessages
   for (const message of messages) {
     nextParsedMessages = await parseAndStoreMessageContent(nextParsedMessages, message)
+  }
+  return nextParsedMessages
+}
+
+const getMessagesNeedingParsing = (parsedMessages: readonly ParsedMessage[], messages: readonly ChatMessage[]): readonly ChatMessage[] => {
+  return messages.filter((message) => {
+    const existingParsedMessage = parsedMessages.find((item) => item.id === message.id)
+    return !existingParsedMessage || existingParsedMessage.text !== message.text
+  })
+}
+
+const parseAndStoreMessagesContentInWorker = async (
+  parsedMessages: readonly ParsedMessage[],
+  messages: readonly ChatMessage[],
+): Promise<readonly ParsedMessage[]> => {
+  const messagesNeedingParsing = getMessagesNeedingParsing(parsedMessages, messages)
+  if (messagesNeedingParsing.length === 0) {
+    return parsedMessages
+  }
+  const parsedContents = await parseMessageContentsInWorker(messagesNeedingParsing.map((message) => message.text))
+  let nextParsedMessages = parsedMessages
+  for (const [index, message] of messagesNeedingParsing.entries()) {
+    const parsedContent = message.text === '' ? emptyMessageContent : parsedContents[index]
+    nextParsedMessages = setParsedMessageContent(nextParsedMessages, message.id, message.text, parsedContent)
   }
   return nextParsedMessages
 }
