@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
@@ -47,9 +48,11 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     })
   }
   const composerHeight = await getComposerHeight(state, value)
+  const composerAttachmentsHeight = getComposerAttachmentsHeight(state.composerAttachments, state.width)
   return {
     ...state,
     chatInputHistoryDraft: state.chatInputHistoryIndex === -1 ? value : state.chatInputHistoryDraft,
+    composerAttachmentsHeight,
     composerHeight,
     composerSelectionEnd: value.length,
     composerSelectionStart: value.length,

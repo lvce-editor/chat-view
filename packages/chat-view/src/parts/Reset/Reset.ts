@@ -11,6 +11,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     agentMode: defaultAgentMode,
     agentModePickerOpen: false,
     composerAttachments: [],
+    composerAttachmentsHeight: 0,
     composerHeight: getMinComposerHeightForState(state),
     composerSelectionEnd: 0,
     composerSelectionStart: 0,

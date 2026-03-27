@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const exists = state.sessions.some((session) => session.id === id)
@@ -21,6 +22,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   return {
     ...state,
     composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
     lastNormalViewMode: state.viewMode === 'chat-focus' ? state.lastNormalViewMode : 'detail',
     renamingSessionId: '',
     selectedSessionId: id,

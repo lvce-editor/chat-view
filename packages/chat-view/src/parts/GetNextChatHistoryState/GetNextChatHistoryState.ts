@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 
 const getHistoryValueForIndex = (history: readonly string[], index: number): string => {
@@ -18,10 +19,12 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
     const nextDraft = state.chatInputHistoryIndex === -1 ? state.composerValue : state.chatInputHistoryDraft
     const nextComposerValue = getHistoryValueForIndex(state.chatInputHistory, nextIndex)
     const composerHeight = await getComposerHeight(state, nextComposerValue)
+    const composerAttachmentsHeight = getComposerAttachmentsHeight(state.composerAttachments, state.width)
     return {
       ...state,
       chatInputHistoryDraft: nextDraft,
       chatInputHistoryIndex: nextIndex,
+      composerAttachmentsHeight,
       composerHeight,
       composerSelectionEnd: nextComposerValue.length,
       composerSelectionStart: nextComposerValue.length,
@@ -35,9 +38,11 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
   const nextIndex = state.chatInputHistoryIndex - 1
   if (nextIndex === -1) {
     const composerHeight = await getComposerHeight(state, state.chatInputHistoryDraft)
+    const composerAttachmentsHeight = getComposerAttachmentsHeight(state.composerAttachments, state.width)
     return {
       ...state,
       chatInputHistoryIndex: -1,
+      composerAttachmentsHeight,
       composerHeight,
       composerSelectionEnd: state.chatInputHistoryDraft.length,
       composerSelectionStart: state.chatInputHistoryDraft.length,
@@ -47,9 +52,11 @@ export const getNextChatHistoryState = async (state: ChatState, direction: 'up' 
   }
   const nextComposerValue = getHistoryValueForIndex(state.chatInputHistory, nextIndex)
   const composerHeight = await getComposerHeight(state, nextComposerValue)
+  const composerAttachmentsHeight = getComposerAttachmentsHeight(state.composerAttachments, state.width)
   return {
     ...state,
     chatInputHistoryIndex: nextIndex,
+    composerAttachmentsHeight,
     composerHeight,
     composerSelectionEnd: nextComposerValue.length,
     composerSelectionStart: nextComposerValue.length,

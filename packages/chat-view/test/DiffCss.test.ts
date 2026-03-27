@@ -79,6 +79,12 @@ test('isEqual should return false when chatSendAreaPaddingTop changes', () => {
   expect(DiffCss.isEqual(oldState, newState)).toBe(false)
 })
 
+test('isEqual should return false when composerAttachmentsHeight changes', () => {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), composerAttachmentsHeight: 34 }
+  expect(DiffCss.isEqual(oldState, newState)).toBe(false)
+})
+
 test('isEqual should return false when chatFocusContentMaxWidth changes', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = { ...createDefaultState(), chatFocusContentMaxWidth: 840 }
