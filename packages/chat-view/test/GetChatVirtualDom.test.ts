@@ -532,6 +532,9 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const composer = result.find((node) => node.name === 'composer')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
+  const projectChevron = result.find(
+    (node) => node.className === `${ClassNames.ProjectListChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
+  )
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
@@ -547,6 +550,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
+  expect(projectChevron).toBeDefined()
   expect(backToChatListButton).toMatchObject({
     className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
     name: 'back',
@@ -558,6 +562,21 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
+})
+
+test('getChatVirtualDOm should render collapsed project chevron icon in chat-focus mode', () => {
+  const result = renderChatView({
+    projectExpandedIds: [],
+    projects: [{ id: 'project-1', name: '_blank', uri: '' }],
+    selectedProjectId: 'project-1',
+    viewMode: 'chat-focus',
+  })
+
+  const projectChevron = result.find(
+    (node) => node.className === `${ClassNames.ProjectListChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronRight}`,
+  )
+
+  expect(projectChevron).toBeDefined()
 })
 
 test('getChatVirtualDOm should render session list entries', () => {
