@@ -9,6 +9,7 @@ import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest, makeStreamingApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
+import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
@@ -811,7 +812,7 @@ export const getOpenApiAssistantText = async (
     workspaceUri = '',
   } = options ?? { stream: false }
   const openAiInput: any[] = messages.map((message) => ({
-    content: message.text,
+    content: getChatMessageOpenAiContent(message),
     role: message.role,
   }))
   const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)

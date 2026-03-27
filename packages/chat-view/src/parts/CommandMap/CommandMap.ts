@@ -15,6 +15,7 @@ import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+import * as GetMockOpenApiRequests from '../GetMockOpenApiRequests/GetMockOpenApiRequests.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
@@ -129,6 +130,7 @@ export const commandMap = {
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getMenuEntryIds': getMenuEntryIds,
+  'Chat.getMockOpenApiRequests': wrapGetter(GetMockOpenApiRequests.getMockOpenApiRequests),
   'Chat.getQuickPickMenuEntries': getQuickPickMenuEntries,
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),

@@ -1,6 +1,7 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
@@ -20,6 +21,7 @@ export interface GetAiResponseOptions {
   readonly nextMessageId: number
   readonly onDataEvent?: (value: unknown) => Promise<void>
   readonly onEventStreamFinished?: () => Promise<void>
+  readonly onMockOpenApiRequestCaptured?: (request: MockOpenApiRequest) => Promise<void> | void
   readonly onTextChunk?: (chunk: string) => Promise<void>
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly openApiApiBaseUrl: string
