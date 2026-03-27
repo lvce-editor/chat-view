@@ -14,6 +14,7 @@ import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleV
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
 import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
+import { getScrollDownButtonDom } from '../GetScrollDownButtonDom/GetScrollDownButtonDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
@@ -159,12 +160,20 @@ export const getChatSendAreaDom = (
   todoListItems: readonly TodoListItem[],
   showCreatePullRequestButton = false,
   voiceDictationEnabled = false,
+  scrollDownButtonEnabled = false,
+  messagesAutoScrollEnabled = true,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const showAgentModePicker = hasSpaceForAgentModePicker
   const showResponsiveRunModePicker = showRunMode && hasSpaceForRunModePicker
+  const showScrollDownButton = scrollDownButtonEnabled && !messagesAutoScrollEnabled
   const bottomControlsCount =
-    2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+    2 +
+    (usageOverviewEnabled ? 1 : 0) +
+    (addContextButtonEnabled ? 1 : 0) +
+    (showCreatePullRequestButton ? 1 : 0) +
+    (voiceDictationEnabled ? 1 : 0) +
+    (showScrollDownButton ? 1 : 0)
   const primaryControlsCount = 1 + (showAgentModePicker ? 1 : 0) + (reasoningPickerEnabled ? 1 : 0) + (showResponsiveRunModePicker ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
@@ -204,6 +213,7 @@ export const getChatSendAreaDom = (
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
+    ...(showScrollDownButton ? getScrollDownButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

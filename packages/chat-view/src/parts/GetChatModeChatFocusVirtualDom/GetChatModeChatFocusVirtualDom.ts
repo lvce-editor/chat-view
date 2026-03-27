@@ -36,6 +36,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -55,6 +56,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -87,6 +89,7 @@ export const getChatModeChatFocusVirtualDom = ({
   composerValue,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
+  messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -106,6 +109,7 @@ export const getChatModeChatFocusVirtualDom = ({
   reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
+  scrollDownButtonEnabled,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
@@ -179,6 +183,8 @@ export const getChatModeChatFocusVirtualDom = ({
       todoListItems,
       showCreatePullRequestButton,
       voiceDictationEnabled,
+      scrollDownButtonEnabled,
+      messagesAutoScrollEnabled,
     ),
     ...getChatOverlaysVirtualDom({
       agentMode,
