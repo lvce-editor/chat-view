@@ -95,6 +95,33 @@ test('resize should recompute composer height when width changes', async () => {
   expect(result.composerHeight).toBe(48)
 })
 
+test('resize should recompute attachment height when width changes', async () => {
+  const getComposerHeight = jest.fn(async (_state: ChatState, _value: string, _width: number) => 48)
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerAttachments: [
+      {
+        attachmentId: 'attachment-1',
+        displayType: 'text-file',
+        mimeType: 'text/plain',
+        name: 'very-long-attachment-name.txt',
+        size: 1,
+      },
+      {
+        attachmentId: 'attachment-2',
+        displayType: 'text-file',
+        mimeType: 'text/plain',
+        name: 'second-very-long-attachment-name.txt',
+        size: 1,
+      },
+    ],
+    width: 400,
+  }
+  const result = await Resize.resize(state, { width: 200 }, getComposerHeight)
+  expect(getComposerHeight).not.toHaveBeenCalled()
+  expect(result.composerAttachmentsHeight).toBeGreaterThan(0)
+})
+
 test('resize should preserve composer height when width does not change', async () => {
   const getComposerHeight = jest.fn(async (_state: ChatState, _value: string, _width: number) => 48)
   const state: ChatState = {

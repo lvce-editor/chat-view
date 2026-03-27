@@ -35,6 +35,33 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
+test('handleSubmit should clear composer attachments after submit', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerAttachments: [
+      {
+        attachmentId: 'attachment-1',
+        displayType: 'text-file' as const,
+        mimeType: 'text/plain',
+        name: 'notes.txt',
+        size: 12,
+      },
+    ],
+    composerAttachmentsHeight: 34,
+    composerValue: 'hello',
+    viewMode: 'detail' as const,
+  }
+  const result = await HandleSubmit.handleSubmit(state)
+  expect(result.composerAttachments).toEqual([])
+  expect(result.composerAttachmentsHeight).toBe(0)
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
 test('handleSubmit should dedupe consecutive history entries', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

@@ -7,6 +7,7 @@ export const handleClickNew = async (state: ChatState): Promise<ChatState> => {
   return focusInput({
     ...clearedState,
     composerAttachments: [],
+    composerAttachmentsHeight: 0,
     lastNormalViewMode: 'list',
     renamingSessionId: '',
     viewMode: 'list',

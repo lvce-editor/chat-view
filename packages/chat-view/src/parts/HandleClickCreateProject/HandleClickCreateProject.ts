@@ -41,6 +41,7 @@ export const handleClickCreateProject = async (state: ChatState): Promise<ChatSt
   return {
     ...state,
     composerAttachments: [],
+    composerAttachmentsHeight: 0,
     projects: [...state.projects, project],
     selectedProjectId: project.id,
     selectedSessionId: '',

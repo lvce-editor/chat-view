@@ -36,6 +36,7 @@ export interface ChatState {
   readonly chatSendAreaPaddingRight: number
   readonly chatSendAreaPaddingTop: number
   readonly composerAttachments: readonly ComposerAttachment[]
+  readonly composerAttachmentsHeight: number
   readonly composerDropActive: boolean
   readonly composerDropEnabled: boolean
   readonly composerFontFamily: string
