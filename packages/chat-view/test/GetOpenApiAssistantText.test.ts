@@ -161,6 +161,98 @@ test('getOpenApiAssistantText should omit disabled tools from request payload', 
   }
 })
 
+test('getOpenApiAssistantText should omit reasoning effort for unsupported models', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'ok' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'gpt-4o',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        reasoningEffort: 'high',
+        stream: false,
+        supportsReasoningEffort: false,
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'ok',
+      type: 'success',
+    })
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestBody.reasoning).toBeUndefined()
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getOpenApiAssistantText should include reasoning effort for supported models', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'ok' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      'gpt-5-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        reasoningEffort: 'high',
+        stream: false,
+        supportsReasoningEffort: true,
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'ok',
+      type: 'success',
+    })
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    expect(requestBody.reasoning).toEqual({
+      effort: 'high',
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should return tool-iterations-exhausted when model keeps requesting tools', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.execute': async () => '{"error":"Unknown tool: invalid_tool"}',
