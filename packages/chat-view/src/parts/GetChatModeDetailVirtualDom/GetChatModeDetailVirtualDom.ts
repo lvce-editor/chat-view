@@ -14,12 +14,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
-<<<<<<< HEAD
-import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
-import { getComposerAttachmentPreviewOverlayVirtualDom } from '../GetComposerAttachmentPreviewOverlayVirtualDom/GetComposerAttachmentPreviewOverlayVirtualDom.ts'
-=======
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
->>>>>>> origin/main
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 
 export interface GetChatModeDetailVirtualDomOptions {
@@ -128,18 +123,13 @@ export const getChatModeDetailVirtualDom = ({
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
-<<<<<<< HEAD
-  const chatRootChildCount =
-    3 +
-    (isDropOverlayVisible ? 1 : 0) +
-    (isComposerAttachmentPreviewOverlayVisible ? 1 : 0) +
-    (isAgentModePickerVisible ? 1 : 0) +
-    (isNewModelPickerVisible ? 1 : 0) +
-    (isRunModePickerVisible ? 1 : 0)
-=======
-  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const hasVisibleOverlays =
+    isDropOverlayVisible ||
+    isComposerAttachmentPreviewOverlayVisible ||
+    isAgentModePickerVisible ||
+    isNewModelPickerVisible ||
+    isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
->>>>>>> origin/main
   return [
     {
       childCount: chatRootChildCount,
@@ -187,35 +177,13 @@ export const getChatModeDetailVirtualDom = ({
       voiceDictationEnabled,
     ),
 <<<<<<< HEAD
-    ...(isDropOverlayVisible
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
-            name: InputName.ComposerDropTarget,
-            onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-            onDragOver: DomEventListenerFunctions.HandleDragOver,
-            onDrop: DomEventListenerFunctions.HandleDrop,
-            type: VirtualDomElements.Div,
-          },
-          {
-            text: Strings.attachImageAsContext(),
-            type: VirtualDomElements.Text,
-          },
-        ]
-      : []),
-    ...getComposerAttachmentPreviewOverlayVirtualDom(
-      composerAttachments,
-      composerAttachmentPreviewOverlayAttachmentId,
-      composerAttachmentPreviewOverlayError,
-    ),
-    ...(isAgentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
-    ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
-=======
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,
+      composerAttachmentPreviewOverlayAttachmentId,
+      composerAttachmentPreviewOverlayError,
+      composerAttachmentPreviewOverlayVisible: isComposerAttachmentPreviewOverlayVisible,
+      composerAttachments,
       dropOverlayVisible: isDropOverlayVisible,
       modelPickerSearchValue,
       modelPickerVisible: isNewModelPickerVisible,
@@ -224,6 +192,5 @@ export const getChatModeDetailVirtualDom = ({
       selectedModelId,
       visibleModels,
     }),
->>>>>>> origin/main
   ]
 }

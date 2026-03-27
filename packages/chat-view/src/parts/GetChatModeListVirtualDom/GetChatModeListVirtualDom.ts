@@ -11,14 +11,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
-<<<<<<< HEAD
-import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
-import { getComposerAttachmentPreviewOverlayVirtualDom } from '../GetComposerAttachmentPreviewOverlayVirtualDom/GetComposerAttachmentPreviewOverlayVirtualDom.ts'
-import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
-import * as InputName from '../InputName/InputName.ts'
-=======
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
->>>>>>> origin/main
 
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -114,18 +107,13 @@ export const getChatModeListVirtualDom = ({
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
-<<<<<<< HEAD
-  const chatRootChildCount =
-    3 +
-    (isDropOverlayVisible ? 1 : 0) +
-    (isComposerAttachmentPreviewOverlayVisible ? 1 : 0) +
-    (isAgentModePickerVisible ? 1 : 0) +
-    (isNewModelPickerVisible ? 1 : 0) +
-    (isRunModePickerVisible ? 1 : 0)
-=======
-  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const hasVisibleOverlays =
+    isDropOverlayVisible ||
+    isComposerAttachmentPreviewOverlayVisible ||
+    isAgentModePickerVisible ||
+    isNewModelPickerVisible ||
+    isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
->>>>>>> origin/main
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
     searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
@@ -165,19 +153,13 @@ export const getChatModeListVirtualDom = ({
       voiceDictationEnabled,
     ),
 <<<<<<< HEAD
-    ...getDropOverlayVirtualDom(isDropOverlayVisible),
-    ...getComposerAttachmentPreviewOverlayVirtualDom(
-      composerAttachments,
-      composerAttachmentPreviewOverlayAttachmentId,
-      composerAttachmentPreviewOverlayError,
-    ),
-    ...(isAgentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
-    ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
-=======
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,
+      composerAttachmentPreviewOverlayAttachmentId,
+      composerAttachmentPreviewOverlayError,
+      composerAttachmentPreviewOverlayVisible: isComposerAttachmentPreviewOverlayVisible,
+      composerAttachments,
       dropOverlayVisible: isDropOverlayVisible,
       modelPickerSearchValue,
       modelPickerVisible: isNewModelPickerVisible,
@@ -186,6 +168,5 @@ export const getChatModeListVirtualDom = ({
       selectedModelId,
       visibleModels,
     }),
->>>>>>> origin/main
   ]
 }
