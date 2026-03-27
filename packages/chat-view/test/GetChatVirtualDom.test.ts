@@ -586,6 +586,9 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   const composer = result.find((node) => node.name === 'composer')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
+  const projectChevron = result.find(
+    (node) => node.className === `${ClassNames.ProjectListChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
+  )
   const focusTitle = result.find((node) => node.text === 'Chat 1')
   const addActionButton = result.find((node) => node.name === 'focus-add-action')
   const openInVsCodeButton = result.find((node) => node.name === 'focus-open-in-vscode')
@@ -623,6 +626,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   expect(composer).toBeDefined()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
+  expect(projectChevron).toBeDefined()
   expect(backToChatListButton).toMatchObject({
     childCount: 1,
     className: ClassNames.IconButton,
@@ -662,6 +666,21 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   })
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
+})
+
+test('getChatVirtualDOm should render collapsed project chevron icon in chat-focus mode', () => {
+  const result = renderChatView({
+    projectExpandedIds: [],
+    projects: [{ id: 'project-1', name: '_blank', uri: '' }],
+    selectedProjectId: 'project-1',
+    viewMode: 'chat-focus',
+  })
+
+  const projectChevron = result.find(
+    (node) => node.className === `${ClassNames.ProjectListChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronRight}`,
+  )
+
+  expect(projectChevron).toBeDefined()
 })
 
 test('getChatVirtualDOm should render session list entries', () => {

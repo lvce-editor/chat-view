@@ -39,11 +39,14 @@ export const getProjectGroupDom = (
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 1,
-      className: ClassNames.ProjectListChevron,
-      type: VirtualDomElements.Span,
+      childCount: 0,
+      className: mergeClassNames(
+        ClassNames.ProjectListChevron,
+        ClassNames.MaskIcon,
+        expanded ? ClassNames.MaskIconChevronDown : ClassNames.MaskIconChevronRight,
+      ),
+      type: VirtualDomElements.Div,
     },
-    text(expanded ? '▾' : '▸'),
     {
       childCount: 0,
       className: 'MaskIcon MaskIconFolder',

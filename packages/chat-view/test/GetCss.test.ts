@@ -11,6 +11,9 @@ test.skip('getCss should include attachment height in chat send area height', ()
   expect(css).toContain('pointer-events: none;')
   expect(css).toContain('.ChatViewDropOverlayActive{')
   expect(css).toContain('background: rgba(255, 255, 255, 0.1);')
+  expect(css).toContain('.ProjectListChevron{')
+  expect(css).toContain('height: 16px;')
+  expect(css).toContain('width: 16px;')
 })
 
 test.skip('getCss should size chat focus messages to their content width', () => {
