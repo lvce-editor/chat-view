@@ -38,13 +38,7 @@ export const getToolCallCreateDirectoryVirtualDom = (toolCall: ChatToolCall): re
       type: VirtualDomElements.Span,
     },
     text('create_directory '),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    ...getToolCallFileNameDom(directoryName, fileNameClickableProps),
+    ...getToolCallFileNameDom(directoryName, { clickableProps: fileNameClickableProps }),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }

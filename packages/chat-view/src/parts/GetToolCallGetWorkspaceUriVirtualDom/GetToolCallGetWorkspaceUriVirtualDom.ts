@@ -34,13 +34,7 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
       type: VirtualDomElements.Span,
     },
     text('get_workspace_uri '),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    ...getToolCallFileNameDom(fileName, fileNameClickableProps),
+    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }
