@@ -16,4 +16,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(dropOverlay).toBeVisible()
   await expect(dropOverlay).toHaveText('Attach Image as Context')
+
+  await Command.execute('Chat.handleDragLeave', 'composer-drop-target')
+
+  await expect(dropOverlay).toBeHidden()
 }
