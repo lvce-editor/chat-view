@@ -136,6 +136,10 @@ export const getCss = (
   pointer-events: auto;
 }
 
+.ChatViewDropOverlayActive{
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .RunModePickerPopOver{
   overflow: hidden;
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
