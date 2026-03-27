@@ -4,6 +4,8 @@ export const name = 'chat-view.file-drop-10-images'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 
+export const skip = 1
+
 const createImageFiles = (count: number): readonly File[] => {
   return Array.from({ length: count }, (_, index) => new File([svgContent], `photo-${index + 1}.svg`, { type: 'image/svg+xml' }))
 }

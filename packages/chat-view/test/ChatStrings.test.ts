@@ -28,6 +28,7 @@ const zeroArgCases = [
   ['assistant', 'Assistant'],
   ['composePlaceholder', 'Type your message. Enter to send.'],
   ['attachImageAsContext', 'Attach Image as Context'],
+  ['removeImageAttachment', 'Remove image attachment'],
   ['openRouterApiKeyPlaceholder', 'Enter OpenRouter API key'],
   ['openApiApiKeyPlaceholder', 'Enter OpenAI API key'],
   ['sendMessage', 'Send message'],

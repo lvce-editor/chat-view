@@ -17,6 +17,7 @@ import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/Ha
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
 import { handleReasoningEffortChange } from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
+import { handleRemoveComposerAttachment } from '../HandleRemoveComposerAttachment/HandleRemoveComposerAttachment.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
@@ -120,6 +121,10 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     case InputName.isRenameInputName(name): {
       const sessionId = InputName.getRenameIdFromInputName(name)
       return startRename(state, sessionId)
+    }
+    case InputName.isComposerAttachmentRemoveInputName(name): {
+      const attachmentId = InputName.getAttachmentIdFromComposerAttachmentRemoveInputName(name)
+      return handleRemoveComposerAttachment(state, attachmentId)
     }
     case name === InputName.SessionDelete:
       return deleteSession(state, id)

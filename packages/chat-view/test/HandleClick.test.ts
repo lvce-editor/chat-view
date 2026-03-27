@@ -2,8 +2,10 @@
 import { expect, test } from '@jest/globals'
 import { ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
+import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
+import * as InputName from '../src/parts/InputName/InputName.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -165,6 +167,29 @@ test('handleClick should keep state for unknown action', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'unknown-action')
   expect(result).toBe(state)
+})
+
+test('handleClick should remove composer attachment and persist removal event', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerAttachments: [
+      { attachmentId: 'attachment-1', displayType: 'image', mimeType: 'image/svg+xml', name: 'photo.svg', size: 1 },
+      { attachmentId: 'attachment-2', displayType: 'text-file', mimeType: 'text/plain', name: 'notes.txt', size: 5 },
+    ],
+    selectedSessionId: 'session-1',
+  }
+  const result = await HandleClick.handleClick(state, InputName.getComposerAttachmentRemoveInputName('attachment-1'))
+  expect(result.composerAttachments).toEqual([
+    { attachmentId: 'attachment-2', displayType: 'text-file', mimeType: 'text/plain', name: 'notes.txt', size: 5 },
+  ])
+  const events = await getChatViewEvents('session-1')
+  expect(events.at(-1)).toMatchObject({
+    attachmentId: 'attachment-1',
+    sessionId: 'session-1',
+    type: 'chat-attachment-removed',
+  })
 })
 
 test('handleClick should toggle run mode picker open', async () => {

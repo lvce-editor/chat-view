@@ -57,6 +57,11 @@ export interface ChatAttachmentAddedEvent extends ChatViewEventBase {
   readonly type: 'chat-attachment-added'
 }
 
+export interface ChatAttachmentRemovedEvent extends ChatViewEventBase {
+  readonly attachmentId: string
+  readonly type: 'chat-attachment-removed'
+}
+
 export interface DataEvent extends ChatViewEventBase {
   readonly type: 'sse-response-part'
   readonly value: unknown
@@ -82,6 +87,7 @@ export type ChatViewEvent =
   | HandleInputEvent
   | HandleSubmitEvent
   | ChatAttachmentAddedEvent
+  | ChatAttachmentRemovedEvent
   | DataEvent
   | ResponseCompletedEvent
   | EventStreamFinishedEvent

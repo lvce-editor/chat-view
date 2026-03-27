@@ -156,6 +156,31 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   })
 })
 
+test('getChatVirtualDom should render remove button before image attachment label', () => {
+  const result = renderChatView({
+    composerAttachments: [{ attachmentId: 'attachment-1', displayType: 'image', mimeType: 'image/svg+xml', name: 'photo.svg', size: 1 }],
+    viewMode: 'detail',
+  })
+  const attachment = result.find((node) => node.name === 'composer-attachment:attachment-1')
+  const removeButton = result.find((node) => node.name === 'composer-attachment-remove:attachment-1')
+  const removeLabel = result.find((node) => node.text === 'x')
+  const attachmentLabel = result.find((node) => node.text === 'Image · photo.svg')
+  expect(attachment).toMatchObject({
+    childCount: 2,
+    className: `${ClassNames.ChatComposerAttachment} ${ClassNames.ChatComposerAttachmentImage}`,
+    type: VirtualDomElements.Div,
+  })
+  expect(removeButton).toMatchObject({
+    buttonType: 'button',
+    className: ClassNames.ChatComposerAttachmentRemoveButton,
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Remove image attachment',
+    type: VirtualDomElements.Button,
+  })
+  expect(removeLabel).toBeDefined()
+  expect(attachmentLabel).toBeDefined()
+})
+
 test('getChatVirtualDom should hide optional pickers when there is not enough horizontal space', () => {
   const result = renderChatView({
     hasSpaceForAgentModePicker: false,
