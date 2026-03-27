@@ -4,17 +4,16 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
-import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
-import { getChatHeaderDomFocusMode } from '../GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
@@ -34,6 +33,10 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly gitBranches: readonly GitBranch[]
+  readonly gitBranchPickerErrorMessage: string
+  readonly gitBranchPickerOpen: boolean
+  readonly gitBranchPickerVisible: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly messagesScrollTop?: number
@@ -85,6 +88,10 @@ export const getChatModeChatFocusVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  gitBranches,
+  gitBranchPickerErrorMessage,
+  gitBranchPickerOpen,
+  gitBranchPickerVisible,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
   messagesScrollTop = 0,
@@ -121,17 +128,14 @@ export const getChatModeChatFocusVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedProject = projects.find((project) => project.id === selectedProjectId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
-  const selectedProjectName = selectedProject?.name || ''
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-  const chatRootChildCount = 4 + (hasVisibleOverlays ? 1 : 0)
+  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
@@ -140,7 +144,7 @@ export const getChatModeChatFocusVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getMessagesDom(
       messages,
       parsedMessages,
@@ -154,12 +158,16 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
       agentMode,
       agentModePickerOpen,
+      gitBranchPickerVisible,
+      gitBranchPickerOpen,
+      gitBranchPickerErrorMessage,
+      gitBranches,
+      selectedSession?.branchName || '',
       hasSpaceForAgentModePicker,
       modelPickerOpen,
       models,

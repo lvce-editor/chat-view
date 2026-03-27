@@ -121,6 +121,14 @@ export const getCss = (
 
 }
 
+.ChatGitBranchPickerMessage{
+  padding: 6px 8px;
+}
+
+.ChatGitBranchPickerErrorMessage{
+  color: var(--vscode-errorForeground, var(--vscode-foreground));
+}
+
 .RunModePickerContainer{
   display: flex;
   justify-content: flex-end;
@@ -192,15 +200,6 @@ export const getCss = (
 .ChatToolCalls .ChatOrderedListItemContent{
   flex: 1;
   min-width: 0;
-}
-
-.ChatFocus .ChatMessages > .Message{
-  inline-size: fit-content;
-  max-inline-size: min(100%, var(--ChatFocusContentMaxWidth));
-}
-
-.ChatFocus .ChatMessages > .Message > .ChatMessageContent{
-  max-inline-size: 100%;
 }
 
 `

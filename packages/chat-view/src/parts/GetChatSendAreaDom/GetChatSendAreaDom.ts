@@ -2,6 +2,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -12,6 +13,7 @@ import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextB
 import { getAgentModePickerVirtualDom } from '../GetAgentModePickerVirtualDom/GetAgentModePickerVirtualDom.ts'
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
+import { getGitBranchPickerVirtualDom } from '../GetGitBranchPickerVirtualDom/GetGitBranchPickerVirtualDom.ts'
 import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
@@ -140,6 +142,11 @@ export const getChatSendAreaDom = (
   composerAttachments: readonly ComposerAttachment[],
   agentMode: AgentMode,
   agentModePickerOpen: boolean,
+  gitBranchPickerVisible: boolean,
+  gitBranchPickerOpen: boolean,
+  gitBranchPickerErrorMessage: string,
+  gitBranches: readonly GitBranch[],
+  fallbackBranchName: string,
   hasSpaceForAgentModePicker: boolean,
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
@@ -162,9 +169,15 @@ export const getChatSendAreaDom = (
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
   const showAgentModePicker = hasSpaceForAgentModePicker
+  const showGitBranchPicker = gitBranchPickerVisible || Boolean(fallbackBranchName)
   const showResponsiveRunModePicker = showRunMode && hasSpaceForRunModePicker
   const bottomControlsCount =
-    2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
+    2 +
+    (usageOverviewEnabled ? 1 : 0) +
+    (addContextButtonEnabled ? 1 : 0) +
+    (showCreatePullRequestButton ? 1 : 0) +
+    (showGitBranchPicker ? 1 : 0) +
+    (voiceDictationEnabled ? 1 : 0)
   const primaryControlsCount = 1 + (showAgentModePicker ? 1 : 0) + (reasoningPickerEnabled ? 1 : 0) + (showResponsiveRunModePicker ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
@@ -204,6 +217,7 @@ export const getChatSendAreaDom = (
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
+    ...(showGitBranchPicker ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName) : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

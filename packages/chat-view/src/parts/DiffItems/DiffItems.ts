@@ -13,6 +13,10 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
+    oldState.gitBranchPickerErrorMessage === newState.gitBranchPickerErrorMessage &&
+    oldState.gitBranchPickerOpen === newState.gitBranchPickerOpen &&
+    oldState.gitBranchPickerVisible === newState.gitBranchPickerVisible &&
+    oldState.gitBranches === newState.gitBranches &&
     oldState.hasSpaceForAgentModePicker === newState.hasSpaceForAgentModePicker &&
     oldState.hasSpaceForRunModePicker === newState.hasSpaceForRunModePicker &&
     oldState.initial === newState.initial &&

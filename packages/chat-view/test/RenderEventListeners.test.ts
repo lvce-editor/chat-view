@@ -47,4 +47,9 @@ test('renderEventListeners should return expected listeners', () => {
     params: ['handleModelPickerListScroll', 'event.target.scrollTop'],
     passive: true,
   })
+  const gitBranchPickerToggleListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickGitBranchPickerToggle)
+  expect(gitBranchPickerToggleListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickGitBranchPickerToggle,
+    params: ['handleClickGitBranchPickerToggle'],
+  })
 })

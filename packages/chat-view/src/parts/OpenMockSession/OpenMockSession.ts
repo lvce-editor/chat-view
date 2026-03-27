@@ -3,8 +3,44 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { parseAndStoreMessagesContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 
-export const openMockSession = async (state: ChatState, mockSessionId: string, mockChatMessages: readonly ChatMessage[]): Promise<ChatState> => {
+interface OpenMockSessionOptions {
+  readonly branchName?: string
+  readonly projectId?: string
+  readonly workspaceUri?: string
+}
+
+const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptions | undefined): ChatSession => {
+  if (!options) {
+    return session
+  }
+  return {
+    ...session,
+    ...(options.branchName
+      ? {
+          branchName: options.branchName,
+        }
+      : {}),
+    ...(options.projectId
+      ? {
+          projectId: options.projectId,
+        }
+      : {}),
+    ...(options.workspaceUri
+      ? {
+          workspaceUri: options.workspaceUri,
+        }
+      : {}),
+  }
+}
+
+export const openMockSession = async (
+  state: ChatState,
+  mockSessionId: string,
+  mockChatMessages: readonly ChatMessage[],
+  options?: OpenMockSessionOptions,
+): Promise<ChatState> => {
   const { sessions: currentSessions } = state
 
   if (!mockSessionId) {
@@ -22,18 +58,24 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
         if (session.id !== mockSessionId) {
           return session
         }
-        return {
-          ...session,
-          messages: mockChatMessages,
-        }
+        return applySessionOptions(
+          {
+            ...session,
+            messages: mockChatMessages,
+          },
+          options,
+        )
       })
     : [
         ...currentSessions,
-        {
-          id: mockSessionId,
-          messages: mockChatMessages,
-          title: mockSessionId,
-        },
+        applySessionOptions(
+          {
+            id: mockSessionId,
+            messages: mockChatMessages,
+            title: mockSessionId,
+          },
+          options,
+        ),
       ]
 
   const selectedSession = sessions.find((session) => session.id === mockSessionId)
@@ -41,7 +83,7 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
     await saveChatSession(selectedSession)
   }
 
-  return {
+  return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
@@ -50,5 +92,5 @@ export const openMockSession = async (state: ChatState, mockSessionId: string, m
     selectedSessionId: mockSessionId,
     sessions,
     viewMode: 'detail',
-  }
+  })
 }

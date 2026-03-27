@@ -25,6 +25,7 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
 import { parseAndStoreMessagesContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
@@ -104,7 +105,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
-  return {
+  const nextState: ChatState = {
     ...state,
     agentMode,
     agentModePickerOpen: false,
@@ -162,4 +163,5 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     visibleModels,
     voiceDictationEnabled,
   }
+  return refreshGitBranchPickerVisibility(nextState)
 }

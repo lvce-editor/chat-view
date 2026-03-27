@@ -5,6 +5,7 @@ import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStor
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+import * as ToggleChatFocusMode from '../src/parts/ToggleChatFocusMode/ToggleChatFocusMode.ts'
 
 const expectInvocations = (actual: readonly (readonly [string, string])[], expected: readonly (readonly [string, string])[]): void => {
   expect(actual.length).toBeGreaterThanOrEqual(expected.length)
@@ -201,6 +202,38 @@ test('loadContent should restore detail view from savedState', async () => {
   }
   const result = await LoadContent.loadContent(state, savedState)
   expect(result.viewMode).toBe('detail')
+})
+
+test('loadContent should preserve selected session branch metadata for chat focus branch picker fallback', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    viewMode: 'list',
+  }
+  const savedState = {
+    selectedSessionId: 'session-branch',
+    sessions: [
+      {
+        branchName: 'main',
+        id: 'session-branch',
+        messages: [],
+        title: 'Branch Session',
+        workspaceUri: 'file:///workspace',
+      },
+    ],
+    viewMode: 'detail' as const,
+  }
+
+  const loaded = await LoadContent.loadContent(state, savedState)
+  expect(loaded.selectedSessionId).toBe('session-branch')
+  expect(loaded.sessions[0].branchName).toBe('main')
+  expect(loaded.sessions[0].workspaceUri).toBe('file:///workspace')
+
+  const focused = await ToggleChatFocusMode.toggleChatFocusMode(loaded)
+  expect(focused.viewMode).toBe('chat-focus')
+  expect(focused.gitBranchPickerVisible).toBe(true)
+  expect(focused.gitBranches).toEqual([{ current: true, name: 'main' }])
 })
 
 test('loadContent should restore scroll positions from savedState', async () => {

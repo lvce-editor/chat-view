@@ -4,6 +4,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -51,6 +52,10 @@ export interface ChatState {
   readonly errorCount: number
   readonly focus: ChatViewFocus
   readonly focused: boolean
+  readonly gitBranches: readonly GitBranch[]
+  readonly gitBranchPickerErrorMessage: string
+  readonly gitBranchPickerOpen: boolean
+  readonly gitBranchPickerVisible: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly headerHeight: number

@@ -125,3 +125,22 @@ test('openMockSession should delegate parsing to chat message parsing worker whe
   expect(result.parsedMessages).toEqual(workerParsedMessages)
   expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['worker']]])
 })
+
+test('openMockSession should apply optional session metadata', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = createDefaultState()
+
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-branch', [], {
+    branchName: 'main',
+    workspaceUri: 'file:///workspace',
+  })
+
+  expect(result.sessions[1]).toEqual({
+    branchName: 'main',
+    id: 'mock-session-branch',
+    messages: [],
+    title: 'mock-session-branch',
+    workspaceUri: 'file:///workspace',
+  })
+})
