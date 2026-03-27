@@ -13,6 +13,7 @@ import {
 } from '../ChatStrings/ChatStrings.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
+import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
@@ -22,7 +23,7 @@ import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAs
 import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getToolCallExecutionStatus } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getToolCallResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
-import { getOpenApiErrorMessage } from '../GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
+import { getImageNotSupportedMessage, getOpenApiErrorMessage } from '../GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 import { getOpenApiModelId } from '../GetOpenApiModelId/GetOpenApiModelId.ts'
 import { getOpenRouterAssistantText } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
 import { getOpenRouterErrorMessage } from '../GetOpenRouterErrorMessage/GetOpenRouterErrorMessage.ts'
@@ -44,6 +45,10 @@ const getEffectiveBackendModelId = (selectedModelId: string): string => {
     return selectedModelId
   }
   return selectedModelId.slice(separatorIndex + 1)
+}
+
+const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
+  return messages.some((message) => message.attachments?.some((attachment) => attachment.displayType === 'image'))
 }
 
 const getBackendAssistantText = async (
@@ -113,6 +118,7 @@ export const getAiResponse = async ({
   nextMessageId,
   onDataEvent,
   onEventStreamFinished,
+  onMockOpenApiRequestCaptured,
   onTextChunk,
   onToolCallsChunk,
   openApiApiBaseUrl,
@@ -197,7 +203,15 @@ export const getAiResponse = async ({
   }
 
   let text = ''
-  if (authEnabled) {
+  const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
+  const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
+  const selectedModel = models.find((model) => model.id === selectedModelId)
+  const supportsImages = selectedModel?.supportsImages ?? false
+  const supportsReasoningEffort = selectedModel?.supportsReasoningEffort ?? false
+  if (hasImageAttachments(messages) && !supportsImages) {
+    text = getImageNotSupportedMessage(selectedModel?.name)
+  }
+  if (!text && authEnabled) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {
@@ -206,15 +220,11 @@ export const getAiResponse = async ({
       text = backendAccessTokenRequiredMessage
     }
   }
-  const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
-  const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  const selectedModel = models.find((model) => model.id === selectedModelId)
-  const supportsReasoningEffort = selectedModel?.supportsReasoningEffort ?? false
   if (!text && usesOpenApiModel) {
     const safeMaxToolCalls = Math.max(1, maxToolCalls)
     if (useMockApi) {
       const openAiInput: any[] = messages.map((message) => ({
-        content: message.text,
+        content: getChatMessageOpenAiContent(message),
         role: message.role,
       }))
       const modelId = getOpenApiModelId(selectedModelId)
@@ -226,7 +236,7 @@ export const getAiResponse = async ({
       const maxToolIterations = safeMaxToolCalls - 1
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
-        MockOpenApiRequest.capture({
+        const request = {
           headers,
           method: 'POST',
           payload: getOpenAiParams(
@@ -243,7 +253,11 @@ export const getAiResponse = async ({
             supportsReasoningEffort,
           ),
           url: getOpenApiApiEndpoint(openApiApiBaseUrl),
-        })
+        }
+        MockOpenApiRequest.capture(request)
+        if (onMockOpenApiRequestCaptured) {
+          await Promise.resolve(onMockOpenApiRequestCaptured(request))
+        }
         const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
         if (result.type !== 'success') {
           text = getOpenApiErrorMessage(result)

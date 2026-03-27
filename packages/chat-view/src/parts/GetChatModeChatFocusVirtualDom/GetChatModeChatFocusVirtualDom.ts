@@ -25,6 +25,8 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly composerAttachmentPreviewOverlayAttachmentId: string
+  readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
@@ -82,6 +84,8 @@ export const getChatModeChatFocusVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
+  composerAttachmentPreviewOverlayAttachmentId,
+  composerAttachmentPreviewOverlayError = false,
   composerAttachments,
   composerDropActive = false,
   composerDropEnabled = true,
@@ -135,11 +139,18 @@ export const getChatModeChatFocusVirtualDom = ({
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
+<<<<<<< HEAD
   const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
+=======
+  const hasVisibleOverlays =
+    isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const chatRootChildCount = 4 + (hasVisibleOverlays ? 1 : 0)
+>>>>>>> origin/main
   return [
     {
       childCount: chatRootChildCount,
@@ -197,6 +208,10 @@ export const getChatModeChatFocusVirtualDom = ({
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,
+      composerAttachmentPreviewOverlayAttachmentId,
+      composerAttachmentPreviewOverlayError,
+      composerAttachmentPreviewOverlayVisible: isComposerAttachmentPreviewOverlayVisible,
+      composerAttachments,
       dropOverlayVisible: isDropOverlayVisible,
       modelPickerSearchValue,
       modelPickerVisible: isNewModelPickerVisible,

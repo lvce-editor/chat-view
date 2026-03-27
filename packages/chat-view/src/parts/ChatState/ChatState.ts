@@ -4,7 +4,11 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+<<<<<<< HEAD
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
+=======
+import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
+>>>>>>> origin/main
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -36,6 +40,8 @@ export interface ChatState {
   readonly chatSendAreaPaddingLeft: number
   readonly chatSendAreaPaddingRight: number
   readonly chatSendAreaPaddingTop: number
+  readonly composerAttachmentPreviewOverlayAttachmentId: string
+  readonly composerAttachmentPreviewOverlayError: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerAttachmentsHeight: number
   readonly composerDropActive: boolean
@@ -72,12 +78,14 @@ export interface ChatState {
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number
   readonly mockApiCommandId: string
+  readonly mockOpenApiRequests: readonly MockOpenApiRequest[]
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
   readonly modelPickerListScrollTop: number
   readonly modelPickerOpen: boolean
   readonly modelPickerSearchValue: string
   readonly models: readonly ChatModel[]
+  readonly nextAttachmentId: number
   readonly nextMessageId: number
   readonly openApiApiBaseUrl: string
   readonly openApiApiKey: string

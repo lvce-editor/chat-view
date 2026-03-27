@@ -24,6 +24,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly composerAttachmentPreviewOverlayAttachmentId: string
+  readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
@@ -73,6 +75,8 @@ export const getChatModeDetailVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   authStatus = 'signed-out',
+  composerAttachmentPreviewOverlayAttachmentId,
+  composerAttachmentPreviewOverlayError = false,
   composerAttachments,
   composerDropActive = false,
   composerDropEnabled = true,
@@ -119,10 +123,12 @@ export const getChatModeDetailVirtualDom = ({
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
+  const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
-  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const hasVisibleOverlays =
+    isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
@@ -180,6 +186,10 @@ export const getChatModeDetailVirtualDom = ({
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,
+      composerAttachmentPreviewOverlayAttachmentId,
+      composerAttachmentPreviewOverlayError,
+      composerAttachmentPreviewOverlayVisible: isComposerAttachmentPreviewOverlayVisible,
+      composerAttachments,
       dropOverlayVisible: isDropOverlayVisible,
       modelPickerSearchValue,
       modelPickerVisible: isNewModelPickerVisible,

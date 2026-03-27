@@ -14,6 +14,18 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id', EventExpression.ClientX, EventExpression.ClientY],
     },
     {
+      name: DomEventListenersFunctions.HandleMouseOver,
+      params: ['handleMouseOver', EventExpression.TargetName],
+    },
+    {
+      name: DomEventListenersFunctions.HandleMouseOut,
+      params: [
+        'handleMouseOut',
+        EventExpression.TargetName,
+        'event.relatedTarget && event.relatedTarget.getAttribute ? event.relatedTarget.getAttribute("name") : ""',
+      ],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickDictationButton,
       params: ['handleClickDictationButton'],
     },
@@ -230,6 +242,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleContextMenuChatImageAttachment,
       params: ['handleContextMenuChatImageAttachment', EventExpression.TargetName, EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleErrorComposerAttachmentPreviewOverlay,
+      params: ['handleErrorComposerAttachmentPreviewOverlay'],
     },
   ]
 }
