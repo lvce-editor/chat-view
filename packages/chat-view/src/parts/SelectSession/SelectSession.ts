@@ -4,13 +4,14 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
-  const exists = state.sessions.some((session) => session.id === id)
+  const { lastNormalViewMode, sessions, viewMode, width } = state
+  const exists = sessions.some((session) => session.id === id)
   if (!exists) {
     return state
   }
   const loadedSession = await getChatSession(id)
   const composerAttachments = await getComposerAttachments(id)
-  const sessions = state.sessions.map((session) => {
+  const hydratedSessions = sessions.map((session) => {
     if (session.id !== id) {
       return session
     }
@@ -22,11 +23,11 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   return {
     ...state,
     composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
-    lastNormalViewMode: state.viewMode === 'chat-focus' ? state.lastNormalViewMode : 'detail',
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
     renamingSessionId: '',
     selectedSessionId: id,
-    sessions,
-    viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+    sessions: hydratedSessions,
+    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   }
 }

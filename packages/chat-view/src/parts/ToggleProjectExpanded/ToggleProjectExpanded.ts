@@ -5,28 +5,29 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
-  const isExpanded = state.projectExpandedIds.includes(projectId)
-  const projectExpandedIds = isExpanded ? state.projectExpandedIds.filter((id) => id !== projectId) : [...state.projectExpandedIds, projectId]
+  const { projectExpandedIds, selectedSessionId, sessions, width } = state
+  const isExpanded = projectExpandedIds.includes(projectId)
+  const nextProjectExpandedIds = isExpanded ? projectExpandedIds.filter((id) => id !== projectId) : [...projectExpandedIds, projectId]
 
-  const visibleSessions = getVisibleSessions(state.sessions, projectId)
+  const visibleSessions = getVisibleSessions(sessions, projectId)
   if (visibleSessions.length === 0) {
     return {
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
-      projectExpandedIds,
+      projectExpandedIds: nextProjectExpandedIds,
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: 'chat-focus',
     }
   }
 
-  const selectedSessionVisible = visibleSessions.some((session) => session.id === state.selectedSessionId)
-  const selectedSessionId = selectedSessionVisible ? state.selectedSessionId : visibleSessions[0].id
-  const loadedSession = await getChatSession(selectedSessionId)
-  const composerAttachments = await getComposerAttachments(selectedSessionId)
-  const sessions = state.sessions.map((session) => {
-    if (session.id !== selectedSessionId || !loadedSession) {
+  const selectedSessionVisible = visibleSessions.some((session) => session.id === selectedSessionId)
+  const nextSelectedSessionId = selectedSessionVisible ? selectedSessionId : visibleSessions[0].id
+  const loadedSession = await getChatSession(nextSelectedSessionId)
+  const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
+  const hydratedSessions = sessions.map((session) => {
+    if (session.id !== nextSelectedSessionId || !loadedSession) {
       return session
     }
     return loadedSession
@@ -35,11 +36,11 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   return {
     ...state,
     composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
-    projectExpandedIds,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    projectExpandedIds: nextProjectExpandedIds,
     selectedProjectId: projectId,
-    selectedSessionId,
-    sessions,
+    selectedSessionId: nextSelectedSessionId,
+    sessions: hydratedSessions,
     viewMode: 'chat-focus',
   }
 }

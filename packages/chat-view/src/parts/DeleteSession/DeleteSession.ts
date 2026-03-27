@@ -5,7 +5,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
-  const { renamingSessionId, sessions } = state
+  const { renamingSessionId, sessions, width } = state
   const filtered = sessions.filter((session) => session.id !== id)
   if (filtered.length === sessions.length) {
     return state
@@ -37,7 +37,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   return {
     ...state,
     composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,
