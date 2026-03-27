@@ -9,4 +9,6 @@ test('getCss should include attachment height in chat send area height', () => {
   expect(css).toContain('.ChatOverlays{')
   expect(css).toContain('position: absolute;')
   expect(css).toContain('pointer-events: none;')
+  expect(css).toContain('.ChatViewDropOverlayActive{')
+  expect(css).toContain('background: rgba(255, 255, 255, 0.1);')
 })
