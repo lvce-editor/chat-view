@@ -137,6 +137,26 @@ export const addContext = (): string => {
   return i18nString(UiStrings.AddContext)
 }
 
+export const addAction = (): string => {
+  return i18nString(UiStrings.AddAction)
+}
+
+export const openInVsCode = (): string => {
+  return i18nString(UiStrings.OpenInVsCode)
+}
+
+export const commit = (): string => {
+  return i18nString(UiStrings.Commit)
+}
+
+export const openTerminal = (): string => {
+  return i18nString(UiStrings.OpenTerminal)
+}
+
+export const showDiff = (): string => {
+  return i18nString(UiStrings.ShowDiff)
+}
+
 export const createPullRequest = (): string => {
   return i18nString(UiStrings.CreatePullRequest)
 }

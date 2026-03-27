@@ -510,7 +510,7 @@ test('getChatVirtualDOm should show model picker empty-state message when search
 
 test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
   const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
-  const projects = [{ id: 'project-1', name: '_blank', uri: '' }]
+  const projects = [{ id: 'project-1', name: 'chat-view', uri: '/workspace/chat-view' }]
   const result = renderChatView({
     projectExpandedIds: ['project-1'],
     projects,
@@ -521,10 +521,13 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   })
 
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 4,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
+  const focusHeader = result.find((node) => node.className === ClassNames.ChatFocusHeader)
+  const focusActions = result.find((node) => node.className === ClassNames.ChatFocusActions)
+  const focusProject = result.find((node) => node.className === `${ClassNames.LabelDetail} ${ClassNames.ChatFocusProject}`)
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
   const addProjectButton = result.find((node) => node.name === 'create-project')
   const projectList = result.find((node) => node.className === ClassNames.ProjectList)
@@ -532,6 +535,12 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const composer = result.find((node) => node.name === 'composer')
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
+  const focusTitle = result.find((node) => node.text === 'Chat 1')
+  const addActionButton = result.find((node) => node.name === 'focus-add-action')
+  const openInVsCodeButton = result.find((node) => node.name === 'focus-open-in-vscode')
+  const commitButton = result.find((node) => node.name === 'focus-commit')
+  const openTerminalButton = result.find((node) => node.name === 'focus-open-terminal')
+  const showDiffButton = result.find((node) => node.name === 'focus-show-diff')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
@@ -539,6 +548,19 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
     childCount: 3,
   })
   expect(chatHeader).toBeUndefined()
+  expect(focusHeader).toMatchObject({
+    className: ClassNames.ChatFocusHeader,
+    type: VirtualDomElements.Header,
+  })
+  expect(focusActions).toMatchObject({
+    'aria-label': 'focus header actions',
+    className: ClassNames.ChatFocusActions,
+    role: 'toolbar',
+    type: VirtualDomElements.Div,
+  })
+  expect(focusProject).toBeDefined()
+  expect(focusTitle).toBeDefined()
+  expect(result.find((node) => node.text === 'chat-view')).toBeDefined()
   expect(projectList).toBeDefined()
   expect(addProjectButton).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
@@ -556,6 +578,25 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   })
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
+  expect(addActionButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-add-action',
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Add Action',
+    type: VirtualDomElements.Button,
+  })
+  expect(openInVsCodeButton).toMatchObject({
+    title: 'Open in VSCode',
+  })
+  expect(commitButton).toMatchObject({
+    title: 'Commit',
+  })
+  expect(openTerminalButton).toMatchObject({
+    title: 'Open Terminal',
+  })
+  expect(showDiffButton).toMatchObject({
+    title: 'Show Diff',
+  })
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
@@ -1771,6 +1812,22 @@ test('getChatVirtualDOm should hide back button in list mode', () => {
   const result = renderChatView()
   const backButton = result.find((node) => node.name === 'back')
   expect(backButton).toBeUndefined()
+})
+
+test('getChatVirtualDOm should not render focus header outside chat-focus mode', () => {
+  const sessions = [{ id: 'session-1', messages: [], title: 'Project Plan' }]
+  const listResult = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const detailResult = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
+  expect(listResult.find((node) => node.className === ClassNames.ChatFocusHeader)).toBeUndefined()
+  expect(detailResult.find((node) => node.className === ClassNames.ChatFocusHeader)).toBeUndefined()
 })
 
 test('getChatVirtualDOm should not render token usage overview when disabled', () => {
