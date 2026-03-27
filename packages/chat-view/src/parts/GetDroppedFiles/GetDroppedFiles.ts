@@ -17,6 +17,6 @@ export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<r
   }
   const actualHandles = await RendererWorker.getFileHandles(fileHandles)
   return actualHandles
-    .map((item) => (item as unknown as FileHandleTransportItem).value)
+    .map((item): any => (item as unknown as FileHandleTransportItem).value)
     .filter((item): item is FileSystemFileHandle => item.kind === 'file')
 }
