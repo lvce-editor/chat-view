@@ -1,6 +1,6 @@
-import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
 import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -8,9 +8,7 @@ import { getDroppedFiles } from '../GetDroppedFiles/GetDroppedFiles.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, fileHandles: readonly number[] = []): Promise<ChatState> => {
-  const actualFiles = await getDroppedFiles(fileHandles)
-  console.log({ actualFiles })
-  console.log('files dropped', name, fileHandles)
+  const droppedFileHandles = await getDroppedFiles(fileHandles)
   if (name !== InputName.ComposerDropTarget) {
     return state
   }
@@ -31,7 +29,8 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
     return nextState
   }
   const nextAttachments: ComposerAttachment[] = []
-  for (const file of actualFiles) {
+  for (const droppedFileHandle of droppedFileHandles) {
+    const file = await droppedFileHandle.getFile()
     const attachmentId = crypto.randomUUID()
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
     const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
