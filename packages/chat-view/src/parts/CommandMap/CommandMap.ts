@@ -46,6 +46,7 @@ import * as HandleDragEnter from '../HandleDragEnter/HandleDragEnter.ts'
 import * as HandleDragLeave from '../HandleDragLeave/HandleDragLeave.ts'
 import * as HandleDragOver from '../HandleDragOver/HandleDragOver.ts'
 import * as HandleDropFiles from '../HandleDropFiles/HandleDropFiles.ts'
+import * as HandleErrorComposerAttachmentPreviewOverlay from '../HandleErrorComposerAttachmentPreviewOverlay/HandleErrorComposerAttachmentPreviewOverlay.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
@@ -53,6 +54,8 @@ import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleM
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
 import { handleModelInputBlur } from '../HandleModelInputBlur/HandleModelInputBlur.ts'
+import * as HandleMouseOut from '../HandleMouseOut/HandleMouseOut.ts'
+import * as HandleMouseOver from '../HandleMouseOver/HandleMouseOver.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPickerList/HandlePointerDownModelPickerList.ts'
 import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
@@ -63,6 +66,7 @@ import * as HandleRunModeChange from '../HandleRunModeChange/HandleRunModeChange
 import * as HandleScroll from '../HandleScroll/HandleScroll.ts'
 import * as HandleSearchValueChange from '../HandleSearchValueChange/HandleSearchValueChange.ts'
 import * as HandleSubmit from '../HandleSubmit/HandleSubmit.ts'
+import * as HideComposerAttachmentPreviewOverlay from '../HideComposerAttachmentPreviewOverlay/HideComposerAttachmentPreviewOverlay.ts'
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import * as MockBackendAuthResponse from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
@@ -110,6 +114,7 @@ import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/Set
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
 import * as SetUseChatMessageParsingWorker from '../SetUseChatMessageParsingWorker/SetUseChatMessageParsingWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
+import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
@@ -165,6 +170,9 @@ export const commandMap = {
   'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
   'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),
   'Chat.handleDropFiles': wrapCommand(HandleDropFiles.handleDropFiles),
+  'Chat.handleErrorComposerAttachmentPreviewOverlay': wrapCommand(
+    HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
+  ),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
@@ -175,6 +183,8 @@ export const commandMap = {
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleModelInputBlur': wrapCommand(handleModelInputBlur),
   'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),
+  'Chat.handleMouseOut': wrapCommand(HandleMouseOut.handleMouseOut),
+  'Chat.handleMouseOver': wrapCommand(HandleMouseOver.handleMouseOver),
   'Chat.handlePointerDownModelPickerList': wrapCommand(HandlePointerDownModelPickerList.handlePointerDownModelPickerList),
   'Chat.handlePointerUpModelPickerList': wrapCommand(handlePointerUpModelPickerList),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
@@ -184,6 +194,7 @@ export const commandMap = {
   'Chat.handleRunModeChange': wrapCommand(HandleRunModeChange.handleRunModeChange),
   'Chat.handleSearchValueChange': wrapCommand(HandleSearchValueChange.handleSearchValueChange),
   'Chat.handleSubmit': wrapCommand(HandleSubmit.handleSubmit),
+  'Chat.hideComposerAttachmentPreviewOverlay': wrapCommand(HideComposerAttachmentPreviewOverlay.hideComposerAttachmentPreviewOverlay),
   'Chat.initialize': initialize,
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
@@ -232,6 +243,7 @@ export const commandMap = {
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
   'Chat.setUseChatMessageParsingWorker': wrapCommand(SetUseChatMessageParsingWorker.setUseChatMessageParsingWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
+  'Chat.showComposerAttachmentPreviewOverlay': wrapCommand(ShowComposerAttachmentPreviewOverlay.showComposerAttachmentPreviewOverlay),
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),
 }

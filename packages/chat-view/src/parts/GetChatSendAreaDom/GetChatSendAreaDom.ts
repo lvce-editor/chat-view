@@ -103,6 +103,10 @@ const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachm
           childCount: 1 + (removeButtonDom.length > 0 ? 1 : 0) + previewDom.length,
           className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
           name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
+          onMouseOut: DomEventListenerFunctions.HandleMouseOut,
+          onMouseOver: DomEventListenerFunctions.HandleMouseOver,
+          onPointerOut: DomEventListenerFunctions.HandleMouseOut,
+          onPointerOver: DomEventListenerFunctions.HandleMouseOver,
           type: VirtualDomElements.Div,
         },
         ...removeButtonDom,
@@ -110,6 +114,7 @@ const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachm
         {
           childCount: 1,
           className: ClassNames.ChatComposerAttachmentLabel,
+          name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
           type: VirtualDomElements.Span,
         },
         {

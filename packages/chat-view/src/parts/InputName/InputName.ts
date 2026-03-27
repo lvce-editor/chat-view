@@ -10,6 +10,7 @@ export const ComposerDropTarget = 'composer-drop-target'
 export const ComposerAttachmentPrefix = 'composer-attachment:'
 export const ComposerAttachmentPreviewPrefix = 'composer-attachment-preview:'
 export const ComposerAttachmentRemovePrefix = 'composer-attachment-remove:'
+export const ComposerAttachmentPreviewOverlay = 'composer-attachment-preview-overlay'
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
 export const CreatePullRequest = 'create-pull-request'
@@ -107,6 +108,14 @@ export const getComposerAttachmentInputName = (attachmentId: string): `${typeof 
   return `${ComposerAttachmentPrefix}${attachmentId}`
 }
 
+export const isComposerAttachmentInputName = (name: string): name is `${typeof ComposerAttachmentPrefix}${string}` => {
+  return name.startsWith(ComposerAttachmentPrefix)
+}
+
+export const getAttachmentIdFromComposerAttachmentInputName = (name: `${typeof ComposerAttachmentPrefix}${string}`): string => {
+  return name.slice(ComposerAttachmentPrefix.length)
+}
+
 export const getComposerAttachmentPreviewInputName = (attachmentId: string): `${typeof ComposerAttachmentPreviewPrefix}${string}` => {
   return `${ComposerAttachmentPreviewPrefix}${attachmentId}`
 }
@@ -129,6 +138,10 @@ export const isComposerAttachmentRemoveInputName = (name: string): name is `${ty
 
 export const getAttachmentIdFromComposerAttachmentRemoveInputName = (name: `${typeof ComposerAttachmentRemovePrefix}${string}`): string => {
   return name.slice(ComposerAttachmentRemovePrefix.length)
+}
+
+export const isComposerAttachmentPreviewOverlayInputName = (name: string): boolean => {
+  return name === ComposerAttachmentPreviewOverlay
 }
 
 export const isModelPickerItemInputName = (name: string): name is `${typeof ModelPickerItemPrefix}${string}` => {
