@@ -571,7 +571,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   })
 
   expect(result[0]).toMatchObject({
-    childCount: 4,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
@@ -604,17 +604,9 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     childCount: 3,
   })
   expect(chatHeader).toBeUndefined()
-  expect(focusHeader).toMatchObject({
-    className: ClassNames.ChatFocusHeader,
-    type: VirtualDomElements.Header,
-  })
-  expect(focusActions).toMatchObject({
-    'aria-label': 'focus header actions',
-    className: ClassNames.ChatFocusActions,
-    role: 'toolbar',
-    type: VirtualDomElements.Div,
-  })
-  expect(focusProject).toBeDefined()
+  expect(focusHeader).toBeUndefined()
+  expect(focusActions).toBeUndefined()
+  expect(focusProject).toBeUndefined()
   expect(focusTitle).toBeDefined()
   expect(result.find((node) => node.text === 'chat-view')).toBeDefined()
   expect(messages).toBeDefined()
@@ -641,29 +633,15 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     type: VirtualDomElements.Div,
   })
   expect(backToChatListLabel).toBeUndefined()
-  expect(result.indexOf(focusHeader as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
-  expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(projectSidebar as (typeof result)[number]))
+  expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
+  expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(composer as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
-  expect(addActionButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
-    name: 'focus-add-action',
-    onClick: DomEventListenerFunctions.HandleClick,
-    title: 'Add Action',
-    type: VirtualDomElements.Button,
-  })
-  expect(openInVsCodeButton).toMatchObject({
-    title: 'Open in VSCode',
-  })
-  expect(commitButton).toMatchObject({
-    title: 'Commit',
-  })
-  expect(openTerminalButton).toMatchObject({
-    title: 'Open Terminal',
-  })
-  expect(showDiffButton).toMatchObject({
-    title: 'Show Diff',
-  })
+  expect(addActionButton).toBeUndefined()
+  expect(openInVsCodeButton).toBeUndefined()
+  expect(commitButton).toBeUndefined()
+  expect(openTerminalButton).toBeUndefined()
+  expect(showDiffButton).toBeUndefined()
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })
