@@ -222,5 +222,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleModelInputBlur,
       params: ['handleModelInputBlur'],
     },
+    {
+      name: DomEventListenersFunctions.HandleContextMenuChatImageAttachment,
+      params: ['handleContextMenuChatImageAttachment'],
+      preventDefault: true,
+    },
   ]
 }

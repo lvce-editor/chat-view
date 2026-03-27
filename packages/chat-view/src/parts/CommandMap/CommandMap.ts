@@ -38,6 +38,7 @@ import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
+import * as HandleContextMenuChatImageAttachment from '../HandleContextMenuChatImageAttachment/HandleContextMenuChatImageAttachment.ts'
 import * as HandleContextMenuChatModelPicker from '../HandleContextMenuChatModelPicker/HandleContextMenuChatModelPicker.ts'
 import * as HandleContextMenuChatSendAreaBottom from '../HandleContextMenuChatSendAreaBottom/HandleContextMenuChatSendAreaBottom.ts'
 import * as HandleDragEnter from '../HandleDragEnter/HandleDragEnter.ts'
@@ -151,6 +152,7 @@ export const commandMap = {
   'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
+  'Chat.handleContextMenuChatImageAttachment': wrapCommand(HandleContextMenuChatImageAttachment.handleContextMenuChatImageAttachment),
   'Chat.handleContextMenuChatModelPicker': wrapCommand(HandleContextMenuChatModelPicker.handleContextMenuChatModelPicker),
   'Chat.handleContextMenuChatSendAreaBottom': wrapCommand(HandleContextMenuChatSendAreaBottom.handleContextMenuChatSendAreaBottom),
   'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
