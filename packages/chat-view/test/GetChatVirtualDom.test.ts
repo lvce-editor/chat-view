@@ -55,7 +55,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     childCount: 2,
     className: ClassNames.ChatHeader,
     onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
-    type: VirtualDomElements.Div,
+    type: VirtualDomElements.Header,
   })
   const chatListEmpty = result.find((node) => node.className === ClassNames.ChatListEmpty)
   const chatWelcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
@@ -1685,6 +1685,7 @@ test('getChatVirtualDOm should render selected chat title in detail mode', () =>
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
   expect(chatHeader).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
+    type: VirtualDomElements.Header,
   })
   const titleNode = result[backButtonIndex + 3]
   expect(titleNode).toMatchObject({ text: 'Project Plan' })
