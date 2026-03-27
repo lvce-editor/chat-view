@@ -5,6 +5,8 @@ import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 export interface SavedState {
   readonly agentMode: AgentMode
   readonly chatListScrollTop: number
+  readonly composerSelectionEnd: number
+  readonly composerSelectionStart: number
   readonly composerValue: string
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly maxToolCalls: number

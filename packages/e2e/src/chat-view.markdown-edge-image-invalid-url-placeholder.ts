@@ -22,6 +22,6 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const images = Locator('.ChatMessages .Message img')
   await expect(images).toHaveCount(1)
-  await expect(images).toHaveAttribute('alt', 'This is an image (image could not be loaded)')
-  await expect(messages.nth(1)).toContainText('image could not be loaded')
+  await expect(images).toHaveAttribute('alt', 'This is an image (Image preview could not be loaded)')
+  await expect(messages.nth(1)).toContainText('Image preview could not be loaded')
 }

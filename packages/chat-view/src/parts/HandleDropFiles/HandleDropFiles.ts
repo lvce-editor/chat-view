@@ -10,7 +10,7 @@ import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, fileHandles: readonly number[] = []): Promise<ChatState> => {
   const droppedFileHandles = await getDroppedFiles(fileHandles)
-  const { composerDropActive, composerDropEnabled, selectedSessionId, width } = state
+  const { composerDropActive, composerDropEnabled, nextAttachmentId, selectedSessionId, width } = state
   if (name !== InputName.ComposerDropTarget) {
     return state
   }
@@ -33,7 +33,7 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
   const nextAttachments: ComposerAttachment[] = []
   for (const droppedFileHandle of droppedFileHandles) {
     const file = await droppedFileHandle.getFile()
-    const attachmentId = crypto.randomUUID()
+    const attachmentId = `attachment-${nextAttachmentId + nextAttachments.length}`
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
     const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
     const textContent = await getComposerAttachmentTextContent(file, displayType)
@@ -69,5 +69,6 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
     ...nextState,
     composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
     composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], width),
+    nextAttachmentId: nextAttachmentId + nextAttachments.length,
   }
 }
