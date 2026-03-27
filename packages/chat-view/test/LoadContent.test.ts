@@ -1,7 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import type { ParsedMessage } from '../src/parts/ParsedMessage/ParsedMessage.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
@@ -702,12 +701,12 @@ test('loadContent should load useChatMessageParsingWorker from preferences', asy
     },
   })
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatParser.parseMessageContent': async (parsedMessages: readonly ParsedMessage[]) => parsedMessages,
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
   const state: ChatState = createDefaultState()
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.useChatMessageParsingWorker).toBe(true)
-  expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatParser.parseMessageContent', [], state.sessions[0].messages]])
+  expect(mockChatMessageParsingRpc.invocations).toEqual([])
   expectInvocations(mockRpc.invocations, [
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
@@ -765,7 +764,7 @@ test('loadContent should delegate message parsing to chat message parsing worker
     },
   ]
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatParser.parseMessageContent': async () => workerParsedMessages,
+    'ChatMessageParsing.parseMessageContents': async () => [workerParsedMessages[0].parsedContent],
   })
   const state: ChatState = {
     ...createDefaultState(),
@@ -777,9 +776,7 @@ test('loadContent should delegate message parsing to chat message parsing worker
 
   expect(result.parsedMessages).toEqual(workerParsedMessages)
   expect(mockRendererRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useChatMessageParsingWorker'])
-  expect(mockChatMessageParsingRpc.invocations).toEqual([
-    ['ChatParser.parseMessageContent', [], [{ id: 'message-1', role: 'assistant', text: 'Hello from worker', time: '10:01' }]],
-  ])
+  expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['Hello from worker']]])
 })
 
 test('loadContent should load useChatToolWorker from preferences', async () => {

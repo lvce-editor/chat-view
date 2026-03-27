@@ -13,6 +13,8 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
+    oldState.hasSpaceForAgentModePicker === newState.hasSpaceForAgentModePicker &&
+    oldState.hasSpaceForRunModePicker === newState.hasSpaceForRunModePicker &&
     oldState.initial === newState.initial &&
     oldState.modelPickerOpen === newState.modelPickerOpen &&
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
