@@ -9,6 +9,7 @@ import {
   openApiRequestFailedMessage,
   openRouterTooManyRequestsMessage,
 } from '../src/parts/ChatStrings/ChatStrings.ts'
+import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
@@ -636,10 +637,10 @@ test('getAiResponse should show a helpful message when OpenAI tool-call iteratio
     })
 
     expect(result.role).toBe('assistant')
-    expect(result.text).toContain('OpenAI request ended after 10 tool-call rounds without a final assistant response.')
+    expect(result.text).toContain(`OpenAI request ended after ${defaultMaxToolCalls} tool-call rounds without a final assistant response.`)
     expect(result.text).toContain('model got stuck in a tool loop')
     const executeInvocations = mockChatToolRpc.invocations.filter((invocation) => invocation[0] === 'ChatTool.execute')
-    expect(executeInvocations).toHaveLength(10)
+    expect(executeInvocations).toHaveLength(defaultMaxToolCalls)
   } finally {
     globalThis.fetch = originalFetch
   }

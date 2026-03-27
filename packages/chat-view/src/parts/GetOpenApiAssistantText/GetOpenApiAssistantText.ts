@@ -8,13 +8,12 @@ import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.t
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest, makeStreamingApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
 export type GetOpenApiAssistantTextResult = GetOpenApiAssistantTextSuccessResult | GetOpenApiAssistantTextErrorResult
-
-const defaultMaxToolCalls = 10
 
 const errorPrefixRegex = /^Error:\s*/
 const notFoundErrorRegex = /not[\s_-]?found|enoent/i
