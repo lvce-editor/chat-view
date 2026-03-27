@@ -26,7 +26,7 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
           ...state,
           composerDropActive: false,
         }
-  if (!state.selectedSessionId || fileHandles.length === 0) {
+  if (!selectedSessionId || fileHandles.length === 0) {
     return nextState
   }
   const nextAttachments: ComposerAttachment[] = []
