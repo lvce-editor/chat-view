@@ -41,13 +41,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
       type: VirtualDomElements.Span,
     },
     text('write_file '),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    ...getToolCallFileNameDom(fileName, fileNameClickableProps),
+    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
     ...(showDiffStats
       ? ([
           {

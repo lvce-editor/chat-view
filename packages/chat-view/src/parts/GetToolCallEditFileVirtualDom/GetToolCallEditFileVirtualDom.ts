@@ -36,13 +36,6 @@ export const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly 
       type: VirtualDomElements.Span,
     },
     text('edit_file '),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      title: target.clickableUri,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    ...getToolCallFileNameDom(fileName, fileNameClickableProps),
+    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.clickableUri }),
   ]
 }
