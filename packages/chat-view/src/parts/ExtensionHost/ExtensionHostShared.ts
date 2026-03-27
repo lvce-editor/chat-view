@@ -24,8 +24,7 @@ export const executeProviders = async ({
 }: ExecuteProvidersOptions): Promise<any> => {
   await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
   // @ts-ignore
-  const result = await ExtensionHost.invoke(method, ...params)
-  return result
+  return ExtensionHost.invoke(method, ...params)
 }
 
 type ExecuteProviderOptions = {
@@ -47,8 +46,7 @@ export const executeProvider = async ({
 }: ExecuteProviderOptions): Promise<any> => {
   await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
   // @ts-ignore
-  const result = ExtensionHost.invoke(method, ...params)
-  return result
+  return ExtensionHost.invoke(method, ...params)
 }
 
 type ExecuteOptions = {
