@@ -7,6 +7,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
+import { getSavedComposerSelection } from '../GetSavedComposerSelection/GetSavedComposerSelection.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
 import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
@@ -32,6 +33,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   const savedComposerValue = getSavedComposerValue(savedState)
+  const composerValue = savedComposerValue ?? state.composerValue
+  const savedComposerSelection = getSavedComposerSelection(savedState, composerValue)
+  const [composerSelectionStart, composerSelectionEnd] = savedComposerSelection ?? [state.composerSelectionStart, state.composerSelectionEnd]
   const {
     aiSessionTitleGenerationEnabled,
     authAccessToken,
@@ -122,7 +126,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
     composerDropActive: false,
     composerDropEnabled,
-    composerValue: savedComposerValue ?? state.composerValue,
+    composerSelectionEnd,
+    composerSelectionStart,
+    composerValue,
     emitStreamingFunctionCallEvents,
     initial: false,
     lastNormalViewMode,

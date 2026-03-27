@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
+import { deleteProject } from '../DeleteProject/DeleteProject.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
@@ -134,6 +135,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     }
     case name === InputName.SessionDelete:
       return deleteSession(state, id)
+    case name === InputName.ProjectDelete:
+      return deleteProject(state, id)
     case name === InputName.Send:
       return handleClickSend(state)
     case name === InputName.ScrollDown:

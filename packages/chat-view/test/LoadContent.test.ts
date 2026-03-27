@@ -267,6 +267,60 @@ test('loadContent should restore composerValue from savedState', async () => {
   expect(result.composerValue).toBe('draft from saved state')
 })
 
+test('loadContent should restore composer selection from savedState', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 3,
+    composerSelectionStart: 1,
+    composerValue: 'draft from state',
+  }
+  const savedState = {
+    composerSelectionEnd: 8,
+    composerSelectionStart: 2,
+    composerValue: 'draft from saved state',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.composerSelectionStart).toBe(2)
+  expect(result.composerSelectionEnd).toBe(8)
+})
+
+test('loadContent should normalize invalid saved composer selection', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 3,
+    composerSelectionStart: 1,
+    composerValue: 'draft from state',
+  }
+  const savedState = {
+    composerSelectionEnd: 100,
+    composerSelectionStart: -2,
+    composerValue: 'draft',
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.composerSelectionStart).toBe(0)
+  expect(result.composerSelectionEnd).toBe(5)
+})
+
+test('loadContent should ignore incomplete saved composer selection', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerSelectionEnd: 3,
+    composerSelectionStart: 1,
+  }
+  const savedState = {
+    composerSelectionStart: 4,
+  }
+  const result = await LoadContent.loadContent(state, savedState)
+  expect(result.composerSelectionStart).toBe(1)
+  expect(result.composerSelectionEnd).toBe(3)
+})
+
 test('loadContent should ignore invalid saved composerValue', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

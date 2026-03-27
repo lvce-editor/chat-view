@@ -197,6 +197,13 @@ export const getCss = (
   color: var(--vscode-textLink-foreground);
 }
 
+.ProjectListChevron{
+  display: inline-block;
+  flex: none;
+  height: 16px;
+  width: 16px;
+}
+
 .ChatOrderedListItem{
   align-items: flex-start;
   display: flex;

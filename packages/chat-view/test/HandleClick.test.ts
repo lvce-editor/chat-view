@@ -19,6 +19,8 @@ test('handleClick should create a new session', async () => {
   expect(result.sessions).toHaveLength(2)
   expect(result.selectedSessionId).toBe(result.sessions[1].id)
   expect(result.sessions[1].id).toMatch(uuidRegex)
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
 })
 
 test('handleClick should create a new session in the selected project from project action button', async () => {
@@ -39,6 +41,27 @@ test('handleClick should create a new session in the selected project from proje
   expect(result.sessions[1].projectId).toBe('project-2')
   expect(result.projectExpandedIds).toEqual(['project-1', 'project-2'])
   expect(result.selectedSessionId).toBe(result.sessions[1].id)
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
+})
+
+test('handleClick should keep chat-focus mode and focus composer when creating a new session from the focus sidebar', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    focus: 'list',
+    focused: true,
+    lastNormalViewMode: 'detail',
+    projectExpandedIds: ['project-1'],
+    viewMode: 'chat-focus',
+  }
+  const result = await HandleClick.handleClick(state, 'create-session-in-project:project-1')
+  expect(result.sessions).toHaveLength(2)
+  expect(result.viewMode).toBe('chat-focus')
+  expect(result.lastNormalViewMode).toBe('detail')
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
 })
 
 test('handleClick should select a session', async () => {
@@ -129,6 +152,44 @@ test('handleClick should delete a session', async () => {
   expect(result.sessions).toHaveLength(1)
   expect(result.sessions[0].id).toBe('session-1')
   expect(result.selectedSessionId).toBe('session-1')
+})
+
+test('handleClick should delete a project and move its sessions to the blank project', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    projectExpandedIds: ['project-1', 'project-2'],
+    projects: [
+      { id: 'project-1', name: '_blank', uri: '' },
+      { id: 'project-2', name: 'workspace', uri: 'file:///workspace' },
+    ],
+    selectedProjectId: 'project-2',
+    selectedSessionId: 'session-2',
+    sessions: [
+      { id: 'session-1', messages: [], projectId: 'project-1', title: 'Chat 1' },
+      { id: 'session-2', messages: [], projectId: 'project-2', title: 'Chat 2' },
+    ],
+    viewMode: 'chat-focus',
+  }
+  const result = await HandleClick.handleClick(state, InputName.ProjectDelete, 'project-2')
+  expect(result.projects).toEqual([{ id: 'project-1', name: '_blank', uri: '' }])
+  expect(result.selectedProjectId).toBe('project-1')
+  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.projectExpandedIds).toEqual(['project-1'])
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], projectId: 'project-1', title: 'Chat 1' },
+    { id: 'session-2', messages: [], projectId: 'project-1', title: 'Chat 2' },
+  ])
+  expect(result.viewMode).toBe('chat-focus')
+})
+
+test('handleClick should ignore deleting the blank project', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = createDefaultState()
+  const result = await HandleClick.handleClick(state, InputName.ProjectDelete, 'project-1')
+  expect(result).toBe(state)
 })
 
 test('handleClick should ignore empty action name', async () => {
