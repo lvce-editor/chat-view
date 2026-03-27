@@ -508,10 +508,18 @@ test('getChatVirtualDOm should show model picker empty-state message when search
   expect(emptyStateLabel).toBeDefined()
 })
 
-test('getChatVirtualDOm should render projects and chats in chat-focus mode', () => {
-  const sessions = [{ id: 'session-1', messages: [], title: 'Chat 1' }]
+test('getChatVirtualDOm should render projects and chats in chat-focus mode', async () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'message-1', role: 'user', text: 'Hello focus mode', time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ] as const
   const projects = [{ id: 'project-1', name: 'chat-view', uri: '/workspace/chat-view' }]
+  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
   const result = renderChatView({
+    parsedMessages,
     projectExpandedIds: ['project-1'],
     projects,
     selectedProjectId: 'project-1',
@@ -529,6 +537,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const focusActions = result.find((node) => node.className === ClassNames.ChatFocusActions)
   const focusProject = result.find((node) => node.className === `${ClassNames.LabelDetail} ${ClassNames.ChatFocusProject}`)
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
+  const messages = result.find((node) => node.className === 'ChatMessages')
   const addProjectButton = result.find((node) => node.name === 'create-project')
   const projectList = result.find((node) => node.className === ClassNames.ProjectList)
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
@@ -563,6 +572,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(focusProject).toBeDefined()
   expect(focusTitle).toBeDefined()
   expect(result.find((node) => node.text === 'chat-view')).toBeDefined()
+  expect(messages).toBeDefined()
   expect(projectList).toBeDefined()
   expect(addProjectButton).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
@@ -585,6 +595,8 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
     type: VirtualDomElements.Div,
   })
   expect(backToChatListLabel).toBeUndefined()
+  expect(result.indexOf(focusHeader as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
+  expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(projectSidebar as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(addActionButton).toMatchObject({
