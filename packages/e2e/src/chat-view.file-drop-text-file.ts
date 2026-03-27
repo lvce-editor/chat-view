@@ -10,6 +10,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachments = Locator('.ChatComposerAttachments')
   const attachment = Locator('.ChatComposerAttachment')
+  const removeButton = Locator('.ChatComposerAttachmentRemoveButton')
   const file = new File(['hello from text file'], 'notes.txt', { type: 'text/plain' })
 
   await expect(composer).toBeVisible()
@@ -18,5 +19,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1)
-  await expect(attachment.first()).toHaveText('Text file · notes.txt')
+  await expect(removeButton).toHaveCount(1)
+  await expect(attachment.first()).toHaveText('xText file · notes.txt')
 }

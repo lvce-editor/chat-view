@@ -50,9 +50,6 @@ const getComposerAttachmentClassName = (displayType: ComposerAttachmentDisplayTy
 }
 
 const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
-  if (attachment.displayType !== 'image') {
-    return []
-  }
   return [
     {
       buttonType: 'button',
@@ -60,7 +57,7 @@ const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): r
       className: ClassNames.ChatComposerAttachmentRemoveButton,
       name: InputName.getComposerAttachmentRemoveInputName(attachment.attachmentId),
       onClick: DomEventListenerFunctions.HandleClick,
-      title: Strings.removeImageAttachment(),
+      title: Strings.removeAttachment(),
       type: VirtualDomElements.Button,
     },
     {
@@ -79,6 +76,8 @@ const getComposerAttachmentPreviewDom = (attachment: ComposerAttachment): readon
       alt: `Image preview for ${attachment.name}`,
       childCount: 0,
       className: ClassNames.ChatComposerAttachmentPreview,
+      name: InputName.getComposerAttachmentPreviewInputName(attachment.attachmentId),
+      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatImageAttachment,
       src: attachment.previewSrc,
       type: VirtualDomElements.Img,
     },

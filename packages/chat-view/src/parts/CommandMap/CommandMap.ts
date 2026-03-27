@@ -74,6 +74,7 @@ import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockO
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
+import * as OpenChatAttachmentInNewTab from '../OpenChatAttachmentInNewTab/OpenChatAttachmentInNewTab.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
 import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
@@ -81,6 +82,7 @@ import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
+import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveComposerAttachment.ts'
 import { rerender } from '../Rerender/Rerender.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
@@ -191,12 +193,14 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
+  'Chat.openChatAttachmentInNewTab': wrapCommand(OpenChatAttachmentInNewTab.openChatAttachmentInNewTab),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),
   'Chat.openRunModePicker': wrapCommand(openRunModePicker),
   'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
+  'Chat.removeComposerAttachment': wrapCommand(RemoveComposerAttachment.removeComposerAttachment),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
