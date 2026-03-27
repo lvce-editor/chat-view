@@ -6,7 +6,15 @@ export interface ResponsivePickerState {
   readonly hasSpaceForRunModePicker: boolean
 }
 
-export const getResponsivePickerState = (width: number): ResponsivePickerState => {
+const fullyVisibleResponsivePickerState: ResponsivePickerState = {
+  hasSpaceForAgentModePicker: true,
+  hasSpaceForRunModePicker: true,
+}
+
+export const getResponsivePickerState = (width: number, responsivePickerVisibilityEnabled: boolean): ResponsivePickerState => {
+  if (!responsivePickerVisibilityEnabled) {
+    return fullyVisibleResponsivePickerState
+  }
   return {
     hasSpaceForAgentModePicker: width >= minimumWidthForAgentModePicker,
     hasSpaceForRunModePicker: width >= minimumWidthForRunModePicker,

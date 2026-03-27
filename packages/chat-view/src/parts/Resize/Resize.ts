@@ -5,7 +5,8 @@ import { getResponsivePickerState } from '../GetResponsivePickerState/GetRespons
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
 
 export const resize = async (state: ChatState, dimensions: any, getComposerHeightFn: GetComposerHeightFn = getComposerHeight): Promise<ChatState> => {
-  const responsivePickerState = dimensions.width === undefined ? undefined : getResponsivePickerState(dimensions.width)
+  const responsivePickerState =
+    dimensions.width === undefined ? undefined : getResponsivePickerState(dimensions.width, state.responsivePickerVisibilityEnabled)
   const responsivePickerOpenState = responsivePickerState
     ? {
         agentModePickerOpen: responsivePickerState.hasSpaceForAgentModePicker ? state.agentModePickerOpen : false,

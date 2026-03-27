@@ -114,6 +114,17 @@ test('resize should update responsive picker visibility when width changes', asy
     width: 800,
   }
   const result = await Resize.resize(state, { width: minimumWidthForRunModePicker - 1 })
+  expect(result.hasSpaceForAgentModePicker).toBe(true)
+  expect(result.hasSpaceForRunModePicker).toBe(true)
+})
+
+test('resize should update responsive picker visibility when enabled', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    responsivePickerVisibilityEnabled: true,
+    width: 800,
+  }
+  const result = await Resize.resize(state, { width: minimumWidthForRunModePicker - 1 })
   expect(result.hasSpaceForAgentModePicker).toBe(false)
   expect(result.hasSpaceForRunModePicker).toBe(false)
 })
@@ -122,6 +133,7 @@ test('resize should close optional pickers when the width becomes too narrow', a
   const state: ChatState = {
     ...createDefaultState(),
     agentModePickerOpen: true,
+    responsivePickerVisibilityEnabled: true,
     runModePickerOpen: true,
     width: 800,
   }

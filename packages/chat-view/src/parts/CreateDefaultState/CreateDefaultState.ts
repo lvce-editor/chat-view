@@ -19,9 +19,10 @@ export const createDefaultState = (): ChatState => {
   const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
+  const responsivePickerVisibilityEnabled = false
   const models = getDefaultModels()
   const visibleModels = getVisibleModels(models, '')
-  const responsivePickerState = getResponsivePickerState(800)
+  const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
   return {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,
@@ -111,6 +112,7 @@ export const createDefaultState = (): ChatState => {
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled: false,
     renamingSessionId: '',
+    responsivePickerVisibilityEnabled,
     runMode: 'local',
     runModePickerOpen: false,
     searchEnabled: false,
