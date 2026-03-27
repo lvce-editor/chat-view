@@ -27,5 +27,5 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1)
-  await expect(attachment.first()).toHaveText('Text file · large-notes.txt')
+  await expect(attachment.first()).toHaveText('xText file · large-notes.txt')
 }
