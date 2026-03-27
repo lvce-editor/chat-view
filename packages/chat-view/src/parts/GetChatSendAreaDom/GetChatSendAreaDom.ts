@@ -76,7 +76,7 @@ const getComposerAttachmentPreviewDom = (attachment: ComposerAttachment): readon
       alt: `Image preview for ${attachment.name}`,
       childCount: 0,
       className: ClassNames.ChatComposerAttachmentPreview,
-      name: InputName.getComposerAttachmentPreviewInputName(attachment.attachmentId),
+      name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatImageAttachment,
       src: attachment.previewSrc,
       type: VirtualDomElements.Img,
