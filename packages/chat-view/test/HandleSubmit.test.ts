@@ -62,6 +62,62 @@ test('handleSubmit should clear composer attachments after submit', async () => 
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
+test('handleSubmit should persist submitted attachments on the user message and remove pending attachment events', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerAttachments: [
+      {
+        attachmentId: 'attachment-1',
+        displayType: 'image' as const,
+        mimeType: 'image/svg+xml',
+        name: 'photo.svg',
+        previewSrc: 'data:image/svg+xml;base64,abc',
+        size: 100,
+      },
+      {
+        attachmentId: 'attachment-2',
+        displayType: 'text-file' as const,
+        mimeType: 'text/plain',
+        name: 'notes.txt',
+        size: 12,
+        textContent: 'hello from file',
+      },
+    ],
+    composerAttachmentsHeight: 34,
+    composerValue: 'hello',
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result.sessions[0].messages[0]).toEqual(
+    expect.objectContaining({
+      attachments: state.composerAttachments,
+      role: 'user',
+      text: 'hello',
+    }),
+  )
+  const events = await getChatViewEvents('session-1')
+  expect(events).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        attachmentId: 'attachment-1',
+        type: 'chat-attachment-removed',
+      }),
+      expect.objectContaining({
+        attachmentId: 'attachment-2',
+        type: 'chat-attachment-removed',
+      }),
+    ]),
+  )
+  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
 test('handleSubmit should dedupe consecutive history entries', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

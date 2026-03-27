@@ -4,6 +4,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -69,6 +70,7 @@ export interface ChatState {
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number
   readonly mockApiCommandId: string
+  readonly mockOpenApiRequests: readonly MockOpenApiRequest[]
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
   readonly modelPickerListScrollTop: number
@@ -102,6 +104,7 @@ export interface ChatState {
   readonly responsivePickerVisibilityEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly searchEnabled: boolean
   readonly searchFieldVisible: boolean
   readonly searchValue: string

@@ -42,6 +42,15 @@ test('getKeyBindings should include chat input history navigation keybindings', 
   })
 })
 
+test('getKeyBindings should include ctrl+n to open new chat when chat input is focused', () => {
+  const result = getKeyBindings()
+  expect(result).toContainEqual({
+    command: 'Chat.handleClickNew',
+    key: KeyModifier.CtrlCmd | KeyCode.KeyN,
+    when: WhenExpression.FocusChatInput,
+  })
+})
+
 test('getKeyBindings should keep enter and shift-enter bindings', () => {
   const result = getKeyBindings()
   expect(result).toContainEqual({

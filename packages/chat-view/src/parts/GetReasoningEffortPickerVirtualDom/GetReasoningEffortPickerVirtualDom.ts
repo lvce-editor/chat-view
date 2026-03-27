@@ -44,6 +44,8 @@ export const getReasoningEffortPickerVirtualDom = (
           {
             childCount: reasoningEfforts.length,
             className: ClassNames.ChatModelPickerList,
+            name: InputName.PickerList,
+            tabIndex: -1,
             type: VirtualDomElements.Ul,
           },
           ...getReasoningEffortOptionsVirtualDom(selectedReasoningEffort),

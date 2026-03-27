@@ -2,11 +2,26 @@ import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantT
 import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 
+const imageRegex = /\b(?:image|vision|multimodal)\b/i
+const unsupportedRegex = /\bdoes(?:\s+not|n't)\s+support|not\s+support(?:ed)?|unsupported\b/i
+
 const isOffline = (): boolean => {
   if (!globalThis.navigator) {
     return false
   }
   return globalThis.navigator.onLine === false
+}
+
+export const isImageNotSupportedError = (
+  errorResult: Pick<GetOpenApiAssistantTextErrorResult, 'errorCode' | 'errorMessage' | 'errorType'>,
+): boolean => {
+  const haystack = [errorResult.errorCode, errorResult.errorMessage, errorResult.errorType].filter(Boolean).join(' ')
+  return imageRegex.test(haystack) && unsupportedRegex.test(haystack)
+}
+
+export const getImageNotSupportedMessage = (modelName?: string): string => {
+  const subject = modelName ? `${modelName} does not support image attachments.` : 'This model does not support image attachments.'
+  return `${subject} Choose a vision-capable model like GPT-4o Mini or GPT-4o, or remove the image and try again.`
 }
 
 export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextErrorResult): string => {
@@ -20,6 +35,10 @@ export const getOpenApiErrorMessage = (errorResult: GetOpenApiAssistantTextError
       if (errorResult.errorCode === 'invalid_api_key') {
         const status = typeof errorResult.statusCode === 'number' ? errorResult.statusCode : 401
         return `OpenAI request failed (Status ${status}): Invalid API key. Please verify your OpenAI API key in Chat Settings.`
+      }
+
+      if (isImageNotSupportedError(errorResult)) {
+        return getImageNotSupportedMessage()
       }
 
       if (errorResult.statusCode === 429) {

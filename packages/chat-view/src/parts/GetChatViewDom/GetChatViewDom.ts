@@ -53,6 +53,7 @@ export interface GetChatVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex?: number
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -72,6 +73,7 @@ export interface GetChatVirtualDomOptions {
   readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
@@ -112,6 +114,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
     listFocusedIndex = -1,
+    messagesAutoScrollEnabled,
     messagesScrollTop,
     modelPickerOpen = false,
     modelPickerSearchValue = '',
@@ -131,6 +134,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     reasoningPickerEnabled,
     runMode,
     runModePickerOpen = false,
+    scrollDownButtonEnabled,
     searchEnabled = false,
     searchFieldVisible = false,
     searchValue = '',
@@ -173,6 +177,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,
         modelPickerSearchValue,
@@ -192,6 +197,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         reasoningPickerEnabled,
         runMode,
         runModePickerOpen,
+        scrollDownButtonEnabled,
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
@@ -226,6 +232,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,
         modelPickerSearchValue,
@@ -242,6 +249,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         reasoningPickerEnabled,
         runMode,
         runModePickerOpen,
+        scrollDownButtonEnabled,
         selectedModelId,
         selectedSessionId,
         sessions,
