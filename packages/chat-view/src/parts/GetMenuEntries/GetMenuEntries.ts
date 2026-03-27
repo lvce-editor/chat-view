@@ -6,7 +6,14 @@ import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntri
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
 import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
-import { MenuChatAttachment, MenuChatHeader, MenuChatInput, MenuChatList, MenuChatProjectList, MenuProjectAddButton } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
+import {
+  MenuChatAttachment,
+  MenuChatHeader,
+  MenuChatInput,
+  MenuChatList,
+  MenuChatProjectList,
+  MenuProjectAddButton,
+} from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
 export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonly MenuEntry[] => {
   switch (props.menuId) {

@@ -33,7 +33,14 @@ test('handleContextMenuChatImageAttachment should open the attachment context me
   )
 
   expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatAttachment, 20, 30, { attachmentId: 'attachment-1', menuId: MenuChatAttachment, previewSrc: 'data:image/svg+xml;base64,abc' }],
+    [
+      'ContextMenu.show2',
+      7,
+      MenuChatAttachment,
+      20,
+      30,
+      { attachmentId: 'attachment-1', menuId: MenuChatAttachment, previewSrc: 'data:image/svg+xml;base64,abc' },
+    ],
   ])
   expect(result).toBe(state)
 })
