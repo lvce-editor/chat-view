@@ -394,7 +394,13 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   expect(result[0]).toMatchObject({
     childCount: 4,
   })
+  const overlays = result.find((node) => node.className === ClassNames.ChatOverlays)
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  expect(overlays).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatOverlays,
+    type: VirtualDomElements.Div,
+  })
   expect(pickerContainers).toHaveLength(1)
   expect(pickerContainers[0]).toMatchObject({
     onContextMenu: expect.any(Number),
@@ -411,8 +417,8 @@ test('getChatVirtualDom should not render absolute picker chat child when picker
   expect(result[0]).toMatchObject({
     childCount: 3,
   })
-  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toBeUndefined()
+  const overlays = result.find((node) => node.className === ClassNames.ChatOverlays)
+  expect(overlays).toBeUndefined()
 })
 
 test('getChatVirtualDOm should filter model picker entries by search', () => {
