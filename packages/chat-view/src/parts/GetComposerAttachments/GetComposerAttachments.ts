@@ -2,6 +2,7 @@ import type { ChatAttachmentAddedEvent, ChatAttachmentRemovedEvent, ChatViewEven
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { getChatViewEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
+import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
 
 const isChatAttachmentAddedEvent = (event: ChatViewEvent): event is ChatAttachmentAddedEvent => {
   return event.type === 'chat-attachment-added'
@@ -25,11 +26,18 @@ export const getComposerAttachments = async (sessionId: string): Promise<readonl
     if (!isChatAttachmentAddedEvent(event)) {
       continue
     }
+    const displayType = await getComposerAttachmentDisplayType(event.blob, event.name, event.mimeType)
+    const previewSrc = await getComposerAttachmentPreviewSrc(event.blob, displayType, event.mimeType)
     attachments.set(event.attachmentId, {
       attachmentId: event.attachmentId,
-      displayType: await getComposerAttachmentDisplayType(event.blob, event.name, event.mimeType),
+      displayType,
       mimeType: event.mimeType,
       name: event.name,
+      ...(previewSrc
+        ? {
+            previewSrc,
+          }
+        : {}),
       size: event.size,
     })
   }

@@ -5,5 +5,6 @@ export interface ComposerAttachment {
   readonly displayType: ComposerAttachmentDisplayType
   readonly mimeType: string
   readonly name: string
+  readonly previewSrc?: string
   readonly size: number
 }
