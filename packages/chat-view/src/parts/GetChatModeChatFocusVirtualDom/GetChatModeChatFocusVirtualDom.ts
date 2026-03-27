@@ -141,13 +141,19 @@ export const getChatModeChatFocusVirtualDom = ({
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-  const chatRootChildCount = 4 + (hasVisibleOverlays ? 1 : 0)
+  const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
+      type: VirtualDomElements.Div,
+    },
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
+    {
+      childCount: 3,
+      className: ClassNames.ChatFocusMainArea,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
@@ -164,7 +170,6 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,

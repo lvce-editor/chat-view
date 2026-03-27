@@ -313,6 +313,24 @@ export const getCss = (
   max-inline-size: 100%;
 }
 
+
+.Viewlet.Chat.ChatFocus{
+  display: flex !important;
+  min-width: 0;
+}
+
+.ChatFocusMainArea{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ChatFocusMainArea > .ChatMessages{
+  flex: 1;
+  min-height: 0;
+}
+
 `
 
   return `${baseCss}
