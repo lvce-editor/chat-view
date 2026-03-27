@@ -7,4 +7,5 @@ export interface ComposerAttachment {
   readonly name: string
   readonly previewSrc?: string
   readonly size: number
+  readonly textContent?: string
 }

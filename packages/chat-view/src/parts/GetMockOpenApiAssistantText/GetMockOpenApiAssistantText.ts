@@ -1,5 +1,6 @@
 import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
+import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 type ResponseFunctionCall = {
@@ -16,6 +17,49 @@ type GetMockOpenApiAssistantTextSuccessResult = {
 }
 
 type GetMockOpenApiAssistantTextResult = GetMockOpenApiAssistantTextSuccessResult | Exclude<GetOpenApiAssistantTextResult, { type: 'success' }>
+
+const lastRequestSummaryToken = '__MOCK_OPENAPI_LAST_REQUEST_SUMMARY__'
+
+const getLastRequestSummary = (): string => {
+  const requests = MockOpenApiRequest.getAll()
+  const request = requests.at(-1)
+  if (!request || !request.payload || typeof request.payload !== 'object') {
+    return 'mock-request-summary images=0 text-files=0'
+  }
+  const input = Reflect.get(request.payload, 'input')
+  if (!Array.isArray(input) || input.length === 0) {
+    return 'mock-request-summary images=0 text-files=0'
+  }
+  let imageCount = 0
+  let textFileCount = 0
+  for (const item of input) {
+    if (!item || typeof item !== 'object') {
+      continue
+    }
+    const content = Reflect.get(item, 'content')
+    if (!Array.isArray(content)) {
+      continue
+    }
+    for (const part of content) {
+      if (!part || typeof part !== 'object') {
+        continue
+      }
+      const type = Reflect.get(part, 'type')
+      if (type === 'input_image') {
+        imageCount++
+        continue
+      }
+      if (type !== 'input_text') {
+        continue
+      }
+      const text = Reflect.get(part, 'text')
+      if (typeof text === 'string' && text.startsWith('Attached text file "')) {
+        textFileCount++
+      }
+    }
+  }
+  return `mock-request-summary images=${imageCount} text-files=${textFileCount}`
+}
 
 const getResponseFunctionCalls = (value: unknown): readonly ResponseFunctionCall[] => {
   if (!value || typeof value !== 'object') {
@@ -238,9 +282,10 @@ export const getMockOpenApiAssistantText = async (
       }
       continue
     }
-    text += chunk
+    const resolvedChunk = chunk === lastRequestSummaryToken ? getLastRequestSummary() : chunk
+    text += resolvedChunk
     if (stream && onTextChunk) {
-      await onTextChunk(chunk)
+      await onTextChunk(resolvedChunk)
     }
   }
 

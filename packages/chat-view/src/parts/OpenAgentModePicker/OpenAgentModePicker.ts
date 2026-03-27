@@ -11,6 +11,8 @@ export const openAgentModePicker = (state: ChatState): ChatState => {
   return {
     ...state,
     agentModePickerOpen,
+    focus: agentModePickerOpen ? 'picker-list' : state.focus,
+    focused: agentModePickerOpen ? true : state.focused,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     reasoningEffortPickerOpen: false,

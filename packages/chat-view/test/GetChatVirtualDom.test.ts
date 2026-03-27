@@ -360,6 +360,48 @@ test('getChatVirtualDom should render create pr button for completed background 
   })
 })
 
+test('getChatVirtualDom should render scroll down button when enabled and messages are not at bottom', () => {
+  const result = renderChatView({
+    messagesAutoScrollEnabled: false,
+    scrollDownButtonEnabled: true,
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [{ id: 'm1', role: 'user' as const, text: 'hello', time: '10:00' }],
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+  const scrollDownButton = result.find((node) => node.name === 'scroll-down')
+  expect(scrollDownButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'scroll-down',
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Scroll down',
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDom should hide scroll down button when auto scroll is enabled', () => {
+  const result = renderChatView({
+    messagesAutoScrollEnabled: true,
+    scrollDownButtonEnabled: true,
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [{ id: 'm1', role: 'user' as const, text: 'hello', time: '10:00' }],
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+  const scrollDownButton = result.find((node) => node.name === 'scroll-down')
+  expect(scrollDownButton).toBeUndefined()
+})
+
 test('getChatVirtualDom should not render create pr button while assistant is still in progress', () => {
   const result = renderChatView({
     runMode: 'background',

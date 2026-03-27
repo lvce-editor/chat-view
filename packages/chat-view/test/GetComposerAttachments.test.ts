@@ -73,6 +73,7 @@ test('getComposerAttachments restores preview src for valid images only', async 
     expect.objectContaining({
       attachmentId: 'attachment-2',
       displayType: 'text-file',
+      textContent: 'hello',
     }),
   )
   expect(attachments[1]).not.toHaveProperty('previewSrc')

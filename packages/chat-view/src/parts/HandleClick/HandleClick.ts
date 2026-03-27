@@ -4,6 +4,7 @@ import { deleteProject } from '../DeleteProject/DeleteProject.ts'
 import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { getModelPickerClickIndex } from '../GetModelPickerClickIndex/GetModelPickerClickIndex.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { handleAgentModeChange } from '../HandleAgentModeChange/HandleAgentModeChange.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickCreatePullRequest } from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
@@ -133,6 +134,12 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       return deleteProject(state, id)
     case name === InputName.Send:
       return handleClickSend(state)
+    case name === InputName.ScrollDown:
+      return {
+        ...state,
+        messagesAutoScrollEnabled: true,
+        messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
+      }
     case name === SaveOpenRouterApiKey:
       return handleClickSaveOpenRouterApiKey(state)
     case name === SaveOpenApiApiKey:

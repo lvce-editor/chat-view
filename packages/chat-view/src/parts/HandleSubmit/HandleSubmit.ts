@@ -12,6 +12,7 @@ import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { getAiSessionTitle } from '../GetAiSessionTitle/GetAiSessionTitle.ts'
+import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
@@ -41,6 +42,20 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
 }
 
 const workspaceUriPlaceholder = '{{workspaceUri}}'
+
+const clearComposerAttachments = async (sessionId: string, attachmentIds: readonly string[]): Promise<void> => {
+  if (!sessionId) {
+    return
+  }
+  for (const attachmentId of attachmentIds) {
+    await appendChatViewEvent({
+      attachmentId,
+      sessionId,
+      timestamp: new Date().toISOString(),
+      type: 'chat-attachment-removed',
+    })
+  }
+}
 
 const getCurrentDate = (): string => {
   return new Date().toISOString().slice(0, 10)
@@ -135,7 +150,17 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const userMessageId = crypto.randomUUID()
+  const composerAttachments = state.composerAttachments.length > 0 ? state.composerAttachments : await getComposerAttachments(state.selectedSessionId)
+  await clearComposerAttachments(
+    state.selectedSessionId,
+    composerAttachments.map((attachment) => attachment.attachmentId),
+  )
   const userMessage: ChatMessage = {
+    ...(composerAttachments.length > 0
+      ? {
+          attachments: composerAttachments,
+        }
+      : {}),
     id: userMessageId,
     role: 'user',
     text: userText,
@@ -257,6 +282,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     latestState: optimisticState,
     previousState: optimisticState,
   }
+  let { mockOpenApiRequests } = optimisticState
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
   const systemPrompt = getEffectiveSystemPrompt(optimisticState, selectedOptimisticSession)
   const workspaceUri = getWorkspaceUri(optimisticState, selectedOptimisticSession)
@@ -302,6 +328,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         type: 'event-stream-finished',
         value: '[DONE]',
       })
+    },
+    onMockOpenApiRequestCaptured: async (request): Promise<void> => {
+      mockOpenApiRequests = [...mockOpenApiRequests, request]
     },
     ...(handleTextChunkFunctionRef
       ? {
@@ -370,6 +399,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   return withUpdatedMessageScrollTop(
     FocusInput.focusInput({
       ...latestState,
+      mockOpenApiRequests,
       nextMessageId: latestState.nextMessageId + 1,
       parsedMessages: finalParsedMessages,
       sessions: updatedSessions,

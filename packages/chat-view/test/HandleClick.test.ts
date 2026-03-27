@@ -4,6 +4,7 @@ import { ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-re
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import { getNextAutoScrollTop } from '../src/parts/GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
@@ -205,6 +206,17 @@ test('handleClick should keep state for unknown action', async () => {
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'unknown-action')
   expect(result).toBe(state)
+})
+
+test('handleClick should scroll messages to bottom when clicking scroll down button', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    messagesAutoScrollEnabled: false,
+    messagesScrollTop: 120,
+  }
+  const result = await HandleClick.handleClick(state, InputName.ScrollDown)
+  expect(result.messagesAutoScrollEnabled).toBe(true)
+  expect(result.messagesScrollTop).toBe(getNextAutoScrollTop(120))
 })
 
 test('handleClick should remove composer attachment and persist removal event', async () => {
