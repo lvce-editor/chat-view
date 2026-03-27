@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import { minimumWidthForAgentModePicker, minimumWidthForRunModePicker } from '../src/parts/GetResponsivePickerState/GetResponsivePickerState.ts'
 import * as Resize from '../src/parts/Resize/Resize.ts'
 
 test('resize should merge dimensions into state', async () => {
@@ -105,4 +106,28 @@ test('resize should preserve composer height when width does not change', async 
   const result = await Resize.resize(state, { height: 500 }, getComposerHeight)
   expect(getComposerHeight).not.toHaveBeenCalled()
   expect(result.composerHeight).toBe(68)
+})
+
+test('resize should update responsive picker visibility when width changes', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    width: 800,
+  }
+  const result = await Resize.resize(state, { width: minimumWidthForRunModePicker - 1 })
+  expect(result.hasSpaceForAgentModePicker).toBe(false)
+  expect(result.hasSpaceForRunModePicker).toBe(false)
+})
+
+test('resize should close optional pickers when the width becomes too narrow', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    agentModePickerOpen: true,
+    runModePickerOpen: true,
+    width: 800,
+  }
+  const result = await Resize.resize(state, { width: minimumWidthForAgentModePicker - 1 })
+  expect(result.agentModePickerOpen).toBe(false)
+  expect(result.runModePickerOpen).toBe(true)
+  expect(result.hasSpaceForAgentModePicker).toBe(false)
+  expect(result.hasSpaceForRunModePicker).toBe(true)
 })

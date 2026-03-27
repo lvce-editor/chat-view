@@ -94,6 +94,7 @@ export const getChatSendAreaDom = (
   composerAttachments: readonly ComposerAttachment[],
   agentMode: AgentMode,
   agentModePickerOpen: boolean,
+  hasSpaceForAgentModePicker: boolean,
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -105,6 +106,7 @@ export const getChatSendAreaDom = (
   tokensMax: number,
   addContextButtonEnabled: boolean,
   showRunMode: boolean,
+  hasSpaceForRunModePicker: boolean,
   runMode: RunMode,
   runModePickerOpen: boolean,
   todoListToolEnabled: boolean,
@@ -113,9 +115,11 @@ export const getChatSendAreaDom = (
   voiceDictationEnabled = false,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
+  const showAgentModePicker = hasSpaceForAgentModePicker
+  const showResponsiveRunModePicker = showRunMode && hasSpaceForRunModePicker
   const bottomControlsCount =
     2 + (usageOverviewEnabled ? 1 : 0) + (addContextButtonEnabled ? 1 : 0) + (showCreatePullRequestButton ? 1 : 0) + (voiceDictationEnabled ? 1 : 0)
-  const primaryControlsCount = 2 + (reasoningPickerEnabled ? 1 : 0) + (showRunMode ? 1 : 0)
+  const primaryControlsCount = 1 + (showAgentModePicker ? 1 : 0) + (reasoningPickerEnabled ? 1 : 0) + (showResponsiveRunModePicker ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
 
@@ -145,10 +149,10 @@ export const getChatSendAreaDom = (
       className: ClassNames.ChatSendAreaPrimaryControls,
       type: VirtualDomElements.Div,
     },
-    ...getAgentModePickerVirtualDom(agentMode, agentModePickerOpen),
+    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen) : []),
     ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
     ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen) : []),
-    ...(showRunMode ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
+    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),

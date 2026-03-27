@@ -50,6 +50,8 @@ export interface ChatState {
   readonly errorCount: number
   readonly focus: ChatViewFocus
   readonly focused: boolean
+  readonly hasSpaceForAgentModePicker: boolean
+  readonly hasSpaceForRunModePicker: boolean
   readonly headerHeight: number
   readonly height: number
   readonly initial: boolean

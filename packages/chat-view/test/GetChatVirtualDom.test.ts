@@ -149,6 +149,42 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   })
 })
 
+test('getChatVirtualDom should hide optional pickers when there is not enough horizontal space', () => {
+  const result = renderChatView({
+    hasSpaceForAgentModePicker: false,
+    hasSpaceForRunModePicker: false,
+  })
+  const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
+  const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
+  const customSelectContainers = result.filter((node) => node.className === ClassNames.CustomSelectContainer)
+  expect(primaryControls).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatSendAreaPrimaryControls,
+    type: VirtualDomElements.Div,
+  })
+  expect(agentModePickerToggle).toBeUndefined()
+  expect(modelPickerToggle).toBeDefined()
+  expect(runModePickerToggle).toBeUndefined()
+  expect(customSelectContainers).toHaveLength(1)
+})
+
+test('getChatVirtualDom should keep the run mode picker when only the agent picker runs out of space', () => {
+  const result = renderChatView({
+    hasSpaceForAgentModePicker: false,
+    hasSpaceForRunModePicker: true,
+  })
+  const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
+  const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
+  expect(primaryControls).toMatchObject({
+    childCount: 2,
+  })
+  expect(agentModePickerToggle).toBeUndefined()
+  expect(runModePickerToggle).toBeDefined()
+})
+
 test('getChatVirtualDom should render open run mode picker without search input', () => {
   const result = renderChatView({
     runModePickerOpen: true,
@@ -173,6 +209,23 @@ test('getChatVirtualDom should render open run mode picker without search input'
     childCount: 4,
   })
   expect(pickerContainers).toHaveLength(1)
+})
+
+test('getChatVirtualDom should suppress hidden picker popovers on narrow widths', () => {
+  const result = renderChatView({
+    agentModePickerOpen: true,
+    hasSpaceForAgentModePicker: false,
+    hasSpaceForRunModePicker: false,
+    runModePickerOpen: true,
+    viewMode: 'detail',
+  })
+  const agentModePicker = result.find((node) => node.name === 'agent-mode-picker-item:agent')
+  const runModePicker = result.find((node) => node.name === 'run-mode-picker-item:background')
+  expect(result[0]).toMatchObject({
+    childCount: 3,
+  })
+  expect(agentModePicker).toBeUndefined()
+  expect(runModePicker).toBeUndefined()
 })
 
 test('getChatVirtualDom should render open agent mode picker as custom select without search input', () => {

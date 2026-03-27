@@ -4,6 +4,7 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
@@ -19,6 +20,7 @@ export const createDefaultState = (): ChatState => {
   const composerLineHeight = 20
   const models = getDefaultModels()
   const visibleModels = getVisibleModels(models, '')
+  const responsivePickerState = getResponsivePickerState(800)
   return {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,
@@ -60,6 +62,7 @@ export const createDefaultState = (): ChatState => {
     focused: false,
     headerHeight: 50,
     height: 0,
+    ...responsivePickerState,
     initial: true,
     inputSource: 'script',
     lastNormalViewMode: 'list',
