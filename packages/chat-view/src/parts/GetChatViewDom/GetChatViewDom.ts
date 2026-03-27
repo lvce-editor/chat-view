@@ -40,6 +40,8 @@ export interface GetChatVirtualDomOptions {
   readonly authErrorMessage?: string
   readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
   readonly chatListScrollTop: number
+  readonly composerAttachmentPreviewOverlayAttachmentId: string
+  readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
@@ -97,6 +99,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     authErrorMessage = '',
     authStatus = 'signed-out',
     chatListScrollTop,
+    composerAttachmentPreviewOverlayAttachmentId,
+    composerAttachmentPreviewOverlayError = false,
     composerAttachments,
     composerDropActive = false,
     composerDropEnabled = true,
@@ -157,6 +161,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authEnabled,
         authErrorMessage,
         authStatus,
+        composerAttachmentPreviewOverlayAttachmentId,
+        composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
         composerDropEnabled,
@@ -208,6 +214,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authEnabled,
         authErrorMessage,
         authStatus,
+        composerAttachmentPreviewOverlayAttachmentId,
+        composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
         composerDropEnabled,
@@ -256,6 +264,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         authErrorMessage,
         authStatus,
         chatListScrollTop,
+        composerAttachmentPreviewOverlayAttachmentId,
+        composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
         composerDropEnabled,

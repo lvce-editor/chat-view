@@ -7,7 +7,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, files: readonly File[] = []): Promise<ChatState> => {
-  const { composerDropActive, composerDropEnabled, selectedSessionId, width } = state
+  const { composerDropActive, composerDropEnabled, nextAttachmentId, selectedSessionId, width } = state
   if (name !== InputName.ComposerDropTarget) {
     return state
   }
@@ -29,7 +29,7 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   }
   const nextAttachments: ComposerAttachment[] = []
   for (const file of files) {
-    const attachmentId = crypto.randomUUID()
+    const attachmentId = `attachment-${nextAttachmentId + nextAttachments.length}`
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
     const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
     await appendChatViewEvent({
@@ -59,5 +59,6 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
     ...nextState,
     composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
     composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], width),
+    nextAttachmentId: nextAttachmentId + nextAttachments.length,
   }
 }
