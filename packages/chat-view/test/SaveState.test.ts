@@ -7,6 +7,8 @@ test('saveState should persist global state without session payloads', () => {
   const state: ChatState = {
     ...createDefaultState(),
     chatListScrollTop: 80,
+    composerSelectionEnd: 4,
+    composerSelectionStart: 2,
     composerValue: 'draft',
     messagesScrollTop: 120,
     nextMessageId: 4,
@@ -32,6 +34,8 @@ test('saveState should persist global state without session payloads', () => {
   expect(result.searchValue).toBe('draft query')
   expect(result.viewMode).toBe('list')
   expect(result.chatListScrollTop).toBe(80)
+  expect(result.composerSelectionStart).toBe(2)
+  expect(result.composerSelectionEnd).toBe(4)
   expect(result.messagesScrollTop).toBe(120)
   expect(result.selectedProjectId).toBe('project-1')
   expect(result.projects).toEqual(state.projects)
