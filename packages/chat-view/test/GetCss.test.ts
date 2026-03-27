@@ -25,3 +25,13 @@ test.skip('getCss should size chat focus messages to their content width', () =>
   expect(css).toContain('.ChatFocus .ChatMessages > .Message > .ChatMessageContent{')
   expect(css).toContain('max-inline-size: 100%;')
 })
+
+test('getCss should style submitted chat attachments separately from composer attachments', () => {
+  const css = getCss(28, 34, 100, 40, 13, 20, 'system-ui', 700, 0, 12, 12, 0, 10, 8, 8, 10, '')
+
+  expect(css).toContain('.ChatAttachments{')
+  expect(css).toContain('.ChatAttachment{')
+  expect(css).toContain('.ChatAttachmentPreview{')
+  expect(css).toContain('.ChatMessages > .MessageUser .ChatAttachments{')
+  expect(css).toContain('justify-content: flex-end;')
+})
