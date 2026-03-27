@@ -100,17 +100,16 @@ export const getComposerAttachmentInputName = (attachmentId: string): `${typeof 
   return `${ComposerAttachmentPrefix}${attachmentId}`
 }
 
-<<<<<<< HEAD
 export const isComposerAttachmentInputName = (name: string): name is `${typeof ComposerAttachmentPrefix}${string}` => {
   return name.startsWith(ComposerAttachmentPrefix)
 }
 
 export const getAttachmentIdFromComposerAttachmentInputName = (name: `${typeof ComposerAttachmentPrefix}${string}`): string => {
   return name.slice(ComposerAttachmentPrefix.length)
-=======
+}
+
 export const getComposerAttachmentPreviewInputName = (attachmentId: string): `${typeof ComposerAttachmentPreviewPrefix}${string}` => {
   return `${ComposerAttachmentPreviewPrefix}${attachmentId}`
->>>>>>> origin/main
 }
 
 export const getComposerAttachmentRemoveInputName = (attachmentId: string): `${typeof ComposerAttachmentRemovePrefix}${string}` => {

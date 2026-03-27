@@ -62,11 +62,7 @@ test('getMessageNodeDom should render markdown image inline nodes as img dom nod
     type: VirtualDomElements.P,
   })
   expect(result[1]).toEqual({
-<<<<<<< HEAD
-    alt: 'This is an image (Image preview could not be loaded)',
-=======
     alt: `This is an image (${ChatStrings.imageCouldNotBeLoaded()})`,
->>>>>>> origin/main
     childCount: 0,
     className: ClassNames.ImageElement,
     onContextMenu: 58,
