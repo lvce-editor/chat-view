@@ -5,6 +5,7 @@ import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
@@ -18,8 +19,10 @@ export const createDefaultState = (): ChatState => {
   const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
+  const responsivePickerVisibilityEnabled = false
   const models = getDefaultModels()
   const visibleModels = getVisibleModels(models, '')
+  const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
   return {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,
@@ -61,6 +64,7 @@ export const createDefaultState = (): ChatState => {
     focused: false,
     headerHeight: 50,
     height: 0,
+    ...responsivePickerState,
     initial: true,
     inputSource: 'script',
     lastNormalViewMode: 'list',
@@ -108,6 +112,7 @@ export const createDefaultState = (): ChatState => {
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled: false,
     renamingSessionId: '',
+    responsivePickerVisibilityEnabled,
     runMode: 'local',
     runModePickerOpen: false,
     searchEnabled: false,

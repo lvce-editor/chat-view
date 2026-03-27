@@ -95,6 +95,7 @@ import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
 import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
+import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
@@ -212,6 +213,7 @@ export const commandMap = {
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
   'Chat.setReasoningPickerEnabled': wrapCommand(SetReasoningPickerEnabled.setReasoningPickerEnabled),
+  'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),

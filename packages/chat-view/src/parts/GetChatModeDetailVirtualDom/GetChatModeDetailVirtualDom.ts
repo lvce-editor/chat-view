@@ -35,6 +35,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly hasSpaceForAgentModePicker: boolean
+  readonly hasSpaceForRunModePicker: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -80,6 +82,8 @@ export const getChatModeDetailVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  hasSpaceForAgentModePicker,
+  hasSpaceForRunModePicker,
   messagesScrollTop = 0,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -114,9 +118,9 @@ export const getChatModeDetailVirtualDom = ({
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
-  const isAgentModePickerVisible = agentModePickerOpen
+  const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
-  const isRunModePickerVisible = showRunMode && runModePickerOpen
+  const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const chatRootChildCount =
     3 + (isDropOverlayVisible ? 1 : 0) + (isAgentModePickerVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
   return [
@@ -145,6 +149,7 @@ export const getChatModeDetailVirtualDom = ({
       composerAttachments,
       agentMode,
       agentModePickerOpen,
+      hasSpaceForAgentModePicker,
       modelPickerOpen,
       models,
       selectedModelId,
@@ -156,6 +161,7 @@ export const getChatModeDetailVirtualDom = ({
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
+      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,

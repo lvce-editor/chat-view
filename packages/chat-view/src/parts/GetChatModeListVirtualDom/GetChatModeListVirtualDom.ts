@@ -33,6 +33,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly hasSpaceForAgentModePicker: boolean
+  readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -95,6 +97,8 @@ export const getChatModeListVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  hasSpaceForAgentModePicker,
+  hasSpaceForRunModePicker,
   listFocusedIndex = -1,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -120,9 +124,9 @@ export const getChatModeListVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
-  const isAgentModePickerVisible = agentModePickerOpen
+  const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
-  const isRunModePickerVisible = showRunMode && runModePickerOpen
+  const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const chatRootChildCount =
     3 + (isDropOverlayVisible ? 1 : 0) + (isAgentModePickerVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
@@ -143,6 +147,7 @@ export const getChatModeListVirtualDom = ({
       composerAttachments,
       agentMode,
       agentModePickerOpen,
+      hasSpaceForAgentModePicker,
       modelPickerOpen,
       models,
       selectedModelId,
@@ -154,6 +159,7 @@ export const getChatModeListVirtualDom = ({
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
+      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,

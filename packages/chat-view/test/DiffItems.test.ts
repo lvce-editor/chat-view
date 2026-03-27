@@ -75,3 +75,9 @@ test('isEqual should return false when run mode picker open state changes', () =
   const state2: ChatState = { ...createDefaultState(), runModePickerOpen: true }
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
+
+test('isEqual should return false when responsive picker space changes', () => {
+  const state1: ChatState = { ...createDefaultState(), hasSpaceForAgentModePicker: true }
+  const state2: ChatState = { ...createDefaultState(), hasSpaceForAgentModePicker: false }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
