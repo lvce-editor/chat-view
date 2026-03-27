@@ -55,7 +55,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     childCount: 2,
     className: ClassNames.ChatHeader,
     onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
-    type: VirtualDomElements.Div,
+    type: VirtualDomElements.Header,
   })
   const chatListEmpty = result.find((node) => node.className === ClassNames.ChatListEmpty)
   const chatWelcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
@@ -143,6 +143,7 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   expect(primaryControls).toMatchObject({
     childCount: 3,
     className: ClassNames.ChatSendAreaPrimaryControls,
+    role: 'toolbar',
     type: VirtualDomElements.Div,
   })
   expect(modelPickerToggle).toBeDefined()
@@ -194,6 +195,7 @@ test('getChatVirtualDom should hide optional pickers when there is not enough ho
   expect(primaryControls).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatSendAreaPrimaryControls,
+    role: 'toolbar',
     type: VirtualDomElements.Div,
   })
   expect(agentModePickerToggle).toBeUndefined()
@@ -212,6 +214,7 @@ test('getChatVirtualDom should keep the run mode picker when only the agent pick
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
     childCount: 2,
+    role: 'toolbar',
   })
   expect(agentModePickerToggle).toBeUndefined()
   expect(runModePickerToggle).toBeDefined()
@@ -394,7 +397,13 @@ test('getChatVirtualDom should render open new model picker as absolute chat chi
   expect(result[0]).toMatchObject({
     childCount: 4,
   })
+  const overlays = result.find((node) => node.className === ClassNames.ChatOverlays)
   const pickerContainers = result.filter((node) => node.className === ClassNames.ChatModelPickerContainer)
+  expect(overlays).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatOverlays,
+    type: VirtualDomElements.Div,
+  })
   expect(pickerContainers).toHaveLength(1)
   expect(pickerContainers[0]).toMatchObject({
     onContextMenu: expect.any(Number),
@@ -411,8 +420,8 @@ test('getChatVirtualDom should not render absolute picker chat child when picker
   expect(result[0]).toMatchObject({
     childCount: 3,
   })
-  const absolutePickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer && node.style === 'position:absolute;')
-  expect(absolutePickerContainer).toBeUndefined()
+  const overlays = result.find((node) => node.className === ClassNames.ChatOverlays)
+  expect(overlays).toBeUndefined()
 })
 
 test('getChatVirtualDOm should filter model picker entries by search', () => {
@@ -1682,6 +1691,7 @@ test('getChatVirtualDOm should render selected chat title in detail mode', () =>
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
   expect(chatHeader).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
+    type: VirtualDomElements.Header,
   })
   const titleNode = result[backButtonIndex + 3]
   expect(titleNode).toMatchObject({ text: 'Project Plan' })

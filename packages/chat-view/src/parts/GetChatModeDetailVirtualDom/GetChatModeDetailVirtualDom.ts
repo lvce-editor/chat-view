@@ -12,14 +12,15 @@ import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullReque
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getAgentModePickerPopOverVirtualDom } from '../GetAgentModePickerPopOverVirtualDom/GetAgentModePickerPopOverVirtualDom.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
+<<<<<<< HEAD
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
 import { getComposerAttachmentPreviewOverlayVirtualDom } from '../GetComposerAttachmentPreviewOverlayVirtualDom/GetComposerAttachmentPreviewOverlayVirtualDom.ts'
+=======
+import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
+>>>>>>> origin/main
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
-import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
-import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatModeDetailVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -127,6 +128,7 @@ export const getChatModeDetailVirtualDom = ({
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
+<<<<<<< HEAD
   const chatRootChildCount =
     3 +
     (isDropOverlayVisible ? 1 : 0) +
@@ -134,6 +136,10 @@ export const getChatModeDetailVirtualDom = ({
     (isAgentModePickerVisible ? 1 : 0) +
     (isNewModelPickerVisible ? 1 : 0) +
     (isRunModePickerVisible ? 1 : 0)
+=======
+  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
+>>>>>>> origin/main
   return [
     {
       childCount: chatRootChildCount,
@@ -180,6 +186,7 @@ export const getChatModeDetailVirtualDom = ({
       showCreatePullRequestButton,
       voiceDictationEnabled,
     ),
+<<<<<<< HEAD
     ...(isDropOverlayVisible
       ? [
           {
@@ -205,5 +212,18 @@ export const getChatModeDetailVirtualDom = ({
     ...(isAgentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
     ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
     ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
+=======
+    ...getChatOverlaysVirtualDom({
+      agentMode,
+      agentModePickerVisible: isAgentModePickerVisible,
+      dropOverlayVisible: isDropOverlayVisible,
+      modelPickerSearchValue,
+      modelPickerVisible: isNewModelPickerVisible,
+      runMode,
+      runModePickerVisible: isRunModePickerVisible,
+      selectedModelId,
+      visibleModels,
+    }),
+>>>>>>> origin/main
   ]
 }

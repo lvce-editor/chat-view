@@ -30,7 +30,7 @@ export const getChatHeaderDomDetailMode = (
       childCount: hasAuthError ? 3 : 2,
       className: ClassNames.ChatHeader,
       onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Header,
     },
     {
       childCount: 2,

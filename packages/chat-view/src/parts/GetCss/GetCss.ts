@@ -163,6 +163,16 @@ export const getCss = (
   justify-content: flex-end;
 }
 
+.ChatOverlays{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ChatOverlays > *{
+  pointer-events: auto;
+}
+
 .RunModePickerPopOver{
   overflow: hidden;
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));

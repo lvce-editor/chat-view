@@ -99,12 +99,12 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleDragEnter,
-      params: ['handleDragEnter', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || []).length > 0'],
+      params: ['handleDragEnter', EventExpression.TargetName, EventExpression.DataTransferFiles2],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragOver,
-      params: ['handleDragOver', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || []).length > 0'],
+      params: ['handleDragOver', EventExpression.TargetName, EventExpression.DataTransferFiles2],
       preventDefault: true,
     },
     {
@@ -114,17 +114,17 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleDrop,
-      params: ['handleDropFiles', EventExpression.TargetName, 'Array.from(event.dataTransfer?.files || [])'],
+      params: ['handleDropFiles', EventExpression.TargetName, EventExpression.DataTransferFiles2],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragEnterChatView,
-      params: ['handleDragEnter', 'composer-drop-target', 'Array.from(event.dataTransfer?.files || []).length > 0'],
+      params: ['handleDragEnter', 'composer-drop-target', EventExpression.DataTransferFiles2],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragOverChatView,
-      params: ['handleDragOver', 'composer-drop-target', 'Array.from(event.dataTransfer?.files || []).length > 0'],
+      params: ['handleDragOver', 'composer-drop-target', EventExpression.DataTransferFiles2],
       preventDefault: true,
     },
     {
