@@ -534,6 +534,8 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   const addSessionInProjectButton = result.find((node) => node.name === 'create-session-in-project:project-1')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
+  const backToChatListButtonIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconArrowLeft}`)
+  const backToChatListLabel = result.find((node) => node.text === 'Back to chat list')
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(projectSidebar).toMatchObject({
     childCount: 3,
@@ -548,12 +550,19 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', ()
   expect(sessionButton).toBeDefined()
   expect(addSessionInProjectButton).toBeDefined()
   expect(backToChatListButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'back',
     onClick: DomEventListenerFunctions.HandleClickBack,
     title: 'Back to chat list',
     type: VirtualDomElements.Button,
   })
+  expect(backToChatListButtonIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconArrowLeft}`,
+    type: VirtualDomElements.Div,
+  })
+  expect(backToChatListLabel).toBeUndefined()
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(normalModeButton).toBeUndefined()
