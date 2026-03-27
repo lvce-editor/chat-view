@@ -105,8 +105,12 @@ export const attachImageAsContext = (): string => {
   return i18nString(UiStrings.AttachImageAsContext)
 }
 
-export const removeImageAttachment = (): string => {
-  return i18nString(UiStrings.RemoveImageAttachment)
+export const openImageInNewTab = (): string => {
+  return i18nString(UiStrings.OpenImageInNewTab)
+}
+
+export const removeAttachment = (): string => {
+  return i18nString(UiStrings.RemoveAttachment)
 }
 
 export const imageCouldNotBeLoaded = (): string => {

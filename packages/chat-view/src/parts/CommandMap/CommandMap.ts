@@ -83,6 +83,7 @@ import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReas
 import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
 import * as PasteInput from '../PasteInput/PasteInput.ts'
 import * as RegisterMockResponse from '../RegisterMockResponse/RegisterMockResponse.ts'
+import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveComposerAttachment.ts'
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
@@ -208,6 +209,7 @@ export const commandMap = {
   'Chat.openRunModePicker': wrapCommand(openRunModePicker),
   'Chat.pasteInput': wrapCommand(PasteInput.pasteInput),
   'Chat.registerMockResponse': wrapCommand(RegisterMockResponse.registerMockResponse),
+  'Chat.removeComposerAttachment': wrapCommand(RemoveComposerAttachment.removeComposerAttachment),
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),

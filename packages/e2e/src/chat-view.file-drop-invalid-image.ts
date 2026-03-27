@@ -18,5 +18,5 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1)
-  await expect(attachment.first()).toHaveText('Invalid image · broken.png')
+  await expect(attachment.first()).toHaveText('xInvalid image · broken.png')
 }

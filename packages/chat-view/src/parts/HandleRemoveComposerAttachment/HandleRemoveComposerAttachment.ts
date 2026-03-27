@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 
 export const handleRemoveComposerAttachment = async (state: ChatState, attachmentId: string): Promise<ChatState> => {
   const { composerAttachments, selectedSessionId } = state
@@ -18,5 +19,6 @@ export const handleRemoveComposerAttachment = async (state: ChatState, attachmen
   return {
     ...state,
     composerAttachments: nextComposerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(nextComposerAttachments, state.width),
   }
 }

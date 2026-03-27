@@ -55,8 +55,14 @@ export const You = 'You'
 export const Assistant = 'Assistant'
 export const ComposePlaceholder = 'Type your message. Enter to send.'
 export const AttachImageAsContext = 'Attach Image as Context'
+<<<<<<< HEAD
 export const RemoveImageAttachment = 'Remove image attachment'
 export const ImageCouldNotBeLoaded = 'Image preview could not be loaded'
+=======
+export const OpenImageInNewTab = 'Open image in new tab'
+export const RemoveAttachment = 'Remove attachment'
+export const ImageCouldNotBeLoaded = 'image could not be loaded'
+>>>>>>> origin/main
 export const OpenRouterApiKeyPlaceholder = 'Enter OpenRouter API key'
 export const OpenApiApiKeyPlaceholder = 'Enter OpenAI API key'
 export const SendMessage = 'Send message'
