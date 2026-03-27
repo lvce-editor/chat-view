@@ -13,6 +13,7 @@ export const isEqualComposerAttachments = (a: ChatState['composerAttachments'], 
       a[i].displayType !== b[i].displayType ||
       a[i].mimeType !== b[i].mimeType ||
       a[i].name !== b[i].name ||
+      a[i].previewSrc !== b[i].previewSrc ||
       a[i].size !== b[i].size
     ) {
       return false

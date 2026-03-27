@@ -63,6 +63,7 @@ export const getCss = (
   display: inline-flex;
   gap: 6px;
   max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   border-radius: 999px;
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
@@ -77,6 +78,14 @@ export const getCss = (
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ChatComposerAttachmentPreview{
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 4px;
+  object-fit: cover;
 }
 
 .ChatComposerAttachmentRemoveButton{

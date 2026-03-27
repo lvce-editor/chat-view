@@ -70,6 +70,21 @@ const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): r
   ]
 }
 
+const getComposerAttachmentPreviewDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
+  if (!attachment.previewSrc) {
+    return []
+  }
+  return [
+    {
+      alt: `Image preview for ${attachment.name}`,
+      childCount: 0,
+      className: ClassNames.ChatComposerAttachmentPreview,
+      src: attachment.previewSrc,
+      type: VirtualDomElements.Img,
+    },
+  ]
+}
+
 const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachment[]): readonly VirtualDomNode[] => {
   if (composerAttachments.length === 0) {
     return []
@@ -81,14 +96,17 @@ const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachm
       type: VirtualDomElements.Div,
     },
     ...composerAttachments.flatMap((attachment) => {
+      const removeButtonDom = getComposerAttachmentRemoveButtonDom(attachment)
+      const previewDom = getComposerAttachmentPreviewDom(attachment)
       return [
         {
-          childCount: attachment.displayType === 'image' ? 2 : 1,
+          childCount: 1 + (removeButtonDom.length > 0 ? 1 : 0) + previewDom.length,
           className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
           name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
           type: VirtualDomElements.Div,
         },
-        ...getComposerAttachmentRemoveButtonDom(attachment),
+        ...removeButtonDom,
+        ...previewDom,
         {
           childCount: 1,
           className: ClassNames.ChatComposerAttachmentLabel,

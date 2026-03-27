@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
+import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -28,6 +29,8 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   const nextAttachments: ComposerAttachment[] = []
   for (const file of files) {
     const attachmentId = crypto.randomUUID()
+    const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
+    const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
     await appendChatViewEvent({
       attachmentId,
       blob: file,
@@ -40,9 +43,14 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
     })
     nextAttachments.push({
       attachmentId,
-      displayType: await getComposerAttachmentDisplayType(file, file.name, file.type),
+      displayType,
       mimeType: file.type,
       name: file.name,
+      ...(previewSrc
+        ? {
+            previewSrc,
+          }
+        : {}),
       size: file.size,
     })
   }

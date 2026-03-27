@@ -7,6 +7,8 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as HandleDropFiles from '../src/parts/HandleDropFiles/HandleDropFiles.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
 
+const imagePreviewSrcRegex = /^data:image\/svg\+xml;base64,/
+
 const createFile = (name: string, type: string, content: string): File => {
   const blob = new Blob([content], { type })
   return Object.assign(blob, { name }) as File
@@ -38,6 +40,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
       displayType: 'image',
       mimeType: 'image/svg+xml',
       name: 'photo.svg',
+      previewSrc: expect.stringMatching(imagePreviewSrcRegex),
       size: files[0].size,
     }),
   ])
