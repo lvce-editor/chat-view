@@ -1362,6 +1362,24 @@ test('parseMessageContent should parse fenced code blocks', async () => {
   ])
 })
 
+test('parseMessageContent should parse fenced typescript code blocks', async () => {
+  const rawMessage = ['```ts', 'interface User {', '  readonly name: string', '}', '', 'const user: User = { name: "chat-view" }', '```'].join('\n')
+
+  const result = await ParseMessageContent.parseMessageContent(rawMessage)
+
+  expect(result).toEqual([
+    {
+      codeTokens: highlightCode(
+        ['interface User {', '  readonly name: string', '}', '', 'const user: User = { name: "chat-view" }'].join('\n'),
+        'ts',
+      ),
+      language: 'ts',
+      text: ['interface User {', '  readonly name: string', '}', '', 'const user: User = { name: "chat-view" }'].join('\n'),
+      type: 'code-block',
+    },
+  ])
+})
+
 test('parseMessageContent should parse markdown heading blocks', async () => {
   const rawMessage = ['# Heading 1', '## Heading 2', '### Heading 3', '#### Heading 4', '##### Heading 5', '###### Heading 6'].join('\n')
 
