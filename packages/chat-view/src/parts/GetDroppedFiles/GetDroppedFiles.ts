@@ -5,6 +5,7 @@ interface FileHandleTransportItem {
 }
 
 export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<readonly FileSystemFileHandle[]> => {
+  // TODO adjust e2e test and remove this code
   if (fileHandles.some((item) => typeof item !== 'number')) {
     return fileHandles.map((item: any) => {
       return {
