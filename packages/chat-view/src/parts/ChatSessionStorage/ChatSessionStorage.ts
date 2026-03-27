@@ -112,7 +112,8 @@ export const clearChatSessions = async (): Promise<void> => {
 }
 
 export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> => {
-  await ChatStorageWorker.appendEvent(event)
+  // The local chat-view event union may temporarily grow ahead of the shared rpc-registry typings.
+  await ChatStorageWorker.appendEvent(event as Parameters<typeof ChatStorageWorker.appendEvent>[0])
 }
 
 export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {

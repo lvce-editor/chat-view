@@ -56,16 +56,38 @@ export const getCss = (
 }
 
 .ChatComposerAttachment{
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
   max-width: 100%;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   border-radius: 999px;
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
   padding: 4px 10px;
   background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
   color: var(--vscode-badge-foreground, var(--vscode-foreground));
   font-size: 12px;
+}
+
+.ChatComposerAttachmentLabel{
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ChatComposerAttachmentRemoveButton{
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  font: inherit;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
 }
 
 .ChatComposerAttachmentImage{

@@ -8,6 +8,7 @@ export const Composer = 'composer'
 export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
 export const ComposerAttachmentPrefix = 'composer-attachment:'
+export const ComposerAttachmentRemovePrefix = 'composer-attachment-remove:'
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
 export const CreatePullRequest = 'create-pull-request'
@@ -95,6 +96,18 @@ export const getModelPickerItemInputName = (modelId: string): `${typeof ModelPic
 
 export const getComposerAttachmentInputName = (attachmentId: string): `${typeof ComposerAttachmentPrefix}${string}` => {
   return `${ComposerAttachmentPrefix}${attachmentId}`
+}
+
+export const getComposerAttachmentRemoveInputName = (attachmentId: string): `${typeof ComposerAttachmentRemovePrefix}${string}` => {
+  return `${ComposerAttachmentRemovePrefix}${attachmentId}`
+}
+
+export const isComposerAttachmentRemoveInputName = (name: string): name is `${typeof ComposerAttachmentRemovePrefix}${string}` => {
+  return name.startsWith(ComposerAttachmentRemovePrefix)
+}
+
+export const getAttachmentIdFromComposerAttachmentRemoveInputName = (name: `${typeof ComposerAttachmentRemovePrefix}${string}`): string => {
+  return name.slice(ComposerAttachmentRemovePrefix.length)
 }
 
 export const isModelPickerItemInputName = (name: string): name is `${typeof ModelPickerItemPrefix}${string}` => {

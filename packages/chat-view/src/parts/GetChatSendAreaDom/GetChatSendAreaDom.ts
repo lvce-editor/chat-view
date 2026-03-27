@@ -49,6 +49,27 @@ const getComposerAttachmentClassName = (displayType: ComposerAttachmentDisplayTy
   }
 }
 
+const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
+  if (attachment.displayType !== 'image') {
+    return []
+  }
+  return [
+    {
+      buttonType: 'button',
+      childCount: 1,
+      className: ClassNames.ChatComposerAttachmentRemoveButton,
+      name: InputName.getComposerAttachmentRemoveInputName(attachment.attachmentId),
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.removeImageAttachment(),
+      type: VirtualDomElements.Button,
+    },
+    {
+      text: 'x',
+      type: VirtualDomElements.Text,
+    },
+  ]
+}
+
 const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachment[]): readonly VirtualDomNode[] => {
   if (composerAttachments.length === 0) {
     return []
@@ -59,18 +80,26 @@ const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachm
       className: ClassNames.ChatComposerAttachments,
       type: VirtualDomElements.Div,
     },
-    ...composerAttachments.flatMap((attachment) => [
-      {
-        childCount: 1,
-        className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
-        name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
-        type: VirtualDomElements.Div,
-      },
-      {
-        text: `${getComposerAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
-        type: VirtualDomElements.Text,
-      },
-    ]),
+    ...composerAttachments.flatMap((attachment) => {
+      return [
+        {
+          childCount: attachment.displayType === 'image' ? 2 : 1,
+          className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
+          name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
+          type: VirtualDomElements.Div,
+        },
+        ...getComposerAttachmentRemoveButtonDom(attachment),
+        {
+          childCount: 1,
+          className: ClassNames.ChatComposerAttachmentLabel,
+          type: VirtualDomElements.Span,
+        },
+        {
+          text: `${getComposerAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
+          type: VirtualDomElements.Text,
+        },
+      ]
+    }),
   ]
 }
 
