@@ -11,6 +11,11 @@ export const getKeyBindings = (): readonly KeyBinding[] => {
       when: WhenExpression.FocusChatInput,
     },
     {
+      command: 'Chat.pasteInput',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyV,
+      when: WhenExpression.FocusChatInput,
+    },
+    {
       command: 'Chat.chatInputHistoryUp',
       key: KeyCode.UpArrow,
       when: WhenExpression.FocusChatInput,
