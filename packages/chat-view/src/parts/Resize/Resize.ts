@@ -6,12 +6,13 @@ import { getResponsivePickerState } from '../GetResponsivePickerState/GetRespons
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
 
 export const resize = async (state: ChatState, dimensions: any, getComposerHeightFn: GetComposerHeightFn = getComposerHeight): Promise<ChatState> => {
+  const { agentModePickerOpen, responsivePickerVisibilityEnabled, runModePickerOpen, width } = state
   const responsivePickerState =
-    dimensions.width === undefined ? undefined : getResponsivePickerState(dimensions.width, state.responsivePickerVisibilityEnabled)
+    dimensions.width === undefined ? undefined : getResponsivePickerState(dimensions.width, responsivePickerVisibilityEnabled)
   const responsivePickerOpenState = responsivePickerState
     ? {
-        agentModePickerOpen: responsivePickerState.hasSpaceForAgentModePicker ? state.agentModePickerOpen : false,
-        runModePickerOpen: responsivePickerState.hasSpaceForRunModePicker ? state.runModePickerOpen : false,
+        agentModePickerOpen: responsivePickerState.hasSpaceForAgentModePicker ? agentModePickerOpen : false,
+        runModePickerOpen: responsivePickerState.hasSpaceForRunModePicker ? runModePickerOpen : false,
       }
     : {}
   const nextState = {
@@ -20,17 +21,18 @@ export const resize = async (state: ChatState, dimensions: any, getComposerHeigh
     ...responsivePickerState,
     ...responsivePickerOpenState,
   }
-  if (dimensions.width !== undefined && dimensions.width !== state.width && nextState.composerValue) {
+  const { composerAttachments, composerValue, width: nextWidth } = nextState
+  if (dimensions.width !== undefined && dimensions.width !== width && composerValue) {
     return {
       ...nextState,
-      composerAttachmentsHeight: getComposerAttachmentsHeight(nextState.composerAttachments, nextState.width),
-      composerHeight: await getComposerHeightFn(nextState, nextState.composerValue, nextState.width),
+      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, nextWidth),
+      composerHeight: await getComposerHeightFn(nextState, composerValue, nextWidth),
     }
   }
-  if (dimensions.width !== undefined && dimensions.width !== state.width && nextState.composerAttachments.length > 0) {
+  if (dimensions.width !== undefined && dimensions.width !== width && composerAttachments.length > 0) {
     return {
       ...nextState,
-      composerAttachmentsHeight: getComposerAttachmentsHeight(nextState.composerAttachments, nextState.width),
+      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, nextWidth),
     }
   }
   return nextState

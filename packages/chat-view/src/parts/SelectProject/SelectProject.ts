@@ -5,10 +5,11 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
-  if (!projectId || state.selectedProjectId === projectId) {
+  const { selectedProjectId, selectedSessionId, sessions, viewMode, width } = state
+  if (!projectId || selectedProjectId === projectId) {
     return state
   }
-  const visibleSessions = getVisibleSessions(state.sessions, projectId)
+  const visibleSessions = getVisibleSessions(sessions, projectId)
   if (visibleSessions.length === 0) {
     return {
       ...state,
@@ -16,14 +17,14 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
       composerAttachmentsHeight: 0,
       selectedProjectId: projectId,
       selectedSessionId: '',
-      viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'list',
+      viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'list',
     }
   }
-  const currentSessionVisible = visibleSessions.some((session) => session.id === state.selectedSessionId)
-  const nextSelectedSessionId = currentSessionVisible ? state.selectedSessionId : visibleSessions[0].id
+  const currentSessionVisible = visibleSessions.some((session) => session.id === selectedSessionId)
+  const nextSelectedSessionId = currentSessionVisible ? selectedSessionId : visibleSessions[0].id
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
-  const sessions = state.sessions.map((session) => {
+  const hydratedSessions = sessions.map((session) => {
     if (session.id !== nextSelectedSessionId || !loadedSession) {
       return session
     }
@@ -32,10 +33,10 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   return {
     ...state,
     composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
-    sessions,
-    viewMode: state.viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+    sessions: hydratedSessions,
+    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   }
 }

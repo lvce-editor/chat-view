@@ -7,23 +7,24 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import * as InputName from '../InputName/InputName.ts'
 
 export const handleDropFiles = async (state: ChatState, name: string, files: readonly File[] = []): Promise<ChatState> => {
+  const { composerDropActive, composerDropEnabled, selectedSessionId, width } = state
   if (name !== InputName.ComposerDropTarget) {
     return state
   }
-  if (!state.composerDropEnabled) {
+  if (!composerDropEnabled) {
     return {
       ...state,
       composerDropActive: false,
     }
   }
   const nextState =
-    state.composerDropActive === false
+    composerDropActive === false
       ? state
       : {
           ...state,
           composerDropActive: false,
         }
-  if (!state.selectedSessionId || files.length === 0) {
+  if (!selectedSessionId || files.length === 0) {
     return nextState
   }
   const nextAttachments: ComposerAttachment[] = []
@@ -36,7 +37,7 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
       blob: file,
       mimeType: file.type,
       name: file.name,
-      sessionId: state.selectedSessionId,
+      sessionId: selectedSessionId,
       size: file.size,
       timestamp: new Date().toISOString(),
       type: 'chat-attachment-added',
@@ -57,6 +58,6 @@ export const handleDropFiles = async (state: ChatState, name: string, files: rea
   return {
     ...nextState,
     composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
-    composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], state.width),
+    composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], width),
   }
 }

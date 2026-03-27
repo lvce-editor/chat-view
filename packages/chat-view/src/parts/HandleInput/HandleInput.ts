@@ -10,7 +10,7 @@ import { OpenApiApiKeyInput } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { OpenRouterApiKeyInput } from '../OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 
 export const handleInput = async (state: ChatState, name: string, value: string, inputSource: 'user' | 'script' = 'user'): Promise<ChatState> => {
-  const { selectedSessionId } = state
+  const { chatInputHistoryDraft, chatInputHistoryIndex, composerAttachments, modelPickerHeaderHeight, models, selectedSessionId, width } = state
   if (name === OpenApiApiKeyInput) {
     return {
       ...state,
@@ -27,10 +27,10 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     return handleSearchValueChange(state, value)
   }
   if (name === InputName.ModelPickerSearch) {
-    const visibleModels = getVisibleModels(state.models, value)
+    const visibleModels = getVisibleModels(models, value)
     return {
       ...state,
-      modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
+      modelPickerHeight: getModelPickerHeight(modelPickerHeaderHeight, visibleModels.length),
       modelPickerListScrollTop: 0,
       modelPickerSearchValue: value,
       visibleModels,
@@ -48,10 +48,10 @@ export const handleInput = async (state: ChatState, name: string, value: string,
     })
   }
   const composerHeight = await getComposerHeight(state, value)
-  const composerAttachmentsHeight = getComposerAttachmentsHeight(state.composerAttachments, state.width)
+  const composerAttachmentsHeight = getComposerAttachmentsHeight(composerAttachments, width)
   return {
     ...state,
-    chatInputHistoryDraft: state.chatInputHistoryIndex === -1 ? value : state.chatInputHistoryDraft,
+    chatInputHistoryDraft: chatInputHistoryIndex === -1 ? value : chatInputHistoryDraft,
     composerAttachmentsHeight,
     composerHeight,
     composerSelectionEnd: value.length,

@@ -1,16 +1,17 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const toggleChatFocusMode = async (state: ChatState): Promise<ChatState> => {
-  if (state.viewMode === 'chat-focus') {
+  const { lastNormalViewMode, viewMode } = state
+  if (viewMode === 'chat-focus') {
     return {
       ...state,
-      viewMode: state.lastNormalViewMode,
+      viewMode: lastNormalViewMode,
     }
   }
-  if (state.viewMode === 'list' || state.viewMode === 'detail') {
+  if (viewMode === 'list' || viewMode === 'detail') {
     return {
       ...state,
-      lastNormalViewMode: state.viewMode,
+      lastNormalViewMode: viewMode,
       viewMode: 'chat-focus',
     }
   }
