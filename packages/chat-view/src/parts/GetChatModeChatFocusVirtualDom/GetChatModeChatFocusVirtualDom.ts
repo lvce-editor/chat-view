@@ -140,7 +140,6 @@ export const getChatModeChatFocusVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
     ...getMessagesDom(
       messages,
@@ -155,6 +154,7 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
