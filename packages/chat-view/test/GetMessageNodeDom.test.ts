@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import * as ChatStrings from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getMessageNodeDom } from '../src/parts/GetMessageNodeDom/GetMessageNodeDom.ts'
@@ -61,7 +62,7 @@ test('getMessageNodeDom should render markdown image inline nodes as img dom nod
     type: VirtualDomElements.P,
   })
   expect(result[1]).toEqual({
-    alt: 'This is an image (image could not be loaded)',
+    alt: `This is an image (${ChatStrings.imageCouldNotBeLoaded()})`,
     childCount: 0,
     className: ClassNames.ImageElement,
     onContextMenu: 58,
