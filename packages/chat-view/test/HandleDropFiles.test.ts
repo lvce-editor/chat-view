@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
+import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import type { ChatViewEvent } from '../src/parts/ChatViewEvent/ChatViewEvent.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
@@ -14,6 +14,22 @@ const createFile = (name: string, type: string, content: string): File => {
   return Object.assign(blob, { name }) as File
 }
 
+const createFileHandle = (file: File): FileSystemFileHandle => {
+  const fileHandle: FileSystemFileHandle = {
+    createSyncAccessHandle: async (): Promise<FileSystemSyncAccessHandle> => {
+      throw new Error('Not implemented in test')
+    },
+    createWritable: async (): Promise<FileSystemWritableFileStream> => {
+      throw new Error('Not implemented in test')
+    },
+    getFile: async (): Promise<File> => file,
+    isSameEntry: async (other: FileSystemHandle): Promise<boolean> => other.name === file.name && other.kind === 'file',
+    kind: 'file',
+    name: file.name,
+  }
+  return fileHandle
+}
+
 test('handleDropFiles stores dropped files as attachment events', async () => {
   const state: ChatState = {
     ...createDefaultState(),
@@ -21,6 +37,8 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     selectedSessionId: 'session-1',
   }
   const files = [createFile('photo.svg', 'image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>')]
+  const fileHandleIds = [1]
+  const fileHandles = [createFileHandle(files[0])]
   const storedEvents: ChatViewEvent[] = []
   using mockRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.appendEvent'(event: ChatViewEvent) {
@@ -31,8 +49,14 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
       return storedEvents.filter((event) => event.sessionId === sessionId)
     },
   })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
+      expect(ids).toEqual(fileHandleIds)
+      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
+    },
+  })
 
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
 
   expect(newState.composerDropActive).toBe(false)
   expect(newState.composerAttachments).toEqual([
@@ -59,6 +83,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     throw new TypeError('Expected chat-attachment-added event')
   }
   expect(events[0].blob).toBeInstanceOf(Blob)
+  expect(mockRendererRpc.invocations).toEqual([['FileSystemHandle.getFileHandles', fileHandleIds]])
   expect(mockRpc.invocations).toEqual([
     ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-1' })],
     ['ChatStorage.getEvents', 'session-1'],
@@ -73,17 +98,26 @@ test('handleDropFiles is no-op when no session is selected', async () => {
   }
 
   const files = [createFile('note.txt', 'text/plain', 'hello')]
+  const fileHandleIds = [7]
+  const fileHandles = [createFileHandle(files[0])]
   using mockRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.getEvents'() {
       return []
     },
   })
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, files)
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
+      expect(ids).toEqual(fileHandleIds)
+      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
+    },
+  })
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
 
   expect(newState.composerDropActive).toBe(false)
   expect(newState.composerAttachments).toHaveLength(0)
   expect(newState.composerAttachmentsHeight).toBe(0)
   const events = await getChatViewEvents()
   expect(events).toHaveLength(0)
+  expect(mockRendererRpc.invocations).toEqual([['FileSystemHandle.getFileHandles', fileHandleIds]])
   expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])
 })

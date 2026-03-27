@@ -208,6 +208,8 @@ export const getAiResponse = async ({
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
+  const selectedModel = models.find((model) => model.id === selectedModelId)
+  const supportsReasoningEffort = selectedModel?.supportsReasoningEffort ?? false
   if (!text && usesOpenApiModel) {
     const safeMaxToolCalls = Math.max(1, maxToolCalls)
     if (useMockApi) {
@@ -238,6 +240,7 @@ export const getAiResponse = async ({
             systemPrompt,
             previousResponseId,
             reasoningEffort,
+            supportsReasoningEffort,
           ),
           url: getOpenApiApiEndpoint(openApiApiBaseUrl),
         })
@@ -347,6 +350,7 @@ export const getAiResponse = async ({
               }
             : {}),
           stream: streamingEnabled,
+          supportsReasoningEffort,
           systemPrompt,
           ...(toolEnablement
             ? {

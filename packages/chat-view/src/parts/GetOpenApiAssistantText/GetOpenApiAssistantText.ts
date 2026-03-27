@@ -63,6 +63,7 @@ export const getOpenAiParams = (
   systemPrompt = '',
   previousResponseId?: string,
   reasoningEffort?: ReasoningEffort,
+  supportsReasoningEffort = false,
 ): object => {
   const openAiTools = getOpenAiTools(tools)
   return {
@@ -90,7 +91,7 @@ export const getOpenAiParams = (
           previous_response_id: previousResponseId,
         }
       : {}),
-    ...(reasoningEffort
+    ...(reasoningEffort && supportsReasoningEffort
       ? {
           reasoning: {
             effort: reasoningEffort,
@@ -801,6 +802,7 @@ export const getOpenApiAssistantText = async (
     questionToolEnabled = false,
     reasoningEffort,
     stream,
+    supportsReasoningEffort = false,
     systemPrompt = '',
     toolEnablement,
     useChatNetworkWorkerForRequests = false,
@@ -828,6 +830,7 @@ export const getOpenApiAssistantText = async (
       systemPrompt,
       previousResponseId,
       reasoningEffort,
+      supportsReasoningEffort,
     )
 
     if (stream) {
