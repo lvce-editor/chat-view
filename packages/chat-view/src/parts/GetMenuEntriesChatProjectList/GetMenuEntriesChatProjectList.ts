@@ -11,11 +11,11 @@ const menuEntryAddProject: MenuEntry = {
   label: GetChatViewDomStrings.addProject(),
 }
 
-export const getMenuEntriesChatProjectList = (projectId: string = ''): readonly MenuEntry[] => {
+export const getMenuEntriesChatProjectList = (projectId: string = '', canRemoveProject = true): readonly MenuEntry[] => {
   if (!projectId) {
     return [menuEntryAddProject]
   }
-  return [
+  const entries: MenuEntry[] = [
     {
       args: [InputName.getCreateSessionInProjectInputName(projectId)],
       command: 'Chat.handleClick',
@@ -25,4 +25,14 @@ export const getMenuEntriesChatProjectList = (projectId: string = ''): readonly 
     },
     menuEntryAddProject,
   ]
+  if (canRemoveProject) {
+    entries.push({
+      args: [InputName.ProjectDelete, projectId],
+      command: 'Chat.handleClick',
+      flags: MenuItemFlags.None,
+      id: 'removeProject',
+      label: GetChatViewDomStrings.removeProject(),
+    })
+  }
+  return entries
 }

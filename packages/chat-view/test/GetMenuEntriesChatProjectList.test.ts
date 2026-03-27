@@ -3,7 +3,7 @@ import * as GetMenuEntriesChatProjectList from '../src/parts/GetMenuEntriesChatP
 
 test('getMenuEntriesChatProjectList should include project actions when a project id is provided', () => {
   const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList('project-1')
-  expect(entries).toHaveLength(2)
+  expect(entries).toHaveLength(3)
   expect(entries[0]).toMatchObject({
     args: ['create-session-in-project:project-1'],
     command: 'Chat.handleClick',
@@ -16,6 +16,12 @@ test('getMenuEntriesChatProjectList should include project actions when a projec
     id: 'addProject',
     label: 'Add Project',
   })
+  expect(entries[2]).toMatchObject({
+    args: ['ProjectDelete', 'project-1'],
+    command: 'Chat.handleClick',
+    id: 'removeProject',
+    label: 'Remove Project',
+  })
 })
 
 test('getMenuEntriesChatProjectList should expose add project when no project row was targeted', () => {
@@ -27,4 +33,10 @@ test('getMenuEntriesChatProjectList should expose add project when no project ro
     id: 'addProject',
     label: 'Add Project',
   })
+})
+
+test('getMenuEntriesChatProjectList should omit remove project when removal is disabled', () => {
+  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList('project-1', false)
+  expect(entries).toHaveLength(2)
+  expect(entries.map((entry) => entry.id)).toEqual(['newChat', 'addProject'])
 })
