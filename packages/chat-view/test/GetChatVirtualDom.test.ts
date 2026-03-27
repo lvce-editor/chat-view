@@ -765,6 +765,27 @@ test('getChatVirtualDOm should render message rows for selected session', () => 
   expect(messageNode).toBeDefined()
 })
 
+test('getChatVirtualDOm should render messages container with log role', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'user' as const, text: 'Hi', time: '10:30' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
+  const messages = result.find((node) => node.className === 'ChatMessages')
+  expect(messages).toMatchObject({
+    className: 'ChatMessages',
+    role: 'log',
+    type: VirtualDomElements.Div,
+  })
+})
+
 test('getChatVirtualDOm should restore messages scroll position', () => {
   const sessions = [
     {
