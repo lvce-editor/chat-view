@@ -571,11 +571,12 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   })
 
   expect(result[0]).toMatchObject({
-    childCount: 4,
+    childCount: 2,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
   const focusHeader = result.find((node) => node.className === ClassNames.ChatFocusHeader)
+  const focusMainArea = result.find((node) => node.className === ClassNames.ChatFocusMainArea)
   const focusActions = result.find((node) => node.className === ClassNames.ChatFocusActions)
   const focusProject = result.find((node) => node.className === `${ClassNames.LabelDetail} ${ClassNames.ChatFocusProject}`)
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
@@ -604,6 +605,11 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     childCount: 3,
   })
   expect(chatHeader).toBeUndefined()
+  expect(focusMainArea).toMatchObject({
+    childCount: 3,
+    className: ClassNames.ChatFocusMainArea,
+    type: VirtualDomElements.Div,
+  })
   expect(focusHeader).toMatchObject({
     className: ClassNames.ChatFocusHeader,
     type: VirtualDomElements.Header,
@@ -641,8 +647,10 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     type: VirtualDomElements.Div,
   })
   expect(backToChatListLabel).toBeUndefined()
+  expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(focusMainArea as (typeof result)[number]))
+  expect(result.indexOf(focusMainArea as (typeof result)[number])).toBeLessThan(result.indexOf(focusHeader as (typeof result)[number]))
   expect(result.indexOf(focusHeader as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
-  expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(projectSidebar as (typeof result)[number]))
+  expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(composer as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(addActionButton).toMatchObject({

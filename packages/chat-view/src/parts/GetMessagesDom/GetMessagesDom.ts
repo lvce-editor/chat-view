@@ -63,7 +63,20 @@ export const getMessagesDom = (
   hideWelcomeMessage = false,
 ): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
-    return hideWelcomeMessage ? [] : GetEmptyMessagesDom.getEmptyMessagesDom()
+    if (!hideWelcomeMessage) {
+      return GetEmptyMessagesDom.getEmptyMessagesDom()
+    }
+    return [
+      {
+        childCount: 0,
+        className: 'ChatMessages',
+        onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
+        onScroll: DomEventListenerFunctions.HandleMessagesScroll,
+        role: 'log',
+        scrollTop: messagesScrollTop,
+        type: VirtualDomElements.Div,
+      },
+    ]
   }
   const displayMessages = getDisplayMessages(messages, parsedMessages)
   return [

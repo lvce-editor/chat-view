@@ -115,6 +115,56 @@ export const getCss = (
   border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
 }
 
+.ChatAttachments{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ChatAttachment{
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  padding: 4px 10px;
+  background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
+  color: var(--vscode-badge-foreground, var(--vscode-foreground));
+  font-size: 12px;
+}
+
+.ChatAttachmentLabel{
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ChatAttachmentPreview{
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.ChatAttachmentImage{
+  border-color: var(--vscode-charts-blue);
+}
+
+.ChatAttachmentInvalidImage{
+  border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));
+  color: var(--vscode-errorForeground, var(--vscode-foreground));
+}
+
+.ChatAttachmentTextFile{
+  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+}
+
 .Chat{
   position: relative;
 }
@@ -250,6 +300,10 @@ export const getCss = (
   justify-content: flex-start;
 }
 
+.ChatMessages > .MessageUser .ChatAttachments{
+  justify-content: flex-end;
+}
+
 .ChatFocus .ChatMessages > .Message{
   inline-size: fit-content;
   max-inline-size: min(100%, var(--ChatFocusContentMaxWidth));
@@ -257,6 +311,24 @@ export const getCss = (
 
 .ChatFocus .ChatMessages > .Message > .ChatMessageContent{
   max-inline-size: 100%;
+}
+
+
+.Viewlet.Chat.ChatFocus{
+  display: flex !important;
+  min-width: 0;
+}
+
+.ChatFocusMainArea{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ChatFocusMainArea > .ChatMessages{
+  flex: 1;
+  min-height: 0;
 }
 
 `

@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -15,6 +16,84 @@ import { getOpenRouterRequestFailedDom } from '../GetOpenRouterRequestFailedDom/
 import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequestsDom/GetOpenRouterTooManyRequestsDom.ts'
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
+
+const getChatAttachmentLabel = (displayType: ComposerAttachmentDisplayType): string => {
+  switch (displayType) {
+    case 'file':
+      return 'File'
+    case 'image':
+      return 'Image'
+    case 'invalid-image':
+      return 'Invalid image'
+    case 'text-file':
+      return 'Text file'
+    default:
+      return displayType
+  }
+}
+
+const getChatAttachmentClassName = (displayType: ComposerAttachmentDisplayType): string => {
+  switch (displayType) {
+    case 'file':
+      return ClassNames.ChatAttachment
+    case 'image':
+      return ClassNames.ChatAttachmentImage
+    case 'invalid-image':
+      return ClassNames.ChatAttachmentInvalidImage
+    case 'text-file':
+      return ClassNames.ChatAttachmentTextFile
+    default:
+      return ClassNames.ChatAttachment
+  }
+}
+
+const getChatAttachmentPreviewDom = (attachment: NonNullable<ChatMessage['attachments']>[number]): readonly VirtualDomNode[] => {
+  if (!attachment.previewSrc) {
+    return []
+  }
+  return [
+    {
+      alt: `Attachment preview for ${attachment.name}`,
+      childCount: 0,
+      className: ClassNames.ChatAttachmentPreview,
+      src: attachment.previewSrc,
+      type: VirtualDomElements.Img,
+    },
+  ]
+}
+
+const getChatAttachmentsDom = (attachments: readonly NonNullable<ChatMessage['attachments']>[number][]): readonly VirtualDomNode[] => {
+  if (attachments.length === 0) {
+    return []
+  }
+  return [
+    {
+      childCount: attachments.length,
+      className: ClassNames.ChatAttachments,
+      type: VirtualDomElements.Div,
+    },
+    ...attachments.flatMap((attachment) => {
+      const previewDom = getChatAttachmentPreviewDom(attachment)
+      return [
+        {
+          childCount: 1 + previewDom.length,
+          className: mergeClassNames(ClassNames.ChatAttachment, getChatAttachmentClassName(attachment.displayType)),
+          type: VirtualDomElements.Div,
+        },
+        ...previewDom,
+        {
+          childCount: 1,
+          className: ClassNames.ChatAttachmentLabel,
+          type: VirtualDomElements.Span,
+        },
+        {
+          text: `${getChatAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
+          type: VirtualDomElements.Text,
+        },
+      ]
+    }),
+  ]
+}
 
 export const getChatMessageDom = (
   message: ChatMessage,
@@ -33,13 +112,15 @@ export const getChatMessageDom = (
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
   const messageDom = getMessageContentDom(parsedMessageContent, useChatMathWorker)
+  const attachmentsDom = message.role === 'user' ? getChatAttachmentsDom(message.attachments ?? []) : []
   const toolCallsDom = getToolCallsDom(message)
   const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const messageDomChildCount = getTopLevelNodeCount(messageDom)
+  const attachmentsChildCount = attachmentsDom.length > 0 ? 1 : 0
   const extraChildCount =
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
-      ? messageDomChildCount + 1 + toolCallsChildCount
-      : messageDomChildCount + toolCallsChildCount
+      ? messageDomChildCount + 1 + toolCallsChildCount + attachmentsChildCount
+      : messageDomChildCount + toolCallsChildCount + attachmentsChildCount
   return [
     {
       childCount: 1,
@@ -53,6 +134,7 @@ export const getChatMessageDom = (
     },
     ...toolCallsDom,
     ...messageDom,
+    ...attachmentsDom,
     ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern) : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),

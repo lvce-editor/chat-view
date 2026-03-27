@@ -772,6 +772,31 @@ test('getMessageNodeDom should render code block nodes as pre and code dom nodes
   })
 })
 
+test('getMessageNodeDom should render code block language as data-lang on pre and code nodes', () => {
+  const result = getMessageNodeDom({
+    codeTokens: [
+      {
+        className: 'TokenKeyword',
+        text: 'const',
+      },
+    ],
+    language: 'ts',
+    text: 'const',
+    type: 'code-block',
+  })
+
+  expect(result[0]).toEqual({
+    childCount: 1,
+    'data-lang': 'ts',
+    type: VirtualDomElements.Pre,
+  })
+  expect(result[1]).toEqual({
+    childCount: 1,
+    'data-lang': 'ts',
+    type: VirtualDomElements.Code,
+  })
+})
+
 test('getMessageNodeDom should render heading nodes as matching heading dom nodes', () => {
   const result = getMessageNodeDom({
     children: [
