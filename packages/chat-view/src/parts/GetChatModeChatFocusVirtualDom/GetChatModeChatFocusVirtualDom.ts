@@ -131,11 +131,7 @@ export const getChatModeChatFocusVirtualDom = ({
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays =
-    isDropOverlayVisible ||
-    isComposerAttachmentPreviewOverlayVisible ||
-    isAgentModePickerVisible ||
-    isNewModelPickerVisible ||
-    isRunModePickerVisible
+    isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   return [
     {

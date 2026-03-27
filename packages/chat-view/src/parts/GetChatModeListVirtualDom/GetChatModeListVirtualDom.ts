@@ -108,11 +108,7 @@ export const getChatModeListVirtualDom = ({
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays =
-    isDropOverlayVisible ||
-    isComposerAttachmentPreviewOverlayVisible ||
-    isAgentModePickerVisible ||
-    isNewModelPickerVisible ||
-    isRunModePickerVisible
+    isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
