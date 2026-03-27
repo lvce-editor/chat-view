@@ -78,6 +78,7 @@ export const getChatHeaderActionsDom = (
 
   return [
     {
+      'aria-label': 'chat actions',
       childCount: items.length,
       className: ClassNames.ChatActions,
       role: AriaRoles.ToolBar,

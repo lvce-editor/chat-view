@@ -46,6 +46,7 @@ test('getChatVirtualDOm should render root chat container', () => {
 
 test('getChatVirtualDOm should structure chat sections as header and list in list mode', () => {
   const result = renderChatView()
+  const chatActions = result.find((node) => node.className === ClassNames.ChatActions && node.role === 'toolbar')
   expect(result[0]).toMatchObject({
     childCount: 3,
     className: `${ClassNames.Viewlet} Chat`,
@@ -65,6 +66,12 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     type: VirtualDomElements.Div,
   })
   expect(chatWelcomeMessage).toBeUndefined()
+  expect(chatActions).toMatchObject({
+    'aria-label': 'chat actions',
+    className: ClassNames.ChatActions,
+    role: 'toolbar',
+    type: VirtualDomElements.Div,
+  })
   const emptyStateMessage = result.find((node) => node.text === 'Click the + button to open a new chat.')
   expect(emptyStateMessage).toBeDefined()
   const composer = result.find((node) => node.name === 'composer')
