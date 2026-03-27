@@ -618,6 +618,7 @@ test('getChatVirtualDOm should render composer textarea', () => {
   })
   expect(composeForm).toMatchObject({
     className: ClassNames.ChatSendArea,
+    onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
     onSubmit: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Form,
   })
