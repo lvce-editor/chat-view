@@ -99,6 +99,7 @@ export interface ChatState {
   readonly responsivePickerVisibilityEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly searchEnabled: boolean
   readonly searchFieldVisible: boolean
   readonly searchValue: string
