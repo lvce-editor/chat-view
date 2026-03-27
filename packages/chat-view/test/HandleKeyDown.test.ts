@@ -57,10 +57,17 @@ test('handleKeyDown should not submit on Shift+Enter', async () => {
 test('handleKeyDown should rename when in rename mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.prompt': async (title: string) => {
+      expect(title).toBe('Renamed Chat')
+      return 'AI Renamed Chat'
+    },
+  })
   const state = { ...createDefaultState(), composerValue: 'Renamed Chat', renamingSessionId: 'session-1' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
-  expect(result.sessions[0].title).toBe('Renamed Chat')
+  expect(result.sessions[0].title).toBe('AI Renamed Chat')
   expect(result.renamingSessionId).toBe('')
+  expect(mockRpc.invocations).toEqual([['Main.prompt', 'Renamed Chat']])
 })
 
 test('handleKeyDown should clear rename mode when rename value is blank', async () => {
@@ -70,6 +77,19 @@ test('handleKeyDown should clear rename mode when rename value is blank', async 
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.renamingSessionId).toBe('')
   expect(result.sessions[0].title).toBe('Chat 1')
+})
+
+test('handleKeyDown should keep existing title when prompted rename is blank', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Main.prompt': async () => '   ',
+  })
+  const state = { ...createDefaultState(), composerValue: 'Renamed Chat', renamingSessionId: 'session-1' }
+  const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
+  expect(result.renamingSessionId).toBe('')
+  expect(result.sessions[0].title).toBe('Chat 1')
+  expect(mockRpc.invocations).toEqual([['Main.prompt', 'Renamed Chat']])
 })
 
 test('handleKeyDown should not submit blank message', async () => {
