@@ -18,6 +18,13 @@ test('renderFocus should return focusSelector command for send button', () => {
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="send"]'])
 })
 
+test('renderFocus should return focusSelector command for picker list', () => {
+  const oldState: ChatState = createDefaultState()
+  const newState: ChatState = { ...createDefaultState(), focus: 'picker-list', focused: true }
+  const result = RenderFocus.renderFocus(oldState, newState)
+  expect(result).toEqual([ViewletCommand.FocusSelector, '.ChatOverlays .ChatModelPickerList'])
+})
+
 test('renderFocus should return focusSelector command for input', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = { ...createDefaultState(), focus: 'input', focused: true }
@@ -178,4 +185,46 @@ test('renderFocus should use normal focus selector when model picker was already
   }
   const result = RenderFocus.renderFocus(oldState, newState)
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="send"]'])
+})
+
+test('renderFocus should focus picker list when agent mode picker opens', () => {
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    agentModePickerOpen: false,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    agentModePickerOpen: true,
+    focus: 'picker-list',
+  }
+  const result = RenderFocus.renderFocus(oldState, newState)
+  expect(result).toEqual([ViewletCommand.FocusSelector, '.ChatOverlays .ChatModelPickerList'])
+})
+
+test('renderFocus should focus picker list when run mode picker opens', () => {
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    runModePickerOpen: false,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    focus: 'picker-list',
+    runModePickerOpen: true,
+  }
+  const result = RenderFocus.renderFocus(oldState, newState)
+  expect(result).toEqual([ViewletCommand.FocusSelector, '.ChatOverlays .ChatModelPickerList'])
+})
+
+test('renderFocus should focus picker list when reasoning effort picker opens', () => {
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    reasoningEffortPickerOpen: false,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    focus: 'picker-list',
+    reasoningEffortPickerOpen: true,
+  }
+  const result = RenderFocus.renderFocus(oldState, newState)
+  expect(result).toEqual([ViewletCommand.FocusSelector, '.ChatOverlays .ChatModelPickerList'])
 })

@@ -36,6 +36,11 @@ export const getKeyBindings = (): readonly KeyBinding[] => {
       when: WhenExpression.FocusChatList,
     },
     {
+      command: 'Chat.handleClickNew',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyN,
+      when: WhenExpression.FocusChatInput,
+    },
+    {
       command: 'Chat.handleSubmit',
       key: KeyCode.Enter,
       when: WhenExpression.FocusChatInput,

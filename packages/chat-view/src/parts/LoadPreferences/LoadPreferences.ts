@@ -10,6 +10,7 @@ import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadReasoningPickerEnabled } from '../LoadReasoningPickerEnabled/LoadReasoningPickerEnabled.ts'
+import { loadScrollDownButtonEnabled } from '../LoadScrollDownButtonEnabled/LoadScrollDownButtonEnabled.ts'
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
@@ -34,6 +35,7 @@ export interface LoadedPreferences {
   openRouterApiKey: string
   passIncludeObfuscation: boolean
   reasoningPickerEnabled: boolean
+  scrollDownButtonEnabled: boolean
   searchEnabled: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
@@ -59,6 +61,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
     reasoningPickerEnabled,
+    scrollDownButtonEnabled,
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,
@@ -82,6 +85,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
     loadReasoningPickerEnabled(),
+    loadScrollDownButtonEnabled(),
     loadSearchEnabled(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
@@ -108,6 +112,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openRouterApiKey,
     passIncludeObfuscation,
     reasoningPickerEnabled,
+    scrollDownButtonEnabled,
     searchEnabled,
     streamingEnabled,
     todoListToolEnabled,

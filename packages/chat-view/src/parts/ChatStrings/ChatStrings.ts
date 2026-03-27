@@ -37,6 +37,10 @@ export const search = (): string => {
   return i18nString(UiStrings.Search)
 }
 
+export const scrollDown = (): string => {
+  return i18nString(UiStrings.ScrollDown)
+}
+
 export const searchModels = (): string => {
   return i18nString(UiStrings.SearchModels)
 }

@@ -120,6 +120,7 @@ export const createDefaultState = (): ChatState => {
     responsivePickerVisibilityEnabled,
     runMode: 'local',
     runModePickerOpen: false,
+    scrollDownButtonEnabled: false,
     searchEnabled: false,
     searchFieldVisible: false,
     searchValue: '',
