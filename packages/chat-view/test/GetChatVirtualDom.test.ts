@@ -122,6 +122,7 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
 test('getChatVirtualDom should wrap agent, model picker and run mode controls together', () => {
   const result = renderChatView()
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const agentModePickerToggleLabel = result.find((node) => node.name === 'agent-mode-picker-toggle' && node.className === ClassNames.SelectLabel)
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
@@ -132,6 +133,12 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
     type: VirtualDomElements.Button,
+  })
+  expect(agentModePickerToggleLabel).toMatchObject({
+    className: ClassNames.SelectLabel,
+    name: 'agent-mode-picker-toggle',
+    role: 'none',
+    type: VirtualDomElements.Span,
   })
   expect(primaryControls).toMatchObject({
     childCount: 3,

@@ -2,7 +2,7 @@ import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getCustomSelectOptionVirtualDom } from '../GetCustomSelectOptionVirtualDom/GetCustomSelectOptionVirtualDom.ts'
-import { getCustomSelectToggleVirtualDom } from '../GetCustomSelectToggleVirtualDom/GetCustomSelectToggleVirtualDom.ts'
+import { getCustomSelectPickerToggleVirtualDom } from '../GetCustomSelectPickerToggleVirtualDom/GetCustomSelectPickerToggleVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 import { defaultReasoningEffort, getReasoningEffortLabel, reasoningEfforts, type ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 
@@ -25,17 +25,13 @@ export const getReasoningEffortPickerVirtualDom = (
   reasoningEffortPickerOpen: boolean,
 ): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: reasoningEffortPickerOpen ? 2 : 1,
-      className: ClassNames.CustomSelectContainer,
-      type: VirtualDomElements.Div,
-    },
-    ...getCustomSelectToggleVirtualDom(
+    ...getCustomSelectPickerToggleVirtualDom(
       getReasoningEffortLabel(selectedReasoningEffort),
       InputName.ReasoningEffortPickerToggle,
       reasoningEffortPickerOpen,
       DomEventListenerFunctions.HandleClickReasoningEffortPickerToggle,
       'Reasoning',
+      reasoningEffortPickerOpen ? 2 : 1,
     ),
     ...(reasoningEffortPickerOpen
       ? [
