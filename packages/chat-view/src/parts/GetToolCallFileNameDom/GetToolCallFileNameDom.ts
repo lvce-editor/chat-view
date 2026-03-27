@@ -6,12 +6,27 @@ type ToolCallFileNameClickableProps = {
   readonly onClick?: number
 }
 
-export const getToolCallFileNameDom = (fileName: string, fileNameClickableProps: ToolCallFileNameClickableProps = {}): readonly VirtualDomNode[] => {
+type GetToolCallFileNameDomOptions = {
+  readonly clickableProps?: ToolCallFileNameClickableProps
+  readonly title?: string
+}
+
+export const getToolCallFileNameDom = (
+  fileName: string,
+  { clickableProps = {}, title }: GetToolCallFileNameDomOptions = {},
+): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      ...(title === undefined ? {} : { title }),
+      ...clickableProps,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
       className: ClassNames.ChatToolCallFileName,
-      ...fileNameClickableProps,
+      ...clickableProps,
       type: VirtualDomElements.Span,
     },
     text(fileName),
