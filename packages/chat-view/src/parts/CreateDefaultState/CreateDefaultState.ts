@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
+import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
@@ -67,7 +68,7 @@ export const createDefaultState = (): ChatState => {
     listFocusedIndex: -1,
     listItemHeight: 40,
     maxComposerRows: 5,
-    maxToolCalls: 10,
+    maxToolCalls: defaultMaxToolCalls,
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 800,

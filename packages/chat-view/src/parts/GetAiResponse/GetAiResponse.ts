@@ -12,6 +12,7 @@ import {
   openRouterApiKeyRequiredMessage,
 } from '../ChatStrings/ChatStrings.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
+import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
@@ -103,7 +104,7 @@ export const getAiResponse = async ({
   authAccessToken,
   authEnabled = false,
   backendUrl = '',
-  maxToolCalls = 10,
+  maxToolCalls = defaultMaxToolCalls,
   messageId,
   messages,
   mockAiResponseDelay = 800,
