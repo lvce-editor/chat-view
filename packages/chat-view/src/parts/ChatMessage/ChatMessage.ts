@@ -1,3 +1,5 @@
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+
 export type ChatToolCallStatus = 'error' | 'not-found' | 'success'
 
 export interface ChatToolCall {
@@ -11,6 +13,7 @@ export interface ChatToolCall {
 }
 
 export interface ChatMessage {
+  readonly attachments?: readonly ComposerAttachment[]
   readonly id: string
   readonly inProgress?: boolean
   readonly role: 'user' | 'assistant'
