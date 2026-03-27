@@ -3,6 +3,7 @@ import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachmen
 import { getChatViewEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
 import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
+import { getComposerAttachmentTextContent } from '../GetComposerAttachmentTextContent/GetComposerAttachmentTextContent.ts'
 
 const isChatAttachmentAddedEvent = (event: ChatViewEvent): event is ChatAttachmentAddedEvent => {
   return event.type === 'chat-attachment-added'
@@ -28,6 +29,7 @@ export const getComposerAttachments = async (sessionId: string): Promise<readonl
     }
     const displayType = await getComposerAttachmentDisplayType(event.blob, event.name, event.mimeType)
     const previewSrc = await getComposerAttachmentPreviewSrc(event.blob, displayType, event.mimeType)
+    const textContent = await getComposerAttachmentTextContent(event.blob, displayType)
     attachments.set(event.attachmentId, {
       attachmentId: event.attachmentId,
       displayType,
@@ -39,6 +41,11 @@ export const getComposerAttachments = async (sessionId: string): Promise<readonl
           }
         : {}),
       size: event.size,
+      ...(typeof textContent === 'string'
+        ? {
+            textContent,
+          }
+        : {}),
     })
   }
   return [...attachments.values()]
