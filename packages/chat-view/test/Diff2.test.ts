@@ -5,16 +5,22 @@ import * as Diff2 from '../src/parts/Diff2/Diff2.ts'
 import * as DiffType from '../src/parts/DiffType/DiffType.ts'
 import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
+function createState(overrides: Partial<ChatState> = {}): ChatState {
+  return {
+    ...createDefaultState(),
+    ...overrides,
+  }
+}
+
 test('diff2 should return diff results for stored status bar states', () => {
   const uid = 902
-  const oldState: ChatState = createDefaultState()
-  const newState: ChatState = {
-    ...createDefaultState(),
+  const oldState = createState()
+  const newState = createState({
     composerSelectionEnd: 5,
     composerSelectionStart: 5,
     composerValue: 'hello',
     inputSource: 'script',
-  }
+  })
 
   StatusBarStates.set(uid, oldState, newState)
 
