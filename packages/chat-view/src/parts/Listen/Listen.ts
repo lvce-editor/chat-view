@@ -13,7 +13,6 @@ import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpen
 import { initializeTextMeasurementWorker } from '../InitializeTextMeasurementWorker/InitializeTextMeasurementWorker.ts'
 import { registerSlashCommands } from '../RegisterSlashCommands/RegisterSlashCommands.ts'
 import { registerCommands } from '../StatusBarStates/StatusBarStates.ts'
-import { initializeIconThemeWorker } from '../InitializeIconThemeWorker/InitializeIconThemeWorker.ts'
 
 export const listen = async (): Promise<void> => {
   registerSlashCommands()
