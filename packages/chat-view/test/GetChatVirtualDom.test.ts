@@ -143,6 +143,7 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   expect(primaryControls).toMatchObject({
     childCount: 3,
     className: ClassNames.ChatSendAreaPrimaryControls,
+    role: 'toolbar',
     type: VirtualDomElements.Div,
   })
   expect(modelPickerToggle).toBeDefined()
@@ -194,6 +195,7 @@ test('getChatVirtualDom should hide optional pickers when there is not enough ho
   expect(primaryControls).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatSendAreaPrimaryControls,
+    role: 'toolbar',
     type: VirtualDomElements.Div,
   })
   expect(agentModePickerToggle).toBeUndefined()
@@ -212,6 +214,7 @@ test('getChatVirtualDom should keep the run mode picker when only the agent pick
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
     childCount: 2,
+    role: 'toolbar',
   })
   expect(agentModePickerToggle).toBeUndefined()
   expect(runModePickerToggle).toBeDefined()
