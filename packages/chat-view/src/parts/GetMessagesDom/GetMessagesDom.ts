@@ -72,6 +72,7 @@ export const getMessagesDom = (
       className: 'ChatMessages',
       onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
       onScroll: DomEventListenerFunctions.HandleMessagesScroll,
+      role: 'log',
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
