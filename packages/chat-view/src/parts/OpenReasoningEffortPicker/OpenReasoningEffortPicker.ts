@@ -5,6 +5,8 @@ export const openReasoningEffortPicker = (state: ChatState): ChatState => {
   return {
     ...state,
     agentModePickerOpen: false,
+    focus: reasoningEffortPickerOpen ? 'picker-list' : state.focus,
+    focused: reasoningEffortPickerOpen ? true : state.focused,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
     reasoningEffortPickerOpen,

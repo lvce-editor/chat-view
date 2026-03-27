@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 export const getCustomSelectPopOverVirtualDom = (
   optionCount: number,
@@ -23,6 +24,8 @@ export const getCustomSelectPopOverVirtualDom = (
     {
       childCount: optionCount,
       className: ClassNames.ChatModelPickerList,
+      name: InputName.PickerList,
+      tabIndex: -1,
       type: VirtualDomElements.Ul,
     },
     ...optionNodes,
