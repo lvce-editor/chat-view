@@ -9,6 +9,7 @@ export const getMenuEntriesChatAttachment = (attachmentId: string, previewSrc: s
       command: 'Chat.openChatAttachmentInNewTab',
       flags: MenuItemFlags.None,
       id: 'openImageInNewTab',
+      // @ts-ignore
       label: ViewletChatStrings.openImageInNewTab(),
     },
     {
@@ -16,6 +17,7 @@ export const getMenuEntriesChatAttachment = (attachmentId: string, previewSrc: s
       command: 'Chat.removeComposerAttachment',
       flags: MenuItemFlags.None,
       id: 'removeAttachment',
+      // @ts-ignore
       label: ViewletChatStrings.removeAttachment(),
     },
   ]
