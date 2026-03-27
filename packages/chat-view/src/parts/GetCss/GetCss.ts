@@ -173,6 +173,10 @@ export const getCss = (
   pointer-events: auto;
 }
 
+.ChatViewDropOverlayActive{
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .RunModePickerPopOver{
   overflow: hidden;
   border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
@@ -225,6 +229,15 @@ export const getCss = (
 .ChatToolCalls .ChatOrderedListItemContent{
   flex: 1;
   min-width: 0;
+}
+
+.ChatFocus .ChatMessages > .Message{
+  inline-size: fit-content;
+  max-inline-size: min(100%, var(--ChatFocusContentMaxWidth));
+}
+
+.ChatFocus .ChatMessages > .Message > .ChatMessageContent{
+  max-inline-size: 100%;
 }
 
 `

@@ -121,3 +121,79 @@ test('handleDropFiles is no-op when no session is selected', async () => {
   expect(mockRendererRpc.invocations).toEqual([['FileSystemHandle.getFileHandles', fileHandleIds]])
   expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])
 })
+
+test('handleDropFiles keeps duplicate images when the same image is dropped twice', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-duplicate-image',
+  }
+  const file = createFile('photo.svg', 'image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>')
+  const fileHandleIds = [1]
+  const fileHandles = [createFileHandle(file)]
+  const storedEvents: ChatViewEvent[] = []
+  using mockRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.appendEvent'(event: ChatViewEvent) {
+      storedEvents.push(event)
+    },
+
+    'ChatStorage.getEvents'(sessionId: string) {
+      return storedEvents.filter((event) => event.sessionId === sessionId)
+    },
+  })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
+      expect(ids).toEqual(fileHandleIds)
+      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
+    },
+  })
+
+  const firstState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
+  const secondState = await HandleDropFiles.handleDropFiles(firstState, InputName.ComposerDropTarget, fileHandleIds)
+
+  expect(secondState.composerAttachments).toHaveLength(2)
+  expect(secondState.composerAttachments).toEqual([
+    expect.objectContaining({
+      displayType: 'image',
+      mimeType: 'image/svg+xml',
+      name: 'photo.svg',
+      previewSrc: expect.stringMatching(imagePreviewSrcRegex),
+      size: file.size,
+    }),
+    expect.objectContaining({
+      displayType: 'image',
+      mimeType: 'image/svg+xml',
+      name: 'photo.svg',
+      previewSrc: expect.stringMatching(imagePreviewSrcRegex),
+      size: file.size,
+    }),
+  ])
+  expect(secondState.composerAttachments[0].attachmentId).not.toBe(secondState.composerAttachments[1].attachmentId)
+  expect(secondState.composerAttachmentsHeight).toBeGreaterThan(0)
+  const events = await getChatViewEvents('session-duplicate-image')
+  expect(events).toHaveLength(2)
+  expect(events).toEqual([
+    expect.objectContaining({
+      mimeType: 'image/svg+xml',
+      name: 'photo.svg',
+      sessionId: 'session-duplicate-image',
+      size: file.size,
+      type: 'chat-attachment-added',
+    }),
+    expect.objectContaining({
+      mimeType: 'image/svg+xml',
+      name: 'photo.svg',
+      sessionId: 'session-duplicate-image',
+      size: file.size,
+      type: 'chat-attachment-added',
+    }),
+  ])
+  expect(mockRpc.invocations).toEqual([
+    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-duplicate-image' })],
+    ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-duplicate-image' })],
+    ['ChatStorage.getEvents', 'session-duplicate-image'],
+  ])
+  expect(mockRendererRpc.invocations).toEqual([
+    ['FileSystemHandle.getFileHandles', fileHandleIds],
+    ['FileSystemHandle.getFileHandles', fileHandleIds],
+  ])
+})
