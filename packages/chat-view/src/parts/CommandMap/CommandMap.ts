@@ -80,11 +80,8 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
-<<<<<<< HEAD
 import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
-=======
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
->>>>>>> origin/main
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
@@ -215,11 +212,8 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
-<<<<<<< HEAD
   'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
-=======
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
->>>>>>> origin/main
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),
