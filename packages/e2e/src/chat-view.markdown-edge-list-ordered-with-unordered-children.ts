@@ -28,7 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
   const topLevelOrdered = Locator('.ChatMessages .Message .ChatMessageContent > ol')
-  const nestedUnordered = Locator('.ChatMessages .Message .ChatMessageContent > ol > li > ul')
+  const nestedUnordered = Locator('.ChatMessages .Message .ChatMessageContent > ol > li > .ChatOrderedListItemContent > ul')
   await expect(topLevelOrdered).toHaveCount(1)
   await expect(nestedUnordered).toHaveCount(2)
 }
