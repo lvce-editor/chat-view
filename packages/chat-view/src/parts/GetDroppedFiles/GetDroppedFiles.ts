@@ -6,7 +6,13 @@ interface FileHandleTransportItem {
 
 export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<readonly FileSystemFileHandle[]> => {
   if (fileHandles.some((item) => typeof item !== 'number')) {
-    return fileHandles as any as readonly FileSystemFileHandle[]
+    return fileHandles.map((item: any) => {
+      return {
+        getFile() {
+          return item
+        },
+      }
+    }) as any as readonly FileSystemFileHandle[]
   }
   const actualHandles = await RendererWorker.getFileHandles(fileHandles)
   return actualHandles
