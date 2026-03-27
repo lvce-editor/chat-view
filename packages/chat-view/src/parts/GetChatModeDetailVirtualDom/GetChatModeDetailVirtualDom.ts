@@ -34,6 +34,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -50,6 +51,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -81,6 +83,7 @@ export const getChatModeDetailVirtualDom = ({
   composerValue,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
+  messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -97,6 +100,7 @@ export const getChatModeDetailVirtualDom = ({
   reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
+  scrollDownButtonEnabled,
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -165,6 +169,8 @@ export const getChatModeDetailVirtualDom = ({
       todoListItems,
       showCreatePullRequestButton,
       voiceDictationEnabled,
+      scrollDownButtonEnabled,
+      messagesAutoScrollEnabled,
     ),
     ...getChatOverlaysVirtualDom({
       agentMode,

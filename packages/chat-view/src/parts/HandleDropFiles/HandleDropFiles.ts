@@ -4,6 +4,7 @@ import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts
 import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDisplayType/GetComposerAttachmentDisplayType.ts'
 import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
+import { getComposerAttachmentTextContent } from '../GetComposerAttachmentTextContent/GetComposerAttachmentTextContent.ts'
 import { getDroppedFiles } from '../GetDroppedFiles/GetDroppedFiles.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -35,6 +36,7 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
     const attachmentId = crypto.randomUUID()
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
     const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
+    const textContent = await getComposerAttachmentTextContent(file, displayType)
     await appendChatViewEvent({
       attachmentId,
       blob: file,
@@ -56,6 +58,11 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
           }
         : {}),
       size: file.size,
+      ...(typeof textContent === 'string'
+        ? {
+            textContent,
+          }
+        : {}),
     })
   }
   return {

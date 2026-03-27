@@ -37,6 +37,10 @@ export const search = (): string => {
   return i18nString(UiStrings.Search)
 }
 
+export const scrollDown = (): string => {
+  return i18nString(UiStrings.ScrollDown)
+}
+
 export const searchModels = (): string => {
   return i18nString(UiStrings.SearchModels)
 }
@@ -135,6 +139,26 @@ export const startVoiceDictation = (): string => {
 
 export const addContext = (): string => {
   return i18nString(UiStrings.AddContext)
+}
+
+export const addAction = (): string => {
+  return i18nString(UiStrings.AddAction)
+}
+
+export const openInVsCode = (): string => {
+  return i18nString(UiStrings.OpenInVsCode)
+}
+
+export const commit = (): string => {
+  return i18nString(UiStrings.Commit)
+}
+
+export const openTerminal = (): string => {
+  return i18nString(UiStrings.OpenTerminal)
+}
+
+export const showDiff = (): string => {
+  return i18nString(UiStrings.ShowDiff)
 }
 
 export const createPullRequest = (): string => {

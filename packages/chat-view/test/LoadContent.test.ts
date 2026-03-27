@@ -329,6 +329,7 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -367,6 +368,7 @@ test('loadContent should load openApiApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -406,6 +408,7 @@ test('loadContent should load emitStreamingFunctionCallEvents from preferences',
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -445,6 +448,7 @@ test('loadContent should load streamingEnabled from preferences', async () => {
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -484,6 +488,7 @@ test('loadContent should load passIncludeObfuscation from preferences', async ()
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -524,6 +529,7 @@ test('loadContent should load composerDropEnabled from preferences', async () =>
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -563,6 +569,7 @@ test('loadContent should load aiSessionTitleGenerationEnabled from preferences',
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -602,6 +609,7 @@ test('loadContent should load useChatNetworkWorkerForRequests from preferences',
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -641,6 +649,7 @@ test('loadContent should load useChatCoordinatorWorker from preferences', async 
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -680,6 +689,7 @@ test('loadContent should load useChatMathWorker from preferences', async () => {
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -724,6 +734,7 @@ test('loadContent should load useChatMessageParsingWorker from preferences', asy
     ['Preferences.get', 'chatView.useChatToolWorker'],
     ['Preferences.get', 'chatView.voiceDictationEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
 })
 
@@ -886,6 +897,7 @@ test('loadContent should load todoListToolEnabled from preferences', async () =>
     ['Preferences.get', 'chatView.streamingEnabled'],
     ['Preferences.get', 'chatView.todoListToolEnabled'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
     ['Preferences.get', 'chatView.passIncludeObfuscation'],
     ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
     ['Preferences.get', 'chatView.useChatCoordinatorWorker'],
@@ -955,6 +967,7 @@ test('loadContent should load searchEnabled from preferences', async () => {
     ['Preferences.get', 'secrets.openRouterApiKey'],
     ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
     ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
     ['Preferences.get', 'chatView.streamingEnabled'],
     ['Preferences.get', 'chatView.passIncludeObfuscation'],
     ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],

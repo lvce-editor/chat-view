@@ -2,7 +2,11 @@ import { expect, test } from '@jest/globals'
 import type { GetOpenApiAssistantTextErrorResult } from '../src/parts/GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../src/parts/ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
-import { getOpenApiErrorMessage } from '../src/parts/GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
+import {
+  getImageNotSupportedMessage,
+  getOpenApiErrorMessage,
+  isImageNotSupportedError,
+} from '../src/parts/GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
 
 const createHttpError = (overrides: Partial<GetOpenApiAssistantTextErrorResult> = {}): GetOpenApiAssistantTextErrorResult => ({
   details: 'http-error',
@@ -80,6 +84,36 @@ test('getOpenApiErrorMessage should format unsupported_parameter errors for reas
   expect(result).toBe(
     "OpenAI request failed (status 400): unsupported_parameter [invalid_request_error]. Unsupported parameter: 'reasoning.effort' is not supported with this model.",
   )
+})
+
+test('getOpenApiErrorMessage should format image-not-supported errors with a helpful message', () => {
+  const result = getOpenApiErrorMessage(
+    createHttpError({
+      errorCode: 'unsupported_parameter',
+      errorMessage: 'This model does not support image input.',
+      errorType: 'invalid_request_error',
+      statusCode: 400,
+    }),
+  )
+
+  expect(result).toBe(getImageNotSupportedMessage())
+})
+
+test('isImageNotSupportedError should require both image and unsupported signals', () => {
+  expect(
+    isImageNotSupportedError({
+      errorCode: 'unsupported_parameter',
+      errorMessage: 'This model does not support image input.',
+      errorType: 'invalid_request_error',
+    }),
+  ).toBe(true)
+  expect(
+    isImageNotSupportedError({
+      errorCode: 'invalid_image_url',
+      errorMessage: 'Image URL is malformed.',
+      errorType: 'invalid_request_error',
+    }),
+  ).toBe(false)
 })
 
 test('getOpenApiErrorMessage should format generic HTTP errors with status and no message', () => {

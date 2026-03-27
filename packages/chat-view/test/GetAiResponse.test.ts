@@ -11,6 +11,8 @@ import {
 } from '../src/parts/ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getAiResponse } from '../src/parts/GetAiResponse/GetAiResponse.ts'
+import { getImageNotSupportedMessage } from '../src/parts/GetOpenApiErrorMessage/GetOpenApiErrorMessage.ts'
+import * as MockOpenApiRequest from '../src/parts/MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
 test('getAiResponse should use chat coordinator worker when enabled', async () => {
@@ -293,6 +295,46 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
 
   expect(result.role).toBe('assistant')
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
+})
+
+test('getAiResponse should reject image attachments for models without image support before calling the provider', async () => {
+  MockOpenApiRequest.reset()
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
+      {
+        attachments: [
+          {
+            attachmentId: 'attachment-1',
+            displayType: 'image',
+            mimeType: 'image/svg+xml',
+            name: 'photo.svg',
+            previewSrc: 'data:image/svg+xml;base64,abc',
+            size: 100,
+          },
+        ],
+        id: 'message-1',
+        role: 'user',
+        text: 'describe this',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: 'oa-key-123',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-5-mini',
+    useMockApi: true,
+    userText: 'describe this',
+  })
+
+  expect(result.role).toBe('assistant')
+  expect(result.text).toBe(getImageNotSupportedMessage('GPT-5 Mini'))
+  expect(MockOpenApiRequest.getAll()).toEqual([])
 })
 
 test('getAiResponse should use backend completions when auth is enabled', async () => {

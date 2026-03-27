@@ -10,9 +10,11 @@ import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
+import { getChatHeaderDomFocusMode } from '../GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
@@ -34,6 +36,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -53,6 +56,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly reasoningPickerEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
+  readonly scrollDownButtonEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -85,6 +89,7 @@ export const getChatModeChatFocusVirtualDom = ({
   composerValue,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
+  messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -104,6 +109,7 @@ export const getChatModeChatFocusVirtualDom = ({
   reasoningPickerEnabled,
   runMode,
   runModePickerOpen = false,
+  scrollDownButtonEnabled,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
@@ -119,14 +125,17 @@ export const getChatModeChatFocusVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
+  const selectedProject = projects.find((project) => project.id === selectedProjectId)
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
+  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
+  const selectedProjectName = selectedProject?.name || ''
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
+  const chatRootChildCount = 4 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
@@ -135,7 +144,7 @@ export const getChatModeChatFocusVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
+    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
     ...getMessagesDom(
       messages,
       parsedMessages,
@@ -149,6 +158,7 @@ export const getChatModeChatFocusVirtualDom = ({
       useChatMathWorker,
       true,
     ),
+    ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
@@ -173,6 +183,8 @@ export const getChatModeChatFocusVirtualDom = ({
       todoListItems,
       showCreatePullRequestButton,
       voiceDictationEnabled,
+      scrollDownButtonEnabled,
+      messagesAutoScrollEnabled,
     ),
     ...getChatOverlaysVirtualDom({
       agentMode,

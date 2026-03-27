@@ -201,6 +201,27 @@ export const getCss = (
   min-width: 0;
 }
 
+.ChatMessages > .Message{
+  display: flex;
+}
+
+.ChatMessages > .MessageUser{
+  justify-content: flex-end;
+}
+
+.ChatMessages > .MessageAssistant{
+  justify-content: flex-start;
+}
+
+.ChatFocus .ChatMessages > .Message{
+  inline-size: fit-content;
+  max-inline-size: min(100%, var(--ChatFocusContentMaxWidth));
+}
+
+.ChatFocus .ChatMessages > .Message > .ChatMessageContent{
+  max-inline-size: 100%;
+}
+
 `
 
   return `${baseCss}
