@@ -1,0 +1,31 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
+export const name = 'chat-view.file-drop-1000-images'
+
+const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
+
+export const skip = 1
+
+const createImageFiles = (count: number): readonly File[] => {
+  return Array.from({ length: count }, (_, index) => new File([svgContent], `photo-${index + 1}.svg`, { type: 'image/svg+xml' }))
+}
+
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+  await Chat.show()
+  await Chat.reset()
+  await Command.execute('Chat.openMockSession', 'session-file-drop-1000-images', [])
+
+  const composer = Locator('.ChatInputBox[name="composer"]')
+  const attachments = Locator('.ChatComposerAttachments')
+  const attachment = Locator('.ChatComposerAttachment')
+  const files = createImageFiles(1000)
+
+  await expect(composer).toBeVisible()
+
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', files)
+
+  await expect(attachments).toBeVisible()
+  await expect(attachment).toHaveCount(1000)
+  await expect(attachment.first()).toHaveText('Image · photo-1.svg')
+  await expect(attachment.nth(999)).toHaveText('Image · photo-1000.svg')
+}
