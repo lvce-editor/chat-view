@@ -4,11 +4,8 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
-<<<<<<< HEAD
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
-=======
 import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
->>>>>>> origin/main
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'

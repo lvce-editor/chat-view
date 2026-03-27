@@ -143,14 +143,9 @@ export const getChatModeChatFocusVirtualDom = ({
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
-<<<<<<< HEAD
-  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
-=======
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-  const chatRootChildCount = 4 + (hasVisibleOverlays ? 1 : 0)
->>>>>>> origin/main
+  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
       childCount: chatRootChildCount,
