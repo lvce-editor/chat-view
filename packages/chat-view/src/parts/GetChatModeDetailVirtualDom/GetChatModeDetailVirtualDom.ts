@@ -176,7 +176,6 @@ export const getChatModeDetailVirtualDom = ({
       showCreatePullRequestButton,
       voiceDictationEnabled,
     ),
-<<<<<<< HEAD
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,

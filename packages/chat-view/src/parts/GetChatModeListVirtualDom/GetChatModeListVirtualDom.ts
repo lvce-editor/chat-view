@@ -152,7 +152,6 @@ export const getChatModeListVirtualDom = ({
       false,
       voiceDictationEnabled,
     ),
-<<<<<<< HEAD
     ...getChatOverlaysVirtualDom({
       agentMode,
       agentModePickerVisible: isAgentModePickerVisible,
