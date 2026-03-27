@@ -67,6 +67,21 @@ test('getOpenApiErrorMessage should format generic HTTP errors with status, code
   expect(result).toBe('OpenAI request failed (status 400): bad_request [invalid_request_error]. Invalid payload.')
 })
 
+test('getOpenApiErrorMessage should format unsupported_parameter errors for reasoning effort', () => {
+  const result = getOpenApiErrorMessage(
+    createHttpError({
+      errorCode: 'unsupported_parameter',
+      errorMessage: "Unsupported parameter: 'reasoning.effort' is not supported with this model.",
+      errorType: 'invalid_request_error',
+      statusCode: 400,
+    }),
+  )
+
+  expect(result).toBe(
+    "OpenAI request failed (status 400): unsupported_parameter [invalid_request_error]. Unsupported parameter: 'reasoning.effort' is not supported with this model.",
+  )
+})
+
 test('getOpenApiErrorMessage should format generic HTTP errors with status and no message', () => {
   const result = getOpenApiErrorMessage(
     createHttpError({
