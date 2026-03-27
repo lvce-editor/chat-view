@@ -6,16 +6,12 @@ import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachmen
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
-import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getAgentModePickerPopOverVirtualDom } from '../GetAgentModePickerPopOverVirtualDom/GetAgentModePickerPopOverVirtualDom.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
-import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
-import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
-import * as InputName from '../InputName/InputName.ts'
+import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -58,27 +54,6 @@ export interface GetChatModeListVirtualDomOptions {
   readonly usageOverviewEnabled: boolean
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
-}
-
-const getDropOverlayVirtualDom = (isDropOverlayVisible: boolean): readonly VirtualDomNode[] => {
-  if (!isDropOverlayVisible) {
-    return []
-  }
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
-      name: InputName.ComposerDropTarget,
-      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-      onDragOver: DomEventListenerFunctions.HandleDragOver,
-      onDrop: DomEventListenerFunctions.HandleDrop,
-      type: VirtualDomElements.Div,
-    },
-    {
-      text: Strings.attachImageAsContext(),
-      type: VirtualDomElements.Text,
-    },
-  ]
 }
 
 export const getChatModeListVirtualDom = ({
@@ -127,8 +102,8 @@ export const getChatModeListVirtualDom = ({
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
-  const chatRootChildCount =
-    3 + (isDropOverlayVisible ? 1 : 0) + (isAgentModePickerVisible ? 1 : 0) + (isNewModelPickerVisible ? 1 : 0) + (isRunModePickerVisible ? 1 : 0)
+  const hasVisibleOverlays = isDropOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
+  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
   const visibleSessions =
     searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
@@ -167,9 +142,16 @@ export const getChatModeListVirtualDom = ({
       false,
       voiceDictationEnabled,
     ),
-    ...getDropOverlayVirtualDom(isDropOverlayVisible),
-    ...(isAgentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(isNewModelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
-    ...(isRunModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
+    ...getChatOverlaysVirtualDom({
+      agentMode,
+      agentModePickerVisible: isAgentModePickerVisible,
+      dropOverlayVisible: isDropOverlayVisible,
+      modelPickerSearchValue,
+      modelPickerVisible: isNewModelPickerVisible,
+      runMode,
+      runModePickerVisible: isRunModePickerVisible,
+      selectedModelId,
+      visibleModels,
+    }),
   ]
 }

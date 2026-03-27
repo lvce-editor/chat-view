@@ -194,6 +194,7 @@ export const getChatSendAreaDom = (
     {
       childCount: primaryControlsCount,
       className: ClassNames.ChatSendAreaPrimaryControls,
+      role: 'toolbar',
       type: VirtualDomElements.Div,
     },
     ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen) : []),
