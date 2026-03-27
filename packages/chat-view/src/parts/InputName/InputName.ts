@@ -8,6 +8,7 @@ export const Composer = 'composer'
 export const Search = 'search'
 export const ComposerDropTarget = 'composer-drop-target'
 export const ComposerAttachmentPrefix = 'composer-attachment:'
+export const ComposerAttachmentPreviewPrefix = 'composer-attachment-preview:'
 export const ComposerAttachmentRemovePrefix = 'composer-attachment-remove:'
 export const ComposerAttachmentPreviewOverlay = 'composer-attachment-preview-overlay'
 export const AddContext = 'add-context'
@@ -99,16 +100,29 @@ export const getComposerAttachmentInputName = (attachmentId: string): `${typeof 
   return `${ComposerAttachmentPrefix}${attachmentId}`
 }
 
+<<<<<<< HEAD
 export const isComposerAttachmentInputName = (name: string): name is `${typeof ComposerAttachmentPrefix}${string}` => {
   return name.startsWith(ComposerAttachmentPrefix)
 }
 
 export const getAttachmentIdFromComposerAttachmentInputName = (name: `${typeof ComposerAttachmentPrefix}${string}`): string => {
   return name.slice(ComposerAttachmentPrefix.length)
+=======
+export const getComposerAttachmentPreviewInputName = (attachmentId: string): `${typeof ComposerAttachmentPreviewPrefix}${string}` => {
+  return `${ComposerAttachmentPreviewPrefix}${attachmentId}`
+>>>>>>> origin/main
 }
 
 export const getComposerAttachmentRemoveInputName = (attachmentId: string): `${typeof ComposerAttachmentRemovePrefix}${string}` => {
   return `${ComposerAttachmentRemovePrefix}${attachmentId}`
+}
+
+export const isComposerAttachmentPreviewInputName = (name: string): name is `${typeof ComposerAttachmentPreviewPrefix}${string}` => {
+  return name.startsWith(ComposerAttachmentPreviewPrefix)
+}
+
+export const getAttachmentIdFromComposerAttachmentPreviewInputName = (name: `${typeof ComposerAttachmentPreviewPrefix}${string}`): string => {
+  return name.slice(ComposerAttachmentPreviewPrefix.length)
 }
 
 export const isComposerAttachmentRemoveInputName = (name: string): name is `${typeof ComposerAttachmentRemovePrefix}${string}` => {

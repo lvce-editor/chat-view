@@ -236,7 +236,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleContextMenuChatImageAttachment,
-      params: ['handleContextMenuChatImageAttachment'],
+      params: ['handleContextMenuChatImageAttachment', EventExpression.TargetName, EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
     },
     {
