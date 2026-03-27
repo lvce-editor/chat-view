@@ -14,6 +14,7 @@ export interface GetOpenApiAssistantTextOptions {
   readonly questionToolEnabled?: boolean
   readonly reasoningEffort?: ReasoningEffort
   readonly stream: boolean
+  readonly supportsReasoningEffort?: boolean
   readonly systemPrompt?: string
   readonly toolEnablement?: ToolEnablement
   readonly useChatNetworkWorkerForRequests?: boolean
