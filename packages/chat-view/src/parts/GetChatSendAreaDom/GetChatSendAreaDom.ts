@@ -180,13 +180,9 @@ export const getChatSendAreaDom = (
     (usageOverviewEnabled ? 1 : 0) +
     (addContextButtonEnabled ? 1 : 0) +
     (showCreatePullRequestButton ? 1 : 0) +
-<<<<<<< HEAD
     (showGitBranchPicker ? 1 : 0) +
-    (voiceDictationEnabled ? 1 : 0)
-=======
     (voiceDictationEnabled ? 1 : 0) +
     (showScrollDownButton ? 1 : 0)
->>>>>>> origin/main
   const primaryControlsCount = 1 + (showAgentModePicker ? 1 : 0) + (reasoningPickerEnabled ? 1 : 0) + (showResponsiveRunModePicker ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
@@ -226,11 +222,8 @@ export const getChatSendAreaDom = (
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
-<<<<<<< HEAD
     ...(showGitBranchPicker ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName) : []),
-=======
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
->>>>>>> origin/main
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
   ]
 }

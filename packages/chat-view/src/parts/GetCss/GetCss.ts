@@ -202,8 +202,6 @@ export const getCss = (
   min-width: 0;
 }
 
-<<<<<<< HEAD
-=======
 .ChatMessages > .Message{
   display: flex;
 }
@@ -224,8 +222,6 @@ export const getCss = (
 .ChatFocus .ChatMessages > .Message > .ChatMessageContent{
   max-inline-size: 100%;
 }
-
->>>>>>> origin/main
 `
 
   return `${baseCss}
