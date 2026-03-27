@@ -9,7 +9,7 @@ export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<r
   if (fileHandles.some((item: any): boolean => typeof item !== 'number')) {
     return fileHandles.map((item: any): any => {
       return {
-        getFile() {
+        getFile(): any {
           return item
         },
       }
