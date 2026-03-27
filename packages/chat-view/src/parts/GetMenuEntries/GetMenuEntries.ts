@@ -26,7 +26,7 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
     case MenuChatList:
       return getMenuEntriesChatList()
     case MenuChatProjectList:
-      return getMenuEntriesChatProjectList(props.projectId)
+      return getMenuEntriesChatProjectList(props.projectId, props.canRemoveProject)
     case MenuProjectAddButton:
       return getMenuEntriesProjectAddButton()
     default:

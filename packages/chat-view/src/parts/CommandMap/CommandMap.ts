@@ -73,6 +73,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
+import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
@@ -192,6 +193,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
+  'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),

@@ -17,6 +17,10 @@ export const addProject = (): string => {
   return i18nString(UiStrings.AddProjectChat)
 }
 
+export const removeProject = (): string => {
+  return i18nString(UiStrings.RemoveProject)
+}
+
 export const debug = (): string => {
   return i18nString(UiStrings.Debug)
 }
