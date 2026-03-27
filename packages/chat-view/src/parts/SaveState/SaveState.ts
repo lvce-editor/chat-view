@@ -5,6 +5,8 @@ export const saveState = (state: ChatState): SavedState => {
   const {
     agentMode,
     chatListScrollTop,
+    composerSelectionEnd,
+    composerSelectionStart,
     composerValue,
     lastNormalViewMode,
     maxToolCalls,
@@ -26,6 +28,8 @@ export const saveState = (state: ChatState): SavedState => {
   return {
     agentMode,
     chatListScrollTop,
+    composerSelectionEnd,
+    composerSelectionStart,
     composerValue,
     lastNormalViewMode,
     maxToolCalls,
