@@ -6,6 +6,32 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const getAuthAction = (
+  authEnabled: boolean,
+  authStatus: 'signed-out' | 'signing-in' | 'signed-in',
+): Parameters<typeof getHeaderActionVirtualDom>[0] | undefined => {
+  const isSigningIn = authStatus === 'signing-in'
+  if (!authEnabled) {
+    return undefined
+  }
+  if (authStatus !== 'signed-in') {
+    return {
+      disabled: isSigningIn,
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAccount),
+      name: InputName.Login,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
+    }
+  }
+  return {
+    disabled: false,
+    icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSignOut),
+    name: InputName.Logout,
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: Strings.logoutFromBackend(),
+  }
+}
+
 export const getChatHeaderActionsDom = (
   viewMode: ChatViewMode,
   authEnabled = false,
@@ -13,25 +39,7 @@ export const getChatHeaderActionsDom = (
   searchEnabled = false,
 ): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
-  const isSigningIn = authStatus === 'signing-in'
-  const authAction =
-    authEnabled && authStatus !== 'signed-in'
-      ? ({
-          disabled: isSigningIn,
-          icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAccount),
-          name: InputName.Login,
-          onClick: DomEventListenerFunctions.HandleClick,
-          title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
-        } as const)
-      : authEnabled
-        ? ({
-            disabled: false,
-            icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSignOut),
-            name: InputName.Logout,
-            onClick: DomEventListenerFunctions.HandleClick,
-            title: Strings.logoutFromBackend(),
-          } as const)
-        : undefined
+  const authAction = getAuthAction(authEnabled, authStatus)
   const items = [
     {
       icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconLayoutPanelLeft),
