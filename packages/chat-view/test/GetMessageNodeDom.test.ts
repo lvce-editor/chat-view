@@ -66,7 +66,7 @@ test('getMessageNodeDom should render markdown image inline nodes as img dom nod
     className: ClassNames.ImageElement,
     src: 'http://invalid-url',
     type: VirtualDomElements.Img,
-    onContextMenu:58
+    onContextMenu: 58,
   })
 })
 
