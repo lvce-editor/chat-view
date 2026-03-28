@@ -24,6 +24,20 @@ const jsRules: readonly TokenRule[] = [
   },
 ]
 
+const tsRules: readonly TokenRule[] = [
+  { className: ClassNames.TokenComment, regex: /\/\/[^\n]*/ },
+  { className: ClassNames.TokenComment, regex: /\/\*[\s\S]*?\*\// },
+  { className: ClassNames.TokenString, regex: /"[^"\\]*(?:\\.[^"\\]*)*"/ },
+  { className: ClassNames.TokenString, regex: /'[^'\\]*(?:\\.[^'\\]*)*'/ },
+  { className: ClassNames.TokenString, regex: /`[^`\\]*(?:\\.[^`\\]*)*`/ },
+  { className: ClassNames.TokenNumber, regex: /\b\d+\.?\d*\b/ },
+  {
+    className: ClassNames.TokenKeyword,
+    regex:
+      /\b(?:abstract|any|as|asserts|async|await|boolean|class|const|constructor|declare|default|enum|export|extends|false|finally|for|from|function|get|if|implements|import|in|infer|instanceof|interface|is|keyof|let|module|namespace|never|new|null|number|object|override|private|protected|public|readonly|return|satisfies|set|static|string|super|switch|symbol|this|throw|true|try|type|typeof|undefined|unknown|var|void|while)\b/,
+  },
+]
+
 const htmlRules: readonly TokenRule[] = [
   { className: ClassNames.TokenComment, regex: /<!--[\s\S]*?-->/ },
   { className: ClassNames.TokenTag, regex: /<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/ },
@@ -105,6 +119,9 @@ export const highlightCode = (code: string, language: string | undefined): reado
   }
   if (normalized === 'js' || normalized === 'javascript') {
     return tokenize(code, jsRules)
+  }
+  if (normalized === 'ts' || normalized === 'typescript') {
+    return tokenize(code, tsRules)
   }
   if (normalized === 'py' || normalized === 'python') {
     return tokenize(code, pythonRules)
