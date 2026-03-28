@@ -39,13 +39,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
       type: VirtualDomElements.Span,
     },
     text(toolNameLabel),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      ...fileNameClickableProps,
-      type: VirtualDomElements.Span,
-    },
-    ...getToolCallFileNameDom(fileName, fileNameClickableProps),
+    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }
