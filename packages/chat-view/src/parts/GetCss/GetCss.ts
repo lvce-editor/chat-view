@@ -112,7 +112,7 @@ export const getCss = (
 }
 
 .InputInvalid{
-  border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));
+  border-color: var(--InputValidationErrorBorder, red);
 }
 
 .ChatComposerAttachmentTextFile{
