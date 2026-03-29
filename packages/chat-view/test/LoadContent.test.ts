@@ -109,6 +109,10 @@ test('loadContent should restore sessions from savedState and recover invalid se
 test('loadContent should load only selected session messages from async storage', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
   await saveChatSession({
     id: 'session-a',
     messages: [{ id: 'message-a', role: 'user', text: 'A', time: '10:00' }],
@@ -355,6 +359,10 @@ test('loadContent should ignore invalid saved scroll positions', async () => {
 test('loadContent should restore selected detail session with messages from savedState', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',

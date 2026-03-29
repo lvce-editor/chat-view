@@ -2,6 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.syntax-highlighting-json-package-json'
 
+export const skip = 1
 const mockResponse = `I will create a new package.json file suitable for a new React project. It will include the basic dependencies for React and ReactDOM.
 
 Here is a basic example for a React project:

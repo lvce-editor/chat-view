@@ -54,11 +54,12 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     toolEnablement,
     useChatCoordinatorWorker,
     useChatMathWorker,
-    useChatMessageParsingWorker,
+    // useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
+  const useChatMessageParsingWorker = true
   const authState = authEnabled && backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
