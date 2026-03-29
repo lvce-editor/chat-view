@@ -659,11 +659,36 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(composer as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
-  expect(addActionButton).toBeUndefined()
-  expect(openInVsCodeButton).toBeUndefined()
-  expect(commitButton).toBeUndefined()
-  expect(openTerminalButton).toBeUndefined()
-  expect(showDiffButton).toBeUndefined()
+  expect(addActionButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-add-action',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(openInVsCodeButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-open-in-vscode',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(commitButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-commit',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(openTerminalButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-open-terminal',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(showDiffButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-show-diff',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })

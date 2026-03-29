@@ -1,5 +1,4 @@
 import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -18,9 +17,6 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
-<<<<<<< HEAD
-export const getChatHeaderDomFocusMode = (selectedSessionTitle: string, selectedProjectName: string): readonly VirtualDomNode[] => {
-=======
 const focusHeaderButtonStyle = 'white-space:nowrap;'
 
 const getFocusHeaderActionButtonDom = (label: string, name: string): readonly VirtualDomNode[] => {
@@ -53,7 +49,6 @@ export const getChatHeaderDomFocusMode = (
     [Strings.openTerminal(), InputName.FocusOpenTerminal],
     [Strings.showDiff(), InputName.FocusShowDiff],
   ] as const
->>>>>>> origin/main
   const hasProjectName = !!selectedProjectName
   return [
     {
@@ -89,11 +84,12 @@ export const getChatHeaderDomFocusMode = (
       : []),
     {
       'aria-label': 'focus header actions',
-      childCount: 0,
+      childCount: items.length,
       className: ClassNames.ChatFocusActions,
       role: AriaRoles.ToolBar,
       style: focusHeaderActionsStyle,
       type: VirtualDomElements.Div,
     },
+    ...items.flatMap(([label, name]) => getFocusHeaderActionButtonDom(label, name)),
   ]
 }
