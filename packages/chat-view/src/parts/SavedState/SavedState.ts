@@ -22,6 +22,5 @@ export interface SavedState {
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
-  readonly systemPrompt: string
   readonly viewMode: ChatViewMode
 }
