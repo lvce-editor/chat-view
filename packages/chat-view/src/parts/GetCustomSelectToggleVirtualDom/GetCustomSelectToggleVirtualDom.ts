@@ -7,11 +7,14 @@ export const getCustomSelectToggleVirtualDom = (
   open: boolean,
   onClick: number,
   title = label,
+  ariaLabel = title,
 ): readonly VirtualDomNode[] => {
   return [
     {
       'aria-expanded': open ? 'true' : 'false',
       'aria-haspopup': 'true',
+      'aria-label': ariaLabel,
+      ariaLabel,
       childCount: 2,
       className: ClassNames.Select,
       inputType: 'button',
