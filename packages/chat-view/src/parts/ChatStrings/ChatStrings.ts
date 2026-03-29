@@ -49,6 +49,10 @@ export const searchModels = (): string => {
   return i18nString(UiStrings.SearchModels)
 }
 
+export const pickModel = (modelName: string): string => {
+  return `${i18nString(UiStrings.PickModel)}, ${modelName}`
+}
+
 export const searchChats = (): string => {
   return i18nString(UiStrings.SearchChats)
 }
