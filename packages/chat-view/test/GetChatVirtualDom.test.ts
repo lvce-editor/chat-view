@@ -1712,9 +1712,10 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     autocapitalize: 'off',
     autocomplete: 'off',
     autocorrect: 'off',
+    className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
     onInput: DomEventListenerFunctions.HandleInput,
     pattern: '^sk-.+',
-    required: true,
+    required: false,
     spellcheck: false,
     type: VirtualDomElements.Input,
   })
@@ -1727,6 +1728,27 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     rel: 'noopener noreferrer',
     target: '_blank',
     type: VirtualDomElements.A,
+  })
+})
+
+test('getChatVirtualDOm should not mark empty OpenAPI api key input as invalid', () => {
+  const sessions = [
+    {
+      id: 'session-1',
+      messages: [{ id: 'm1', role: 'assistant' as const, text: openApiApiKeyRequiredMessage, time: '10:31' }],
+      title: 'Chat 1',
+    },
+  ]
+  const result = renderChatView({
+    openApiApiKeyInput: '',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'detail',
+  })
+  const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
+  expect(apiKeyInput).toMatchObject({
+    className: ClassNames.InputBox,
+    required: false,
   })
 })
 
