@@ -324,16 +324,6 @@ export const getCss = (
   display: flex !important;
   min-width: 0;
 }
-
-<<<<<<< HEAD
-=======
-
-.Viewlet.Chat.ChatFocus{
-  display: flex !important;
-  min-width: 0;
-}
-
->>>>>>> origin/main
 .ChatFocusMainArea{
   display: flex;
   flex: 1;
@@ -345,10 +335,6 @@ export const getCss = (
   flex: 1;
   min-height: 0;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
 `
 
   return `${baseCss}
