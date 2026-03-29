@@ -1,6 +1,6 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, logoutFromBackend } from '../BackendAuth/BackendAuth.ts'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleClickLogout = async (state: ChatState): Promise<ChatState> => {

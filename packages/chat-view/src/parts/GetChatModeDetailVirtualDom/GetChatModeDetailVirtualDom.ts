@@ -24,8 +24,6 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly userName?: string
-  readonly userState?: AuthUserState
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
@@ -66,6 +64,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
@@ -76,8 +76,6 @@ export const getChatModeDetailVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  userName = '',
-  userState = 'loggedOut',
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
@@ -118,6 +116,8 @@ export const getChatModeDetailVirtualDom = ({
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
+  userName = '',
+  userState = 'loggedOut',
   visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
