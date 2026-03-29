@@ -1,8 +1,10 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
+import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
 
 const getAuthErrorDom = (hasAuthError: boolean, authErrorMessage: string): readonly VirtualDomNode[] => {
   if (!hasAuthError) {
@@ -21,17 +23,19 @@ const getAuthErrorDom = (hasAuthError: boolean, authErrorMessage: string): reado
 export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   authEnabled = false,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
+  userState: AuthUserState = 'loggedOut',
+  userName = '',
   authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
   const hasAuthError = authEnabled && !!authErrorMessage
   return [
     {
-      childCount: hasAuthError ? 3 : 2,
+      childCount: 2 + (authEnabled ? 1 : 0) + (hasAuthError ? 1 : 0),
       className: ClassNames.ChatHeader,
       onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Header,
     },
+    ...getChatHeaderAuthDom(authEnabled, userState, userName),
     {
       childCount: 2,
       className: ClassNames.ChatName,
@@ -44,7 +48,7 @@ export const getChatHeaderDomDetailMode = (
       type: VirtualDomElements.H2,
     },
     text(selectedSessionTitle),
-    ...getChatHeaderActionsDom('detail', authEnabled, authStatus),
+    ...getChatHeaderActionsDom('detail'),
     ...getAuthErrorDom(hasAuthError, authErrorMessage),
   ]
 }

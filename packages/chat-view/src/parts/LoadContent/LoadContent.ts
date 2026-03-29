@@ -1,5 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
@@ -36,9 +37,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const [composerSelectionStart, composerSelectionEnd] = savedComposerSelection ?? [state.composerSelectionStart, state.composerSelectionEnd]
   const {
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
     authEnabled,
-    authRefreshToken,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
@@ -59,6 +58,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
+  const authState = authEnabled && backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -112,10 +112,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     agentMode,
     agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
+    authAccessToken: authState.authAccessToken,
     authEnabled,
-    authRefreshToken,
-    authStatus: authAccessToken ? 'signed-in' : 'signed-out',
+    authErrorMessage: authState.authErrorMessage,
     backendUrl,
     chatHistoryEnabled,
     chatListScrollTop,
@@ -163,6 +162,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    userName: authState.userName,
+    userState: authState.userState,
+    userSubscriptionPlan: authState.userSubscriptionPlan,
+    userUsedTokens: authState.userUsedTokens,
     viewMode,
     visibleModels,
     voiceDictationEnabled,

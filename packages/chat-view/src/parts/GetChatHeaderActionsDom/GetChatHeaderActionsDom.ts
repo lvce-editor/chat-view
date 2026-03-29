@@ -6,40 +6,8 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-const getAuthAction = (
-  authEnabled: boolean,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in',
-): Parameters<typeof getHeaderActionVirtualDom>[0] | undefined => {
-  const isSigningIn = authStatus === 'signing-in'
-  if (!authEnabled) {
-    return undefined
-  }
-  if (authStatus !== 'signed-in') {
-    return {
-      disabled: isSigningIn,
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAccount),
-      name: InputName.Login,
-      onClick: DomEventListenerFunctions.HandleClick,
-      title: isSigningIn ? Strings.loggingInToBackend() : Strings.loginToBackend(),
-    }
-  }
-  return {
-    disabled: false,
-    icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSignOut),
-    name: InputName.Logout,
-    onClick: DomEventListenerFunctions.HandleClick,
-    title: Strings.logoutFromBackend(),
-  }
-}
-
-export const getChatHeaderActionsDom = (
-  viewMode: ChatViewMode,
-  authEnabled = false,
-  authStatus: 'signed-out' | 'signing-in' | 'signed-in' = 'signed-out',
-  searchEnabled = false,
-): readonly VirtualDomNode[] => {
+export const getChatHeaderActionsDom = (viewMode: ChatViewMode, searchEnabled = false): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
-  const authAction = getAuthAction(authEnabled, authStatus)
   const items = [
     {
       icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconLayoutPanelLeft),
@@ -75,7 +43,6 @@ export const getChatHeaderActionsDom = (
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
-    ...(authAction ? [authAction] : []),
     {
       icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconClose),
       name: InputName.CloseChat,

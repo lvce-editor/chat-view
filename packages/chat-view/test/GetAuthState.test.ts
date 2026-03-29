@@ -8,10 +8,9 @@ test('getAuthState should return auth-related fields from state', () => {
     authAccessToken: 'access-token',
     authEnabled: true,
     authErrorMessage: 'failed',
-    authRefreshToken: 'refresh-token',
-    authStatus: 'signed-in' as const,
     backendUrl: 'https://example.com',
     userName: 'test-user',
+    userState: 'loggedIn' as const,
     userSubscriptionPlan: 'pro',
     userUsedTokens: 123,
   }
@@ -22,10 +21,9 @@ test('getAuthState should return auth-related fields from state', () => {
     authAccessToken: 'access-token',
     authEnabled: true,
     authErrorMessage: 'failed',
-    authRefreshToken: 'refresh-token',
-    authStatus: 'signed-in',
     backendUrl: 'https://example.com',
     userName: 'test-user',
+    userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 123,
   })

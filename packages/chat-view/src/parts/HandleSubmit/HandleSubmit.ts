@@ -5,6 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
+import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -104,6 +105,13 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
+  const authState = state.authEnabled && state.backendUrl ? await syncBackendAuth(state.backendUrl) : undefined
+  const effectiveState = authState
+    ? {
+        ...state,
+        ...authState,
+      }
+    : state
   const {
     agentMode,
     aiSessionTitleGenerationEnabled,
@@ -138,22 +146,25 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     useMockApi,
     viewMode,
     webSearchEnabled,
-  } = state
+  } = effectiveState
   const userText = composerValue.trim()
   if (!userText) {
-    return state
+    return effectiveState
   }
 
   const slashCommand = getSlashCommand(userText)
   if (slashCommand) {
-    return executeSlashCommand(state, slashCommand)
+    return executeSlashCommand(effectiveState, slashCommand)
   }
 
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const userMessageId = crypto.randomUUID()
-  const composerAttachments = state.composerAttachments.length > 0 ? state.composerAttachments : await getComposerAttachments(state.selectedSessionId)
+  const composerAttachments =
+    effectiveState.composerAttachments.length > 0
+      ? effectiveState.composerAttachments
+      : await getComposerAttachments(effectiveState.selectedSessionId)
   await clearComposerAttachments(
-    state.selectedSessionId,
+    effectiveState.selectedSessionId,
     composerAttachments.map((attachment) => attachment.attachmentId),
   )
   const userMessage: ChatMessage = {
@@ -176,7 +187,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     text: '',
     time: assistantTime,
   }
-  let { parsedMessages } = state
+  let { parsedMessages } = effectiveState
   parsedMessages = await parseAndStoreMessageContentWithWorkerPreference(parsedMessages, userMessage, useChatMessageParsingWorker)
   parsedMessages = await parseAndStoreMessageContentWithWorkerPreference(parsedMessages, inProgressAssistantMessage, useChatMessageParsingWorker)
 
@@ -213,10 +224,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     await saveChatSession(provisionedSession)
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
-        ...state,
+        ...effectiveState,
         composerAttachments: [],
         composerAttachmentsHeight: 0,
-        composerHeight: getMinComposerHeightForState(state),
+        composerHeight: getMinComposerHeightForState(effectiveState),
         composerSelectionEnd: 0,
         composerSelectionStart: 0,
         composerValue: '',
@@ -258,10 +269,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     }
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
-        ...state,
+        ...effectiveState,
         composerAttachments: [],
         composerAttachmentsHeight: 0,
-        composerHeight: getMinComposerHeightForState(state),
+        composerHeight: getMinComposerHeightForState(effectiveState),
         composerSelectionEnd: 0,
         composerSelectionStart: 0,
         composerValue: '',
@@ -275,7 +286,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   }
 
-  set(state.uid, state, optimisticState)
+  set(effectiveState.uid, effectiveState, optimisticState)
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 

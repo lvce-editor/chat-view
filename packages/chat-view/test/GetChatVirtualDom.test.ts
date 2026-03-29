@@ -1095,12 +1095,12 @@ test('getChatVirtualDOm should render focused chat list item highlight', () => {
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,
-    authStatus: 'signed-out',
+    userState: 'loggedOut',
   })
   const loginButton = result.find((node) => node.title === 'Login to backend')
   expect(loginButton).toBeDefined()
   expect(loginButton).toMatchObject({
-    className: ClassNames.IconButton,
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
@@ -1109,7 +1109,7 @@ test('getChatVirtualDOm should render login button in header actions when auth i
 test('getChatVirtualDOm should disable login button while signing in', () => {
   const result = renderChatView({
     authEnabled: true,
-    authStatus: 'signing-in',
+    userState: 'loggingIn',
   })
   const loginButton = result.find((node) => node.name === 'login')
   expect(loginButton).toBeDefined()
@@ -1123,12 +1123,28 @@ test('getChatVirtualDOm should render auth error label when login fails', () => 
   const result = renderChatView({
     authEnabled: true,
     authErrorMessage: 'Invalid backend credentials.',
-    authStatus: 'signed-out',
+    userState: 'loggedOut',
   })
   const authError = result.find((node) => node.className === 'ChatAuthError')
   expect(authError).toBeDefined()
   const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
   expect(authErrorText).toBeDefined()
+})
+
+test('getChatVirtualDOm should render user name and logout button when logged in', () => {
+  const result = renderChatView({
+    authEnabled: true,
+    userName: 'test-user',
+    userState: 'loggedIn',
+  })
+  const userNameLabel = result.find((node) => node.text === 'test-user')
+  const logoutButton = result.find((node) => node.name === 'logout')
+  expect(userNameLabel).toBeDefined()
+  expect(logoutButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    title: 'Logout from backend',
+    type: VirtualDomElements.Button,
+  })
 })
 
 test('getChatVirtualDOm should hide session list in detail mode', () => {
