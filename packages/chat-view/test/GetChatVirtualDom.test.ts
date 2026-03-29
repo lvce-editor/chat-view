@@ -439,7 +439,7 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
   const modelPickerList = result.find((node) => node.className === ClassNames.ChatModelPickerList)
-  const modelPickerItem = result.find((node) => node.name === 'model-picker-item:test')
+  const modelPickerItem = result.find((node) => node['data-id'] === 'test')
   expect(modelPicker).toBeDefined()
   expect(modelPickerToggle).toMatchObject({
     'aria-expanded': 'true',
@@ -462,8 +462,8 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   })
   expect(modelPickerItem).toMatchObject({
     className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
-    name: 'model-picker-item:test',
-    type: VirtualDomElements.Button,
+    'data-id': 'test',
+    type: VirtualDomElements.Li,
   })
 })
 
@@ -521,7 +521,7 @@ test('getChatVirtualDOm should filter model picker entries by search', () => {
   const testLabel = result.find((node) => node.text === 'test')
   expect(modelPickerItems).toHaveLength(1)
   expect(modelPickerItems[0]).toMatchObject({
-    name: 'model-picker-item:codex-5.3',
+    'data-id': 'codex-5.3',
   })
   expect(codexLabel).toBeDefined()
   expect(testLabel).toBeUndefined()
