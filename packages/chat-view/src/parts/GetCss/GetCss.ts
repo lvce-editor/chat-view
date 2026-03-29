@@ -420,9 +420,15 @@ display: flex;
 .ChatModelPickerList {
   flex-direction: column;
   flex: 1;
-  display: grid; /* TODO why does flex not work? why does flex reduce item height here?? */
-  contain:strict;
+  display: flex;
+  contain: strict;
 
+}
+
+
+.ChatModelPickerItem  {
+  contain: strict;
+  flex-shrink:0; /* TODO why?? */
 }
 
 
