@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  const toggleButton = Locator('.ChatSendArea button.Select[name="model-picker-toggle"]')
+  const toggleButton = Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]')
   await Command.execute('Chat.openModelPicker')
   const searchInput = Locator('.ChatModelPicker [name="model-picker-search"]')
   await expect(searchInput).toBeVisible()

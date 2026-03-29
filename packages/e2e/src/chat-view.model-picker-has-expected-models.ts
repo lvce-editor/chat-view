@@ -32,7 +32,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
-  await Locator('.ChatSendArea button.Select[name="model-picker-toggle"]').click()
+  await Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]').click()
 
   for (const modelId of expectedModelIds) {
     await expect(Locator(`.ChatModelPicker .ChatModelPickerItem[data-id="${modelId}"]`)).toHaveCount(1)

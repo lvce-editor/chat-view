@@ -68,7 +68,6 @@ export const getGitBranchPickerVirtualDom = (
       DomEventListenerFunctions.HandleClickGitBranchPickerToggle,
       'Switch branch',
       'Switch branch',
-      gitBranchPickerOpen ? 2 : 1,
     ),
     ...(gitBranchPickerOpen
       ? [

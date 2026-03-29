@@ -1,5 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { getCustomSelectToggleVirtualDom } from '../GetCustomSelectToggleVirtualDom/GetCustomSelectToggleVirtualDom.ts'
 
 export const getCustomSelectPickerToggleVirtualDom = (
@@ -9,14 +8,6 @@ export const getCustomSelectPickerToggleVirtualDom = (
   onClick: number,
   title = label,
   ariaLabel = title,
-  containerChildCount = 1,
 ): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: containerChildCount,
-      className: ClassNames.CustomSelectContainer,
-      type: VirtualDomElements.Div,
-    },
-    ...getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel),
-  ]
+  return getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel)
 }
