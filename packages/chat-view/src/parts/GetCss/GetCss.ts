@@ -383,21 +383,37 @@ export const getCss = (
 
 
 .ChatSelect {
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%),
-    linear-gradient(135deg, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%, transparent 50%);
-  background-position:
-    calc(100% - 10px) 50%,
-    calc(100% - 6px) 50%;
-  background-repeat: no-repeat;
-  background-size:
-    4px 4px,
-    4px 4px;
-  max-width: 60px;
-  padding-right: 16px;
+display: flex;
+    gap: 4px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--vscode-descriptionForeground, var(--vscode-disabledForeground));
+    padding: 0 !important;
+}
+
+
+
+
+
+
+
+
+
+.SelectLabel {
+      width: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+
+.ChatSelect .MaskIcon {
+
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
 }
 
 
