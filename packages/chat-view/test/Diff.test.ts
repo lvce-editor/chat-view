@@ -56,6 +56,22 @@ test('diff should not return RenderValue when composer changes from user input',
   expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderSelection])
 })
 
+test('diff should return RenderValue when openai api key input changes', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = {
+    ...createDefaultState(),
+    openApiApiKeyInput: '',
+    sessions,
+  }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    openApiApiKeyInput: 'invalid-key',
+    sessions,
+  }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderValue])
+})
+
 test('diff should return RenderSelection when composer selection changes', () => {
   const { sessions } = createDefaultState()
   const oldState: ChatState = { ...createDefaultState(), composerSelectionEnd: 0, composerSelectionStart: 0, sessions }
