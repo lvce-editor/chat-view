@@ -365,6 +365,42 @@ export const getCss = (
   display: flex;
   contain: content;
 }
+
+
+.ChatSelect:hover{
+  background: var(--vscode-toolbar-hoverBackground, color-mix(in srgb, var(--vscode-editor-background) 80%, white));
+  color: var(--vscode-foreground);
+}
+
+.SelectLabel {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.ChatSelect {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%),
+    linear-gradient(135deg, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) 50%,
+    calc(100% - 6px) 50%;
+  background-repeat: no-repeat;
+  background-size:
+    4px 4px,
+    4px 4px;
+  max-width: 60px;
+  padding-right: 16px;
+}
+
+
 `
 
   return `${baseCss}
