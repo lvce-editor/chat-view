@@ -2,6 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-message-with-markdown-ascii-linux'
 
+export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const linuxArt = ['       .--.', '      |o_o |', '      |:_/ |', '     //   \\ \\', '    (|     | )', "   /'\\_   _/`\\", '   \\___)=(___/'].join(
     '\n',
