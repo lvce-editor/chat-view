@@ -5,7 +5,7 @@ export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/Ha
 export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
-import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseAndStoreMessageContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export interface HandleTextChunkState {
@@ -19,8 +19,8 @@ export const updateMessageTextInSelectedSession = async (
   selectedSessionId: string,
   messageId: string,
   text: string,
-
   inProgress: boolean,
+  useChatMessageParsingWorker: boolean,
 ): Promise<{ readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] }> => {
   let updatedMessage: ChatSession['messages'][number] | undefined
   const updatedSessions = sessions.map((session) => {
@@ -44,7 +44,7 @@ export const updateMessageTextInSelectedSession = async (
   })
   let nextParsedMessages = parsedMessages
   if (updatedMessage) {
-    nextParsedMessages = await parseAndStoreMessageContent(parsedMessages, updatedMessage)
+    nextParsedMessages = await parseAndStoreMessageContentWithWorkerPreference(parsedMessages, updatedMessage, useChatMessageParsingWorker)
   }
   return {
     parsedMessages: nextParsedMessages,
@@ -82,6 +82,7 @@ export const handleTextChunkFunction = async (
     assistantMessageId,
     updatedText,
     true,
+    handleTextChunkState.latestState.useChatMessageParsingWorker,
   )
   const nextState = {
     ...handleTextChunkState.latestState,

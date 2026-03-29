@@ -203,6 +203,17 @@ export const parseAndStoreMessageContent = async (
   return setParsedMessageContent(parsedMessages, message.id, message.text, parsedContent)
 }
 
+export const parseAndStoreMessageContentWithWorkerPreference = async (
+  parsedMessages: readonly ParsedMessage[],
+  message: ChatMessage,
+  useChatMessageParsingWorker: boolean,
+): Promise<readonly ParsedMessage[]> => {
+  if (useChatMessageParsingWorker) {
+    return parseAndStoreMessagesContentInWorker(parsedMessages, [message])
+  }
+  return parseAndStoreMessageContent(parsedMessages, message)
+}
+
 export const parseAndStoreMessagesContent = async (
   parsedMessages: readonly ParsedMessage[],
   messages: readonly ChatMessage[],
