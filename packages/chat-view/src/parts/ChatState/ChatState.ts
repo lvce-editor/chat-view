@@ -1,4 +1,5 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
@@ -10,7 +11,6 @@ import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
-import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
@@ -130,8 +130,8 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
-  readonly userState: AuthUserState
   readonly userName: string
+  readonly userState: AuthUserState
   readonly userSubscriptionPlan: string
   readonly userUsedTokens: number
   readonly viewMode: ChatViewMode

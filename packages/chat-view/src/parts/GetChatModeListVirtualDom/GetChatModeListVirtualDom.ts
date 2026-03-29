@@ -20,8 +20,6 @@ export interface GetChatModeListVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly userName?: string
-  readonly userState?: AuthUserState
   readonly chatListScrollTop?: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -56,6 +54,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
@@ -66,8 +66,6 @@ export const getChatModeListVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  userName = '',
-  userState = 'loggedOut',
   chatListScrollTop = 0,
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
@@ -102,6 +100,8 @@ export const getChatModeListVirtualDom = ({
   tokensMax,
   tokensUsed,
   usageOverviewEnabled,
+  userName = '',
+  userState = 'loggedOut',
   visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {

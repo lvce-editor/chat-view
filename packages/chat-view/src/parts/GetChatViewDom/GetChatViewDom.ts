@@ -39,8 +39,6 @@ export interface GetChatVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly userName?: string
-  readonly userState?: AuthUserState
   readonly chatListScrollTop: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -89,6 +87,8 @@ export interface GetChatVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly viewMode: ChatViewMode
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
@@ -101,8 +101,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     agentModePickerOpen = false,
     authEnabled = false,
     authErrorMessage = '',
-    userName = '',
-    userState = 'loggedOut',
     chatListScrollTop,
     composerAttachmentPreviewOverlayAttachmentId,
     composerAttachmentPreviewOverlayError = false,
@@ -151,6 +149,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     tokensUsed,
     usageOverviewEnabled,
     useChatMathWorker = false,
+    userName = '',
+    userState = 'loggedOut',
     viewMode,
     visibleModels = models,
     voiceDictationEnabled = false,
@@ -167,8 +167,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        userName,
-        userState,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
@@ -213,6 +211,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensUsed,
         usageOverviewEnabled,
         useChatMathWorker,
+        userName,
+        userState,
         visibleModels,
         voiceDictationEnabled,
       })
@@ -223,8 +223,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        userName,
-        userState,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
@@ -265,6 +263,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensUsed,
         usageOverviewEnabled,
         useChatMathWorker,
+        userName,
+        userState,
         visibleModels,
         voiceDictationEnabled,
       })
@@ -275,8 +275,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        userName,
-        userState,
         chatListScrollTop,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
@@ -311,6 +309,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         tokensMax,
         tokensUsed,
         usageOverviewEnabled,
+        userName,
+        userState,
         visibleModels,
         voiceDictationEnabled,
       })

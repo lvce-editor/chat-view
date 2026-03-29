@@ -124,7 +124,7 @@ export const syncBackendAuth = async (backendUrl: string): Promise<BackendAuthSt
   }
 }
 
-export const waitForBackendLogin = async (backendUrl: string, timeoutMs = 30_000, pollIntervalMs = 1_000): Promise<BackendAuthState> => {
+export const waitForBackendLogin = async (backendUrl: string, timeoutMs = 30_000, pollIntervalMs = 1000): Promise<BackendAuthState> => {
   const deadline = Date.now() + timeoutMs
   let lastErrorMessage = ''
   while (Date.now() < deadline) {
