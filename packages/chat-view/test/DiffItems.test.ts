@@ -34,6 +34,20 @@ test('isEqual should return false when selectedModelId changes', () => {
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
 
+test('isEqual should return false when openai api key input changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), openApiApiKeyInput: '', sessions }
+  const state2: ChatState = { ...createDefaultState(), openApiApiKeyInput: 'invalid-key', sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
+test('isEqual should return false when openrouter api key input changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), openRouterApiKeyInput: '', sessions }
+  const state2: ChatState = { ...createDefaultState(), openRouterApiKeyInput: 'or-key-typed', sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
 test('isEqual should return false when sessions reference changes', () => {
   const state1: ChatState = createDefaultState()
   const state2: ChatState = {

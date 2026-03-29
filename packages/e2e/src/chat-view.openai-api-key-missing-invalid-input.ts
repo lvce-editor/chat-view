@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-api-key-missing-invalid-input'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -24,5 +22,5 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   // assert invalid input red border
   await expect(openAiApiKeyInput).toHaveValue('invalid-key')
   await expect(Locator('[name="open-api-api-key"]:invalid')).toBeVisible()
-  await expect(openAiApiKeyInput).toHaveClass('InputBox InputInvalid')
+  await expect(Locator('[name="open-api-api-key"].InputInvalid')).toBeVisible()
 }

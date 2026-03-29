@@ -21,3 +21,15 @@ test('diffValue should return false when composerValue changes', () => {
   const newState = createState({ composerValue: 'b' })
   expect(DiffValue.diffValue(oldState, newState)).toBe(false)
 })
+
+test('diffValue should return false when openai api key input changes', () => {
+  const oldState = createState({ openApiApiKeyInput: '' })
+  const newState = createState({ openApiApiKeyInput: 'invalid-key' })
+  expect(DiffValue.diffValue(oldState, newState)).toBe(false)
+})
+
+test('diffValue should return false when openrouter api key input changes', () => {
+  const oldState = createState({ openRouterApiKeyInput: '' })
+  const newState = createState({ openRouterApiKeyInput: 'or-key-typed' })
+  expect(DiffValue.diffValue(oldState, newState)).toBe(false)
+})

@@ -29,6 +29,8 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
     isEqualVisibleModels(oldState.visibleModels, newState.visibleModels) &&
     oldState.listFocusedIndex === newState.listFocusedIndex &&
+    oldState.openApiApiKeyInput === newState.openApiApiKeyInput &&
+    oldState.openRouterApiKeyInput === newState.openRouterApiKeyInput &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     isEqualProjects(oldState.projects, newState.projects) &&
     oldState.reasoningEffort === newState.reasoningEffort &&
