@@ -571,11 +571,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   })
 
   expect(result[0]).toMatchObject({
-<<<<<<< HEAD
-    childCount: 3,
-=======
     childCount: 2,
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
@@ -609,11 +605,6 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     childCount: 3,
   })
   expect(chatHeader).toBeUndefined()
-<<<<<<< HEAD
-  expect(focusHeader).toBeUndefined()
-  expect(focusActions).toBeUndefined()
-  expect(focusProject).toBeUndefined()
-=======
   expect(focusMainArea).toMatchObject({
     childCount: 3,
     className: ClassNames.ChatFocusMainArea,
@@ -630,7 +621,6 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     type: VirtualDomElements.Div,
   })
   expect(focusProject).toBeDefined()
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
   expect(focusTitle).toBeDefined()
   expect(result.find((node) => node.text === 'chat-view')).toBeDefined()
   expect(messages).toBeDefined()
@@ -657,13 +647,9 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     type: VirtualDomElements.Div,
   })
   expect(backToChatListLabel).toBeUndefined()
-<<<<<<< HEAD
-  expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
-=======
   expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(focusMainArea as (typeof result)[number]))
   expect(result.indexOf(focusMainArea as (typeof result)[number])).toBeLessThan(result.indexOf(focusHeader as (typeof result)[number]))
   expect(result.indexOf(focusHeader as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
   expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(composer as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))

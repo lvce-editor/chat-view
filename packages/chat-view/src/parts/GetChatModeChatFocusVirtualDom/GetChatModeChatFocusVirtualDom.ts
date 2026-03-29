@@ -11,9 +11,11 @@ import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import { canCreatePullRequest } from '../CanCreatePullRequest/CanCreatePullRequest.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
+import { getChatHeaderDomFocusMode } from '../GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
@@ -136,6 +138,8 @@ export const getChatModeChatFocusVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
+  const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
+  const selectedProjectName = projects.find((project) => project.id === selectedProjectId)?.name || ''
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
@@ -145,11 +149,7 @@ export const getChatModeChatFocusVirtualDom = ({
   const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
-<<<<<<< HEAD
-  const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
-=======
   const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
   return [
     {
       childCount: chatRootChildCount,
@@ -159,15 +159,12 @@ export const getChatModeChatFocusVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
-<<<<<<< HEAD
-=======
     {
       childCount: 3,
       className: ClassNames.ChatFocusMainArea,
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
     ...getMessagesDom(
       messages,
       parsedMessages,

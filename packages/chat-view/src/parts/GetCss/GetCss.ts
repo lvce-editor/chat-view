@@ -320,10 +320,6 @@ export const getCss = (
 .ChatFocus .ChatMessages > .Message > .ChatMessageContent{
   max-inline-size: 100%;
 }
-<<<<<<< HEAD
-=======
-
-
 .Viewlet.Chat.ChatFocus{
   display: flex !important;
   min-width: 0;
@@ -340,8 +336,6 @@ export const getCss = (
   flex: 1;
   min-height: 0;
 }
-
->>>>>>> 61fca10b9181 (feat: add ChatFocusMainArea class and update chat focus virtual DOM structure (#874))
 `
 
   return `${baseCss}
