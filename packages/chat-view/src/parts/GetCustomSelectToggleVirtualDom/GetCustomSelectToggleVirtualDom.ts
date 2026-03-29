@@ -9,6 +9,16 @@ export const getCustomSelectToggleVirtualDom = (
   title = label,
   ariaLabel = title,
 ): readonly VirtualDomNode[] => {
+  const getChevronDom = (expanded: boolean): VirtualDomNode => {
+    return {
+      childCount: 0,
+      className: mergeClassNames(ClassNames.MaskIcon, expanded ? ClassNames.MaskIconChevronUp : ClassNames.MaskIconChevronDown),
+      name,
+      role: AriaRoles.None,
+      type: VirtualDomElements.Div,
+    }
+  }
+
   return [
     {
       'aria-expanded': open ? 'true' : 'false',
@@ -31,12 +41,6 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Span,
     },
     text(label),
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, open ? ClassNames.MaskIconChevronUp : ClassNames.MaskIconChevronDown),
-      name,
-      role: AriaRoles.None,
-      type: VirtualDomElements.Div,
-    },
+    getChevronDom(open),
   ]
 }
