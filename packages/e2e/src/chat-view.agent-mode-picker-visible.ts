@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  const agentModeSelect = Locator(`.ChatSendArea .Select[name="agent-mode-picker-toggle"]`)
+  const agentModeSelect = Locator(`.ChatSendArea .ChatSelect[name="agent-mode-picker-toggle"]`)
 
   await expect(agentModeSelect).toBeVisible()
   await expect(agentModeSelect).toHaveText('Agent')

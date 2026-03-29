@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  const runModePickerToggle = Locator('.ChatSendArea button.Select[name="run-mode-picker-toggle"]')
+  const runModePickerToggle = Locator('.ChatSendArea button.ChatSelect[name="run-mode-picker-toggle"]')
   await expect(runModePickerToggle).toBeVisible()
   await Command.execute('Chat.handleClick', 'run-mode-picker-toggle')
 

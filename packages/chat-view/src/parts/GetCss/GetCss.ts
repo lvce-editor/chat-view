@@ -223,7 +223,7 @@ export const getCss = (
   color: var(--vscode-errorForeground, var(--vscode-foreground));
 }
 
-.CustomSelectContainer{
+.ChatSelect{
   position: relative;
   min-width: 0;
 

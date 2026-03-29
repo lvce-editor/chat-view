@@ -16,7 +16,7 @@ export const getCustomSelectToggleVirtualDom = (
       'aria-label': ariaLabel,
       ariaLabel,
       childCount: 2,
-      className: ClassNames.Select,
+      className: ClassNames.ChatSelect,
       inputType: 'button',
       name,
       onClick,

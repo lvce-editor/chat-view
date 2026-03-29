@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Locator('.ChatSendArea button.Select[name="model-picker-toggle"]').click()
+  await Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]').click()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
   await expect(items).toHaveCount(19)

@@ -84,7 +84,7 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
     'aria-label': 'Pick Model, test',
-    className: ClassNames.Select,
+    className: ClassNames.ChatSelect,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     title: 'Pick Model, test',
     type: VirtualDomElements.Button,
@@ -116,7 +116,7 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
     'aria-label': 'Pick Model, test',
-    className: ClassNames.Select,
+    className: ClassNames.ChatSelect,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
     title: 'Pick Model, test',
     type: VirtualDomElements.Button,
@@ -137,11 +137,10 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
-  const customSelectContainers = result.filter((node) => node.className === ClassNames.CustomSelectContainer)
   expect(agentModePickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
-    className: ClassNames.Select,
+    className: ClassNames.ChatSelect,
     onClick: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
     type: VirtualDomElements.Button,
   })
@@ -158,11 +157,10 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
     type: VirtualDomElements.Div,
   })
   expect(modelPickerToggle).toBeDefined()
-  expect(customSelectContainers).toHaveLength(3)
   expect(runModePickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
-    className: ClassNames.Select,
+    className: ClassNames.ChatSelect,
     onClick: DomEventListenerFunctions.HandleClickRunModePickerToggle,
     type: VirtualDomElements.Button,
   })
@@ -227,7 +225,6 @@ test('getChatVirtualDom should hide optional pickers when there is not enough ho
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
-  const customSelectContainers = result.filter((node) => node.className === ClassNames.CustomSelectContainer)
   expect(primaryControls).toMatchObject({
     childCount: 1,
     className: ClassNames.ChatSendAreaPrimaryControls,
@@ -237,7 +234,6 @@ test('getChatVirtualDom should hide optional pickers when there is not enough ho
   expect(agentModePickerToggle).toBeUndefined()
   expect(modelPickerToggle).toBeDefined()
   expect(runModePickerToggle).toBeUndefined()
-  expect(customSelectContainers).toHaveLength(1)
 })
 
 test('getChatVirtualDom should keep the run mode picker when only the agent picker runs out of space', () => {
@@ -318,7 +314,7 @@ test('getChatVirtualDom should render open agent mode picker as custom select wi
   expect(agentModePickerToggle).toMatchObject({
     'aria-expanded': 'true',
     'aria-haspopup': 'true',
-    className: ClassNames.Select,
+    className: ClassNames.ChatSelect,
     onClick: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
     title: 'Agent',
     type: VirtualDomElements.Button,
