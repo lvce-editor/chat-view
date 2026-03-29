@@ -356,6 +356,11 @@ export const getCss = (
   flex: 1;
   min-height: 0;
 }
+
+.ChatModelPickerList {
+  display: flex;
+  contain: content;
+}
 `
 
   return `${baseCss}
