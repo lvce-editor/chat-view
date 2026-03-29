@@ -1,20 +1,13 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { ComposerAttachment } from '../src/parts/ComposerAttachment/ComposerAttachment.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import { getChatMessageDom } from '../src/parts/GetChatMessageDom/GetChatMessageDom.ts'
 
-test('getChatMessageDom should render user attachments below the message content', () => {
+test('getChatMessageDom should render non-image user attachments below the message content', () => {
   const result = getChatMessageDom(
     {
       attachments: [
-        {
-          attachmentId: 'attachment-1',
-          displayType: 'image',
-          mimeType: 'image/svg+xml',
-          name: 'photo.svg',
-          previewSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg==',
-          size: 77,
-        },
         {
           attachmentId: 'attachment-2',
           displayType: 'text-file',
@@ -63,30 +56,9 @@ test('getChatMessageDom should render user attachments below the message content
       type: VirtualDomElements.Text,
     }),
     {
-      childCount: 2,
+      childCount: 1,
       className: ClassNames.ChatAttachments,
       type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 2,
-      className: `${ClassNames.ChatAttachment} ${ClassNames.ChatAttachmentImage}`,
-      type: VirtualDomElements.Div,
-    },
-    {
-      alt: 'Attachment preview for photo.svg',
-      childCount: 0,
-      className: ClassNames.ChatAttachmentPreview,
-      src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg==',
-      type: VirtualDomElements.Img,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatAttachmentLabel,
-      type: VirtualDomElements.Span,
-    },
-    {
-      text: 'Image · photo.svg',
-      type: VirtualDomElements.Text,
     },
     {
       childCount: 1,
@@ -101,6 +73,55 @@ test('getChatMessageDom should render user attachments below the message content
     {
       text: 'Text file · notes.txt',
       type: VirtualDomElements.Text,
+    },
+  ])
+})
+
+test('getChatMessageDom should render standalone image attachments as their own message-like bubble', () => {
+  const imageAttachment: ComposerAttachment = {
+    attachmentId: 'attachment-1',
+    displayType: 'image',
+    mimeType: 'image/svg+xml',
+    name: 'photo.svg',
+    previewSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg==',
+    size: 77,
+  }
+  const result = getChatMessageDom(
+    {
+      attachments: [imageAttachment],
+      id: 'message-1',
+      role: 'user',
+      text: '',
+      time: '10:00',
+    },
+    [],
+    '',
+    '',
+    'idle',
+    'https://platform.openai.com/api-keys',
+    '^sk-.+',
+    'idle',
+    false,
+    imageAttachment,
+  )
+
+  expect(result).toEqual([
+    {
+      childCount: 1,
+      className: `${ClassNames.Message} ${ClassNames.MessageUser}`,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: `${ClassNames.ChatMessageContent} ${ClassNames.ChatImageMessageContent}`,
+      type: VirtualDomElements.Div,
+    },
+    {
+      alt: 'photo.svg',
+      childCount: 0,
+      className: ClassNames.ChatMessageImage,
+      src: imageAttachment.previewSrc,
+      type: VirtualDomElements.Img,
     },
   ])
 })
