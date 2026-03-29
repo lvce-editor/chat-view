@@ -417,6 +417,22 @@ display: flex;
 }
 
 
+.ChatModelPickerList {
+  flex-direction: column;
+  flex: 1;
+  display: flex;
+  contain:strict;
+
+}
+
+
+.ChatModelPickerHeader {
+  height: 40px;
+  contain: strict;
+
+}
+
+
 `
 
   return `${baseCss}
