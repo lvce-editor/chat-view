@@ -3,6 +3,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.message-attachment-50-images'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
+const svgPreviewSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg=='
+
 const createImageFiles = (count: number): readonly File[] => {
   return Array.from({ length: count }, (_, index) => new File([svgContent], `photo-${index + 1}.svg`, { type: 'image/svg+xml' }))
 }
@@ -27,14 +29,17 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleInput('Please review these images')
   await Chat.handleSubmit()
 
-  const userMessage = Locator('.ChatMessages .MessageUser').first()
-  const attachments = userMessage.locator('.ChatAttachments')
-  const attachment = userMessage.locator('.ChatAttachment')
-  const preview = userMessage.locator('.ChatAttachmentPreview')
+  const userMessages = Locator('.ChatMessages .MessageUser')
+  const textMessage = userMessages.first()
+  const imageMessageContents = Locator('.ChatMessages .MessageUser .ChatMessageContent.ChatImageMessageContent')
+  const images = Locator('.ChatMessages .MessageUser .ChatMessageImage')
 
-  await expect(attachments).toBeVisible()
-  await expect(attachment).toHaveCount(50)
-  await expect(preview).toHaveCount(50)
-  await expect(attachment.first()).toHaveText('Image · photo-1.svg')
-  await expect(attachment.nth(49)).toHaveText('Image · photo-50.svg')
+  await expect(userMessages).toHaveCount(51)
+  await expect(textMessage).toHaveText('Please review these images')
+  await expect(imageMessageContents).toHaveCount(50)
+  await expect(images).toHaveCount(50)
+  await expect(images.first()).toHaveAttribute('alt', 'photo-1.svg')
+  await expect(images.first()).toHaveAttribute('src', svgPreviewSrc)
+  await expect(images.nth(49)).toHaveAttribute('alt', 'photo-50.svg')
+  await expect(images.nth(49)).toHaveAttribute('src', svgPreviewSrc)
 }
