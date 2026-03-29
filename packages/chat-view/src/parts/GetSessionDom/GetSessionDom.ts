@@ -22,7 +22,7 @@ export const getSessionDom = (session: ChatSession, focused = false): readonly V
     },
     {
       childCount: 0,
-      className: `${ClassNames.ChatListItemStatusIcon} codicon codicon-circle-filled ${sessionStatusClassName}`,
+      className: `${ClassNames.ChatListItemStatusIcon} ${sessionStatusClassName}`,
       type: VirtualDomElements.Div,
     },
     {
