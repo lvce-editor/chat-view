@@ -115,7 +115,6 @@ import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListTo
 import * as SetToolEnablement from '../SetToolEnablement/SetToolEnablement.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
-import * as SetUseChatMessageParsingWorker from '../SetUseChatMessageParsingWorker/SetUseChatMessageParsingWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
@@ -247,7 +246,6 @@ export const commandMap = {
   'Chat.setToolEnablement': wrapCommand(SetToolEnablement.setToolEnablement),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
-  'Chat.setUseChatMessageParsingWorker': wrapCommand(SetUseChatMessageParsingWorker.setUseChatMessageParsingWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
   'Chat.showComposerAttachmentPreviewOverlay': wrapCommand(ShowComposerAttachmentPreviewOverlay.showComposerAttachmentPreviewOverlay),
   'Chat.terminate': terminate,

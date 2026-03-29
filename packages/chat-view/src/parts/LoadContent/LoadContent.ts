@@ -25,7 +25,7 @@ import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
-import { parseAndStoreMessagesContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
@@ -54,12 +54,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     toolEnablement,
     useChatCoordinatorWorker,
     useChatMathWorker,
-    // useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const useChatMessageParsingWorker = true
   const authState = authEnabled && backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
@@ -103,7 +101,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const composerAttachments = await getComposerAttachments(selectedSessionId)
   let { parsedMessages } = state
   for (const session of sessions) {
-    parsedMessages = await parseAndStoreMessagesContentWithWorkerPreference(parsedMessages, session.messages, useChatMessageParsingWorker)
+    parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
   }
   const preferredViewMode = savedViewMode || state.viewMode
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
@@ -161,7 +159,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     toolEnablement,
     useChatCoordinatorWorker,
     useChatMathWorker,
-    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     userName: authState.userName,

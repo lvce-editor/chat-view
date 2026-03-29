@@ -1,5 +1,4 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import type { CodeToken } from '../HighlightCode/HighlightCode.ts'
 
 export type MessageIntermediateNode =
   | MessageTextNode
@@ -123,7 +122,6 @@ export interface MessageTableRowNode {
 }
 
 export interface MessageCodeBlockNode {
-  readonly codeTokens: readonly CodeToken[]
   readonly language?: string
   readonly text: string
   readonly type: 'code-block'

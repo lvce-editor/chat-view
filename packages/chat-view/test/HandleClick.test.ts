@@ -1,5 +1,5 @@
 // cspell:ignore openrouter worktrees
-import { expect, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, test } from '@jest/globals'
 import { ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
@@ -7,9 +7,20 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import { getNextAutoScrollTop } from '../src/parts/GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
+import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
+
+beforeEach(() => {
+  mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
+})
+
+afterEach(() => {
+  mockChatMessageParsingRpc[Symbol.dispose]()
+})
 
 test('handleClick should create a new session', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()

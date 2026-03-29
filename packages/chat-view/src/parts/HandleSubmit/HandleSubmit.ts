@@ -27,7 +27,7 @@ import {
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
-import { parseAndStoreMessageContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
@@ -140,7 +140,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled,
     toolEnablement,
     useChatCoordinatorWorker,
-    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     useMockApi,
@@ -188,8 +187,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     time: assistantTime,
   }
   let { parsedMessages } = effectiveState
-  parsedMessages = await parseAndStoreMessageContentWithWorkerPreference(parsedMessages, userMessage, useChatMessageParsingWorker)
-  parsedMessages = await parseAndStoreMessageContentWithWorkerPreference(parsedMessages, inProgressAssistantMessage, useChatMessageParsingWorker)
+  parsedMessages = await parseAndStoreMessageContent(parsedMessages, userMessage)
+  parsedMessages = await parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 
   let workingSessions = sessions
   if (viewMode === 'detail') {
@@ -388,16 +387,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       assistantMessageId,
       assistantMessage.text,
       false,
-      latestState.useChatMessageParsingWorker,
     )
     updatedSessions = updated.sessions
     finalParsedMessages = updated.parsedMessages
   } else {
-    finalParsedMessages = await parseAndStoreMessageContentWithWorkerPreference(
-      finalParsedMessages,
-      assistantMessage,
-      latestState.useChatMessageParsingWorker,
-    )
+    finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
     updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
   }
   if (aiSessionTitleGenerationEnabled && createsNewSession) {

@@ -8,7 +8,6 @@ import type {
   MessageTableCellNode,
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import { parseMessageContents as parseMessageContentsInWorker } from '../ChatMessageParsingRequest/ChatMessageParsingRequest.ts'
-import { parseMessageContent } from '../ParseMessageContent/ParseMessageContent.ts'
 
 const emptyMessageContent: readonly MessageIntermediateNode[] = [
   {
@@ -144,15 +143,6 @@ const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageInte
   return node
 }
 
-export const parseMessage = async (rawMessage: string): Promise<readonly MessageIntermediateNode[]> => {
-  const parsedContent = await parseMessageContent(rawMessage)
-  const nextParsedContent: MessageIntermediateNode[] = []
-  for (const node of parsedContent) {
-    nextParsedContent.push(await parseMathNode(node))
-  }
-  return nextParsedContent
-}
-
 export const getParsedMessageContent = (
   parsedMessages: readonly ParsedMessage[],
   messageId: string,
@@ -194,35 +184,14 @@ export const parseAndStoreMessageContent = async (
   parsedMessages: readonly ParsedMessage[],
   message: ChatMessage,
 ): Promise<readonly ParsedMessage[]> => {
-  const existingParsedMessage = parsedMessages.find((item) => item.id === message.id)
-  if (existingParsedMessage && existingParsedMessage.text === message.text) {
-    return parsedMessages
-  }
-  await Promise.resolve()
-  const parsedContent = message.text === '' ? emptyMessageContent : await parseMessage(message.text)
-  return setParsedMessageContent(parsedMessages, message.id, message.text, parsedContent)
-}
-
-export const parseAndStoreMessageContentWithWorkerPreference = async (
-  parsedMessages: readonly ParsedMessage[],
-  message: ChatMessage,
-  useChatMessageParsingWorker: boolean,
-): Promise<readonly ParsedMessage[]> => {
-  if (useChatMessageParsingWorker) {
-    return parseAndStoreMessagesContentInWorker(parsedMessages, [message])
-  }
-  return parseAndStoreMessageContent(parsedMessages, message)
+  return parseAndStoreMessagesContentInWorker(parsedMessages, [message])
 }
 
 export const parseAndStoreMessagesContent = async (
   parsedMessages: readonly ParsedMessage[],
   messages: readonly ChatMessage[],
 ): Promise<readonly ParsedMessage[]> => {
-  let nextParsedMessages = parsedMessages
-  for (const message of messages) {
-    nextParsedMessages = await parseAndStoreMessageContent(nextParsedMessages, message)
-  }
-  return nextParsedMessages
+  return parseAndStoreMessagesContentInWorker(parsedMessages, messages)
 }
 
 const getMessagesNeedingParsing = (parsedMessages: readonly ParsedMessage[], messages: readonly ChatMessage[]): readonly ChatMessage[] => {
@@ -247,17 +216,6 @@ const parseAndStoreMessagesContentInWorker = async (
     nextParsedMessages = setParsedMessageContent(nextParsedMessages, message.id, message.text, parsedContent)
   }
   return nextParsedMessages
-}
-
-export const parseAndStoreMessagesContentWithWorkerPreference = async (
-  parsedMessages: readonly ParsedMessage[],
-  messages: readonly ChatMessage[],
-  useChatMessageParsingWorker: boolean,
-): Promise<readonly ParsedMessage[]> => {
-  if (useChatMessageParsingWorker) {
-    return parseAndStoreMessagesContentInWorker(parsedMessages, messages)
-  }
-  return parseAndStoreMessagesContent(parsedMessages, messages)
 }
 
 export const getEmptyMessageContent = (): readonly MessageIntermediateNode[] => {
