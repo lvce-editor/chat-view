@@ -1,7 +1,5 @@
 import { loadAiSessionTitleGenerationEnabled } from '../LoadAiSessionTitleGenerationEnabled/LoadAiSessionTitleGenerationEnabled.ts'
 import { loadAuthEnabled } from '../LoadAuthEnabled/LoadAuthEnabled.ts'
-import { loadBackendAccessToken } from '../LoadBackendAccessToken/LoadBackendAccessToken.ts'
-import { loadBackendRefreshToken } from '../LoadBackendRefreshToken/LoadBackendRefreshToken.ts'
 import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { loadChatHistoryEnabled } from '../LoadChatHistoryEnabled/LoadChatHistoryEnabled.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
@@ -24,9 +22,7 @@ import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoic
 
 export interface LoadedPreferences {
   aiSessionTitleGenerationEnabled: boolean
-  authAccessToken: string
   authEnabled: boolean
-  authRefreshToken: string
   backendUrl: string
   chatHistoryEnabled: boolean
   composerDropEnabled: boolean
@@ -51,9 +47,7 @@ export interface LoadedPreferences {
 export const loadPreferences = async (): Promise<LoadedPreferences> => {
   const [
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
     authEnabled,
-    authRefreshToken,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
@@ -75,9 +69,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     voiceDictationEnabled,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
-    loadBackendAccessToken(),
     loadAuthEnabled(),
-    loadBackendRefreshToken(),
     loadBackendUrl(),
     loadChatHistoryEnabled(),
     loadComposerDropEnabled(),
@@ -101,9 +93,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
 
   return {
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
     authEnabled,
-    authRefreshToken,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,

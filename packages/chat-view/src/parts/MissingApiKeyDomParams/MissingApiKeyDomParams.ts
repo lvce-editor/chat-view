@@ -1,5 +1,6 @@
 export interface MissingApiKeyDomParams {
   readonly getApiKeyText: string
+  readonly inputClassName?: string
   readonly inputName: string
   readonly inputPattern?: string
   readonly inputRequired?: boolean
