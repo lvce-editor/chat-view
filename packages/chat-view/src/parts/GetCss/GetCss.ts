@@ -229,6 +229,10 @@ export const getCss = (
 
 }
 
+.ChatModelPickerItem{
+  display: flex;
+}
+
 .ChatGitBranchPickerMessage{
   padding: 6px 8px;
 }
