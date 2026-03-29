@@ -17,6 +17,7 @@ export const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], 
       onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpModelPickerList,
       onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
+      role: 'listbox',
       type: VirtualDomElements.Ul,
     },
 

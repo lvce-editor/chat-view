@@ -454,11 +454,13 @@ test('getChatVirtualDOm should render open model picker with search input', () =
     onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     onPointerUp: DomEventListenerFunctions.HandlePointerUpModelPickerList,
     onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
+    role: 'listbox',
     type: VirtualDomElements.Ul,
   })
   expect(modelPickerItem).toMatchObject({
     className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
     'data-id': 'test',
+    role: 'option',
     type: VirtualDomElements.Li,
   })
 })
