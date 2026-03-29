@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { openApiApiKeyRequiredMessage } from '../src/parts/ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import { getChatMessageDom } from '../src/parts/GetChatMessageDom/GetChatMessageDom.ts'
 
@@ -140,6 +141,80 @@ test('getChatMessageDom should not render attachment markup for assistant messag
   expect(result).not.toContainEqual(
     expect.objectContaining({
       className: ClassNames.ChatAttachments,
+    }),
+  )
+})
+
+test('getChatMessageDom should mark invalid openai api key input with InputInvalid class', () => {
+  const result = getChatMessageDom(
+    {
+      id: 'message-1',
+      role: 'assistant',
+      text: openApiApiKeyRequiredMessage,
+      time: '10:00',
+    },
+    [
+      {
+        children: [
+          {
+            text: openApiApiKeyRequiredMessage,
+            type: 'text',
+          },
+        ],
+        type: 'text',
+      },
+    ],
+    '',
+    'invalid-key',
+  )
+
+  expect(result).toContainEqual(
+    expect.objectContaining({
+      className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
+      name: 'open-api-api-key',
+      pattern: '^sk-.+',
+      required: false,
+      type: VirtualDomElements.Input,
+    }),
+  )
+})
+
+test('getChatMessageDom should allow empty openai api key input without InputInvalid class', () => {
+  const result = getChatMessageDom(
+    {
+      id: 'message-1',
+      role: 'assistant',
+      text: openApiApiKeyRequiredMessage,
+      time: '10:00',
+    },
+    [
+      {
+        children: [
+          {
+            text: openApiApiKeyRequiredMessage,
+            type: 'text',
+          },
+        ],
+        type: 'text',
+      },
+    ],
+    '',
+    '',
+  )
+
+  expect(result).toContainEqual(
+    expect.objectContaining({
+      className: ClassNames.InputBox,
+      name: 'open-api-api-key',
+      pattern: '^sk-.+',
+      required: false,
+      type: VirtualDomElements.Input,
+    }),
+  )
+  expect(result).not.toContainEqual(
+    expect.objectContaining({
+      className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
+      name: 'open-api-api-key',
     }),
   )
 })

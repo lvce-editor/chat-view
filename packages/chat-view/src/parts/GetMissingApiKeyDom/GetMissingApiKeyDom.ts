@@ -45,6 +45,7 @@ const getMissingApiActionsDom = ({
 
 export const getMissingApiKeyDom = ({
   getApiKeyText,
+  inputClassName,
   inputName,
   inputPattern,
   inputRequired = false,
@@ -69,7 +70,7 @@ export const getMissingApiKeyDom = ({
       autocomplete: 'off',
       autocorrect: 'off',
       childCount: 0,
-      className: ClassNames.InputBox,
+      className: inputClassName ? mergeClassNames(ClassNames.InputBox, inputClassName) : ClassNames.InputBox,
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
       ...(inputPattern ? { pattern: inputPattern } : {}),

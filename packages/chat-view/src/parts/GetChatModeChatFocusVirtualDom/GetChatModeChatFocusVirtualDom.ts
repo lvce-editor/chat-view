@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
@@ -26,7 +27,6 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
@@ -75,6 +75,8 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
@@ -85,7 +87,6 @@ export const getChatModeChatFocusVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  authStatus = 'signed-out',
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
@@ -134,6 +135,8 @@ export const getChatModeChatFocusVirtualDom = ({
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
+  userName = '',
+  userState = 'loggedOut',
   visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
@@ -164,7 +167,7 @@ export const getChatModeChatFocusVirtualDom = ({
       className: ClassNames.ChatFocusMainArea,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName),
+    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
       messages,
       parsedMessages,

@@ -1,4 +1,5 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
@@ -21,8 +22,6 @@ export interface ChatState {
   readonly authAccessToken: string
   readonly authEnabled: boolean
   readonly authErrorMessage: string
-  readonly authRefreshToken: string
-  readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
   readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
@@ -137,6 +136,7 @@ export interface ChatState {
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
   readonly userName: string
+  readonly userState: AuthUserState
   readonly userSubscriptionPlan: string
   readonly userUsedTokens: number
   readonly viewMode: ChatViewMode

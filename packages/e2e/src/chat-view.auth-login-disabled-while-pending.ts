@@ -11,15 +11,14 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.mockBackendAuthResponse({
     accessToken: 'access-token-delayed',
     delay: 900,
-    refreshToken: 'refresh-token-delayed',
     type: 'success',
     usedTokens: 1,
     userName: 'test',
   })
 
-  const loginButton = Locator('.IconButton[name="login"]')
-  const pendingLoginButton = Locator('.IconButton[name="login"][title="Logging in to backend"]')
-  const logoutButton = Locator('.IconButton[name="logout"]')
+  const loginButton = Locator('button[name="login"]')
+  const pendingLoginButton = Locator('button[name="login"][title="Logging in to backend"]')
+  const logoutButton = Locator('button[name="logout"]')
 
   await expect(loginButton).toBeVisible()
 

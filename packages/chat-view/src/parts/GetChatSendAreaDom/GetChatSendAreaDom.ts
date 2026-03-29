@@ -55,6 +55,7 @@ const getComposerAttachmentClassName = (displayType: ComposerAttachmentDisplayTy
 const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
   return [
     {
+      'aria-label': Strings.removeAttachment(),
       buttonType: 'button',
       childCount: 1,
       className: ClassNames.ChatComposerAttachmentRemoveButton,

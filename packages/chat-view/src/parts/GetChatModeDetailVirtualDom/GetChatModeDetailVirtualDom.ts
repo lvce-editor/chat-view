@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
@@ -23,7 +24,6 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
@@ -64,6 +64,8 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker?: boolean
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
   readonly voiceDictationEnabled?: boolean
 }
@@ -74,7 +76,6 @@ export const getChatModeDetailVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  authStatus = 'signed-out',
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
@@ -115,6 +116,8 @@ export const getChatModeDetailVirtualDom = ({
   tokensUsed,
   usageOverviewEnabled,
   useChatMathWorker = false,
+  userName = '',
+  userState = 'loggedOut',
   visibleModels = models,
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
@@ -138,7 +141,7 @@ export const getChatModeDetailVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, authStatus, authErrorMessage),
+    ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, userState, userName, authErrorMessage),
     ...getMessagesDom(
       messages,
       parsedMessages,

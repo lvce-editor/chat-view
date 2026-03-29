@@ -1,5 +1,11 @@
 import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
+import * as Strings from '../ChatStrings/ChatStrings.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
+import * as InputName from '../InputName/InputName.ts'
 
 const focusHeaderStyle =
   'align-items:center;border-bottom:1px solid var(--vscode-panel-border, transparent);display:flex;gap:12px;justify-content:space-between;padding:8px 12px;'
@@ -12,15 +18,51 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
+<<<<<<< HEAD
 export const getChatHeaderDomFocusMode = (selectedSessionTitle: string, selectedProjectName: string): readonly VirtualDomNode[] => {
+=======
+const focusHeaderButtonStyle = 'white-space:nowrap;'
+
+const getFocusHeaderActionButtonDom = (label: string, name: string): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      inputType: 'button',
+      name,
+      onClick: DomEventListenerFunctions.HandleClick,
+      style: focusHeaderButtonStyle,
+      title: label,
+      type: VirtualDomElements.Button,
+    },
+    text(label),
+  ]
+}
+
+export const getChatHeaderDomFocusMode = (
+  selectedSessionTitle: string,
+  selectedProjectName: string,
+  authEnabled = false,
+  userState: AuthUserState = 'loggedOut',
+  userName = '',
+): readonly VirtualDomNode[] => {
+  const items = [
+    [Strings.addAction(), InputName.FocusAddAction],
+    [Strings.openInVsCode(), InputName.FocusOpenInVsCode],
+    [Strings.commit(), InputName.FocusCommit],
+    [Strings.openTerminal(), InputName.FocusOpenTerminal],
+    [Strings.showDiff(), InputName.FocusShowDiff],
+  ] as const
+>>>>>>> origin/main
   const hasProjectName = !!selectedProjectName
   return [
     {
-      childCount: 2,
+      childCount: 2 + (authEnabled ? 1 : 0),
       className: ClassNames.ChatFocusHeader,
       style: focusHeaderStyle,
       type: VirtualDomElements.Header,
     },
+    ...getChatHeaderAuthDom(authEnabled, userState, userName),
     {
       childCount: hasProjectName ? 2 : 1,
       className: ClassNames.ChatName,
