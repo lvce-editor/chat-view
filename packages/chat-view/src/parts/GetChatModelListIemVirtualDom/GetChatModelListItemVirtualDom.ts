@@ -8,12 +8,14 @@ import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   const detail = getUsageCostLabel(model)
   const hasDetail = detail !== ''
-  const className = mergeClassNames(ClassNames.ChatModelPickerItem, model.id === selectedModelId ? ClassNames.ChatModelPickerItemSelected : '')
+  const selected = model.id === selectedModelId
+  const className = mergeClassNames(ClassNames.ChatModelPickerItem, selected ? ClassNames.ChatModelPickerItemSelected : '')
   return [
     {
       childCount: hasDetail ? 2 : 1,
       className,
       'data-id': model.id,
+      role: 'option',
       type: VirtualDomElements.Li,
     },
     {
