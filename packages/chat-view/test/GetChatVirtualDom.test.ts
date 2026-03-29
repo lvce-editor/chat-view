@@ -179,6 +179,7 @@ test('getChatVirtualDom should render remove button before image attachment labe
     type: VirtualDomElements.Div,
   })
   expect(removeButton).toMatchObject({
+    'aria-label': 'Remove attachment',
     buttonType: 'button',
     className: ClassNames.ChatComposerAttachmentRemoveButton,
     onClick: DomEventListenerFunctions.HandleClick,
@@ -203,6 +204,7 @@ test('getChatVirtualDom should render remove button for text file attachment', (
     type: VirtualDomElements.Div,
   })
   expect(removeButton).toMatchObject({
+    'aria-label': 'Remove attachment',
     buttonType: 'button',
     className: ClassNames.ChatComposerAttachmentRemoveButton,
     onClick: DomEventListenerFunctions.HandleClick,
