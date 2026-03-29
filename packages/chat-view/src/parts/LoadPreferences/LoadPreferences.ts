@@ -15,7 +15,6 @@ import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoList
 import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
-import { loadUseChatMessageParsingWorker } from '../LoadUseChatMessageParsingWorker/LoadUseChatMessageParsingWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
@@ -38,7 +37,6 @@ export interface LoadedPreferences {
   toolEnablement: Record<string, boolean>
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
-  useChatMessageParsingWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
   voiceDictationEnabled: boolean
@@ -63,7 +61,6 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     passIncludeObfuscation,
     useChatCoordinatorWorker,
     useChatMathWorker,
-    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,
@@ -85,7 +82,6 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadPassIncludeObfuscation(),
     loadUseChatCoordinatorWorker(),
     loadUseChatMathWorker(),
-    loadUseChatMessageParsingWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadUseChatToolWorker(),
     loadVoiceDictationEnabled(),
@@ -109,7 +105,6 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     toolEnablement,
     useChatCoordinatorWorker,
     useChatMathWorker,
-    useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
     voiceDictationEnabled,

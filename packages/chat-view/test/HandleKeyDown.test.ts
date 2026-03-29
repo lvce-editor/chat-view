@@ -1,9 +1,20 @@
-import { expect, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleKeyDown from '../src/parts/HandleKeyDown/HandleKeyDown.ts'
+import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+
+let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
+
+beforeEach(() => {
+  mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
+})
+
+afterEach(() => {
+  mockChatMessageParsingRpc[Symbol.dispose]()
+})
 
 test('handleKeyDown should submit on Enter', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()

@@ -749,12 +749,6 @@ test('getMessageNodeDom should keep leading punctuation with bold ordered list p
 
 test('getMessageNodeDom should render code block nodes as pre and code dom nodes', () => {
   const result = getMessageNodeDom({
-    codeTokens: [
-      {
-        className: '',
-        text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
-      },
-    ],
     text: '{ "jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1 }',
     type: 'code-block',
   })
@@ -774,12 +768,6 @@ test('getMessageNodeDom should render code block nodes as pre and code dom nodes
 
 test('getMessageNodeDom should render code block language as data-lang on pre and code nodes', () => {
   const result = getMessageNodeDom({
-    codeTokens: [
-      {
-        className: 'TokenKeyword',
-        text: 'const',
-      },
-    ],
     language: 'ts',
     text: 'const',
     type: 'code-block',

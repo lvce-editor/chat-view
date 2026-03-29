@@ -1,6 +1,7 @@
 // cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
 import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { ParsedMessage } from '../src/parts/ParsedMessage/ParsedMessage.ts'
 import {
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -13,7 +14,6 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
-import { parseAndStoreMessagesContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 
 const models = [
   { id: 'test', name: 'test', usageCost: 0 },
@@ -565,7 +565,23 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     },
   ] as const
   const projects = [{ id: 'project-1', name: 'chat-view', uri: '/workspace/chat-view' }]
-  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
+  const parsedMessages: readonly ParsedMessage[] = [
+    {
+      id: 'm1',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'Hello focus mode',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'Hello focus mode',
+    },
+  ]
   const result = renderChatView({
     parsedMessages,
     projectExpandedIds: ['project-1'],
@@ -1839,7 +1855,55 @@ test('getChatVirtualDOm should render ordered list from assistant message text',
     },
   ]
 
-  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
+  const parsedMessages: readonly ParsedMessage[] = [
+    {
+      id: 'm1',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'I can use the following tools to help:',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+        {
+          items: [
+            {
+              children: [
+                {
+                  text: 'functions.read_file - Read UTF-8 text content from a file inside the currently open workspace folder. Only pass an absolute URI.',
+                  type: 'text',
+                },
+              ],
+              index: 1,
+              type: 'list-item',
+            },
+            {
+              children: [
+                { text: 'functions.write_file - Write UTF-8 text content to a file inside the currently open workspace folder.', type: 'text' },
+              ],
+              index: 2,
+              type: 'list-item',
+            },
+            {
+              children: [
+                {
+                  text: 'functions.list_files - List direct children (files and folders) for a folder inside the currently open workspace folder.',
+                  type: 'text',
+                },
+              ],
+              index: 3,
+              type: 'list-item',
+            },
+          ],
+          type: 'ordered-list',
+        },
+      ],
+      text: sessions[0].messages[0].text,
+    },
+  ]
 
   const result = renderChatView({
     parsedMessages,
@@ -1898,7 +1962,58 @@ test('getChatVirtualDom should keep send area outside message when assistant mar
       title: 'Chat 1',
     },
   ]
-  const parsedMessages = await parseAndStoreMessagesContent([], sessions[0].messages)
+  const parsedMessages: readonly ParsedMessage[] = [
+    {
+      id: 'm1',
+      parsedContent: [
+        {
+          children: [{ text: 'I can do that, but I need file contents first.', type: 'text' }],
+          type: 'text',
+        },
+        {
+          children: [{ text: 'Two quick questions:', type: 'text' }],
+          type: 'text',
+        },
+        {
+          items: [
+            {
+              children: [{ text: 'Keep exact duplicates only?', type: 'text' }],
+              index: 1,
+              nestedItems: [
+                { children: [{ text: 'Exact is safest.', type: 'text' }], type: 'list-item' },
+                { children: [{ text: 'Normalized is more aggressive.', type: 'text' }], type: 'list-item' },
+              ],
+              nestedListType: 'unordered-list',
+              type: 'list-item',
+            },
+            {
+              children: [{ text: 'Paste the file or upload it.', type: 'text' }],
+              index: 2,
+              type: 'list-item',
+            },
+          ],
+          type: 'ordered-list',
+        },
+        {
+          children: [{ text: 'keep name, value and priority (!important)', type: 'text' }],
+          level: 1,
+          type: 'heading',
+        },
+        {
+          children: [{ text: 'How to run:', type: 'text' }],
+          type: 'text',
+        },
+        {
+          items: [
+            { children: [{ text: 'Install the dependency', type: 'text' }], type: 'list-item' },
+            { children: [{ text: 'Run script', type: 'text' }], type: 'list-item' },
+          ],
+          type: 'unordered-list',
+        },
+      ],
+      text: sessions[0].messages[0].text,
+    },
+  ]
   const result = renderChatView({
     parsedMessages,
     selectedSessionId: 'session-1',

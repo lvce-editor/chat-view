@@ -1,16 +1,24 @@
 // cspell:ignore openrouter worktree worktrees
-import { afterEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 import { registerSlashCommands } from '../src/parts/RegisterSlashCommands/RegisterSlashCommands.ts'
+import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 registerSlashCommands()
 
+let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
+
+beforeEach(() => {
+  mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
+})
+
 afterEach(() => {
+  mockChatMessageParsingRpc[Symbol.dispose]()
   jest.useRealTimers()
 })
 
@@ -35,7 +43,7 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
-test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker when enabled', async () => {
+test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -58,7 +66,6 @@ test('handleSubmit should delegate optimistic and final message parsing to chat 
   const state = {
     ...createDefaultState(),
     composerValue: 'hello',
-    useChatMessageParsingWorker: true,
     viewMode: 'detail' as const,
   }
 
@@ -574,7 +581,6 @@ test('handleSubmit should use chat message parsing worker for streaming message 
       openApiApiKey: 'oa-key-123',
       selectedModelId: 'openapi/gpt-4o-mini',
       streamingEnabled: true,
-      useChatMessageParsingWorker: true,
       viewMode: 'detail' as const,
     }
 

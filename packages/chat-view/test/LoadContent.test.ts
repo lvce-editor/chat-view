@@ -824,52 +824,7 @@ test('loadContent should load useChatMathWorker from preferences', async () => {
   ])
 })
 
-test('loadContent should load useChatMessageParsingWorker from preferences', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Preferences.get': async (key: string) => {
-      if (key === 'chatView.useChatMessageParsingWorker') {
-        return true
-      }
-      if (key === 'secrets.openApiKey') {
-        return ''
-      }
-      if (key === 'secrets.openRouterApiKey') {
-        return ''
-      }
-      return undefined
-    },
-  })
-  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
-  })
-  const state: ChatState = createDefaultState()
-  const result = await LoadContent.loadContent(state, undefined)
-  expect(result.useChatMessageParsingWorker).toBe(true)
-  expect(mockChatMessageParsingRpc.invocations).toEqual([])
-  expectInvocations(mockRpc.invocations, [
-    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
-    ['Preferences.get', 'chatView.composerDropEnabled'],
-    ['Preferences.get', 'secrets.openApiKey'],
-    ['Preferences.get', 'secrets.openApiApiKey'],
-    ['Preferences.get', 'secrets.openAiApiKey'],
-    ['Preferences.get', 'secrets.openRouterApiKey'],
-    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
-    ['Preferences.get', 'chatView.streamingEnabled'],
-    ['Preferences.get', 'chatView.passIncludeObfuscation'],
-    ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
-    ['Preferences.get', 'chatView.useChatCoordinatorWorker'],
-    ['Preferences.get', 'chatView.useChatMathWorker'],
-    ['Preferences.get', 'chatView.useChatMessageParsingWorker'],
-    ['Preferences.get', 'chatView.useChatToolWorker'],
-    ['Preferences.get', 'chatView.voiceDictationEnabled'],
-    ['Preferences.get', 'chatView.searchEnabled'],
-    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
-  ])
-})
-
-test('loadContent should delegate message parsing to chat message parsing worker when enabled', async () => {
+test('loadContent should delegate message parsing to chat message parsing worker', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   await saveChatSession({
@@ -879,15 +834,13 @@ test('loadContent should delegate message parsing to chat message parsing worker
   })
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
-      if (key === 'chatView.useChatMessageParsingWorker') {
-        return true
-      }
       if (key === 'secrets.openApiKey' || key === 'secrets.openRouterApiKey') {
         return ''
       }
       return undefined
     },
   })
+  expect(mockRendererRpc).toBeDefined()
   const workerParsedMessages = [
     {
       id: 'message-1',
@@ -917,7 +870,6 @@ test('loadContent should delegate message parsing to chat message parsing worker
   const result = await LoadContent.loadContent(state, undefined)
 
   expect(result.parsedMessages).toEqual(workerParsedMessages)
-  expect(mockRendererRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useChatMessageParsingWorker'])
   expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['Hello from worker']]])
 })
 

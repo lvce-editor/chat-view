@@ -2,7 +2,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { parseAndStoreMessagesContentWithWorkerPreference } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 
 interface OpenMockSessionOptions {
@@ -46,11 +46,7 @@ export const openMockSession = async (
   if (!mockSessionId) {
     return state
   }
-  const parsedMessages = await parseAndStoreMessagesContentWithWorkerPreference(
-    state.parsedMessages,
-    mockChatMessages,
-    state.useChatMessageParsingWorker,
-  )
+  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, mockChatMessages)
 
   const existingSession = currentSessions.find((session) => session.id === mockSessionId)
   const sessions: readonly ChatSession[] = existingSession
