@@ -5,6 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -36,6 +37,10 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly gitBranches: readonly GitBranch[]
+  readonly gitBranchPickerErrorMessage: string
+  readonly gitBranchPickerOpen: boolean
+  readonly gitBranchPickerVisible: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly messagesAutoScrollEnabled: boolean
@@ -92,6 +97,10 @@ export const getChatModeChatFocusVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  gitBranches,
+  gitBranchPickerErrorMessage,
+  gitBranchPickerOpen,
+  gitBranchPickerVisible,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
   messagesAutoScrollEnabled,
@@ -132,10 +141,9 @@ export const getChatModeChatFocusVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const selectedProject = projects.find((project) => project.id === selectedProjectId)
-  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
-  const selectedProjectName = selectedProject?.name || ''
+  const selectedProjectName = projects.find((project) => project.id === selectedProjectId)?.name || ''
+  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
@@ -178,6 +186,11 @@ export const getChatModeChatFocusVirtualDom = ({
       composerAttachments,
       agentMode,
       agentModePickerOpen,
+      gitBranchPickerVisible,
+      gitBranchPickerOpen,
+      gitBranchPickerErrorMessage,
+      gitBranches,
+      selectedSession?.branchName || '',
       hasSpaceForAgentModePicker,
       modelPickerOpen,
       models,

@@ -3,6 +3,7 @@ import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { selectedProjectId, selectedSessionId, sessions, viewMode, width } = state
@@ -11,14 +12,14 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   }
   const visibleSessions = getVisibleSessions(sessions, projectId)
   if (visibleSessions.length === 0) {
-    return {
+    return refreshGitBranchPickerVisibility({
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'list',
-    }
+    })
   }
   const currentSessionVisible = visibleSessions.some((session) => session.id === selectedSessionId)
   const nextSelectedSessionId = currentSessionVisible ? selectedSessionId : visibleSessions[0].id
@@ -30,7 +31,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     }
     return loadedSession
   })
-  return {
+  return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
@@ -38,5 +39,5 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-  }
+  })
 }

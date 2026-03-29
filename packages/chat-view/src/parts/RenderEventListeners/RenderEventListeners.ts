@@ -66,6 +66,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['openAgentModePicker'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickGitBranchPickerToggle,
+      params: ['handleClickGitBranchPickerToggle'],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerOverlay,
       params: ['handleClickModelPickerOverlay', EventExpression.DefaultPrevented],
     },

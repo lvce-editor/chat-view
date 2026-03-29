@@ -5,6 +5,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -50,6 +51,10 @@ export interface GetChatVirtualDomOptions {
   readonly composerHeight: number
   readonly composerLineHeight: number
   readonly composerValue: string
+  readonly gitBranches?: readonly GitBranch[]
+  readonly gitBranchPickerErrorMessage?: string
+  readonly gitBranchPickerOpen?: boolean
+  readonly gitBranchPickerVisible?: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex?: number
@@ -112,6 +117,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerHeight,
     composerLineHeight,
     composerValue,
+    gitBranches = [],
+    gitBranchPickerErrorMessage = '',
+    gitBranchPickerOpen = false,
+    gitBranchPickerVisible = false,
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
     listFocusedIndex = -1,
@@ -177,6 +186,10 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerHeight,
         composerLineHeight,
         composerValue,
+        gitBranches,
+        gitBranchPickerErrorMessage,
+        gitBranchPickerOpen,
+        gitBranchPickerVisible,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         messagesAutoScrollEnabled,

@@ -6,6 +6,7 @@ import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
 import * as ChatListFocusPrevious from '../ChatListFocusPrevious/ChatListFocusPrevious.ts'
 import * as ClearInput from '../ClearInput/ClearInput.ts'
+import { closeGitBranchPicker } from '../CloseGitBranchPicker/CloseGitBranchPicker.ts'
 import * as CopyInput from '../CopyInput/CopyInput.ts'
 import * as StatusBar from '../Create/Create.ts'
 import * as CutInput from '../CutInput/CutInput.ts'
@@ -31,6 +32,7 @@ import * as HandleClickCreatePullRequest from '../HandleClickCreatePullRequest/H
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
+import * as HandleClickGitBranchPickerToggle from '../HandleClickGitBranchPickerToggle/HandleClickGitBranchPickerToggle.ts'
 import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay/HandleClickModelPickerOverlay.ts'
@@ -78,6 +80,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
+import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
@@ -126,6 +129,7 @@ export const commandMap = {
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
   'Chat.chatListFocusPrevious': wrapCommand(ChatListFocusPrevious.chatListFocusPrevious),
   'Chat.clearInput': wrapCommand(ClearInput.clearInput),
+  'Chat.closeGitBranchPicker': wrapCommand(closeGitBranchPicker),
   'Chat.copyInput': wrapCommand(CopyInput.copyInput),
   'Chat.create': StatusBar.create,
   'Chat.cutInput': wrapCommand(CutInput.cutInput),
@@ -154,6 +158,7 @@ export const commandMap = {
   'Chat.handleClickDelete': wrapCommand(HandleClickDelete.handleClickDelete),
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': wrapCommand(HandleClickFileName.handleClickFileName),
+  'Chat.handleClickGitBranchPickerToggle': wrapCommand(HandleClickGitBranchPickerToggle.handleClickGitBranchPickerToggle),
   'Chat.handleClickList': wrapCommand(HandleClick.handleClickList),
   'Chat.handleClickModelPickerList': wrapCommand(handleClickModelPickerList),
   'Chat.handleClickModelPickerListIndex': wrapCommand(handleClickModelPickerListIndex),
@@ -207,6 +212,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
+  'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
   'Chat.openModelPicker': wrapCommand(openModelPicker),

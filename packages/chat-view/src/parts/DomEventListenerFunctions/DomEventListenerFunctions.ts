@@ -55,4 +55,5 @@ export const HandlePointerUpModelPickerList = 55
 export const HandleClickReasoningEffortPickerToggle = 56
 export const HandleClickAgentModePickerToggle = 57
 export const HandleContextMenuChatImageAttachment = 58
-export const HandleErrorComposerAttachmentPreviewOverlay = 59
+export const HandleClickGitBranchPickerToggle = 59
+export const HandleErrorComposerAttachmentPreviewOverlay = 60

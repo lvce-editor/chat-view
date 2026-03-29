@@ -118,3 +118,15 @@ test('diff should return RenderScrollTop when scroll positions change', () => {
   const result = Diff.diff(oldState, newState)
   expect(result).toEqual([DiffType.RenderScrollTop])
 })
+
+test('diff should return RenderScrollTop when project list scroll position changes', () => {
+  const { sessions } = createDefaultState()
+  const oldState: ChatState = { ...createDefaultState(), sessions }
+  const newState: ChatState = {
+    ...createDefaultState(),
+    projectListScrollTop: 10,
+    sessions,
+  }
+  const result = Diff.diff(oldState, newState)
+  expect(result).toEqual([DiffType.RenderScrollTop])
+})

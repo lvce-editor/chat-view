@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
+import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { lastNormalViewMode, sessions, viewMode, width } = state
@@ -20,7 +21,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     }
     return loadedSession
   })
-  return {
+  return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
@@ -29,5 +30,5 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     selectedSessionId: id,
     sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-  }
+  })
 }

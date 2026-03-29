@@ -1,5 +1,11 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { isEqualComposerAttachments, isEqualProjectExpandedIds, isEqualVisibleModels } from './IsEqualHelpers/IsEqualHelpers.ts'
+import {
+  isEqualComposerAttachments,
+  isEqualGitBranches,
+  isEqualProjectExpandedIds,
+  isEqualProjects,
+  isEqualVisibleModels,
+} from './IsEqualHelpers/IsEqualHelpers.ts'
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
@@ -12,6 +18,10 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
+    oldState.gitBranchPickerErrorMessage === newState.gitBranchPickerErrorMessage &&
+    oldState.gitBranchPickerOpen === newState.gitBranchPickerOpen &&
+    oldState.gitBranchPickerVisible === newState.gitBranchPickerVisible &&
+    isEqualGitBranches(oldState.gitBranches, newState.gitBranches) &&
     oldState.hasSpaceForAgentModePicker === newState.hasSpaceForAgentModePicker &&
     oldState.hasSpaceForRunModePicker === newState.hasSpaceForRunModePicker &&
     oldState.initial === newState.initial &&
@@ -20,7 +30,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     isEqualVisibleModels(oldState.visibleModels, newState.visibleModels) &&
     oldState.listFocusedIndex === newState.listFocusedIndex &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
-    oldState.projectListScrollTop === newState.projectListScrollTop &&
+    isEqualProjects(oldState.projects, newState.projects) &&
     oldState.reasoningEffort === newState.reasoningEffort &&
     oldState.reasoningEffortPickerOpen === newState.reasoningEffortPickerOpen &&
     oldState.reasoningPickerEnabled === newState.reasoningPickerEnabled &&
@@ -28,6 +38,9 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.selectedModelId === newState.selectedModelId &&
     oldState.selectedProjectId === newState.selectedProjectId &&
     oldState.selectedSessionId === newState.selectedSessionId &&
+    oldState.searchEnabled === newState.searchEnabled &&
+    oldState.searchFieldVisible === newState.searchFieldVisible &&
+    oldState.searchValue === newState.searchValue &&
     oldState.showRunMode === newState.showRunMode &&
     oldState.runMode === newState.runMode &&
     oldState.runModePickerOpen === newState.runModePickerOpen &&

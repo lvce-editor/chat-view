@@ -663,20 +663,31 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
     name: 'focus-add-action',
     onClick: DomEventListenerFunctions.HandleClick,
-    title: 'Add Action',
     type: VirtualDomElements.Button,
   })
   expect(openInVsCodeButton).toMatchObject({
-    title: 'Open in VSCode',
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-open-in-vscode',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
   })
   expect(commitButton).toMatchObject({
-    title: 'Commit',
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-commit',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
   })
   expect(openTerminalButton).toMatchObject({
-    title: 'Open Terminal',
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-open-terminal',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
   })
   expect(showDiffButton).toMatchObject({
-    title: 'Show Diff',
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'focus-show-diff',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
   })
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()

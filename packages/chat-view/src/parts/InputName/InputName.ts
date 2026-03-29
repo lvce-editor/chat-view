@@ -14,9 +14,11 @@ export const ComposerAttachmentPreviewOverlay = 'composer-attachment-preview-ove
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
 export const CreatePullRequest = 'create-pull-request'
+export const GitBranchPickerToggle = 'git-branch-picker-toggle'
+export const GitBranchPickerItemPrefix = 'git-branch-picker-item:'
 export const FocusAddAction = 'focus-add-action'
-export const FocusOpenInVsCode = 'focus-open-in-vscode'
 export const FocusCommit = 'focus-commit'
+export const FocusOpenInVsCode = 'focus-open-in-vscode'
 export const FocusOpenTerminal = 'focus-open-terminal'
 export const FocusShowDiff = 'focus-show-diff'
 export const Send = 'send'
@@ -102,6 +104,18 @@ export const getRenameIdFromInputName = (name: `${typeof RenamePrefix}${string}`
 
 export const getModelPickerItemInputName = (modelId: string): `${typeof ModelPickerItemPrefix}${string}` => {
   return `${ModelPickerItemPrefix}${modelId}`
+}
+
+export const getGitBranchPickerItemInputName = (branchName: string): `${typeof GitBranchPickerItemPrefix}${string}` => {
+  return `${GitBranchPickerItemPrefix}${branchName}`
+}
+
+export const isGitBranchPickerItemInputName = (name: string): name is `${typeof GitBranchPickerItemPrefix}${string}` => {
+  return name.startsWith(GitBranchPickerItemPrefix)
+}
+
+export const getGitBranchFromGitBranchPickerItemInputName = (name: `${typeof GitBranchPickerItemPrefix}${string}`): string => {
+  return name.slice(GitBranchPickerItemPrefix.length)
 }
 
 export const getComposerAttachmentInputName = (attachmentId: string): `${typeof ComposerAttachmentPrefix}${string}` => {

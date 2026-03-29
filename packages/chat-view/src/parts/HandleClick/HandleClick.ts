@@ -18,6 +18,7 @@ import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiK
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { handleGitBranchChange } from '../HandleGitBranchChange/HandleGitBranchChange.ts'
 import { handleReasoningEffortChange } from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
 import { handleRemoveComposerAttachment } from '../HandleRemoveComposerAttachment/HandleRemoveComposerAttachment.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -74,6 +75,10 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         selectedModelId: modelId,
         visibleModels: state.models,
       }
+    }
+    case InputName.isGitBranchPickerItemInputName(name): {
+      const branchName = InputName.getGitBranchFromGitBranchPickerItemInputName(name)
+      return handleGitBranchChange(state, branchName)
     }
     case InputName.isAgentModePickerItemInputName(name): {
       const agentMode = InputName.getAgentModeFromAgentModePickerItemInputName(name)
