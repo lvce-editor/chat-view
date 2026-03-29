@@ -1,25 +1,21 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import * as Preferences from '../Preferences/Preferences.ts'
+import { getLoggedOutBackendAuthState, logoutFromBackend } from '../BackendAuth/BackendAuth.ts'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { set } from '../StatusBarStates/StatusBarStates.ts'
 
 export const handleClickLogout = async (state: ChatState): Promise<ChatState> => {
-  try {
-    await RendererWorker.invoke('Auth.logout', state.backendUrl)
-  } catch {
-    // Ignore logout bridge errors and still clear local auth state.
-  }
-  await Preferences.update({
-    'secrets.chatBackendAccessToken': '',
-    'secrets.chatBackendRefreshToken': '',
-  })
-  return {
+  const loggingOutState: ChatState = {
     ...state,
-    authAccessToken: '',
     authErrorMessage: '',
-    authRefreshToken: '',
-    authStatus: 'signed-out',
-    userName: '',
-    userSubscriptionPlan: '',
-    userUsedTokens: 0,
+    userState: 'loggingOut',
+  }
+  if (state.uid) {
+    set(state.uid, state, loggingOutState)
+    await RendererWorker.invoke('Chat.rerender')
+  }
+  await logoutFromBackend(state.backendUrl)
+  return {
+    ...loggingOutState,
+    ...getLoggedOutBackendAuthState(),
   }
 }

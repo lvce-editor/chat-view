@@ -1,5 +1,6 @@
 import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
@@ -38,7 +39,8 @@ export interface GetChatVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly chatListScrollTop: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -99,7 +101,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     agentModePickerOpen = false,
     authEnabled = false,
     authErrorMessage = '',
-    authStatus = 'signed-out',
+    userName = '',
+    userState = 'loggedOut',
     chatListScrollTop,
     composerAttachmentPreviewOverlayAttachmentId,
     composerAttachmentPreviewOverlayError = false,
@@ -164,7 +167,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        authStatus,
+        userName,
+        userState,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
@@ -219,7 +223,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        authStatus,
+        userName,
+        userState,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
@@ -270,7 +275,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
-        authStatus,
+        userName,
+        userState,
         chatListScrollTop,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,

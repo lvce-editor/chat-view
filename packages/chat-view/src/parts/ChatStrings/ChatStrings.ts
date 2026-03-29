@@ -73,6 +73,14 @@ export const loggingInToBackend = (): string => {
   return i18nString(UiStrings.LoggingInToBackend)
 }
 
+export const loggingOutFromBackend = (): string => {
+  return i18nString(UiStrings.LoggingOutFromBackend)
+}
+
+export const signedIn = (): string => {
+  return i18nString(UiStrings.SignedIn)
+}
+
 export const chatFocusMode = (): string => {
   return i18nString(UiStrings.SwitchToChatFocusMode)
 }

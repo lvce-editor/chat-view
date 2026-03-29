@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -19,7 +20,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly authStatus?: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly userName?: string
+  readonly userState?: AuthUserState
   readonly chatListScrollTop?: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -64,7 +66,8 @@ export const getChatModeListVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  authStatus = 'signed-out',
+  userName = '',
+  userState = 'loggedOut',
   chatListScrollTop = 0,
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
@@ -121,7 +124,7 @@ export const getChatModeListVirtualDom = ({
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,
     },
-    ...getChatHeaderListModeDom(authEnabled, authStatus, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
+    ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
     ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,

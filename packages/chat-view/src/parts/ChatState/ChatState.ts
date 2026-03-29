@@ -10,6 +10,7 @@ import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
+import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
@@ -20,8 +21,6 @@ export interface ChatState {
   readonly authAccessToken: string
   readonly authEnabled: boolean
   readonly authErrorMessage: string
-  readonly authRefreshToken: string
-  readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
   readonly backendUrl: string
   readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
@@ -131,6 +130,7 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
+  readonly userState: AuthUserState
   readonly userName: string
   readonly userSubscriptionPlan: string
   readonly userUsedTokens: number
