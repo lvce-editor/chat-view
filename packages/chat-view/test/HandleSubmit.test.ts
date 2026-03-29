@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktree worktrees
 import { afterEach, expect, jest, test } from '@jest/globals'
-import { ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
@@ -33,6 +33,75 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+})
+
+test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) =>
+      rawMessages.map((rawMessage) => [
+        {
+          children: [
+            {
+              text: rawMessage === '' ? '[empty]' : `worker:${rawMessage}`,
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ]),
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    useChatMessageParsingWorker: true,
+    viewMode: 'detail' as const,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result.parsedMessages).toEqual([
+    {
+      id: result.sessions[0].messages[0].id,
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'worker:hello',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'hello',
+    },
+    {
+      id: result.sessions[0].messages[1].id,
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'worker:Mock AI response: I received "hello".',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'Mock AI response: I received "hello".',
+    },
+  ])
+  expect(mockChatMessageParsingRpc.invocations).toEqual([
+    ['ChatMessageParsing.parseMessageContents', ['hello']],
+    ['ChatMessageParsing.parseMessageContents', ['']],
+    ['ChatMessageParsing.parseMessageContents', ['Mock AI response: I received "hello".']],
+  ])
+  expect(mockRendererRpc.invocations).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should clear composer attachments after submit', async () => {
@@ -446,6 +515,111 @@ test('handleSubmit should update assistant message incrementally when streaming 
     expect(result.sessions[0].messages[1].text).toBe('Streaming')
     expect(result.sessions[0].messages[1].inProgress).toBe(false)
     expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should use chat message parsing worker for streaming message updates when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) =>
+      rawMessages.map((rawMessage) => [
+        {
+          children: [
+            {
+              text: rawMessage === '' ? '[empty]' : `worker:${rawMessage}`,
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ]),
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"type":"response.output_text.delta","delta":"Stream"}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"ing"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from streaming',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      useChatMessageParsingWorker: true,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(result.sessions[0].messages[1].text).toBe('Streaming')
+    expect(result.parsedMessages).toEqual([
+      {
+        id: result.sessions[0].messages[0].id,
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:hello from streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+        text: 'hello from streaming',
+      },
+      {
+        id: result.sessions[0].messages[1].id,
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:Streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+        text: 'Streaming',
+      },
+    ])
+    expect(mockChatMessageParsingRpc.invocations).toEqual([
+      ['ChatMessageParsing.parseMessageContents', ['hello from streaming']],
+      ['ChatMessageParsing.parseMessageContents', ['']],
+      ['ChatMessageParsing.parseMessageContents', ['Stream']],
+      ['ChatMessageParsing.parseMessageContents', ['Streaming']],
+    ])
+    expect(mockRendererRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
