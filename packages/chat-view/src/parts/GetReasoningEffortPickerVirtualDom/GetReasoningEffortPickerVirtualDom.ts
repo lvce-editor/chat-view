@@ -31,6 +31,7 @@ export const getReasoningEffortPickerVirtualDom = (
       reasoningEffortPickerOpen,
       DomEventListenerFunctions.HandleClickReasoningEffortPickerToggle,
       'Reasoning',
+      'Reasoning',
       reasoningEffortPickerOpen ? 2 : 1,
     ),
     ...(reasoningEffortPickerOpen

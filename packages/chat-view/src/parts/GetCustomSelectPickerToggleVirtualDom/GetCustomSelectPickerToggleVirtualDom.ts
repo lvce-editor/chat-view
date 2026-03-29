@@ -8,6 +8,7 @@ export const getCustomSelectPickerToggleVirtualDom = (
   open: boolean,
   onClick: number,
   title = label,
+  ariaLabel = title,
   containerChildCount = 1,
 ): readonly VirtualDomNode[] => {
   return [
@@ -16,6 +17,6 @@ export const getCustomSelectPickerToggleVirtualDom = (
       className: ClassNames.CustomSelectContainer,
       type: VirtualDomElements.Div,
     },
-    ...getCustomSelectToggleVirtualDom(label, name, open, onClick, title),
+    ...getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel),
   ]
 }

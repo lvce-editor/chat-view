@@ -19,7 +19,6 @@ import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSele
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
-import { getSavedSystemPrompt } from '../GetSavedSystemPrompt/GetSavedSystemPrompt.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
@@ -96,7 +95,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   )
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
-  const systemPrompt = getSavedSystemPrompt(savedState) ?? state.systemPrompt
   const visibleModels = getVisibleModels(state.models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
@@ -159,7 +157,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     streamingEnabled,
-    systemPrompt,
     todoListToolEnabled,
     toolEnablement,
     useChatCoordinatorWorker,

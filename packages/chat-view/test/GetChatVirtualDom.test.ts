@@ -83,8 +83,10 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(modelPickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
+    'aria-label': 'Pick Model, test',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
+    title: 'Pick Model, test',
     type: VirtualDomElements.Button,
   })
   expect(sendButton).toBeDefined()
@@ -113,8 +115,10 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   expect(modelPickerToggle).toMatchObject({
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
+    'aria-label': 'Pick Model, test',
     className: ClassNames.Select,
     onClick: DomEventListenerFunctions.HandleClickModelPickerToggle,
+    title: 'Pick Model, test',
     type: VirtualDomElements.Button,
   })
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
