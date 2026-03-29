@@ -37,3 +37,10 @@ test('getCss should style submitted chat attachments separately from composer at
   expect(css).toContain('.ChatMessages > .MessageUser .ChatAttachments{')
   expect(css).toContain('justify-content: flex-end;')
 })
+
+test('getCss should style invalid inputs with the input validation border color', () => {
+  const css = getCss(28, 34, 100, 40, 13, 20, 'system-ui', 700, 0, 12, 12, 0, 10, 8, 8, 10, '')
+
+  expect(css).toContain('.InputInvalid{')
+  expect(css).toContain('border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));')
+})

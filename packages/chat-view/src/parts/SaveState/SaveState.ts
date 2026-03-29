@@ -22,7 +22,6 @@ export const saveState = (state: ChatState): SavedState => {
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
-    systemPrompt,
     viewMode,
   } = state
   return {
@@ -45,7 +44,6 @@ export const saveState = (state: ChatState): SavedState => {
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
-    systemPrompt,
     viewMode,
   }
 }

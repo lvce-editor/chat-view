@@ -114,7 +114,7 @@ export const getChatMessageDom = (
   message: ChatMessage,
   parsedMessageContent: readonly MessageIntermediateNode[],
   _openRouterApiKeyInput: string,
-  _openApiApiKeyInput = '',
+  openApiApiKeyInput = '',
   openApiApiKeyState: 'idle' | 'saving' = 'idle',
   openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
   openApiApiKeyInputPattern = '^sk-.+',
@@ -156,7 +156,9 @@ export const getChatMessageDom = (
     ...toolCallsDom,
     ...messageDom,
     ...attachmentsDom,
-    ...(isOpenApiApiKeyMissingMessage ? getMissingOpenApiApiKeyDom(openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern) : []),
+    ...(isOpenApiApiKeyMissingMessage
+      ? getMissingOpenApiApiKeyDom(openApiApiKeyInput, openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern)
+      : []),
     ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
     ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
     ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),

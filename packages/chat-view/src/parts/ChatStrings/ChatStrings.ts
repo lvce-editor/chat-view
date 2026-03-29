@@ -49,6 +49,10 @@ export const searchModels = (): string => {
   return i18nString(UiStrings.SearchModels)
 }
 
+export const pickModel = (modelName: string): string => {
+  return `${i18nString(UiStrings.PickModel)}, ${modelName}`
+}
+
 export const searchChats = (): string => {
   return i18nString(UiStrings.SearchChats)
 }
@@ -71,6 +75,14 @@ export const logoutFromBackend = (): string => {
 
 export const loggingInToBackend = (): string => {
   return i18nString(UiStrings.LoggingInToBackend)
+}
+
+export const loggingOutFromBackend = (): string => {
+  return i18nString(UiStrings.LoggingOutFromBackend)
+}
+
+export const signedIn = (): string => {
+  return i18nString(UiStrings.SignedIn)
 }
 
 export const chatFocusMode = (): string => {

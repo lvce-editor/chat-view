@@ -1,5 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
@@ -19,7 +20,6 @@ import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSele
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
-import { getSavedSystemPrompt } from '../GetSavedSystemPrompt/GetSavedSystemPrompt.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
@@ -37,9 +37,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const [composerSelectionStart, composerSelectionEnd] = savedComposerSelection ?? [state.composerSelectionStart, state.composerSelectionEnd]
   const {
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
     authEnabled,
-    authRefreshToken,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
@@ -60,6 +58,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatToolWorker,
     voiceDictationEnabled,
   } = await loadPreferences()
+  const authState = authEnabled && backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -95,7 +94,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   )
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
-  const systemPrompt = getSavedSystemPrompt(savedState) ?? state.systemPrompt
   const visibleModels = getVisibleModels(state.models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
@@ -114,10 +112,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     agentMode,
     agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled,
-    authAccessToken,
+    authAccessToken: authState.authAccessToken,
     authEnabled,
-    authRefreshToken,
-    authStatus: authAccessToken ? 'signed-in' : 'signed-out',
+    authErrorMessage: authState.authErrorMessage,
     backendUrl,
     chatHistoryEnabled,
     chatListScrollTop,
@@ -158,7 +155,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     streamingEnabled,
-    systemPrompt,
     todoListToolEnabled,
     toolEnablement,
     useChatCoordinatorWorker,
@@ -166,6 +162,10 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMessageParsingWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    userName: authState.userName,
+    userState: authState.userState,
+    userSubscriptionPlan: authState.userSubscriptionPlan,
+    userUsedTokens: authState.userUsedTokens,
     viewMode,
     visibleModels,
     voiceDictationEnabled,

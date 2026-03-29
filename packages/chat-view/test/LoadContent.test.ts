@@ -175,18 +175,18 @@ test('loadContent should restore selectedModelId from savedState', async () => {
   expect(result.selectedModelId).toBe('claude-code')
 })
 
-test('loadContent should restore systemPrompt from savedState', async () => {
+test('loadContent should ignore systemPrompt from savedState', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
-    systemPrompt: '',
+    systemPrompt: 'Use the in-code system prompt.',
   }
   const savedState = {
     systemPrompt: 'You are an expert TypeScript coding assistant.',
   }
   const result = await LoadContent.loadContent(state, savedState)
-  expect(result.systemPrompt).toBe('You are an expert TypeScript coding assistant.')
+  expect(result.systemPrompt).toBe('Use the in-code system prompt.')
 })
 
 test('loadContent should restore detail view from savedState', async () => {
@@ -367,8 +367,6 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chat.authEnabled'],
     ['Preferences.get', 'chat.backendUrl'],
-    ['Preferences.get', 'secrets.chatBackendAccessToken'],
-    ['Preferences.get', 'secrets.chatBackendRefreshToken'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openApiApiKey'],
@@ -408,8 +406,6 @@ test('loadContent should load openApiApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chat.authEnabled'],
     ['Preferences.get', 'chat.backendUrl'],
-    ['Preferences.get', 'secrets.chatBackendAccessToken'],
-    ['Preferences.get', 'secrets.chatBackendRefreshToken'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
     ['Preferences.get', 'secrets.openRouterApiKey'],
@@ -424,6 +420,46 @@ test('loadContent should load openApiApiKey from preferences', async () => {
     ['Preferences.get', 'chatView.searchEnabled'],
     ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
   ])
+})
+
+test('loadContent should sync backend auth state when auth is enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        accessToken: 'access-token-1',
+        subscriptionPlan: 'pro',
+        usedTokens: 42,
+        userName: 'test-user',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    using mockRpc = RendererWorker.registerMockRpc({
+      'Preferences.get': async (key: string) => {
+        if (key === 'chat.authEnabled') {
+          return true
+        }
+        if (key === 'chat.backendUrl') {
+          return 'https://backend.example.com'
+        }
+        return undefined
+      },
+    })
+    const result = await LoadContent.loadContent(createDefaultState(), undefined)
+    expect(result.authAccessToken).toBe('access-token-1')
+    expect(result.userName).toBe('test-user')
+    expect(result.userState).toBe('loggedIn')
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('loadContent should load emitStreamingFunctionCallEvents from preferences', async () => {

@@ -8,7 +8,6 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.agentModePickerOpen === newState.agentModePickerOpen &&
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
-    oldState.authStatus === newState.authStatus &&
     isEqualComposerAttachments(oldState.composerAttachments, newState.composerAttachments) &&
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
@@ -37,6 +36,8 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.tokensUsed === newState.tokensUsed &&
     oldState.usageOverviewEnabled === newState.usageOverviewEnabled &&
     oldState.useChatMathWorker === newState.useChatMathWorker &&
+    oldState.userName === newState.userName &&
+    oldState.userState === newState.userState &&
     oldState.viewMode === newState.viewMode &&
     oldState.voiceDictationEnabled === newState.voiceDictationEnabled
   )

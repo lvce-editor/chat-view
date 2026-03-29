@@ -12,7 +12,7 @@ const assertEqual = <T>(actual: T, expected: T, context: string): void => {
 }
 
 interface AuthState {
-  readonly authStatus: 'signed-out' | 'signing-in' | 'signed-in'
+  readonly userState: 'loggedIn' | 'loggingIn' | 'loggedOut' | 'loggingOut'
 }
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
@@ -25,8 +25,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     type: 'error',
   })
 
-  const loginButton = Locator('.IconButton[name="login"]')
-  const logoutButton = Locator('.IconButton[name="logout"]')
+  const loginButton = Locator('button[name="login"]')
+  const logoutButton = Locator('button[name="logout"]')
 
   await expect(loginButton).toBeVisible()
   await loginButton.click()
@@ -38,5 +38,5 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(logoutButton).toHaveCount(0)
 
   const authState = (await Command.execute('Chat.getAuthState')) as AuthState
-  assertEqual(authState.authStatus, 'signed-out', 'auth status')
+  assertEqual(authState.userState, 'loggedOut', 'user state')
 }
