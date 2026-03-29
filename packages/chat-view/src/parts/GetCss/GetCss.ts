@@ -169,6 +169,23 @@ export const getCss = (
   border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
 }
 
+.ChatImageMessageContent{
+  padding: 6px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border-radius: 12px;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  overflow: hidden;
+}
+
+.ChatMessageImage{
+  display: block;
+  max-width: min(320px, 100%);
+  max-height: min(320px, calc(100vh - 220px));
+  border-radius: 8px;
+  object-fit: contain;
+  background: color-mix(in srgb, var(--vscode-editor-background) 88%, black);
+}
+
 .Chat{
   position: relative;
 }

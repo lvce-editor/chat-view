@@ -1,6 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import type { ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -95,6 +95,21 @@ const getChatAttachmentsDom = (attachments: readonly NonNullable<ChatMessage['at
   ]
 }
 
+const getStandaloneImageAttachmentDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
+  if (!attachment.previewSrc) {
+    return getChatAttachmentsDom([attachment])
+  }
+  return [
+    {
+      alt: attachment.name,
+      childCount: 0,
+      className: ClassNames.ChatMessageImage,
+      src: attachment.previewSrc,
+      type: VirtualDomElements.Img,
+    },
+  ]
+}
+
 export const getChatMessageDom = (
   message: ChatMessage,
   parsedMessageContent: readonly MessageIntermediateNode[],
@@ -105,14 +120,18 @@ export const getChatMessageDom = (
   openApiApiKeyInputPattern = '^sk-.+',
   openRouterApiKeyState: 'idle' | 'saving' = 'idle',
   useChatMathWorker = false,
+  standaloneImageAttachment?: ComposerAttachment,
 ): readonly VirtualDomNode[] => {
   const roleClassName = message.role === 'user' ? ClassNames.MessageUser : ClassNames.MessageAssistant
   const isOpenApiApiKeyMissingMessage = message.role === 'assistant' && message.text === openApiApiKeyRequiredMessage
   const isOpenRouterApiKeyMissingMessage = message.role === 'assistant' && message.text === openRouterApiKeyRequiredMessage
   const isOpenRouterRequestFailedMessage = message.role === 'assistant' && message.text === openRouterRequestFailedMessage
   const isOpenRouterTooManyRequestsMessage = message.role === 'assistant' && message.text.startsWith(openRouterTooManyRequestsMessage)
-  const messageDom = getMessageContentDom(parsedMessageContent, useChatMathWorker)
-  const attachmentsDom = message.role === 'user' ? getChatAttachmentsDom(message.attachments ?? []) : []
+  const isStandaloneImageMessage = !!standaloneImageAttachment
+  const messageDom = isStandaloneImageMessage
+    ? getStandaloneImageAttachmentDom(standaloneImageAttachment)
+    : getMessageContentDom(parsedMessageContent, useChatMathWorker)
+  const attachmentsDom = !isStandaloneImageMessage && message.role === 'user' ? getChatAttachmentsDom(message.attachments ?? []) : []
   const toolCallsDom = getToolCallsDom(message)
   const toolCallsChildCount = toolCallsDom.length > 0 ? 1 : 0
   const messageDomChildCount = getTopLevelNodeCount(messageDom)
@@ -129,7 +148,9 @@ export const getChatMessageDom = (
     },
     {
       childCount: extraChildCount,
-      className: ClassNames.ChatMessageContent,
+      className: isStandaloneImageMessage
+        ? mergeClassNames(ClassNames.ChatMessageContent, ClassNames.ChatImageMessageContent)
+        : ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
     ...toolCallsDom,

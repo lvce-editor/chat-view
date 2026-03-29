@@ -32,6 +32,8 @@ test('getCss should style submitted chat attachments separately from composer at
   expect(css).toContain('.ChatAttachments{')
   expect(css).toContain('.ChatAttachment{')
   expect(css).toContain('.ChatAttachmentPreview{')
+  expect(css).toContain('.ChatImageMessageContent{')
+  expect(css).toContain('.ChatMessageImage{')
   expect(css).toContain('.ChatMessages > .MessageUser .ChatAttachments{')
   expect(css).toContain('justify-content: flex-end;')
 })
