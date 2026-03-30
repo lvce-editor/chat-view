@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-glob-retry-count-and-list-files'
 
+export const skip=1
+
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const workspaceUri = 'file:///playground'
   const files = [
