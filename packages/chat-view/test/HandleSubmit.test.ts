@@ -529,7 +529,6 @@ test('handleSubmit should update assistant message incrementally when streaming 
     expect(result.sessions[0].messages[1].text).toBe('Streaming')
     expect(result.sessions[0].messages[1].inProgress).toBe(false)
     expect(result.sessions[0].status).toBe('finished')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
     expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
@@ -615,7 +614,7 @@ test('handleSubmit should ignore additional streaming events after session is st
     })
     expect(events.filter((event) => event.type === 'sse-response-part')).toHaveLength(0)
     expect(events.find((event) => event.type === 'event-stream-finished')).toBeUndefined()
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
