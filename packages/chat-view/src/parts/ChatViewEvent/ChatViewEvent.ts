@@ -77,6 +77,23 @@ export interface EventStreamFinishedEvent extends ChatViewEventBase {
   readonly value: '[DONE]'
 }
 
+export interface ToolExecutionStartedEvent extends ChatViewEventBase {
+  readonly arguments: unknown
+  readonly id: string
+  readonly name: string
+  readonly options: unknown
+  readonly time: string
+  readonly type: 'tool-execution-started'
+}
+
+export interface ToolExecutionFinishedEvent extends ChatViewEventBase {
+  readonly id: string
+  readonly name: string
+  readonly result: unknown
+  readonly status: 'error' | 'success'
+  readonly type: 'tool-execution-finished'
+}
+
 export type ChatViewEvent =
   | ChatSessionCreatedEvent
   | ChatSessionDeletedEvent
@@ -91,3 +108,5 @@ export type ChatViewEvent =
   | DataEvent
   | ResponseCompletedEvent
   | EventStreamFinishedEvent
+  | ToolExecutionStartedEvent
+  | ToolExecutionFinishedEvent

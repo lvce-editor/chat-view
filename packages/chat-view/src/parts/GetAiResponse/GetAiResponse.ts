@@ -129,6 +129,7 @@ export const getAiResponse = async ({
   platform,
   questionToolEnabled = false,
   reasoningEffort,
+  sessionId,
   selectedModelId,
   streamingEnabled = true,
   systemPrompt = '',
@@ -277,6 +278,12 @@ export const getAiResponse = async ({
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
             platform,
+            ...(sessionId
+              ? {
+                  sessionId,
+                }
+              : {}),
+            toolCallId: toolCall.callId,
             ...(toolEnablement
               ? {
                   toolEnablement,
@@ -364,6 +371,11 @@ export const getAiResponse = async ({
                 reasoningEffort,
               }
             : {}),
+          ...(sessionId
+            ? {
+                sessionId,
+              }
+            : {}),
           stream: streamingEnabled,
           supportsReasoningEffort,
           systemPrompt,
@@ -424,6 +436,7 @@ export const getAiResponse = async ({
         workspaceUri,
         agentMode,
         toolEnablement,
+        sessionId,
       )
       if (result.type === 'success') {
         const { text: assistantText } = result

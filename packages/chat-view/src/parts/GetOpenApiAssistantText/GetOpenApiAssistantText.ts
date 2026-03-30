@@ -802,6 +802,7 @@ export const getOpenApiAssistantText = async (
     onToolCallsChunk,
     questionToolEnabled = false,
     reasoningEffort,
+    sessionId,
     stream,
     supportsReasoningEffort = false,
     systemPrompt = '',
@@ -938,6 +939,12 @@ export const getOpenApiAssistantText = async (
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
             platform,
+            ...(sessionId
+              ? {
+                  sessionId,
+                }
+              : {}),
+            toolCallId: toolCall.callId,
             ...(toolEnablement
               ? {
                   toolEnablement,
@@ -1115,6 +1122,12 @@ export const getOpenApiAssistantText = async (
         const content = await executeChatTool(toolCall.name, toolCall.arguments, {
           assetDir,
           platform,
+          ...(sessionId
+            ? {
+                sessionId,
+              }
+            : {}),
+          toolCallId: toolCall.callId,
           ...(toolEnablement
             ? {
                 toolEnablement,
@@ -1207,7 +1220,20 @@ export const getOpenApiAssistantText = async (
           const name = Reflect.get(toolFunction, 'name')
           const rawArguments = Reflect.get(toolFunction, 'arguments')
           const content =
-            typeof name === 'string' ? await executeChatTool(name, rawArguments, { assetDir, platform, useChatToolWorker, workspaceUri }) : '{}'
+            typeof name === 'string'
+              ? await executeChatTool(name, rawArguments, {
+                  assetDir,
+                  platform,
+                  ...(sessionId
+                    ? {
+                        sessionId,
+                      }
+                    : {}),
+                  toolCallId: id,
+                  useChatToolWorker,
+                  workspaceUri,
+                })
+              : '{}'
           if (typeof name === 'string') {
             const executionStatus = getToolCallExecutionStatus(content)
             const toolCallResult = getToolCallResult(name, content)

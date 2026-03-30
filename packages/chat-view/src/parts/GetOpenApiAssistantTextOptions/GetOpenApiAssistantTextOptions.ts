@@ -13,6 +13,7 @@ export interface GetOpenApiAssistantTextOptions {
   readonly onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>
   readonly questionToolEnabled?: boolean
   readonly reasoningEffort?: ReasoningEffort
+  readonly sessionId?: string
   readonly stream: boolean
   readonly supportsReasoningEffort?: boolean
   readonly systemPrompt?: string
