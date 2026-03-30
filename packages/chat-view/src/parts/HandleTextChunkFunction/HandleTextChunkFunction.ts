@@ -1,17 +1,10 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/HandleToolCallsChunkFunction.ts'
 export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
+import { getNextHandleTextChunkState } from '../GetNextHandleTextChunkState/GetNextHandleTextChunkState.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { set } from '../StatusBarStates/StatusBarStates.ts'
-
-export interface HandleTextChunkState {
-  latestState: ChatState
-  previousState: ChatState
-}
 
 export const updateMessageTextInSelectedSession = async (
   sessions: readonly ChatSession[],
@@ -52,50 +45,26 @@ export const updateMessageTextInSelectedSession = async (
 }
 
 export const handleTextChunkFunction = async (
-  uid: number,
   assistantMessageId: string,
   chunk: string,
-  handleTextChunkState: Readonly<HandleTextChunkState>,
-): Promise<HandleTextChunkState> => {
-  const selectedSession = handleTextChunkState.latestState.sessions.find(
-    (session) => session.id === handleTextChunkState.latestState.selectedSessionId,
-  )
+  latestState: ChatState,
+): Promise<ChatState> => {
+  const selectedSession = latestState.sessions.find((session) => session.id === latestState.selectedSessionId)
   if (!selectedSession) {
-    return {
-      latestState: handleTextChunkState.latestState,
-      previousState: handleTextChunkState.previousState,
-    }
+    return latestState
   }
   const assistantMessage = selectedSession.messages.find((message) => message.id === assistantMessageId)
   if (!assistantMessage) {
-    return {
-      latestState: handleTextChunkState.latestState,
-      previousState: handleTextChunkState.previousState,
-    }
+    return latestState
   }
   const updatedText = assistantMessage.text + chunk
   const updated = await updateMessageTextInSelectedSession(
-    handleTextChunkState.latestState.sessions,
-    handleTextChunkState.latestState.parsedMessages,
-    handleTextChunkState.latestState.selectedSessionId,
+    latestState.sessions,
+    latestState.parsedMessages,
+    latestState.selectedSessionId,
     assistantMessageId,
     updatedText,
     true,
   )
-  const nextState = {
-    ...handleTextChunkState.latestState,
-    ...(handleTextChunkState.latestState.messagesAutoScrollEnabled
-      ? {
-          messagesScrollTop: getNextAutoScrollTop(handleTextChunkState.latestState.messagesScrollTop),
-        }
-      : {}),
-    parsedMessages: updated.parsedMessages,
-    sessions: updated.sessions,
-  }
-  set(uid, handleTextChunkState.previousState, nextState)
-  await RendererWorker.invoke('Chat.rerender')
-  return {
-    latestState: nextState,
-    previousState: nextState,
-  }
+  return getNextHandleTextChunkState(latestState, updated.parsedMessages, updated.sessions)
 }

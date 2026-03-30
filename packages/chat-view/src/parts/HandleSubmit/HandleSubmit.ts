@@ -22,13 +22,12 @@ import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
 import {
   handleToolCallsChunkFunction,
   handleTextChunkFunction,
-  type HandleTextChunkState,
   updateMessageTextInSelectedSession,
 } from '../HandleTextChunkFunction/HandleTextChunkFunction.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { applyStateUpdate, get, set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
@@ -289,11 +288,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   // @ts-ignore
   await RendererWorker.invoke('Chat.rerender')
 
-  let handleTextChunkState: HandleTextChunkState = {
-    latestState: optimisticState,
-    previousState: optimisticState,
-  }
-  let { mockOpenApiRequests } = optimisticState
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
   const systemPrompt = getEffectiveSystemPrompt(optimisticState, selectedOptimisticSession)
   const workspaceUri = getWorkspaceUri(optimisticState, selectedOptimisticSession)
@@ -303,7 +297,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const handleTextChunkFunctionRef = streamingEnabled
     ? async (chunk: string): Promise<void> => {
-        handleTextChunkState = await handleTextChunkFunction(state.uid, assistantMessageId, chunk, handleTextChunkState)
+        await applyStateUpdate(
+          state.uid,
+          (latestState) => handleTextChunkFunction(assistantMessageId, chunk, latestState),
+          { fallbackState: optimisticState, rerender: true },
+        )
       }
     : undefined
 
@@ -341,7 +339,14 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       })
     },
     onMockOpenApiRequestCaptured: async (request): Promise<void> => {
-      mockOpenApiRequests = [...mockOpenApiRequests, request]
+      await applyStateUpdate(
+        state.uid,
+        (latestState) => ({
+          ...latestState,
+          mockOpenApiRequests: [...latestState.mockOpenApiRequests, request],
+        }),
+        { fallbackState: optimisticState },
+      )
     },
     ...(handleTextChunkFunctionRef
       ? {
@@ -349,7 +354,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         }
       : {}),
     onToolCallsChunk: async (toolCalls): Promise<void> => {
-      handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
+      await applyStateUpdate(
+        state.uid,
+        (latestState) => handleToolCallsChunkFunction(assistantMessageId, toolCalls, latestState),
+        { fallbackState: optimisticState, rerender: true },
+      )
     },
     openApiApiBaseUrl,
     openApiApiKey,
@@ -376,45 +385,54 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     workspaceUri,
   })
 
-  const { latestState } = handleTextChunkState
-  let finalParsedMessages = latestState.parsedMessages
-  let updatedSessions: readonly ChatSession[]
-  if (streamingEnabled) {
-    const updated = await updateMessageTextInSelectedSession(
-      latestState.sessions,
-      finalParsedMessages,
-      latestState.selectedSessionId,
-      assistantMessageId,
-      assistantMessage.text,
-      false,
-    )
-    updatedSessions = updated.sessions
-    finalParsedMessages = updated.parsedMessages
-  } else {
-    finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
-    updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
-  }
-  if (aiSessionTitleGenerationEnabled && createsNewSession) {
-    const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
-    if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
-      const generatedTitle = await getAiSessionTitle(latestState, userText, assistantMessage.text)
-      if (generatedTitle) {
-        updatedSessions = updateSessionTitle(updatedSessions, latestState.selectedSessionId, generatedTitle)
+  const finalUpdate = await applyStateUpdate(
+    state.uid,
+    async (latestState) => {
+      let finalParsedMessages = latestState.parsedMessages
+      let updatedSessions: readonly ChatSession[]
+      if (streamingEnabled) {
+        const updated = await updateMessageTextInSelectedSession(
+          latestState.sessions,
+          finalParsedMessages,
+          latestState.selectedSessionId,
+          assistantMessageId,
+          assistantMessage.text,
+          false,
+        )
+        updatedSessions = updated.sessions
+        finalParsedMessages = updated.parsedMessages
+      } else {
+        finalParsedMessages = await parseAndStoreMessageContent(finalParsedMessages, assistantMessage)
+        updatedSessions = appendMessageToSelectedSession(latestState.sessions, latestState.selectedSessionId, assistantMessage)
       }
-    }
-  }
-  const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
-  if (selectedSession) {
-    await saveChatSession(selectedSession)
+      if (aiSessionTitleGenerationEnabled && createsNewSession) {
+        const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
+        if (selectedSession && isDefaultSessionTitle(selectedSession.title)) {
+          const generatedTitle = await getAiSessionTitle(latestState, userText, assistantMessage.text)
+          if (generatedTitle) {
+            updatedSessions = updateSessionTitle(updatedSessions, latestState.selectedSessionId, generatedTitle)
+          }
+        }
+      }
+      const nextState = withUpdatedMessageScrollTop(
+        FocusInput.focusInput({
+          ...latestState,
+          nextMessageId: latestState.nextMessageId + 1,
+          parsedMessages: finalParsedMessages,
+          sessions: updatedSessions,
+        }),
+      )
+      return {
+        nextState,
+        result: updatedSessions.find((session) => session.id === nextState.selectedSessionId),
+      }
+    },
+    { fallbackState: get(state.uid).newState },
+  )
+
+  if (finalUpdate.result) {
+    await saveChatSession(finalUpdate.result)
   }
 
-  return withUpdatedMessageScrollTop(
-    FocusInput.focusInput({
-      ...latestState,
-      mockOpenApiRequests,
-      nextMessageId: latestState.nextMessageId + 1,
-      parsedMessages: finalParsedMessages,
-      sessions: updatedSessions,
-    }),
-  )
+  return finalUpdate.nextState
 }

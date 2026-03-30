@@ -6,6 +6,7 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 import { registerSlashCommands } from '../src/parts/RegisterSlashCommands/RegisterSlashCommands.ts'
+import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
 import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
@@ -1155,4 +1156,60 @@ test('handleSubmit should provision a background worktree for a new background s
     ['Chat.rerender'],
   ])
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+})
+
+test('handleSubmit should preserve newer registry updates before finalizing', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  let releaseFetch: (() => void) | undefined
+  const fetchStarted = new Promise<void>((resolve) => {
+    globalThis.fetch = (async () => {
+      resolve()
+      await new Promise<void>((fetchResolve) => {
+        releaseFetch = fetchResolve
+      })
+      return {
+        json: async () => ({ choices: [{ message: { content: 'Real OpenAI response' } }] }),
+        ok: true,
+        status: 200,
+      } as Response
+    }) as typeof globalThis.fetch
+  })
+
+  try {
+    const uid = 44
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello from openapi',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: false,
+      uid,
+      viewMode: 'detail' as const,
+    }
+    StatusBarStates.set(uid, state, state)
+
+    const resultPromise = HandleSubmit.handleSubmit(state)
+    await fetchStarted
+    await StatusBarStates.applyStateUpdate(
+      uid,
+      (latestState) => ({
+        ...latestState,
+        searchValue: 'keep-me',
+      }),
+      { rerender: false },
+    )
+    releaseFetch?.()
+    const result = await resultPromise
+
+    expect(result.searchValue).toBe('keep-me')
+    expect(mockRendererRpc.invocations).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
