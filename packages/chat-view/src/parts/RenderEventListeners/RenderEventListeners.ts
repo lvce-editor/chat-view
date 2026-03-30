@@ -229,6 +229,20 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       preventDefault: true,
     },
     {
+      name: DomEventListenersFunctions.HandlePointerDownProjectSidebarSash,
+      params: ['handlePointerDownProjectSidebarSash'],
+      preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerMoveProjectSidebarSash,
+      params: ['handlePointerMoveProjectSidebarSash', EventExpression.ClientX],
+    },
+    {
+      name: DomEventListenersFunctions.HandlePointerUpProjectSidebarSash,
+      params: ['handlePointerUpProjectSidebarSash', EventExpression.ClientX],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenersFunctions.HandlePointerUpModelPickerList,
       params: ['handlePointerUpModelPickerList', EventExpression.ClientY],
       preventDefault: true,

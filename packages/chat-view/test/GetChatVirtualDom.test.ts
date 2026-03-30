@@ -625,7 +625,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   })
 
   expect(result[0]).toMatchObject({
-    childCount: 2,
+    childCount: 3,
     className: `${ClassNames.Viewlet} Chat ChatFocus`,
   })
   const chatHeader = result.find((node) => node.className === ClassNames.ChatHeader)
@@ -634,6 +634,7 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   const focusActions = result.find((node) => node.className === ClassNames.ChatFocusActions)
   const focusProject = result.find((node) => node.className === `${ClassNames.LabelDetail} ${ClassNames.ChatFocusProject}`)
   const projectSidebar = result.find((node) => node.className === ClassNames.ProjectSidebar)
+  const sash = result.find((node) => node.className === `${ClassNames.Sash} ${ClassNames.SashVertical}`)
   const messages = result.find((node) => node.className === 'ChatMessages')
   const addProjectButton = result.find((node) => node.name === 'create-project')
   const projectList = result.find((node) => node.className === ClassNames.ProjectList)
@@ -646,10 +647,20 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   )
   const focusTitle = result.find((node) => node.text === 'Chat 1')
   const addActionButton = result.find((node) => node.name === 'focus-add-action')
+  const addActionIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconAdd}`)
   const openInVsCodeButton = result.find((node) => node.name === 'focus-open-in-vscode')
+  const openInVsCodeIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconFolder}`)
   const commitButton = result.find((node) => node.name === 'focus-commit')
+  const commitIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconGitCommit}`)
   const openTerminalButton = result.find((node) => node.name === 'focus-open-terminal')
+  const openTerminalIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconTerminal}`)
   const showDiffButton = result.find((node) => node.name === 'focus-show-diff')
+  const showDiffIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconDiff}`)
+  const addActionLabel = result.find((node) => node.text === 'Add Action')
+  const openInVsCodeLabel = result.find((node) => node.text === 'Open in VSCode')
+  const commitLabel = result.find((node) => node.text === 'Commit')
+  const openTerminalLabel = result.find((node) => node.text === 'Open Terminal')
+  const showDiffLabel = result.find((node) => node.text === 'Show Diff')
   const normalModeButton = result.find((node) => node.title === 'Switch to normal chat mode')
   const backToChatListButton = result.find((node) => node.name === 'back' && node.title === 'Back to chat list')
   const backToChatListButtonIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconArrowLeft}`)
@@ -657,6 +668,14 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
   const welcomeMessage = result.find((node) => node.className === ClassNames.ChatWelcomeMessage)
   expect(projectSidebar).toMatchObject({
     childCount: 3,
+  })
+  expect(sash).toMatchObject({
+    'aria-orientation': 'vertical',
+    childCount: 0,
+    className: `${ClassNames.Sash} ${ClassNames.SashVertical}`,
+    onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
+    role: 'separator',
+    type: VirtualDomElements.Div,
   })
   expect(chatHeader).toBeUndefined()
   expect(focusMainArea).toMatchObject({
@@ -701,42 +720,83 @@ test('getChatVirtualDOm should render projects and chats in chat-focus mode', as
     type: VirtualDomElements.Div,
   })
   expect(backToChatListLabel).toBeUndefined()
-  expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(focusMainArea as (typeof result)[number]))
+  expect(result.indexOf(projectSidebar as (typeof result)[number])).toBeLessThan(result.indexOf(sash as (typeof result)[number]))
+  expect(result.indexOf(sash as (typeof result)[number])).toBeLessThan(result.indexOf(focusMainArea as (typeof result)[number]))
   expect(result.indexOf(focusMainArea as (typeof result)[number])).toBeLessThan(result.indexOf(focusHeader as (typeof result)[number]))
   expect(result.indexOf(focusHeader as (typeof result)[number])).toBeLessThan(result.indexOf(messages as (typeof result)[number]))
   expect(result.indexOf(messages as (typeof result)[number])).toBeLessThan(result.indexOf(composer as (typeof result)[number]))
   expect(result.indexOf(projectList as (typeof result)[number])).toBeLessThan(result.indexOf(addProjectButton as (typeof result)[number]))
   expect(result.indexOf(addProjectButton as (typeof result)[number])).toBeLessThan(result.indexOf(backToChatListButton as (typeof result)[number]))
   expect(addActionButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'focus-add-action',
     onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Add Action',
     type: VirtualDomElements.Button,
+  })
+  expect(addActionIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconAdd}`,
+    type: VirtualDomElements.Div,
   })
   expect(openInVsCodeButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'focus-open-in-vscode',
     onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Open in VSCode',
     type: VirtualDomElements.Button,
+  })
+  expect(openInVsCodeIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconFolder}`,
+    type: VirtualDomElements.Div,
   })
   expect(commitButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'focus-commit',
     onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Commit',
     type: VirtualDomElements.Button,
+  })
+  expect(commitIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconGitCommit}`,
+    type: VirtualDomElements.Div,
   })
   expect(openTerminalButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'focus-open-terminal',
     onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Open Terminal',
     type: VirtualDomElements.Button,
+  })
+  expect(openTerminalIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconTerminal}`,
+    type: VirtualDomElements.Div,
   })
   expect(showDiffButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    childCount: 1,
+    className: ClassNames.IconButton,
     name: 'focus-show-diff',
     onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Show Diff',
     type: VirtualDomElements.Button,
   })
+  expect(showDiffIcon).toMatchObject({
+    childCount: 0,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconDiff}`,
+    type: VirtualDomElements.Div,
+  })
+  expect(addActionLabel).toBeUndefined()
+  expect(openInVsCodeLabel).toBeUndefined()
+  expect(commitLabel).toBeUndefined()
+  expect(openTerminalLabel).toBeUndefined()
+  expect(showDiffLabel).toBeUndefined()
   expect(normalModeButton).toBeUndefined()
   expect(welcomeMessage).toBeUndefined()
 })

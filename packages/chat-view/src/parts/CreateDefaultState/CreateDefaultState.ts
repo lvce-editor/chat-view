@@ -107,6 +107,8 @@ export const createDefaultState = (): ChatState => {
     platform: 0,
     projectExpandedIds: [defaultProjectId],
     projectListScrollTop: 0,
+    projectSidebarResizing: false,
+    projectSidebarWidth: 280,
     projects: [
       {
         id: defaultProjectId,

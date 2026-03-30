@@ -7,6 +7,7 @@ export const getCss = (
   chatMessageLineHeight: number,
   chatMessageFontFamily: string,
   chatFocusContentMaxWidth: number,
+  projectSidebarWidth: number,
   textAreaPaddingTop: number,
   textAreaPaddingLeft: number,
   textAreaPaddingRight: number,
@@ -42,6 +43,7 @@ export const getCss = (
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
   --ChatFocusContentMaxWidth: ${chatFocusContentMaxWidth}px;
+  --ProjectSidebarWidth: ${projectSidebarWidth}px;
   --RunModePickerHeight: ${runModePickerHeight}px;
 }
 
@@ -356,6 +358,39 @@ export const getCss = (
   display: flex !important;
   min-width: 0;
 }
+
+.ChatFocus > .ProjectSidebar{
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  inline-size: var(--ProjectSidebarWidth);
+  min-inline-size: 0;
+}
+
+.ChatFocus > .ProjectSidebar > .ProjectList{
+  flex: 1;
+  min-height: 0;
+}
+
+.ChatFocus > .Sash.SashVertical{
+  position: relative;
+  flex: none;
+  inline-size: 4px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.ChatFocus > .Sash.SashVertical::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--vscode-sideBar-border, var(--WidgetBorder, white)) 75%, transparent);
+}
+
+.ChatFocus > .Sash.SashVertical:hover::before{
+  background: var(--vscode-focusBorder, var(--vscode-button-background));
+}
+
 .ChatFocusMainArea{
   display: flex;
   flex: 1;

@@ -39,6 +39,7 @@ test('saveState should persist global state without session payloads', () => {
   expect(result.selectedProjectId).toBe('project-1')
   expect(result.projects).toEqual(state.projects)
   expect(result.projectListScrollTop).toBe(0)
+  expect(result.projectSidebarWidth).toBe(280)
   expect(result.lastNormalViewMode).toBe('list')
   expect(result.maxToolCalls).toBe(100)
 })

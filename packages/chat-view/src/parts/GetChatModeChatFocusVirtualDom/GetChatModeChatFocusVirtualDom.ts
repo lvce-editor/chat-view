@@ -155,13 +155,23 @@ export const getChatModeChatFocusVirtualDom = ({
   const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
   return [
     {
-      childCount: chatRootChildCount,
+      childCount: chatRootChildCount + 1,
       className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus),
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
+      onPointerMove: DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,
+      onPointerUp: DomEventListenerFunctions.HandlePointerUpProjectSidebarSash,
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
+    {
+      'aria-orientation': 'vertical',
+      childCount: 0,
+      className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
+      onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
+      role: 'separator',
+      type: VirtualDomElements.Div,
+    },
     {
       childCount: 3,
       className: ClassNames.ChatFocusMainArea,

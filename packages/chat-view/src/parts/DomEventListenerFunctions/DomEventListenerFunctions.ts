@@ -58,3 +58,6 @@ export const HandleContextMenuChatImageAttachment = 58
 export const HandleClickGitBranchPickerToggle = 59
 export const HandleErrorComposerAttachmentPreviewOverlay = 60
 export const HandleClickCustomSelectOverlay = 61
+export const HandlePointerDownProjectSidebarSash = 62
+export const HandlePointerMoveProjectSidebarSash = 63
+export const HandlePointerUpProjectSidebarSash = 64
