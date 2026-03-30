@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
@@ -15,6 +16,32 @@ const hasWriteFileLineCounts = (value: object): boolean => {
 const hasToolError = (value: object): boolean => {
   const error = Reflect.get(value, 'error')
   return typeof error === 'string' && error.trim().length > 0
+}
+
+const getTrackedToolExecutionValue = (value: unknown): unknown => {
+  if (typeof value !== 'string') {
+    return value
+  }
+  try {
+    return JSON.parse(value) as unknown
+  } catch {
+    return value
+  }
+}
+
+const getStoredToolExecutionStatus = (result: unknown): 'error' | 'success' => {
+  let parsed: unknown = result
+  if (typeof result === 'string') {
+    try {
+      parsed = JSON.parse(result) as unknown
+    } catch {
+      return 'error'
+    }
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return 'error'
+  }
+  return hasToolError(parsed) ? 'error' : 'success'
 }
 
 const parseWriteFileArguments = (rawArguments: unknown): { readonly content: string; readonly target: string } | undefined => {
@@ -124,7 +151,7 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
     // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error('Chat tools must be executed in a web worker environment. Please set useChatToolWorker to true in the options.')
   }
-  const workerOutput = await ChatToolRequest.execute(name, rawArguments, {
+  const executionOptions = {
     assetDir: options.assetDir,
     platform: options.platform,
     ...(options.workspaceUri
@@ -132,7 +159,52 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
           workspaceUri: options.workspaceUri,
         }
       : {}),
-  })
-  const outputWithLineCounts = name === 'write_file' ? await withWriteFileLineCounts(workerOutput, rawArguments) : workerOutput
-  return stringifyToolOutput(outputWithLineCounts)
+  }
+  const executionId = options.toolCallId || `${name}-${Date.now()}`
+  const startedAt = new Date().toISOString()
+  if (options.sessionId) {
+    await appendChatViewEvent({
+      arguments: getTrackedToolExecutionValue(rawArguments),
+      id: executionId,
+      name,
+      options: executionOptions,
+      sessionId: options.sessionId,
+      time: startedAt,
+      timestamp: startedAt,
+      type: 'tool-execution-started',
+    })
+  }
+  try {
+    const workerOutput = await ChatToolRequest.execute(name, rawArguments, executionOptions)
+    const outputWithLineCounts = name === 'write_file' ? await withWriteFileLineCounts(workerOutput, rawArguments) : workerOutput
+    const result = stringifyToolOutput(outputWithLineCounts)
+    if (options.sessionId) {
+      await appendChatViewEvent({
+        id: executionId,
+        name,
+        result: outputWithLineCounts,
+        sessionId: options.sessionId,
+        status: getStoredToolExecutionStatus(outputWithLineCounts),
+        timestamp: new Date().toISOString(),
+        type: 'tool-execution-finished',
+      })
+    }
+    return result
+  } catch (error) {
+    const errorResult = {
+      error: error instanceof Error ? error.message : String(error),
+    }
+    if (options.sessionId) {
+      await appendChatViewEvent({
+        id: executionId,
+        name,
+        result: errorResult,
+        sessionId: options.sessionId,
+        status: 'error',
+        timestamp: new Date().toISOString(),
+        type: 'tool-execution-finished',
+      })
+    }
+    throw error
+  }
 }

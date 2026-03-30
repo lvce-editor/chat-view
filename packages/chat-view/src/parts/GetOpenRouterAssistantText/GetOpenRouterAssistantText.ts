@@ -196,6 +196,7 @@ export const getOpenRouterAssistantText = async (
   workspaceUri = '',
   agentMode: AgentMode | boolean = defaultAgentMode,
   toolEnablement?: ToolEnablement,
+  sessionId?: string,
 ): Promise<GetOpenRouterAssistantTextResult> => {
   const effectiveAgentMode = typeof agentMode === 'boolean' ? defaultAgentMode : agentMode
   const completionMessages: any[] = [
@@ -383,6 +384,12 @@ export const getOpenRouterAssistantText = async (
             ? await executeChatTool(name, rawArguments, {
                 assetDir,
                 platform,
+                ...(sessionId
+                  ? {
+                      sessionId,
+                    }
+                  : {}),
+                toolCallId: id,
                 ...(toolEnablement
                   ? {
                       toolEnablement,

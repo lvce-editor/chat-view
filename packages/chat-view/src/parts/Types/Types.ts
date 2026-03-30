@@ -17,6 +17,8 @@ export type ChatTool = {
 export type ExecuteToolOptions = {
   readonly assetDir: string
   readonly platform: number
+  readonly sessionId?: string
+  readonly toolCallId?: string
   readonly toolEnablement?: ToolEnablement
   readonly useChatToolWorker?: boolean
   readonly workspaceUri?: string

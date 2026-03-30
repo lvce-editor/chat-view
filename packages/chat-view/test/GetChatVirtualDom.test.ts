@@ -1376,6 +1376,7 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': uri,
       onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: uri,
       type: VirtualDomElements.Span,
     },
     {
@@ -1469,6 +1470,7 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': path,
       onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: path,
       type: VirtualDomElements.Span,
     },
     {
@@ -1558,6 +1560,7 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': uri,
       onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: uri,
       type: VirtualDomElements.Span,
     },
     {
@@ -1647,6 +1650,7 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': uri,
       onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: uri,
       type: VirtualDomElements.Span,
     },
     {

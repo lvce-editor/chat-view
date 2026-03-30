@@ -9,7 +9,11 @@ export const getToolCallLabel = (toolCall: ChatToolCall): string => {
   if (toolCall.name === 'write_file' && !toolCall.status && hasIncompleteJsonArguments(toolCall.arguments)) {
     return `${displayName} (in progress)`
   }
-  if ((toolCall.name === 'list_files' || toolCall.name === 'grep_search') && !toolCall.status && hasIncompleteJsonArguments(toolCall.arguments)) {
+  if (
+    (toolCall.name === 'list_files' || toolCall.name === 'grep_search' || toolCall.name === 'glob') &&
+    !toolCall.status &&
+    hasIncompleteJsonArguments(toolCall.arguments)
+  ) {
     return displayName
   }
   const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)

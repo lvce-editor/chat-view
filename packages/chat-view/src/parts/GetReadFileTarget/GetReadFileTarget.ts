@@ -55,14 +55,16 @@ export const getReadFileTarget = (rawArguments: string): { readonly title: strin
   }
   const uri = Reflect.get(parsed, 'uri')
   const path = Reflect.get(parsed, 'path')
+  const baseUri = Reflect.get(parsed, 'baseUri')
   const uriValue = typeof uri === 'string' ? uri : ''
   const pathValue = typeof path === 'string' ? path : ''
-  const title = uriValue || pathValue
+  const baseUriValue = typeof baseUri === 'string' ? baseUri : ''
+  const title = uriValue || pathValue || baseUriValue
   if (!title) {
     return undefined
   }
-  // `read_file` tool calls now use absolute `uri`; keep `path` as a legacy fallback for old transcripts.
-  const clickableUri = uriValue || pathValue
+  // File-like tool calls use absolute `uri` where available; keep `path` as a legacy fallback.
+  const clickableUri = uriValue || pathValue || baseUriValue
   return {
     clickableUri,
     title,

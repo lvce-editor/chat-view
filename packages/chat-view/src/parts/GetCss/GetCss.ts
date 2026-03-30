@@ -357,6 +357,7 @@ export const getCss = (
 .Viewlet.Chat.ChatFocus{
   display: flex !important;
   min-width: 0;
+  flex-direction: row !important;
 }
 
 .ChatFocus > .ProjectSidebar{
