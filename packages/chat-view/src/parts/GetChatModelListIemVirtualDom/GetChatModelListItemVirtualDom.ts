@@ -5,9 +5,24 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 
+const getUsageCostDom = (detail: string): readonly VirtualDomNode[] => {
+  if (detail === '') {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatModelPickerItemUsageCost,
+      type: VirtualDomElements.Span,
+    },
+    text(detail),
+  ]
+}
+
 export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   const detail = getUsageCostLabel(model)
   const hasDetail = detail !== ''
+  const usageCostDom = getUsageCostDom(detail)
   const selected = model.id === selectedModelId
   const className = mergeClassNames(ClassNames.ChatModelPickerItem, selected ? ClassNames.ChatModelPickerItemSelected : '')
   return [
@@ -25,15 +40,6 @@ export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId
       type: VirtualDomElements.Span,
     },
     text(getModelLabel(model)),
-    ...(hasDetail
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatModelPickerItemUsageCost,
-            type: VirtualDomElements.Span,
-          },
-          text(detail),
-        ]
-      : []),
+    ...usageCostDom,
   ]
 }
