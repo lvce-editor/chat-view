@@ -24,6 +24,10 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
+const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
+  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
+}
+
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -42,7 +46,7 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(result.chatInputHistoryIndex).toBe(-1)
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker', async () => {
@@ -110,7 +114,7 @@ test('handleSubmit should delegate optimistic and final message parsing to chat 
     ['ChatMessageParsing.parseMessageContents', ['']],
     ['ChatMessageParsing.parseMessageContents', ['Mock AI response: I received "hello".']],
   ])
-  expect(mockRendererRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should clear composer attachments after submit', async () => {
@@ -137,7 +141,7 @@ test('handleSubmit should clear composer attachments after submit', async () => 
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.composerAttachments).toEqual([])
   expect(result.composerAttachmentsHeight).toBe(0)
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should persist submitted attachments on the user message and remove pending attachment events', async () => {
@@ -193,7 +197,7 @@ test('handleSubmit should persist submitted attachments on the user message and 
       }),
     ]),
   )
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should dedupe consecutive history entries', async () => {
@@ -210,7 +214,7 @@ test('handleSubmit should dedupe consecutive history entries', async () => {
   }
   const first = await HandleSubmit.handleSubmit(firstState)
   expect(first.chatInputHistory).toEqual(['hello'])
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should create a new session and switch to detail mode from list mode', async () => {
@@ -236,7 +240,7 @@ test('handleSubmit should create a new session and switch to detail mode from li
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should ignore blank composer value', async () => {
@@ -275,7 +279,7 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('Real OpenRouter response')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -299,7 +303,7 @@ test('handleSubmit should not fall back to mock response for openRouter models w
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.sessions[0].messages[1].text).toBe('OpenRouter API key is not configured. Enter your OpenRouter API key below and click Save.')
   expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should not fall back to mock response for openRouter models when request fails', async () => {
@@ -326,7 +330,7 @@ test('handleSubmit should not fall back to mock response for openRouter models w
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('OpenRouter request failed. Possible reasons:')
     expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -359,7 +363,7 @@ test('handleSubmit should show too many requests message for OpenRouter 429 resp
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('OpenRouter rate limit reached (429). Please try again soon. Helpful tips:')
     expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -394,7 +398,7 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('Real OpenAI response')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -419,7 +423,7 @@ test('handleSubmit should not fall back to mock response for openApi models when
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.sessions[0].messages[1].text).toBe('OpenAI API key is not configured. Enter your OpenAI API key below and click Save.')
   expect(result.sessions[0].messages[1].text).not.toContain('Mock AI response:')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleSubmit should include OpenRouter limit reset and usage details in 429 message when available', async () => {
@@ -471,7 +475,7 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
     expect(result.sessions[0].messages[1].text).toContain('Credits remaining: 3.')
     expect(result.sessions[0].messages[1].text).toContain('Credits used today (UTC): 9.')
     expect(result.sessions[0].messages[1].text).toContain('Credits used (all time): 120.')
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -526,6 +530,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
     expect(result.sessions[0].messages[1].inProgress).toBe(false)
     expect(result.sessions[0].status).toBe('finished')
     expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -714,7 +719,7 @@ test('handleSubmit should use chat message parsing worker for streaming message 
       ['ChatMessageParsing.parseMessageContents', ['Stream']],
       ['ChatMessageParsing.parseMessageContents', ['Streaming']],
     ])
-    expect(mockRendererRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -1154,6 +1159,53 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   }
 })
 
+test('handleSubmit should resolve workspaceUri placeholder in system prompt from renderer workspace path', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(new Date('2026-03-25T12:00:00.000Z'))
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+    'Workspace.getPath': async () => 'file:///workspace/from-renderer',
+  })
+  const originalFetch = globalThis.fetch
+  let capturedBody: Record<string, unknown> | undefined
+  globalThis.fetch = (async (_input: unknown, init?: RequestInit) => {
+    const body = init?.body
+    if (typeof body === 'string') {
+      capturedBody = JSON.parse(body) as Record<string, unknown>
+    }
+    return {
+      json: async () => ({ choices: [{ message: { content: 'OpenRouter response' } }] }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    openRouterApiKey: 'or-key-123',
+    selectedModelId: 'claude-code',
+    systemPrompt: 'Environment:\n- Current workspace URI: {{workspaceUri}}',
+    useMockApi: false,
+    viewMode: 'detail' as const,
+  }
+
+  try {
+    const result = await HandleSubmit.handleSubmit(state)
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
+    expect(mockRendererRpc.invocations).toContainEqual(['Workspace.getPath'])
+    const messages = capturedBody?.messages as readonly { readonly role: string; readonly content: string }[] | undefined
+    expect(messages?.[0]?.role).toBe('system')
+    expect(messages?.[0]?.content).toContain('Current workspace URI: file:///workspace/from-renderer')
+    expect(messages?.[0]?.content).not.toContain('Current workspace URI: unknown')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleSubmit should generate ai session title for new session when enabled', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -1194,7 +1246,7 @@ test('handleSubmit should generate ai session title for new session when enabled
     expect(newSession).toBeDefined()
     expect(newSession?.title).toBe('TypeScript parser bug fix')
     expect(requestIndex).toBe(2)
-    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+    expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }
