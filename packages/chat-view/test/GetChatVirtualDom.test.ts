@@ -298,9 +298,9 @@ test('getChatVirtualDom should render open run mode picker without search input'
   const pickerContainers = result.filter((node) => node.className === runModePickerContainerClassName)
   expect(runModePicker).toMatchObject({
     className: runModePickerClassName,
-    style: 'height: 84px;',
     type: VirtualDomElements.Div,
   })
+  expect(runModePicker?.style).toBeUndefined()
   expect(runModeBackgroundOption).toMatchObject({
     className: ClassNames.ChatModelPickerItem,
     type: VirtualDomElements.Button,

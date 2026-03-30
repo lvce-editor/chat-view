@@ -44,3 +44,11 @@ test('getCss should style invalid inputs with the input validation border color'
   expect(css).toContain('.InputInvalid{')
   expect(css).toContain('border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));')
 })
+
+test('getCss should expose run mode picker height via css variable', () => {
+  const css = getCss(28, 34, 100, 40, 13, 20, 'system-ui', 700, 0, 12, 12, 0, 10, 8, 8, 10, '')
+
+  expect(css).toContain('--RunModePickerHeight: 84px;')
+  expect(css).toContain('.RunModePickerPopOver{')
+  expect(css).toContain('height: var(--RunModePickerHeight);')
+})

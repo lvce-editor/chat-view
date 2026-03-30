@@ -20,6 +20,7 @@ export const getCss = (
   const buttonsHeight = 20
   const gap = 10
   const contentPadding = 10
+  const runModePickerHeight = 84
   const chatSendAreaHeight =
     composerHeight + composerAttachmentsHeight + chatSendAreaPaddingTop + chatSendAreaPaddingBottom + buttonsHeight + gap + contentPadding * 2
   const baseCss = `:root {
@@ -41,6 +42,7 @@ export const getCss = (
   --ChatMessageLineHeight: ${chatMessageLineHeight}px;
   --ChatMessageFontFamily: ${chatMessageFontFamily};
   --ChatFocusContentMaxWidth: ${chatFocusContentMaxWidth}px;
+  --RunModePickerHeight: ${runModePickerHeight}px;
 }
 
 :root{
@@ -265,6 +267,7 @@ export const getCss = (
 }
 
 .RunModePickerPopOver{
+  height: var(--RunModePickerHeight);
   overflow: hidden;
   border: 1px solid var(--WidgetBorder, white);
   border-radius: 8px;

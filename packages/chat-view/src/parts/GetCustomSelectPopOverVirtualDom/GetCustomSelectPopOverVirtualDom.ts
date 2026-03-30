@@ -9,6 +9,7 @@ export const getCustomSelectPopOverVirtualDom = (
   optionNodes: readonly VirtualDomNode[],
   containerClassName = '',
   popOverClassName = '',
+  useInlineHeight = true,
 ): readonly VirtualDomNode[] => {
   return [
     {
@@ -17,12 +18,18 @@ export const getCustomSelectPopOverVirtualDom = (
       onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatModelPicker, popOverClassName),
-      style: `height: ${height}px;`,
-      type: VirtualDomElements.Div,
-    },
+    useInlineHeight
+      ? {
+          childCount: 1,
+          className: mergeClassNames(ClassNames.ChatModelPicker, popOverClassName),
+          style: `height: ${height}px;`,
+          type: VirtualDomElements.Div,
+        }
+      : {
+          childCount: 1,
+          className: mergeClassNames(ClassNames.ChatModelPicker, popOverClassName),
+          type: VirtualDomElements.Div,
+        },
     {
       childCount: optionCount,
       className: ClassNames.ChatModelPickerList,
