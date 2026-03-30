@@ -5,30 +5,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
-import * as InputName from '../InputName/InputName.ts'
-
-const getChatSearchDom = (hasSearchField: boolean, searchValue: string): readonly VirtualDomNode[] => {
-  if (!hasSearchField) {
-    return []
-  }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.SearchFieldContainer,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 0,
-      className: ClassNames.InputBox,
-      inputType: 'search',
-      name: InputName.Search,
-      onInput: DomEventListenerFunctions.HandleSearchInput,
-      placeholder: Strings.searchChats(),
-      type: VirtualDomElements.Input,
-      value: searchValue,
-    },
-  ]
-}
+import { getChatSearchDom } from '../GetChatSearchDom/GetChatSearchDom.ts'
 
 export const getChatHeaderListModeDom = (
   authEnabled = false,
