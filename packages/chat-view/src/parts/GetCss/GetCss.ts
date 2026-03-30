@@ -96,6 +96,14 @@ export const getCss = (
   object-fit: cover;
 }
 
+.ChatComposerAttachmentPreview,
+.ChatAttachmentPreview,
+.ChatMessageImage,
+.ChatComposerAttachmentPreviewOverlayImage,
+.ImageElement{
+  cursor: default;
+}
+
 .ChatComposerAttachmentRemoveButton{
   appearance: none;
   background: transparent;
