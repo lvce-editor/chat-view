@@ -1,12 +1,11 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
-import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
-import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getAddContextButtonDom } from '../GetAddContextButtonDom/GetAddContextButtonDom.ts'
@@ -20,129 +19,8 @@ import { getScrollDownButtonDom } from '../GetScrollDownButtonDom/GetScrollDownB
 import { getSendButtonDom } from '../GetSendButtonDom/GetSendButtonDom.ts'
 import { getTodoListDom } from '../GetTodoListDom/GetTodoListDom.ts'
 import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.ts'
-import * as InputName from '../InputName/InputName.ts'
-
-const getComposerAttachmentLabel = (displayType: ComposerAttachmentDisplayType): string => {
-  switch (displayType) {
-    case 'file':
-      return 'File'
-    case 'image':
-      return 'Image'
-    case 'invalid-image':
-      return 'Invalid image'
-    case 'text-file':
-      return 'Text file'
-    default:
-      return displayType
-  }
-}
-
-const getComposerAttachmentClassName = (displayType: ComposerAttachmentDisplayType): string => {
-  switch (displayType) {
-    case 'file':
-      return ClassNames.ChatComposerAttachment
-    case 'image':
-      return ClassNames.ChatComposerAttachmentImage
-    case 'invalid-image':
-      return ClassNames.ChatComposerAttachmentInvalidImage
-    case 'text-file':
-      return ClassNames.ChatComposerAttachmentTextFile
-    default:
-      return ClassNames.ChatComposerAttachment
-  }
-}
-
-const getComposerAttachmentRemoveButtonDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
-  return [
-    {
-      'aria-label': Strings.removeAttachment(),
-      buttonType: 'button',
-      childCount: 1,
-      className: ClassNames.ChatComposerAttachmentRemoveButton,
-      name: InputName.getComposerAttachmentRemoveInputName(attachment.attachmentId),
-      onClick: DomEventListenerFunctions.HandleClick,
-      title: Strings.removeAttachment(),
-      type: VirtualDomElements.Button,
-    },
-    {
-      text: 'x',
-      type: VirtualDomElements.Text,
-    },
-  ]
-}
-
-const getComposerAttachmentPreviewDom = (attachment: ComposerAttachment): readonly VirtualDomNode[] => {
-  if (!attachment.previewSrc) {
-    return []
-  }
-  return [
-    {
-      alt: `Image preview for ${attachment.name}`,
-      childCount: 0,
-      className: ClassNames.ChatComposerAttachmentPreview,
-      name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
-      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatImageAttachment,
-      src: attachment.previewSrc,
-      type: VirtualDomElements.Img,
-    },
-  ]
-}
-
-const getComposerAttachmentsDom = (composerAttachments: readonly ComposerAttachment[]): readonly VirtualDomNode[] => {
-  if (composerAttachments.length === 0) {
-    return []
-  }
-  return [
-    {
-      childCount: composerAttachments.length,
-      className: ClassNames.ChatComposerAttachments,
-      type: VirtualDomElements.Div,
-    },
-    ...composerAttachments.flatMap((attachment) => {
-      const removeButtonDom = getComposerAttachmentRemoveButtonDom(attachment)
-      const previewDom = getComposerAttachmentPreviewDom(attachment)
-      return [
-        {
-          childCount: 1 + (removeButtonDom.length > 0 ? 1 : 0) + previewDom.length,
-          className: mergeClassNames(ClassNames.ChatComposerAttachment, getComposerAttachmentClassName(attachment.displayType)),
-          name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
-          onMouseOut: DomEventListenerFunctions.HandleMouseOut,
-          onMouseOver: DomEventListenerFunctions.HandleMouseOver,
-          onPointerOut: DomEventListenerFunctions.HandleMouseOut,
-          onPointerOver: DomEventListenerFunctions.HandleMouseOver,
-          type: VirtualDomElements.Div,
-        },
-        ...removeButtonDom,
-        ...previewDom,
-        {
-          childCount: 1,
-          className: ClassNames.ChatComposerAttachmentLabel,
-          name: InputName.getComposerAttachmentInputName(attachment.attachmentId),
-          type: VirtualDomElements.Span,
-        },
-        {
-          text: `${getComposerAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
-          type: VirtualDomElements.Text,
-        },
-      ]
-    }),
-  ]
-}
-
-const getComposerTextAreaDom = (): VirtualDomNode => {
-  return {
-    childCount: 0,
-    className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
-    name: InputName.Composer,
-    onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
-    onFocus: DomEventListenerFunctions.HandleFocus,
-    onInput: DomEventListenerFunctions.HandleInput,
-    onSelectionChange: DomEventListenerFunctions.HandleComposerSelectionChange,
-    placeholder: Strings.composePlaceholder(),
-    spellcheck: false,
-    type: VirtualDomElements.TextArea,
-  }
-}
+import { getComposerAttachmentsDom } from './GetComposerAttachmentsDom/GetComposerAttachmentsDom.ts'
+import { getComposerTextAreaDom } from './GetComposerTextAreaDom/GetComposerTextAreaDom.ts'
 
 export const getChatSendAreaDom = (
   composerValue: string,
