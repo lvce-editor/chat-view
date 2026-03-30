@@ -14,8 +14,8 @@ import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSav
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedProjectExpandedIds } from '../GetSavedProjectExpandedIds/GetSavedProjectExpandedIds.ts'
 import { getSavedProjectListScrollTop } from '../GetSavedProjectListScrollTop/GetSavedProjectListScrollTop.ts'
-import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
 import { getSavedProjects } from '../GetSavedProjects/GetSavedProjects.ts'
+import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
 import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReasoningEffort.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
@@ -143,9 +143,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     passIncludeObfuscation,
     projectExpandedIds,
     projectListScrollTop,
+    projects,
     projectSidebarResizing: false,
     projectSidebarWidth,
-    projects,
     reasoningEffort,
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled,

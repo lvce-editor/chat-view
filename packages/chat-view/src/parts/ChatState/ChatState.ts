@@ -99,9 +99,9 @@ export interface ChatState {
   readonly platform: number
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
+  readonly projects: readonly Project[]
   readonly projectSidebarResizing: boolean
   readonly projectSidebarWidth: number
-  readonly projects: readonly Project[]
   readonly questionToolEnabled?: boolean
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen: boolean

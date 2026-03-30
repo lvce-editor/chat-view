@@ -107,8 +107,6 @@ export const createDefaultState = (): ChatState => {
     platform: 0,
     projectExpandedIds: [defaultProjectId],
     projectListScrollTop: 0,
-    projectSidebarResizing: false,
-    projectSidebarWidth: 280,
     projects: [
       {
         id: defaultProjectId,
@@ -116,6 +114,8 @@ export const createDefaultState = (): ChatState => {
         uri: '',
       },
     ],
+    projectSidebarResizing: false,
+    projectSidebarWidth: 280,
     questionToolEnabled: false,
     reasoningEffort: defaultReasoningEffort,
     reasoningEffortPickerOpen: false,
