@@ -43,6 +43,10 @@ export const getCss = (
   --ChatFocusContentMaxWidth: ${chatFocusContentMaxWidth}px;
 }
 
+:root{
+ --WidgetBorder: white;
+}
+
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
 }
@@ -66,7 +70,7 @@ export const getCss = (
   min-width: 0;
   overflow: hidden;
   border-radius: 999px;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border: 1px solid var(--WidgetBorder, white);
   padding: 4px 10px;
   background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
   color: var(--vscode-badge-foreground, var(--vscode-foreground));
@@ -116,7 +120,7 @@ export const getCss = (
 }
 
 .ChatComposerAttachmentTextFile{
-  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+  border-color: var(--vscode-charts-green, var(--WidgetBorder, white));
 }
 
 .ChatAttachments{
@@ -134,7 +138,7 @@ export const getCss = (
   min-width: 0;
   overflow: hidden;
   border-radius: 999px;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border: 1px solid var(--WidgetBorder, white);
   padding: 4px 10px;
   background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
   color: var(--vscode-badge-foreground, var(--vscode-foreground));
@@ -166,12 +170,12 @@ export const getCss = (
 }
 
 .ChatAttachmentTextFile{
-  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+  border-color: var(--vscode-charts-green, var(--WidgetBorder, white));
 }
 
 .ChatImageMessageContent{
   padding: 6px;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border: 1px solid var(--WidgetBorder, white);
   border-radius: 12px;
   background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   overflow: hidden;
@@ -202,7 +206,7 @@ export const getCss = (
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border: 1px solid var(--WidgetBorder, white);
   border-radius: 12px;
   background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   box-shadow: 0 12px 28px color-mix(in srgb, var(--vscode-editor-background) 45%, black);
@@ -262,7 +266,7 @@ export const getCss = (
 
 .RunModePickerPopOver{
   overflow: hidden;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border: 1px solid var(--WidgetBorder, white);
   border-radius: 8px;
   background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
   box-shadow: 0 8px 24px color-mix(in srgb, var(--vscode-editor-background) 50%, black);
