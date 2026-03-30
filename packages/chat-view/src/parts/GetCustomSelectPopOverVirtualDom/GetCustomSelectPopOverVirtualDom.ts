@@ -1,5 +1,6 @@
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getCustomSelectPopOverVirtualDom = (
@@ -13,6 +14,7 @@ export const getCustomSelectPopOverVirtualDom = (
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.ChatModelPickerContainer, containerClassName),
+      onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
       type: VirtualDomElements.Div,
     },
     {

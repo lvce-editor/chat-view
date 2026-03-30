@@ -70,6 +70,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickGitBranchPickerToggle'],
     },
     {
+      name: DomEventListenersFunctions.HandleClickCustomSelectOverlay,
+      params: ['handleClickCustomSelectOverlay', EventExpression.DefaultPrevented],
+    },
+    {
       name: DomEventListenersFunctions.HandleClickModelPickerOverlay,
       params: ['handleClickModelPickerOverlay', EventExpression.DefaultPrevented],
     },
