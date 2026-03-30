@@ -28,8 +28,10 @@ export const getComposerAttachments = async (sessionId: string): Promise<readonl
       continue
     }
     const displayType = await getComposerAttachmentDisplayType(event.blob, event.name, event.mimeType)
-    const previewSrc = await getComposerAttachmentPreviewSrc(event.blob, displayType, event.mimeType)
-    const textContent = await getComposerAttachmentTextContent(event.blob, displayType)
+    const [previewSrc, textContent] = await Promise.all([
+      getComposerAttachmentPreviewSrc(event.blob, displayType, event.mimeType),
+      getComposerAttachmentTextContent(event.blob, displayType),
+    ])
     attachments.set(event.attachmentId, {
       attachmentId: event.attachmentId,
       displayType,

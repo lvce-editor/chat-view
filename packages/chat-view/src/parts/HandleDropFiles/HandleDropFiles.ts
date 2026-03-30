@@ -35,8 +35,10 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
     const file = await droppedFileHandle.getFile()
     const attachmentId = `attachment-${nextAttachmentId + nextAttachments.length}`
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
-    const previewSrc = await getComposerAttachmentPreviewSrc(file, displayType, file.type)
-    const textContent = await getComposerAttachmentTextContent(file, displayType)
+    const [previewSrc, textContent] = await Promise.all([
+      getComposerAttachmentPreviewSrc(file, displayType, file.type),
+      getComposerAttachmentTextContent(file, displayType),
+    ])
     await appendChatViewEvent({
       attachmentId,
       blob: file,
