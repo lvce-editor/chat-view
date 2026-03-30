@@ -35,13 +35,7 @@ export const handleToolCallsChunkFunction = async (
       previousState: liveState,
     }
   }
-  const updated = updateMessageToolCallsInSelectedSession(
-    liveState.sessions,
-    liveState.parsedMessages,
-    sessionId,
-    assistantMessageId,
-    toolCalls,
-  )
+  const updated = updateMessageToolCallsInSelectedSession(liveState.sessions, liveState.parsedMessages, sessionId, assistantMessageId, toolCalls)
   const nextState = getNextHandleTextChunkState(liveState, updated.parsedMessages, updated.sessions)
   await setAndRerenderHandleTextChunkState(uid, liveState, nextState)
   return {
