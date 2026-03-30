@@ -307,7 +307,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       }
     : undefined
 
-    console.log('start submit')
+  console.log('start submit')
   const assistantMessage = await getAiResponse({
     agentMode,
     assetDir,
