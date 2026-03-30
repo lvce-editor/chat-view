@@ -3,21 +3,8 @@ import { mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
+import { getUsageCostDom } from '../GetUsageCostDom/GetUsageCostDom.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
-
-const getUsageCostDom = (detail: string): readonly VirtualDomNode[] => {
-  if (detail === '') {
-    return []
-  }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerItemUsageCost,
-      type: VirtualDomElements.Span,
-    },
-    text(detail),
-  ]
-}
 
 export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
   const detail = getUsageCostLabel(model)
