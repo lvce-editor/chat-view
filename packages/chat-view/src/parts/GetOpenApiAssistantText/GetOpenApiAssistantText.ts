@@ -11,6 +11,7 @@ import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getGlobMatchCount } from '../GetGlobMatchCount/GetGlobMatchCount.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
@@ -196,6 +197,9 @@ export const getToolCallResult = (name: string, content: string): string | undef
       return undefined
     }
     return content
+  }
+  if (name === 'glob') {
+    return getGlobMatchCount(content) === undefined ? undefined : content
   }
   if (name !== 'getWorkspaceUri') {
     return undefined
