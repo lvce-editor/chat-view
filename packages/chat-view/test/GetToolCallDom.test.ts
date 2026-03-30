@@ -161,66 +161,13 @@ test('getToolCallDom should render grep_search query and expose raw arguments on
 
 test('getToolCallDom should render glob baseUri as clickable folder name with full uri on hover', () => {
   const baseUri = 'file:///workspace/src'
+  const pattern = '**/*'
   const result = getToolCallDom({
     arguments: JSON.stringify({
       baseUri,
-      pattern: '**/*',
+      pattern,
     }),
     name: 'glob',
-    status: 'success',
-  })
-
-  expect(result).toEqual([
-    {
-      childCount: 3,
-      className: ClassNames.ChatOrderedListItem,
-      type: VirtualDomElements.Li,
-    },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
-    expect.objectContaining({
-      text: 'glob ',
-      type: VirtualDomElements.Text,
-    }),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallReadFileLink,
-      'data-uri': baseUri,
-      onClick: DomEventListenerFunctions.HandleClickFileName,
-      title: baseUri,
-      type: VirtualDomElements.Span,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallFileName,
-      'data-uri': baseUri,
-      onClick: DomEventListenerFunctions.HandleClickFileName,
-      type: VirtualDomElements.Span,
-    },
-    expect.objectContaining({
-      text: 'src',
-      type: VirtualDomElements.Text,
-    }),
-  ])
-})
-
-test('getToolCallDom should render finished glob tool calls with a match count', () => {
-  const baseUri = 'file:///workspace/chat-view'
-  const result = getToolCallDom({
-    arguments: JSON.stringify({
-      baseUri,
-      pattern: '**/*',
-    }),
-    name: 'glob',
-    result: JSON.stringify(['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts']),
     status: 'success',
   })
 
@@ -260,7 +207,70 @@ test('getToolCallDom should render finished glob tool calls with a match count',
       type: VirtualDomElements.Span,
     },
     expect.objectContaining({
+      text: 'src',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ` "${pattern}"`,
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})
+
+test('getToolCallDom should render finished glob tool calls with a match count', () => {
+  const baseUri = 'file:///workspace/chat-view'
+  const pattern = '**/*'
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      baseUri,
+      pattern,
+    }),
+    name: 'glob',
+    result: JSON.stringify(['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts']),
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 5,
+      className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 0,
+      className: ClassNames.FileIcon,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'glob ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': baseUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: baseUri,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': baseUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
       text: 'chat-view',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ` "${pattern}"`,
       type: VirtualDomElements.Text,
     }),
     expect.objectContaining({

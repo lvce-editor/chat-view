@@ -8,6 +8,22 @@ import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
+const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
+  if (toolCall.name !== 'glob') {
+    return ''
+  }
+  try {
+    const parsed = JSON.parse(toolCall.arguments)
+    if (!parsed || typeof parsed !== 'object') {
+      return ''
+    }
+    const pattern = Reflect.get(parsed, 'pattern')
+    return typeof pattern === 'string' && pattern ? ` "${pattern}"` : ''
+  } catch {
+    return ''
+  }
+}
+
 export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)
   if (!target) {
@@ -16,6 +32,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   const fileName = getFileNameFromUri(target.title)
   const toolNameLabel = `${toolCall.name} `
   const statusLabel = getToolCallStatusLabel(toolCall)
+  const globPatternLabel = getGlobPatternLabel(toolCall)
   const globMatchCount = toolCall.name === 'glob' && toolCall.status === 'success' ? getGlobMatchCount(toolCall.result) : undefined
   const globMatchLabel = typeof globMatchCount === 'number' ? `, ${globMatchCount} ${globMatchCount === 1 ? 'match' : 'matches'}` : ''
   const fileNameClickableProps = target.clickableUri
@@ -26,7 +43,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     : {}
   return [
     {
-      childCount: 3 + (globMatchLabel ? 1 : 0) + (statusLabel ? 1 : 0),
+      childCount: 3 + (globPatternLabel ? 1 : 0) + (globMatchLabel ? 1 : 0) + (statusLabel ? 1 : 0),
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
@@ -42,6 +59,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     },
     text(toolNameLabel),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.title }),
+    ...(globPatternLabel ? [text(globPatternLabel)] : []),
     ...(globMatchLabel ? [text(globMatchLabel)] : []),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]

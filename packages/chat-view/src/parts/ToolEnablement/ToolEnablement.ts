@@ -2,11 +2,15 @@ import type { ChatTool } from '../Types/Types.ts'
 
 export type ToolEnablement = Readonly<Record<string, boolean>>
 
+const defaultToolEnablement: ToolEnablement = {
+  run_in_terminal: false,
+}
+
 export const parseToolEnablement = (value: unknown): ToolEnablement => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return {}
+    return defaultToolEnablement
   }
-  const toolEnablement: Record<string, boolean> = {}
+  const toolEnablement: Record<string, boolean> = { ...defaultToolEnablement }
   for (const [key, enabled] of Object.entries(value)) {
     if (typeof enabled === 'boolean') {
       toolEnablement[key] = enabled
@@ -33,10 +37,13 @@ export const validateToolEnablement = (value: unknown): ToolEnablement => {
 
 export const isToolEnabled = (toolEnablement: ToolEnablement | undefined, toolName: string): boolean => {
   if (!toolEnablement) {
-    return true
+    return defaultToolEnablement[toolName] ?? true
   }
   const enabled = toolEnablement[toolName]
-  return typeof enabled === 'boolean' ? enabled : true
+  if (typeof enabled === 'boolean') {
+    return enabled
+  }
+  return defaultToolEnablement[toolName] ?? true
 }
 
 export const filterEnabledTools = (tools: readonly ChatTool[], toolEnablement: ToolEnablement | undefined): readonly ChatTool[] => {
