@@ -3,9 +3,11 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 import { registerSlashCommands } from '../src/parts/RegisterSlashCommands/RegisterSlashCommands.ts'
+import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
 import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
@@ -229,6 +231,7 @@ test('handleSubmit should create a new session and switch to detail mode from li
   expect(newSession?.messages[0].role).toBe('user')
   expect(newSession?.messages[0].text).toBe('first message')
   expect(newSession?.messages[1].role).toBe('assistant')
+  expect(newSession?.status).toBe('finished')
   expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
@@ -521,7 +524,93 @@ test('handleSubmit should update assistant message incrementally when streaming 
     expect(result.sessions[0].messages[1].role).toBe('assistant')
     expect(result.sessions[0].messages[1].text).toBe('Streaming')
     expect(result.sessions[0].messages[1].inProgress).toBe(false)
+    expect(result.sessions[0].status).toBe('finished')
     expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should ignore additional streaming events after session is stopped', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  let resolveInitialRerender: (() => void) | undefined
+  const initialRerenderPromise = new Promise<void>((resolve) => {
+    resolveInitialRerender = resolve
+  })
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {
+      resolveInitialRerender?.()
+    },
+  })
+  const originalFetch = globalThis.fetch
+  let releaseFirstRead: (() => void) | undefined
+  const firstReadPromise = new Promise<void>((resolve) => {
+    releaseFirstRead = resolve
+  })
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"type":"response.output_text.delta","delta":"Streaming"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index === 0) {
+              await firstReadPromise
+            }
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'stop me',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      uid: 1,
+      viewMode: 'detail' as const,
+    }
+
+    const resultPromise = HandleSubmit.handleSubmit(state)
+    await initialRerenderPromise
+    const inProgressState = StatusBarStates.get(state.uid)?.newState
+    expect(inProgressState?.sessions[0].status).toBe('in-progress')
+    expect(inProgressState?.sessions[0].messages[1]).toMatchObject({
+      inProgress: true,
+      text: '',
+    })
+
+    const stoppedState = await HandleClick.handleClick(inProgressState || state, 'stop')
+    StatusBarStates.set(state.uid, inProgressState || state, stoppedState)
+    releaseFirstRead?.()
+
+    const result = await resultPromise
+    const events = await getChatViewEvents(result.selectedSessionId)
+
+    expect(result.sessions[0].status).toBe('stopped')
+    expect(result.sessions[0].messages[1]).toMatchObject({
+      inProgress: false,
+      text: '',
+    })
+    expect(events.filter((event) => event.type === 'sse-response-part')).toHaveLength(0)
+    expect(events.find((event) => event.type === 'event-stream-finished')).toBeUndefined()
+    expect(mockRpc.invocations).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
   }

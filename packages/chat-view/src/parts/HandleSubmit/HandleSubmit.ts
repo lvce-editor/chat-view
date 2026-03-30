@@ -17,6 +17,7 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
+import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
 import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
 import {
@@ -28,7 +29,7 @@ import {
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { get, set } from '../StatusBarStates/StatusBarStates.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
@@ -43,6 +44,39 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
 }
 
 const workspaceUriPlaceholder = '{{workspaceUri}}'
+
+const getLiveState = (uid: number): ChatState | undefined => {
+  const entry = get(uid)
+  return entry?.newState
+}
+
+const updateSessionStatus = (
+  sessions: readonly ChatSession[],
+  sessionId: string,
+  status: NonNullable<ChatSession['status']>,
+): readonly ChatSession[] => {
+  return sessions.map((session) => {
+    if (session.id !== sessionId) {
+      return session
+    }
+    return {
+      ...session,
+      status,
+    }
+  })
+}
+
+const isSessionStopped = (uid: number, sessionId: string): boolean => {
+  const liveState = getLiveState(uid)
+  if (!liveState) {
+    return false
+  }
+  const session = liveState.sessions.find((item) => item.id === sessionId)
+  if (!session) {
+    return false
+  }
+  return getChatSessionStatus(session) === 'stopped'
+}
 
 const clearComposerAttachments = async (sessionId: string, attachmentIds: readonly string[]): Promise<void> => {
   if (!sessionId) {
@@ -217,6 +251,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       id: newSessionId,
       messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
       projectId: state.selectedProjectId,
+      status: 'in-progress',
       title: `Chat ${workingSessions.length + 1}`,
     }
     const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
@@ -262,7 +297,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     const updatedSessions = streamingEnabled
       ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)
       : updatedWithUser
-    const selectedSession = updatedSessions.find((session) => session.id === selectedSessionId)
+    const updatedSessionsWithStatus = updateSessionStatus(updatedSessions, selectedSessionId, 'in-progress')
+    const selectedSession = updatedSessionsWithStatus.find((session) => session.id === selectedSessionId)
     if (selectedSession) {
       await saveChatSession(selectedSession)
     }
@@ -279,7 +315,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: selectedSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
-        sessions: updatedSessions,
+        sessions: updatedSessionsWithStatus,
       }),
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
@@ -303,7 +339,13 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
 
   const handleTextChunkFunctionRef = streamingEnabled
     ? async (chunk: string): Promise<void> => {
-        handleTextChunkState = await handleTextChunkFunction(state.uid, assistantMessageId, chunk, handleTextChunkState)
+        handleTextChunkState = await handleTextChunkFunction(
+          state.uid,
+          optimisticState.selectedSessionId,
+          assistantMessageId,
+          chunk,
+          handleTextChunkState,
+        )
       }
     : undefined
 
@@ -321,6 +363,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     models,
     nextMessageId: optimisticState.nextMessageId,
     onDataEvent: async (value: unknown): Promise<void> => {
+      if (isSessionStopped(state.uid, optimisticState.selectedSessionId)) {
+        return
+      }
       if (!emitStreamingFunctionCallEvents && isStreamingFunctionCallEvent(value)) {
         return
       }
@@ -333,6 +378,9 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       })
     },
     onEventStreamFinished: async (): Promise<void> => {
+      if (isSessionStopped(state.uid, optimisticState.selectedSessionId)) {
+        return
+      }
       await appendChatViewEvent({
         sessionId: optimisticState.selectedSessionId,
         timestamp: new Date().toISOString(),
@@ -349,7 +397,13 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         }
       : {}),
     onToolCallsChunk: async (toolCalls): Promise<void> => {
-      handleTextChunkState = await handleToolCallsChunkFunction(state.uid, assistantMessageId, toolCalls, handleTextChunkState)
+      handleTextChunkState = await handleToolCallsChunkFunction(
+        state.uid,
+        optimisticState.selectedSessionId,
+        assistantMessageId,
+        toolCalls,
+        handleTextChunkState,
+      )
     },
     openApiApiBaseUrl,
     openApiApiKey,
@@ -376,6 +430,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     webSearchEnabled,
     workspaceUri,
   })
+
+  if (isSessionStopped(state.uid, optimisticState.selectedSessionId)) {
+    return getLiveState(state.uid) || handleTextChunkState.latestState
+  }
 
   const { latestState } = handleTextChunkState
   let finalParsedMessages = latestState.parsedMessages
@@ -404,6 +462,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       }
     }
   }
+  updatedSessions = updateSessionStatus(updatedSessions, latestState.selectedSessionId, 'finished')
   const selectedSession = updatedSessions.find((session) => session.id === latestState.selectedSessionId)
   if (selectedSession) {
     await saveChatSession(selectedSession)

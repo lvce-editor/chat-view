@@ -185,6 +185,10 @@ export const send = (): string => {
   return i18nString(UiStrings.Send)
 }
 
+export const stop = (): string => {
+  return i18nString(UiStrings.Stop)
+}
+
 export const save = (): string => {
   return i18nString(UiStrings.Save)
 }

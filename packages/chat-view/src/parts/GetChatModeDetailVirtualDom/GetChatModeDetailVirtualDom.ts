@@ -16,6 +16,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
+import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 
 export interface GetChatModeDetailVirtualDomOptions {
@@ -122,6 +123,7 @@ export const getChatModeDetailVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
@@ -183,6 +185,7 @@ export const getChatModeDetailVirtualDom = ({
       todoListItems,
       showCreatePullRequestButton,
       voiceDictationEnabled,
+      isSelectedSessionInProgress,
       scrollDownButtonEnabled,
       messagesAutoScrollEnabled,
     ),

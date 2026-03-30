@@ -18,6 +18,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomFocusMode } from '../GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
+import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 
@@ -153,6 +154,7 @@ export const getChatModeChatFocusVirtualDom = ({
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
   return [
     {
       childCount: chatRootChildCount + 1,
@@ -220,6 +222,7 @@ export const getChatModeChatFocusVirtualDom = ({
       todoListItems,
       showCreatePullRequestButton,
       voiceDictationEnabled,
+      isSelectedSessionInProgress,
       scrollDownButtonEnabled,
       messagesAutoScrollEnabled,
     ),

@@ -51,6 +51,7 @@ export const getChatSendAreaDom = (
   todoListItems: readonly TodoListItem[],
   showCreatePullRequestButton = false,
   voiceDictationEnabled = false,
+  isSessionInProgress = false,
   scrollDownButtonEnabled = false,
   messagesAutoScrollEnabled = true,
 ): readonly VirtualDomNode[] => {
@@ -108,6 +109,6 @@ export const getChatSendAreaDom = (
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
     ...(showGitBranchPicker ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName) : []),
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
-    ...getSendButtonDom(isSendDisabled, voiceDictationEnabled),
+    ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),
   ]
 }

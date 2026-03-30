@@ -155,6 +155,7 @@ export const getChatModeListVirtualDom = ({
       todoListItems,
       false,
       voiceDictationEnabled,
+      false,
     ),
     ...getChatOverlaysVirtualDom({
       agentMode,

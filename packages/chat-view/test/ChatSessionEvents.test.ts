@@ -81,6 +81,21 @@ test('deleteChatSession should append delete event and hide session from reads',
   })
 })
 
+test('saveChatSession should persist session status', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  await saveChatSession({
+    id: 'session-1',
+    messages: [],
+    status: 'stopped',
+    title: 'Chat 1',
+  })
+
+  const session = await getChatSession('session-1')
+
+  expect(session?.status).toBe('stopped')
+})
+
 test('appendChatViewEvent stores attachment events including blob payload', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

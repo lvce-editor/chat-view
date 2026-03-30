@@ -3,10 +3,11 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/HandleToolCallsChunkFunction.ts'
 export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
+import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { get, set } from '../StatusBarStates/StatusBarStates.ts'
 
 export interface HandleTextChunkState {
   latestState: ChatState
@@ -53,46 +54,52 @@ export const updateMessageTextInSelectedSession = async (
 
 export const handleTextChunkFunction = async (
   uid: number,
+  sessionId: string,
   assistantMessageId: string,
   chunk: string,
   handleTextChunkState: Readonly<HandleTextChunkState>,
 ): Promise<HandleTextChunkState> => {
-  const selectedSession = handleTextChunkState.latestState.sessions.find(
-    (session) => session.id === handleTextChunkState.latestState.selectedSessionId,
-  )
+  const liveState = get(uid)?.newState || handleTextChunkState.latestState
+  const selectedSession = liveState.sessions.find((session) => session.id === sessionId)
   if (!selectedSession) {
     return {
-      latestState: handleTextChunkState.latestState,
-      previousState: handleTextChunkState.previousState,
+      latestState: liveState,
+      previousState: liveState,
+    }
+  }
+  if (getChatSessionStatus(selectedSession) === 'stopped') {
+    return {
+      latestState: liveState,
+      previousState: liveState,
     }
   }
   const assistantMessage = selectedSession.messages.find((message) => message.id === assistantMessageId)
   if (!assistantMessage) {
     return {
-      latestState: handleTextChunkState.latestState,
-      previousState: handleTextChunkState.previousState,
+      latestState: liveState,
+      previousState: liveState,
     }
   }
   const updatedText = assistantMessage.text + chunk
   const updated = await updateMessageTextInSelectedSession(
-    handleTextChunkState.latestState.sessions,
-    handleTextChunkState.latestState.parsedMessages,
-    handleTextChunkState.latestState.selectedSessionId,
+    liveState.sessions,
+    liveState.parsedMessages,
+    sessionId,
     assistantMessageId,
     updatedText,
     true,
   )
   const nextState = {
-    ...handleTextChunkState.latestState,
-    ...(handleTextChunkState.latestState.messagesAutoScrollEnabled
+    ...liveState,
+    ...(liveState.messagesAutoScrollEnabled
       ? {
-          messagesScrollTop: getNextAutoScrollTop(handleTextChunkState.latestState.messagesScrollTop),
+          messagesScrollTop: getNextAutoScrollTop(liveState.messagesScrollTop),
         }
       : {}),
     parsedMessages: updated.parsedMessages,
     sessions: updated.sessions,
   }
-  set(uid, handleTextChunkState.previousState, nextState)
+  set(uid, liveState, nextState)
   await RendererWorker.invoke('Chat.rerender')
   return {
     latestState: nextState,

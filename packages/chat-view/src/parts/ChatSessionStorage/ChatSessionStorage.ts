@@ -22,6 +22,11 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
             pullRequestUrl: session.pullRequestUrl,
           }
         : {}),
+      ...(session.status
+        ? {
+            status: session.status,
+          }
+        : {}),
       title: session.title,
       ...(session.workspaceUri
         ? {
@@ -57,6 +62,11 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
           pullRequestUrl: session.pullRequestUrl,
         }
       : {}),
+    ...(session.status
+      ? {
+          status: session.status,
+        }
+      : {}),
     title: session.title,
     ...(session.workspaceUri
       ? {
@@ -85,6 +95,11 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
     ...(session.pullRequestUrl
       ? {
           pullRequestUrl: session.pullRequestUrl,
+        }
+      : {}),
+    ...(session.status
+      ? {
+          status: session.status,
         }
       : {}),
     title: session.title,

@@ -72,6 +72,8 @@ export const getChatDetailsDom = (
       todoListToolEnabled,
       todoListItems,
       showCreatePullRequestButton,
+      false,
+      false,
     ),
   ]
 }

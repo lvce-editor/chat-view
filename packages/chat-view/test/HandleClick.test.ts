@@ -494,6 +494,34 @@ test('handleClickSend should create a new session from list mode', async () => {
   expect(mockRpc.invocations).toEqual([['Chat.rerender']])
 })
 
+test('handleClick should stop the selected in-progress session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [{ id: 'message-1', inProgress: true, role: 'assistant', text: 'partial', time: '10:00' }],
+        status: 'in-progress',
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  }
+
+  const result = await HandleClick.handleClick(state, InputName.Stop)
+
+  expect(result.sessions[0]).toMatchObject({
+    status: 'stopped',
+  })
+  expect(result.sessions[0].messages[0]).toMatchObject({
+    inProgress: false,
+    text: 'partial',
+  })
+})
+
 test('handleClick should save openrouter api key to user settings', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
