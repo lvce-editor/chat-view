@@ -22,7 +22,6 @@ export const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly 
     {
       childCount: 3,
       className: ClassNames.ChatOrderedListItem,
-      title: target.title,
       type: VirtualDomElements.Li,
     },
     {

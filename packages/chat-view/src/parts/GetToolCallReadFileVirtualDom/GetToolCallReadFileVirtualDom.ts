@@ -28,7 +28,6 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     {
       childCount: 3 + (globMatchLabel ? 1 : 0) + (statusLabel ? 1 : 0),
       className: ClassNames.ChatOrderedListItem,
-      title: target.title,
       type: VirtualDomElements.Li,
     },
     {

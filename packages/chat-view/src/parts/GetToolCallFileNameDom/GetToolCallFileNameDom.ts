@@ -15,11 +15,12 @@ export const getToolCallFileNameDom = (
   fileName: string,
   { clickableProps = {}, title }: GetToolCallFileNameDomOptions = {},
 ): readonly VirtualDomNode[] => {
+  const resolvedTitle = title ?? clickableProps['data-uri']
   return [
     {
       childCount: 1,
       className: ClassNames.ChatToolCallReadFileLink,
-      ...(title === undefined ? {} : { title }),
+      ...(resolvedTitle === undefined ? {} : { title: resolvedTitle }),
       ...clickableProps,
       type: VirtualDomElements.Span,
     },
