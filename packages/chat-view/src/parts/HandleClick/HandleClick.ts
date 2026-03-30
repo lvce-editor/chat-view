@@ -18,6 +18,7 @@ import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiK
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
+import { handleClickStop } from '../HandleClickStop/HandleClickStop.ts'
 import { handleGitBranchChange } from '../HandleGitBranchChange/HandleGitBranchChange.ts'
 import { handleReasoningEffortChange } from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
 import { handleRemoveComposerAttachment } from '../HandleRemoveComposerAttachment/HandleRemoveComposerAttachment.ts'
@@ -139,6 +140,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       return deleteProject(state, id)
     case name === InputName.Send:
       return handleClickSend(state)
+    case name === InputName.Stop:
+      return handleClickStop(state)
     case name === InputName.ScrollDown:
       return {
         ...state,

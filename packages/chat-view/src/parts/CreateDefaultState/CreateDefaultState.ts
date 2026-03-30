@@ -136,6 +136,7 @@ export const createDefaultState = (): ChatState => {
         id: defaultSessionId,
         messages: [],
         projectId: defaultProjectId,
+        status: 'idle',
         title: Strings.defaultSessionTitle(),
       },
     ],

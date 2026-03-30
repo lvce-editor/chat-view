@@ -106,6 +106,33 @@ test('getChatVirtualDOm should structure chat sections as header and list in lis
   expect(chatFocusButton).toBeDefined()
 })
 
+test('getChatVirtualDom should render stop button for an in-progress session', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [{ id: 'message-1', inProgress: true, role: 'assistant', text: '', time: '10:00' }],
+        status: 'in-progress',
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+
+  const stopButton = result.find((node) => node.name === 'stop')
+  const stopLabel = result.find((node) => node.text === 'stop')
+
+  expect(stopButton).toMatchObject({
+    buttonType: 'button',
+    className: ClassNames.Button,
+    name: 'stop',
+    onClick: DomEventListenerFunctions.HandleClick,
+    type: VirtualDomElements.Button,
+  })
+  expect(stopLabel).toBeDefined()
+})
+
 test('getChatVirtualDOm should render model picker toggle button instead of select', () => {
   const result = renderChatView()
   const modelSelect = result.find((node) => node.name === 'model')
