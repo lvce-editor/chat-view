@@ -307,6 +307,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       }
     : undefined
 
+    console.log('start submit')
   const assistantMessage = await getAiResponse({
     agentMode,
     assetDir,
@@ -407,6 +408,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   if (selectedSession) {
     await saveChatSession(selectedSession)
   }
+
+  console.log('finish submit')
   return withUpdatedMessageScrollTop(
     FocusInput.focusInput({
       ...latestState,
