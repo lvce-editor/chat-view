@@ -29,6 +29,7 @@ import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickCreatePullRequest from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
+import * as HandleClickCustomSelectOverlay from '../HandleClickCustomSelectOverlay/HandleClickCustomSelectOverlay.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
@@ -154,6 +155,7 @@ export const commandMap = {
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickCreatePullRequest': wrapCommand(HandleClickCreatePullRequest.handleClickCreatePullRequest),
+  'Chat.handleClickCustomSelectOverlay': wrapCommand(HandleClickCustomSelectOverlay.handleClickCustomSelectOverlay),
   'Chat.handleClickDelete': wrapCommand(HandleClickDelete.handleClickDelete),
   'Chat.handleClickDictationButton': wrapCommand(HandleClickDictationButton.handleClickDictationButton),
   'Chat.handleClickFileName': wrapCommand(HandleClickFileName.handleClickFileName),

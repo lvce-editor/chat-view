@@ -57,3 +57,4 @@ export const HandleClickAgentModePickerToggle = 57
 export const HandleContextMenuChatImageAttachment = 58
 export const HandleClickGitBranchPickerToggle = 59
 export const HandleErrorComposerAttachmentPreviewOverlay = 60
+export const HandleClickCustomSelectOverlay = 61

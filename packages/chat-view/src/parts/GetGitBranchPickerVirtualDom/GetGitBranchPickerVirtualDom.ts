@@ -72,6 +72,12 @@ export const getGitBranchPickerVirtualDom = (
     ...(gitBranchPickerOpen
       ? [
           {
+            childCount: 1,
+            className: ClassNames.ChatModelPickerContainer,
+            onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+            type: VirtualDomElements.Div,
+          },
+          {
             childCount: (showMessage ? 1 : 0) + 1,
             className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
             style: `height: ${popOverHeight}px;`,

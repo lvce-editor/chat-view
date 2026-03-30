@@ -37,6 +37,12 @@ export const getReasoningEffortPickerVirtualDom = (
       ? [
           {
             childCount: 1,
+            className: ClassNames.ChatModelPickerContainer,
+            onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+            type: VirtualDomElements.Div,
+          },
+          {
+            childCount: 1,
             className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver),
             style: `height: ${reasoningEffortPickerHeight}px;`,
             type: VirtualDomElements.Div,
