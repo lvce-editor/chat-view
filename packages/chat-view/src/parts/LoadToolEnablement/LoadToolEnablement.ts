@@ -7,6 +7,6 @@ export const loadToolEnablement = async (): Promise<ToolEnablement> => {
     const savedToolEnablement = await Preferences.get('chat.toolEnablement')
     return parseToolEnablement(savedToolEnablement)
   } catch {
-    return {}
+    return parseToolEnablement(undefined)
   }
 }

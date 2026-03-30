@@ -18,6 +18,7 @@ test('loadToolEnablement should return stored tool enablement object', async () 
   const result = await LoadToolEnablement.loadToolEnablement()
   expect(result).toEqual({
     read_file: true,
+    run_in_terminal: false,
     write_file: false,
   })
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chat.toolEnablement']])
@@ -34,6 +35,7 @@ test('loadToolEnablement should ignore non-boolean values', async () => {
   const result = await LoadToolEnablement.loadToolEnablement()
   expect(result).toEqual({
     read_file: true,
+    run_in_terminal: false,
   })
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chat.toolEnablement']])
 })
@@ -46,6 +48,8 @@ test('loadToolEnablement should return empty object on preference read error', a
   })
 
   const result = await LoadToolEnablement.loadToolEnablement()
-  expect(result).toEqual({})
+  expect(result).toEqual({
+    run_in_terminal: false,
+  })
   expect(mockRpc.invocations).toEqual([['Preferences.get', 'chat.toolEnablement']])
 })

@@ -106,6 +106,20 @@ test('executeChatTool should reject disabled tools before invoking the worker', 
   expect(mockChatToolRpc.invocations).toEqual([])
 })
 
+test('executeChatTool should reject run_in_terminal by default before invoking the worker', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => ({
+      ok: true,
+    }),
+  })
+
+  await expect(executeChatTool('run_in_terminal', JSON.stringify({ command: 'node -v' }), executeToolOptions)).rejects.toThrow(
+    'Tool "run_in_terminal" is disabled in chat.toolEnablement preferences.',
+  )
+
+  expect(mockChatToolRpc.invocations).toEqual([])
+})
+
 test('executeChatTool should store tool execution start and finish events for successful calls', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({

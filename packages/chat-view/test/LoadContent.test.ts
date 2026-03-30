@@ -1014,6 +1014,7 @@ test('loadContent should load toolEnablement from preferences', async () => {
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.toolEnablement).toEqual({
     read_file: false,
+    run_in_terminal: false,
     write_file: true,
   })
   expectInvocations(mockRpc.invocations, [['Preferences.get', 'chat.toolEnablement']])
