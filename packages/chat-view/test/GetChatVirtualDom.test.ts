@@ -113,6 +113,7 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
+    'aria-controls': 'model-picker-list',
     'aria-expanded': 'false',
     'aria-haspopup': 'true',
     'aria-label': 'Pick Model, test',
@@ -128,6 +129,39 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
     type: VirtualDomElements.Span,
   })
   expect(modelPicker).toBeUndefined()
+})
+
+test('getChatVirtualDom should expose explicit aria-selected state for model picker options', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+  })
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const listbox = result.find((node) => node.id === 'model-picker-list')
+  const selectedOption = result.find((node) => node.role === 'option' && node['data-id'] === 'test')
+  const unselectedOption = result.find((node) => node.role === 'option' && node['data-id'] === 'codex-5.3')
+  expect(modelPickerToggle).toMatchObject({
+    'aria-controls': 'model-picker-list',
+    'aria-expanded': 'true',
+  })
+  expect(listbox).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatModelPickerList,
+    id: 'model-picker-list',
+    role: 'listbox',
+    type: VirtualDomElements.Ul,
+  })
+  expect(selectedOption).toMatchObject({
+    'aria-selected': 'true',
+    'data-id': 'test',
+    role: 'option',
+    type: VirtualDomElements.Li,
+  })
+  expect(unselectedOption).toMatchObject({
+    'aria-selected': 'false',
+    'data-id': 'codex-5.3',
+    role: 'option',
+    type: VirtualDomElements.Li,
+  })
 })
 
 test('getChatVirtualDom should wrap agent, model picker and run mode controls together', () => {

@@ -12,6 +12,7 @@ export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId
   const className = mergeClassNames(ClassNames.ChatModelPickerItem, selected ? ClassNames.ChatModelPickerItemSelected : '')
   return [
     {
+      'aria-selected': selected ? 'true' : 'false',
       childCount: hasDetail ? 2 : 1,
       className,
       'data-id': model.id,
