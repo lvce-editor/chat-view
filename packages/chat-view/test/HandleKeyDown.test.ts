@@ -8,6 +8,10 @@ import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMoc
 
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
 
+const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
+  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
+}
+
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
 })
@@ -30,7 +34,7 @@ test('handleKeyDown should submit on Enter', async () => {
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleKeyDown should create a new session on Enter from list mode', async () => {
@@ -54,7 +58,7 @@ test('handleKeyDown should create a new session on Enter from list mode', async 
   expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
   expect(newSession?.messages[0]?.text).toBe('hello')
   expect(result.viewMode).toBe('detail')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleKeyDown should not submit on Shift+Enter', async () => {

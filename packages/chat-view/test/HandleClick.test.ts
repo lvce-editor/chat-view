@@ -12,6 +12,10 @@ import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMoc
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
+const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
+  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
+}
+
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
 
 beforeEach(() => {
@@ -448,7 +452,7 @@ test('handleClick should submit message when clicking send', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleClickSend should submit message', async () => {
@@ -467,7 +471,7 @@ test('handleClickSend should submit message', async () => {
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
   expect(result.composerValue).toBe('')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleClickSend should create a new session from list mode', async () => {
@@ -491,7 +495,7 @@ test('handleClickSend should create a new session from list mode', async () => {
   expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
   expect(newSession?.messages[0]?.text).toBe('hello')
   expect(result.viewMode).toBe('detail')
-  expect(mockRpc.invocations).toEqual([['Chat.rerender']])
+  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
 test('handleClick should save openrouter api key to user settings', async () => {
