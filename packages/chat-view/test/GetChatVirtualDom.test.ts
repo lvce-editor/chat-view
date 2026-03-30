@@ -1604,7 +1604,6 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
       text: 'package.json',
       type: VirtualDomElements.Text,
     }),
-      title: path,
   ])
 })
 
