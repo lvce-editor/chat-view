@@ -125,9 +125,7 @@ test('executeChatTool should store tool execution start and finish events for su
     ok: true,
     uri: 'file:///workspace',
   })
-  expect(mockChatToolRpc.invocations).toEqual([
-    ['ChatTool.execute', 'getWorkspaceUri', '{}', { assetDir: '', platform: 0 }],
-  ])
+  expect(mockChatToolRpc.invocations).toEqual([['ChatTool.execute', 'getWorkspaceUri', '{}', { assetDir: '', platform: 0 }]])
   await expect(getChatViewEvents('session-1')).resolves.toEqual([
     {
       arguments: '{}',
@@ -201,9 +199,7 @@ test('executeChatTool should store failed tool execution events when the worker 
     }),
   ).rejects.toThrow('tool crashed')
 
-  expect(mockChatToolRpc.invocations).toEqual([
-    ['ChatTool.execute', 'read_file', '{"path":"README.md"}', { assetDir: '', platform: 0 }],
-  ])
+  expect(mockChatToolRpc.invocations).toEqual([['ChatTool.execute', 'read_file', '{"path":"README.md"}', { assetDir: '', platform: 0 }]])
   await expect(getChatViewEvents('session-2')).resolves.toEqual([
     {
       arguments: '{"path":"README.md"}',
