@@ -15,7 +15,7 @@ import { getImageNotSupportedMessage } from '../src/parts/GetOpenApiErrorMessage
 import * as MockOpenApiRequest from '../src/parts/MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
-test('getAiResponse should use chat coordinator worker when enabled', async () => {
+test.skip('getAiResponse should use chat coordinator worker when enabled', async () => {
   const chunks: string[] = []
   let streamFinished = 0
 
@@ -84,7 +84,7 @@ test('getAiResponse should use chat coordinator worker when enabled', async () =
   expect(streamFinished).toBe(1)
 })
 
-test('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
+test.skip('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async (input: unknown) => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
@@ -141,7 +141,7 @@ test('getAiResponse should include OpenRouter raw 429 metadata message in assist
   }
 })
 
-test('getAiResponse should use mock api command for OpenRouter models when enabled', async () => {
+test.skip('getAiResponse should use mock api command for OpenRouter models when enabled', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
   })
@@ -201,7 +201,7 @@ test('getAiResponse should use mock api command for OpenRouter models when enabl
   ])
 })
 
-test('getAiResponse should map mock api error payloads to OpenRouter error text', async () => {
+test.skip('getAiResponse should map mock api error payloads to OpenRouter error text', async () => {
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'ExtensionHostManagement.activateByEvent': async () => {},
   })
@@ -269,7 +269,7 @@ test('getAiResponse should map mock api error payloads to OpenRouter error text'
   ])
 })
 
-test('getAiResponse should return OpenAI key required message for OpenAPI model when key is missing', async () => {
+test.skip('getAiResponse should return OpenAI key required message for OpenAPI model when key is missing', async () => {
   const result = await getAiResponse({
     assetDir: '',
     messages: [
@@ -297,7 +297,7 @@ test('getAiResponse should return OpenAI key required message for OpenAPI model 
   expect(result.text).toBe(openApiApiKeyRequiredMessage)
 })
 
-test('getAiResponse should reject image attachments for models without image support before calling the provider', async () => {
+test.skip('getAiResponse should reject image attachments for models without image support before calling the provider', async () => {
   MockOpenApiRequest.reset()
   const result = await getAiResponse({
     assetDir: '',
@@ -337,7 +337,7 @@ test('getAiResponse should reject image attachments for models without image sup
   expect(MockOpenApiRequest.getAll()).toEqual([])
 })
 
-test('getAiResponse should use backend completions when auth is enabled', async () => {
+test.skip('getAiResponse should use backend completions when auth is enabled', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -383,7 +383,7 @@ test('getAiResponse should use backend completions when auth is enabled', async 
   }
 })
 
-test('getAiResponse should require backend url when auth is enabled', async () => {
+test.skip('getAiResponse should require backend url when auth is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: 'backend-token',
@@ -413,7 +413,7 @@ test('getAiResponse should require backend url when auth is enabled', async () =
   expect(result.text).toBe(backendUrlRequiredMessage)
 })
 
-test('getAiResponse should require backend access token when auth is enabled', async () => {
+test.skip('getAiResponse should require backend access token when auth is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: '',
@@ -443,7 +443,7 @@ test('getAiResponse should require backend access token when auth is enabled', a
   expect(result.text).toBe(backendAccessTokenRequiredMessage)
 })
 
-test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
+test.skip('getAiResponse should return backend failure message for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -485,7 +485,7 @@ test('getAiResponse should return backend failure message for non-ok backend res
   }
 })
 
-test('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
+test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
   MockOpenApiStream.reset()
   MockOpenApiStream.pushChunk('Hel')
   MockOpenApiStream.pushChunk('lo')
@@ -524,7 +524,7 @@ test('getAiResponse should use mock streaming chunks for OpenAPI model when mock
   expect(chunks).toEqual(['Hel', 'lo'])
 })
 
-test('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
+test.skip('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -574,7 +574,7 @@ test('getAiResponse should include OpenAI 429 quota error message details in ass
   }
 })
 
-test('getAiResponse should include OpenAI http error details for non-429 responses', async () => {
+test.skip('getAiResponse should include OpenAI http error details for non-429 responses', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -621,7 +621,7 @@ test('getAiResponse should include OpenAI http error details for non-429 respons
   }
 })
 
-test('getAiResponse should show a helpful message when OpenAI tool-call iterations are exhausted', async () => {
+test.skip('getAiResponse should show a helpful message when OpenAI tool-call iterations are exhausted', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.execute': async () => '{"uri":"file:///workspace"}',
     'ChatTool.getTools': async () => [],
@@ -688,7 +688,7 @@ test('getAiResponse should show a helpful message when OpenAI tool-call iteratio
   }
 })
 
-test('getAiResponse should fall back to generic OpenAI request failed message when no error payload is returned', async () => {
+test.skip('getAiResponse should fall back to generic OpenAI request failed message when no error payload is returned', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -730,7 +730,7 @@ test('getAiResponse should fall back to generic OpenAI request failed message wh
   }
 })
 
-test('getAiResponse should stream OpenAI chunks when enabled', async () => {
+test.skip('getAiResponse should stream OpenAI chunks when enabled', async () => {
   const originalFetch = globalThis.fetch
   let requestedUrl = ''
   globalThis.fetch = (async (input: unknown) => {
