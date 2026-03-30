@@ -86,3 +86,22 @@ test('handleInput should update modelPickerSearchValue when editing model picker
   expect(result.modelPickerSearchValue).toBe('gpt')
   expect(result.visibleModels).toEqual(getVisibleModels(state.models, 'gpt'))
 })
+
+test('handleInput should keep selected model when it remains visible after filtering', async () => {
+  const state = createState({
+    selectedModelId: 'openapi/gpt-4.1-mini',
+  })
+  const result = await invokeHandleInput(state, InputName.ModelPickerSearch, 'gpt')
+  expect(result.selectedModelId).toBe('openapi/gpt-4.1-mini')
+})
+
+test('handleInput should select the first visible model when filtering hides the current selection', async () => {
+  const state = createState({
+    selectedModelId: 'openapi/gpt-4.1-mini',
+  })
+  const visibleModels = getVisibleModels(state.models, 'codex')
+  const result = await invokeHandleInput(state, InputName.ModelPickerSearch, 'codex')
+  expect(visibleModels.length).toBeGreaterThan(0)
+  expect(result.visibleModels).toEqual(visibleModels)
+  expect(result.selectedModelId).toBe(visibleModels[0].id)
+})

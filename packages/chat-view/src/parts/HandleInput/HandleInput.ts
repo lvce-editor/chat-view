@@ -27,11 +27,15 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   }
   if (name === InputName.ModelPickerSearch) {
     const visibleModels = getVisibleModels(state.models, value)
+    const selectedModelId = visibleModels.some((model) => model.id === state.selectedModelId)
+      ? state.selectedModelId
+      : visibleModels[0]?.id || state.selectedModelId
     return {
       ...state,
       modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
       modelPickerListScrollTop: 0,
       modelPickerSearchValue: value,
+      selectedModelId,
       visibleModels,
     }
   }
