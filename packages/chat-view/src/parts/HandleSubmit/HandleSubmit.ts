@@ -73,8 +73,20 @@ const getWorkspaceUri = (state: ChatState, session: ChatSession | undefined): st
   return getProjectUri(state, session?.projectId || state.selectedProjectId)
 }
 
-const getEffectiveSystemPrompt = (state: ChatState, session: ChatSession | undefined): string => {
-  const resolvedSystemPrompt = state.systemPrompt.replaceAll(workspaceUriPlaceholder, getWorkspaceUri(state, session) || 'unknown')
+const resolveWorkspaceUri = async (state: ChatState, session: ChatSession | undefined): Promise<string> => {
+  const workspaceUri = getWorkspaceUri(state, session)
+  if (workspaceUri) {
+    return workspaceUri
+  }
+  try {
+    return await RendererWorker.getWorkspacePath()
+  } catch {
+    return ''
+  }
+}
+
+const getEffectiveSystemPrompt = (state: ChatState, workspaceUri: string): string => {
+  const resolvedSystemPrompt = state.systemPrompt.replaceAll(workspaceUriPlaceholder, workspaceUri || 'unknown')
   const currentDateInstructions = `Current date: ${getCurrentDate()}.
 
 Do not assume your knowledge cutoff is the same as the current date.`
@@ -295,8 +307,10 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
   let { mockOpenApiRequests } = optimisticState
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
-  const systemPrompt = getEffectiveSystemPrompt(optimisticState, selectedOptimisticSession)
-  const workspaceUri = getWorkspaceUri(optimisticState, selectedOptimisticSession)
+  const workspaceUri = useMockApi
+    ? getWorkspaceUri(optimisticState, selectedOptimisticSession)
+    : await resolveWorkspaceUri(optimisticState, selectedOptimisticSession)
+  const systemPrompt = getEffectiveSystemPrompt(optimisticState, workspaceUri)
   const messages = (selectedOptimisticSession?.messages ?? []).filter((message) => !message.inProgress)
   const mentionContextMessage = await getMentionContextMessage(userText)
   const messagesWithMentionContext = mentionContextMessage ? [...messages, mentionContextMessage] : messages
