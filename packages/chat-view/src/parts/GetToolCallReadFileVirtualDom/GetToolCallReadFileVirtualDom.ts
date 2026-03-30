@@ -39,7 +39,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
       type: VirtualDomElements.Span,
     },
     text(toolNameLabel),
-    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
+    ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.title }),
     ...(statusLabel ? [text(statusLabel)] : []),
   ]
 }

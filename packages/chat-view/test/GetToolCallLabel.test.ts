@@ -19,6 +19,15 @@ test('getToolCallLabel should render list_files uri once json arguments are comp
   expect(result).toBe('list_files "file:///workspace/src"')
 })
 
+test('getToolCallLabel should render glob without partial json when arguments are incomplete', () => {
+  const result = getToolCallLabel({
+    arguments: '{"baseUri":"file:///workspace/src',
+    name: 'glob',
+  })
+
+  expect(result).toBe('glob')
+})
+
 test('getToolCallLabel should render run_in_terminal with options command only', () => {
   const result = getToolCallLabel({
     arguments: '{"options":{"command":"node -v","shell":"bash"}}',
