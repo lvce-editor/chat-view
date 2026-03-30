@@ -32,8 +32,8 @@ export interface GetAiResponseOptions {
   readonly platform: number
   readonly questionToolEnabled?: boolean
   readonly reasoningEffort?: ReasoningEffort
-  readonly sessionId?: string
   readonly selectedModelId: string
+  readonly sessionId?: string
   readonly streamingEnabled?: boolean
   readonly systemPrompt?: string
   readonly toolEnablement?: ToolEnablement

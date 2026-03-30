@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { ChatToolWorker, RendererWorker } from '@lvce-editor/rpc-registry'
-import { executeChatTool } from '../src/parts/ExecuteChatTool/ExecuteChatTool.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { executeChatTool } from '../src/parts/ExecuteChatTool/ExecuteChatTool.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const executeToolOptions = {

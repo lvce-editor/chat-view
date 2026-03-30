@@ -363,8 +363,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         }
       : {}),
     reasoningEffort,
-    sessionId: optimisticState.selectedSessionId,
     selectedModelId,
+    sessionId: optimisticState.selectedSessionId,
     streamingEnabled,
     systemPrompt,
     toolEnablement,

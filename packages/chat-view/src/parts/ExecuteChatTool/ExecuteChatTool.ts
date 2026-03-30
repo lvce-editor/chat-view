@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
+import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
