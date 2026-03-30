@@ -8,6 +8,7 @@ export const getCustomSelectToggleVirtualDom = (
   onClick: number,
   title = label,
   ariaLabel = title,
+  ariaControls = '',
 ): readonly VirtualDomNode[] => {
   const getChevronDom = (expanded: boolean): VirtualDomNode => {
     return {
@@ -21,6 +22,7 @@ export const getCustomSelectToggleVirtualDom = (
 
   return [
     {
+      ...(ariaControls ? { 'aria-controls': ariaControls } : {}),
       'aria-expanded': open ? 'true' : 'false',
       'aria-haspopup': 'true',
       'aria-label': ariaLabel,
