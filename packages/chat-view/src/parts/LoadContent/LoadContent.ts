@@ -15,6 +15,7 @@ import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSaved
 import { getSavedProjectExpandedIds } from '../GetSavedProjectExpandedIds/GetSavedProjectExpandedIds.ts'
 import { getSavedProjectListScrollTop } from '../GetSavedProjectListScrollTop/GetSavedProjectListScrollTop.ts'
 import { getSavedProjects } from '../GetSavedProjects/GetSavedProjects.ts'
+import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
 import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReasoningEffort.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
@@ -88,6 +89,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const chatListScrollTop = getSavedChatListScrollTop(savedState) ?? state.chatListScrollTop
   const messagesScrollTop = getSavedMessagesScrollTop(savedState) ?? state.messagesScrollTop
   const projectListScrollTop = getSavedProjectListScrollTop(savedState) ?? state.projectListScrollTop
+  const projectSidebarWidth = getSavedProjectSidebarWidth(savedState) ?? state.projectSidebarWidth
   const savedProjectExpandedIds = getSavedProjectExpandedIds(savedState)
   const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) =>
     projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
@@ -142,6 +144,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projectExpandedIds,
     projectListScrollTop,
     projects,
+    projectSidebarResizing: false,
+    projectSidebarWidth,
     reasoningEffort,
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled,

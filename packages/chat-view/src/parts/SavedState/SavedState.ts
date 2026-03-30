@@ -15,6 +15,7 @@ export interface SavedState {
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly { id: string; name: string; uri: string }[]
+  readonly projectSidebarWidth: number
   readonly reasoningEffort: ReasoningEffort
   readonly renamingSessionId: string
   readonly searchFieldVisible: boolean

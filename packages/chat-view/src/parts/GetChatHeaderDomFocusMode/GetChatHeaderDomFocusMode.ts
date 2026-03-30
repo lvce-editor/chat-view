@@ -4,6 +4,7 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
+import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const focusHeaderStyle =
@@ -17,24 +18,6 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
-const focusHeaderButtonStyle = 'white-space:nowrap;'
-
-const getFocusHeaderActionButtonDom = (label: string, name: string): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
-      inputType: 'button',
-      name,
-      onClick: DomEventListenerFunctions.HandleClick,
-      style: focusHeaderButtonStyle,
-      title: label,
-      type: VirtualDomElements.Button,
-    },
-    text(label),
-  ]
-}
-
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
@@ -43,11 +26,36 @@ export const getChatHeaderDomFocusMode = (
   userName = '',
 ): readonly VirtualDomNode[] => {
   const items = [
-    [Strings.addAction(), InputName.FocusAddAction],
-    [Strings.openInVsCode(), InputName.FocusOpenInVsCode],
-    [Strings.commit(), InputName.FocusCommit],
-    [Strings.openTerminal(), InputName.FocusOpenTerminal],
-    [Strings.showDiff(), InputName.FocusShowDiff],
+    {
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd),
+      name: InputName.FocusAddAction,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.addAction(),
+    },
+    {
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
+      name: InputName.FocusOpenInVsCode,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.openInVsCode(),
+    },
+    {
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconGitCommit),
+      name: InputName.FocusCommit,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.commit(),
+    },
+    {
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconTerminal),
+      name: InputName.FocusOpenTerminal,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.openTerminal(),
+    },
+    {
+      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDiff),
+      name: InputName.FocusShowDiff,
+      onClick: DomEventListenerFunctions.HandleClick,
+      title: Strings.showDiff(),
+    },
   ] as const
   const hasProjectName = !!selectedProjectName
   return [
@@ -90,6 +98,6 @@ export const getChatHeaderDomFocusMode = (
       style: focusHeaderActionsStyle,
       type: VirtualDomElements.Div,
     },
-    ...items.flatMap(([label, name]) => getFocusHeaderActionButtonDom(label, name)),
+    ...items.flatMap(getHeaderActionVirtualDom),
   ]
 }

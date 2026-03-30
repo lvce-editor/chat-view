@@ -114,6 +114,8 @@ export const createDefaultState = (): ChatState => {
         uri: '',
       },
     ],
+    projectSidebarResizing: false,
+    projectSidebarWidth: 280,
     questionToolEnabled: false,
     reasoningEffort: defaultReasoningEffort,
     reasoningEffortPickerOpen: false,

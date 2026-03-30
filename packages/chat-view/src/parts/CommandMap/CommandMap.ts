@@ -61,7 +61,10 @@ import * as HandleMouseOut from '../HandleMouseOut/HandleMouseOut.ts'
 import * as HandleMouseOver from '../HandleMouseOver/HandleMouseOver.ts'
 import * as HandleNewline from '../HandleNewline/HandleNewline.ts'
 import * as HandlePointerDownModelPickerList from '../HandlePointerDownModelPickerList/HandlePointerDownModelPickerList.ts'
+import * as HandlePointerDownProjectSidebarSash from '../HandlePointerDownProjectSidebarSash/HandlePointerDownProjectSidebarSash.ts'
+import { handlePointerMoveProjectSidebarSash } from '../HandlePointerMoveProjectSidebarSash/HandlePointerMoveProjectSidebarSash.ts'
 import { handlePointerUpModelPickerList } from '../HandlePointerUpModelPickerList/HandlePointerUpModelPickerList.ts'
+import { handlePointerUpProjectSidebarSash } from '../HandlePointerUpProjectSidebarSash/HandlePointerUpProjectSidebarSash.ts'
 import * as HandleProjectAddButtonContextMenu from '../HandleProjectAddButtonContextMenu/HandleProjectAddButtonContextMenu.ts'
 import * as HandleProjectListContextMenu from '../HandleProjectListContextMenu/HandleProjectListContextMenu.ts'
 import * as HandleReasoningEffortChange from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
@@ -192,7 +195,10 @@ export const commandMap = {
   'Chat.handleMouseOut': wrapCommand(HandleMouseOut.handleMouseOut),
   'Chat.handleMouseOver': wrapCommand(HandleMouseOver.handleMouseOver),
   'Chat.handlePointerDownModelPickerList': wrapCommand(HandlePointerDownModelPickerList.handlePointerDownModelPickerList),
+  'Chat.handlePointerDownProjectSidebarSash': wrapCommand(HandlePointerDownProjectSidebarSash.handlePointerDownProjectSidebarSash),
+  'Chat.handlePointerMoveProjectSidebarSash': wrapCommand(handlePointerMoveProjectSidebarSash),
   'Chat.handlePointerUpModelPickerList': wrapCommand(handlePointerUpModelPickerList),
+  'Chat.handlePointerUpProjectSidebarSash': wrapCommand(handlePointerUpProjectSidebarSash),
   'Chat.handleProjectAddButtonContextMenu': wrapCommand(HandleProjectAddButtonContextMenu.handleProjectAddButtonContextMenu),
   'Chat.handleProjectListContextMenu': wrapCommand(HandleProjectListContextMenu.handleProjectListContextMenu),
   'Chat.handleProjectListScroll': wrapCommand(HandleScroll.handleProjectListScroll),

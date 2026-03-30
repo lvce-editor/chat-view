@@ -52,4 +52,11 @@ test('renderEventListeners should return expected listeners', () => {
     name: DomEventListenerFunctions.HandleClickGitBranchPickerToggle,
     params: ['handleClickGitBranchPickerToggle'],
   })
+  const projectSidebarSashPointerMoveListener = result.find(
+    (listener) => listener.name === DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,
+  )
+  expect(projectSidebarSashPointerMoveListener).toEqual({
+    name: DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,
+    params: ['handlePointerMoveProjectSidebarSash', EventExpression.ClientX],
+  })
 })
