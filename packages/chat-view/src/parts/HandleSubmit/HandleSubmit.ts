@@ -407,6 +407,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   if (selectedSession) {
     await saveChatSession(selectedSession)
   }
+
   return withUpdatedMessageScrollTop(
     FocusInput.focusInput({
       ...latestState,

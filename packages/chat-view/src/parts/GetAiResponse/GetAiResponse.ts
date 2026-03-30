@@ -141,6 +141,7 @@ export const getAiResponse = async ({
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
+  useChatCoordinatorWorker = false // TODO enable this
   if (useChatCoordinatorWorker && !authEnabled) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
