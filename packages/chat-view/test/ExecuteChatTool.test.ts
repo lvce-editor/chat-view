@@ -128,7 +128,7 @@ test('executeChatTool should store tool execution start and finish events for su
   expect(mockChatToolRpc.invocations).toEqual([['ChatTool.execute', 'getWorkspaceUri', '{}', { assetDir: '', platform: 0 }]])
   await expect(getChatViewEvents('session-1')).resolves.toEqual([
     {
-      arguments: '{}',
+      arguments: {},
       id: 'tool-1',
       name: 'getWorkspaceUri',
       options: {
@@ -143,7 +143,10 @@ test('executeChatTool should store tool execution start and finish events for su
     {
       id: 'tool-1',
       name: 'getWorkspaceUri',
-      result: '{"ok":true,"uri":"file:///workspace"}',
+      result: {
+        ok: true,
+        uri: 'file:///workspace',
+      },
       sessionId: 'session-1',
       status: 'success',
       timestamp: expect.any(String),
@@ -154,7 +157,7 @@ test('executeChatTool should store tool execution start and finish events for su
     [
       'ChatStorage.appendEvent',
       {
-        arguments: '{}',
+        arguments: {},
         id: 'tool-1',
         name: 'getWorkspaceUri',
         options: {
@@ -172,7 +175,10 @@ test('executeChatTool should store tool execution start and finish events for su
       {
         id: 'tool-1',
         name: 'getWorkspaceUri',
-        result: '{"ok":true,"uri":"file:///workspace"}',
+        result: {
+          ok: true,
+          uri: 'file:///workspace',
+        },
         sessionId: 'session-1',
         status: 'success',
         timestamp: expect.any(String),
@@ -202,7 +208,7 @@ test('executeChatTool should store failed tool execution events when the worker 
   expect(mockChatToolRpc.invocations).toEqual([['ChatTool.execute', 'read_file', '{"path":"README.md"}', { assetDir: '', platform: 0 }]])
   await expect(getChatViewEvents('session-2')).resolves.toEqual([
     {
-      arguments: '{"path":"README.md"}',
+      arguments: { path: 'README.md' },
       id: 'tool-2',
       name: 'read_file',
       options: {
@@ -217,7 +223,9 @@ test('executeChatTool should store failed tool execution events when the worker 
     {
       id: 'tool-2',
       name: 'read_file',
-      result: '{"error":"tool crashed"}',
+      result: {
+        error: 'tool crashed',
+      },
       sessionId: 'session-2',
       status: 'error',
       timestamp: expect.any(String),
@@ -228,7 +236,7 @@ test('executeChatTool should store failed tool execution events when the worker 
     [
       'ChatStorage.appendEvent',
       {
-        arguments: '{"path":"README.md"}',
+        arguments: { path: 'README.md' },
         id: 'tool-2',
         name: 'read_file',
         options: {
@@ -246,7 +254,9 @@ test('executeChatTool should store failed tool execution events when the worker 
       {
         id: 'tool-2',
         name: 'read_file',
-        result: '{"error":"tool crashed"}',
+        result: {
+          error: 'tool crashed',
+        },
         sessionId: 'session-2',
         status: 'error',
         timestamp: expect.any(String),

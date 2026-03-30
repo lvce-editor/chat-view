@@ -18,12 +18,25 @@ const hasToolError = (value: object): boolean => {
   return typeof error === 'string' && error.trim().length > 0
 }
 
-const getStoredToolExecutionStatus = (result: string): 'error' | 'success' => {
-  let parsed: unknown
+const getTrackedToolExecutionValue = (value: unknown): unknown => {
+  if (typeof value !== 'string') {
+    return value
+  }
   try {
-    parsed = JSON.parse(result) as unknown
+    return JSON.parse(value) as unknown
   } catch {
-    return 'error'
+    return value
+  }
+}
+
+const getStoredToolExecutionStatus = (result: unknown): 'error' | 'success' => {
+  let parsed: unknown = result
+  if (typeof result === 'string') {
+    try {
+      parsed = JSON.parse(result) as unknown
+    } catch {
+      return 'error'
+    }
   }
   if (!parsed || typeof parsed !== 'object') {
     return 'error'
@@ -151,7 +164,7 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
   const startedAt = new Date().toISOString()
   if (options.sessionId) {
     await appendChatViewEvent({
-      arguments: rawArguments,
+      arguments: getTrackedToolExecutionValue(rawArguments),
       id: executionId,
       name,
       options: executionOptions,
@@ -169,22 +182,23 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
       await appendChatViewEvent({
         id: executionId,
         name,
-        result,
+        result: outputWithLineCounts,
         sessionId: options.sessionId,
-        status: getStoredToolExecutionStatus(result),
+        status: getStoredToolExecutionStatus(outputWithLineCounts),
         timestamp: new Date().toISOString(),
         type: 'tool-execution-finished',
       })
     }
     return result
   } catch (error) {
+    const errorResult = {
+      error: error instanceof Error ? error.message : String(error),
+    }
     if (options.sessionId) {
       await appendChatViewEvent({
         id: executionId,
         name,
-        result: stringifyToolOutput({
-          error: error instanceof Error ? error.message : String(error),
-        }),
+        result: errorResult,
         sessionId: options.sessionId,
         status: 'error',
         timestamp: new Date().toISOString(),
