@@ -1,5 +1,6 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getGitBranches, hasGitRepository } from '../GetGitBranches/GetGitBranches.ts'
+import { getGitBranches } from '../GetGitBranches/GetGitBranches.ts'
+import { hasGitRepository } from '../GetGitBranches/HasGitRepository/HasGitRepository.ts'
 import { getSelectedSession } from '../GetSelectedSession/GetSelectedSession.ts'
 import { getWorkspaceUri } from '../GetWorkspaceUri/GetWorkspaceUri.ts'
 
