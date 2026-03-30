@@ -17,8 +17,7 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   const toolNameLabel = `${toolCall.name} `
   const statusLabel = getToolCallStatusLabel(toolCall)
   const globMatchCount = toolCall.name === 'glob' && toolCall.status === 'success' ? getGlobMatchCount(toolCall.result) : undefined
-  const globMatchLabel =
-    typeof globMatchCount === 'number' ? `, ${globMatchCount} ${globMatchCount === 1 ? 'match' : 'matches'}` : ''
+  const globMatchLabel = typeof globMatchCount === 'number' ? `, ${globMatchCount} ${globMatchCount === 1 ? 'match' : 'matches'}` : ''
   const fileNameClickableProps = target.clickableUri
     ? {
         'data-uri': target.clickableUri,
