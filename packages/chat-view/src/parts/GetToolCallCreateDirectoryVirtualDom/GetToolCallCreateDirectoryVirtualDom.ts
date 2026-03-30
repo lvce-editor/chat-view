@@ -24,7 +24,6 @@ export const getToolCallCreateDirectoryVirtualDom = (toolCall: ChatToolCall): re
     {
       childCount: statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
-      title: target.title,
       type: VirtualDomElements.Li,
     },
     {

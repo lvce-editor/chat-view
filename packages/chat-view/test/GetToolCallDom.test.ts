@@ -174,7 +174,6 @@ test('getToolCallDom should render glob baseUri as clickable folder name with fu
     {
       childCount: 3,
       className: ClassNames.ChatOrderedListItem,
-      title: baseUri,
       type: VirtualDomElements.Li,
     },
     {
@@ -294,7 +293,6 @@ test('getToolCallDom should render write_file as filename with line count badges
   expect(result[0]).toEqual({
     childCount: 5,
     className: ClassNames.ChatOrderedListItem,
-    title: 'src/main.ts',
     type: VirtualDomElements.Li,
   })
   expect(result[2]).toEqual({
@@ -304,6 +302,14 @@ test('getToolCallDom should render write_file as filename with line count badges
   })
   expect(result[3]).toMatchObject({
     text: 'write_file ',
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallReadFileLink,
+    'data-uri': 'src/main.ts',
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    title: 'src/main.ts',
+    type: VirtualDomElements.Span,
   })
   expect(result[5]).toEqual({
     childCount: 1,
@@ -370,7 +376,6 @@ test('getToolCallDom should not render write_file diff badges when tool call fai
   expect(result[0]).toEqual({
     childCount: 4,
     className: ClassNames.ChatOrderedListItem,
-    title: 'index.html',
     type: VirtualDomElements.Li,
   })
   expect(result[2]).toEqual({
@@ -407,7 +412,6 @@ test('getToolCallDom should render edit_file as filename with uri title', () => 
   expect(result[0]).toEqual({
     childCount: 3,
     className: ClassNames.ChatOrderedListItem,
-    title: uri,
     type: VirtualDomElements.Li,
   })
   expect(result[2]).toEqual({
@@ -452,7 +456,6 @@ test('getToolCallDom should render create_directory as folder name with uri titl
   expect(result[0]).toEqual({
     childCount: 3,
     className: ClassNames.ChatOrderedListItem,
-    title: uri,
     type: VirtualDomElements.Li,
   })
   expect(result[2]).toEqual({
@@ -468,6 +471,7 @@ test('getToolCallDom should render create_directory as folder name with uri titl
     className: ClassNames.ChatToolCallReadFileLink,
     'data-uri': uri,
     onClick: DomEventListenerFunctions.HandleClickFileName,
+    title: uri,
     type: VirtualDomElements.Span,
   })
   expect(result[5]).toEqual({
@@ -479,5 +483,33 @@ test('getToolCallDom should render create_directory as folder name with uri titl
   })
   expect(result[6]).toMatchObject({
     text: 'components',
+  })
+})
+
+test('getToolCallDom should render getWorkspaceUri result with uri title on the filename link', () => {
+  const uri = 'file:///workspace/chat-view'
+  const result = getToolCallDom({
+    arguments: '{}',
+    name: 'getWorkspaceUri',
+    result: uri,
+    status: 'success',
+  })
+
+  expect(result).toHaveLength(7)
+  expect(result[0]).toEqual({
+    childCount: 3,
+    className: ClassNames.ChatOrderedListItem,
+    type: VirtualDomElements.Li,
+  })
+  expect(result[4]).toEqual({
+    childCount: 1,
+    className: ClassNames.ChatToolCallReadFileLink,
+    'data-uri': uri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+    title: uri,
+    type: VirtualDomElements.Span,
+  })
+  expect(result[6]).toMatchObject({
+    text: 'chat-view',
   })
 })

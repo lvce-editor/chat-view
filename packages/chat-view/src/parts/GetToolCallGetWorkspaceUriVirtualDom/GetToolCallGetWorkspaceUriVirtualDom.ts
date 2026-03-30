@@ -20,7 +20,6 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
     {
       childCount: statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
-      title: toolCall.result,
       type: VirtualDomElements.Li,
     },
     {

@@ -1283,7 +1283,6 @@ test('getChatVirtualDOm should render assistant tool call lines', () => {
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: uri,
       type: VirtualDomElements.Li,
     },
     {
@@ -1377,7 +1376,6 @@ test('getChatVirtualDOm should render assistant read_file path as clickable file
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: path,
       type: VirtualDomElements.Li,
     },
     {
@@ -1467,7 +1465,6 @@ test('getChatVirtualDOm should render assistant list_files uri as clickable file
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: uri,
       type: VirtualDomElements.Li,
     },
     {
@@ -1557,7 +1554,6 @@ test('getChatVirtualDOm should render assistant list_file uri as clickable filen
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: uri,
       type: VirtualDomElements.Li,
     },
     {

@@ -80,7 +80,7 @@ export const createDefaultState = (): ChatState => {
     maxToolCalls: defaultMaxToolCalls,
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
-    mockAiResponseDelay: 800,
+    mockAiResponseDelay: 0,
     mockApiCommandId: '',
     mockOpenApiRequests: [],
     modelPickerHeaderHeight,

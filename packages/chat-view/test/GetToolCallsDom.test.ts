@@ -46,7 +46,6 @@ test('getToolCallsDom should render one list item per tool call', () => {
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: 'a.txt',
       type: VirtualDomElements.Li,
     },
     {
@@ -77,6 +76,7 @@ test('getToolCallsDom should render one list item per tool call', () => {
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': 'a.txt',
       onClick: expect.any(Number),
+      title: 'a.txt',
       type: VirtualDomElements.Span,
     }),
     expect.objectContaining({
@@ -91,7 +91,6 @@ test('getToolCallsDom should render one list item per tool call', () => {
     {
       childCount: 2,
       className: ClassNames.ChatOrderedListItem,
-      title: 'b.txt',
       type: VirtualDomElements.Li,
     },
     {
@@ -122,6 +121,7 @@ test('getToolCallsDom should render one list item per tool call', () => {
       className: ClassNames.ChatToolCallReadFileLink,
       'data-uri': 'b.txt',
       onClick: expect.any(Number),
+      title: 'b.txt',
       type: VirtualDomElements.Span,
     }),
     expect.objectContaining({

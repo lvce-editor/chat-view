@@ -27,7 +27,6 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
     {
       childCount: showDiffStats ? (statusLabel ? 6 : 5) : statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
-      title: target.title,
       type: VirtualDomElements.Li,
     },
     {
