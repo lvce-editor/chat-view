@@ -5,6 +5,21 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const getImageCouldNotBeLoadedDom = (): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
+      name: InputName.ComposerAttachmentPreviewOverlay,
+      type: VirtualDomElements.Div,
+    },
+    {
+      text: Strings.imageCouldNotBeLoaded(),
+      type: VirtualDomElements.Text,
+    },
+  ]
+}
+
 export const getComposerAttachmentPreviewOverlayVirtualDom = (
   composerAttachments: readonly ComposerAttachment[],
   attachmentId: string,
@@ -29,18 +44,7 @@ export const getComposerAttachmentPreviewOverlayVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...(hasError
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
-            name: InputName.ComposerAttachmentPreviewOverlay,
-            type: VirtualDomElements.Div,
-          },
-          {
-            text: Strings.imageCouldNotBeLoaded(),
-            type: VirtualDomElements.Text,
-          },
-        ]
+      ? getImageCouldNotBeLoadedDom()
       : [
           {
             alt: `Large image preview for ${attachment.name}`,
