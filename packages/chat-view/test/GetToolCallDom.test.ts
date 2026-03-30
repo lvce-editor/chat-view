@@ -228,6 +228,10 @@ test('getToolCallDom should render finished glob tool calls with a match count',
     {
       childCount: 4,
       className: ClassNames.ChatOrderedListItem,
+<<<<<<< HEAD
+=======
+      title: baseUri,
+>>>>>>> origin/main
       type: VirtualDomElements.Li,
     },
     {
