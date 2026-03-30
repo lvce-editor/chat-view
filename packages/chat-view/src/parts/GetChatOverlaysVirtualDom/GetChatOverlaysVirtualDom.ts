@@ -1,16 +1,14 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
-import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getAgentModePickerPopOverVirtualDom } from '../GetAgentModePickerPopOverVirtualDom/GetAgentModePickerPopOverVirtualDom.ts'
 import { getChatModelPickerPopOverVirtualDom } from '../GetChatModelPickerPopOverVirtualDom/GetChatModelPickerPopOverVirtualDom.ts'
 import { getComposerAttachmentPreviewOverlayVirtualDom } from '../GetComposerAttachmentPreviewOverlayVirtualDom/GetComposerAttachmentPreviewOverlayVirtualDom.ts'
+import { getDropOverlayVirtualDom } from '../GetDropOverlayVirtualDom/GetDropOverlayVirtualDom.ts'
 import { getRunModePickerPopOverVirtualDom } from '../GetRunModePickerPopOverVirtualDom/GetRunModePickerPopOverVirtualDom.ts'
-import * as InputName from '../InputName/InputName.ts'
 
 export interface GetChatOverlaysVirtualDomOptions {
   readonly agentMode: AgentMode
@@ -26,24 +24,6 @@ export interface GetChatOverlaysVirtualDomOptions {
   readonly runModePickerVisible: boolean
   readonly selectedModelId: string
   readonly visibleModels: readonly ChatModel[]
-}
-
-const getDropOverlayVirtualDom = (): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatViewDropOverlay, ClassNames.ChatViewDropOverlayActive),
-      name: InputName.ComposerDropTarget,
-      onDragLeave: DomEventListenerFunctions.HandleDragLeave,
-      onDragOver: DomEventListenerFunctions.HandleDragOver,
-      onDrop: DomEventListenerFunctions.HandleDrop,
-      type: VirtualDomElements.Div,
-    },
-    {
-      text: Strings.attachImageAsContext(),
-      type: VirtualDomElements.Text,
-    },
-  ]
 }
 
 export const getChatOverlaysVirtualDom = ({
