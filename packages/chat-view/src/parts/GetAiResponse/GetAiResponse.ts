@@ -239,7 +239,6 @@ export const getAiResponse = async ({
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
        const tools1= await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
-       console.log({tools1})
         const request = {
           headers,
           method: 'POST',
