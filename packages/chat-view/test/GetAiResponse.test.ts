@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-disabled-tests */
 // cspell:ignore openrouter
 import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
