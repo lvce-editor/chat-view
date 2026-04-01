@@ -23,7 +23,10 @@ export const getGitBranches = async (workspaceUri: string): Promise<readonly Git
     // Keep trying to discover branches from refs even if HEAD cannot be read.
   }
   try {
-    await collectBranchNames(workspaceUri, toGitUri(gitDirUri, 'refs', 'heads'), '', branches)
+    const discoveredBranches = await collectBranchNames(workspaceUri, toGitUri(gitDirUri, 'refs', 'heads'), '')
+    for (const branch of discoveredBranches) {
+      branches.add(branch)
+    }
   } catch {
     // Repositories without local refs should still open and surface any current branch we found.
   }

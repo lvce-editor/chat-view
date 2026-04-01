@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
 import * as Logger from '../Logger/Logger.ts'
 
-type ListenerFunction = (...args: any[]) => any
+type ListenerFunction = (...args: readonly unknown[]) => unknown
 
 export const state: Record<number, ListenerFunction> = Object.create(null)
 
@@ -12,7 +12,7 @@ export const register = (listener: ListenerFunction): number => {
   return id
 }
 
-export const execute = (id: number, ...args: ReadonlyArray<any>): any => {
+export const execute = (id: number, ...args: readonly unknown[]): unknown => {
   Assert.number(id)
   const listener = state[id]
   if (!listener) {

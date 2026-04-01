@@ -1,6 +1,19 @@
 import { expect, test } from '@jest/globals'
 import * as BackendAuth from '../src/parts/BackendAuth/BackendAuth.ts'
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input instanceof Request) {
+    return input.url
+  }
+  return ''
+}
+
 test('syncBackendAuth should return logged in state when backend refresh succeeds', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
@@ -88,9 +101,9 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
 
 test('logoutFromBackend should post to backend logout endpoint', async () => {
   const originalFetch = globalThis.fetch
-  const fetchCalls: Array<readonly [string, RequestInit | undefined]> = []
-  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    fetchCalls.push([String(input), init])
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  globalThis.fetch = (async (input: unknown, init?: Readonly<RequestInit>) => {
+    fetchCalls.push([getRequestUrl(input), init])
     return {
       ok: true,
       status: 204,

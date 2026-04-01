@@ -10,6 +10,19 @@ import * as InputName from '../src/parts/InputName/InputName.ts'
 import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input instanceof Request) {
+    return input.url
+  }
+  return ''
+}
+
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
@@ -343,9 +356,9 @@ test('handleClick should open backend login page and sync backend auth state', a
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
-  const fetchCalls: Array<readonly [string, RequestInit | undefined]> = []
-  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    fetchCalls.push([String(input), init])
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  globalThis.fetch = (async (input: unknown, init?: Readonly<RequestInit>) => {
+    fetchCalls.push([getRequestUrl(input), init])
     return {
       json: async () => ({
         accessToken: 'backend-token-1',
@@ -394,9 +407,9 @@ test('handleClick should logout and clear backend auth state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
-  const fetchCalls: Array<readonly [string, RequestInit | undefined]> = []
-  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
-    fetchCalls.push([String(input), init])
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  globalThis.fetch = (async (input: unknown, init?: Readonly<RequestInit>) => {
+    fetchCalls.push([getRequestUrl(input), init])
     return {
       ok: true,
       status: 204,
