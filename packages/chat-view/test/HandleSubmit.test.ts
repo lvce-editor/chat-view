@@ -1114,7 +1114,8 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   })
   const originalFetch = globalThis.fetch
   let capturedBody: Record<string, unknown> | undefined
-  globalThis.fetch = (async (_input: unknown, init?: Readonly<RequestInit>) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     const body = init?.body
     if (typeof body === 'string') {
       capturedBody = JSON.parse(body) as Record<string, unknown>
@@ -1169,7 +1170,8 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   })
   const originalFetch = globalThis.fetch
   let capturedBody: Record<string, unknown> | undefined
-  globalThis.fetch = (async (_input: unknown, init?: Readonly<RequestInit>) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     const body = init?.body
     if (typeof body === 'string') {
       capturedBody = JSON.parse(body) as Record<string, unknown>

@@ -357,7 +357,8 @@ test('handleClick should open backend login page and sync backend auth state', a
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = (async (input: unknown, init?: Readonly<RequestInit>) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     return {
       json: async () => ({
@@ -408,7 +409,8 @@ test('handleClick should logout and clear backend auth state', async () => {
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = (async (input: unknown, init?: Readonly<RequestInit>) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     return {
       ok: true,
