@@ -13,7 +13,6 @@ interface MockOpenApiRequest {
 
 const assert = (condition: boolean, message: string): void => {
   if (!condition) {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(message)
   }
 }

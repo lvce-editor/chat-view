@@ -71,7 +71,6 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const newContent = await FileSystem.readFile(`${tmpDir}/notes.txt`)
   if (newContent !== 'alpha\nbeta') {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(`Expected updated file content to be "alpha\\nbeta", got "${newContent}"`)
   }
 }

@@ -3,6 +3,8 @@ export interface FileSystemEntry {
   readonly type: number
 }
 
+const isFileSystemEntry = (entry: Readonly<FileSystemEntry> | undefined): entry is FileSystemEntry => !!entry
+
 export const parseEntries = (value: unknown): readonly FileSystemEntry[] => {
   if (!Array.isArray(value)) {
     return []
@@ -23,5 +25,5 @@ export const parseEntries = (value: unknown): readonly FileSystemEntry[] => {
       }
       return undefined
     })
-    .filter((entry): entry is FileSystemEntry => !!entry)
+    .filter(isFileSystemEntry)
 }
