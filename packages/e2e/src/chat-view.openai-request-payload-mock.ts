@@ -11,14 +11,12 @@ interface MockOpenApiRequest {
 
 const assert = (condition: boolean, message: string): void => {
   if (!condition) {
-     
     throw new Error(message)
   }
 }
 
 const assertEqual = <T>(actual: T, expected: T, context: string): void => {
   if (actual !== expected) {
-     
     throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }
@@ -27,7 +25,6 @@ const assertDeepEqual = (actual: unknown, expected: unknown, context: string): v
   const actualJson = JSON.stringify(actual)
   const expectedJson = JSON.stringify(expected)
   if (actualJson !== expectedJson) {
-     
     throw new Error(`${context}: expected ${expectedJson}, got ${actualJson}`)
   }
 }

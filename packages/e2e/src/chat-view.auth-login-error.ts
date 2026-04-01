@@ -6,7 +6,6 @@ export const skip = 1
 
 const assertEqual = <T>(actual: T, expected: T, context: string): void => {
   if (actual !== expected) {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }
