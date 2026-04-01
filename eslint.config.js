@@ -8,10 +8,5 @@ export default [
   ...actions.default,
   ...tsconfig.default,
   ...regex.default,
-  {
-    rules: {
-      '@typescript-eslint/prefer-readonly-parameter-types': 'off',
-      '@typescript-eslint/no-redundant-type-constituents': 'off',
-    },
-  },
+
 ]
