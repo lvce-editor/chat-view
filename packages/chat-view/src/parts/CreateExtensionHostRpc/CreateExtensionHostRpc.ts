@@ -10,10 +10,6 @@ export const createExtensionHostRpc = async (): Promise<Rpc> => {
     })
     return rpc
   } catch (error) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new VError(error, `Failed to create extension host rpc`)
   }
 }

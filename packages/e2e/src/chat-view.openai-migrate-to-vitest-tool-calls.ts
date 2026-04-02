@@ -1,7 +1,3 @@
-<<<<<<< HEAD
- 
-=======
->>>>>>> origin/main
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-migrate-to-vitest-tool-calls'

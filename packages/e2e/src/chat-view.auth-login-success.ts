@@ -4,10 +4,6 @@ export const name = 'chat-view.auth-login-success'
 
 const assertEqual = <T>(actual: T, expected: T, context: string): void => {
   if (actual !== expected) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }

@@ -8,10 +8,6 @@ import { toGitUri } from './ToGitUri/ToGitUri.ts'
 export const getGitBranches = async (workspaceUri: string): Promise<readonly GitBranch[]> => {
   const gitDirUri = await getGitDirUri(workspaceUri)
   if (!gitDirUri) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new globalThis.Error('Git repository not found.')
   }
   const branches = new Set<string>()
@@ -34,10 +30,6 @@ export const getGitBranches = async (workspaceUri: string): Promise<readonly Git
     // Repositories without local refs should still open and surface any current branch we found.
   }
   if (branches.size === 0) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new globalThis.Error('No local git branches found.')
   }
   return [...branches]

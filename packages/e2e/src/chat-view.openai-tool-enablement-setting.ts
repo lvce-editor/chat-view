@@ -13,10 +13,6 @@ interface MockOpenApiRequest {
 
 const assert = (condition: boolean, message: string): void => {
   if (!condition) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new Error(message)
   }
 }

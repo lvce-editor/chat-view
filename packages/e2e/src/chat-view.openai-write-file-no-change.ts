@@ -72,10 +72,6 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const newContent = await FileSystem.readFile(`${tmpDir}/notes.txt`)
   if (newContent !== initialContent) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new Error(`Expected file content to remain "${initialContent}", got "${newContent}"`)
   }
 }

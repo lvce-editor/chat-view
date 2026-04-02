@@ -7,10 +7,6 @@ export const skip = 1
 
 const assertEqual = <T>(actual: T, expected: T, message: string): void => {
   if (actual !== expected) {
-<<<<<<< HEAD
-     
-=======
->>>>>>> origin/main
     throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }
