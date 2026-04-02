@@ -238,6 +238,7 @@ export const getAiResponse = async ({
       const maxToolIterations = safeMaxToolCalls - 1
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
+        const tools1 = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
         const request = {
           headers,
           method: 'POST',
@@ -246,7 +247,7 @@ export const getAiResponse = async ({
             modelId,
             streamingEnabled,
             passIncludeObfuscation,
-            await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement),
+            tools1,
             agentMode === 'plan' ? false : webSearchEnabled,
             safeMaxToolCalls,
             systemPrompt,

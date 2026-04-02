@@ -775,6 +775,7 @@ const getResponseFromSseEvents = (events: readonly unknown[]): Response => {
     return `data: ${data}\n\n`
   })
   const stream = new ReadableStream<Uint8Array>({
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
     start(controller): void {
       for (const chunk of chunks) {
         controller.enqueue(new TextEncoder().encode(chunk))

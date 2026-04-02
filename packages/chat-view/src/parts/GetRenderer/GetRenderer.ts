@@ -28,7 +28,10 @@ export const getRenderer = (diffType: number): Renderer => {
     case DiffType.RenderValue:
       return RenderValue.renderValue
     default:
+<<<<<<< HEAD
        
+=======
+>>>>>>> origin/main
       throw new Error('unknown renderer')
   }
 }

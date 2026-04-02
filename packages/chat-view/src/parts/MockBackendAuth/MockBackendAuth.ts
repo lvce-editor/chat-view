@@ -36,7 +36,10 @@ export const consumeNextLoginResponse = async (): Promise<unknown> => {
     await new Promise((resolve) => setTimeout(resolve, response.delay))
   }
   if (response.type === 'error') {
+<<<<<<< HEAD
      
+=======
+>>>>>>> origin/main
     throw new Error(response.message)
   }
   return response.response
