@@ -1106,7 +1106,7 @@ test('handleSubmit should render mock OpenAI write_file tool calls from response
 
 test('handleSubmit should resolve workspaceUri placeholder in system prompt from selected project', async () => {
   jest.useFakeTimers()
-  jest.setSystemTime(new Date('2026-03-25T12:00:00.000Z'))
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -1161,7 +1161,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
 
 test('handleSubmit should resolve workspaceUri placeholder in system prompt from renderer workspace path', async () => {
   jest.useFakeTimers()
-  jest.setSystemTime(new Date('2026-03-25T12:00:00.000Z'))
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
