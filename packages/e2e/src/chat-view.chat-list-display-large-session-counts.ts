@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-display-large-session-counts'
 
-const counts = [10, 100, 1000, 10000, 50000]
+const counts = [10, 100, 1000, 10_000, 50_000]
 
 const getTitle = (index: number): string => {
   return `Chat ${index + 1}`

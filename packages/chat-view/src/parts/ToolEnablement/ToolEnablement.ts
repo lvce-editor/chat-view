@@ -21,13 +21,13 @@ export const parseToolEnablement = (value: unknown): ToolEnablement => {
 
 export const validateToolEnablement = (value: unknown): ToolEnablement => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
+     
     throw new TypeError('Tool enablement must be an object map of tool names to booleans.')
   }
   const toolEnablement: Record<string, boolean> = {}
   for (const [key, enabled] of Object.entries(value)) {
     if (typeof enabled !== 'boolean') {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
+       
       throw new TypeError(`Tool enablement for "${key}" must be a boolean.`)
     }
     toolEnablement[key] = enabled

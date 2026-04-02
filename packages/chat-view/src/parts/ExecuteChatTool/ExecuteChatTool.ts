@@ -144,11 +144,11 @@ const withWriteFileLineCounts = async (workerOutput: unknown, rawArguments: unkn
 
 export const executeChatTool = async (name: string, rawArguments: unknown, options: ExecuteToolOptions): Promise<string> => {
   if (!isToolEnabled(options.toolEnablement, name)) {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
+     
     throw new Error(`Tool "${name}" is disabled in chat.toolEnablement preferences.`)
   }
   if (!options.useChatToolWorker) {
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
+     
     throw new Error('Chat tools must be executed in a web worker environment. Please set useChatToolWorker to true in the options.')
   }
   const executionOptions = {
