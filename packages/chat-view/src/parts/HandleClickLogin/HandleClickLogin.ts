@@ -1,4 +1,4 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
@@ -68,7 +68,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    await RendererWorker.invoke('Main.openUri', getBackendLoginUrl(state.backendUrl))
+    await OpenerWorker.openExternal(getBackendLoginUrl(state.backendUrl))
     const authState = await waitForBackendLogin(state.backendUrl)
     return {
       ...signingInState,
