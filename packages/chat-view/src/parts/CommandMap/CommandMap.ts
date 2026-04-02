@@ -87,6 +87,7 @@ import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.
 import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
+import * as OpenMockSessions from '../OpenMockSessions/OpenMockSessions.ts'
 import { openModelPicker } from '../OpenModelPicker/OpenModelPicker.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
 import { openRunModePicker } from '../OpenRunModePicker/OpenRunModePicker.ts'
@@ -222,6 +223,7 @@ export const commandMap = {
   'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
+  'Chat.openMockSessions': wrapCommand(OpenMockSessions.openMockSessions),
   'Chat.openModelPicker': wrapCommand(openModelPicker),
   'Chat.openReasoningEffortPicker': wrapCommand(openReasoningEffortPicker),
   'Chat.openRunModePicker': wrapCommand(openRunModePicker),
