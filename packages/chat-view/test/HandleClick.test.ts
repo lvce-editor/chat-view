@@ -372,7 +372,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     } as Response
   }) as typeof globalThis.fetch
   using mockRpc = OpenerWorker.registerMockRpc({
-    'Open.openExternal': async () => {},
+    'Open.openUrl': async () => {},
   })
   try {
     const state: ChatState = {
@@ -386,7 +386,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     expect(result.userState).toBe('loggedIn')
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(321)
-    expect(mockRpc.invocations).toEqual([['Open.openExternal', 'https://backend.example.com/auth/login']])
+    expect(mockRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/auth/login', 0]])
     expect(fetchCalls).toEqual([
       [
         'https://backend.example.com/auth/refresh',
