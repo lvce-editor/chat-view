@@ -68,7 +68,8 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    await OpenerWorker.openUrl(getBackendLoginUrl(state.backendUrl), state.platform)
+    const url = await getBackendLoginUrl(state.backendUrl)
+    await OpenerWorker.openUrl(url, state.platform)
     const authState = await waitForBackendLogin(state.backendUrl)
     return {
       ...signingInState,
