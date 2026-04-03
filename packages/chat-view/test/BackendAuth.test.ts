@@ -70,7 +70,8 @@ test('syncBackendAuth should return logged out state for unauthorized response',
 
 test('syncBackendAuth should time out hanging backend refresh requests', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = ((...args: readonly unknown[]) => {
+    const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     return new Promise<Response>((resolve, reject) => {
       init?.signal?.addEventListener(
         'abort',
@@ -87,6 +88,27 @@ test('syncBackendAuth should time out hanging backend refresh requests', async (
     expect(result).toEqual({
       authAccessToken: '',
       authErrorMessage: 'Backend authentication timed out.',
+      userName: '',
+      userState: 'loggedOut',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('syncBackendAuth should return generic message for backend refresh fetch failure', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    throw new TypeError('Failed to fetch')
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await BackendAuth.syncBackendAuth('https://backend.example.com', 10)
+    expect(result).toEqual({
+      authAccessToken: '',
+      authErrorMessage: 'Auth backend error or unavailable.',
       userName: '',
       userState: 'loggedOut',
       userSubscriptionPlan: '',
@@ -130,7 +152,8 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
 
 test('waitForBackendLogin should fail immediately when backend refresh times out', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = ((...args: readonly unknown[]) => {
+    const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     return new Promise<Response>((resolve, reject) => {
       init?.signal?.addEventListener(
         'abort',

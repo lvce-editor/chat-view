@@ -4,9 +4,10 @@ import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 interface MockBackendAuthResponsePayload {
   readonly accessToken?: string
   readonly delay?: number
+  readonly errorName?: string
   readonly message?: string
-  readonly request?: 'login' | 'refresh'
   readonly refreshToken?: string
+  readonly request?: 'login' | 'refresh'
   readonly subscriptionPlan?: string
   readonly type?: 'error' | 'success'
   readonly usedTokens?: number
@@ -31,6 +32,7 @@ export const mockBackendAuthResponse = (state: ChatState, payload: MockBackendAu
   if (payload.type === 'error') {
     setNextResponse({
       delay,
+      errorName: payload.errorName,
       message: payload.message || 'Backend authentication failed.',
       type: 'error',
     })

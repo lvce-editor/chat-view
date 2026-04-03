@@ -1,14 +1,25 @@
 import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
 import { defaultAuthMaxDelay } from '../../DefaultAuthMaxDelay/DefaultAuthMaxDelay.ts'
+import * as MockBackendAuth from '../../MockBackendAuth/MockBackendAuth.ts'
 import { getBackendRefreshUrl } from '../GetBackendRefreshUrl/GetBackendRefreshUrl.ts'
 import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
-import * as MockBackendAuth from '../../MockBackendAuth/MockBackendAuth.ts'
 import { parseBackendAuthResponse } from '../ParseBackendAuthResponse/ParseBackendAuthResponse.ts'
 
 const timeoutErrorMessage = 'Backend authentication timed out.'
+const backendUnavailableErrorMessage = 'Auth backend error or unavailable.'
 
 const isAbortError = (error: unknown): boolean => {
   return error instanceof Error && error.name === 'AbortError'
+}
+
+const isBackendUnavailableError = (error: unknown): boolean => {
+  if (!(error instanceof Error)) {
+    return false
+  }
+  if (error instanceof TypeError) {
+    return true
+  }
+  return error.message === 'Failed to fetch'
 }
 
 const getAbortError = (): Error => {
@@ -24,7 +35,7 @@ const getAbortSignal = (timeoutMs: number): readonly [AbortSignal, () => void] =
   }, timeoutMs)
   return [
     abortController.signal,
-    () => {
+    (): void => {
       clearTimeout(timeout)
     },
   ]
@@ -76,6 +87,9 @@ export const syncBackendAuth = async (backendUrl: string, timeoutMs = defaultAut
   } catch (error) {
     if (isAbortError(error)) {
       return getLoggedOutBackendAuthState(timeoutErrorMessage)
+    }
+    if (isBackendUnavailableError(error)) {
+      return getLoggedOutBackendAuthState(backendUnavailableErrorMessage)
     }
     const authErrorMessage = error instanceof Error && error.message ? error.message : 'Backend authentication failed.'
     return getLoggedOutBackendAuthState(authErrorMessage)

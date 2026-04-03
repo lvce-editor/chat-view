@@ -412,7 +412,8 @@ test('handleClick should use authMaxDelay when backend refresh hangs', async () 
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
   })
-  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = ((...args: readonly unknown[]) => {
+    const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     return new Promise<Response>((resolve, reject) => {
       init?.signal?.addEventListener(
         'abort',

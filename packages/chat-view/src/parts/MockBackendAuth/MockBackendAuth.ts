@@ -6,6 +6,7 @@ interface MockBackendAuthSuccess {
 
 interface MockBackendAuthError {
   readonly delay: number
+  readonly errorName?: string
   readonly message: string
   readonly type: 'error'
 }
@@ -21,6 +22,17 @@ const createAbortError = (): Error => {
   })
 }
 
+const createError = (message: string, errorName?: string): Error => {
+  if (errorName === 'TypeError') {
+    return new TypeError(message)
+  }
+  const error = new Error(message)
+  if (errorName) {
+    error.name = errorName
+  }
+  return error
+}
+
 const waitForDelay = async (delay: number, signal?: AbortSignal): Promise<void> => {
   if (delay <= 0) {
     return
@@ -30,7 +42,7 @@ const waitForDelay = async (delay: number, signal?: AbortSignal): Promise<void> 
       signal?.removeEventListener('abort', handleAbort)
       resolve()
     }, delay)
-    const handleAbort = () => {
+    const handleAbort = (): void => {
       clearTimeout(timeout)
       reject(createAbortError())
     }
@@ -42,22 +54,22 @@ const waitForDelay = async (delay: number, signal?: AbortSignal): Promise<void> 
   })
 }
 
-const consumeResponse = async (response: MockBackendAuthResponse | undefined, signal?: AbortSignal): Promise<unknown> => {
+const consumeResponse = async (response: Readonly<MockBackendAuthResponse> | undefined, signal?: AbortSignal): Promise<unknown> => {
   if (!response) {
     return undefined
   }
   await waitForDelay(response.delay, signal)
   if (response.type === 'error') {
-    throw new Error(response.message)
+    throw createError(response.message, response.errorName)
   }
   return response.response
 }
 
-export const setNextLoginResponse = (response: MockBackendAuthResponse): void => {
+export const setNextLoginResponse = (response: Readonly<MockBackendAuthResponse>): void => {
   nextLoginResponse = response
 }
 
-export const setNextRefreshResponse = (response: MockBackendAuthResponse): void => {
+export const setNextRefreshResponse = (response: Readonly<MockBackendAuthResponse>): void => {
   nextRefreshResponse = response
 }
 
@@ -80,7 +92,7 @@ export const consumeNextLoginResponse = async (): Promise<unknown> => {
   return consumeResponse(response)
 }
 
-export const consumeNextRefreshResponse = async (signal?: AbortSignal): Promise<unknown> => {
+export const consumeNextRefreshResponse = async (signal?: Readonly<AbortSignal>): Promise<unknown> => {
   const response = nextRefreshResponse
   nextRefreshResponse = undefined
   return consumeResponse(response, signal)
