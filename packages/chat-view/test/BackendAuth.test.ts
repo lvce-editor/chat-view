@@ -99,7 +99,7 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
   }
 })
 
-test('getBackendLoginUrl should include redirect_uri from current location', () => {
+test('getBackendLoginUrl should include redirect_uri from current location', async () => {
   const originalLocation = Object.getOwnPropertyDescriptor(globalThis, 'location')
   Object.defineProperty(globalThis, 'location', {
     configurable: true,
@@ -109,7 +109,7 @@ test('getBackendLoginUrl should include redirect_uri from current location', () 
   })
 
   try {
-    const result = BackendAuth.getBackendLoginUrl('https://backend.example.com')
+    const result =await BackendAuth.getBackendLoginUrl('https://backend.example.com')
     expect(result).toBe('https://backend.example.com/auth/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fcurrent%3Ftab%3Dauth%23login')
   } finally {
     if (originalLocation) {
