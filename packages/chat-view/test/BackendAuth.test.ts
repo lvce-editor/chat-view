@@ -99,6 +99,27 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
   }
 })
 
+test('getBackendLoginUrl should include redirect_uri from current location', () => {
+  const originalLocation = Object.getOwnPropertyDescriptor(globalThis, 'location')
+  Object.defineProperty(globalThis, 'location', {
+    configurable: true,
+    value: {
+      href: 'https://chat.example.com/current?tab=auth#login',
+    },
+  })
+
+  try {
+    const result = BackendAuth.getBackendLoginUrl('https://backend.example.com')
+    expect(result).toBe('https://backend.example.com/auth/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fcurrent%3Ftab%3Dauth%23login')
+  } finally {
+    if (originalLocation) {
+      Object.defineProperty(globalThis, 'location', originalLocation)
+    } else {
+      Reflect.deleteProperty(globalThis, 'location')
+    }
+  }
+})
+
 test('logoutFromBackend should post to backend logout endpoint', async () => {
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
