@@ -4,7 +4,7 @@ import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 
-test.skip('renderCss should return setCss command with uid and css', () => {
+test('renderCss should return setCss command with uid and css', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),
@@ -38,21 +38,8 @@ test.skip('renderCss should return setCss command with uid and css', () => {
   expect(result[2].length).toBeGreaterThan(0)
   expect(result[2]).toContain('--ChatTextAreaHeight: 28px;')
   expect(result[2]).toContain('--ChatFocusContentMaxWidth: 700px;')
-  expect(result[2]).toContain('.ChatFocus .ChatMessages > .Message,')
-  expect(result[2]).toContain('.ChatFocus .ChatSendAreaContent{')
-  // expect(result[2]).toContain('.ChatInputBox::selection{')
-  // expect(result[2]).toContain('background: rgba(255, 255, 255, 0.2);')
-  // expect(result[2]).toContain('--ChatSendAreaHeight: 90px;')
-  // expect(result[2]).toContain('--ChatTextAreaPaddingTop: 0px;')
-  // expect(result[2]).toContain('--ChatTextAreaPaddingLeft: 12px;')
-  // expect(result[2]).toContain('--ChatTextAreaPaddingRight: 12px;')
-  // expect(result[2]).toContain('--ChatTextAreaPaddingBottom: 0px;')
-  // expect(result[2]).toContain('--ChatSendAreaPaddingTop: 10px;')
-  // expect(result[2]).toContain('--ChatSendAreaPaddingLeft: 8px;')
-  // expect(result[2]).toContain('--ChatSendAreaPaddingRight: 8px;')
-  // expect(result[2]).toContain('--ChatSendAreaPaddingBottom: 10px;')
-  // expect(result[2]).toContain('.ChatTodoList')
-  // expect(result[2]).toContain('.ChatTodoListItemInProgress::before')
-  // expect(result[2]).toContain('.ChatTodoListItemCompleted::before')
-  // expect(result[2]).toContain('.card{color:green;}')
+  expect(result[2]).toContain('.ChatFocus .ChatMessages > .Message{')
+  expect(result[2]).toContain('.ChatFocus .ChatMessages > .Message > .ChatMessageContent{')
+  expect(result[2]).toContain('.ChatSendAreaBottom{')
+  expect(result[2]).toContain('.card{color:green;}')
 })

@@ -33,7 +33,7 @@ const createError = (message: string, errorName?: string): Error => {
   return error
 }
 
-const waitForDelay = async (delay: number, signal?: AbortSignal): Promise<void> => {
+const waitForDelay = async (delay: number, signal?: Readonly<AbortSignal>): Promise<void> => {
   if (delay <= 0) {
     return
   }
@@ -54,7 +54,7 @@ const waitForDelay = async (delay: number, signal?: AbortSignal): Promise<void> 
   })
 }
 
-const consumeResponse = async (response: Readonly<MockBackendAuthResponse> | undefined, signal?: AbortSignal): Promise<unknown> => {
+const consumeResponse = async (response: Readonly<MockBackendAuthResponse> | undefined, signal?: Readonly<AbortSignal>): Promise<unknown> => {
   if (!response) {
     return undefined
   }
