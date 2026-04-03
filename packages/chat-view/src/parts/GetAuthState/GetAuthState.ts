@@ -1,11 +1,13 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const getAuthState = (state: ChatState): unknown => {
-  const { authAccessToken, authEnabled, authErrorMessage, backendUrl, userName, userState, userSubscriptionPlan, userUsedTokens } = state
+  const { authAccessToken, authEnabled, authMaxDelay, authErrorMessage, backendUrl, userName, userState, userSubscriptionPlan, userUsedTokens } =
+    state
 
   return {
     authAccessToken,
     authEnabled,
+    authMaxDelay,
     authErrorMessage,
     backendUrl,
     userName,

@@ -68,6 +68,35 @@ test('syncBackendAuth should return logged out state for unauthorized response',
   }
 })
 
+test('syncBackendAuth should time out hanging backend refresh requests', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    return new Promise<Response>((resolve, reject) => {
+      init?.signal?.addEventListener(
+        'abort',
+        () => {
+          reject(Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' }))
+        },
+        { once: true },
+      )
+    })
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await BackendAuth.syncBackendAuth('https://backend.example.com', 10)
+    expect(result).toEqual({
+      authAccessToken: '',
+      authErrorMessage: 'Backend authentication timed out.',
+      userName: '',
+      userState: 'loggedOut',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('waitForBackendLogin should retry until backend refresh succeeds', async () => {
   const originalFetch = globalThis.fetch
   let callCount = 0
@@ -94,6 +123,35 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
     expect(result.authAccessToken).toBe('access-token-2')
     expect(result.userName).toBe('second-user')
     expect(result.userState).toBe('loggedIn')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('waitForBackendLogin should fail immediately when backend refresh times out', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    return new Promise<Response>((resolve, reject) => {
+      init?.signal?.addEventListener(
+        'abort',
+        () => {
+          reject(Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' }))
+        },
+        { once: true },
+      )
+    })
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await BackendAuth.waitForBackendLogin('https://backend.example.com', 10, 0)
+    expect(result).toEqual({
+      authAccessToken: '',
+      authErrorMessage: 'Backend authentication timed out.',
+      userName: '',
+      userState: 'loggedOut',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    })
   } finally {
     globalThis.fetch = originalFetch
   }

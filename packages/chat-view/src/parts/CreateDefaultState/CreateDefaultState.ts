@@ -1,6 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
+import { defaultAuthMaxDelay } from '../DefaultAuthMaxDelay/DefaultAuthMaxDelay.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
@@ -31,6 +32,7 @@ export const createDefaultState = (): ChatState => {
     assetDir: '',
     authAccessToken: '',
     authEnabled: false,
+    authMaxDelay: defaultAuthMaxDelay,
     authErrorMessage: '',
     backendUrl: '',
     chatFocusContentMaxWidth: 700,

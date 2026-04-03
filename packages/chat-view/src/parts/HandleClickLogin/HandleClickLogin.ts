@@ -68,8 +68,10 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    await OpenerWorker.openUrl(getBackendLoginUrl(state.backendUrl), state.platform)
-    const authState = await waitForBackendLogin(state.backendUrl)
+    if (!MockBackendAuth.hasPendingMockRefreshResponse()) {
+      await OpenerWorker.openUrl(getBackendLoginUrl(state.backendUrl), state.platform)
+    }
+    const authState = await waitForBackendLogin(state.backendUrl, state.authMaxDelay)
     return {
       ...signingInState,
       ...authState,

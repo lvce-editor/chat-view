@@ -102,6 +102,7 @@ import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
 import * as SetAddContextButtonEnabled from '../SetAddContextButtonEnabled/SetAddContextButtonEnabled.ts'
 import * as SetAuthEnabled from '../SetAuthEnabled/SetAuthEnabled.ts'
+import * as SetAuthMaxDelay from '../SetAuthMaxDelay/SetAuthMaxDelay.ts'
 import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
@@ -238,6 +239,7 @@ export const commandMap = {
   'Chat.saveState': wrapGetter(saveState),
   'Chat.setAddContextButtonEnabled': wrapCommand(SetAddContextButtonEnabled.setAddContextButtonEnabled),
   'Chat.setAuthEnabled': wrapCommand(SetAuthEnabled.setAuthEnabled),
+  'Chat.setAuthMaxDelay': wrapCommand(SetAuthMaxDelay.setAuthMaxDelay),
   'Chat.setBackendUrl': wrapCommand(SetBackendUrl.setBackendUrl),
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),

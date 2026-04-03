@@ -5,6 +5,7 @@ interface MockBackendAuthResponsePayload {
   readonly accessToken?: string
   readonly delay?: number
   readonly message?: string
+  readonly request?: 'login' | 'refresh'
   readonly refreshToken?: string
   readonly subscriptionPlan?: string
   readonly type?: 'error' | 'success'
@@ -26,15 +27,16 @@ const getDelay = (payload: unknown): number => {
 
 export const mockBackendAuthResponse = (state: ChatState, payload: MockBackendAuthResponsePayload): ChatState => {
   const delay = getDelay(payload)
+  const setNextResponse = payload.request === 'refresh' ? MockBackendAuth.setNextRefreshResponse : MockBackendAuth.setNextLoginResponse
   if (payload.type === 'error') {
-    MockBackendAuth.setNextLoginResponse({
+    setNextResponse({
       delay,
       message: payload.message || 'Backend authentication failed.',
       type: 'error',
     })
     return state
   }
-  MockBackendAuth.setNextLoginResponse({
+  setNextResponse({
     delay,
     response: payload,
     type: 'success',

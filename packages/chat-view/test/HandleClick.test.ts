@@ -396,9 +396,55 @@ test('handleClick should open backend login page and sync backend auth state', a
             Accept: 'application/json',
           },
           method: 'POST',
+          signal: expect.any(AbortSignal),
         },
       ],
     ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleClick should use authMaxDelay when backend refresh hangs', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const originalFetch = globalThis.fetch
+  using mockRpc = OpenerWorker.registerMockRpc({
+    'Open.openUrl': async () => {},
+  })
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    return new Promise<Response>((resolve, reject) => {
+      init?.signal?.addEventListener(
+        'abort',
+        () => {
+          reject(Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' }))
+        },
+        { once: true },
+      )
+    })
+  }) as typeof globalThis.fetch
+
+  try {
+    const state: ChatState = {
+      ...createDefaultState(),
+      authEnabled: true,
+      authMaxDelay: 10,
+      backendUrl: 'https://backend.example.com',
+    }
+    const result = await HandleClick.handleClick(state, 'login')
+    expect(result).toEqual({
+      ...state,
+      authAccessToken: '',
+      authEnabled: true,
+      authErrorMessage: 'Backend authentication timed out.',
+      authMaxDelay: 10,
+      backendUrl: 'https://backend.example.com',
+      userName: '',
+      userState: 'loggedOut',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    })
+    expect(mockRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/auth/login', 0]])
   } finally {
     globalThis.fetch = originalFetch
   }

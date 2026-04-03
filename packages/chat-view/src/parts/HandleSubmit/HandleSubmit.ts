@@ -151,7 +151,7 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const authState = state.authEnabled && state.backendUrl ? await syncBackendAuth(state.backendUrl) : undefined
+  const authState = state.authEnabled && state.backendUrl ? await syncBackendAuth(state.backendUrl, state.authMaxDelay) : undefined
   const effectiveState = authState
     ? {
         ...state,

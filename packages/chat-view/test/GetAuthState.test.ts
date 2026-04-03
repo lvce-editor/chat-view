@@ -7,6 +7,7 @@ test('getAuthState should return auth-related fields from state', () => {
     ...createDefaultState(),
     authAccessToken: 'access-token',
     authEnabled: true,
+    authMaxDelay: 2345,
     authErrorMessage: 'failed',
     backendUrl: 'https://example.com',
     userName: 'test-user',
@@ -20,6 +21,7 @@ test('getAuthState should return auth-related fields from state', () => {
   expect(result).toEqual({
     authAccessToken: 'access-token',
     authEnabled: true,
+    authMaxDelay: 2345,
     authErrorMessage: 'failed',
     backendUrl: 'https://example.com',
     userName: 'test-user',
