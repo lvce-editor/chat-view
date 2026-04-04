@@ -23,7 +23,6 @@ export interface ChatState {
   readonly authEnabled: boolean
   readonly authErrorMessage: string
   readonly backendUrl: string
-  readonly useOwnBackend: boolean
   readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
   readonly chatInputHistory: readonly string[]
@@ -137,6 +136,7 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
+  readonly useOwnBackend: boolean
   readonly userName: string
   readonly userState: AuthUserState
   readonly userSubscriptionPlan: string

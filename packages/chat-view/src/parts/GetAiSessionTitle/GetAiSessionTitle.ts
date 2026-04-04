@@ -20,8 +20,8 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     openRouterApiBaseUrl,
     openRouterApiKey,
     selectedModelId,
-    useOwnBackend,
     useMockApi,
+    useOwnBackend,
   } = state
   if (useMockApi) {
     return ''
@@ -73,8 +73,8 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     useChatCoordinatorWorker: state.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useChatToolWorker: state.useChatToolWorker,
-    useOwnBackend,
     useMockApi,
+    useOwnBackend,
     userText: titlePrompt,
     webSearchEnabled: false,
   })

@@ -14,8 +14,6 @@ export type GetBackendErrorMessageResult = BackendHttpErrorResult | BackendReque
 
 export const getBackendErrorMessage = (errorResult: GetBackendErrorMessageResult): string => {
   switch (errorResult.details) {
-    case 'request-failed':
-      return backendCompletionFailedMessage
     case 'http-error': {
       const errorMessage = errorResult.errorMessage?.trim()
       if (typeof errorResult.statusCode === 'number') {
@@ -30,5 +28,7 @@ export const getBackendErrorMessage = (errorResult: GetBackendErrorMessageResult
       }
       return backendCompletionFailedMessage
     }
+    case 'request-failed':
+      return backendCompletionFailedMessage
   }
 }

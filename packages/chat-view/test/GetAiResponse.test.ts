@@ -341,7 +341,8 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
   const originalFetch = globalThis.fetch
   let actualUrl = ''
   let actualInit: RequestInit | undefined
-  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+  globalThis.fetch = (async (...args: readonly [input: string | URL | Request, init?: Readonly<RequestInit>]) => {
+    const [input, init] = args
     actualUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
     actualInit = init
     return {
@@ -376,8 +377,8 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
       systemPrompt: 'You are helpful.',
-      useOwnBackend: true,
       useMockApi: false,
+      useOwnBackend: true,
       userText: 'hello',
     })
 
@@ -391,7 +392,12 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
         'Content-Type': 'application/json',
       }),
     )
-    expect(JSON.parse(String(actualInit?.body))).toEqual({
+    const body = actualInit?.body
+    expect(typeof body).toBe('string')
+    if (typeof body !== 'string') {
+      throw new TypeError('Expected backend completion request body to be a string')
+    }
+    expect(JSON.parse(body)).toEqual({
       messages: [
         {
           content: 'You are helpful.',
@@ -433,8 +439,8 @@ test('getAiResponse should require backend url when useOwnBackend is enabled', a
     openRouterApiKey: '',
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
-    useOwnBackend: true,
     useMockApi: false,
+    useOwnBackend: true,
     userText: 'hello',
   })
 
@@ -463,8 +469,8 @@ test('getAiResponse should require backend access token when useOwnBackend is en
     openRouterApiKey: '',
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
-    useOwnBackend: true,
     useMockApi: false,
+    useOwnBackend: true,
     userText: 'hello',
   })
 
@@ -505,8 +511,8 @@ test('getAiResponse should return backend failure message for non-ok backend res
       openRouterApiKey: '',
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
-      useOwnBackend: true,
       useMockApi: false,
+      useOwnBackend: true,
       userText: 'hello',
     })
 
@@ -551,8 +557,8 @@ test('getAiResponse should include backend API error message and status code for
       openRouterApiKey: '',
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
-      useOwnBackend: true,
       useMockApi: false,
+      useOwnBackend: true,
       userText: 'hello',
     })
 

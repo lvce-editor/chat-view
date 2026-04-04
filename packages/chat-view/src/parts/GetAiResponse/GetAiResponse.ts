@@ -13,13 +13,12 @@ import {
 } from '../ChatStrings/ChatStrings.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
+import { getBackendErrorMessage } from '../GetBackendErrorMessage/GetBackendErrorMessage.ts'
 import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
-import { getBackendErrorMessage } from '../GetBackendErrorMessage/GetBackendErrorMessage.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
 import { getMockOpenRouterAssistantText } from '../GetMockOpenRouterAssistantText/GetMockOpenRouterAssistantText.ts'
-import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
@@ -32,6 +31,7 @@ import { getOpenRouterErrorMessage } from '../GetOpenRouterErrorMessage/GetOpenR
 import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModelId.ts'
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
+import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
 const trailingSlashesRegex = /\/+$/
@@ -142,12 +142,7 @@ const getBackendAssistantText = async (
     })
   }
   if (!response.ok) {
-    let payload: unknown = undefined
-    try {
-      payload = await response.json()
-    } catch {
-      payload = undefined
-    }
+    const payload: unknown = await response.json().catch(() => undefined)
     const errorMessage = getBackendErrorMessageFromBody(payload)
     const statusCode = response.status || getBackendStatusCodeFromBody(payload)
     return getBackendErrorMessage({
@@ -227,8 +222,8 @@ export const getAiResponse = async ({
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
-  useOwnBackend = false,
   useMockApi,
+  useOwnBackend = false,
   userText,
   webSearchEnabled = false,
   workspaceUri,
