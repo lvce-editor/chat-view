@@ -110,7 +110,7 @@ test('getBackendLoginUrl should include redirect_uri from current location', asy
 
   try {
     const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com')
-    expect(result).toBe('https://backend.example.com/auth/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fcurrent%3Ftab%3Dauth%23login')
+    expect(result).toBe('https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fcurrent%3Ftab%3Dauth%23login')
   } finally {
     if (originalLocation) {
       Object.defineProperty(globalThis, 'location', originalLocation)

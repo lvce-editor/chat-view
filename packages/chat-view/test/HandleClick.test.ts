@@ -394,7 +394,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(321)
     expect(mockRpc.invocations).toEqual([
-      ['Open.openUrl', 'https://backend.example.com/auth/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1', 0],
+      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1', 0],
     ])
     expect(fetchCalls).toEqual([
       [
