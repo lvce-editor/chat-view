@@ -355,6 +355,13 @@ test.skip('handleClick should select model from delegated model picker list clic
 test('handleClick should open backend login page and sync backend auth state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  const originalLocation = Object.getOwnPropertyDescriptor(globalThis, 'location')
+  Object.defineProperty(globalThis, 'location', {
+    configurable: true,
+    value: {
+      href: 'https://chat.example.com/workbench?view=chat#session-1',
+    },
+  })
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
   globalThis.fetch = (async (...args: readonly unknown[]) => {
@@ -386,7 +393,9 @@ test('handleClick should open backend login page and sync backend auth state', a
     expect(result.userState).toBe('loggedIn')
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(321)
-    expect(mockRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/auth/login', 0]])
+    expect(mockRpc.invocations).toEqual([
+      ['Open.openUrl', 'https://backend.example.com/auth/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1', 0],
+    ])
     expect(fetchCalls).toEqual([
       [
         'https://backend.example.com/auth/refresh',
@@ -402,6 +411,11 @@ test('handleClick should open backend login page and sync backend auth state', a
     ])
   } finally {
     globalThis.fetch = originalFetch
+    if (originalLocation) {
+      Object.defineProperty(globalThis, 'location', originalLocation)
+    } else {
+      Reflect.deleteProperty(globalThis, 'location')
+    }
   }
 })
 
