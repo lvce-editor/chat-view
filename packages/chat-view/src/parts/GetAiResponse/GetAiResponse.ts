@@ -93,8 +93,16 @@ const getBackendAssistantText = async (
   if (mockError) {
     return getBackendErrorMessage({
       details: 'http-error',
-      errorMessage: getBackendErrorMessageFromBody(mockError.body),
-      statusCode: mockError.statusCode,
+      ...(typeof mockError.statusCode === 'number'
+        ? {
+            statusCode: mockError.statusCode,
+          }
+        : {}),
+      ...(getBackendErrorMessageFromBody(mockError.body)
+        ? {
+            errorMessage: getBackendErrorMessageFromBody(mockError.body),
+          }
+        : {}),
     })
   }
 
@@ -139,10 +147,20 @@ const getBackendAssistantText = async (
     } catch {
       payload = undefined
     }
+    const errorMessage = getBackendErrorMessageFromBody(payload)
+    const statusCode = response.status || getBackendStatusCodeFromBody(payload)
     return getBackendErrorMessage({
       details: 'http-error',
-      errorMessage: getBackendErrorMessageFromBody(payload),
-      statusCode: response.status || getBackendStatusCodeFromBody(payload),
+      ...(typeof statusCode === 'number'
+        ? {
+            statusCode,
+          }
+        : {}),
+      ...(errorMessage
+        ? {
+            errorMessage,
+          }
+        : {}),
     })
   }
   let json: {
