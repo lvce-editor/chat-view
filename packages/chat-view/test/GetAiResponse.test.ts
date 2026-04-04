@@ -338,12 +338,16 @@ test.skip('getAiResponse should reject image attachments for models without imag
   expect(MockOpenApiRequest.getAll()).toEqual([])
 })
 
-test.skip('getAiResponse should use backend completions when auth is enabled', async () => {
+test('getAiResponse should use backend completions when useOwnBackend is enabled', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  let actualUrl = ''
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+    actualUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+    actualInit = init
     return {
       json: async () => ({
-        choices: [{ message: { content: 'Backend completion response' } }],
+        text: 'Backend completion response',
       }),
       ok: true,
       status: 200,
@@ -354,7 +358,6 @@ test.skip('getAiResponse should use backend completions when auth is enabled', a
     const result = await getAiResponse({
       assetDir: '',
       authAccessToken: 'backend-token',
-      authEnabled: true,
       backendUrl: 'https://backend.example.com',
       messages: [
         {
@@ -373,22 +376,46 @@ test.skip('getAiResponse should use backend completions when auth is enabled', a
       openRouterApiKey: '',
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: 'You are helpful.',
+      useOwnBackend: true,
       useMockApi: false,
       userText: 'hello',
     })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('Backend completion response')
+    expect(actualUrl).toBe('https://backend.example.com/v1/chat/completions')
+    expect(actualInit?.method).toBe('POST')
+    expect(actualInit?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer backend-token',
+        'Content-Type': 'application/json',
+      }),
+    )
+    expect(JSON.parse(String(actualInit?.body))).toEqual({
+      messages: [
+        {
+          content: 'You are helpful.',
+          role: 'system',
+        },
+        {
+          content: 'hello',
+          role: 'user',
+        },
+      ],
+      model: 'openapi/gpt-4o-mini',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      stream: false,
+    })
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
-test.skip('getAiResponse should require backend url when auth is enabled', async () => {
+test('getAiResponse should require backend url when useOwnBackend is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: 'backend-token',
-    authEnabled: true,
     backendUrl: '',
     messages: [
       {
@@ -407,6 +434,7 @@ test.skip('getAiResponse should require backend url when auth is enabled', async
     openRouterApiKey: '',
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
+    useOwnBackend: true,
     useMockApi: false,
     userText: 'hello',
   })
@@ -414,11 +442,10 @@ test.skip('getAiResponse should require backend url when auth is enabled', async
   expect(result.text).toBe(backendUrlRequiredMessage)
 })
 
-test.skip('getAiResponse should require backend access token when auth is enabled', async () => {
+test('getAiResponse should require backend access token when useOwnBackend is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: '',
-    authEnabled: true,
     backendUrl: 'https://backend.example.com',
     messages: [
       {
@@ -437,6 +464,7 @@ test.skip('getAiResponse should require backend access token when auth is enable
     openRouterApiKey: '',
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
+    useOwnBackend: true,
     useMockApi: false,
     userText: 'hello',
   })
@@ -444,7 +472,7 @@ test.skip('getAiResponse should require backend access token when auth is enable
   expect(result.text).toBe(backendAccessTokenRequiredMessage)
 })
 
-test.skip('getAiResponse should return backend failure message for non-ok backend responses', async () => {
+test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
@@ -457,7 +485,6 @@ test.skip('getAiResponse should return backend failure message for non-ok backen
     const result = await getAiResponse({
       assetDir: '',
       authAccessToken: 'backend-token',
-      authEnabled: true,
       backendUrl: 'https://backend.example.com',
       messages: [
         {
@@ -476,6 +503,7 @@ test.skip('getAiResponse should return backend failure message for non-ok backen
       openRouterApiKey: '',
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
+      useOwnBackend: true,
       useMockApi: false,
       userText: 'hello',
     })

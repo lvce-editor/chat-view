@@ -40,6 +40,7 @@ export interface GetAiResponseOptions {
   readonly useChatCoordinatorWorker?: boolean
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
+  readonly useOwnBackend?: boolean
   readonly useMockApi: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean

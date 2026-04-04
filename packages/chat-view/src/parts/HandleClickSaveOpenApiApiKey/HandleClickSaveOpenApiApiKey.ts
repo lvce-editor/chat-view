@@ -64,6 +64,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     systemPrompt: updatedState.systemPrompt,
     useChatCoordinatorWorker: updatedState.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: updatedState.useChatNetworkWorkerForRequests,
+    useOwnBackend: updatedState.useOwnBackend,
     useMockApi: updatedState.useMockApi,
     userText: previousUserMessage.text,
   })

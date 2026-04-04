@@ -39,14 +39,6 @@ const getBackendCompletionsEndpoint = (backendUrl: string): string => {
   return `${trimmedBackendUrl}/v1/chat/completions`
 }
 
-const getEffectiveBackendModelId = (selectedModelId: string): string => {
-  const separatorIndex = selectedModelId.indexOf('/')
-  if (separatorIndex === -1) {
-    return selectedModelId
-  }
-  return selectedModelId.slice(separatorIndex + 1)
-}
-
 const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
   return messages.some((message) => message.attachments?.some((attachment) => attachment.displayType === 'image'))
 }
@@ -76,7 +68,8 @@ const getBackendAssistantText = async (
             role: message.role,
           })),
         ],
-        model: getEffectiveBackendModelId(selectedModelId),
+        model: selectedModelId,
+        selectedModelId,
         stream: false,
       }),
       headers: {
@@ -93,13 +86,17 @@ const getBackendAssistantText = async (
     return backendCompletionFailedMessage
   }
   const json = (await response.json()) as {
+    readonly message?: {
+      readonly content?: string
+    }
+    readonly text?: string
     readonly choices?: readonly {
       readonly message?: {
         readonly content?: string
       }
     }[]
   }
-  const content = json.choices?.[0]?.message?.content
+  const content = json.text || json.message?.content || json.choices?.[0]?.message?.content
   return typeof content === 'string' && content ? content : backendCompletionFailedMessage
 }
 
@@ -107,7 +104,6 @@ export const getAiResponse = async ({
   agentMode = defaultAgentMode,
   assetDir,
   authAccessToken,
-  authEnabled = false,
   backendUrl = '',
   maxToolCalls = defaultMaxToolCalls,
   messageId,
@@ -137,13 +133,14 @@ export const getAiResponse = async ({
   useChatCoordinatorWorker = false,
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
+  useOwnBackend = false,
   useMockApi,
   userText,
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   useChatCoordinatorWorker = false // TODO enable this
-  if (useChatCoordinatorWorker && !authEnabled) {
+  if (useChatCoordinatorWorker && !useOwnBackend) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,
@@ -213,7 +210,7 @@ export const getAiResponse = async ({
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
-  if (!text && authEnabled) {
+  if (!text && useOwnBackend) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {

@@ -151,7 +151,8 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const authState = state.authEnabled && state.backendUrl ? await syncBackendAuth(state.backendUrl) : undefined
+  const shouldSyncBackendAuth = (state.authEnabled || state.useOwnBackend) && !!state.backendUrl
+  const authState = shouldSyncBackendAuth ? await syncBackendAuth(state.backendUrl) : undefined
   const effectiveState = authState
     ? {
         ...state,
@@ -188,6 +189,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     useMockApi,
     viewMode,
     webSearchEnabled,
@@ -439,6 +441,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     useMockApi,
     userText,
     webSearchEnabled,

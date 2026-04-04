@@ -13,7 +13,6 @@ Assistant: ${assistantText}`
 export const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
   const {
     authAccessToken,
-    authEnabled,
     backendUrl,
     models,
     openApiApiBaseUrl,
@@ -21,6 +20,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     openRouterApiBaseUrl,
     openRouterApiKey,
     selectedModelId,
+    useOwnBackend,
     useMockApi,
   } = state
   if (useMockApi) {
@@ -28,14 +28,20 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (!authEnabled && usesOpenApiModel && !openApiApiKey) {
-    return ''
-  }
-  if (!authEnabled && usesOpenRouterModel && !openRouterApiKey) {
-    return ''
-  }
-  if (!authEnabled && !usesOpenApiModel && !usesOpenRouterModel) {
-    return ''
+  if (useOwnBackend) {
+    if (!backendUrl || !authAccessToken) {
+      return ''
+    }
+  } else {
+    if (usesOpenApiModel && !openApiApiKey) {
+      return ''
+    }
+    if (usesOpenRouterModel && !openRouterApiKey) {
+      return ''
+    }
+    if (!usesOpenApiModel && !usesOpenRouterModel) {
+      return ''
+    }
   }
 
   const titlePrompt = getTitlePrompt(userText, assistantText)
@@ -48,7 +54,6 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
   const titleResponse = await getAiResponse({
     assetDir: state.assetDir,
     authAccessToken,
-    authEnabled,
     backendUrl,
     maxToolCalls: state.maxToolCalls,
     messages: [promptMessage],
@@ -68,6 +73,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     useChatCoordinatorWorker: state.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useChatToolWorker: state.useChatToolWorker,
+    useOwnBackend,
     useMockApi,
     userText: titlePrompt,
     webSearchEnabled: false,

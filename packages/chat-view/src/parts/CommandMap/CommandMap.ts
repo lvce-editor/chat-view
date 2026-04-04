@@ -121,6 +121,7 @@ import * as SetToolEnablement from '../SetToolEnablement/SetToolEnablement.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
+import * as SetUseOwnBackend from '../SetUseOwnBackend/SetUseOwnBackend.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
@@ -257,6 +258,7 @@ export const commandMap = {
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
+  'Chat.setUseOwnBackend': wrapCommand(SetUseOwnBackend.setUseOwnBackend),
   'Chat.showComposerAttachmentPreviewOverlay': wrapCommand(ShowComposerAttachmentPreviewOverlay.showComposerAttachmentPreviewOverlay),
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),

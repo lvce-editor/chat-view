@@ -17,6 +17,7 @@ import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/Lo
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
+import { loadUseOwnBackend } from '../LoadUseOwnBackend/LoadUseOwnBackend.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
 export interface LoadedPreferences {
@@ -39,6 +40,7 @@ export interface LoadedPreferences {
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
+  useOwnBackend: boolean
   voiceDictationEnabled: boolean
 }
 
@@ -63,6 +65,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     voiceDictationEnabled,
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
@@ -84,6 +87,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadUseChatMathWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadUseChatToolWorker(),
+    loadUseOwnBackend(),
     loadVoiceDictationEnabled(),
   ])
 
@@ -107,6 +111,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     voiceDictationEnabled,
   }
 }
