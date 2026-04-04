@@ -14,7 +14,7 @@ const getCurrentHref = async (): Promise<string> => {
 }
 
 export const getBackendLoginUrl = async (backendUrl: string): Promise<string> => {
-  const loginUrl = new URL(getBackendAuthUrl(backendUrl, '/auth/login'))
+  const loginUrl = new URL(getBackendAuthUrl(backendUrl, '/login'))
   const redirectUri = await getCurrentHref()
   if (redirectUri) {
     loginUrl.searchParams.set('redirect_uri', redirectUri)
