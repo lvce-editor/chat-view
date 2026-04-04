@@ -60,7 +60,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const authState = authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
+  const authState =
+    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions

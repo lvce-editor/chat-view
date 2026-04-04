@@ -476,6 +476,9 @@ test('getAiResponse should return backend failure message for non-ok backend res
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
+      json: async () => ({
+        error: 'Vercel AI Gateway error (status 500): Upstream request failed.',
+      }),
       ok: false,
       status: 500,
     } as Response
@@ -508,7 +511,55 @@ test('getAiResponse should return backend failure message for non-ok backend res
       userText: 'hello',
     })
 
-    expect(result.text).toBe(backendCompletionFailedMessage)
+    expect(result.text).toBe('Backend completion request failed (status 500). Vercel AI Gateway error (status 500): Upstream request failed.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should include backend API error message and status code for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        error: 'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
+        statusCode: 403,
+      }),
+      ok: false,
+      status: 403,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useOwnBackend: true,
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 403). Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
+    )
   } finally {
     globalThis.fetch = originalFetch
   }

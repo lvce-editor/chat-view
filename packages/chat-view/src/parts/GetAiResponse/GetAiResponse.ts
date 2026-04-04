@@ -15,9 +15,11 @@ import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getBackendErrorMessage } from '../GetBackendErrorMessage/GetBackendErrorMessage.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
 import { getMockOpenApiAssistantText } from '../GetMockOpenApiAssistantText/GetMockOpenApiAssistantText.ts'
 import { getMockOpenRouterAssistantText } from '../GetMockOpenRouterAssistantText/GetMockOpenRouterAssistantText.ts'
+import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getOpenApiAssistantText } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import { getOpenAiParams } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
@@ -43,6 +45,43 @@ const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
   return messages.some((message) => message.attachments?.some((attachment) => attachment.displayType === 'image'))
 }
 
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return !!value && typeof value === 'object'
+}
+
+const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const directMessage = Reflect.get(body, 'message')
+  if (typeof directMessage === 'string' && directMessage) {
+    return directMessage
+  }
+  const directError = Reflect.get(body, 'error')
+  if (typeof directError === 'string' && directError) {
+    return directError
+  }
+  if (!isObject(directError)) {
+    return undefined
+  }
+  const nestedMessage = Reflect.get(directError, 'message')
+  if (typeof nestedMessage === 'string' && nestedMessage) {
+    return nestedMessage
+  }
+  return undefined
+}
+
+const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const statusCode = Reflect.get(body, 'statusCode')
+  if (typeof statusCode === 'number') {
+    return statusCode
+  }
+  return undefined
+}
+
 const getBackendAssistantText = async (
   messages: readonly ChatMessage[],
   selectedModelId: string,
@@ -50,6 +89,15 @@ const getBackendAssistantText = async (
   authAccessToken: string,
   systemPrompt: string,
 ): Promise<string> => {
+  const mockError = MockBackendCompletion.takeErrorResponse()
+  if (mockError) {
+    return getBackendErrorMessage({
+      details: 'http-error',
+      errorMessage: getBackendErrorMessageFromBody(mockError.body),
+      statusCode: mockError.statusCode,
+    })
+  }
+
   let response: Response
   try {
     response = await fetch(getBackendCompletionsEndpoint(backendUrl), {
@@ -80,12 +128,24 @@ const getBackendAssistantText = async (
       method: 'POST',
     })
   } catch {
-    return backendCompletionFailedMessage
+    return getBackendErrorMessage({
+      details: 'request-failed',
+    })
   }
   if (!response.ok) {
-    return backendCompletionFailedMessage
+    let payload: unknown = undefined
+    try {
+      payload = await response.json()
+    } catch {
+      payload = undefined
+    }
+    return getBackendErrorMessage({
+      details: 'http-error',
+      errorMessage: getBackendErrorMessageFromBody(payload),
+      statusCode: response.status || getBackendStatusCodeFromBody(payload),
+    })
   }
-  const json = (await response.json()) as {
+  let json: {
     readonly message?: {
       readonly content?: string
     }
@@ -95,6 +155,21 @@ const getBackendAssistantText = async (
         readonly content?: string
       }
     }[]
+  }
+  try {
+    json = (await response.json()) as {
+      readonly message?: {
+        readonly content?: string
+      }
+      readonly text?: string
+      readonly choices?: readonly {
+        readonly message?: {
+          readonly content?: string
+        }
+      }[]
+    }
+  } catch {
+    return backendCompletionFailedMessage
   }
   const content = json.text || json.message?.content || json.choices?.[0]?.message?.content
   return typeof content === 'string' && content ? content : backendCompletionFailedMessage
