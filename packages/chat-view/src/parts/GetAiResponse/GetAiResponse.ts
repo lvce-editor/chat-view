@@ -91,6 +91,7 @@ const getBackendAssistantText = async (
 ): Promise<string> => {
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
+    const errorMessage = getBackendErrorMessageFromBody(mockError.body)
     return getBackendErrorMessage({
       details: 'http-error',
       ...(typeof mockError.statusCode === 'number'
@@ -98,9 +99,9 @@ const getBackendAssistantText = async (
             statusCode: mockError.statusCode,
           }
         : {}),
-      ...(getBackendErrorMessageFromBody(mockError.body)
+      ...(errorMessage
         ? {
-            errorMessage: getBackendErrorMessageFromBody(mockError.body),
+            errorMessage,
           }
         : {}),
     })

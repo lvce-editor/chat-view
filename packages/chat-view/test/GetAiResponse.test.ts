@@ -4,7 +4,6 @@ import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import {
   backendAccessTokenRequiredMessage,
-  backendCompletionFailedMessage,
   backendUrlRequiredMessage,
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
