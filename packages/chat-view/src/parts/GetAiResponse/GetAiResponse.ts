@@ -144,20 +144,33 @@ const getBackendResponseOutputText = (body: unknown): string => {
   return chunks.join('')
 }
 
-const getBackendResponsesBody = (messages: readonly ChatMessage[], modelId: string, systemPrompt: string): object => {
-  return {
-    input: messages.map((message) => ({
-      content: getChatMessageOpenAiContent(message),
-      role: message.role,
-    })),
-    ...(systemPrompt
-      ? {
-          instructions: systemPrompt,
-        }
-      : {}),
-    model: modelId,
-    stream: false,
-  }
+const getBackendResponsesBody = (
+  messages: readonly ChatMessage[],
+  modelId: string,
+  systemPrompt: string,
+  tools: readonly unknown[],
+  maxToolCalls: number,
+  webSearchEnabled: boolean,
+  reasoningEffort?: GetAiResponseOptions['reasoningEffort'],
+  supportsReasoningEffort = false,
+): object => {
+  const input = messages.map((message) => ({
+    content: getChatMessageOpenAiContent(message),
+    role: message.role,
+  }))
+  return getOpenAiParams(
+    input,
+    modelId,
+    false,
+    false,
+    tools,
+    webSearchEnabled,
+    maxToolCalls,
+    systemPrompt,
+    undefined,
+    reasoningEffort,
+    supportsReasoningEffort,
+  )
 }
 
 const getBackendAssistantText = async (
@@ -166,6 +179,13 @@ const getBackendAssistantText = async (
   backendUrl: string,
   authAccessToken: string,
   systemPrompt: string,
+  agentMode = defaultAgentMode,
+  questionToolEnabled = false,
+  toolEnablement?: GetAiResponseOptions['toolEnablement'],
+  maxToolCalls = defaultMaxToolCalls,
+  webSearchEnabled = false,
+  reasoningEffort?: GetAiResponseOptions['reasoningEffort'],
+  supportsReasoningEffort = false,
 ): Promise<string> => {
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
@@ -187,8 +207,20 @@ const getBackendAssistantText = async (
 
   let response: Response
   try {
+    const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
     response = await fetch(getBackendResponsesEndpoint(backendUrl), {
-      body: JSON.stringify(getBackendResponsesBody(messages, modelId, systemPrompt)),
+      body: JSON.stringify(
+        getBackendResponsesBody(
+          messages,
+          modelId,
+          systemPrompt,
+          tools,
+          maxToolCalls,
+          webSearchEnabled,
+          reasoningEffort,
+          supportsReasoningEffort,
+        ),
+      ),
       headers: {
         Authorization: `Bearer ${authAccessToken}`,
         'Content-Type': 'application/json',
@@ -336,6 +368,7 @@ export const getAiResponse = async ({
   const selectedModel = models.find((model) => model.id === selectedModelId)
   const supportsImages = selectedModel?.supportsImages ?? false
   const supportsReasoningEffort = selectedModel?.supportsReasoningEffort ?? false
+  const safeMaxToolCalls = Math.max(1, maxToolCalls)
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
@@ -343,13 +376,25 @@ export const getAiResponse = async ({
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {
-      text = await getBackendAssistantText(messages, getOpenApiModelId(selectedModelId), backendUrl, authAccessToken, systemPrompt)
+      text = await getBackendAssistantText(
+        messages,
+        getOpenApiModelId(selectedModelId),
+        backendUrl,
+        authAccessToken,
+        systemPrompt,
+        agentMode,
+        questionToolEnabled,
+        toolEnablement,
+        safeMaxToolCalls,
+        agentMode === 'plan' ? false : webSearchEnabled,
+        reasoningEffort,
+        supportsReasoningEffort,
+      )
     } else {
       text = backendAccessTokenRequiredMessage
     }
   }
   if (!text && usesOpenApiModel) {
-    const safeMaxToolCalls = Math.max(1, maxToolCalls)
     if (useMockApi) {
       const openAiInput: any[] = messages.map((message) => ({
         content: getChatMessageOpenAiContent(message),
