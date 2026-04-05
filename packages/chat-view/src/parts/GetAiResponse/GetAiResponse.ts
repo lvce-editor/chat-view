@@ -346,7 +346,7 @@ const getBackendAssistantText = async ({
         : {}),
     })
   }
-    const mockResponse = MockBackendCompletion.takeResponse()
+  const mockResponse = MockBackendCompletion.takeResponse()
 
   const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
   const input: unknown[] = messages.map((message) => ({
@@ -365,7 +365,17 @@ const getBackendAssistantText = async ({
       try {
         response = await fetch(getBackendResponsesEndpoint(backendUrl), {
           body: JSON.stringify(
-            getBackendResponsesBody(input, modelId, systemPrompt, tools, maxToolCalls, webSearchEnabled, previousResponseId, reasoningEffort, supportsReasoningEffort),
+            getBackendResponsesBody(
+              input,
+              modelId,
+              systemPrompt,
+              tools,
+              maxToolCalls,
+              webSearchEnabled,
+              previousResponseId,
+              reasoningEffort,
+              supportsReasoningEffort,
+            ),
           ),
           headers: {
             Authorization: `Bearer ${authAccessToken}`,
