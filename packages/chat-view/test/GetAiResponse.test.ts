@@ -523,6 +523,228 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
   }
 })
 
+test('getAiResponse should execute backend response tool calls and continue with previous response id', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => '{"workspaceUri":"file:///workspace"}',
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Get workspace uri',
+          name: 'getWorkspaceUri',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  const originalFetch = globalThis.fetch
+  const requestBodies: unknown[] = []
+  const toolCallChunks: unknown[] = []
+  let requestCount = 0
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    requestCount++
+    const init = args[1] as RequestInit | undefined
+    const body = init?.body
+    requestBodies.push(typeof body === 'string' ? JSON.parse(body) : body)
+    if (requestCount === 1) {
+      return {
+        json: async () => ({
+          id: 'resp_1',
+          output: [
+            {
+              arguments: '{}',
+              call_id: 'call_1',
+              id: 'fc_1',
+              name: 'getWorkspaceUri',
+              status: 'completed',
+              type: 'function_call',
+            },
+          ],
+          status: 'completed',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        id: 'resp_2',
+        output: [
+          {
+            content: [
+              {
+                text: 'Workspace resolved.',
+                type: 'output_text',
+              },
+            ],
+            id: 'msg_1',
+            type: 'message',
+          },
+        ],
+        status: 'completed',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-5.4-mini', name: 'GPT-5.4 Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      onToolCallsChunk: async (toolCalls) => {
+        toolCallChunks.push(toolCalls)
+      },
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-5.4-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+      workspaceUri: 'file:///workspace',
+    })
+
+    expect(result.text).toBe('Workspace resolved.')
+    expect(requestBodies).toEqual([
+      {
+        input: [
+          {
+            content: 'hello',
+            role: 'user',
+          },
+        ],
+        max_tool_calls: defaultMaxToolCalls,
+        model: 'gpt-5.4-mini',
+        tool_choice: 'auto',
+        tools: [
+          {
+            description: 'Get workspace uri',
+            name: 'getWorkspaceUri',
+            parameters: {
+              additionalProperties: false,
+              properties: {},
+              type: 'object',
+            },
+            type: 'function',
+          },
+        ],
+      },
+      {
+        input: [
+          {
+            call_id: 'call_1',
+            output: '{"workspaceUri":"file:///workspace"}',
+            type: 'function_call_output',
+          },
+        ],
+        max_tool_calls: defaultMaxToolCalls,
+        model: 'gpt-5.4-mini',
+        previous_response_id: 'resp_1',
+        tool_choice: 'auto',
+        tools: [
+          {
+            description: 'Get workspace uri',
+            name: 'getWorkspaceUri',
+            parameters: {
+              additionalProperties: false,
+              properties: {},
+              type: 'object',
+            },
+            type: 'function',
+          },
+        ],
+      },
+    ])
+    expect(toolCallChunks).toEqual([
+      [
+        {
+          arguments: '{}',
+          id: 'call_1',
+          name: 'getWorkspaceUri',
+          result: 'file:///workspace',
+          status: 'success',
+        },
+      ],
+    ])
+    expect(mockChatToolRpc.invocations).toEqual([
+      ['ChatTool.getTools'],
+      ['ChatTool.execute', 'getWorkspaceUri', '{}', { assetDir: '', platform: 0, workspaceUri: 'file:///workspace' }],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should explain invalid successful backend responses', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [],
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        id: 'resp_invalid',
+        output: [],
+        status: 'completed',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-5.4-mini', name: 'GPT-5.4 Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-5.4-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe('Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.')
+    expect(mockChatToolRpc.invocations).toEqual([['ChatTool.getTools']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getAiResponse should require backend url when useOwnBackend is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',

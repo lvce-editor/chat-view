@@ -77,6 +77,7 @@ import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import * as MockBackendAuthResponse from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
 import * as MockBackendSetHttpErrorResponse from '../MockBackendSetHttpErrorResponse/MockBackendSetHttpErrorResponse.ts'
+import * as MockBackendSetResponse from '../MockBackendSetResponse/MockBackendSetResponse.ts'
 import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenApiRequestGetAll.ts'
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
@@ -215,6 +216,7 @@ export const commandMap = {
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.mockBackendAuthResponse': wrapCommand(MockBackendAuthResponse.mockBackendAuthResponse),
   'Chat.mockBackendSetHttpErrorResponse': wrapCommand(MockBackendSetHttpErrorResponse.mockBackendSetHttpErrorResponse),
+  'Chat.mockBackendSetResponse': wrapCommand(MockBackendSetResponse.mockBackendSetResponse),
   'Chat.mockOpenApiRequestGetAll': wrapGetter(MockOpenApiRequestGetAll.mockOpenApiRequestGetAll),
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),

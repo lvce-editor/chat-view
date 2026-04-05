@@ -39,3 +39,21 @@ test('getBackendErrorMessage should return the generic request failed message fo
 
   expect(result).toBe(backendCompletionFailedMessage)
 })
+
+test('getBackendErrorMessage should include transport error details when available', () => {
+  const result = getBackendErrorMessage({
+    details: 'request-failed',
+    errorMessage: 'fetch failed',
+  })
+
+  expect(result).toBe('Backend completion request failed. fetch failed')
+})
+
+test('getBackendErrorMessage should include invalid response details when available', () => {
+  const result = getBackendErrorMessage({
+    details: 'invalid-response',
+    errorMessage: 'Unexpected backend response format: no assistant text or tool calls were returned.',
+  })
+
+  expect(result).toBe('Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.')
+})

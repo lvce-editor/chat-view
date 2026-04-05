@@ -2,7 +2,7 @@ export const reasoningEfforts = ['extra-high', 'high', 'medium', 'low'] as const
 
 export type ReasoningEffort = (typeof reasoningEfforts)[number]
 
-export const defaultReasoningEffort: ReasoningEffort = 'high'
+export const defaultReasoningEffort: ReasoningEffort = 'medium'
 
 export const isReasoningEffort = (value: string): value is ReasoningEffort => {
   return reasoningEfforts.includes(value as ReasoningEffort)
