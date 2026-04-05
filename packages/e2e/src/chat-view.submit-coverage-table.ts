@@ -1,3 +1,5 @@
+/* cspell:ignore Worktree */
+
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.submit-coverage-table'
@@ -839,7 +841,12 @@ All files                                                 |   81.22 |    62.02 |
 
 const expectedRowCount = coverageTable
   .split('\n')
-  .filter((line) => line.trim() && !line.startsWith('---') && line !== 'File                                                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s').length
+  .filter(
+    (line) =>
+      line.trim() &&
+      !line.startsWith('---') &&
+      line !== 'File                                                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s',
+  ).length
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
