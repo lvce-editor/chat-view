@@ -348,7 +348,7 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
     actualInit = init as RequestInit | undefined
     return {
       json: async () => ({
-        text: 'Backend completion response',
+        output_text: 'Backend completion response',
       }),
       ok: true,
       status: 200,
@@ -385,7 +385,7 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('Backend completion response')
-    expect(actualUrl).toBe('https://backend.example.com/v1/chat/completions')
+    expect(actualUrl).toBe('https://backend.example.com/v1/responses')
     expect(actualInit?.method).toBe('POST')
     expect(actualInit?.headers).toEqual(
       expect.objectContaining({
@@ -399,18 +399,14 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
       throw new TypeError('Expected backend completion request body to be a string')
     }
     expect(JSON.parse(body)).toEqual({
-      messages: [
-        {
-          content: 'You are helpful.',
-          role: 'system',
-        },
+      input: [
         {
           content: 'hello',
           role: 'user',
         },
       ],
-      model: 'openapi/gpt-4o-mini',
-      selectedModelId: 'openapi/gpt-4o-mini',
+      instructions: 'You are helpful.',
+      model: 'gpt-4o-mini',
       stream: false,
     })
   } finally {

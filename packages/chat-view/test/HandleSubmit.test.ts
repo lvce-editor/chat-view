@@ -1059,10 +1059,10 @@ test('handleSubmit should sync backend auth and use backend completions when use
         status: 200,
       } as Response
     }
-    if (url.endsWith('/v1/chat/completions')) {
+    if (url.endsWith('/v1/responses')) {
       return {
         json: async () => ({
-          text: 'Backend completion response',
+          output_text: 'Backend completion response',
         }),
         ok: true,
         status: 200,
@@ -1091,12 +1091,22 @@ test('handleSubmit should sync backend auth and use backend completions when use
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
     expect(requests).toHaveLength(2)
     expect(requests[0].url).toBe('https://backend.example.com/auth/refresh')
-    expect(requests[1].url).toBe('https://backend.example.com/v1/chat/completions')
+    expect(requests[1].url).toBe('https://backend.example.com/v1/responses')
     expect(requests[1].init?.headers).toEqual(
       expect.objectContaining({
         Authorization: 'Bearer access-token-1',
       }),
     )
+    expect(JSON.parse(requests[1].init?.body as string)).toEqual({
+      input: [
+        {
+          content: 'hello',
+          role: 'user',
+        },
+      ],
+      model: 'gpt-4o-mini',
+      stream: false,
+    })
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
