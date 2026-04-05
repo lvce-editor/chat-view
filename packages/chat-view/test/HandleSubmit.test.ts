@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
@@ -1108,8 +1109,10 @@ test('handleSubmit should sync backend auth and use backend completions when use
         },
       ],
       instructions: 'Current date: 2026-03-25.\n\nDo not assume your knowledge cutoff is the same as the current date.',
+      max_tool_calls: defaultMaxToolCalls,
       model: 'gpt-4o-mini',
-      stream: false,
+      tool_choice: 'auto',
+      tools: [{ type: 'web_search' }],
     })
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
