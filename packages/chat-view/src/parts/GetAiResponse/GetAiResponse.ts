@@ -210,16 +210,7 @@ const getBackendAssistantText = async (
     const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
     response = await fetch(getBackendResponsesEndpoint(backendUrl), {
       body: JSON.stringify(
-        getBackendResponsesBody(
-          messages,
-          modelId,
-          systemPrompt,
-          tools,
-          maxToolCalls,
-          webSearchEnabled,
-          reasoningEffort,
-          supportsReasoningEffort,
-        ),
+        getBackendResponsesBody(messages, modelId, systemPrompt, tools, maxToolCalls, webSearchEnabled, reasoningEffort, supportsReasoningEffort),
       ),
       headers: {
         Authorization: `Bearer ${authAccessToken}`,
