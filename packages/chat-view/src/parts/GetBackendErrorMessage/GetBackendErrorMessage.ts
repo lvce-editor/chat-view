@@ -34,19 +34,19 @@ export const getBackendErrorMessage = (errorResult: GetBackendErrorMessageResult
       }
       return backendCompletionFailedMessage
     }
-    case 'request-failed': {
-      const errorMessage = errorResult.errorMessage?.trim()
-      if (errorMessage) {
-        return `Backend completion request failed. ${errorMessage}`
-      }
-      return backendCompletionFailedMessage
-    }
     case 'invalid-response': {
       const errorMessage = errorResult.errorMessage?.trim()
       if (errorMessage) {
         return `Backend completion request failed. ${errorMessage}`
       }
       return 'Backend completion request failed. Unexpected backend response format.'
+    }
+    case 'request-failed': {
+      const errorMessage = errorResult.errorMessage?.trim()
+      if (errorMessage) {
+        return `Backend completion request failed. ${errorMessage}`
+      }
+      return backendCompletionFailedMessage
     }
   }
 }
