@@ -41,6 +41,7 @@ export interface GetAiResponseOptions {
   readonly useChatNetworkWorkerForRequests?: boolean
   readonly useChatToolWorker?: boolean
   readonly useMockApi: boolean
+  readonly useOwnBackend?: boolean
   readonly userText: string
   readonly webSearchEnabled?: boolean
   readonly workspaceUri?: string

@@ -57,9 +57,11 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const authState = authEnabled && backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
+  const authState =
+    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -165,6 +167,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useOwnBackend,
     userName: authState.userName,
     userState: authState.userState,
     userSubscriptionPlan: authState.userSubscriptionPlan,

@@ -13,7 +13,6 @@ Assistant: ${assistantText}`
 export const getAiSessionTitle = async (state: ChatState, userText: string, assistantText: string): Promise<string> => {
   const {
     authAccessToken,
-    authEnabled,
     backendUrl,
     models,
     openApiApiBaseUrl,
@@ -22,20 +21,27 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     openRouterApiKey,
     selectedModelId,
     useMockApi,
+    useOwnBackend,
   } = state
   if (useMockApi) {
     return ''
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (!authEnabled && usesOpenApiModel && !openApiApiKey) {
-    return ''
-  }
-  if (!authEnabled && usesOpenRouterModel && !openRouterApiKey) {
-    return ''
-  }
-  if (!authEnabled && !usesOpenApiModel && !usesOpenRouterModel) {
-    return ''
+  if (useOwnBackend) {
+    if (!backendUrl || !authAccessToken) {
+      return ''
+    }
+  } else {
+    if (usesOpenApiModel && !openApiApiKey) {
+      return ''
+    }
+    if (usesOpenRouterModel && !openRouterApiKey) {
+      return ''
+    }
+    if (!usesOpenApiModel && !usesOpenRouterModel) {
+      return ''
+    }
   }
 
   const titlePrompt = getTitlePrompt(userText, assistantText)
@@ -48,7 +54,6 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
   const titleResponse = await getAiResponse({
     assetDir: state.assetDir,
     authAccessToken,
-    authEnabled,
     backendUrl,
     maxToolCalls: state.maxToolCalls,
     messages: [promptMessage],
@@ -69,6 +74,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useChatToolWorker: state.useChatToolWorker,
     useMockApi,
+    useOwnBackend,
     userText: titlePrompt,
     webSearchEnabled: false,
   })

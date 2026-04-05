@@ -64,6 +64,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     useChatCoordinatorWorker: updatedState.useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests: updatedState.useChatNetworkWorkerForRequests,
     useMockApi: updatedState.useMockApi,
+    useOwnBackend: updatedState.useOwnBackend,
     userText: previousUserMessage.text,
   })
 

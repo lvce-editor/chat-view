@@ -1033,6 +1033,76 @@ test('handleSubmit should inject mentioned file context into ai request messages
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })
 
+test('handleSubmit should sync backend auth and use backend completions when useOwnBackend is enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  const requests: { url: string; init?: RequestInit }[] = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const requestInit = init as RequestInit | undefined
+    requests.push(requestInit ? { init: requestInit, url } : { url })
+    if (url.endsWith('/auth/refresh')) {
+      return {
+        json: async () => ({
+          accessToken: 'access-token-1',
+          subscriptionPlan: 'pro',
+          usedTokens: 42,
+          userName: 'test-user',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    if (url.endsWith('/v1/chat/completions')) {
+      return {
+        json: async () => ({
+          text: 'Backend completion response',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      ok: false,
+      status: 404,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      backendUrl: 'https://backend.example.com',
+      composerValue: 'hello',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useOwnBackend: true,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
+    expect(requests).toHaveLength(2)
+    expect(requests[0].url).toBe('https://backend.example.com/auth/refresh')
+    expect(requests[1].url).toBe('https://backend.example.com/v1/chat/completions')
+    expect(requests[1].init?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer access-token-1',
+      }),
+    )
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleSubmit should render mock OpenAI write_file tool calls from response.completed events', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

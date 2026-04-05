@@ -13,6 +13,7 @@ import {
 } from '../ChatStrings/ChatStrings.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
+import { getBackendErrorMessage } from '../GetBackendErrorMessage/GetBackendErrorMessage.ts'
 import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getMockAiResponse } from '../GetMockAiResponse/GetMockAiResponse.ts'
@@ -30,6 +31,7 @@ import { getOpenRouterErrorMessage } from '../GetOpenRouterErrorMessage/GetOpenR
 import { getOpenRouterModelId } from '../GetOpenRouterModelId/GetOpenRouterModelId.ts'
 import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
+import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 
 const trailingSlashesRegex = /\/+$/
@@ -39,16 +41,45 @@ const getBackendCompletionsEndpoint = (backendUrl: string): string => {
   return `${trimmedBackendUrl}/v1/chat/completions`
 }
 
-const getEffectiveBackendModelId = (selectedModelId: string): string => {
-  const separatorIndex = selectedModelId.indexOf('/')
-  if (separatorIndex === -1) {
-    return selectedModelId
-  }
-  return selectedModelId.slice(separatorIndex + 1)
-}
-
 const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
   return messages.some((message) => message.attachments?.some((attachment) => attachment.displayType === 'image'))
+}
+
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return !!value && typeof value === 'object'
+}
+
+const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const directMessage = Reflect.get(body, 'message')
+  if (typeof directMessage === 'string' && directMessage) {
+    return directMessage
+  }
+  const directError = Reflect.get(body, 'error')
+  if (typeof directError === 'string' && directError) {
+    return directError
+  }
+  if (!isObject(directError)) {
+    return undefined
+  }
+  const nestedMessage = Reflect.get(directError, 'message')
+  if (typeof nestedMessage === 'string' && nestedMessage) {
+    return nestedMessage
+  }
+  return undefined
+}
+
+const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const statusCode = Reflect.get(body, 'statusCode')
+  if (typeof statusCode === 'number') {
+    return statusCode
+  }
+  return undefined
 }
 
 const getBackendAssistantText = async (
@@ -58,6 +89,24 @@ const getBackendAssistantText = async (
   authAccessToken: string,
   systemPrompt: string,
 ): Promise<string> => {
+  const mockError = MockBackendCompletion.takeErrorResponse()
+  if (mockError) {
+    const errorMessage = getBackendErrorMessageFromBody(mockError.body)
+    return getBackendErrorMessage({
+      details: 'http-error',
+      ...(typeof mockError.statusCode === 'number'
+        ? {
+            statusCode: mockError.statusCode,
+          }
+        : {}),
+      ...(errorMessage
+        ? {
+            errorMessage,
+          }
+        : {}),
+    })
+  }
+
   let response: Response
   try {
     response = await fetch(getBackendCompletionsEndpoint(backendUrl), {
@@ -76,7 +125,8 @@ const getBackendAssistantText = async (
             role: message.role,
           })),
         ],
-        model: getEffectiveBackendModelId(selectedModelId),
+        model: selectedModelId,
+        selectedModelId,
         stream: false,
       }),
       headers: {
@@ -87,19 +137,55 @@ const getBackendAssistantText = async (
       method: 'POST',
     })
   } catch {
-    return backendCompletionFailedMessage
+    return getBackendErrorMessage({
+      details: 'request-failed',
+    })
   }
   if (!response.ok) {
-    return backendCompletionFailedMessage
+    const payload: unknown = await response.json().catch(() => undefined)
+    const errorMessage = getBackendErrorMessageFromBody(payload)
+    const statusCode = response.status || getBackendStatusCodeFromBody(payload)
+    return getBackendErrorMessage({
+      details: 'http-error',
+      ...(typeof statusCode === 'number'
+        ? {
+            statusCode,
+          }
+        : {}),
+      ...(errorMessage
+        ? {
+            errorMessage,
+          }
+        : {}),
+    })
   }
-  const json = (await response.json()) as {
+  let json: {
+    readonly message?: {
+      readonly content?: string
+    }
+    readonly text?: string
     readonly choices?: readonly {
       readonly message?: {
         readonly content?: string
       }
     }[]
   }
-  const content = json.choices?.[0]?.message?.content
+  try {
+    json = (await response.json()) as {
+      readonly message?: {
+        readonly content?: string
+      }
+      readonly text?: string
+      readonly choices?: readonly {
+        readonly message?: {
+          readonly content?: string
+        }
+      }[]
+    }
+  } catch {
+    return backendCompletionFailedMessage
+  }
+  const content = json.text || json.message?.content || json.choices?.[0]?.message?.content
   return typeof content === 'string' && content ? content : backendCompletionFailedMessage
 }
 
@@ -107,7 +193,6 @@ export const getAiResponse = async ({
   agentMode = defaultAgentMode,
   assetDir,
   authAccessToken,
-  authEnabled = false,
   backendUrl = '',
   maxToolCalls = defaultMaxToolCalls,
   messageId,
@@ -138,12 +223,13 @@ export const getAiResponse = async ({
   useChatNetworkWorkerForRequests = false,
   useChatToolWorker = true,
   useMockApi,
+  useOwnBackend = false,
   userText,
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   useChatCoordinatorWorker = false // TODO enable this
-  if (useChatCoordinatorWorker && !authEnabled) {
+  if (useChatCoordinatorWorker && !useOwnBackend) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,
@@ -213,7 +299,7 @@ export const getAiResponse = async ({
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
-  if (!text && authEnabled) {
+  if (!text && useOwnBackend) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {

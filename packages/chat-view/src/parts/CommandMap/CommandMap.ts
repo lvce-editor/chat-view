@@ -76,6 +76,7 @@ import * as HideComposerAttachmentPreviewOverlay from '../HideComposerAttachment
 import { initialize } from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import * as MockBackendAuthResponse from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
+import * as MockBackendSetHttpErrorResponse from '../MockBackendSetHttpErrorResponse/MockBackendSetHttpErrorResponse.ts'
 import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenApiRequestGetAll.ts'
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
@@ -121,6 +122,7 @@ import * as SetToolEnablement from '../SetToolEnablement/SetToolEnablement.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
+import * as SetUseOwnBackend from '../SetUseOwnBackend/SetUseOwnBackend.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
@@ -212,6 +214,7 @@ export const commandMap = {
   'Chat.loadContent': wrapCommand(LoadContent.loadContent),
   'Chat.loadContent2': wrapCommand(LoadContent.loadContent),
   'Chat.mockBackendAuthResponse': wrapCommand(MockBackendAuthResponse.mockBackendAuthResponse),
+  'Chat.mockBackendSetHttpErrorResponse': wrapCommand(MockBackendSetHttpErrorResponse.mockBackendSetHttpErrorResponse),
   'Chat.mockOpenApiRequestGetAll': wrapGetter(MockOpenApiRequestGetAll.mockOpenApiRequestGetAll),
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
@@ -257,6 +260,7 @@ export const commandMap = {
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
+  'Chat.setUseOwnBackend': wrapCommand(SetUseOwnBackend.setUseOwnBackend),
   'Chat.showComposerAttachmentPreviewOverlay': wrapCommand(ShowComposerAttachmentPreviewOverlay.showComposerAttachmentPreviewOverlay),
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),

@@ -69,6 +69,7 @@ export const createDefaultState = (): ChatState => {
     gitBranchPickerVisible: false,
     headerHeight: 50,
     height: 0,
+    useOwnBackend: false,
     ...responsivePickerState,
     initial: true,
     inputSource: 'script',

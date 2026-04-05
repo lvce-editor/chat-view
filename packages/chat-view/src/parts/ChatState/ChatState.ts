@@ -136,6 +136,7 @@ export interface ChatState {
   readonly useChatNetworkWorkerForRequests: boolean
   readonly useChatToolWorker: boolean
   readonly useMockApi: boolean
+  readonly useOwnBackend: boolean
   readonly userName: string
   readonly userState: AuthUserState
   readonly userSubscriptionPlan: string

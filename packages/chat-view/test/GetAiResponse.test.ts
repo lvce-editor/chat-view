@@ -4,7 +4,6 @@ import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import {
   backendAccessTokenRequiredMessage,
-  backendCompletionFailedMessage,
   backendUrlRequiredMessage,
   openApiApiKeyRequiredMessage,
   openApiRequestFailedMessage,
@@ -338,12 +337,18 @@ test.skip('getAiResponse should reject image attachments for models without imag
   expect(MockOpenApiRequest.getAll()).toEqual([])
 })
 
-test.skip('getAiResponse should use backend completions when auth is enabled', async () => {
+test('getAiResponse should use backend completions when useOwnBackend is enabled', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  let actualUrl = ''
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    actualInit = init as RequestInit | undefined
     return {
       json: async () => ({
-        choices: [{ message: { content: 'Backend completion response' } }],
+        text: 'Backend completion response',
       }),
       ok: true,
       status: 200,
@@ -354,7 +359,6 @@ test.skip('getAiResponse should use backend completions when auth is enabled', a
     const result = await getAiResponse({
       assetDir: '',
       authAccessToken: 'backend-token',
-      authEnabled: true,
       backendUrl: 'https://backend.example.com',
       messages: [
         {
@@ -373,22 +377,51 @@ test.skip('getAiResponse should use backend completions when auth is enabled', a
       openRouterApiKey: '',
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: 'You are helpful.',
       useMockApi: false,
+      useOwnBackend: true,
       userText: 'hello',
     })
 
     expect(result.role).toBe('assistant')
     expect(result.text).toBe('Backend completion response')
+    expect(actualUrl).toBe('https://backend.example.com/v1/chat/completions')
+    expect(actualInit?.method).toBe('POST')
+    expect(actualInit?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer backend-token',
+        'Content-Type': 'application/json',
+      }),
+    )
+    const body = actualInit?.body
+    expect(typeof body).toBe('string')
+    if (typeof body !== 'string') {
+      throw new TypeError('Expected backend completion request body to be a string')
+    }
+    expect(JSON.parse(body)).toEqual({
+      messages: [
+        {
+          content: 'You are helpful.',
+          role: 'system',
+        },
+        {
+          content: 'hello',
+          role: 'user',
+        },
+      ],
+      model: 'openapi/gpt-4o-mini',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      stream: false,
+    })
   } finally {
     globalThis.fetch = originalFetch
   }
 })
 
-test.skip('getAiResponse should require backend url when auth is enabled', async () => {
+test('getAiResponse should require backend url when useOwnBackend is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: 'backend-token',
-    authEnabled: true,
     backendUrl: '',
     messages: [
       {
@@ -408,17 +441,17 @@ test.skip('getAiResponse should require backend url when auth is enabled', async
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
     useMockApi: false,
+    useOwnBackend: true,
     userText: 'hello',
   })
 
   expect(result.text).toBe(backendUrlRequiredMessage)
 })
 
-test.skip('getAiResponse should require backend access token when auth is enabled', async () => {
+test('getAiResponse should require backend access token when useOwnBackend is enabled', async () => {
   const result = await getAiResponse({
     assetDir: '',
     authAccessToken: '',
-    authEnabled: true,
     backendUrl: 'https://backend.example.com',
     messages: [
       {
@@ -438,16 +471,20 @@ test.skip('getAiResponse should require backend access token when auth is enable
     platform: 0,
     selectedModelId: 'openapi/gpt-4o-mini',
     useMockApi: false,
+    useOwnBackend: true,
     userText: 'hello',
   })
 
   expect(result.text).toBe(backendAccessTokenRequiredMessage)
 })
 
-test.skip('getAiResponse should return backend failure message for non-ok backend responses', async () => {
+test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     return {
+      json: async () => ({
+        error: 'Vercel AI Gateway error (status 500): Upstream request failed.',
+      }),
       ok: false,
       status: 500,
     } as Response
@@ -457,7 +494,6 @@ test.skip('getAiResponse should return backend failure message for non-ok backen
     const result = await getAiResponse({
       assetDir: '',
       authAccessToken: 'backend-token',
-      authEnabled: true,
       backendUrl: 'https://backend.example.com',
       messages: [
         {
@@ -477,10 +513,59 @@ test.skip('getAiResponse should return backend failure message for non-ok backen
       platform: 0,
       selectedModelId: 'openapi/gpt-4o-mini',
       useMockApi: false,
+      useOwnBackend: true,
       userText: 'hello',
     })
 
-    expect(result.text).toBe(backendCompletionFailedMessage)
+    expect(result.text).toBe('Backend completion request failed (status 500). Vercel AI Gateway error (status 500): Upstream request failed.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should include backend API error message and status code for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    return {
+      json: async () => ({
+        error: 'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
+        statusCode: 403,
+      }),
+      ok: false,
+      status: 403,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 403). Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
+    )
   } finally {
     globalThis.fetch = originalFetch
   }
