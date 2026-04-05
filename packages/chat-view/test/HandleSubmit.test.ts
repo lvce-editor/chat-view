@@ -1034,6 +1034,8 @@ test('handleSubmit should inject mentioned file context into ai request messages
 })
 
 test('handleSubmit should sync backend auth and use backend completions when useOwnBackend is enabled', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -1081,6 +1083,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
       composerValue: 'hello',
       models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
       selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: '',
       useOwnBackend: true,
       viewMode: 'detail' as const,
     }
@@ -1104,6 +1107,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
           role: 'user',
         },
       ],
+      instructions: 'Current date: 2026-03-25.\n\nDo not assume your knowledge cutoff is the same as the current date.',
       model: 'gpt-4o-mini',
       stream: false,
     })
