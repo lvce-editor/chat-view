@@ -36,9 +36,9 @@ import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts
 
 const trailingSlashesRegex = /\/+$/
 
-const getBackendCompletionsEndpoint = (backendUrl: string): string => {
+const getBackendResponsesEndpoint = (backendUrl: string): string => {
   const trimmedBackendUrl = backendUrl.replace(trailingSlashesRegex, '')
-  return `${trimmedBackendUrl}/v1/chat/completions`
+  return `${trimmedBackendUrl}/v1/responses`
 }
 
 const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
@@ -82,9 +82,87 @@ const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
   return undefined
 }
 
+const getBackendResponseOutputText = (body: unknown): string => {
+  if (!isObject(body)) {
+    return ''
+  }
+  const outputText = Reflect.get(body, 'output_text')
+  if (typeof outputText === 'string' && outputText) {
+    return outputText
+  }
+  const text = Reflect.get(body, 'text')
+  if (typeof text === 'string' && text) {
+    return text
+  }
+  const message = Reflect.get(body, 'message')
+  if (isObject(message)) {
+    const content = Reflect.get(message, 'content')
+    if (typeof content === 'string' && content) {
+      return content
+    }
+  }
+  const choices = Reflect.get(body, 'choices')
+  if (Array.isArray(choices)) {
+    const firstChoice = choices[0]
+    if (isObject(firstChoice)) {
+      const firstMessage = Reflect.get(firstChoice, 'message')
+      if (isObject(firstMessage)) {
+        const content = Reflect.get(firstMessage, 'content')
+        if (typeof content === 'string' && content) {
+          return content
+        }
+      }
+    }
+  }
+  const output = Reflect.get(body, 'output')
+  if (!Array.isArray(output)) {
+    return ''
+  }
+  const chunks: string[] = []
+  for (const outputItem of output) {
+    if (!isObject(outputItem)) {
+      continue
+    }
+    if (Reflect.get(outputItem, 'type') !== 'message') {
+      continue
+    }
+    const content = Reflect.get(outputItem, 'content')
+    if (!Array.isArray(content)) {
+      continue
+    }
+    for (const part of content) {
+      if (!isObject(part)) {
+        continue
+      }
+      const type = Reflect.get(part, 'type')
+      const text = Reflect.get(part, 'text')
+      if ((type === 'output_text' || type === 'text') && typeof text === 'string' && text) {
+        chunks.push(text)
+      }
+    }
+  }
+  return chunks.join('')
+}
+
+const getBackendResponsesBody = (messages: readonly ChatMessage[], modelId: string, systemPrompt: string): object => {
+  return {
+    input: messages.map((message) => ({
+      content: getChatMessageOpenAiContent(message),
+      role: message.role,
+    })),
+    ...(systemPrompt
+      ? {
+          instructions: systemPrompt,
+        }
+      : {}),
+    model: modelId,
+    stream: false,
+  }
+}
+
 const getBackendAssistantText = async (
   messages: readonly ChatMessage[],
-  selectedModelId: string,
+  modelId: string,
   backendUrl: string,
   authAccessToken: string,
   systemPrompt: string,
@@ -109,26 +187,8 @@ const getBackendAssistantText = async (
 
   let response: Response
   try {
-    response = await fetch(getBackendCompletionsEndpoint(backendUrl), {
-      body: JSON.stringify({
-        messages: [
-          ...(systemPrompt
-            ? [
-                {
-                  content: systemPrompt,
-                  role: 'system',
-                },
-              ]
-            : []),
-          ...messages.map((message) => ({
-            content: message.text,
-            role: message.role,
-          })),
-        ],
-        model: selectedModelId,
-        selectedModelId,
-        stream: false,
-      }),
+    response = await fetch(getBackendResponsesEndpoint(backendUrl), {
+      body: JSON.stringify(getBackendResponsesBody(messages, modelId, systemPrompt)),
       headers: {
         Authorization: `Bearer ${authAccessToken}`,
         'Content-Type': 'application/json',
@@ -159,33 +219,13 @@ const getBackendAssistantText = async (
         : {}),
     })
   }
-  let json: {
-    readonly message?: {
-      readonly content?: string
-    }
-    readonly text?: string
-    readonly choices?: readonly {
-      readonly message?: {
-        readonly content?: string
-      }
-    }[]
-  }
+  let json: unknown
   try {
-    json = (await response.json()) as {
-      readonly message?: {
-        readonly content?: string
-      }
-      readonly text?: string
-      readonly choices?: readonly {
-        readonly message?: {
-          readonly content?: string
-        }
-      }[]
-    }
+    json = (await response.json()) as unknown
   } catch {
     return backendCompletionFailedMessage
   }
-  const content = json.text || json.message?.content || json.choices?.[0]?.message?.content
+  const content = getBackendResponseOutputText(json)
   return typeof content === 'string' && content ? content : backendCompletionFailedMessage
 }
 
@@ -303,7 +343,7 @@ export const getAiResponse = async ({
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {
-      text = await getBackendAssistantText(messages, selectedModelId, backendUrl, authAccessToken, systemPrompt)
+      text = await getBackendAssistantText(messages, getOpenApiModelId(selectedModelId), backendUrl, authAccessToken, systemPrompt)
     } else {
       text = backendAccessTokenRequiredMessage
     }

@@ -1034,6 +1034,8 @@ test('handleSubmit should inject mentioned file context into ai request messages
 })
 
 test('handleSubmit should sync backend auth and use backend completions when useOwnBackend is enabled', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
@@ -1059,10 +1061,10 @@ test('handleSubmit should sync backend auth and use backend completions when use
         status: 200,
       } as Response
     }
-    if (url.endsWith('/v1/chat/completions')) {
+    if (url.endsWith('/v1/responses')) {
       return {
         json: async () => ({
-          text: 'Backend completion response',
+          output_text: 'Backend completion response',
         }),
         ok: true,
         status: 200,
@@ -1081,6 +1083,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
       composerValue: 'hello',
       models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
       selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: '',
       useOwnBackend: true,
       viewMode: 'detail' as const,
     }
@@ -1091,12 +1094,23 @@ test('handleSubmit should sync backend auth and use backend completions when use
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
     expect(requests).toHaveLength(2)
     expect(requests[0].url).toBe('https://backend.example.com/auth/refresh')
-    expect(requests[1].url).toBe('https://backend.example.com/v1/chat/completions')
+    expect(requests[1].url).toBe('https://backend.example.com/v1/responses')
     expect(requests[1].init?.headers).toEqual(
       expect.objectContaining({
         Authorization: 'Bearer access-token-1',
       }),
     )
+    expect(JSON.parse(requests[1].init?.body as string)).toEqual({
+      input: [
+        {
+          content: 'hello',
+          role: 'user',
+        },
+      ],
+      instructions: 'Current date: 2026-03-25.\n\nDo not assume your knowledge cutoff is the same as the current date.',
+      model: 'gpt-4o-mini',
+      stream: false,
+    })
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch
