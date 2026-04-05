@@ -4,7 +4,7 @@ import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as RenderCss from '../src/parts/RenderCss/RenderCss.ts'
 
-test.skip('renderCss should return setCss command with uid and css', () => {
+test('renderCss should return setCss command with uid and css', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),

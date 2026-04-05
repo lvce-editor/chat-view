@@ -1041,10 +1041,12 @@ test('handleSubmit should sync backend auth and use backend completions when use
   })
   const originalFetch = globalThis.fetch
   const requests: { url: string; init?: RequestInit }[] = []
-  globalThis.fetch = (async (...args: readonly [input: string | URL | Request, init?: Readonly<RequestInit>]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
     const [input, init] = args
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
-    requests.push(init ? { init, url } : { url })
+    const requestInput = input as string | URL | { readonly url: string }
+    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const requestInit = init as RequestInit | undefined
+    requests.push(requestInit ? { init: requestInit, url } : { url })
     if (url.endsWith('/auth/refresh')) {
       return {
         json: async () => ({

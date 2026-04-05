@@ -341,10 +341,11 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
   const originalFetch = globalThis.fetch
   let actualUrl = ''
   let actualInit: RequestInit | undefined
-  globalThis.fetch = (async (...args: readonly [input: string | URL | Request, init?: Readonly<RequestInit>]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
     const [input, init] = args
-    actualUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
-    actualInit = init
+    const requestInput = input as string | URL | { readonly url: string }
+    actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    actualInit = init as RequestInit | undefined
     return {
       json: async () => ({
         text: 'Backend completion response',
