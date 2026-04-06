@@ -1,3 +1,4 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { expect, test } from '@jest/globals'
 import * as BackendAuth from '../src/parts/BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
@@ -155,8 +156,19 @@ test('getBackendLoginUrl should include redirect_uri from current location', asy
 })
 
 test('getBackendLoginUrl should prefer explicit redirect_uri override', async () => {
-  const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com', 'http://localhost:4567')
+  const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com', 0, 0, 'http://localhost:4567')
   expect(result).toBe('https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567')
+})
+
+test('getBackendLoginUrl should use localhost oauth redirect on electron', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'OAuthServer.create': async () => 4567,
+  })
+
+  const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com', 2, 123)
+
+  expect(result).toBe('https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567')
+  expect(mockRendererRpc.invocations).toEqual([['OAuthServer.create', '123']])
 })
 
 test('logoutFromBackend should post to backend logout endpoint', async () => {

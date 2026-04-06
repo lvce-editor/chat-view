@@ -4,8 +4,6 @@ import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin }
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
-const PlatformTypeElectron = 2
-
 interface LoginResponse {
   readonly accessToken?: string
   readonly error?: string
@@ -70,11 +68,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    const redirectUri =
-      state.platform === PlatformTypeElectron
-        ? `http://localhost:${await RendererWorker.invoke('OAuthServer.create', String(state.uid))}`
-        : ''
-    const url = await getBackendLoginUrl(state.backendUrl, redirectUri)
+    const url = await getBackendLoginUrl(state.backendUrl, state.platform, state.uid)
     await OpenerWorker.openUrl(url, state.platform)
     const authState = await waitForBackendLogin(state.backendUrl)
     return {
