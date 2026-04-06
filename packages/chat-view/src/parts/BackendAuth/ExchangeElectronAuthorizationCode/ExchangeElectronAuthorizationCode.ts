@@ -12,11 +12,7 @@ const getExchangeErrorMessage = async (response: Response): Promise<string> => {
   return 'Backend authentication failed.'
 }
 
-export const exchangeElectronAuthorizationCode = async (
-  backendUrl: string,
-  code: string,
-  redirectUri: string,
-): Promise<void> => {
+export const exchangeElectronAuthorizationCode = async (backendUrl: string, code: string, redirectUri: string): Promise<void> => {
   const response = await fetch(getBackendNativeExchangeUrl(backendUrl), {
     body: JSON.stringify({ code, redirectUri }),
     credentials: 'include',

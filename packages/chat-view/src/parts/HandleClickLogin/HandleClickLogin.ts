@@ -75,9 +75,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
     const { loginUrl, redirectUri } = await getBackendLoginRequest(backendUrl, platform, uid)
     await OpenerWorker.openUrl(loginUrl, platform)
     const authState =
-      platform === PlatformTypeElectron
-        ? await waitForElectronBackendLogin(backendUrl, uid, redirectUri)
-        : await waitForBackendLogin(backendUrl)
+      platform === PlatformTypeElectron ? await waitForElectronBackendLogin(backendUrl, uid, redirectUri) : await waitForBackendLogin(backendUrl)
     return {
       ...signingInState,
       ...authState,

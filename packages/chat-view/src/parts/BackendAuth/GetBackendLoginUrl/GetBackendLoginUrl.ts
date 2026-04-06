@@ -35,12 +35,7 @@ export const getBackendLoginUrl = async (backendUrl: string, platform = 0, uid =
   return loginUrl
 }
 
-export const getBackendLoginRequest = async (
-  backendUrl: string,
-  platform = 0,
-  uid = 0,
-  redirectUri = '',
-): Promise<BackendLoginRequest> => {
+export const getBackendLoginRequest = async (backendUrl: string, platform = 0, uid = 0, redirectUri = ''): Promise<BackendLoginRequest> => {
   const loginUrl = new URL(getBackendAuthUrl(backendUrl, '/login'))
   const effectiveRedirectUri = await getEffectiveRedirectUri(platform, uid, redirectUri)
   if (effectiveRedirectUri) {

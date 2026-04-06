@@ -160,13 +160,7 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
   })
 
   try {
-    const result = await BackendAuth.waitForElectronBackendLogin(
-      'https://backend.example.com',
-      123,
-      'http://localhost:4567',
-      100,
-      0,
-    )
+    const result = await BackendAuth.waitForElectronBackendLogin('https://backend.example.com', 123, 'http://localhost:4567', 100, 0)
     expect(result).toEqual({
       authAccessToken: 'access-token-electron',
       authErrorMessage: '',
