@@ -12,9 +12,6 @@ const authNameStyle = 'max-width:180px;overflow:hidden;text-overflow:ellipsis;wh
 const authButtonStyle = 'white-space:nowrap;'
 
 const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): string => {
-  if (userState === 'loggingIn') {
-    return Strings.loggingInToBackend()
-  }
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
   }
@@ -22,9 +19,6 @@ const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): str
 }
 
 const getButtonTitle = (userState: AuthUserState, isAuthenticated: boolean): string => {
-  if (userState === 'loggingIn') {
-    return Strings.loggingInToBackend()
-  }
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
   }
@@ -39,7 +33,7 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
   const buttonName = isAuthenticated ? InputName.Logout : InputName.Login
   const buttonLabel = getButtonLabel(userState, isAuthenticated)
   const buttonTitle = getButtonTitle(userState, isAuthenticated)
-  const isPending = userState === 'loggingIn' || userState === 'loggingOut'
+  const isPending = userState === 'loggingOut'
   const displayName = userName || Strings.signedIn()
   return [
     {
