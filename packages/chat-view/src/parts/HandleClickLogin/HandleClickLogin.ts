@@ -1,8 +1,10 @@
 import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin } from '../BackendAuth/BackendAuth.ts'
+import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+
+const PlatformTypeElectron = 2
 
 interface LoginResponse {
   readonly accessToken?: string
@@ -20,20 +22,22 @@ const isLoginResponse = (value: unknown): value is LoginResponse => {
 }
 
 const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState => {
+  const { userName, userSubscriptionPlan, userUsedTokens } = state
   const accessToken = typeof response.accessToken === 'string' ? response.accessToken : ''
   return {
     ...state,
     authAccessToken: accessToken,
     authErrorMessage: '',
-    userName: typeof response.userName === 'string' ? response.userName : state.userName,
+    userName: typeof response.userName === 'string' ? response.userName : userName,
     userState: accessToken ? 'loggedIn' : 'loggedOut',
-    userSubscriptionPlan: typeof response.subscriptionPlan === 'string' ? response.subscriptionPlan : state.userSubscriptionPlan,
-    userUsedTokens: typeof response.usedTokens === 'number' ? response.usedTokens : state.userUsedTokens,
+    userSubscriptionPlan: typeof response.subscriptionPlan === 'string' ? response.subscriptionPlan : userSubscriptionPlan,
+    userUsedTokens: typeof response.usedTokens === 'number' ? response.usedTokens : userUsedTokens,
   }
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {
-  if (!state.backendUrl) {
+  const { backendUrl, platform, uid } = state
+  if (!backendUrl) {
     return {
       ...state,
       authErrorMessage: 'Backend URL is missing.',
@@ -45,8 +49,8 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
     authErrorMessage: '',
     userState: 'loggingIn',
   }
-  if (state.uid) {
-    set(state.uid, state, signingInState)
+  if (uid) {
+    set(uid, state, signingInState)
     await RendererWorker.invoke('Chat.rerender')
   }
   try {
@@ -68,9 +72,9 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    const url = await getBackendLoginUrl(state.backendUrl)
-    await OpenerWorker.openUrl(url, state.platform)
-    const authState = await waitForBackendLogin(state.backendUrl)
+    const url = await getBackendLoginUrl(backendUrl, platform, uid)
+    await OpenerWorker.openUrl(url, platform)
+    const authState = platform === PlatformTypeElectron ? await waitForElectronBackendLogin(backendUrl, uid) : await waitForBackendLogin(backendUrl)
     return {
       ...signingInState,
       ...authState,
