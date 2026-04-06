@@ -486,6 +486,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
   }) as typeof globalThis.fetch
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'OAuthServer.create': async () => 4567,
+    'OAuthServer.getCode': async () => 'code-1',
   })
   using mockOpenerRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
@@ -504,7 +505,10 @@ test('handleClick should use localhost oauth redirect on electron backend login'
     expect(result.userState).toBe('loggedIn')
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(999)
-    expect(mockRendererRpc.invocations).toEqual([['OAuthServer.create', '0']])
+    expect(mockRendererRpc.invocations).toEqual([
+      ['OAuthServer.create', '0'],
+      ['OAuthServer.getCode', '0'],
+    ])
     expect(mockOpenerRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2]])
     expect(fetchCalls).toEqual([
       [

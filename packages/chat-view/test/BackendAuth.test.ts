@@ -134,6 +134,62 @@ test('waitForBackendLogin should retry until backend refresh succeeds', async ()
   }
 })
 
+test('waitForElectronBackendLogin should wait for oauth code before syncing backend auth', async () => {
+  const originalFetch = globalThis.fetch
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
+    fetchCalls.push([getRequestUrl(input), init])
+    return {
+      json: async () => ({
+        accessToken: 'access-token-electron',
+        subscriptionPlan: 'pro',
+        usedTokens: 11,
+        userName: 'electron-user',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+  let codeCallCount = 0
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'OAuthServer.getCode': async () => {
+      codeCallCount++
+      return codeCallCount === 1 ? '' : 'code-1'
+    },
+  })
+
+  try {
+    const result = await BackendAuth.waitForElectronBackendLogin('https://backend.example.com', 123, 100, 0)
+    expect(result).toEqual({
+      authAccessToken: 'access-token-electron',
+      authErrorMessage: '',
+      userName: 'electron-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 11,
+    })
+    expect(mockRendererRpc.invocations).toEqual([
+      ['OAuthServer.getCode', '123'],
+      ['OAuthServer.getCode', '123'],
+    ])
+    expect(fetchCalls).toEqual([
+      [
+        'https://backend.example.com/auth/refresh',
+        {
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getBackendLoginUrl should include redirect_uri from current location', async () => {
   const originalLocation = Object.getOwnPropertyDescriptor(globalThis, 'location')
   Object.defineProperty(globalThis, 'location', {
