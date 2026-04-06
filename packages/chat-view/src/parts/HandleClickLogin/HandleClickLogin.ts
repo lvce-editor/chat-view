@@ -22,7 +22,7 @@ const isLoginResponse = (value: unknown): value is LoginResponse => {
 }
 
 const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState => {
-  const { userName, userUsedTokens, userSubscriptionPlan } = state
+  const { userName, userSubscriptionPlan, userUsedTokens } = state
   const accessToken = typeof response.accessToken === 'string' ? response.accessToken : ''
   return {
     ...state,
@@ -36,7 +36,7 @@ const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState 
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {
-  const { backendUrl, uid, platform } = state
+  const { backendUrl, platform, uid } = state
   if (!backendUrl) {
     return {
       ...state,

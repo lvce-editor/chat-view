@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { delay } from '../../Delay/Delay.ts'
 import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
+import { delay } from '../../Delay/Delay.ts'
 import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
 import { waitForBackendLogin } from '../WaitForBackendLogin/WaitForBackendLogin.ts'
 

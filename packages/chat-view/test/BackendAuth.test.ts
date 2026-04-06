@@ -1,5 +1,5 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { expect, test } from '@jest/globals'
+import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as BackendAuth from '../src/parts/BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
