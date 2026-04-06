@@ -512,6 +512,21 @@ test('handleClick should use localhost oauth redirect on electron backend login'
     expect(mockOpenerRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2]])
     expect(fetchCalls).toEqual([
       [
+        'https://backend.example.com/auth/native/exchange',
+        {
+          body: JSON.stringify({
+            code: 'code-1',
+            redirectUri: 'http://localhost:4567',
+          }),
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
+      [
         'https://backend.example.com/auth/refresh',
         {
           credentials: 'include',

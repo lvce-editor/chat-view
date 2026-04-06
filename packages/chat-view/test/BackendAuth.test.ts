@@ -160,7 +160,13 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
   })
 
   try {
-    const result = await BackendAuth.waitForElectronBackendLogin('https://backend.example.com', 123, 100, 0)
+    const result = await BackendAuth.waitForElectronBackendLogin(
+      'https://backend.example.com',
+      123,
+      'http://localhost:4567',
+      100,
+      0,
+    )
     expect(result).toEqual({
       authAccessToken: 'access-token-electron',
       authErrorMessage: '',
@@ -174,6 +180,21 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
       ['OAuthServer.getCode', '123'],
     ])
     expect(fetchCalls).toEqual([
+      [
+        'https://backend.example.com/auth/native/exchange',
+        {
+          body: JSON.stringify({
+            code: 'code-1',
+            redirectUri: 'http://localhost:4567',
+          }),
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
       [
         'https://backend.example.com/auth/refresh',
         {
@@ -224,6 +245,20 @@ test('getBackendLoginUrl should use localhost oauth redirect on electron', async
   const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com', 2, 123)
 
   expect(result).toBe('https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567')
+  expect(mockRendererRpc.invocations).toEqual([['OAuthServer.create', '123']])
+})
+
+test('getBackendLoginRequest should return login url and redirect uri on electron', async () => {
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'OAuthServer.create': async () => 4567,
+  })
+
+  const result = await BackendAuth.getBackendLoginRequest('https://backend.example.com', 2, 123)
+
+  expect(result).toEqual({
+    loginUrl: 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567',
+    redirectUri: 'http://localhost:4567',
+  })
   expect(mockRendererRpc.invocations).toEqual([['OAuthServer.create', '123']])
 })
 

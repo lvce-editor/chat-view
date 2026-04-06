@@ -1,6 +1,6 @@
 import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
+import { getBackendLoginRequest, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -72,9 +72,12 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       }
       return getLoggedInState(signingInState, response)
     }
-    const url = await getBackendLoginUrl(backendUrl, platform, uid)
-    await OpenerWorker.openUrl(url, platform)
-    const authState = platform === PlatformTypeElectron ? await waitForElectronBackendLogin(backendUrl, uid) : await waitForBackendLogin(backendUrl)
+    const { loginUrl, redirectUri } = await getBackendLoginRequest(backendUrl, platform, uid)
+    await OpenerWorker.openUrl(loginUrl, platform)
+    const authState =
+      platform === PlatformTypeElectron
+        ? await waitForElectronBackendLogin(backendUrl, uid, redirectUri)
+        : await waitForBackendLogin(backendUrl)
     return {
       ...signingInState,
       ...authState,
