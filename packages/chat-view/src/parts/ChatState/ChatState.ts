@@ -22,6 +22,7 @@ export interface ChatState {
   readonly authAccessToken: string
   readonly authEnabled: boolean
   readonly authErrorMessage: string
+  readonly authUseRedirect: boolean
   readonly backendUrl: string
   readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean

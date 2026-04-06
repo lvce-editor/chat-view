@@ -407,6 +407,7 @@ test('loadContent should load openRouterApiKey from preferences', async () => {
   expectInvocations(mockRpc.invocations, [
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chat.authEnabled'],
+    ['Preferences.get', 'chat.authUseRedirect'],
     ['Preferences.get', 'chat.backendUrl'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
@@ -446,6 +447,7 @@ test('loadContent should load openApiApiKey from preferences', async () => {
   expectInvocations(mockRpc.invocations, [
     ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
     ['Preferences.get', 'chat.authEnabled'],
+    ['Preferences.get', 'chat.authUseRedirect'],
     ['Preferences.get', 'chat.backendUrl'],
     ['Preferences.get', 'chatView.composerDropEnabled'],
     ['Preferences.get', 'secrets.openApiKey'],
@@ -486,6 +488,9 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
         if (key === 'chat.authEnabled') {
           return true
         }
+        if (key === 'chat.authUseRedirect') {
+          return true
+        }
         if (key === 'chat.backendUrl') {
           return 'https://backend.example.com'
         }
@@ -494,9 +499,11 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
     })
     const result = await LoadContent.loadContent(createDefaultState(), undefined)
     expect(result.authAccessToken).toBe('access-token-1')
+    expect(result.authUseRedirect).toBe(true)
     expect(result.userName).toBe('test-user')
     expect(result.userState).toBe('loggedIn')
     expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authUseRedirect'])
     expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
   } finally {
     globalThis.fetch = originalFetch

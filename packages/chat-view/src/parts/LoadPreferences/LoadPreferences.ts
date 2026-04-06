@@ -1,5 +1,6 @@
 import { loadAiSessionTitleGenerationEnabled } from '../LoadAiSessionTitleGenerationEnabled/LoadAiSessionTitleGenerationEnabled.ts'
 import { loadAuthEnabled } from '../LoadAuthEnabled/LoadAuthEnabled.ts'
+import { loadAuthUseRedirect } from '../LoadAuthUseRedirect/LoadAuthUseRedirect.ts'
 import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { loadChatHistoryEnabled } from '../LoadChatHistoryEnabled/LoadChatHistoryEnabled.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
@@ -23,6 +24,7 @@ import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoic
 export interface LoadedPreferences {
   aiSessionTitleGenerationEnabled: boolean
   authEnabled: boolean
+  authUseRedirect: boolean
   backendUrl: string
   chatHistoryEnabled: boolean
   composerDropEnabled: boolean
@@ -48,6 +50,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
   const [
     aiSessionTitleGenerationEnabled,
     authEnabled,
+    authUseRedirect,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
@@ -70,6 +73,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
   ] = await Promise.all([
     loadAiSessionTitleGenerationEnabled(),
     loadAuthEnabled(),
+    loadAuthUseRedirect(),
     loadBackendUrl(),
     loadChatHistoryEnabled(),
     loadComposerDropEnabled(),
@@ -94,6 +98,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
   return {
     aiSessionTitleGenerationEnabled,
     authEnabled,
+    authUseRedirect,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,

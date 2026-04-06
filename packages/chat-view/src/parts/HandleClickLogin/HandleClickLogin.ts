@@ -36,7 +36,7 @@ const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState 
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {
-  const { backendUrl, platform, uid } = state
+  const { authUseRedirect, backendUrl, platform, uid } = state
   if (!backendUrl) {
     return {
       ...state,
@@ -73,7 +73,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
       return getLoggedInState(signingInState, response)
     }
     const { loginUrl, redirectUri } = await getBackendLoginRequest(backendUrl, platform, uid)
-    await OpenerWorker.openUrl(loginUrl, platform)
+    await OpenerWorker.invoke('Open.openUrl', loginUrl, platform, authUseRedirect)
     const authState =
       platform === PlatformTypeElectron ? await waitForElectronBackendLogin(backendUrl, uid, redirectUri) : await waitForBackendLogin(backendUrl)
     return {
