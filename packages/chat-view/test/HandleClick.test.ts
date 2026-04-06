@@ -470,9 +470,17 @@ test('handleClick should use localhost oauth redirect on electron backend login'
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  let fetchCallCount = 0
   globalThis.fetch = (async (...args: readonly unknown[]) => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
+    fetchCallCount++
+    if (fetchCallCount === 1) {
+      return {
+        ok: true,
+        status: 204,
+      } as Response
+    }
     return {
       json: async () => ({
         accessToken: 'backend-token-electron',
