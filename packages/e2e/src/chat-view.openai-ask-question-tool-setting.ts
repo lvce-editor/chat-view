@@ -39,7 +39,7 @@ export const test: Test = async ({ Chat, Command }) => {
   const initialTools = initialRequests[0]?.payload.tools || []
   assert(!initialTools.some((tool) => tool.type === 'function' && tool.name === 'ask_question'), 'ask_question should be disabled by default')
 
-  await Command.execute('Chat.setQuestionToolEnabled', true)
+  await Chat.setQuestionToolEnabled(true)
   await Chat.mockOpenApiRequestReset()
   await Chat.mockOpenApiStreamReset()
   await Chat.mockOpenApiStreamPushChunk('ok')

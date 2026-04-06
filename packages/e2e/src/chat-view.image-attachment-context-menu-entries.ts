@@ -6,20 +6,20 @@ const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-image-attachment-context-menu-entries', [])
+  await Chat.openMockSession('session-image-attachment-context-menu-entries', [])
 
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
   const preview = Locator('.ChatComposerAttachmentPreview')
   const openMenuItem = Locator('.MenuItem').nth(0)
   const removeMenuItem = Locator('.MenuItem').nth(1)
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
+  await Chat.handleDropFiles(imageFile)
   await expect(preview).toBeVisible()
 
-  await Command.execute('Chat.handleContextMenuChatImageAttachment', '', 0, 0)
+  await Chat.handleContextMenuChatImageAttachment('', 0, 0)
 
   await expect(openMenuItem).toBeVisible()
   await expect(openMenuItem).toHaveText('Open image in new tab')

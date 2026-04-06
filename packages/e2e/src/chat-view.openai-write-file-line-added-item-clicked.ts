@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-line-added-item-clicked'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   const notesUri = encodeURI(`${tmpDir}/notes.txt`)
@@ -54,7 +54,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleSubmit()
 
   // act
-  await Command.execute('Chat.handleClickFileName', notesUri)
+  await Chat.handleClickFileName(notesUri)
 
   // assert
   const tab = Locator(`.MainTab[title="${notesUri}"]`)

@@ -2,14 +2,14 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.model-picker-input-blur'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
 
   // act
-  await Command.execute('Chat.handleModelInputBlur')
+  await Chat.handleModelInputBlur()
 
   // assert
   const modelPicker = Locator('.ChatModelPicker')

@@ -11,10 +11,10 @@ const createLargeTextFile = (): File => {
   return new File(chunks, 'large-notes.txt', { type: 'text/plain' })
 }
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-large-text-file', [])
+  await Chat.openMockSession('session-file-drop-large-text-file', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachments = Locator('.ChatComposerAttachments')
@@ -23,7 +23,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  await Chat.handleDropFiles(file)
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1)

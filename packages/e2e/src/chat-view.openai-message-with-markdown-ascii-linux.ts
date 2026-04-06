@@ -3,7 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-message-with-markdown-ascii-linux'
 
 export const skip = 1
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const linuxArt = ['       .--.', '      |o_o |', '      |:_/ |', '     //   \\ \\', '    (|     | )', "   /'\\_   _/`\\", '   \\___)=(___/'].join(
     '\n',
   )
@@ -17,7 +17,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: mockText })
+  await Chat.registerMockResponse({ text: mockText })
   await Chat.handleInput('show linux ascii art')
 
   await Chat.handleSubmit()

@@ -5,7 +5,7 @@ export const name = 'chat-view.reasoning-picker-select-effort'
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.setReasoningPickerEnabled', true)
+  await Chat.setReasoningPickerEnabled(true)
   await Command.execute('Chat.setReasoningEffort', 'extra-high')
   await Chat.rerender()
 

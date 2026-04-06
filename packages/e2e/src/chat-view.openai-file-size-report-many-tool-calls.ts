@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-file-size-report-many-tool-calls'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   const workspaceUri = 'file:///playground'
   const languagesUri = `${workspaceUri}/languages`
   const languageFiles = [
@@ -31,7 +31,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-file-size-report-many-tool-calls', [
+  await Chat.openMockSession('session-file-size-report-many-tool-calls', [
     {
       id: 'message-user-1',
       role: 'user',

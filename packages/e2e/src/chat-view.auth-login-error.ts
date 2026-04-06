@@ -18,7 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setAuthEnabled', true)
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Chat.mockBackendAuthResponse({
     message: 'Invalid backend credentials.',
     type: 'error',

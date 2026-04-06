@@ -20,7 +20,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(projectLabels.nth(1)).toHaveText('▾workspace')
   await expect(focusProject).toHaveText('workspace')
 
-  await Command.execute('Chat.handleProjectListContextMenu', 0, 100, 100)
+  await Chat.handleProjectListContextMenu(0, 100, 100)
 
   const newChatMenuItem = Locator('.MenuItem').nth(0)
   const addProjectMenuItem = Locator('.MenuItem').nth(1)

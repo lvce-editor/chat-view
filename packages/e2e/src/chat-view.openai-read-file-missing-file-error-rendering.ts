@@ -8,7 +8,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   const missingPath = 'src/does-not-exist.txt'
   const errorMessage = `File not found: ${missingPath}`
 
-  await Command.execute('Chat.openMockSession', 'session-read-file-missing', [
+  await Chat.openMockSession('session-read-file-missing', [
     {
       id: 'message-user-1',
       role: 'user',

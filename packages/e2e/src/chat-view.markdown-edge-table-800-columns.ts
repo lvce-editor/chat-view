@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.table-800-columns'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -17,7 +17,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const values = Array.from({ length: cellCount }, (_, i) => `V${i + 1}`).join(' | ')
   const text = `| ${headers} |\n|${separators}|\n| ${values} |`
 
-  await Command.execute('Chat.registerMockResponse', { text })
+  await Chat.registerMockResponse({ text })
   await Chat.handleInput('table 800 columns')
 
   await Chat.handleSubmit()

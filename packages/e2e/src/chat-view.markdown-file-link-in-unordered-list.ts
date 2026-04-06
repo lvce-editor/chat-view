@@ -3,7 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-file-link.in-unordered-list'
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -11,7 +11,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', {
+  await Chat.registerMockResponse({
     text: 'Files added:\n- [doodle-jump/index.html](doodle-jump/index.html)\n- [doodle-jump/style.css](doodle-jump/style.css)\n- [doodle-jump/game.js](doodle-jump/game.js)',
   })
   await Chat.handleInput('list added files as links')

@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-message-with-markdown-table'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const mockText = `Got it! Here's a simple example of a groceries table. You can let me know if you want to customize it with more items, prices, quantities, or categories.
 
@@ -22,7 +22,7 @@ Would you like me to add or change anything?`
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: mockText })
+  await Chat.registerMockResponse({ text: mockText })
   await Chat.handleInput('whats jsonrpc')
 
   // act

@@ -7,7 +7,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Command.execute('Chat.setUseOwnBackend', true)
   await Chat.mockBackendAuthResponse({
     accessToken: 'backend-token',

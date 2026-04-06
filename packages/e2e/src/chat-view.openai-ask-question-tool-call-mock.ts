@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-ask-question-tool-call-mock'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   const longQuestion =
     'This is a really long question that should still be rendered correctly in the chat UI even when it spans far beyond typical question lengths and contains enough text to validate wrapping and overflow handling.'
   const longAnswer =
@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
-  await Command.execute('Chat.setQuestionToolEnabled', true)
+  await Chat.setQuestionToolEnabled(true)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiStreamReset()

@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.math-inline-invalid-latex'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -10,7 +10,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: 'Invalid inline: $\\notARealCommand{x}$' })
+  await Chat.registerMockResponse({ text: 'Invalid inline: $\\notARealCommand{x}$' })
   await Chat.handleInput('invalid inline latex')
 
   await Chat.handleSubmit()

@@ -7,7 +7,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
-  await Command.execute('Chat.openMockSession', 'session-message-attachment-invalid-image', [])
+  await Chat.openMockSession('session-message-attachment-invalid-image', [])
   await Chat.handleModelChange('openapi/gpt-4o-mini')
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
@@ -18,7 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const file = new File(['not-a-real-png'], 'broken.png', { type: 'image/png' })
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  await Chat.handleDropFiles(file)
   await Chat.handleInput('Please review this image')
   await Chat.handleSubmit()
 

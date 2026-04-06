@@ -6,17 +6,17 @@ const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-attachment-remove', [])
+  await Chat.openMockSession('session-file-attachment-remove', [])
 
   const attachments = Locator('.ChatComposerAttachments')
   const attachment = Locator('.ChatComposerAttachment')
   const removeButton = Locator('.ChatComposerAttachmentRemoveButton')
   const file = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  await Chat.handleDropFiles(file)
 
   await expect(attachment).toHaveCount(1)
   await expect(removeButton).toHaveCount(1)

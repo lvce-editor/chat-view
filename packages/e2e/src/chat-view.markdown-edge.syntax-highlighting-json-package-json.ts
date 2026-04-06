@@ -36,7 +36,7 @@ Here is a basic example for a React project:
 
 Should I create this package.json file for you with this content? If you want any customization like project name or author, please let me know.`
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -44,7 +44,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: mockResponse })
+  await Chat.registerMockResponse({ text: mockResponse })
   await Chat.handleInput('create a package.json for react')
   await Chat.handleSubmit()
   await Chat.rerender()

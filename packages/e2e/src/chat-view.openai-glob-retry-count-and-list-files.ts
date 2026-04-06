@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-glob-retry-count-and-list-files'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   const workspaceUri = 'file:///playground'
   const files = [
     'README.md',
@@ -40,7 +40,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-openai-glob-retry-count-and-list-files', [
+  await Chat.openMockSession('session-openai-glob-retry-count-and-list-files', [
     {
       id: 'message-user-1',
       role: 'user',

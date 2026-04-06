@@ -12,7 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleClickNew()
   await Chat.handleClickBack()
 
-  await Command.execute('Chat.handleInputFocus', 'chat-list')
+  await Chat.handleInputFocus()
   await Command.execute('Chat.chatListFocusPrevious')
 
   const focusedItem = Locator('.ChatList .ChatListItemFocused')

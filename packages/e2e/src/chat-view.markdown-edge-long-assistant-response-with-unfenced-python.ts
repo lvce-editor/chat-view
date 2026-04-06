@@ -3,11 +3,11 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge-long-assistant-response-with-unfenced-python'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-1', [
+  await Chat.openMockSession('session-1', [
     {
       id: 'message-1',
       role: 'user',

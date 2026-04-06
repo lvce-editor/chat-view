@@ -4,7 +4,7 @@ export const name = 'chat-view.markdown-edge.mixed-multi-blocks-4'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -12,7 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', {
+  await Chat.registerMockResponse({
     text: '# Title\n\nParagraph with **bold** and *italic*.\n\n- Item A\n- Item B\n\n```\nplain code\n```',
   })
   await Chat.handleInput('mixed markdown 4')

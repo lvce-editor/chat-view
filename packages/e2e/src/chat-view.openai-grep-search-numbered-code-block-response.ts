@@ -4,11 +4,11 @@ export const name = 'chat-view.openai-grep-search-numbered-code-block-response'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-grep-search-numbered-code-block-response', [
+  await Chat.openMockSession('session-grep-search-numbered-code-block-response', [
     {
       id: 'message-user-1',
       role: 'user',

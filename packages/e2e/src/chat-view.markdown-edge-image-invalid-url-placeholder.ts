@@ -4,7 +4,7 @@ export const name = 'chat-view.markdown-edge.image-invalid-url-placeholder'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -12,7 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: '![This is an image](http://invalid-url)' })
+  await Chat.registerMockResponse({ text: '![This is an image](http://invalid-url)' })
   await Chat.handleInput('show markdown image')
 
   await Chat.handleSubmit()

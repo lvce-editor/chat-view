@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-1', [], {
+  await Chat.openMockSession('session-1', [], {
     workspaceUri: `file://${tmpDir}`,
   })
   await Command.execute('Chat.handleClick', 'toggle-chat-focus')

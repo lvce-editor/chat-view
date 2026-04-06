@@ -3,7 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-edge.syntax-highlighting-html-500-code-blocks'
 
 export const skip = 1
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -18,7 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
     return `\`\`\`html\n<div class="hero-${number}">Hello ${number}</div>\n\`\`\``
   }).join('\n\n')
 
-  await Command.execute('Chat.registerMockResponse', { text: htmlBlocks })
+  await Chat.registerMockResponse({ text: htmlBlocks })
   await Chat.handleInput('show me 500 different html code blocks')
   await Chat.handleSubmit()
   await Chat.rerender()

@@ -11,11 +11,11 @@ const getMockMessages = (): readonly { readonly id: string; readonly role: 'user
   }))
 }
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'scroll-down-default-hidden', getMockMessages())
-  await Command.execute('Chat.handleMessagesScroll', 0, 4000, 400)
+  await Chat.openMockSession('scroll-down-default-hidden', getMockMessages())
+  await Chat.handleMessagesScroll(0, 4000, 400)
   await Chat.rerender()
 
   const scrollDownButton = Locator('.Button[name="scroll-down"]')

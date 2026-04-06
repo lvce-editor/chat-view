@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.ordered-list-10k'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const itemCount = 10_000
   const text = Array.from({ length: itemCount }, (_, i) => `${i + 1}. Item ${i + 1}`).join('\n')
 
-  await Command.execute('Chat.registerMockResponse', { text })
+  await Chat.registerMockResponse({ text })
   await Chat.handleInput('ordered list 10k')
 
   await Chat.handleSubmit()

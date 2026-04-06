@@ -4,7 +4,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-edge.math-inline-display-dollar-double'
 
 export const skip = 1
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -12,7 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: 'Display inline with double delimiters: $$\\int_0^1 x^2 dx = \\frac{1}{3}$$.' })
+  await Chat.registerMockResponse({ text: 'Display inline with double delimiters: $$\\int_0^1 x^2 dx = \\frac{1}{3}$$.' })
   await Chat.handleInput('double dollar inline math')
 
   await Chat.handleSubmit()

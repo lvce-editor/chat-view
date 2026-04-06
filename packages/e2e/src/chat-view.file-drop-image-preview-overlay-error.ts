@@ -9,7 +9,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-image-preview-overlay-error', [])
+  await Chat.openMockSession('session-file-drop-image-preview-overlay-error', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const overlay = Locator('.ChatComposerAttachmentPreviewOverlay')
@@ -19,8 +19,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
-  await Command.execute('Chat.showComposerAttachmentPreviewOverlay', 'attachment-1')
+  await Chat.handleDropFiles(imageFile)
+  await Chat.showComposerAttachmentPreviewOverlay('attachment-1')
 
   await expect(overlay).toBeVisible()
   await expect(overlayImage).toBeVisible()

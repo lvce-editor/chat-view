@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.link-long-url'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const longPath = `segment-${'a'.repeat(2048)}`
   const longUrl = `https://example.com/${longPath}?q=${'b'.repeat(512)}`
   const tmpDir = await FileSystem.getTmpDir()
@@ -12,7 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: `[Long URL](${longUrl})` })
+  await Chat.registerMockResponse({ text: `[Long URL](${longUrl})` })
   await Chat.handleInput('test very long markdown url')
 
   await Chat.handleSubmit()

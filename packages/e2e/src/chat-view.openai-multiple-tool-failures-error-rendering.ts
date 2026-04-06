@@ -5,11 +5,11 @@ export const name = 'chat-view.openai-multiple-tool-failures-error-rendering'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-tool-failures', [
+  await Chat.openMockSession('session-tool-failures', [
     {
       id: 'message-user-1',
       role: 'user',

@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.unordered-list'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   const mockText = `The purpose of life is a deeply philosophical and personal question that varies from person to person. Many perspectives exist:
 
@@ -14,7 +14,7 @@ Ultimately, the purpose of life is something each individual defines for themsel
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.registerMockResponse', { text: mockText })
+  await Chat.registerMockResponse({ text: mockText })
   await Chat.handleInput('purpose of life?')
 
   // act
