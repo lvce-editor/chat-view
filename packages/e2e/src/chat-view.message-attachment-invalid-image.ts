@@ -18,6 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const file = new File(['not-a-real-png'], 'broken.png', { type: 'image/png' })
 
+  // @ts-ignore
   await Chat.handleDropFiles(file)
   await Chat.handleInput('Please review this image')
   await Chat.handleSubmit()

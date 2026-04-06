@@ -19,6 +19,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
+  // @ts-ignore
   await Chat.handleDropFiles(imageFile)
   await Chat.showComposerAttachmentPreviewOverlay('attachment-1')
 

@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-read-file-missing-file-error-rendering'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   const missingPath = 'src/does-not-exist.txt'
   const errorMessage = `File not found: ${missingPath}`
 

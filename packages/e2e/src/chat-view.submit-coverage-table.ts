@@ -850,7 +850,7 @@ const expectedRowCount = coverageTable
       line !== 'File                                                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s',
   ).length
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()

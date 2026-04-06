@@ -16,6 +16,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const openMenuItem = Locator('.MenuItem').nth(0)
   const removeMenuItem = Locator('.MenuItem').nth(1)
 
+  // @ts-ignore
   await Chat.handleDropFiles(imageFile)
   await expect(preview).toBeVisible()
 

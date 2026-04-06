@@ -9,6 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator, Workspace }) 
   await Chat.show()
   await Chat.reset()
 
+  // @ts-ignore
   await Chat.openMockSession('session-1', [], {
     branchName: 'main',
     workspaceUri: `file://${repoRoot}`,

@@ -23,6 +23,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   })
 
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
+  // @ts-ignore
   await Chat.handleDropFiles(imageFile)
   await Chat.handleInput('Describe this image')
   await Chat.handleSubmit()

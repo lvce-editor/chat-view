@@ -18,6 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const file = new File(['hello from text file'], 'notes.txt', { type: 'text/plain' })
 
+  // @ts-ignore
   await Chat.handleDropFiles(file)
   await Chat.handleInput('Please review this text file')
   await Chat.handleSubmit()

@@ -8,6 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.show()
   await Chat.reset()
 
+  // @ts-ignore
   await Chat.openMockSession('session-1', [], {
     workspaceUri: `file://${tmpDir}`,
   })

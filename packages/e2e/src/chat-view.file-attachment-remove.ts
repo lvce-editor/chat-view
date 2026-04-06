@@ -16,6 +16,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const removeButton = Locator('.ChatComposerAttachmentRemoveButton')
   const file = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
 
+  // @ts-ignore
   await Chat.handleDropFiles(file)
 
   await expect(attachment).toHaveCount(1)

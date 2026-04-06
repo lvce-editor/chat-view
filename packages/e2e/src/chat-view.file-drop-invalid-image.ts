@@ -14,6 +14,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
+  // @ts-ignore
   await Chat.handleDropFiles(file)
 
   await expect(attachments).toBeVisible()

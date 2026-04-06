@@ -18,6 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(Locator('.ChatInputBox[name="composer"]')).toBeVisible()
 
+  // @ts-ignore
   await Chat.handleDropFiles(imageFile)
   await Chat.showComposerAttachmentPreviewOverlay('attachment-1')
 
