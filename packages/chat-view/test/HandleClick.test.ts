@@ -385,6 +385,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     const state: ChatState = {
       ...createDefaultState(),
       authEnabled: true,
+      authUseRedirect: true,
       backendUrl: 'https://backend.example.com',
     }
     const result = await HandleClick.handleClick(state, 'login')
@@ -394,7 +395,12 @@ test('handleClick should open backend login page and sync backend auth state', a
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(321)
     expect(mockRpc.invocations).toEqual([
-      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1', 0],
+      [
+        'Open.openUrl',
+        'https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1',
+        0,
+        true,
+      ],
     ])
     expect(fetchCalls).toEqual([
       [
@@ -517,7 +523,9 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       ['OAuthServer.create', '0'],
       ['OAuthServer.getCode', '0'],
     ])
-    expect(mockOpenerRpc.invocations).toEqual([['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2]])
+    expect(mockOpenerRpc.invocations).toEqual([
+      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2, false],
+    ])
     expect(fetchCalls).toEqual([
       [
         'https://backend.example.com/auth/native/exchange',

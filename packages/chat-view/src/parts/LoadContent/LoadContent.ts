@@ -40,6 +40,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const {
     aiSessionTitleGenerationEnabled,
     authEnabled,
+    authUseRedirect,
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
@@ -119,6 +120,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     authAccessToken: authState.authAccessToken,
     authEnabled,
     authErrorMessage: authState.authErrorMessage,
+    authUseRedirect,
     backendUrl,
     chatHistoryEnabled,
     chatListScrollTop,
