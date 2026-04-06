@@ -465,6 +465,66 @@ test('handleClick should logout and clear backend auth state', async () => {
   }
 })
 
+test('handleClick should use localhost oauth redirect on electron backend login', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const originalFetch = globalThis.fetch
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
+    fetchCalls.push([getRequestUrl(input), init])
+    return {
+      json: async () => ({
+        accessToken: 'backend-token-electron',
+        subscriptionPlan: 'pro',
+        usedTokens: 999,
+        userName: 'electron-user',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'OAuthServer.create': async () => 4567,
+  })
+  using mockOpenerRpc = OpenerWorker.registerMockRpc({
+    'Open.openUrl': async () => {},
+  })
+  try {
+    const state: ChatState = {
+      ...createDefaultState(),
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      platform: 2,
+      uid: 0,
+    }
+    const result = await HandleClick.handleClick(state, 'login')
+    expect(result.authAccessToken).toBe('backend-token-electron')
+    expect(result.userName).toBe('electron-user')
+    expect(result.userState).toBe('loggedIn')
+    expect(result.userSubscriptionPlan).toBe('pro')
+    expect(result.userUsedTokens).toBe(999)
+    expect(mockRendererRpc.invocations).toEqual([['OAuthServer.create', '0']])
+    expect(mockOpenerRpc.invocations).toEqual([
+      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2],
+    ])
+    expect(fetchCalls).toEqual([
+      [
+        'https://backend.example.com/auth/refresh',
+        {
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleClick should submit message when clicking send', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

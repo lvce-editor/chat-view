@@ -154,6 +154,11 @@ test('getBackendLoginUrl should include redirect_uri from current location', asy
   }
 })
 
+test('getBackendLoginUrl should prefer explicit redirect_uri override', async () => {
+  const result = await BackendAuth.getBackendLoginUrl('https://backend.example.com', 'http://localhost:4567')
+  expect(result).toBe('https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567')
+})
+
 test('logoutFromBackend should post to backend logout endpoint', async () => {
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []

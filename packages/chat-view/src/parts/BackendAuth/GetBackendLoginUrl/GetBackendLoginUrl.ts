@@ -13,11 +13,11 @@ const getCurrentHref = async (): Promise<string> => {
   return globalThis.location.href
 }
 
-export const getBackendLoginUrl = async (backendUrl: string): Promise<string> => {
+export const getBackendLoginUrl = async (backendUrl: string, redirectUri = ''): Promise<string> => {
   const loginUrl = new URL(getBackendAuthUrl(backendUrl, '/login'))
-  const redirectUri = await getCurrentHref()
-  if (redirectUri) {
-    loginUrl.searchParams.set('redirect_uri', redirectUri)
+  const effectiveRedirectUri = redirectUri || (await getCurrentHref())
+  if (effectiveRedirectUri) {
+    loginUrl.searchParams.set('redirect_uri', effectiveRedirectUri)
   }
   return loginUrl.toString()
 }
