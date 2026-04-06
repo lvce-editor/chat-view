@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import { getBackendAuthUrl } from '../../GetBackendAuthUrl/GetBackendAuthUrl.ts'
+import { getBackendAuthUrl } from '../GetBackendAuthUrl/GetBackendAuthUrl.ts'
 
 const PlatformTypeElectron = 2
 

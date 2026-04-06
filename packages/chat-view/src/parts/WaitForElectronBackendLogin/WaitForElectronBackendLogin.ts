@@ -1,9 +1,9 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { BackendAuthState } from '../../BackendAuthState/BackendAuthState.ts'
+import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
 import { delay } from '../Delay/Delay.ts'
-import { exchangeElectronAuthorizationCode } from '../../ExchangeElectronAuthorizationCode/ExchangeElectronAuthorizationCode.ts'
-import { getLoggedOutBackendAuthState } from '../../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
-import { waitForBackendLogin } from '../../WaitForBackendLogin/WaitForBackendLogin.ts'
+import { exchangeElectronAuthorizationCode } from '../ExchangeElectronAuthorizationCode/ExchangeElectronAuthorizationCode.ts'
+import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
+import { waitForBackendLogin } from '../WaitForBackendLogin/WaitForBackendLogin.ts'
 
 const hasAuthorizationCode = (value: unknown): boolean => {
   return typeof value === 'string' && value.length > 0

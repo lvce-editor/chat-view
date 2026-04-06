@@ -1,5 +1,5 @@
 import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
-import * as MockBackendAuth from '../../MockBackendAuth/MockBackendAuth.ts'
+import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { getBackendRefreshUrl } from '../GetBackendRefreshUrl/GetBackendRefreshUrl.ts'
 import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
 import { parseBackendAuthResponse } from '../ParseBackendAuthResponse/ParseBackendAuthResponse.ts'
