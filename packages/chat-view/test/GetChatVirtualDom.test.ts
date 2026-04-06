@@ -1254,7 +1254,7 @@ test('getChatVirtualDOm should render login button in header actions when auth i
   })
 })
 
-test('getChatVirtualDOm should disable login button while signing in', () => {
+test('getChatVirtualDOm should render login button normally while signing in', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggingIn',
@@ -1262,9 +1262,11 @@ test('getChatVirtualDOm should disable login button while signing in', () => {
   const loginButton = result.find((node) => node.name === 'login')
   expect(loginButton).toBeDefined()
   expect(loginButton).toMatchObject({
-    disabled: true,
-    title: 'Logging in to backend',
+    disabled: false,
+    title: 'Login to backend',
   })
+  const loginLabel = result.find((node) => node.text === 'Login')
+  expect(loginLabel).toBeDefined()
 })
 
 test('getChatVirtualDOm should render auth error label when login fails', () => {
