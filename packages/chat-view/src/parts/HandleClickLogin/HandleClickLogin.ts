@@ -1,5 +1,5 @@
 import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatState } from '../ChatState/ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 import { getBackendLoginUrl, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
