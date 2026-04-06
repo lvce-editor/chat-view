@@ -1,6 +1,7 @@
 export type { BackendAuthState } from './BackendAuthState/BackendAuthState.ts'
-export { getBackendLoginUrl } from './GetBackendLoginUrl/GetBackendLoginUrl.ts'
+export { getBackendLoginRequest, getBackendLoginUrl } from './GetBackendLoginUrl/GetBackendLoginUrl.ts'
 export { getLoggedOutBackendAuthState } from './GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
 export { logoutFromBackend } from './LogoutFromBackend/LogoutFromBackend.ts'
 export { syncBackendAuth } from './SyncBackendAuth/SyncBackendAuth.ts'
+export { waitForElectronBackendLogin } from './WaitForElectronBackendLogin/WaitForElectronBackendLogin.ts'
 export { waitForBackendLogin } from './WaitForBackendLogin/WaitForBackendLogin.ts'

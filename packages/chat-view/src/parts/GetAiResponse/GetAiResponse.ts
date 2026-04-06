@@ -1,12 +1,12 @@
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import {
   backendAccessTokenRequiredMessage,
-  backendCompletionFailedMessage,
   backendUrlRequiredMessage,
   openApiApiKeyRequiredMessage,
   openRouterApiKeyRequiredMessage,
@@ -82,6 +82,124 @@ const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
   return undefined
 }
 
+const getBackendResponseId = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const id = Reflect.get(body, 'id')
+  return typeof id === 'string' && id ? id : undefined
+}
+
+const getBackendResponseStatus = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const status = Reflect.get(body, 'status')
+  return typeof status === 'string' && status ? status : undefined
+}
+
+const getBackendIncompleteMessage = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const incompleteDetails = Reflect.get(body, 'incomplete_details')
+  if (!isObject(incompleteDetails)) {
+    return undefined
+  }
+  const reason = Reflect.get(incompleteDetails, 'reason')
+  if (typeof reason === 'string' && reason) {
+    return `Backend response was incomplete (${reason}).`
+  }
+  return undefined
+}
+
+const getBackendResponseFunctionCalls = (body: unknown): readonly ResponseFunctionCall[] => {
+  if (!isObject(body)) {
+    return []
+  }
+  const output = Reflect.get(body, 'output')
+  if (!Array.isArray(output)) {
+    return []
+  }
+  const calls: ResponseFunctionCall[] = []
+  for (const outputItem of output) {
+    if (!isObject(outputItem)) {
+      continue
+    }
+    if (Reflect.get(outputItem, 'type') !== 'function_call') {
+      continue
+    }
+    const callId = Reflect.get(outputItem, 'call_id')
+    const name = Reflect.get(outputItem, 'name')
+    const rawArguments = Reflect.get(outputItem, 'arguments')
+    if (typeof callId !== 'string' || !callId || typeof name !== 'string' || !name) {
+      continue
+    }
+    calls.push({
+      arguments: typeof rawArguments === 'string' ? rawArguments : '',
+      callId,
+      name,
+    })
+  }
+  return calls
+}
+
+const getErrorMessage = (error: unknown): string | undefined => {
+  if (error instanceof Error) {
+    return error.message
+  }
+  return typeof error === 'string' && error ? error : undefined
+}
+
+const getBackendInvalidResponseDetails = (body: unknown): string => {
+  const errorMessage = getBackendErrorMessageFromBody(body)
+  if (errorMessage) {
+    return errorMessage
+  }
+  const incompleteMessage = getBackendIncompleteMessage(body)
+  if (incompleteMessage) {
+    return incompleteMessage
+  }
+  const status = getBackendResponseStatus(body)
+  if (status && status !== 'completed') {
+    return `Backend response status was "${status}".`
+  }
+  if (isObject(body) && Array.isArray(Reflect.get(body, 'output'))) {
+    return 'Unexpected backend response format: no assistant text or tool calls were returned.'
+  }
+  return 'Unexpected backend response format.'
+}
+
+const toExecutedToolCall = (toolCall: ResponseFunctionCall, content: string): StreamingToolCall => {
+  const executionStatus = getToolCallExecutionStatus(content)
+  const toolCallResult = getToolCallResult(toolCall.name, content)
+  return {
+    arguments: toolCall.arguments,
+    ...(executionStatus.errorMessage
+      ? {
+          errorMessage: executionStatus.errorMessage,
+        }
+      : {}),
+    ...(executionStatus.errorStack
+      ? {
+          errorStack: executionStatus.errorStack,
+        }
+      : {}),
+    id: toolCall.callId,
+    name: toolCall.name,
+    ...(toolCallResult
+      ? {
+          result: toolCallResult,
+        }
+      : {}),
+    ...(executionStatus.status
+      ? {
+          status: executionStatus.status,
+        }
+      : {}),
+  }
+}
+
 const getBackendResponseOutputText = (body: unknown): string => {
   if (!isObject(body)) {
     return ''
@@ -145,19 +263,16 @@ const getBackendResponseOutputText = (body: unknown): string => {
 }
 
 const getBackendResponsesBody = (
-  messages: readonly ChatMessage[],
+  input: readonly unknown[],
   modelId: string,
   systemPrompt: string,
   tools: readonly unknown[],
   maxToolCalls: number,
   webSearchEnabled: boolean,
+  previousResponseId?: string,
   reasoningEffort?: GetAiResponseOptions['reasoningEffort'],
   supportsReasoningEffort = false,
 ): object => {
-  const input = messages.map((message) => ({
-    content: getChatMessageOpenAiContent(message),
-    role: message.role,
-  }))
   return getOpenAiParams(
     input,
     modelId,
@@ -167,26 +282,53 @@ const getBackendResponsesBody = (
     webSearchEnabled,
     maxToolCalls,
     systemPrompt,
-    undefined,
+    previousResponseId,
     reasoningEffort,
     supportsReasoningEffort,
   )
 }
 
-const getBackendAssistantText = async (
-  messages: readonly ChatMessage[],
-  modelId: string,
-  backendUrl: string,
-  authAccessToken: string,
-  systemPrompt: string,
+interface GetBackendAssistantTextOptions {
+  readonly agentMode?: GetAiResponseOptions['agentMode']
+  readonly assetDir: string
+  readonly authAccessToken: string
+  readonly backendUrl: string
+  readonly maxToolCalls?: number
+  readonly messages: readonly ChatMessage[]
+  readonly modelId: string
+  readonly onToolCallsChunk?: GetAiResponseOptions['onToolCallsChunk']
+  readonly platform: GetAiResponseOptions['platform']
+  readonly questionToolEnabled?: boolean
+  readonly reasoningEffort?: GetAiResponseOptions['reasoningEffort']
+  readonly sessionId?: string
+  readonly supportsReasoningEffort?: boolean
+  readonly systemPrompt: string
+  readonly toolEnablement?: GetAiResponseOptions['toolEnablement']
+  readonly useChatToolWorker: boolean
+  readonly webSearchEnabled?: boolean
+  readonly workspaceUri?: string
+}
+
+const getBackendAssistantText = async ({
   agentMode = defaultAgentMode,
-  questionToolEnabled = false,
-  toolEnablement?: GetAiResponseOptions['toolEnablement'],
+  assetDir,
+  authAccessToken,
+  backendUrl,
   maxToolCalls = defaultMaxToolCalls,
-  webSearchEnabled = false,
-  reasoningEffort?: GetAiResponseOptions['reasoningEffort'],
+  messages,
+  modelId,
+  onToolCallsChunk,
+  platform,
+  questionToolEnabled = false,
+  reasoningEffort,
+  sessionId,
   supportsReasoningEffort = false,
-): Promise<string> => {
+  systemPrompt,
+  toolEnablement,
+  useChatToolWorker,
+  webSearchEnabled = false,
+  workspaceUri,
+}: GetBackendAssistantTextOptions): Promise<string> => {
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
     const errorMessage = getBackendErrorMessageFromBody(mockError.body)
@@ -204,52 +346,145 @@ const getBackendAssistantText = async (
         : {}),
     })
   }
+  const mockResponse = MockBackendCompletion.takeResponse()
 
-  let response: Response
-  try {
-    const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
-    response = await fetch(getBackendResponsesEndpoint(backendUrl), {
-      body: JSON.stringify(
-        getBackendResponsesBody(messages, modelId, systemPrompt, tools, maxToolCalls, webSearchEnabled, reasoningEffort, supportsReasoningEffort),
-      ),
-      headers: {
-        Authorization: `Bearer ${authAccessToken}`,
-        'Content-Type': 'application/json',
-        ...getClientRequestIdHeader(),
-      },
-      method: 'POST',
-    })
-  } catch {
+  const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
+  const input: unknown[] = messages.map((message) => ({
+    content: getChatMessageOpenAiContent(message),
+    role: message.role,
+  }))
+  let previousResponseId: string | undefined
+  const maxToolIterations = Math.max(0, maxToolCalls - 1)
+
+  for (let index = 0; index <= maxToolIterations; index++) {
+    let json: unknown
+    if (index === 0 && mockResponse) {
+      json = mockResponse.body
+    } else {
+      let response: Response
+      try {
+        response = await fetch(getBackendResponsesEndpoint(backendUrl), {
+          body: JSON.stringify(
+            getBackendResponsesBody(
+              input,
+              modelId,
+              systemPrompt,
+              tools,
+              maxToolCalls,
+              webSearchEnabled,
+              previousResponseId,
+              reasoningEffort,
+              supportsReasoningEffort,
+            ),
+          ),
+          headers: {
+            Authorization: `Bearer ${authAccessToken}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+        })
+      } catch (error) {
+        const errorMessage = getErrorMessage(error)
+        return getBackendErrorMessage({
+          details: 'request-failed',
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+        })
+      }
+      if (!response.ok) {
+        const payload: unknown = await response.json().catch(() => undefined)
+        const errorMessage = getBackendErrorMessageFromBody(payload)
+        const statusCode = response.status || getBackendStatusCodeFromBody(payload)
+        return getBackendErrorMessage({
+          details: 'http-error',
+          ...(typeof statusCode === 'number'
+            ? {
+                statusCode,
+              }
+            : {}),
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+        })
+      }
+      try {
+        json = (await response.json()) as unknown
+      } catch {
+        return getBackendErrorMessage({
+          details: 'invalid-response',
+          errorMessage: 'Backend returned invalid JSON.',
+        })
+      }
+    }
+
+    const responseFunctionCalls = getBackendResponseFunctionCalls(json)
+    if (responseFunctionCalls.length > 0) {
+      const responseId = getBackendResponseId(json)
+      if (!responseId) {
+        return getBackendErrorMessage({
+          details: 'invalid-response',
+          errorMessage: 'Unexpected backend response format: tool calls were returned without a response id.',
+        })
+      }
+      previousResponseId = responseId
+      input.length = 0
+      const executedToolCalls: StreamingToolCall[] = []
+      for (const toolCall of responseFunctionCalls) {
+        const content = await executeChatTool(toolCall.name, toolCall.arguments, {
+          assetDir,
+          platform,
+          ...(sessionId
+            ? {
+                sessionId,
+              }
+            : {}),
+          toolCallId: toolCall.callId,
+          ...(toolEnablement
+            ? {
+                toolEnablement,
+              }
+            : {}),
+          useChatToolWorker,
+          ...(workspaceUri
+            ? {
+                workspaceUri,
+              }
+            : {}),
+        })
+        executedToolCalls.push(toExecutedToolCall(toolCall, content))
+        input.push({
+          call_id: toolCall.callId,
+          output: content,
+          type: 'function_call_output',
+        })
+      }
+      if (onToolCallsChunk && executedToolCalls.length > 0) {
+        await onToolCallsChunk(executedToolCalls)
+      }
+      continue
+    }
+
+    const content = getBackendResponseOutputText(json)
+    if (content) {
+      return content
+    }
+
     return getBackendErrorMessage({
-      details: 'request-failed',
+      details: 'invalid-response',
+      errorMessage: getBackendInvalidResponseDetails(json),
     })
   }
-  if (!response.ok) {
-    const payload: unknown = await response.json().catch(() => undefined)
-    const errorMessage = getBackendErrorMessageFromBody(payload)
-    const statusCode = response.status || getBackendStatusCodeFromBody(payload)
-    return getBackendErrorMessage({
-      details: 'http-error',
-      ...(typeof statusCode === 'number'
-        ? {
-            statusCode,
-          }
-        : {}),
-      ...(errorMessage
-        ? {
-            errorMessage,
-          }
-        : {}),
-    })
-  }
-  let json: unknown
-  try {
-    json = (await response.json()) as unknown
-  } catch {
-    return backendCompletionFailedMessage
-  }
-  const content = getBackendResponseOutputText(json)
-  return typeof content === 'string' && content ? content : backendCompletionFailedMessage
+
+  return getBackendErrorMessage({
+    details: 'invalid-response',
+    errorMessage: `Backend request ended after ${maxToolCalls} tool-call rounds without a final assistant response. This usually means the model got stuck in a tool loop.`,
+  })
 }
 
 export const getAiResponse = async ({
@@ -367,20 +602,34 @@ export const getAiResponse = async ({
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authAccessToken) {
-      text = await getBackendAssistantText(
-        messages,
-        getOpenApiModelId(selectedModelId),
-        backendUrl,
-        authAccessToken,
-        systemPrompt,
+      text = await getBackendAssistantText({
         agentMode,
+        assetDir,
+        authAccessToken,
+        backendUrl,
+        maxToolCalls: safeMaxToolCalls,
+        messages,
+        modelId: getOpenApiModelId(selectedModelId),
+        onToolCallsChunk,
+        platform,
         questionToolEnabled,
-        toolEnablement,
-        safeMaxToolCalls,
-        agentMode === 'plan' ? false : webSearchEnabled,
         reasoningEffort,
         supportsReasoningEffort,
-      )
+        systemPrompt,
+        toolEnablement,
+        useChatToolWorker,
+        webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
+        ...(sessionId
+          ? {
+              sessionId,
+            }
+          : {}),
+        ...(workspaceUri
+          ? {
+              workspaceUri,
+            }
+          : {}),
+      })
     } else {
       text = backendAccessTokenRequiredMessage
     }

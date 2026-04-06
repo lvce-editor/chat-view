@@ -385,6 +385,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     const state: ChatState = {
       ...createDefaultState(),
       authEnabled: true,
+      authUseRedirect: true,
       backendUrl: 'https://backend.example.com',
     }
     const result = await HandleClick.handleClick(state, 'login')
@@ -394,7 +395,12 @@ test('handleClick should open backend login page and sync backend auth state', a
     expect(result.userSubscriptionPlan).toBe('pro')
     expect(result.userUsedTokens).toBe(321)
     expect(mockRpc.invocations).toEqual([
-      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1', 0],
+      [
+        'Open.openUrl',
+        'https://backend.example.com/login?redirect_uri=https%3A%2F%2Fchat.example.com%2Fworkbench%3Fview%3Dchat%23session-1',
+        0,
+        true,
+      ],
     ])
     expect(fetchCalls).toEqual([
       [
@@ -451,6 +457,93 @@ test('handleClick should logout and clear backend auth state', async () => {
     expect(fetchCalls).toEqual([
       [
         'https://backend.example.com/auth/logout',
+        {
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleClick should use localhost oauth redirect on electron backend login', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const originalFetch = globalThis.fetch
+  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
+  let fetchCallCount = 0
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
+    fetchCalls.push([getRequestUrl(input), init])
+    fetchCallCount++
+    if (fetchCallCount === 1) {
+      return {
+        ok: true,
+        status: 204,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        accessToken: 'backend-token-electron',
+        subscriptionPlan: 'pro',
+        usedTokens: 999,
+        userName: 'electron-user',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'OAuthServer.create': async () => 4567,
+    'OAuthServer.getCode': async () => 'code-1',
+  })
+  using mockOpenerRpc = OpenerWorker.registerMockRpc({
+    'Open.openUrl': async () => {},
+  })
+  try {
+    const state: ChatState = {
+      ...createDefaultState(),
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      platform: 2,
+      uid: 0,
+    }
+    const result = await HandleClick.handleClick(state, 'login')
+    expect(result.authAccessToken).toBe('backend-token-electron')
+    expect(result.userName).toBe('electron-user')
+    expect(result.userState).toBe('loggedIn')
+    expect(result.userSubscriptionPlan).toBe('pro')
+    expect(result.userUsedTokens).toBe(999)
+    expect(mockRendererRpc.invocations).toEqual([
+      ['OAuthServer.create', '0'],
+      ['OAuthServer.getCode', '0'],
+    ])
+    expect(mockOpenerRpc.invocations).toEqual([
+      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2, false],
+    ])
+    expect(fetchCalls).toEqual([
+      [
+        'https://backend.example.com/auth/native/exchange',
+        {
+          body: JSON.stringify({
+            code: 'code-1',
+            redirectUri: 'http://localhost:4567',
+          }),
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        },
+      ],
+      [
+        'https://backend.example.com/auth/refresh',
         {
           credentials: 'include',
           headers: {

@@ -18,7 +18,7 @@ test('create should show run mode by default', () => {
   const result = StatusBarStates.get(uid)
   const { newState } = result
   const newStateTyped: ChatState = newState
-  expect(newStateTyped.reasoningEffort).toBe('high')
+  expect(newStateTyped.reasoningEffort).toBe('medium')
   expect(newStateTyped.reasoningPickerEnabled).toBe(false)
   expect(newStateTyped.showRunMode).toBe(true)
   expect(newStateTyped.runMode).toBe('local')
