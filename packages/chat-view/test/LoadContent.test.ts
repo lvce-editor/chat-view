@@ -831,6 +831,47 @@ test('loadContent should load useChatCoordinatorWorker from preferences', async 
   ])
 })
 
+test('loadContent should load useAuthWorker from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.useAuthWorker') {
+        return true
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.useAuthWorker).toBe(true)
+  expectInvocations(mockRpc.invocations, [
+    ['Preferences.get', 'chatView.aiSessionTitleGenerationEnabled'],
+    ['Preferences.get', 'chatView.composerDropEnabled'],
+    ['Preferences.get', 'secrets.openApiKey'],
+    ['Preferences.get', 'secrets.openApiApiKey'],
+    ['Preferences.get', 'secrets.openAiApiKey'],
+    ['Preferences.get', 'secrets.openRouterApiKey'],
+    ['Preferences.get', 'chatView.emitStreamingFunctionCallEvents'],
+    ['Preferences.get', 'chatView.streamingEnabled'],
+    ['Preferences.get', 'chatView.passIncludeObfuscation'],
+    ['Preferences.get', 'chatView.useChatNetworkWorkerForRequests'],
+    ['Preferences.get', 'chatView.useChatCoordinatorWorker'],
+    ['Preferences.get', 'chatView.useChatMathWorker'],
+    ['Preferences.get', 'chatView.useChatToolWorker'],
+    ['Preferences.get', 'chatView.useAuthWorker'],
+    ['Preferences.get', 'chatView.voiceDictationEnabled'],
+    ['Preferences.get', 'chatView.searchEnabled'],
+    ['Preferences.get', 'chatView.scrollDownButtonEnabled'],
+  ])
+})
+
 test('loadContent should load useChatMathWorker from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
