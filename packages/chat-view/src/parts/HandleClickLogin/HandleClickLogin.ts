@@ -1,4 +1,4 @@
-import { OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getBackendLoginRequest, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
@@ -36,7 +36,7 @@ const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState 
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {
-  const { authUseRedirect, backendUrl, platform, uid } = state
+  const { authUseRedirect, backendUrl, platform, uid, useAuthWorker } = state
   if (!backendUrl) {
     return {
       ...state,
@@ -54,6 +54,18 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
     await RendererWorker.invoke('Chat.rerender')
   }
   try {
+    if (useAuthWorker) {
+      const authState = await AuthWorker.login({
+        authUseRedirect,
+        backendUrl,
+        platform,
+        uid,
+      })
+      return {
+        ...signingInState,
+        ...authState,
+      }
+    }
     if (MockBackendAuth.hasPendingMockLoginResponse()) {
       const response = await MockBackendAuth.consumeNextLoginResponse()
       if (!isLoginResponse(response)) {

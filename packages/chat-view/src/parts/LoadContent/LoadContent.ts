@@ -58,6 +58,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useAuthWorker,
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
@@ -169,6 +170,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useAuthWorker,
     useOwnBackend,
     userName: authState.userName,
     userState: authState.userState,

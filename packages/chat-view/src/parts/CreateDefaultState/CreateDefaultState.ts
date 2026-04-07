@@ -33,6 +33,7 @@ export const createDefaultState = (): ChatState => {
     authEnabled: false,
     authErrorMessage: '',
     authUseRedirect: false,
+    useAuthWorker: false,
     backendUrl: '',
     chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,

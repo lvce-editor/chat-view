@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -424,6 +424,52 @@ test('handleClick should open backend login page and sync backend auth state', a
   }
 })
 
+test('handleClick should login via auth worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.login': async () => ({
+      authAccessToken: 'worker-token-1',
+      authErrorMessage: '',
+      userName: 'worker-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 99,
+    }),
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    authEnabled: true,
+    authUseRedirect: true,
+    backendUrl: 'https://backend.example.com',
+    platform: 2,
+    uid: 7,
+    useAuthWorker: true,
+  }
+
+  const result = await HandleClick.handleClick(state, 'login')
+
+  expect(result).toMatchObject({
+    authAccessToken: 'worker-token-1',
+    authErrorMessage: '',
+    userName: 'worker-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 99,
+  })
+  expect(mockAuthRpc.invocations).toEqual([
+    [
+      'Auth.login',
+      {
+        authUseRedirect: true,
+        backendUrl: 'https://backend.example.com',
+        platform: 2,
+        uid: 7,
+      },
+    ],
+  ])
+})
+
 test('handleClick should logout and clear backend auth state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -469,6 +515,43 @@ test('handleClick should logout and clear backend auth state', async () => {
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('handleClick should logout via auth worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.logout': async () => undefined,
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    authAccessToken: 'worker-token-1',
+    authEnabled: true,
+    backendUrl: 'https://backend.example.com',
+    useAuthWorker: true,
+    userName: 'worker-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 99,
+  }
+
+  const result = await HandleClick.handleClick(state, 'logout')
+
+  expect(result).toMatchObject({
+    authAccessToken: '',
+    userName: '',
+    userState: 'loggedOut',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
+  })
+  expect(mockAuthRpc.invocations).toEqual([
+    [
+      'Auth.logout',
+      {
+        backendUrl: 'https://backend.example.com',
+      },
+    ],
+  ])
 })
 
 test('handleClick should use localhost oauth redirect on electron backend login', async () => {
