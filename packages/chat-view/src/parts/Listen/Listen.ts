@@ -1,6 +1,7 @@
 import { WebWorkerRpcClient } from '@lvce-editor/rpc'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as CommandMap from '../CommandMap/CommandMap.ts'
+import { initializeAuthWorker } from '../InitializeAuthWorker/InitializeAuthWorker.ts'
 import { initializeChatCoordinatorWorker } from '../InitializeChatCoordinatorWorker/InitializeChatCoordinatorWorker.ts'
 import { initializeChatMathWorker } from '../InitializeChatMathWorker/InitializeChatMathWorker.ts'
 import { initializeChatMessageParsingWorker } from '../InitializeChatMessageParsingWorker/InitializeChatMessageParsingWorker.ts'
@@ -32,5 +33,6 @@ export const listen = async (): Promise<void> => {
     initializeOpenerWorker(),
     initializeIconThemeWorker(),
     initializeTextMeasurementWorker(),
+    initializeAuthWorker(),
   ])
 }
