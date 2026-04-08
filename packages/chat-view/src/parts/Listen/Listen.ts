@@ -34,5 +34,6 @@ export const listen = async (): Promise<void> => {
     initializeOpenerWorker(),
     initializeIconThemeWorker(),
     initializeTextMeasurementWorker(),
+    initializeAuthWorker(),
   ])
 }
