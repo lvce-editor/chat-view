@@ -14,11 +14,11 @@ import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
+import { loadUseAuthWorker } from '../LoadUseAuthWorker/LoadUseAuthWorker.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
 import { loadUseChatToolWorker } from '../LoadUseChatToolWorker/LoadUseChatToolWorker.ts'
-import { loadUseAuthWorker } from '../LoadUseAuthWorker/LoadUseAuthWorker.ts'
 import { loadUseOwnBackend } from '../LoadUseOwnBackend/LoadUseOwnBackend.ts'
 import { loadVoiceDictationEnabled } from '../LoadVoiceDictationEnabled/LoadVoiceDictationEnabled.ts'
 
@@ -39,11 +39,11 @@ export interface LoadedPreferences {
   streamingEnabled: boolean
   todoListToolEnabled: boolean
   toolEnablement: Record<string, boolean>
+  useAuthWorker: boolean
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
   useChatToolWorker: boolean
-  useAuthWorker: boolean
   useOwnBackend: boolean
   voiceDictationEnabled: boolean
 }
@@ -116,11 +116,11 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,
+    useAuthWorker,
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
-    useAuthWorker,
     useOwnBackend,
     voiceDictationEnabled,
   }

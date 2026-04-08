@@ -120,10 +120,10 @@ import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled
 import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
 import * as SetTodoListToolEnabled from '../SetTodoListToolEnabled/SetTodoListToolEnabled.ts'
 import * as SetToolEnablement from '../SetToolEnablement/SetToolEnablement.ts'
+import * as SetUseAuthWorker from '../SetUseAuthWorker/SetUseAuthWorker.ts'
 import * as SetUseChatCoordinatorWorker from '../SetUseChatCoordinatorWorker/SetUseChatCoordinatorWorker.ts'
 import * as SetUseChatMathWorker from '../SetUseChatMathWorker/SetUseChatMathWorker.ts'
 import * as SetUseChatNetworkWorkerForRequests from '../SetUseChatNetworkWorkerForRequests/SetUseChatNetworkWorkerForRequests.ts'
-import * as SetUseAuthWorker from '../SetUseAuthWorker/SetUseAuthWorker.ts'
 import * as SetUseOwnBackend from '../SetUseOwnBackend/SetUseOwnBackend.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
@@ -260,10 +260,10 @@ export const commandMap = {
   'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),
   'Chat.setTodoListToolEnabled': wrapCommand(SetTodoListToolEnabled.setTodoListToolEnabled),
   'Chat.setToolEnablement': wrapCommand(SetToolEnablement.setToolEnablement),
+  'Chat.setUseAuthWorker': wrapCommand(SetUseAuthWorker.setUseAuthWorker),
   'Chat.setUseChatCoordinatorWorker': wrapCommand(SetUseChatCoordinatorWorker.setUseChatCoordinatorWorker),
   'Chat.setUseChatMathWorker': wrapCommand(SetUseChatMathWorker.setUseChatMathWorker),
   'Chat.setUseChatNetworkWorkerForRequests': wrapCommand(SetUseChatNetworkWorkerForRequests.setUseChatNetworkWorkerForRequests),
-  'Chat.setUseAuthWorker': wrapCommand(SetUseAuthWorker.setUseAuthWorker),
   'Chat.setUseOwnBackend': wrapCommand(SetUseOwnBackend.setUseOwnBackend),
   'Chat.showComposerAttachmentPreviewOverlay': wrapCommand(ShowComposerAttachmentPreviewOverlay.showComposerAttachmentPreviewOverlay),
   'Chat.terminate': terminate,
