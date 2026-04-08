@@ -427,6 +427,7 @@ test('handleClick should open backend login page and sync backend auth state', a
 test('handleClick should login via auth worker when enabled', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({})
   using mockAuthRpc = AuthWorker.registerMockRpc({
     'Auth.login': async () => ({
       authAccessToken: 'worker-token-1',
@@ -468,6 +469,7 @@ test('handleClick should login via auth worker when enabled', async () => {
       },
     ],
   ])
+  expect(mockRendererRpc.invocations).toEqual([])
 })
 
 test('handleClick should logout and clear backend auth state', async () => {
