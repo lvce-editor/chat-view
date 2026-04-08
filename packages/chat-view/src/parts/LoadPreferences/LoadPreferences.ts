@@ -14,6 +14,7 @@ import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
+import { loadUseAuthWorker } from '../LoadUseAuthWorker/LoadUseAuthWorker.ts'
 import { loadUseChatCoordinatorWorker } from '../LoadUseChatCoordinatorWorker/LoadUseChatCoordinatorWorker.ts'
 import { loadUseChatMathWorker } from '../LoadUseChatMathWorker/LoadUseChatMathWorker.ts'
 import { loadUseChatNetworkWorkerForRequests } from '../LoadUseChatNetworkWorkerForRequests/LoadUseChatNetworkWorkerForRequests.ts'
@@ -38,6 +39,7 @@ export interface LoadedPreferences {
   streamingEnabled: boolean
   todoListToolEnabled: boolean
   toolEnablement: Record<string, boolean>
+  useAuthWorker: boolean
   useChatCoordinatorWorker: boolean
   useChatMathWorker: boolean
   useChatNetworkWorkerForRequests: boolean
@@ -68,6 +70,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     useChatMathWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
+    useAuthWorker,
     useOwnBackend,
     voiceDictationEnabled,
   ] = await Promise.all([
@@ -91,6 +94,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadUseChatMathWorker(),
     loadUseChatNetworkWorkerForRequests(),
     loadUseChatToolWorker(),
+    loadUseAuthWorker(),
     loadUseOwnBackend(),
     loadVoiceDictationEnabled(),
   ])
@@ -112,6 +116,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,
+    useAuthWorker,
     useChatCoordinatorWorker,
     useChatMathWorker,
     useChatNetworkWorkerForRequests,

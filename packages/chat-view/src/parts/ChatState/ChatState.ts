@@ -132,6 +132,7 @@ export interface ChatState {
   readonly toolEnablement: ToolEnablement
   readonly uid: number
   readonly usageOverviewEnabled: boolean
+  readonly useAuthWorker: boolean
   readonly useChatCoordinatorWorker: boolean
   readonly useChatMathWorker: boolean
   readonly useChatNetworkWorkerForRequests: boolean

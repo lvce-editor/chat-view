@@ -23,6 +23,7 @@ export const listen = async (): Promise<void> => {
   })
   RendererWorker.set(rpc)
   await Promise.all([
+    initializeAuthWorker(),
     initializeChatCoordinatorWorker(),
     initializeChatMathWorker(),
     initializeChatMessageParsingWorker(),
