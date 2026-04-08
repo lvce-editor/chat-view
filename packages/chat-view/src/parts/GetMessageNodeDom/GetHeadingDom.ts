@@ -1,4 +1,4 @@
-import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { MessageHeadingNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 import { getHeadingElementType } from './GetHeadingElementType.ts'

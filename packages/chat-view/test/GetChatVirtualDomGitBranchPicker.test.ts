@@ -1,5 +1,5 @@
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { expect, test } from '@jest/globals'
-import { type VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
