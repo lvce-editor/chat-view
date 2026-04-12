@@ -7,21 +7,17 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
   const hasDetail = detail !== ''
   return [
     {
-      childCount: 1,
-      type: VirtualDomElements.Li,
-    },
-    {
+      'aria-selected': selected ? 'true' : 'false',
       childCount: hasDetail ? 2 : 1,
       className,
-      inputType: 'button',
       name,
       onClick: DomEventListenerFunctions.HandleClick,
-      type: VirtualDomElements.Button,
+      role: 'option',
+      type: VirtualDomElements.Li,
     },
     {
       childCount: 1,
       className: ClassNames.ChatModelPickerItemLabel,
-      name,
       type: VirtualDomElements.Span,
     },
     text(label),
@@ -30,7 +26,6 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
           {
             childCount: 1,
             className: ClassNames.ChatModelPickerItemUsageCost,
-            name,
             type: VirtualDomElements.Span,
           },
           text(detail),
