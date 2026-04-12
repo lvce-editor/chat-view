@@ -1,5 +1,8 @@
 import { expect, test } from '@jest/globals'
-import { getLatestExecutablePlanMessage, isExecutablePlanMessage } from '../src/parts/GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
+import {
+  getLatestExecutablePlanMessage,
+  isExecutablePlanMessage,
+} from '../src/parts/GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
 
 test('isExecutablePlanMessage should accept a completed plan reply without tool failures', () => {
   const result = isExecutablePlanMessage({
