@@ -13,6 +13,7 @@ import { getAgentModePickerVirtualDom } from '../GetAgentModePickerVirtualDom/Ge
 import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleVirtualDom/GetChatModelPickerToggleVirtualDom.ts'
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
 import { getGitBranchPickerVirtualDom } from '../GetGitBranchPickerVirtualDom/GetGitBranchPickerVirtualDom.ts'
+import { getImplementPlanButtonDom } from '../GetImplementPlanButtonDom/GetImplementPlanButtonDom.ts'
 import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getScrollDownButtonDom } from '../GetScrollDownButtonDom/GetScrollDownButtonDom.ts'
@@ -50,6 +51,7 @@ export const getChatSendAreaDom = (
   todoListToolEnabled: boolean,
   todoListItems: readonly TodoListItem[],
   showCreatePullRequestButton = false,
+  showImplementPlanButton = false,
   voiceDictationEnabled = false,
   isSessionInProgress = false,
   scrollDownButtonEnabled = false,
@@ -65,6 +67,7 @@ export const getChatSendAreaDom = (
     (usageOverviewEnabled ? 1 : 0) +
     (addContextButtonEnabled ? 1 : 0) +
     (showCreatePullRequestButton ? 1 : 0) +
+    (showImplementPlanButton ? 1 : 0) +
     (showGitBranchPicker ? 1 : 0) +
     (voiceDictationEnabled ? 1 : 0) +
     (showScrollDownButton ? 1 : 0)
@@ -107,6 +110,7 @@ export const getChatSendAreaDom = (
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
+    ...(showImplementPlanButton ? getImplementPlanButtonDom() : []),
     ...(showGitBranchPicker ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName) : []),
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),

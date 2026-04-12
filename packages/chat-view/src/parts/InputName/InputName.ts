@@ -14,6 +14,7 @@ export const ComposerAttachmentPreviewOverlay = 'composer-attachment-preview-ove
 export const AddContext = 'add-context'
 export const Dictate = 'dictate'
 export const CreatePullRequest = 'create-pull-request'
+export const ImplementPlan = 'implement-plan'
 export const GitBranchPickerToggle = 'git-branch-picker-toggle'
 export const GitBranchPickerItemPrefix = 'git-branch-picker-item:'
 export const FocusAddAction = 'focus-add-action'

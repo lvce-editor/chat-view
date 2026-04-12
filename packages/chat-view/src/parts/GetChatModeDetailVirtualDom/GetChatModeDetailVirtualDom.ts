@@ -17,6 +17,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomDetailMode } from '../GetChatHeaderDomDetailMode/GetChatHeaderDomDetailMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
+import { getLatestExecutablePlanMessage } from '../GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 
 export interface GetChatModeDetailVirtualDomOptions {
@@ -127,6 +128,7 @@ export const getChatModeDetailVirtualDom = ({
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
+  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
@@ -184,6 +186,7 @@ export const getChatModeDetailVirtualDom = ({
       todoListToolEnabled,
       todoListItems,
       showCreatePullRequestButton,
+      showImplementPlanButton,
       voiceDictationEnabled,
       isSelectedSessionInProgress,
       scrollDownButtonEnabled,
