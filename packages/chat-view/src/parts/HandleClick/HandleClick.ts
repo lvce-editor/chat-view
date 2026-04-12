@@ -8,6 +8,7 @@ import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollT
 import { handleAgentModeChange } from '../HandleAgentModeChange/HandleAgentModeChange.ts'
 import { handleClickCreateProject } from '../HandleClickCreateProject/HandleClickCreateProject.ts'
 import { handleClickCreatePullRequest } from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
+import { handleClickImplementPlan } from '../HandleClickImplementPlan/HandleClickImplementPlan.ts'
 import { handleClickLogin } from '../HandleClickLogin/HandleClickLogin.ts'
 import { handleClickLogout } from '../HandleClickLogout/HandleClickLogout.ts'
 import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
@@ -45,6 +46,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       return handleClickCreateProject(state)
     case name === InputName.CreatePullRequest:
       return handleClickCreatePullRequest(state)
+    case name === InputName.ImplementPlan:
+      return handleClickImplementPlan(state)
     case InputName.isCreateSessionInProjectInputName(name): {
       const projectId = InputName.getProjectIdFromCreateSessionInProjectInputName(name)
       return createSession(state, projectId)

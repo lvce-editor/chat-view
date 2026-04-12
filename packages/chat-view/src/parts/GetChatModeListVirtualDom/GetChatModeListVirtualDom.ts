@@ -154,6 +154,7 @@ export const getChatModeListVirtualDom = ({
       todoListToolEnabled,
       todoListItems,
       false,
+      false,
       voiceDictationEnabled,
       false,
     ),
