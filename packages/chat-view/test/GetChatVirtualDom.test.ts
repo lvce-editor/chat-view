@@ -133,6 +133,78 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
   expect(stopLabel).toBeDefined()
 })
 
+test('getChatVirtualDom should render implement button for the latest successful plan reply in detail mode', () => {
+  const result = renderChatView({
+    agentMode: 'plan',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [
+          { id: 'message-user-1', role: 'user', text: 'make a plan', time: '10:00' },
+          {
+            agentMode: 'plan',
+            id: 'message-assistant-1',
+            role: 'assistant',
+            text: '1. Inspect\n2. Implement\n3. Verify',
+            time: '10:01',
+          },
+        ],
+        status: 'finished',
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+
+  const implementButton = result.find((node) => node.name === 'implement-plan')
+
+  expect(implementButton).toMatchObject({
+    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
+    name: 'implement-plan',
+    onClick: DomEventListenerFunctions.HandleClick,
+    title: 'Implement',
+    type: VirtualDomElements.Button,
+  })
+})
+
+test('getChatVirtualDom should hide implement button for failed plan replies', () => {
+  const result = renderChatView({
+    agentMode: 'plan',
+    selectedSessionId: 'session-1',
+    sessions: [
+      {
+        id: 'session-1',
+        messages: [
+          { id: 'message-user-1', role: 'user', text: 'make a plan', time: '10:00' },
+          {
+            agentMode: 'plan',
+            id: 'message-assistant-1',
+            role: 'assistant',
+            text: "I can't make a reliable plan.",
+            time: '10:01',
+            toolCalls: [
+              {
+                arguments: '{}',
+                errorMessage: 'File not found: src/missing.ts',
+                name: 'read_file',
+                status: 'not-found',
+              },
+            ],
+          },
+        ],
+        status: 'finished',
+        title: 'Chat 1',
+      },
+    ],
+    viewMode: 'detail',
+  })
+
+  const implementButton = result.find((node) => node.name === 'implement-plan')
+
+  expect(implementButton).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render model picker toggle button instead of select', () => {
   const result = renderChatView()
   const modelSelect = result.find((node) => node.name === 'model')
