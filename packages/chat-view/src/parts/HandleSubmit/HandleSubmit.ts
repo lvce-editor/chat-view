@@ -19,8 +19,8 @@ import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHe
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
-import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
+import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import {
   handleToolCallsChunkFunction,
   handleTextChunkFunction,
