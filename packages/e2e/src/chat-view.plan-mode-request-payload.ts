@@ -30,7 +30,7 @@ export const test: Test = async ({ Chat, Command }) => {
   await Chat.handleSubmit()
 
   const requests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
-  const payload = requests[0].payload
+  const [{ payload }] = requests
 
   assert((payload.instructions || '').includes('Plan mode instructions:'), 'Plan mode instructions should be present in the request payload')
   assert(!(payload.tools || []).some((tool) => tool.type === 'web_search'), 'Plan mode should not include web_search')

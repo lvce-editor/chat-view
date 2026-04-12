@@ -1,7 +1,7 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { getImplementationPrompt } from '../GetImplementationPrompt/GetImplementationPrompt.ts'
 import { getLatestExecutablePlanMessage } from '../GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
-import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { handleSubmit } from '../HandleSubmit/HandleSubmit.ts'
 
 export const handleClickImplementPlan = async (state: ChatState): Promise<ChatState> => {

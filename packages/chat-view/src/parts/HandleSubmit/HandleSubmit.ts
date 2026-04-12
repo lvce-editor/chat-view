@@ -18,8 +18,8 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
-import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
+import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
 import {
   handleToolCallsChunkFunction,

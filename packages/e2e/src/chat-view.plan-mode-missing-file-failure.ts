@@ -33,7 +33,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
     })}\n\n`,
   )
   await Chat.mockOpenApiStreamPushChunk(
-    `data: ${JSON.stringify({ type: 'response.output_text.delta', delta: "I can't make a reliable plan because I could not read src/missing.ts." })}\n\n`,
+    `data: ${JSON.stringify({ delta: "I can't make a reliable plan because I could not read src/missing.ts.", type: 'response.output_text.delta' })}\n\n`,
   )
   await Chat.mockOpenApiStreamPushChunk(
     `data: ${JSON.stringify({
