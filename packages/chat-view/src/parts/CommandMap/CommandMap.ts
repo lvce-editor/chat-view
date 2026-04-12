@@ -113,6 +113,7 @@ import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionTo
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
 import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
+import * as SetInProgress from '../SetInProgress/SetInProgress.ts'
 import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetScrollDownButtonEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
@@ -253,6 +254,7 @@ export const commandMap = {
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
   'Chat.setReasoningPickerEnabled': wrapCommand(SetReasoningPickerEnabled.setReasoningPickerEnabled),
   'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
+  'Chat.setInProgress': wrapCommand(SetInProgress.setInProgress),
   'Chat.setScrollDownButtonEnabled': wrapCommand(SetScrollDownButtonEnabled.setScrollDownButtonEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
