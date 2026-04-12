@@ -6,7 +6,9 @@ const hasFailedToolCall = (message: ChatMessage): boolean => {
 }
 
 export const isExecutablePlanMessage = (message: ChatMessage): boolean => {
-  return message.role === 'assistant' && message.agentMode === 'plan' && !message.inProgress && message.text.trim() !== '' && !hasFailedToolCall(message)
+  return (
+    message.role === 'assistant' && message.agentMode === 'plan' && !message.inProgress && message.text.trim() !== '' && !hasFailedToolCall(message)
+  )
 }
 
 export const getLatestExecutablePlanMessage = (session: ChatSession | undefined): ChatMessage | undefined => {
