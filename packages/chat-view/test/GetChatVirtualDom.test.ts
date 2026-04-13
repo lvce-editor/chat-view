@@ -330,7 +330,8 @@ test('getChatVirtualDom should render open run mode picker without search input'
   expect(runModePicker?.style).toBeUndefined()
   expect(runModeBackgroundOption).toMatchObject({
     className: ClassNames.ChatModelPickerItem,
-    type: VirtualDomElements.Button,
+    role: 'option',
+    type: VirtualDomElements.Li,
   })
   expect(runModeSearchInput).toBeUndefined()
   expect(result[0]).toMatchObject({
@@ -383,11 +384,13 @@ test('getChatVirtualDom should render open agent mode picker as custom select wi
   expect(selectedAgentOption).toMatchObject({
     className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
     name: 'agent-mode-picker-item:agent',
-    type: VirtualDomElements.Button,
+    role: 'option',
+    type: VirtualDomElements.Li,
   })
   expect(planOption).toMatchObject({
     className: ClassNames.ChatModelPickerItem,
-    type: VirtualDomElements.Button,
+    role: 'option',
+    type: VirtualDomElements.Li,
   })
   expect(modelPickerSearchInput).toBeUndefined()
   expect(result[0]).toMatchObject({
