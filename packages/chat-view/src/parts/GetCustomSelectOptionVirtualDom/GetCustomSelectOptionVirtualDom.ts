@@ -8,6 +8,7 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
   return [
     {
       childCount: 1,
+      className,
       type: VirtualDomElements.Li,
     },
     {
