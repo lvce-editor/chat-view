@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -15,7 +15,7 @@ export const getSessionDom = (session: ChatSession, focused = false, showChatLis
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
   return [
     {
-      childCount: 3,
+      childCount: showChatListTime ? 4 : 3,
       className: sessionClassName,
       type: VirtualDomElements.Li,
     },
@@ -30,7 +30,7 @@ export const getSessionDom = (session: ChatSession, focused = false, showChatLis
       type: VirtualDomElements.Div,
     },
     {
-      childCount: showChatListTime ? 2 : 1,
+      childCount: 1,
       className: ClassNames.ChatListItemLabel,
       name: InputName.getSessionInputName(session.id),
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
@@ -57,6 +57,7 @@ export const getSessionDom = (session: ChatSession, focused = false, showChatLis
     {
       childCount: 1,
       className: ClassNames.ChatActions,
+      role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
     {
