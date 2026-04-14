@@ -581,3 +581,81 @@ test('getToolCallDom should render getWorkspaceUri result with uri title on the 
     text: 'chat-view',
   })
 })
+
+test('getToolCallDom should render rename as from to filenames with full uri titles', () => {
+  const oldUri = 'file:///workspace/packages/memory'
+  const newUri = 'file:///workspace/packages/memory.bak'
+  const result = getToolCallDom({
+    arguments: JSON.stringify({
+      newUri,
+      oldUri,
+    }),
+    name: 'rename',
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 5,
+      className: ClassNames.ChatOrderedListItem,
+      title: `${oldUri} -> ${newUri}`,
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 0,
+      className: ClassNames.FileIcon,
+      type: VirtualDomElements.Div,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'rename ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': oldUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: oldUri,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': oldUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'memory',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ' -> ',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallReadFileLink,
+      'data-uri': newUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      title: newUri,
+      type: VirtualDomElements.Span,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ChatToolCallFileName,
+      'data-uri': newUri,
+      onClick: DomEventListenerFunctions.HandleClickFileName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'memory.bak',
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})

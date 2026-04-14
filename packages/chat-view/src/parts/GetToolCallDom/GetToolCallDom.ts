@@ -6,6 +6,7 @@ import { getToolCallDefaultDom } from '../GetToolCallDefaultDom/GetToolCallDefau
 import { getToolCallEditFileVirtualDom } from '../GetToolCallEditFileVirtualDom/GetToolCallEditFileVirtualDom.ts'
 import { getToolCallGetWorkspaceUriVirtualDom } from '../GetToolCallGetWorkspaceUriVirtualDom/GetToolCallGetWorkspaceUriVirtualDom.ts'
 import { getToolCallReadFileVirtualDom } from '../GetToolCallReadFileVirtualDom/GetToolCallReadFileVirtualDom.ts'
+import { getToolCallRenameVirtualDom } from '../GetToolCallRenameVirtualDom/GetToolCallRenameVirtualDom.ts'
 import { getToolCallRenderHtmlVirtualDom } from '../GetToolCallRenderHtmlVirtualDom/GetToolCallRenderHtmlVirtualDom.ts'
 import { getToolCallWriteFileVirtualDom } from '../GetToolCallWriteFileVirtualDom/GetToolCallWriteFileVirtualDom.ts'
 
@@ -40,6 +41,13 @@ export const getToolCallDom = (toolCall: ChatToolCall): readonly VirtualDomNode[
 
   if (toolCall.name === 'edit_file') {
     const virtualDom = getToolCallEditFileVirtualDom(toolCall)
+    if (virtualDom.length > 0) {
+      return virtualDom
+    }
+  }
+
+  if (toolCall.name === 'rename') {
+    const virtualDom = getToolCallRenameVirtualDom(toolCall)
     if (virtualDom.length > 0) {
       return virtualDom
     }

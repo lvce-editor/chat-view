@@ -54,3 +54,21 @@ test('getToolCallLabel should render grep_search without partial json when argum
 
   expect(result).toBe('grep_search')
 })
+
+test('getToolCallLabel should render rename as from to filenames', () => {
+  const result = getToolCallLabel({
+    arguments: '{"oldUri":"file:///workspace/packages/memory","newUri":"file:///workspace/packages/memory.bak"}',
+    name: 'rename',
+  })
+
+  expect(result).toBe('rename memory -> memory.bak')
+})
+
+test('getToolCallLabel should render rename without partial json when arguments are incomplete', () => {
+  const result = getToolCallLabel({
+    arguments: '{"oldUri":"file:///workspace/packages/memo',
+    name: 'rename',
+  })
+
+  expect(result).toBe('rename')
+})
