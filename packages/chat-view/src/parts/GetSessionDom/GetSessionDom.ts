@@ -3,12 +3,14 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getSessionDom = (session: ChatSession, focused = false): readonly VirtualDomNode[] => {
+export const getSessionDom = (session: ChatSession, focused = false, showChatListTime = true): readonly VirtualDomNode[] => {
   const sessionClassName = focused ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused) : ClassNames.ChatListItem
   const sessionStatusClassName = getSessionStatusClassName(session)
+  const lastActiveTime = getSessionLastActiveTime(session) || 'n/a'
   return [
     {
       childCount: 3,
@@ -26,7 +28,7 @@ export const getSessionDom = (session: ChatSession, focused = false): readonly V
       type: VirtualDomElements.Div,
     },
     {
-      childCount: 1,
+      childCount: showChatListTime ? 2 : 1,
       className: ClassNames.ChatListItemLabel,
       name: InputName.getSessionInputName(session.id),
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
@@ -34,7 +36,22 @@ export const getSessionDom = (session: ChatSession, focused = false): readonly V
       tabIndex: 0,
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: ClassNames.ChatListItemTitle,
+      type: VirtualDomElements.Div,
+    },
     text(session.title),
+    ...(showChatListTime
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatListItemTime,
+            type: VirtualDomElements.Div,
+          },
+          text(lastActiveTime),
+        ]
+      : []),
     {
       childCount: 1,
       className: ClassNames.ChatActions,
@@ -52,7 +69,7 @@ export const getSessionDom = (session: ChatSession, focused = false): readonly V
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconTrash',
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
       type: VirtualDomElements.Div,
     },
   ]

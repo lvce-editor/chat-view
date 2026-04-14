@@ -11,6 +11,7 @@ import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPa
 import { loadReasoningPickerEnabled } from '../LoadReasoningPickerEnabled/LoadReasoningPickerEnabled.ts'
 import { loadScrollDownButtonEnabled } from '../LoadScrollDownButtonEnabled/LoadScrollDownButtonEnabled.ts'
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
+import { loadShowChatListTime } from '../LoadShowChatListTime/LoadShowChatListTime.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
@@ -36,6 +37,7 @@ export interface LoadedPreferences {
   reasoningPickerEnabled: boolean
   scrollDownButtonEnabled: boolean
   searchEnabled: boolean
+  showChatListTime: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
   toolEnablement: Record<string, boolean>
@@ -62,6 +64,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     reasoningPickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
+    showChatListTime,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,
@@ -86,6 +89,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadReasoningPickerEnabled(),
     loadScrollDownButtonEnabled(),
     loadSearchEnabled(),
+    loadShowChatListTime(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
     loadToolEnablement(),
@@ -113,6 +117,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     reasoningPickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
+    showChatListTime,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,

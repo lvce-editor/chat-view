@@ -1,6 +1,7 @@
 import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
+import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 
 export const resetChatSessionStorage = (): void => {
   // no-op: chat session storage always goes through ChatStorageWorker
@@ -9,6 +10,7 @@ export const resetChatSessionStorage = (): void => {
 export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
   const sessions = (await ChatStorageWorker.invoke('ChatStorage.listSessions')) as readonly ChatSession[]
   return sessions.map((session) => {
+    const lastActiveTime = getSessionLastActiveTime(session)
     const summary: ChatSession = {
       ...(session.branchName
         ? {
@@ -16,6 +18,11 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
           }
         : {}),
       id: session.id,
+      ...(lastActiveTime
+        ? {
+            lastActiveTime,
+          }
+        : {}),
       messages: [],
       ...(session.pullRequestUrl
         ? {
@@ -49,6 +56,7 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
   if (!session) {
     return undefined
   }
+  const lastActiveTime = getSessionLastActiveTime(session)
   const resultBase: ChatSession = {
     ...(session.branchName
       ? {
@@ -56,6 +64,11 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
         }
       : {}),
     id: session.id,
+    ...(lastActiveTime
+      ? {
+          lastActiveTime,
+        }
+      : {}),
     messages: [...session.messages],
     ...(session.pullRequestUrl
       ? {
@@ -84,6 +97,7 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
 }
 
 export const saveChatSession = async (session: ChatSession): Promise<void> => {
+  const lastActiveTime = getSessionLastActiveTime(session)
   const value: ChatSession = {
     ...(session.branchName
       ? {
@@ -91,6 +105,11 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
         }
       : {}),
     id: session.id,
+    ...(lastActiveTime
+      ? {
+          lastActiveTime,
+        }
+      : {}),
     messages: [...session.messages],
     ...(session.pullRequestUrl
       ? {

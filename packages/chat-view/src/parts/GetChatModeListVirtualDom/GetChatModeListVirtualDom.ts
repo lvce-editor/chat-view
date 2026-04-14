@@ -48,6 +48,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showChatListTime: boolean
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
   readonly todoListToolEnabled: boolean
@@ -94,6 +95,7 @@ export const getChatModeListVirtualDom = ({
   selectedModelId,
   selectedSessionId,
   sessions,
+  showChatListTime,
   showRunMode,
   todoListItems,
   todoListToolEnabled,
@@ -125,7 +127,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, chatListScrollTop),
+    ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
