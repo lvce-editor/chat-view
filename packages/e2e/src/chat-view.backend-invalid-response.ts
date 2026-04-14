@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     accessToken: 'backend-token',
     request: 'refresh',
     type: 'success',
-    userName: 'Simon',
+    userName: 'Test',
   })
   await Command.execute('Chat.mockBackendSetResponse', {
     id: 'resp_invalid',
