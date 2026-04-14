@@ -1,4 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
+ 
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-rename-file-enoent-error'
@@ -25,8 +25,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
       toolCalls: [
         {
           arguments: JSON.stringify({
-            path: 'nonexistent.txt',
             newPath: 'something-else.txt',
+            path: 'nonexistent.txt',
           }),
           errorMessage: 'File not found: nonexistent.txt',
           id: 'call_01',

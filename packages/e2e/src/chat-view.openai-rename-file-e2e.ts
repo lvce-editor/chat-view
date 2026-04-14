@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-rename-file-e2e'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, FileSystem, Locator, Workspace, expect }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   // create original.txt with initial content
   await FileSystem.writeFile(`${tmpDir}/original.txt`, 'hello world')
@@ -33,7 +33,7 @@ export const test: Test = async ({ Chat, FileSystem, Locator, Workspace, expect 
           object: 'response',
           output: [
             {
-              arguments: JSON.stringify({ path: 'original.txt', newPath: 'renamed.txt' }),
+              arguments: JSON.stringify({ newPath: 'renamed.txt', path: 'original.txt' }),
               call_id: 'call_01',
               id: 'fc_01',
               name: 'rename_file',
