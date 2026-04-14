@@ -1,0 +1,19 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
+export const name = 'chat-view.chat-list-time-1-second'
+
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+  const now = Date.parse('2026-04-14T12:00:00.000Z')
+
+  await Chat.show()
+  await Chat.reset()
+  await Command.execute('Chat.setNowForTest', now)
+  await Command.execute('Chat.openMockSession', '1 second', [], {
+    lastActiveTime: new Date(now - 1_000).toISOString(),
+  })
+  await Chat.handleClickBack()
+
+  const sessionTime = Locator('.ChatListItemTime')
+  await expect(sessionTime).toHaveCount(1)
+  await expect(sessionTime).toHaveText('1 sec ago')
+}
