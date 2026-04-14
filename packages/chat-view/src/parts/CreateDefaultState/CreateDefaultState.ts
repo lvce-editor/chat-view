@@ -78,7 +78,7 @@ export const createDefaultState = (): ChatState => {
     lastNormalViewMode: 'list',
     lastSubmittedSessionId: '',
     listFocusedIndex: -1,
-    listItemHeight: 40,
+    listItemHeight: 54,
     maxComposerRows: 5,
     maxToolCalls: defaultMaxToolCalls,
     messagesAutoScrollEnabled: true,
