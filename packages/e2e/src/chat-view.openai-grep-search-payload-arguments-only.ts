@@ -6,7 +6,7 @@ export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const nestedArguments =
-    '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memorymeasurement|MemoryMeasurement","useDefaultExcludes":true}'
+    '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memoryMeasurement|MemoryMeasurement","useDefaultExcludes":true}'
 
   await Chat.show()
   await Chat.reset()
@@ -52,6 +52,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const toolCall = messages.nth(1).locator('.ChatOrderedListItem').nth(0)
   await expect(toolCall).toContainText('grep_search')
-  await expect(toolCall).toContainText('"memorymeasurement|MemoryMeasurement"')
+  await expect(toolCall).toContainText('"memoryMeasurement|MemoryMeasurement"')
   await expect(toolCall).toHaveAttribute('title', nestedArguments)
 }

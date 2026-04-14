@@ -166,7 +166,7 @@ test('getToolCallDom should expose only nested arguments on hover for wrapped gr
       includePattern: '**/*',
       isRegexp: true,
       maxResults: 100,
-      query: 'memorymeasurement|MemoryMeasurement',
+      query: 'memoryMeasurement|MemoryMeasurement',
       useDefaultExcludes: true,
     },
     name: 'grep_search',
@@ -175,7 +175,7 @@ test('getToolCallDom should expose only nested arguments on hover for wrapped gr
     },
   })
   const nestedArguments =
-    '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memorymeasurement|MemoryMeasurement","useDefaultExcludes":true}'
+    '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memoryMeasurement|MemoryMeasurement","useDefaultExcludes":true}'
   const result = getToolCallDom({
     arguments: wrappedArguments,
     name: 'grep_search',
@@ -199,7 +199,7 @@ test('getToolCallDom should expose only nested arguments on hover for wrapped gr
       type: VirtualDomElements.Text,
     }),
     expect.objectContaining({
-      text: ' "memorymeasurement|MemoryMeasurement"',
+      text: ' "memoryMeasurement|MemoryMeasurement"',
       type: VirtualDomElements.Text,
     }),
   ])
