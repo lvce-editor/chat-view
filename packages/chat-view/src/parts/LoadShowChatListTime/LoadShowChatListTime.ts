@@ -1,4 +1,4 @@
-import { Preferences } from '@lvce-editor/rpc-registry'
+import * as Preferences from '../Preferences/Preferences.ts'
 
 export const loadShowChatListTime = async (): Promise<boolean> => {
   try {

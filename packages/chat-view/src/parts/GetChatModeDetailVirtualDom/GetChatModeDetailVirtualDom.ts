@@ -59,6 +59,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showChatListTime: boolean
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
   readonly todoListToolEnabled: boolean
@@ -111,6 +112,7 @@ export const getChatModeDetailVirtualDom = ({
   selectedModelId,
   selectedSessionId,
   sessions,
+  showChatListTime,
   showRunMode,
   todoListItems,
   todoListToolEnabled,
