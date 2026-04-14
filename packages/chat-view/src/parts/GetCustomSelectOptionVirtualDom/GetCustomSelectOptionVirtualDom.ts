@@ -7,15 +7,7 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
   const hasDetail = detail !== ''
   return [
     {
-<<<<<<< HEAD
       'aria-selected': selected ? 'true' : 'false',
-=======
-      childCount: 1,
-      className,
-      type: VirtualDomElements.Li,
-    },
-    {
->>>>>>> origin/main
       childCount: hasDetail ? 2 : 1,
       className,
       name,
