@@ -1,3 +1,4 @@
+import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 
 export type ChatToolCallStatus = 'error' | 'not-found' | 'success'
@@ -13,6 +14,7 @@ export interface ChatToolCall {
 }
 
 export interface ChatMessage {
+  readonly agentMode?: AgentMode
   readonly attachments?: readonly ComposerAttachment[]
   readonly id: string
   readonly inProgress?: boolean

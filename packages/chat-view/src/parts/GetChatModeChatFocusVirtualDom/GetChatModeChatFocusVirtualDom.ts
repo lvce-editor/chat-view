@@ -19,6 +19,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderDomFocusMode } from '../GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
+import { getLatestExecutablePlanMessage } from '../GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 
@@ -146,6 +147,8 @@ export const getChatModeChatFocusVirtualDom = ({
   const selectedProjectName = projects.find((project) => project.id === selectedProjectId)?.name || ''
   const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
+  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
@@ -154,7 +157,6 @@ export const getChatModeChatFocusVirtualDom = ({
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
-  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
   return [
     {
       childCount: chatRootChildCount + 1,
@@ -221,6 +223,7 @@ export const getChatModeChatFocusVirtualDom = ({
       todoListToolEnabled,
       todoListItems,
       showCreatePullRequestButton,
+      showImplementPlanButton,
       voiceDictationEnabled,
       isSelectedSessionInProgress,
       scrollDownButtonEnabled,

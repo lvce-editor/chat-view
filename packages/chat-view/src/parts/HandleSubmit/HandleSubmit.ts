@@ -20,6 +20,7 @@ import { getMentionContextMessage } from '../GetMentionContextMessage/GetMention
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
 import { getSseEventType } from '../GetSseEventType/GetSseEventType.ts'
+import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import {
   handleToolCallsChunkFunction,
   handleTextChunkFunction,
@@ -42,8 +43,6 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
     messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
   }
 }
-
-const workspaceUriPlaceholder = '{{workspaceUri}}'
 
 const getLiveState = (uid: number): ChatState | undefined => {
   const entry = get(uid)
@@ -92,10 +91,6 @@ const clearComposerAttachments = async (sessionId: string, attachmentIds: readon
   }
 }
 
-const getCurrentDate = (): string => {
-  return new Date().toISOString().slice(0, 10)
-}
-
 const getProjectUri = (state: ChatState, projectId: string): string => {
   return state.projects.find((project) => project.id === projectId)?.uri || ''
 }
@@ -117,19 +112,6 @@ const resolveWorkspaceUri = async (state: ChatState, session: ChatSession | unde
   } catch {
     return ''
   }
-}
-
-const getEffectiveSystemPrompt = (state: ChatState, workspaceUri: string): string => {
-  const resolvedSystemPrompt = state.systemPrompt.replaceAll(workspaceUriPlaceholder, workspaceUri || 'unknown')
-  const currentDateInstructions = `Current date: ${getCurrentDate()}.
-
-Do not assume your knowledge cutoff is the same as the current date.`
-  if (!resolvedSystemPrompt) {
-    return currentDateInstructions
-  }
-  return `${resolvedSystemPrompt}
-
-${currentDateInstructions}`
 }
 
 const withProvisionedBackgroundSession = async (state: ChatState, session: ChatSession): Promise<ChatSession> => {
@@ -228,6 +210,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const assistantMessageId = crypto.randomUUID()
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const inProgressAssistantMessage: ChatMessage = {
+    ...(agentMode === 'plan'
+      ? {
+          agentMode,
+        }
+      : {}),
     id: assistantMessageId,
     inProgress: true,
     role: 'assistant',
@@ -348,7 +335,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const workspaceUri = useMockApi
     ? getWorkspaceUri(optimisticState, selectedOptimisticSession)
     : await resolveWorkspaceUri(optimisticState, selectedOptimisticSession)
-  const systemPrompt = getEffectiveSystemPrompt(optimisticState, workspaceUri)
+  const systemPrompt = getSystemPromptForAgentMode(optimisticState.systemPrompt, workspaceUri, agentMode)
   const messages = (selectedOptimisticSession?.messages ?? []).filter((message) => !message.inProgress)
   const mentionContextMessage = await getMentionContextMessage(userText)
   const messagesWithMentionContext = mentionContextMessage ? [...messages, mentionContextMessage] : messages
@@ -365,7 +352,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       }
     : undefined
 
-  const assistantMessage = await getAiResponse({
+  const assistantMessageResponse = await getAiResponse({
     agentMode,
     assetDir,
     authAccessToken,
@@ -447,6 +434,13 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     webSearchEnabled,
     workspaceUri,
   })
+  const assistantMessage: ChatMessage =
+    agentMode === 'plan'
+      ? {
+          ...assistantMessageResponse,
+          agentMode,
+        }
+      : assistantMessageResponse
 
   if (isSessionStopped(state.uid, optimisticState.selectedSessionId)) {
     return getLiveState(state.uid) || handleTextChunkState.latestState

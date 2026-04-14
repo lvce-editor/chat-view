@@ -181,6 +181,10 @@ export const createPullRequest = (): string => {
   return i18nString(UiStrings.CreatePullRequest)
 }
 
+export const implement = (): string => {
+  return i18nString(UiStrings.Implement)
+}
+
 export const send = (): string => {
   return i18nString(UiStrings.Send)
 }

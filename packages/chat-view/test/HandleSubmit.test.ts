@@ -1191,6 +1191,85 @@ test('handleSubmit should render mock OpenAI write_file tool calls from response
   ])
 })
 
+test('handleSubmit should use plan mode instructions, restrict tools, and tag assistant replies in plan mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+      {
+        function: {
+          description: 'Write file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  jest.useFakeTimers().setSystemTime(Date.parse('2026-04-12T09:00:00.000Z'))
+  MockOpenApiStream.reset()
+  MockOpenApiStream.pushChunk('data: {"type":"response.output_text.delta","delta":"1. Inspect files"}\n\n')
+  MockOpenApiStream.pushChunk('data: {"type":"response.completed"}\n\n')
+  MockOpenApiStream.pushChunk('data: [DONE]\n\n')
+  MockOpenApiStream.finish()
+
+  const state = {
+    ...createDefaultState(),
+    agentMode: 'plan' as const,
+    composerValue: 'make a plan',
+    models: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' as const }],
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    streamingEnabled: true,
+    useMockApi: true,
+    viewMode: 'detail' as const,
+    webSearchEnabled: true,
+  }
+
+  const result = await HandleSubmit.handleSubmit(state)
+  const request = result.mockOpenApiRequests[0]
+  const payload = request.payload as {
+    readonly instructions: string
+    readonly tools: readonly { readonly name?: string; readonly type: string }[]
+  }
+
+  expect(result.sessions[0].messages[1]).toEqual(
+    expect.objectContaining({
+      agentMode: 'plan',
+      role: 'assistant',
+      text: '1. Inspect files',
+    }),
+  )
+  expect(payload.instructions).toContain('Plan mode instructions:')
+  expect(payload.instructions).toContain('Current date: 2026-04-12.')
+  expect(payload.tools).toEqual([
+    expect.objectContaining({
+      name: 'read_file',
+      type: 'function',
+    }),
+  ])
+  expect(mockChatToolRpc.invocations).toEqual([['ChatTool.getTools']])
+  expect(mockRendererRpc.invocations).toEqual([['Chat.rerender'], ['Chat.rerender']])
+})
+
 test('handleSubmit should resolve workspaceUri placeholder in system prompt from selected project', async () => {
   jest.useFakeTimers()
   jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))

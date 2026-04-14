@@ -5,12 +5,6 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-const authContainerStyle = 'align-items:center;display:flex;gap:8px;min-width:0;'
-
-const authNameStyle = 'max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'
-
-const authButtonStyle = 'white-space:nowrap;'
-
 const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): string => {
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
@@ -39,7 +33,6 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
     {
       childCount: isAuthenticated ? 2 : 1,
       className: ClassNames.ChatHeaderAuth,
-      style: authContainerStyle,
       type: VirtualDomElements.Div,
     },
     ...(isAuthenticated
@@ -47,7 +40,6 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
           {
             childCount: 1,
             className: ClassNames.ChatHeaderAuthName,
-            style: authNameStyle,
             title: displayName,
             type: VirtualDomElements.Span,
           },
@@ -61,7 +53,6 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
       inputType: 'button',
       name: buttonName,
       onClick: DomEventListenerFunctions.HandleClick,
-      style: authButtonStyle,
       title: buttonTitle,
       type: VirtualDomElements.Button,
     },
