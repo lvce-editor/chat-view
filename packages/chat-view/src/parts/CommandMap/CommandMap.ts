@@ -110,6 +110,7 @@ import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelect
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
+import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
 import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
@@ -249,6 +250,7 @@ export const commandMap = {
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
+  'Chat.setNowForTest': wrapCommand(SetNowForTest.setNowForTest),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),

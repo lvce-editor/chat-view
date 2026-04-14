@@ -55,6 +55,7 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
     { id: 'session-1', messages: [], title: 'Chat 1' },
     {
       id: 'session-2',
+      lastActiveTime: '10:00',
       messages: [
         {
           id: 'message-2',
