@@ -141,12 +141,14 @@ test('openMockSession should apply optional session metadata', async () => {
 
   const result = await OpenMockSession.openMockSession(state, 'mock-session-branch', [], {
     branchName: 'main',
+    lastActiveTime: '2026-04-14T12:00:00.000Z',
     workspaceUri: 'file:///workspace',
   })
 
   expect(result.sessions[1]).toEqual({
     branchName: 'main',
     id: 'mock-session-branch',
+    lastActiveTime: '2026-04-14T12:00:00.000Z',
     messages: [],
     title: 'mock-session-branch',
     workspaceUri: 'file:///workspace',

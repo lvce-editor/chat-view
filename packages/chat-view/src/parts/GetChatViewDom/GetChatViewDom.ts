@@ -86,6 +86,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showChatListTime: boolean
   readonly showRunMode: boolean
   readonly todoListToolEnabled: boolean
   readonly tokensMax: number
@@ -152,6 +153,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedProjectId = '',
     selectedSessionId,
     sessions,
+    showChatListTime,
     showRunMode,
     todoListToolEnabled,
     tokensMax,
@@ -316,6 +318,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedModelId,
         selectedSessionId,
         sessions,
+        showChatListTime,
         showRunMode,
         todoListItems,
         todoListToolEnabled,

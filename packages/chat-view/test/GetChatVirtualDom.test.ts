@@ -929,7 +929,7 @@ test('getChatVirtualDOm should render collapsed project chevron icon in chat-foc
 
 test('getChatVirtualDOm should render session list entries', () => {
   const sessions = [
-    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-1', messages: [{ id: 'message-1', role: 'assistant' as const, text: 'Done', time: '10:30' }], title: 'Chat 1' },
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
   const result = renderChatView({
@@ -938,14 +938,25 @@ test('getChatVirtualDOm should render session list entries', () => {
   })
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
+  const archiveIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconArchive}`)
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
+  const sessionTitle = result.find((node) => node.className === ClassNames.ChatListItemTitle)
+  const sessionTime = result.find((node) => node.className === ClassNames.ChatListItemTime)
   const sessionStatusRow = result.find((node) => node.className === ClassNames.ChatListItemStatusRow)
   const sessionStatusIcon = result.find((node) => node.className === `${ClassNames.ChatListItemStatusIcon} ${ClassNames.ChatListItemStatusStopped}`)
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
+  expect(archiveIcon).toBeDefined()
   expect(sessionLabel).toBeDefined()
+  expect(sessionTitle).toBeDefined()
+  expect(sessionTime).toBeDefined()
+  expect(sessionLabel).toMatchObject({
+    childCount: 1,
+  })
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
+  expect(result.find((node) => node.text === '10:30')).toBeDefined()
+  expect(result.find((node) => node.text === 'n/a')).toBeDefined()
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
   expect(chatList).toMatchObject({
     onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
@@ -954,6 +965,21 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(deleteButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
+  expect(archiveIcon).toMatchObject({
+    type: VirtualDomElements.Div,
+  })
+})
+
+test('getChatVirtualDOm should hide session list times when disabled', () => {
+  const sessions = [{ id: 'session-1', messages: [{ id: 'message-1', role: 'assistant' as const, text: 'Done', time: '10:30' }], title: 'Chat 1' }]
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions,
+    showChatListTime: false,
+  })
+  const sessionTime = result.find((node) => node.className === ClassNames.ChatListItemTime)
+  expect(sessionTime).toBeUndefined()
+  expect(result.find((node) => node.text === '10:30')).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render stopped/in progress/finished session status icons', () => {

@@ -119,6 +119,7 @@ export interface ChatState {
   readonly selectedProjectId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showChatListTime: boolean
   readonly showRunMode: boolean
   readonly streamingEnabled: boolean
   readonly systemPrompt: string

@@ -1,6 +1,8 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 
 export const toSummarySession = (session: ChatSession): ChatSession => {
+  const lastActiveTime = getSessionLastActiveTime(session)
   const summary: ChatSession = {
     ...(session.branchName
       ? {
@@ -8,6 +10,11 @@ export const toSummarySession = (session: ChatSession): ChatSession => {
         }
       : {}),
     id: session.id,
+    ...(lastActiveTime
+      ? {
+          lastActiveTime,
+        }
+      : {}),
     messages: [],
     ...(session.pullRequestUrl
       ? {

@@ -10,6 +10,7 @@ export const getChatListDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
   listFocusedIndex: number,
+  showChatListTime: boolean,
   chatListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   if (sessions.length === 0) {
@@ -28,6 +29,6 @@ export const getChatListDom = (
       tabIndex: 0,
       type: VirtualDomElements.Ul,
     },
-    ...sessions.flatMap((session, index) => getSessionDom(session, index === listFocusedIndex)),
+    ...sessions.flatMap((session, index) => getSessionDom(session, index === listFocusedIndex, showChatListTime)),
   ]
 }

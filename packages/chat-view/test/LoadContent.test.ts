@@ -136,8 +136,13 @@ test('loadContent should load only selected session messages from async storage'
 
   const result = await LoadContent.loadContent(state, savedState)
   expect(result.sessions).toEqual([
-    { id: 'session-a', messages: [], title: 'Saved A' },
-    { id: 'session-b', messages: [{ id: 'message-b', role: 'assistant', text: 'B', time: '10:01' }], title: 'Saved B' },
+    { id: 'session-a', lastActiveTime: '10:00', messages: [], title: 'Saved A' },
+    {
+      id: 'session-b',
+      lastActiveTime: '10:01',
+      messages: [{ id: 'message-b', role: 'assistant', text: 'B', time: '10:01' }],
+      title: 'Saved B',
+    },
   ])
   expect(result.selectedSessionId).toBe('session-b')
   expect(result.viewMode).toBe('detail')
@@ -384,7 +389,10 @@ test('loadContent should restore selected detail session with messages from save
   const result = await LoadContent.loadContent(state, savedState)
   expect(result.selectedSessionId).toBe('session-b')
   expect(result.viewMode).toBe('detail')
-  expect(result.sessions).toEqual(savedState.sessions)
+  expect(result.sessions).toEqual([
+    { id: 'session-a', messages: [], title: 'Saved A' },
+    { id: 'session-b', lastActiveTime: '10:01', messages: savedMessages, title: 'Saved B' },
+  ])
 })
 
 test('loadContent should load openRouterApiKey from preferences', async () => {

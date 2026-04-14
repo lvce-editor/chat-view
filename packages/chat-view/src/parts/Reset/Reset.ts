@@ -3,9 +3,11 @@ import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import { clearChatSessions } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
+import { resetRelativeTimeNowForTest } from '../RelativeTimeNow/RelativeTimeNow.ts'
 
 export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
+  resetRelativeTimeNowForTest()
   return {
     ...state,
     agentMode: defaultAgentMode,

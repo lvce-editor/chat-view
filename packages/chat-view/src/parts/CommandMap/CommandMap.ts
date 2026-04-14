@@ -108,6 +108,7 @@ import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
+import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
@@ -115,6 +116,7 @@ import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReas
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
 import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetScrollDownButtonEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
+import * as SetShowChatListTime from '../SetShowChatListTime/SetShowChatListTime.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
@@ -248,6 +250,7 @@ export const commandMap = {
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
+  'Chat.setNowForTest': wrapCommand(SetNowForTest.setNowForTest),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
@@ -255,6 +258,7 @@ export const commandMap = {
   'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
   'Chat.setScrollDownButtonEnabled': wrapCommand(SetScrollDownButtonEnabled.setScrollDownButtonEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
+  'Chat.setShowChatListTime': wrapCommand(SetShowChatListTime.setShowChatListTime),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),

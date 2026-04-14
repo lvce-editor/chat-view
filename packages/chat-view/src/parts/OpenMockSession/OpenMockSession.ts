@@ -7,6 +7,7 @@ import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisib
 
 interface OpenMockSessionOptions {
   readonly branchName?: string
+  readonly lastActiveTime?: string
   readonly projectId?: string
   readonly workspaceUri?: string
 }
@@ -20,6 +21,11 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
     ...(options.branchName
       ? {
           branchName: options.branchName,
+        }
+      : {}),
+    ...(options.lastActiveTime
+      ? {
+          lastActiveTime: options.lastActiveTime,
         }
       : {}),
     ...(options.projectId
