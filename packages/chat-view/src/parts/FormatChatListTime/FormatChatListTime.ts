@@ -5,13 +5,14 @@ const hour = minute * 60
 const day = hour * 24
 const month = day * 30
 const year = day * 365
+const isoDateTimeRegex = /^\d{4}-\d{2}-\d{2}T/
 
 const formatAgo = (value: number, singular: string, plural: string): string => {
   return value === 1 ? `${value} ${singular} ago` : `${value} ${plural} ago`
 }
 
 const isIsoDateTime = (value: string): boolean => {
-  return /^\d{4}-\d{2}-\d{2}T/.test(value)
+  return isoDateTimeRegex.test(value)
 }
 
 export const formatChatListTime = (value: string): string => {

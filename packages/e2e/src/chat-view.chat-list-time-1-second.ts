@@ -9,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Command.execute('Chat.setNowForTest', now)
   await Command.execute('Chat.openMockSession', '1 second', [], {
-    lastActiveTime: new Date(now - 1_000).toISOString(),
+    lastActiveTime: new Date(now - 1000).toISOString(),
   })
   await Chat.handleClickBack()
 

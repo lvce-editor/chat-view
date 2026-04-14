@@ -14,7 +14,7 @@ test('formatChatListTime should format iso timestamps with vscode-style short la
   const now = Date.parse('2026-04-14T12:00:00.000Z')
   RelativeTimeNow.setRelativeTimeNowForTest(now)
 
-  expect(FormatChatListTime.formatChatListTime(new Date(now - 1_000).toISOString())).toBe('1 sec ago')
+  expect(FormatChatListTime.formatChatListTime(new Date(now - 1000).toISOString())).toBe('1 sec ago')
   expect(FormatChatListTime.formatChatListTime(new Date(now - 10_000).toISOString())).toBe('10 secs ago')
   expect(FormatChatListTime.formatChatListTime(new Date(now - 60_000).toISOString())).toBe('1 min ago')
   expect(FormatChatListTime.formatChatListTime(new Date(now - 10 * 60_000).toISOString())).toBe('10 mins ago')
