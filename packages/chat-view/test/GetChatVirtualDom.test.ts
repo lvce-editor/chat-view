@@ -435,6 +435,10 @@ test('getChatVirtualDom should render open agent mode picker as custom select wi
   })
   const agentModePicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const selectedAgentListItem = result.find(
+    (node) => node.type === VirtualDomElements.Li && node.className === `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
+  )
+  const planListItem = result.find((node) => node.type === VirtualDomElements.Li && node.className === ClassNames.ChatModelPickerItem)
   const selectedAgentOption = result.find((node) => node.name === 'agent-mode-picker-item:agent')
   const planOption = result.find((node) => node.name === 'agent-mode-picker-item:plan')
   const modelPickerSearchInput = result.find((node) => node.name === 'model-picker-search')
@@ -451,6 +455,14 @@ test('getChatVirtualDom should render open agent mode picker as custom select wi
     onClick: DomEventListenerFunctions.HandleClickAgentModePickerToggle,
     title: 'Agent',
     type: VirtualDomElements.Button,
+  })
+  expect(selectedAgentListItem).toMatchObject({
+    className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
+    type: VirtualDomElements.Li,
+  })
+  expect(planListItem).toMatchObject({
+    className: ClassNames.ChatModelPickerItem,
+    type: VirtualDomElements.Li,
   })
   expect(selectedAgentOption).toMatchObject({
     className: `${ClassNames.ChatModelPickerItem} ${ClassNames.ChatModelPickerItemSelected}`,
