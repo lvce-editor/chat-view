@@ -116,6 +116,7 @@ import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReas
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
 import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetScrollDownButtonEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
+import * as SetSelectChevronEnabled from '../SetSelectChevronEnabled/SetSelectChevronEnabled.ts'
 import * as SetShowChatListTime from '../SetShowChatListTime/SetShowChatListTime.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
@@ -258,6 +259,7 @@ export const commandMap = {
   'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
   'Chat.setScrollDownButtonEnabled': wrapCommand(SetScrollDownButtonEnabled.setScrollDownButtonEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
+  'Chat.setSelectChevronEnabled': wrapCommand(SetSelectChevronEnabled.setSelectChevronEnabled),
   'Chat.setShowChatListTime': wrapCommand(SetShowChatListTime.setShowChatListTime),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),

@@ -55,6 +55,7 @@ export const getChatDetailsDom = (
       [],
       '',
       hasSpaceForAgentModePicker,
+      true,
       modelPickerOpen,
       models,
       selectedModelId,
