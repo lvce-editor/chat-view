@@ -56,10 +56,26 @@ test('getToolCallStatusLabel should return generic error label without message',
   expect(result).toBe(' (error)')
 })
 
-test('getToolCallStatusLabel should return empty label for success status', () => {
+test('getToolCallStatusLabel should return finished label for success status', () => {
   const toolCall = createToolCall({ status: 'success' })
 
   const result = getToolCallStatusLabel(toolCall)
 
-  expect(result).toBe('')
+  expect(result).toBe(' (finished)')
+})
+
+test('getToolCallStatusLabel should return in progress label', () => {
+  const toolCall = createToolCall({ status: 'in-progress' })
+
+  const result = getToolCallStatusLabel(toolCall)
+
+  expect(result).toBe(' (in progress)')
+})
+
+test('getToolCallStatusLabel should return canceled label', () => {
+  const toolCall = createToolCall({ status: 'canceled' })
+
+  const result = getToolCallStatusLabel(toolCall)
+
+  expect(result).toBe(' (canceled)')
 })

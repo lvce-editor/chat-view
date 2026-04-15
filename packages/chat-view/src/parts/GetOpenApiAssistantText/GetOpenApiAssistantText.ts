@@ -133,6 +133,19 @@ const getShortToolErrorMessage = (error: string): string => {
   return `${firstLine.slice(0, 77)}...`
 }
 
+const getStreamingToolCallStatus = (value: unknown): StreamingToolCall['status'] | undefined => {
+  if (value === 'in_progress') {
+    return 'in-progress'
+  }
+  if (value === 'cancelled' || value === 'canceled') {
+    return 'canceled'
+  }
+  if (value === 'failed' || value === 'error') {
+    return 'error'
+  }
+  return undefined
+}
+
 export const getToolCallExecutionStatus = (content: string): Pick<StreamingToolCall, 'errorMessage' | 'errorStack' | 'status'> => {
   let parsed: unknown
   try {
@@ -505,6 +518,8 @@ const parseOpenApiStream = async (
       const callId = Reflect.get(item, 'call_id')
       const name = Reflect.get(item, 'name')
       const rawArguments = Reflect.get(item, 'arguments')
+      const rawStatus = Reflect.get(item, 'status')
+      const status = getStreamingToolCallStatus(rawStatus)
       const next: StreamingToolCall = {
         arguments: typeof rawArguments === 'string' ? rawArguments : '',
         ...(typeof callId === 'string'
@@ -513,6 +528,11 @@ const parseOpenApiStream = async (
             }
           : {}),
         name: typeof name === 'string' ? name : '',
+        ...(status
+          ? {
+              status,
+            }
+          : {}),
       }
       toolCallAccumulator = {
         ...toolCallAccumulator,
@@ -535,6 +555,8 @@ const parseOpenApiStream = async (
       const callId = Reflect.get(item, 'call_id')
       const name = Reflect.get(item, 'name')
       const rawArguments = Reflect.get(item, 'arguments')
+      const rawStatus = Reflect.get(item, 'status')
+      const status = getStreamingToolCallStatus(rawStatus)
       const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: '' }
       toolCallAccumulator = {
         ...toolCallAccumulator,
@@ -550,6 +572,15 @@ const parseOpenApiStream = async (
                 }
               : {}),
           name: typeof name === 'string' && name ? name : current.name,
+          ...(status
+            ? {
+                status,
+              }
+            : current.status
+              ? {
+                  status: current.status,
+                }
+              : {}),
         },
       }
       await emitToolCallAccumulator()
