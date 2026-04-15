@@ -34,6 +34,7 @@ import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
 import * as HandleClickFileName from '../HandleClickFileName/HandleClickFileName.ts'
 import * as HandleClickGitBranchPickerToggle from '../HandleClickGitBranchPickerToggle/HandleClickGitBranchPickerToggle.ts'
+import * as HandleClickModelPickerContainer from '../HandleClickModelPickerContainer/HandleClickModelPickerContainer.ts'
 import { handleClickModelPickerList } from '../HandleClickModelPickerList/HandleClickModelPickerList.ts'
 import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIndex/HandleClickModelPickerListIndex.ts'
 import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay/HandleClickModelPickerOverlay.ts'
@@ -51,6 +52,7 @@ import * as HandleDragOver from '../HandleDragOver/HandleDragOver.ts'
 import * as HandleDropFiles from '../HandleDropFiles/HandleDropFiles.ts'
 import * as HandleErrorComposerAttachmentPreviewOverlay from '../HandleErrorComposerAttachmentPreviewOverlay/HandleErrorComposerAttachmentPreviewOverlay.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
+import * as HandleInputBlur from '../HandleInputBlur/HandleInputBlur.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
@@ -190,12 +192,14 @@ export const commandMap = {
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
   ),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
+  'Chat.handleInputBlur': wrapCommand(HandleInputBlur.handleInputBlur),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
   'Chat.handleMissingOpenRouterApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenRouterApiKeyFormSubmit),
+  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleModelChange': wrapCommand(HandleModelChange.handleModelChange),
   'Chat.handleModelInputBlur': wrapCommand(handleModelInputBlur),
   'Chat.handleModelPickerListScroll': wrapCommand(HandleScroll.handleModelPickerListScroll),

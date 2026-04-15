@@ -234,10 +234,16 @@ test('getChatVirtualDom should expose explicit aria-selected state for model pic
   const result = renderChatView({
     modelPickerOpen: true,
   })
+  const modelPickerContainer = result.find((node) => node.className === ClassNames.ChatModelPickerContainer)
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
   const listbox = result.find((node) => node.id === 'model-picker-list')
   const selectedOption = result.find((node) => node.role === 'option' && node['data-id'] === 'test')
   const unselectedOption = result.find((node) => node.role === 'option' && node['data-id'] === 'codex-5.3')
+  expect(modelPickerContainer).toMatchObject({
+    className: ClassNames.ChatModelPickerContainer,
+    onClick: DomEventListenerFunctions.HandleClickModelPickerContainer,
+    type: VirtualDomElements.Div,
+  })
   expect(modelPickerToggle).toMatchObject({
     'aria-controls': 'model-picker-list',
     'aria-expanded': 'true',

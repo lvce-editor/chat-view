@@ -8,6 +8,8 @@ import {
 } from './IsEqualHelpers/IsEqualHelpers.ts'
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
+  const oldComposerFocused = oldState.focus === 'composer' && oldState.focused
+  const newComposerFocused = newState.focus === 'composer' && newState.focused
   return (
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
     oldState.agentMode === newState.agentMode &&
@@ -18,6 +20,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.composerDropActive === newState.composerDropActive &&
     oldState.composerDropEnabled === newState.composerDropEnabled &&
     oldState.composerValue === newState.composerValue &&
+    oldComposerFocused === newComposerFocused &&
     oldState.gitBranchPickerErrorMessage === newState.gitBranchPickerErrorMessage &&
     oldState.gitBranchPickerOpen === newState.gitBranchPickerOpen &&
     oldState.gitBranchPickerVisible === newState.gitBranchPickerVisible &&

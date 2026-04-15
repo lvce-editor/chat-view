@@ -10,6 +10,7 @@ export const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonl
       childCount: 1,
       className: ClassNames.ChatModelPickerHeader,
       type: VirtualDomElements.Div,
+      onClick: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     },
     {
       childCount: 0,
@@ -17,9 +18,8 @@ export const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonl
       inputType: 'search',
       name: InputName.ModelPickerSearch,
       onBlur: DomEventListenerFunctions.HandleModelInputBlur,
-      onClick: DomEventListenerFunctions.HandlePointerDownModelPickerList,
       onInput: DomEventListenerFunctions.HandleInput,
-      onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
+      // onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
       placeholder: Strings.searchModels(),
       type: VirtualDomElements.Input,
       value: modelPickerSearchValue,

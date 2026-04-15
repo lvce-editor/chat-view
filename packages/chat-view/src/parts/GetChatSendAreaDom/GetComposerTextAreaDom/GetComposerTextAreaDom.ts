@@ -9,6 +9,7 @@ export const getComposerTextAreaDom = (): VirtualDomNode => {
     childCount: 0,
     className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
     name: InputName.Composer,
+    onBlur: DomEventListenerFunctions.HandleBlur,
     onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
     onFocus: DomEventListenerFunctions.HandleFocus,
     onInput: DomEventListenerFunctions.HandleInput,

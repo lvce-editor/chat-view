@@ -32,6 +32,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
+  readonly composerFocused: boolean
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
   readonly composerFontFamily?: string
@@ -92,6 +93,7 @@ export const getChatModeChatFocusVirtualDom = ({
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
+  composerFocused,
   composerDropActive = false,
   composerDropEnabled = true,
   composerFontFamily = 'system-ui',
@@ -197,6 +199,7 @@ export const getChatModeChatFocusVirtualDom = ({
     ),
     ...getChatSendAreaDom(
       composerValue,
+      composerFocused,
       composerAttachments,
       agentMode,
       agentModePickerOpen,

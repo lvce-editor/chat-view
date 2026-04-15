@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 
 export const handleModelInputBlur = async (state: ChatState): Promise<ChatState> => {
+  console.trace('input blur...')
   if (!state.modelPickerOpen) {
     return state
   }
