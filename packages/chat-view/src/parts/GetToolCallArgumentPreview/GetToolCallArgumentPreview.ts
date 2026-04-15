@@ -26,6 +26,13 @@ export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (typeof query === 'string') {
     return `"${query}"`
   }
+  const nestedArguments = Reflect.get(parsed, 'arguments')
+  if (nestedArguments && typeof nestedArguments === 'object' && !Array.isArray(nestedArguments)) {
+    const nestedQuery = Reflect.get(nestedArguments, 'query')
+    if (typeof nestedQuery === 'string') {
+      return `"${nestedQuery}"`
+    }
+  }
   const path = Reflect.get(parsed, 'path')
   if (typeof path === 'string') {
     return `"${path}"`
