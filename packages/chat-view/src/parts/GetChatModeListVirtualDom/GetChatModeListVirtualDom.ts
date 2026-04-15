@@ -118,7 +118,8 @@ export const getChatModeListVirtualDom = ({
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
-  const visibleSessions = searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
+  const visibleSessions =
+    searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
   return [
     {
       childCount: chatRootChildCount,
@@ -128,14 +129,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(
-      visibleSessions,
-      selectedSessionId,
-      listFocusOutline,
-      listFocusedIndex,
-      showChatListTime,
-      chatListScrollTop,
-    ),
+    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
