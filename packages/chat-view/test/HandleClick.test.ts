@@ -182,22 +182,6 @@ test('handleClick should delete a session', async () => {
   expect(result.selectedSessionId).toBe('session-1')
 })
 
-test('handleClick should pin and unpin a session', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-    ],
-  }
-  const pinned = await HandleClick.handleClick(state, InputName.SessionPin, 'session-2')
-  expect(pinned.sessions[1]).toEqual({ id: 'session-2', messages: [], pinned: true, title: 'Chat 2' })
-  const unpinned = await HandleClick.handleClick(pinned, InputName.SessionPin, 'session-2')
-  expect(unpinned.sessions[1]).toEqual({ id: 'session-2', messages: [], pinned: false, title: 'Chat 2' })
-})
-
 test('handleClick should delete a project and move its sessions to the blank project', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

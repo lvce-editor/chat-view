@@ -108,7 +108,6 @@ export interface ChatState {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen: boolean
   readonly reasoningPickerEnabled: boolean
-  readonly renderSelectChevrons: boolean
   readonly renamingSessionId: string
   readonly responsivePickerVisibilityEnabled: boolean
   readonly runMode: RunMode
@@ -120,7 +119,6 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
-  readonly sessionPinningEnabled: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean

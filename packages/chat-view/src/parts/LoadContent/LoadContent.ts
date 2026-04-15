@@ -51,7 +51,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     reasoningPickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
-    sessionPinningEnabled,
     showChatListTime,
     streamingEnabled,
     todoListToolEnabled,
@@ -103,7 +102,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
   const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
   const visibleModels = getVisibleModels(state.models, '')
-  const visibleSessions = getVisibleSessions(sessions, selectedProjectId, sessionPinningEnabled)
+  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
@@ -164,7 +163,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
-    sessionPinningEnabled,
     sessions,
     showChatListTime,
     streamingEnabled,

@@ -27,10 +27,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   const renameMenuItem = Locator('.MenuItem').nth(0)
   await expect(renameMenuItem).toBeVisible()
   await expect(renameMenuItem).toHaveText('Rename')
-  const pinMenuItem = Locator('.MenuItem').nth(1)
-  await expect(pinMenuItem).toBeVisible()
-  await expect(pinMenuItem).toHaveText('Pin')
-  const archiveMenuItem = Locator('.MenuItem').nth(2)
+  const archiveMenuItem = Locator('.MenuItem').nth(1)
   await expect(archiveMenuItem).toBeVisible()
   await expect(archiveMenuItem).toHaveText('Archive')
 }

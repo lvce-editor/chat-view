@@ -17,7 +17,9 @@ test('handleChatListContextMenu should focus the clicked item and invoke Context
   }
   const result = await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
 
-  expect(mockRpc.invocations).toEqual([['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, sessionId: 'session-1' }]])
+  expect(mockRpc.invocations).toEqual([
+    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: false, sessionId: 'session-1', sessionPinningEnabled: true }],
+  ])
   expect(result).toEqual({
     ...state,
     focus: 'list',

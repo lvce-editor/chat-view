@@ -12,7 +12,6 @@ export const getChatListDom = (
   listFocusOutline: boolean,
   listFocusedIndex: number,
   showChatListTime: boolean,
-  sessionPinningEnabled: boolean,
   chatListScrollTop = 0,
 ): readonly VirtualDomNode[] => {
   if (sessions.length === 0) {
@@ -32,7 +31,7 @@ export const getChatListDom = (
       type: VirtualDomElements.Ul,
     },
     ...sessions.flatMap((session, index) =>
-      getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex, sessionPinningEnabled),
+      getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex),
     ),
   ]
 }

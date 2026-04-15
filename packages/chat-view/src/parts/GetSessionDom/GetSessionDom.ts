@@ -13,7 +13,6 @@ export const getSessionDom = (
   focused = false,
   showChatListTime = true,
   showFocusOutline = false,
-  sessionPinningEnabled = true,
 ): readonly VirtualDomNode[] => {
   const sessionClassName = showFocusOutline
     ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline)
@@ -25,9 +24,8 @@ export const getSessionDom = (
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
   return [
     {
-      childCount: sessionPinningEnabled ? 3 : 2,
+      childCount: 2,
       className: sessionClassName,
-      'data-pinned': session.pinned ? 'true' : 'false',
       type: VirtualDomElements.Li,
     },
     {
@@ -53,34 +51,11 @@ export const getSessionDom = (
       onFocus: DomEventListenerFunctions.HandleFocus,
       tabIndex: 0,
       type: VirtualDomElements.Div,
-    },
+        childCount: 1,
     {
       childCount: 1,
       className: ClassNames.ChatListItemTitle,
       type: VirtualDomElements.Div,
-    },
-    text(session.title),
-    ...(showChatListTime
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatListItemTime,
-            type: VirtualDomElements.Div,
-          },
-          text(formattedLastActiveTime),
-        ]
-      : []),
-    {
-      childCount: sessionPinningEnabled ? 2 : 1,
-      className: ClassNames.ChatActions,
-      role: AriaRoles.ToolBar,
-      type: VirtualDomElements.Div,
-    },
-    ...(sessionPinningEnabled
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(
               ClassNames.IconButton,
               ClassNames.SessionPinButton,
               session.pinned ? ClassNames.ChatListItemPinned : ClassNames.Empty,

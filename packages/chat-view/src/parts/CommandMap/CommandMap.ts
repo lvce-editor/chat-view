@@ -39,7 +39,6 @@ import { handleClickModelPickerListIndex } from '../HandleClickModelPickerListIn
 import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay/HandleClickModelPickerOverlay.ts'
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
-import * as HandleClickPin from '../HandleClickPin/HandleClickPin.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
@@ -113,12 +112,10 @@ import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
-import * as SetRenderSelectChevrons from '../SetRenderSelectChevrons/SetRenderSelectChevrons.ts'
 import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
 import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetScrollDownButtonEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
-import * as SetSessionPinningEnabled from '../SetSessionPinningEnabled/SetSessionPinningEnabled.ts'
 import * as SetShowChatListTime from '../SetShowChatListTime/SetShowChatListTime.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
@@ -179,7 +176,6 @@ export const commandMap = {
   'Chat.handleClickModelPickerOverlay': wrapCommand(HandleClickModelPickerOverlay.handleClickModelPickerOverlay),
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
-  'Chat.handleClickPin': wrapCommand(HandleClickPin.handleClickPin),
   'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
@@ -258,12 +254,10 @@ export const commandMap = {
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
-  'Chat.setRenderSelectChevrons': wrapCommand(SetRenderSelectChevrons.setRenderSelectChevrons),
   'Chat.setReasoningPickerEnabled': wrapCommand(SetReasoningPickerEnabled.setReasoningPickerEnabled),
   'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
   'Chat.setScrollDownButtonEnabled': wrapCommand(SetScrollDownButtonEnabled.setScrollDownButtonEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
-  'Chat.setSessionPinningEnabled': wrapCommand(SetSessionPinningEnabled.setSessionPinningEnabled),
   'Chat.setShowChatListTime': wrapCommand(SetShowChatListTime.setShowChatListTime),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),

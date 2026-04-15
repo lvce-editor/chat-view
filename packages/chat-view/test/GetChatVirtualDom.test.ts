@@ -941,9 +941,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   })
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
-  const pinButton = result.find((node) => node.name === 'SessionPin' && node['data-id'] === 'session-1')
   const archiveIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconArchive}`)
-  const pinIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconPinned}`)
   const sessionContent = result.find((node) => node.className === ClassNames.ChatListItemContent)
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
   const sessionTitle = result.find((node) => node.className === ClassNames.ChatListItemTitle)
@@ -952,9 +950,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   const sessionStatusIcon = result.find((node) => node.className === `${ClassNames.ChatListItemStatusIcon} ${ClassNames.ChatListItemStatusStopped}`)
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
-  expect(pinButton).toBeDefined()
   expect(archiveIcon).toBeDefined()
-  expect(pinIcon).toBeDefined()
   expect(sessionContent).toBeDefined()
   expect(sessionLabel).toBeDefined()
   expect(sessionTitle).toBeDefined()
@@ -977,45 +973,9 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(deleteButton).toMatchObject({
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
-  expect(pinButton).toMatchObject({
-    onClick: DomEventListenerFunctions.HandleClickPin,
-  })
   expect(archiveIcon).toMatchObject({
     type: VirtualDomElements.Div,
   })
-})
-
-test('getChatVirtualDOm should render data-pinned attribute and pinned session first when enabled', () => {
-  const result = renderChatView({
-    selectedSessionId: 'session-1',
-    sessionPinningEnabled: true,
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], pinned: true, title: 'Chat 2' },
-    ],
-  })
-  const chatListItems = result.filter((node) => node.className === ClassNames.ChatListItem)
-  const pinnedItem = chatListItems[0]
-  const unpinnedItem = chatListItems[1]
-  expect(pinnedItem).toMatchObject({
-    'data-pinned': 'true',
-  })
-  expect(unpinnedItem).toMatchObject({
-    'data-pinned': 'false',
-  })
-  const firstPinnedLabelIndex = result.findIndex((node) => node.text === 'Chat 2')
-  const firstUnpinnedLabelIndex = result.findIndex((node) => node.text === 'Chat 1')
-  expect(firstPinnedLabelIndex).toBeLessThan(firstUnpinnedLabelIndex)
-})
-
-test('getChatVirtualDOm should hide pin action when session pinning is disabled', () => {
-  const result = renderChatView({
-    selectedSessionId: 'session-1',
-    sessionPinningEnabled: false,
-    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
-  })
-  const pinButton = result.find((node) => node.name === 'SessionPin')
-  expect(pinButton).toBeUndefined()
 })
 
 test('getChatVirtualDOm should hide session list times when disabled', () => {
@@ -1028,18 +988,6 @@ test('getChatVirtualDOm should hide session list times when disabled', () => {
   const sessionTime = result.find((node) => node.className === ClassNames.ChatListItemTime)
   expect(sessionTime).toBeUndefined()
   expect(result.find((node) => node.text === '10:30')).toBeUndefined()
-})
-
-test('getChatVirtualDOm should hide select chevrons when disabled', () => {
-  const result = renderChatView({
-    renderSelectChevrons: false,
-  })
-  const selectChevron = result.find(
-    (node) =>
-      node.className === mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconChevronDown) ||
-      node.className === mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconChevronUp),
-  )
-  expect(selectChevron).toBeUndefined()
 })
 
 test('getChatVirtualDOm should render stopped/in progress/finished session status icons', () => {
