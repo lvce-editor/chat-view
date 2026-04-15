@@ -120,7 +120,7 @@ test('diff should return RenderFocus when composer focus is requested', () => {
   const oldState: ChatState = { ...createDefaultState(), focus: 'composer', focused: false, sessions }
   const newState: ChatState = { ...createDefaultState(), focus: 'composer', focused: true, sessions }
   const result = Diff.diff(oldState, newState)
-  expect(result).toEqual([DiffType.RenderFocus, DiffType.RenderFocusContext])
+  expect(result).toEqual([DiffType.RenderIncremental, DiffType.RenderFocus, DiffType.RenderFocusContext])
 })
 
 test('diff should return RenderScrollTop when scroll positions change', () => {
