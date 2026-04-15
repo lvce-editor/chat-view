@@ -2,6 +2,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
+import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 
@@ -29,6 +30,8 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
+    messagesAutoScrollEnabled: true,
+    messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
