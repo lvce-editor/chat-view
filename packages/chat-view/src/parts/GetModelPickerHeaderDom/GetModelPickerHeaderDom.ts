@@ -9,8 +9,8 @@ export const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonl
     {
       childCount: 1,
       className: ClassNames.ChatModelPickerHeader,
-      type: VirtualDomElements.Div,
       onClick: DomEventListenerFunctions.HandlePointerDownModelPickerList,
+      type: VirtualDomElements.Div,
     },
     {
       childCount: 0,

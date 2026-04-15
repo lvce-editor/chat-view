@@ -44,8 +44,8 @@ export interface GetChatVirtualDomOptions {
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
-  readonly composerFocused: boolean
   readonly composerDropActive?: boolean
+  readonly composerFocused: boolean
   readonly composerDropEnabled?: boolean
   readonly composerFontFamily: string
   readonly composerFontSize: number
@@ -112,8 +112,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerAttachmentPreviewOverlayAttachmentId,
     composerAttachmentPreviewOverlayError = false,
     composerAttachments,
-    composerFocused,
     composerDropActive = false,
+    composerFocused,
     composerDropEnabled = true,
     composerFontFamily,
     composerFontSize,
@@ -183,8 +183,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
-        composerFocused,
         composerDropActive,
+        composerFocused,
         composerDropEnabled,
         composerFontFamily,
         composerFontSize,
@@ -244,8 +244,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
-        composerFocused,
         composerDropActive,
+        composerFocused,
         composerDropEnabled,
         composerFontFamily,
         composerFontSize,
@@ -298,8 +298,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
         composerAttachments,
-        composerFocused,
         composerDropActive,
+        composerFocused,
         composerDropEnabled,
         composerFontFamily,
         composerFontSize,
