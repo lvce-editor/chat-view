@@ -5,7 +5,6 @@ export interface ChatSession {
   readonly id: string
   readonly lastActiveTime?: string
   readonly messages: readonly ChatMessage[]
-  readonly pinned?: boolean
   readonly projectId?: string
   readonly pullRequestUrl?: string
   readonly status?: 'idle' | 'in-progress' | 'stopped' | 'finished'

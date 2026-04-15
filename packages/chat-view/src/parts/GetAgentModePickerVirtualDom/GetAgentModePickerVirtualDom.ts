@@ -7,13 +7,11 @@ import * as InputName from '../InputName/InputName.ts'
 export const getAgentModePickerVirtualDom = (
   selectedAgentMode: AgentMode,
   agentModePickerOpen: boolean,
-  renderSelectChevrons: boolean,
 ): readonly VirtualDomNode[] => {
   return getCustomSelectPickerToggleVirtualDom(
     getAgentModeLabel(selectedAgentMode),
     InputName.AgentModePickerToggle,
     agentModePickerOpen,
     DomEventListenerFunctions.HandleClickAgentModePickerToggle,
-    renderSelectChevrons,
   )
 }

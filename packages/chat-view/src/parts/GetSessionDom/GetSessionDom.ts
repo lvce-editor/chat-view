@@ -13,6 +13,7 @@ export const getSessionDom = (
   focused = false,
   showChatListTime = true,
   showFocusOutline = false,
+  sessionPinningEnabled = true,
 ): readonly VirtualDomNode[] => {
   const sessionClassName = showFocusOutline
     ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline)
@@ -26,6 +27,7 @@ export const getSessionDom = (
     {
       childCount: 2,
       className: sessionClassName,
+      'data-pinned': session.pinned ? 'true' : 'false',
       type: VirtualDomElements.Li,
     },
     {
@@ -40,22 +42,34 @@ export const getSessionDom = (
     },
     {
       childCount: showChatListTime ? 2 : 1,
-      className: ClassNames.ChatListItemContent,
+    },
       type: VirtualDomElements.Div,
     },
     {
       childCount: 1,
-      className: ClassNames.ChatListItemLabel,
-      name: InputName.getSessionInputName(session.id),
-      onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
-      onFocus: DomEventListenerFunctions.HandleFocus,
-      tabIndex: 0,
-      type: VirtualDomElements.Div,
-        childCount: 1,
+    },
+    text(session.title),
+    ...(showChatListTime
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ChatListItemTime,
+            type: VirtualDomElements.Div,
+          },
+          text(formattedLastActiveTime),
+        ]
+      : []),
     {
-      childCount: 1,
-      className: ClassNames.ChatListItemTitle,
+      childCount: sessionPinningEnabled ? 2 : 1,
+      className: ClassNames.ChatActions,
+      role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
+    },
+    ...(sessionPinningEnabled
+      ? [
+          {
+            childCount: 1,
+            className: mergeClassNames(
               ClassNames.IconButton,
               ClassNames.SessionPinButton,
               session.pinned ? ClassNames.ChatListItemPinned : ClassNames.Empty,
@@ -78,6 +92,17 @@ export const getSessionDom = (
       childCount: 1,
       className: mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton),
       'data-id': session.id,
+      name: InputName.SessionDelete,
+      onClick: DomEventListenerFunctions.HandleClickDelete,
+      tabIndex: 0,
+      title: Strings.deleteChatSession(),
+      type: VirtualDomElements.Button,
+    },
+    {
+      childCount: 0,
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
+      type: VirtualDomElements.Div,
+    },
       name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
       tabIndex: 0,

@@ -42,10 +42,6 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClickDelete', 'event.target.dataset.id'],
     },
     {
-      name: DomEventListenersFunctions.HandleClickPin,
-      params: ['handleClickPin', 'event.target.dataset.id'],
-    },
-    {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['handleClickClose'],
     },

@@ -77,6 +77,7 @@ export interface GetChatVirtualDomOptions {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
+  readonly renderSelectChevrons: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly scrollDownButtonEnabled: boolean
@@ -86,6 +87,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
+  readonly sessionPinningEnabled?: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -145,6 +147,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     reasoningEffort,
     reasoningEffortPickerOpen = false,
     reasoningPickerEnabled,
+    renderSelectChevrons,
     runMode,
     runModePickerOpen = false,
     scrollDownButtonEnabled,
@@ -154,6 +157,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
+    sessionPinningEnabled = true,
     sessions,
     showChatListTime,
     showRunMode,
@@ -214,6 +218,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,
+        renderSelectChevrons,
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
@@ -267,6 +272,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,
+        renderSelectChevrons,
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
@@ -313,6 +319,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,
+        renderSelectChevrons,
         runMode,
         runModePickerOpen,
         searchEnabled,
@@ -320,6 +327,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         searchValue,
         selectedModelId,
         selectedSessionId,
+        sessionPinningEnabled,
         sessions,
         showChatListTime,
         showRunMode,
