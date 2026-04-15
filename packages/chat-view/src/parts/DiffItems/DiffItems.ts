@@ -25,6 +25,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.hasSpaceForAgentModePicker === newState.hasSpaceForAgentModePicker &&
     oldState.hasSpaceForRunModePicker === newState.hasSpaceForRunModePicker &&
     oldState.initial === newState.initial &&
+    oldState.listFocusOutline === newState.listFocusOutline &&
     oldState.modelPickerOpen === newState.modelPickerOpen &&
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
     isEqualVisibleModels(oldState.visibleModels, newState.visibleModels) &&

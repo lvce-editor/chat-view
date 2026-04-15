@@ -1358,6 +1358,26 @@ test('getChatVirtualDOm should render focused chat list item highlight', () => {
   expect(focusedItems).toHaveLength(1)
 })
 
+test('getChatVirtualDOm should render context menu outline class for focused chat list item', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    listFocusOutline: true,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const focusedItems = result.filter(
+    (node) =>
+      node.className ===
+      `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused} ${ClassNames.ChatListItemFocusOutline} ${ClassNames.FocusOutline}`,
+  )
+  expect(focusedItems).toHaveLength(1)
+})
+
 test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,

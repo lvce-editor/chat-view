@@ -13,6 +13,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await Chat.handleSubmit()
   await Chat.handleClickBack()
   const chatListItems = Locator('.ChatList .ChatListItem')
+  const outlinedItem = Locator('.ChatList .ChatListItem.ChatListItemFocusOutline')
   const archiveButton = Locator('.SessionArchiveButton')
   await expect(chatListItems).toHaveCount(1)
   await expect(archiveButton).toBeVisible()
@@ -22,6 +23,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await Chat.handleChatListContextMenu(0, 70)
 
   // assert
+  await expect(outlinedItem).toHaveCount(1)
   const renameMenuItem = Locator('.MenuItem').nth(0)
   await expect(renameMenuItem).toBeVisible()
   await expect(renameMenuItem).toHaveText('Rename')

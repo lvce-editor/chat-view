@@ -14,5 +14,6 @@ export const selectListIndex = async (state: ChatState, index: number): Promise<
     focus: 'list',
     focused: true,
     listFocusedIndex: index,
+    listFocusOutline: false,
   }
 }

@@ -13,6 +13,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focus: 'send-button',
       focused: true,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   if (name === InputName.ChatList) {
@@ -21,6 +22,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focus: 'list',
       focused: true,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   if (InputName.isSessionInputName(name) || name === InputName.SessionDelete) {
@@ -37,6 +39,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focus: 'list',
       focused: true,
       listFocusedIndex: focusedIndex,
+      listFocusOutline: false,
     }
   }
   if (
@@ -51,10 +54,12 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focus: 'header',
       focused: true,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   return {
     ...state,
     focused: false,
+    listFocusOutline: false,
   }
 }

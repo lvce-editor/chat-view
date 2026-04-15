@@ -10,6 +10,7 @@ export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState
       focus: 'list',
       focused: true,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   const currentIndex = getListFocusIndex(state)
@@ -19,5 +20,6 @@ export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState
     focus: 'list',
     focused: true,
     listFocusedIndex: previousIndex,
+    listFocusOutline: false,
   }
 }
