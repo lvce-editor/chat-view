@@ -112,8 +112,8 @@ import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
 import * as SetReasoningEffort from '../SetReasoningEffort/SetReasoningEffort.ts'
-import * as SetRenderSelectChevrons from '../SetRenderSelectChevrons/SetRenderSelectChevrons.ts'
 import * as SetReasoningPickerEnabled from '../SetReasoningPickerEnabled/SetReasoningPickerEnabled.ts'
+import * as SetRenderSelectChevrons from '../SetRenderSelectChevrons/SetRenderSelectChevrons.ts'
 import * as SetResponsivePickerVisibilityEnabled from '../SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
 import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetScrollDownButtonEnabled.ts'
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
@@ -255,8 +255,8 @@ export const commandMap = {
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
   'Chat.setReasoningEffort': wrapCommand(SetReasoningEffort.setReasoningEffort),
-  'Chat.setRenderSelectChevrons': wrapCommand(SetRenderSelectChevrons.setRenderSelectChevrons),
   'Chat.setReasoningPickerEnabled': wrapCommand(SetReasoningPickerEnabled.setReasoningPickerEnabled),
+  'Chat.setRenderSelectChevrons': wrapCommand(SetRenderSelectChevrons.setRenderSelectChevrons),
   'Chat.setResponsivePickerVisibilityEnabled': wrapCommand(SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled),
   'Chat.setScrollDownButtonEnabled': wrapCommand(SetScrollDownButtonEnabled.setScrollDownButtonEnabled),
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),

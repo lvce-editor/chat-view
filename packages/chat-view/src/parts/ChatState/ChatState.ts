@@ -108,8 +108,8 @@ export interface ChatState {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen: boolean
   readonly reasoningPickerEnabled: boolean
-  readonly renderSelectChevrons: boolean
   readonly renamingSessionId: string
+  readonly renderSelectChevrons: boolean
   readonly responsivePickerVisibilityEnabled: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen: boolean
