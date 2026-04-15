@@ -91,6 +91,11 @@ export const getChatSendAreaDom = (
     },
     ...getTodoListDom(hasTodoList, todoListItems),
     ...getComposerAttachmentsDom(composerAttachments),
+    {
+      childCount: 1,
+      className: ClassNames.ChatSendAreaContentTop,
+      type: VirtualDomElements.Div,
+    },
     getComposerTextAreaDom(),
     {
       childCount: bottomControlsCount,
