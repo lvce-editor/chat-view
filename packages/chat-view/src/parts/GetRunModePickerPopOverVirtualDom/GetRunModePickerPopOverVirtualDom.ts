@@ -21,6 +21,5 @@ export const getRunModePickerPopOverVirtualDom = (selectedRunMode: RunMode): rea
     getRunModeOptionsVirtualDom(selectedRunMode),
     ClassNames.RunModePickerContainer,
     ClassNames.RunModePickerPopOver,
-    false,
   )
 }
