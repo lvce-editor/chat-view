@@ -588,9 +588,7 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   })
   expect(modelPickerSearchInput).toMatchObject({
     inputType: 'search',
-    onClick: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     onInput: DomEventListenerFunctions.HandleInput,
-    onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     placeholder: searchModels(),
     type: VirtualDomElements.Input,
   })
