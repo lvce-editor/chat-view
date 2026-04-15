@@ -6,6 +6,7 @@ export const getCustomSelectToggleVirtualDom = (
   name: string,
   open: boolean,
   onClick: number,
+  renderSelectChevrons: boolean,
   title = label,
   ariaLabel = title,
   ariaControls = '',
@@ -27,7 +28,7 @@ export const getCustomSelectToggleVirtualDom = (
       'aria-haspopup': 'true',
       'aria-label': ariaLabel,
       ariaLabel,
-      childCount: 2,
+      childCount: renderSelectChevrons ? 2 : 1,
       className: ClassNames.ChatSelect,
       inputType: 'button',
       name,
@@ -43,6 +44,6 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Span,
     },
     text(label),
-    getChevronDom(open),
+    ...(renderSelectChevrons ? [getChevronDom(open)] : []),
   ]
 }
