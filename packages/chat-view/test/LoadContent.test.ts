@@ -1204,3 +1204,25 @@ test('loadContent should load chatHistoryEnabled from preferences', async () => 
   expect(result.chatHistoryEnabled).toBe(false)
   expectInvocations(mockRpc.invocations, [['Preferences.get', 'chat.chatHistoryEnabled']])
 })
+
+test('loadContent should normalize in-progress sessions to stopped on reload', async () => {
+  using _mockChatStorageRpc = registerMockChatStorageRpc()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
+  await saveChatSession({
+    id: 'session-1',
+    messages: [
+      { id: 'msg-1', role: 'user', text: 'hello', time: '2024-01-01T00:00:00.000Z' },
+      { id: 'msg-2', inProgress: true, role: 'assistant', text: 'partial response', time: '2024-01-01T00:00:01.000Z' },
+    ],
+    status: 'in-progress',
+    title: 'Chat 1',
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  const session = result.sessions.find((s) => s.id === 'session-1')
+  expect(session?.status).toBe('stopped')
+  expect(session?.messages.find((m) => m.id === 'msg-2')?.inProgress).toBe(false)
+})
