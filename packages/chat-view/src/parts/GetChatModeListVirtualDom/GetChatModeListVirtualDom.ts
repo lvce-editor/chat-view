@@ -13,7 +13,6 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
-import { getPinnedSessionsFirst } from '../GetPinnedSessionsFirst/GetPinnedSessionsFirst.ts'
 
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -42,7 +41,6 @@ export interface GetChatModeListVirtualDomOptions {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
-  readonly renderSelectChevrons: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
@@ -50,7 +48,6 @@ export interface GetChatModeListVirtualDomOptions {
   readonly searchValue?: string
   readonly selectedModelId: string
   readonly selectedSessionId: string
-  readonly sessionPinningEnabled?: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -92,7 +89,6 @@ export const getChatModeListVirtualDom = ({
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
-  renderSelectChevrons,
   runMode,
   runModePickerOpen = false,
   searchEnabled = false,
@@ -100,7 +96,6 @@ export const getChatModeListVirtualDom = ({
   searchValue = '',
   selectedModelId,
   selectedSessionId,
-  sessionPinningEnabled = true,
   sessions,
   showChatListTime,
   showRunMode,
@@ -123,8 +118,7 @@ export const getChatModeListVirtualDom = ({
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
   const searchValueTrimmed = searchValue.trim().toLowerCase()
-  const filteredSessions = searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
-  const visibleSessions = sessionPinningEnabled ? getPinnedSessionsFirst(filteredSessions) : filteredSessions
+  const visibleSessions = searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
   return [
     {
       childCount: chatRootChildCount,
@@ -134,7 +128,14 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, sessionPinningEnabled, chatListScrollTop),
+    ...getChatListDom(
+      visibleSessions,
+      selectedSessionId,
+      listFocusOutline,
+      listFocusedIndex,
+      showChatListTime,
+      chatListScrollTop,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
@@ -156,7 +157,6 @@ export const getChatModeListVirtualDom = ({
       tokensUsed,
       tokensMax,
       addContextButtonEnabled,
-      renderSelectChevrons,
       showRunMode,
       hasSpaceForRunModePicker,
       runMode,

@@ -18,36 +18,14 @@ test('handleChatListContextMenu should focus the clicked item and invoke Context
   const result = await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
 
   expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: false, sessionId: 'session-1', sessionPinningEnabled: true }],
+    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, sessionId: 'session-1' }],
   ])
   expect(result).toEqual({
     ...state,
-  expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: false, sessionId: 'session-1', sessionPinningEnabled: true }],
-  ])
     focused: true,
     listFocusedIndex: 0,
     listFocusOutline: true,
   })
-})
-
-test('handleChatListContextMenu should pass pinned session state to the context menu', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
-    'ContextMenu.show2': async () => {},
-  })
-
-  const state = {
-    ...createDefaultState(),
-    height: 400,
-    sessions: [{ id: 'session-1', messages: [], pinned: true, projectId: '', title: 'Chat 1' }],
-    uid: 7,
-    width: 300,
-  }
-  await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
-
-  expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: true, sessionId: 'session-1', sessionPinningEnabled: true }],
-  ])
 })
 
 test('handleChatListContextMenu should ignore clicks outside list bounds', async () => {

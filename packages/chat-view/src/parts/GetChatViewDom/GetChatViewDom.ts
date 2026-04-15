@@ -87,7 +87,6 @@ export interface GetChatVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
-  readonly sessionPinningEnabled?: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -157,7 +156,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
-    sessionPinningEnabled = true,
     sessions,
     showChatListTime,
     showRunMode,
@@ -327,7 +325,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         searchValue,
         selectedModelId,
         selectedSessionId,
-        sessionPinningEnabled,
         sessions,
         showChatListTime,
         showRunMode,

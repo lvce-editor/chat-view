@@ -3,7 +3,7 @@ import { getListFocusIndex } from '../GetListFocusIndex/GetListFocusIndex.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState> => {
-  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.sessionPinningEnabled)
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
   if (visibleSessions.length === 0) {
     return {
       ...state,

@@ -10,7 +10,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   if (!projectId || selectedProjectId === projectId) {
     return state
   }
-  const visibleSessions = getVisibleSessions(sessions, projectId, state.sessionPinningEnabled)
+  const visibleSessions = getVisibleSessions(sessions, projectId)
   if (visibleSessions.length === 0) {
     return refreshGitBranchPickerVisibility({
       ...state,

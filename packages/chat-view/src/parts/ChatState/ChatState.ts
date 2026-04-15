@@ -120,7 +120,6 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
-  readonly sessionPinningEnabled: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean

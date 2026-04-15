@@ -64,7 +64,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
   const projectExpandedIds = state.projectExpandedIds.filter(
     (expandedProjectId) => expandedProjectId !== projectId && projects.some((candidate) => candidate.id === expandedProjectId),
   )
-  const visibleSessions = getVisibleSessions(sessions, selectedProjectId, state.sessionPinningEnabled)
+  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const nextProjectExpandedIds = ensureExpandedProject(state, projectExpandedIds, selectedProjectId, visibleSessions)
 
   if (visibleSessions.length === 0) {
