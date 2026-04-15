@@ -136,6 +136,7 @@ export const createDefaultState = (): ChatState => {
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
+    sessionPinningEnabled: true,
     sessions: [
       {
         id: defaultSessionId,
