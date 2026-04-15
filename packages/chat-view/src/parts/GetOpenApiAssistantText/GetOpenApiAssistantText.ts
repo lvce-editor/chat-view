@@ -191,8 +191,8 @@ export const getToolCallResult = (name: string, content: string): string | undef
     if (!parsed || typeof parsed !== 'object') {
       return undefined
     }
-    const linesAdded = Reflect.get(parsed, 'linesAdded')
-    const linesDeleted = Reflect.get(parsed, 'linesDeleted')
+    const linesAdded = Reflect.get(parsed, 'addedLines') ?? Reflect.get(parsed, 'linesAdded')
+    const linesDeleted = Reflect.get(parsed, 'removedLines') ?? Reflect.get(parsed, 'linesDeleted')
     if (typeof linesAdded !== 'number' && typeof linesDeleted !== 'number') {
       return undefined
     }

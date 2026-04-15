@@ -87,6 +87,7 @@ export const getGitBranchPickerVirtualDom = (
           {
             childCount: branchOptions.length / 4,
             className: ClassNames.ChatModelPickerList,
+            role: 'listbox',
             type: VirtualDomElements.Ul,
           },
           ...branchOptions,

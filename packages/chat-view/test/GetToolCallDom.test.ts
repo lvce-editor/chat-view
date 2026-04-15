@@ -159,6 +159,85 @@ test('getToolCallDom should render grep_search query and expose raw arguments on
   ])
 })
 
+test('getToolCallDom should expose only nested arguments on hover for wrapped grep_search payloads', () => {
+  const wrappedArguments = JSON.stringify({
+    arguments: {
+      includeIgnoredFiles: false,
+      includePattern: '**/*',
+      isRegexp: true,
+      maxResults: 100,
+      query: 'memoryMeasurement|MemoryMeasurement',
+      useDefaultExcludes: true,
+    },
+    name: 'grep_search',
+    result: {
+      count: 1,
+    },
+  })
+  const nestedArguments =
+    '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memoryMeasurement|MemoryMeasurement","useDefaultExcludes":true}'
+  const result = getToolCallDom({
+    arguments: wrappedArguments,
+    name: 'grep_search',
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 2,
+      className: ClassNames.ChatOrderedListItem,
+      title: nestedArguments,
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'grep_search',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ' "memoryMeasurement|MemoryMeasurement"',
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})
+
+test('getToolCallDom should render grep_search result only when result is available', () => {
+  const result = getToolCallDom({
+    arguments: '{"includeIgnoredFiles":false,"includePattern":"**","isRegexp":false,"maxResults":10,"query":"hello"}',
+    name: 'grep_search',
+    result: JSON.stringify({
+      arguments: {
+        query: 'hello',
+      },
+      name: 'grep_search',
+      result: [
+        {
+          line: 3,
+          path: 'src/example.ts',
+          text: 'const hello = true',
+        },
+      ],
+    }),
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 1,
+      className: ClassNames.ChatOrderedListItem,
+      type: VirtualDomElements.Li,
+    },
+    expect.objectContaining({
+      text: '[{"line":3,"path":"src/example.ts","text":"const hello = true"}]',
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})
+
 test('getToolCallDom should render glob baseUri as clickable folder name with full uri on hover', () => {
   const baseUri = 'file:///workspace/src'
   const pattern = '**/*'
