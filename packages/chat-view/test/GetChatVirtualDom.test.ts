@@ -399,7 +399,7 @@ test('getChatVirtualDom should render open run mode picker without search input'
     className: runModePickerClassName,
     type: VirtualDomElements.Div,
   })
-  expect(runModePicker?.style).toBeUndefined()
+  expect(runModePicker?.style).toBe('height: 84px;')
   expect(runModeBackgroundOption).toMatchObject({
     className: ClassNames.ChatModelPickerItem,
     type: VirtualDomElements.Button,
@@ -939,6 +939,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   const sessionButton = result.find((node) => node.name === 'session:session-1')
   const deleteButton = result.find((node) => node.name === 'SessionDelete' && node['data-id'] === 'session-1')
   const archiveIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconArchive}`)
+  const sessionContent = result.find((node) => node.className === ClassNames.ChatListItemContent)
   const sessionLabel = result.find((node) => node.name === 'session:session-1' && node.className === ClassNames.ChatListItemLabel)
   const sessionTitle = result.find((node) => node.className === ClassNames.ChatListItemTitle)
   const sessionTime = result.find((node) => node.className === ClassNames.ChatListItemTime)
@@ -947,9 +948,13 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(sessionButton).toBeDefined()
   expect(deleteButton).toBeDefined()
   expect(archiveIcon).toBeDefined()
+  expect(sessionContent).toBeDefined()
   expect(sessionLabel).toBeDefined()
   expect(sessionTitle).toBeDefined()
   expect(sessionTime).toBeDefined()
+  expect(sessionContent).toMatchObject({
+    childCount: 2,
+  })
   expect(sessionLabel).toMatchObject({
     childCount: 1,
   })

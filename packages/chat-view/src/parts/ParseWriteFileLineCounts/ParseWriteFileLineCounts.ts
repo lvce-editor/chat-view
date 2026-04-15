@@ -20,8 +20,8 @@ export const parseWriteFileLineCounts = (rawResult: string | undefined): { reado
       linesDeleted: 0,
     }
   }
-  const linesAdded = Reflect.get(parsed, 'linesAdded')
-  const linesDeleted = Reflect.get(parsed, 'linesDeleted')
+  const linesAdded = Reflect.get(parsed, 'addedLines') ?? Reflect.get(parsed, 'linesAdded')
+  const linesDeleted = Reflect.get(parsed, 'removedLines') ?? Reflect.get(parsed, 'linesDeleted')
   return {
     linesAdded: typeof linesAdded === 'number' ? Math.max(0, linesAdded) : 0,
     linesDeleted: typeof linesDeleted === 'number' ? Math.max(0, linesDeleted) : 0,
