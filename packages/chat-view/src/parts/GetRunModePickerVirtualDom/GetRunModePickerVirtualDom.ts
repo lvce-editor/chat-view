@@ -4,11 +4,16 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getCustomSelectPickerToggleVirtualDom } from '../GetCustomSelectPickerToggleVirtualDom/GetCustomSelectPickerToggleVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getRunModePickerVirtualDom = (selectedRunMode: RunMode, runModePickerOpen: boolean): readonly VirtualDomNode[] => {
+export const getRunModePickerVirtualDom = (
+  selectedRunMode: RunMode,
+  runModePickerOpen: boolean,
+  renderSelectChevrons = true,
+): readonly VirtualDomNode[] => {
   return getCustomSelectPickerToggleVirtualDom(
     selectedRunMode,
     InputName.RunModePickerToggle,
     runModePickerOpen,
     DomEventListenerFunctions.HandleClickRunModePickerToggle,
+    renderSelectChevrons,
   )
 }
