@@ -23,7 +23,7 @@ const getReasoningEffortOptionsVirtualDom = (selectedReasoningEffort: ReasoningE
 export const getReasoningEffortPickerVirtualDom = (
   selectedReasoningEffort: ReasoningEffort,
   reasoningEffortPickerOpen: boolean,
-  selectChevronEnabled: boolean,
+  selectChevronEnabled = true,
 ): readonly VirtualDomNode[] => {
   return [
     ...getCustomSelectPickerToggleVirtualDom(
