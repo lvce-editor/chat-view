@@ -191,10 +191,10 @@ export const commandMap = {
   'Chat.handleErrorComposerAttachmentPreviewOverlay': wrapCommand(
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
   ),
+  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputBlur': wrapCommand(HandleInputBlur.handleInputBlur),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
-  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
