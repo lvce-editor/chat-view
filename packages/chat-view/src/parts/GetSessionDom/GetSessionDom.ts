@@ -3,6 +3,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { formatChatListTime } from '../FormatChatListTime/FormatChatListTime.ts'
+import { getChatListActionsDom } from '../GetChatListActionsDom/GetChatListActionsDom.ts'
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -73,6 +74,6 @@ export const getSessionDom = (
           text(formattedLastActiveTime),
         ]
       : []),
-    ...getChatLitActionsDom(session, sessionPinningEnabled),
+    ...getChatListActionsDom(session, sessionPinningEnabled),
   ]
 }

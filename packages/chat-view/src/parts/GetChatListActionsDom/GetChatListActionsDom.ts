@@ -5,7 +5,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getChatLitActionsDom = (session: ChatSession, sessionPinningEnabled = true): readonly VirtualDomNode[] => {
+export const getChatListActionsDom = (session: ChatSession, sessionPinningEnabled = true): readonly VirtualDomNode[] => {
   return [
     {
       childCount: sessionPinningEnabled ? 2 : 1,
