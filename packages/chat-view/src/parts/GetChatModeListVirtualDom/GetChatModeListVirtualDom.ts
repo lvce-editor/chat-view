@@ -25,8 +25,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
-  readonly composerFocused: boolean
   readonly composerDropEnabled?: boolean
+  readonly composerFocused: boolean
   readonly composerFontFamily?: string
   readonly composerFontSize?: number
   readonly composerHeight?: number
@@ -73,8 +73,8 @@ export const getChatModeListVirtualDom = ({
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
   composerDropActive = false,
-  composerFocused,
   composerDropEnabled = true,
+  composerFocused,
   composerFontFamily = 'system-ui',
   composerFontSize = 13,
   composerHeight = 28,

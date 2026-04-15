@@ -45,8 +45,8 @@ export interface GetChatVirtualDomOptions {
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
-  readonly composerFocused: boolean
   readonly composerDropEnabled?: boolean
+  readonly composerFocused: boolean
   readonly composerFontFamily: string
   readonly composerFontSize: number
   readonly composerHeight: number
@@ -113,8 +113,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerAttachmentPreviewOverlayError = false,
     composerAttachments,
     composerDropActive = false,
-    composerFocused,
     composerDropEnabled = true,
+    composerFocused,
     composerFontFamily,
     composerFontSize,
     composerHeight,
@@ -184,8 +184,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
-        composerFocused,
         composerDropEnabled,
+        composerFocused,
         composerFontFamily,
         composerFontSize,
         composerHeight,
@@ -245,8 +245,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
-        composerFocused,
         composerDropEnabled,
+        composerFocused,
         composerFontFamily,
         composerFontSize,
         composerHeight,
@@ -299,8 +299,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerAttachmentPreviewOverlayError,
         composerAttachments,
         composerDropActive,
-        composerFocused,
         composerDropEnabled,
+        composerFocused,
         composerFontFamily,
         composerFontSize,
         composerHeight,

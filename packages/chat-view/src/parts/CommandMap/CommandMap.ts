@@ -187,11 +187,11 @@ export const commandMap = {
   'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
   'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
   'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),
+  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleDropFiles': wrapCommand(HandleDropFiles.handleDropFiles),
   'Chat.handleErrorComposerAttachmentPreviewOverlay': wrapCommand(
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
   ),
-  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
   'Chat.handleInputBlur': wrapCommand(HandleInputBlur.handleInputBlur),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
