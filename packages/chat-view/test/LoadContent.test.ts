@@ -1158,6 +1158,30 @@ test('loadContent should load searchEnabled from preferences', async () => {
   ])
 })
 
+test('loadContent should load showRunMode from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.runModePickerEnabled') {
+        return false
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.showRunMode).toBe(false)
+  expect(result.runModePickerOpen).toBe(false)
+  expectInvocations(mockRpc.invocations, [['Preferences.get', 'chatView.runModePickerEnabled']])
+})
+
 test('loadContent should load chatHistoryEnabled from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
