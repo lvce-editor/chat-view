@@ -18,7 +18,14 @@ test('handleChatListContextMenu should focus the clicked item and invoke Context
   const result = await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
 
   expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: false, sessionId: 'session-1', sessionPinningEnabled: state.sessionPinningEnabled }],
+    [
+      'ContextMenu.show2',
+      7,
+      MenuChatList,
+      100,
+      60,
+      { menuId: MenuChatList, pinned: false, sessionId: 'session-1', sessionPinningEnabled: state.sessionPinningEnabled },
+    ],
   ])
   expect(result).toEqual({
     ...state,
@@ -44,7 +51,14 @@ test('handleChatListContextMenu should pass pinned session state to the context 
   await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 60)
 
   expect(mockRpc.invocations).toEqual([
-    ['ContextMenu.show2', 7, MenuChatList, 100, 60, { menuId: MenuChatList, pinned: true, sessionId: 'session-1', sessionPinningEnabled: state.sessionPinningEnabled }],
+    [
+      'ContextMenu.show2',
+      7,
+      MenuChatList,
+      100,
+      60,
+      { menuId: MenuChatList, pinned: true, sessionId: 'session-1', sessionPinningEnabled: state.sessionPinningEnabled },
+    ],
   ])
 })
 
