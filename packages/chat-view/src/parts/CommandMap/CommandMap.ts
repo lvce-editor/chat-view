@@ -184,10 +184,10 @@ export const commandMap = {
   'Chat.handleContextMenuChatImageAttachment': wrapCommand(HandleContextMenuChatImageAttachment.handleContextMenuChatImageAttachment),
   'Chat.handleContextMenuChatModelPicker': wrapCommand(HandleContextMenuChatModelPicker.handleContextMenuChatModelPicker),
   'Chat.handleContextMenuChatSendAreaBottom': wrapCommand(HandleContextMenuChatSendAreaBottom.handleContextMenuChatSendAreaBottom),
+  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleDragEnter': wrapCommand(HandleDragEnter.handleDragEnter),
   'Chat.handleDragLeave': wrapCommand(HandleDragLeave.handleDragLeave),
   'Chat.handleDragOver': wrapCommand(HandleDragOver.handleDragOver),
-  'Chat.handleClickModelPickerContainer': wrapCommand(HandleClickModelPickerContainer.handleClickModelPickerContainer),
   'Chat.handleDropFiles': wrapCommand(HandleDropFiles.handleDropFiles),
   'Chat.handleErrorComposerAttachmentPreviewOverlay': wrapCommand(
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
