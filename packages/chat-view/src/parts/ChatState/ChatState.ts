@@ -67,8 +67,8 @@ export interface ChatState {
   readonly inputSource: 'user' | 'script'
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly lastSubmittedSessionId: string
-  readonly listFocusOutline: boolean
   readonly listFocusedIndex: number
+  readonly listFocusOutline: boolean
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly maxToolCalls: number

@@ -33,8 +33,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
-  readonly listFocusOutline?: boolean
   readonly listFocusedIndex?: number
+  readonly listFocusOutline?: boolean
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
@@ -81,8 +81,8 @@ export const getChatModeListVirtualDom = ({
   composerValue,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
-  listFocusOutline = false,
   listFocusedIndex = -1,
+  listFocusOutline = false,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,

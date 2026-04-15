@@ -10,8 +10,8 @@ export const handleClickList = async (state: ChatState, eventX: number, eventY: 
       ...state,
       focus: 'list',
       focused: true,
-      listFocusOutline: false,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
@@ -20,8 +20,8 @@ export const handleClickList = async (state: ChatState, eventX: number, eventY: 
       ...state,
       focus: 'list',
       focused: true,
-      listFocusOutline: false,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   return selectListIndex(state, index)

@@ -35,16 +35,16 @@ test('handleInputFocus should set list focus for session element', async () => {
 test('handleInputFocus should set list focus with -1 for chat list container', async () => {
   const state = {
     ...createDefaultState(),
-    listFocusOutline: true,
     listFocusedIndex: 0,
+    listFocusOutline: true,
   }
   const result = await HandleInputFocus.handleInputFocus(state, 'chat-list')
   expect(result).toEqual({
     ...state,
     focus: 'list',
     focused: true,
-    listFocusOutline: false,
     listFocusedIndex: -1,
+    listFocusOutline: false,
   })
 })
 

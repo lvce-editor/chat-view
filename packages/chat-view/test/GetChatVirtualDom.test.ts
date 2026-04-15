@@ -1364,8 +1364,8 @@ test('getChatVirtualDOm should render context menu outline class for focused cha
     { id: 'session-2', messages: [], title: 'Chat 2' },
   ]
   const result = renderChatView({
-    listFocusOutline: true,
     listFocusedIndex: 1,
+    listFocusOutline: true,
     selectedSessionId: 'session-1',
     sessions,
     viewMode: 'list',

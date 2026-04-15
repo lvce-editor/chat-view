@@ -22,8 +22,8 @@ test('handleChatListContextMenu should focus the clicked item and invoke Context
     ...state,
     focus: 'list',
     focused: true,
-    listFocusOutline: true,
     listFocusedIndex: 0,
+    listFocusOutline: true,
   })
 })
 
