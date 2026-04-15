@@ -9,6 +9,7 @@ export const getCustomSelectPickerToggleVirtualDom = (
   title = label,
   ariaLabel = title,
   ariaControls = '',
+  selectChevronEnabled = true,
 ): readonly VirtualDomNode[] => {
-  return getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel, ariaControls)
+  return getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel, ariaControls, selectChevronEnabled)
 }

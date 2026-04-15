@@ -46,6 +46,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -94,6 +95,7 @@ export const getChatModeListVirtualDom = ({
   searchEnabled = false,
   searchFieldVisible = false,
   searchValue = '',
+  selectChevronEnabled,
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -141,6 +143,7 @@ export const getChatModeListVirtualDom = ({
       [],
       '',
       hasSpaceForAgentModePicker,
+      selectChevronEnabled,
       modelPickerOpen,
       models,
       selectedModelId,
