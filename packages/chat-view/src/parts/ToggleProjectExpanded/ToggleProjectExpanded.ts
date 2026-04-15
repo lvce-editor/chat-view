@@ -9,7 +9,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   const isExpanded = projectExpandedIds.includes(projectId)
   const nextProjectExpandedIds = isExpanded ? projectExpandedIds.filter((id) => id !== projectId) : [...projectExpandedIds, projectId]
 
-  const visibleSessions = getVisibleSessions(sessions, projectId)
+  const visibleSessions = getVisibleSessions(sessions, projectId, state.sessionPinningEnabled)
   if (visibleSessions.length === 0) {
     return {
       ...state,

@@ -24,7 +24,7 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
     case MenuChatInput:
       return getMenuEntriesChatInput()
     case MenuChatList:
-      return getMenuEntriesChatList()
+      return getMenuEntriesChatList(props.sessionId, props.pinned, props.sessionPinningEnabled)
     case MenuChatProjectList:
       return getMenuEntriesChatProjectList(props.projectId, props.canRemoveProject)
     case MenuProjectAddButton:

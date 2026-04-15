@@ -14,7 +14,7 @@ export const handleClickList = async (state: ChatState, eventX: number, eventY: 
       listFocusOutline: false,
     }
   }
-  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.sessionPinningEnabled)
   if (index >= visibleSessions.length) {
     return {
       ...state,

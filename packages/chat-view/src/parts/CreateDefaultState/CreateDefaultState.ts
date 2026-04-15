@@ -124,6 +124,7 @@ export const createDefaultState = (): ChatState => {
     reasoningEffort: defaultReasoningEffort,
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled: false,
+    renderSelectChevrons: true,
     renamingSessionId: '',
     responsivePickerVisibilityEnabled,
     runMode: 'local',
@@ -135,6 +136,7 @@ export const createDefaultState = (): ChatState => {
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
+    sessionPinningEnabled: true,
     sessions: [
       {
         id: defaultSessionId,
@@ -149,8 +151,8 @@ export const createDefaultState = (): ChatState => {
     streamingEnabled: true,
     systemPrompt: getDefaultSystemPrompt(),
     textAreaPaddingBottom: 0,
-    textAreaPaddingLeft: 12,
-    textAreaPaddingRight: 12,
+    textAreaPaddingLeft: 0,
+    textAreaPaddingRight: 0,
     textAreaPaddingTop: 0,
     todoListToolEnabled: false,
     tokensMax: 0,

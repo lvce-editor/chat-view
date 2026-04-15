@@ -16,6 +16,7 @@ import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySet
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
 import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiKeyWebsite/HandleClickOpenRouterApiKeyWebsite.ts'
+import { handleClickPin } from '../HandleClickPin/HandleClickPin.ts'
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
@@ -139,6 +140,8 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     }
     case name === InputName.SessionDelete:
       return deleteSession(state, id)
+    case name === InputName.SessionPin:
+      return handleClickPin(state, id)
     case name === InputName.ProjectDelete:
       return deleteProject(state, id)
     case name === InputName.Send:

@@ -26,7 +26,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
     }
   }
   if (InputName.isSessionInputName(name) || name === InputName.SessionDelete) {
-    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.sessionPinningEnabled)
     const sessionId = InputName.isSessionInputName(name) ? InputName.getSessionIdFromInputName(name) : ''
     const focusedIndex =
       sessionId === ''

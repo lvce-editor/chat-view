@@ -24,6 +24,11 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
           }
         : {}),
       messages: [],
+      ...(session.pinned
+        ? {
+            pinned: true,
+          }
+        : {}),
       ...(session.pullRequestUrl
         ? {
             pullRequestUrl: session.pullRequestUrl,
@@ -70,6 +75,11 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
         }
       : {}),
     messages: [...session.messages],
+    ...(session.pinned
+      ? {
+          pinned: true,
+        }
+      : {}),
     ...(session.pullRequestUrl
       ? {
           pullRequestUrl: session.pullRequestUrl,
@@ -111,6 +121,11 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
         }
       : {}),
     messages: [...session.messages],
+    ...(session.pinned
+      ? {
+          pinned: true,
+        }
+      : {}),
     ...(session.pullRequestUrl
       ? {
           pullRequestUrl: session.pullRequestUrl,

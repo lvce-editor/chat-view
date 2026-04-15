@@ -17,7 +17,7 @@ const getFocusSelector = (state: ChatState): string => {
       if (listFocusedIndex === -1) {
         return `[name="${InputName.ChatList}"]`
       }
-      const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+      const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.sessionPinningEnabled)
       const session = visibleSessions[listFocusedIndex]
       if (!session) {
         return `[name="${InputName.ChatList}"]`

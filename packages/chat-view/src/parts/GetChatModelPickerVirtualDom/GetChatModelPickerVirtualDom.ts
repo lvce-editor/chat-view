@@ -9,9 +9,10 @@ export const getChatModelPickerVirtualDom = (
   selectedModelId: string,
   modelPickerOpen: boolean,
   modelPickerSearchValue: string,
+  renderSelectChevrons: boolean,
 ): readonly VirtualDomNode[] => {
   return [
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
+    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, renderSelectChevrons),
     ...(modelPickerOpen ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
   ]
 }

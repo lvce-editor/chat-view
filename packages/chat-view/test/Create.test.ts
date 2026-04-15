@@ -20,6 +20,7 @@ test('create should show run mode by default', () => {
   const newStateTyped: ChatState = newState
   expect(newStateTyped.reasoningEffort).toBe('medium')
   expect(newStateTyped.reasoningPickerEnabled).toBe(false)
+  expect(newStateTyped.renderSelectChevrons).toBe(true)
   expect(newStateTyped.showRunMode).toBe(true)
   expect(newStateTyped.runMode).toBe('local')
 })
