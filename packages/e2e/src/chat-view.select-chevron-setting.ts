@@ -19,4 +19,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(modelPickerChevron).toHaveCount(1)
   await expect(agentModePickerChevron).toHaveCount(1)
   await expect(runModePickerChevron).toHaveCount(1)
+
+  await Command.execute('Chat.setSelectChevronEnabled', false)
+
+  await expect(modelPickerChevron).toHaveCount(0)
+  await expect(agentModePickerChevron).toHaveCount(0)
+  await expect(runModePickerChevron).toHaveCount(0)
 }
