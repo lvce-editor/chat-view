@@ -9,6 +9,7 @@ export const handleModelInputBlur = async (state: ChatState): Promise<ChatState>
     ...state,
     focus: 'composer',
     focused: true,
+    listFocusOutline: false,
     listFocusedIndex: -1,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
     modelPickerListScrollTop: 0,

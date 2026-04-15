@@ -5,6 +5,7 @@ export const focusInput = (state: ChatState): ChatState => {
     ...state,
     focus: 'composer',
     focused: true,
+    listFocusOutline: false,
     listFocusedIndex: -1,
   }
 }

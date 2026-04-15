@@ -10,6 +10,7 @@ export const handleClickList = async (state: ChatState, eventX: number, eventY: 
       ...state,
       focus: 'list',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: -1,
     }
   }
@@ -19,6 +20,7 @@ export const handleClickList = async (state: ChatState, eventX: number, eventY: 
       ...state,
       focus: 'list',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: -1,
     }
   }

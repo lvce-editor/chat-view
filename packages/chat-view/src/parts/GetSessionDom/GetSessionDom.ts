@@ -8,8 +8,17 @@ import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSession
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getSessionDom = (session: ChatSession, focused = false, showChatListTime = true): readonly VirtualDomNode[] => {
-  const sessionClassName = focused ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused) : ClassNames.ChatListItem
+export const getSessionDom = (
+  session: ChatSession,
+  focused = false,
+  showChatListTime = true,
+  showFocusOutline = false,
+): readonly VirtualDomNode[] => {
+  const sessionClassName = showFocusOutline
+    ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline)
+    : focused
+      ? mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused)
+      : ClassNames.ChatListItem
   const sessionStatusClassName = getSessionStatusClassName(session)
   const lastActiveTime = getSessionLastActiveTime(session)
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'

@@ -33,6 +33,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly listFocusOutline?: boolean
   readonly listFocusedIndex?: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -80,6 +81,7 @@ export const getChatModeListVirtualDom = ({
   composerValue,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
+  listFocusOutline = false,
   listFocusedIndex = -1,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
@@ -127,7 +129,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,

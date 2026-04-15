@@ -57,6 +57,7 @@ export interface GetChatVirtualDomOptions {
   readonly gitBranchPickerVisible?: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly listFocusOutline?: boolean
   readonly listFocusedIndex?: number
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
@@ -124,6 +125,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     gitBranchPickerVisible = false,
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
+    listFocusOutline = false,
     listFocusedIndex = -1,
     messagesAutoScrollEnabled,
     messagesScrollTop,
@@ -303,6 +305,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        listFocusOutline,
         listFocusedIndex,
         modelPickerOpen,
         modelPickerSearchValue,

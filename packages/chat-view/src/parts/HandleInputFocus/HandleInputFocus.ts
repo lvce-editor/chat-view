@@ -12,6 +12,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'send-button',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: -1,
     }
   }
@@ -20,6 +21,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'list',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: -1,
     }
   }
@@ -36,6 +38,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'list',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: focusedIndex,
     }
   }
@@ -50,11 +53,13 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       ...state,
       focus: 'header',
       focused: true,
+      listFocusOutline: false,
       listFocusedIndex: -1,
     }
   }
   return {
     ...state,
     focused: false,
+    listFocusOutline: false,
   }
 }

@@ -9,6 +9,7 @@ import * as InputName from '../InputName/InputName.ts'
 export const getChatListDom = (
   sessions: readonly ChatSession[],
   selectedSessionId: string,
+  listFocusOutline: boolean,
   listFocusedIndex: number,
   showChatListTime: boolean,
   chatListScrollTop = 0,
@@ -29,6 +30,8 @@ export const getChatListDom = (
       tabIndex: 0,
       type: VirtualDomElements.Ul,
     },
-    ...sessions.flatMap((session, index) => getSessionDom(session, index === listFocusedIndex, showChatListTime)),
+    ...sessions.flatMap((session, index) =>
+      getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex),
+    ),
   ]
 }
