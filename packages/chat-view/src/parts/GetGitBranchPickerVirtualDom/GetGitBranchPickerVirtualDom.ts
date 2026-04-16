@@ -54,7 +54,11 @@ export const getGitBranchPickerVirtualDom = (
   gitBranchPickerOpen: boolean,
   gitBranchPickerErrorMessage: string,
   fallbackBranchName: string,
+<<<<<<< HEAD
   renderSelectChevrons = true,
+=======
+  selectChevronEnabled = true,
+>>>>>>> origin/main
 ): readonly VirtualDomNode[] => {
   const label = getCurrentBranchLabel(gitBranches, fallbackBranchName)
   const branchOptions = getBranchOptionsVirtualDom(gitBranches)
@@ -70,6 +74,8 @@ export const getGitBranchPickerVirtualDom = (
       renderSelectChevrons,
       'Switch branch',
       'Switch branch',
+      undefined,
+      selectChevronEnabled,
     ),
     ...(gitBranchPickerOpen
       ? [

@@ -117,6 +117,7 @@ export interface ChatState {
   readonly searchEnabled: boolean
   readonly searchFieldVisible: boolean
   readonly searchValue: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string

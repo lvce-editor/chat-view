@@ -50,6 +50,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.runMode === newState.runMode &&
     oldState.runModePickerOpen === newState.runModePickerOpen &&
     oldState.sessions === newState.sessions &&
+    oldState.selectChevronEnabled === newState.selectChevronEnabled &&
     oldState.tokensMax === newState.tokensMax &&
     oldState.tokensUsed === newState.tokensUsed &&
     oldState.usageOverviewEnabled === newState.usageOverviewEnabled &&

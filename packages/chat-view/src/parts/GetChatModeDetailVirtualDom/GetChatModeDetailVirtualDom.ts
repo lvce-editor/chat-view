@@ -57,6 +57,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly scrollDownButtonEnabled: boolean
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -110,6 +111,7 @@ export const getChatModeDetailVirtualDom = ({
   runMode,
   runModePickerOpen = false,
   scrollDownButtonEnabled,
+  selectChevronEnabled,
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -171,6 +173,7 @@ export const getChatModeDetailVirtualDom = ({
       [],
       '',
       hasSpaceForAgentModePicker,
+      selectChevronEnabled,
       modelPickerOpen,
       models,
       selectedModelId,

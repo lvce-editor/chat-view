@@ -84,6 +84,7 @@ export interface GetChatVirtualDomOptions {
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -154,6 +155,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     searchEnabled = false,
     searchFieldVisible = false,
     searchValue = '',
+    selectChevronEnabled,
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
@@ -222,6 +224,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
+        selectChevronEnabled,
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
@@ -276,6 +279,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
+        selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
         sessions,
@@ -325,6 +329,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         searchEnabled,
         searchFieldVisible,
         searchValue,
+        selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
         sessionPinningEnabled,

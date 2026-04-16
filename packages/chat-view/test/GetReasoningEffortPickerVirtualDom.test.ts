@@ -5,7 +5,7 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import { getReasoningEffortPickerVirtualDom } from '../src/parts/GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 
 test('getReasoningEffortPickerVirtualDom should render overlay click handler when open', () => {
-  const result = getReasoningEffortPickerVirtualDom('medium', true)
+  const result = getReasoningEffortPickerVirtualDom('medium', true, true)
   const overlay = result.find((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(overlay).toMatchObject({
     childCount: 1,

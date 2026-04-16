@@ -26,6 +26,7 @@ import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
+import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
@@ -49,6 +50,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     openRouterApiKey,
     passIncludeObfuscation,
     reasoningPickerEnabled,
+    runModePickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
@@ -105,6 +107,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
+  sessions = normalizeSessionsOnLoad(sessions)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
   let { parsedMessages } = state
   for (const session of sessions) {
@@ -165,6 +168,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedSessionId,
     sessions,
     showChatListTime,
+    showRunMode: runModePickerEnabled,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,
