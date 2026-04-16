@@ -89,11 +89,8 @@ export const ChatMessageImage: string = 'ChatMessageImage'
 export const ChatSendArea: string = 'ChatSendArea'
 export const ChatSendAreaBottom: string = 'ChatSendAreaBottom'
 export const ChatSendAreaContent: string = 'ChatSendAreaContent'
-<<<<<<< HEAD
 export const ChatSendAreaContentFocused: string = 'ChatSendAreaContentFocused'
-=======
 export const ChatSendAreaContentTop: string = 'ChatSendAreaContentTop'
->>>>>>> origin/main
 export const ChatSendAreaPrimaryControls: string = 'ChatSendAreaPrimaryControls'
 export const ChatSelect: string = 'ChatSelect'
 export const ChatSendAreaDropTarget: string = 'ChatSendAreaDropTarget'
