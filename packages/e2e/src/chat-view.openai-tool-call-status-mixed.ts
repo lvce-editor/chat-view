@@ -40,7 +40,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
           status: 'error',
         },
         {
-          arguments: JSON.stringify({ oldUri: 'file:///workspace/src/old.ts', newUri: 'file:///workspace/src/new.ts' }),
+          arguments: JSON.stringify({ newUri: 'file:///workspace/src/new.ts', oldUri: 'file:///workspace/src/old.ts' }),
           id: 'call_04',
           name: 'rename',
           status: 'success',
