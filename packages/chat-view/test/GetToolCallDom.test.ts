@@ -35,7 +35,7 @@ test('getToolCallDom should render render_html tool calls as native virtual dom 
     text: 'render_html',
   })
   expect(result[4]).toMatchObject({
-    text: ': Paris Weather',
+    text: ': Paris Weather (finished)',
   })
   expect(result[5]).toEqual({
     childCount: 1,
@@ -83,11 +83,14 @@ test('getToolCallDom should display getWorkspaceUri as get_workspace_uri', () =>
     status: 'success',
   })
 
-  expect(result).toHaveLength(3)
+  expect(result).toHaveLength(4)
   expect(result[1]).toEqual({
     childCount: 1,
     className: ClassNames.ToolCallName,
     type: VirtualDomElements.Span,
+  })
+  expect(result[3]).toMatchObject({
+    text: ' (finished)',
   })
 })
 
@@ -98,13 +101,14 @@ test('getToolCallDom should render unknown tool name in ToolCallName span', () =
     status: 'success',
   })
 
-  expect(result).toHaveLength(3)
+  expect(result).toHaveLength(4)
   expect(result[1]).toEqual({
     childCount: 1,
     className: ClassNames.ToolCallName,
     type: VirtualDomElements.Span,
   })
   expect(result.find((node) => node.text === 'unknown_tool')).toBeDefined()
+  expect(result.find((node) => node.text === ' (finished)')).toBeDefined()
 })
 
 test('getToolCallDom should render getWorkspaceUri tool name text inside ToolCallName span', () => {
@@ -124,8 +128,9 @@ test('getToolCallDom should not display empty object arguments', () => {
     status: 'success',
   })
 
-  expect(result).toHaveLength(3)
+  expect(result).toHaveLength(4)
   expect(result.find((node) => node.text === 'unknown_tool')).toBeDefined()
+  expect(result.find((node) => node.text === ' (finished)')).toBeDefined()
 })
 
 test('getToolCallDom should render grep_search query and expose raw arguments on hover', () => {
@@ -153,7 +158,7 @@ test('getToolCallDom should render grep_search query and expose raw arguments on
       type: VirtualDomElements.Text,
     }),
     expect.objectContaining({
-      text: ' "hello"',
+      text: ' "hello" (finished)',
       type: VirtualDomElements.Text,
     }),
   ])
@@ -199,7 +204,7 @@ test('getToolCallDom should expose only nested arguments on hover for wrapped gr
       type: VirtualDomElements.Text,
     }),
     expect.objectContaining({
-      text: ' "memoryMeasurement|MemoryMeasurement"',
+      text: ' "memoryMeasurement|MemoryMeasurement" (finished)',
       type: VirtualDomElements.Text,
     }),
   ])
@@ -252,7 +257,7 @@ test('getToolCallDom should render glob baseUri as clickable folder name with fu
 
   expect(result).toEqual([
     {
-      childCount: 4,
+      childCount: 5,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
@@ -293,6 +298,10 @@ test('getToolCallDom should render glob baseUri as clickable folder name with fu
       text: ` "${pattern}"`,
       type: VirtualDomElements.Text,
     }),
+    expect.objectContaining({
+      text: ' (finished)',
+      type: VirtualDomElements.Text,
+    }),
   ])
 })
 
@@ -311,7 +320,7 @@ test('getToolCallDom should render finished glob tool calls with a match count',
 
   expect(result).toEqual([
     {
-      childCount: 5,
+      childCount: 6,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
@@ -354,6 +363,10 @@ test('getToolCallDom should render finished glob tool calls with a match count',
     }),
     expect.objectContaining({
       text: ', 5 matches',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ' (finished)',
       type: VirtualDomElements.Text,
     }),
   ])
@@ -438,7 +451,7 @@ test('getToolCallDom should render write_file as filename with line count badges
   })
 
   expect(result[0]).toEqual({
-    childCount: 5,
+    childCount: 6,
     className: ClassNames.ChatOrderedListItem,
     type: VirtualDomElements.Li,
   })
@@ -483,6 +496,9 @@ test('getToolCallDom should render write_file as filename with line count badges
   })
   expect(result[10]).toMatchObject({
     text: ' -1',
+  })
+  expect(result[11]).toMatchObject({
+    text: ' (finished)',
   })
   expect(result.find((node) => node.text === '"const value = 2\\n"')).toBeUndefined()
 })
@@ -599,9 +615,9 @@ test('getToolCallDom should render create_directory as folder name with uri titl
     status: 'success',
   })
 
-  expect(result).toHaveLength(7)
+  expect(result).toHaveLength(8)
   expect(result[0]).toEqual({
-    childCount: 3,
+    childCount: 4,
     className: ClassNames.ChatOrderedListItem,
     type: VirtualDomElements.Li,
   })
@@ -631,6 +647,9 @@ test('getToolCallDom should render create_directory as folder name with uri titl
   expect(result[6]).toMatchObject({
     text: 'components',
   })
+  expect(result[7]).toMatchObject({
+    text: ' (finished)',
+  })
 })
 
 test('getToolCallDom should render getWorkspaceUri result with uri title on the filename link', () => {
@@ -642,9 +661,9 @@ test('getToolCallDom should render getWorkspaceUri result with uri title on the 
     status: 'success',
   })
 
-  expect(result).toHaveLength(7)
+  expect(result).toHaveLength(8)
   expect(result[0]).toEqual({
-    childCount: 3,
+    childCount: 4,
     className: ClassNames.ChatOrderedListItem,
     type: VirtualDomElements.Li,
   })
@@ -658,6 +677,9 @@ test('getToolCallDom should render getWorkspaceUri result with uri title on the 
   })
   expect(result[6]).toMatchObject({
     text: 'chat-view',
+  })
+  expect(result[7]).toMatchObject({
+    text: ' (finished)',
   })
 })
 
@@ -675,7 +697,7 @@ test('getToolCallDom should render rename as from to filenames with full uri tit
 
   expect(result).toEqual([
     {
-      childCount: 5,
+      childCount: 6,
       className: ClassNames.ChatOrderedListItem,
       title: `${oldUri} -> ${newUri}`,
       type: VirtualDomElements.Li,
@@ -734,6 +756,10 @@ test('getToolCallDom should render rename as from to filenames with full uri tit
     },
     expect.objectContaining({
       text: 'memory.bak',
+      type: VirtualDomElements.Text,
+    }),
+    expect.objectContaining({
+      text: ' (finished)',
       type: VirtualDomElements.Text,
     }),
   ])

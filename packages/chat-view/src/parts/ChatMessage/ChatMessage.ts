@@ -1,7 +1,7 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 
-export type ChatToolCallStatus = 'error' | 'not-found' | 'success'
+export type ChatToolCallStatus = 'canceled' | 'error' | 'in-progress' | 'not-found' | 'success'
 
 export interface ChatToolCall {
   readonly arguments: string
