@@ -68,6 +68,7 @@ export interface ChatState {
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly lastSubmittedSessionId: string
   readonly listFocusedIndex: number
+  readonly listFocusOutline: boolean
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly maxToolCalls: number
@@ -115,6 +116,7 @@ export interface ChatState {
   readonly searchEnabled: boolean
   readonly searchFieldVisible: boolean
   readonly searchValue: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string

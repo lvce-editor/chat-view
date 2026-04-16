@@ -5,7 +5,7 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import { getGitBranchPickerVirtualDom } from '../src/parts/GetGitBranchPickerVirtualDom/GetGitBranchPickerVirtualDom.ts'
 
 test('getGitBranchPickerVirtualDom should render overlay click handler when open', () => {
-  const result = getGitBranchPickerVirtualDom([{ current: true, name: 'main' }], true, '', 'main')
+  const result = getGitBranchPickerVirtualDom([{ current: true, name: 'main' }], true, '', 'main', true)
   const overlay = result.find((node) => node.className === ClassNames.ChatModelPickerContainer)
   expect(overlay).toMatchObject({
     childCount: 1,

@@ -59,6 +59,7 @@ export interface GetChatVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex?: number
+  readonly listFocusOutline?: boolean
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
@@ -83,6 +84,7 @@ export interface GetChatVirtualDomOptions {
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -127,6 +129,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
     listFocusedIndex = -1,
+    listFocusOutline = false,
     messagesAutoScrollEnabled,
     messagesScrollTop,
     modelPickerOpen = false,
@@ -151,6 +154,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     searchEnabled = false,
     searchFieldVisible = false,
     searchValue = '',
+    selectChevronEnabled,
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
@@ -218,6 +222,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
+        selectChevronEnabled,
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
@@ -272,6 +277,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         runMode,
         runModePickerOpen,
         scrollDownButtonEnabled,
+        selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
         sessions,
@@ -309,6 +315,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         listFocusedIndex,
+        listFocusOutline,
         modelPickerOpen,
         modelPickerSearchValue,
         models,
@@ -320,6 +327,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         searchEnabled,
         searchFieldVisible,
         searchValue,
+        selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
         sessions,

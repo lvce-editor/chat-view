@@ -35,6 +35,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex?: number
+  readonly listFocusOutline?: boolean
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
@@ -46,6 +47,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly searchEnabled?: boolean
   readonly searchFieldVisible?: boolean
   readonly searchValue?: string
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
@@ -83,6 +85,7 @@ export const getChatModeListVirtualDom = ({
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
   listFocusedIndex = -1,
+  listFocusOutline = false,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
@@ -94,6 +97,7 @@ export const getChatModeListVirtualDom = ({
   searchEnabled = false,
   searchFieldVisible = false,
   searchValue = '',
+  selectChevronEnabled,
   selectedModelId,
   selectedSessionId,
   sessions,
@@ -129,7 +133,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerFocused,
@@ -142,6 +146,7 @@ export const getChatModeListVirtualDom = ({
       [],
       '',
       hasSpaceForAgentModePicker,
+      selectChevronEnabled,
       modelPickerOpen,
       models,
       selectedModelId,

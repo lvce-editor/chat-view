@@ -9,6 +9,7 @@ import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
 import { loadReasoningPickerEnabled } from '../LoadReasoningPickerEnabled/LoadReasoningPickerEnabled.ts'
+import { loadRunModePickerEnabled } from '../LoadRunModePickerEnabled/LoadRunModePickerEnabled.ts'
 import { loadScrollDownButtonEnabled } from '../LoadScrollDownButtonEnabled/LoadScrollDownButtonEnabled.ts'
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadShowChatListTime } from '../LoadShowChatListTime/LoadShowChatListTime.ts'
@@ -35,6 +36,7 @@ export interface LoadedPreferences {
   openRouterApiKey: string
   passIncludeObfuscation: boolean
   reasoningPickerEnabled: boolean
+  runModePickerEnabled: boolean
   scrollDownButtonEnabled: boolean
   searchEnabled: boolean
   showChatListTime: boolean
@@ -62,6 +64,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
     reasoningPickerEnabled,
+    runModePickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
@@ -87,6 +90,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
     loadReasoningPickerEnabled(),
+    loadRunModePickerEnabled(),
     loadScrollDownButtonEnabled(),
     loadSearchEnabled(),
     loadShowChatListTime(),
@@ -115,6 +119,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     openRouterApiKey,
     passIncludeObfuscation,
     reasoningPickerEnabled,
+    runModePickerEnabled,
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,

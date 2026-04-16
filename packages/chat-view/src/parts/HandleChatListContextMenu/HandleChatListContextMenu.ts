@@ -24,5 +24,6 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
     focus: 'list',
     focused: true,
     listFocusedIndex: index,
+    listFocusOutline: true,
   }
 }

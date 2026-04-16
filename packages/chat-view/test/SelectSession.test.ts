@@ -3,6 +3,7 @@ import { ChatMessageParsingWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import { getNextAutoScrollTop } from '../src/parts/GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import * as SelectSession from '../src/parts/SelectSession/SelectSession.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
@@ -39,6 +40,8 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
 
   const state: ChatState = {
     ...createDefaultState(),
+    messagesAutoScrollEnabled: false,
+    messagesScrollTop: 120,
     selectedSessionId: 'session-1',
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
@@ -51,6 +54,8 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
 
   expect(result.selectedSessionId).toBe('session-2')
   expect(result.viewMode).toBe('detail')
+  expect(result.messagesAutoScrollEnabled).toBe(true)
+  expect(result.messagesScrollTop).toBe(getNextAutoScrollTop(120))
   expect(result.sessions).toEqual([
     { id: 'session-1', messages: [], title: 'Chat 1' },
     {

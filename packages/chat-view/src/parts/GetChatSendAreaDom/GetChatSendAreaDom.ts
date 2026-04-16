@@ -35,6 +35,7 @@ export const getChatSendAreaDom = (
   gitBranches: readonly GitBranch[],
   fallbackBranchName: string,
   hasSpaceForAgentModePicker: boolean,
+  selectChevronEnabled: boolean,
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -93,6 +94,11 @@ export const getChatSendAreaDom = (
     },
     ...getTodoListDom(hasTodoList, todoListItems),
     ...getComposerAttachmentsDom(composerAttachments),
+    {
+      childCount: 1,
+      className: ClassNames.ChatSendAreaContentTop,
+      type: VirtualDomElements.Div,
+    },
     getComposerTextAreaDom(),
     {
       childCount: bottomControlsCount,
@@ -106,15 +112,17 @@ export const getChatSendAreaDom = (
       role: 'toolbar',
       type: VirtualDomElements.Div,
     },
-    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen) : []),
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen),
-    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen) : []),
-    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen) : []),
+    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),
+    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled),
+    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
+    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
     ...(showImplementPlanButton ? getImplementPlanButtonDom() : []),
-    ...(showGitBranchPicker ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName) : []),
+    ...(showGitBranchPicker
+      ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, selectChevronEnabled)
+      : []),
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),
   ]

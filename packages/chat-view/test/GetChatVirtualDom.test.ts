@@ -222,6 +222,9 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const result = renderChatView()
   const modelSelect = result.find((node) => node.name === 'model')
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const modelPickerToggleChevron = result.find(
+    (node) => node.name === 'model-picker-toggle' && node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
+  )
   const modelPicker = result.find((node) => node.className === ClassNames.ChatModelPicker)
   expect(modelSelect).toBeUndefined()
   expect(modelPickerToggle).toMatchObject({
@@ -240,7 +243,21 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
     role: 'none',
     type: VirtualDomElements.Span,
   })
+  expect(modelPickerToggleChevron).toMatchObject({
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
+    name: 'model-picker-toggle',
+    role: 'none',
+    type: VirtualDomElements.Div,
+  })
   expect(modelPicker).toBeUndefined()
+})
+
+test('getChatVirtualDom should omit select chevrons when disabled', () => {
+  const result = renderChatView({
+    selectChevronEnabled: false,
+  })
+  const chevron = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`)
+  expect(chevron).toBeUndefined()
 })
 
 test('getChatVirtualDom should expose explicit aria-selected state for model picker options', () => {
@@ -1056,9 +1073,11 @@ test('getChatVirtualDOm should render composer textarea', () => {
   const composer = result.find((node) => node.name === 'composer')
   const sendButton = result.find((node) => node.name === 'send')
   const composeForm = result.find((node) => node.className === ClassNames.ChatSendArea)
+  const composeContentTop = result.find((node) => node.className === ClassNames.ChatSendAreaContentTop)
   expect(composer).toBeDefined()
   expect(sendButton).toBeDefined()
   expect(composeForm).toBeDefined()
+  expect(composeContentTop).toBeDefined()
   expect(composer).toMatchObject({
     className: 'MultilineInputBox ChatInputBox',
     onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
@@ -1072,6 +1091,11 @@ test('getChatVirtualDOm should render composer textarea', () => {
     onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
     onSubmit: DomEventListenerFunctions.HandleSubmit,
     type: VirtualDomElements.Form,
+  })
+  expect(composeContentTop).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatSendAreaContentTop,
+    type: VirtualDomElements.Div,
   })
   expect(sendButton).toMatchObject({
     buttonType: 'submit',
@@ -1366,6 +1390,26 @@ test('getChatVirtualDOm should render focused chat list item highlight', () => {
     viewMode: 'list',
   })
   const focusedItems = result.filter((node) => node.className === `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused}`)
+  expect(focusedItems).toHaveLength(1)
+})
+
+test('getChatVirtualDOm should render context menu outline class for focused chat list item', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    listFocusOutline: true,
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const focusedItems = result.filter(
+    (node) =>
+      node.className ===
+      `${ClassNames.ChatListItem} ${ClassNames.ChatListItemFocused} ${ClassNames.ChatListItemFocusOutline} ${ClassNames.FocusOutline}`,
+  )
   expect(focusedItems).toHaveLength(1)
 })
 

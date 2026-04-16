@@ -9,6 +9,7 @@ export const chatListFocusLast = async (state: ChatState): Promise<ChatState> =>
       focus: 'list',
       focused: true,
       listFocusedIndex: -1,
+      listFocusOutline: false,
     }
   }
   return {
@@ -16,5 +17,6 @@ export const chatListFocusLast = async (state: ChatState): Promise<ChatState> =>
     focus: 'list',
     focused: true,
     listFocusedIndex: visibleSessions.length - 1,
+    listFocusOutline: false,
   }
 }
