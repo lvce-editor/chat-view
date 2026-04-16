@@ -132,6 +132,7 @@ export const createDefaultState = (): ChatState => {
     searchEnabled: false,
     searchFieldVisible: false,
     searchValue: '',
+    selectChevronEnabled: true,
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,

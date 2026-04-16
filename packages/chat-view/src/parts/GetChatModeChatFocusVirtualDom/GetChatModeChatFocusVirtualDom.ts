@@ -66,6 +66,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly scrollDownButtonEnabled: boolean
+  readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
@@ -126,6 +127,7 @@ export const getChatModeChatFocusVirtualDom = ({
   runMode,
   runModePickerOpen = false,
   scrollDownButtonEnabled,
+  selectChevronEnabled,
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
@@ -206,6 +208,7 @@ export const getChatModeChatFocusVirtualDom = ({
       gitBranches,
       selectedSession?.branchName || '',
       hasSpaceForAgentModePicker,
+      selectChevronEnabled,
       modelPickerOpen,
       models,
       selectedModelId,
