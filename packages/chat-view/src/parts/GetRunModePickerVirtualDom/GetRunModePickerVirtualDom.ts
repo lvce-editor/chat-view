@@ -7,24 +7,18 @@ import * as InputName from '../InputName/InputName.ts'
 export const getRunModePickerVirtualDom = (
   selectedRunMode: RunMode,
   runModePickerOpen: boolean,
-<<<<<<< HEAD
   renderSelectChevrons = true,
-=======
   selectChevronEnabled = true,
->>>>>>> origin/main
 ): readonly VirtualDomNode[] => {
   return getCustomSelectPickerToggleVirtualDom(
     selectedRunMode,
     InputName.RunModePickerToggle,
     runModePickerOpen,
     DomEventListenerFunctions.HandleClickRunModePickerToggle,
-<<<<<<< HEAD
     renderSelectChevrons,
-=======
     undefined,
     undefined,
     undefined,
     selectChevronEnabled,
->>>>>>> origin/main
   )
 }

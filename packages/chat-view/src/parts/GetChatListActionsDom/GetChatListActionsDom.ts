@@ -5,11 +5,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-<<<<<<< HEAD
 export const getChatListActionsDom = (session: ChatSession, sessionPinningEnabled = true): readonly VirtualDomNode[] => {
-=======
-export const getChatListActionsDom = (session: ChatSession, sessionPinningEnabled = false): readonly VirtualDomNode[] => {
->>>>>>> origin/main
   return [
     {
       childCount: sessionPinningEnabled ? 2 : 1,
@@ -17,7 +13,6 @@ export const getChatListActionsDom = (session: ChatSession, sessionPinningEnable
       role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
-<<<<<<< HEAD
     ...(sessionPinningEnabled
       ? [
           {
@@ -41,8 +36,6 @@ export const getChatListActionsDom = (session: ChatSession, sessionPinningEnable
           },
         ]
       : []),
-=======
->>>>>>> origin/main
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton),

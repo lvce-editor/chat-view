@@ -110,27 +110,25 @@ export const getChatSendAreaDom = (
       role: 'toolbar',
       type: VirtualDomElements.Div,
     },
-<<<<<<< HEAD
-    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, renderSelectChevrons) : []),
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, renderSelectChevrons),
-    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, renderSelectChevrons) : []),
-    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, renderSelectChevrons) : []),
-=======
-    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled),
-    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
-    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []),
->>>>>>> origin/main
+    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, renderSelectChevrons, selectChevronEnabled) : []),
+    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, renderSelectChevrons, selectChevronEnabled),
+    ...(reasoningPickerEnabled
+      ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, renderSelectChevrons, selectChevronEnabled)
+      : []),
+    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, renderSelectChevrons, selectChevronEnabled) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
     ...(showImplementPlanButton ? getImplementPlanButtonDom() : []),
     ...(showGitBranchPicker
-<<<<<<< HEAD
-      ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, renderSelectChevrons)
-=======
-      ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, selectChevronEnabled)
->>>>>>> origin/main
+      ? getGitBranchPickerVirtualDom(
+          gitBranches,
+          gitBranchPickerOpen,
+          gitBranchPickerErrorMessage,
+          fallbackBranchName,
+          renderSelectChevrons,
+          selectChevronEnabled,
+        )
       : []),
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),

@@ -9,11 +9,8 @@ export const getChatModelPickerToggleVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,
   modelPickerOpen: boolean,
-<<<<<<< HEAD
-  renderSelectChevrons: boolean,
-=======
+  renderSelectChevrons = true,
   selectChevronEnabled = true,
->>>>>>> origin/main
 ): readonly VirtualDomNode[] => {
   const selectedModel = models.find((model) => model.id === selectedModelId)
   const selectedModelLabel = selectedModel ? selectedModel.name : selectedModelId

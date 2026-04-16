@@ -22,6 +22,8 @@ export const getCustomSelectToggleVirtualDom = (
     }
   }
 
+  const showChevron = renderSelectChevrons && selectChevronEnabled
+
   return [
     {
       ...(ariaControls ? { 'aria-controls': ariaControls } : {}),
@@ -29,11 +31,7 @@ export const getCustomSelectToggleVirtualDom = (
       'aria-haspopup': 'true',
       'aria-label': ariaLabel,
       ariaLabel,
-<<<<<<< HEAD
-      childCount: renderSelectChevrons ? 2 : 1,
-=======
-      childCount: selectChevronEnabled ? 2 : 1,
->>>>>>> origin/main
+      childCount: showChevron ? 2 : 1,
       className: ClassNames.ChatSelect,
       inputType: 'button',
       name,
@@ -49,10 +47,6 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Span,
     },
     text(label),
-<<<<<<< HEAD
-    ...(renderSelectChevrons ? [getChevronDom(open)] : []),
-=======
-    ...(selectChevronEnabled ? [getChevronDom(open)] : []),
->>>>>>> origin/main
+    ...(showChevron ? [getChevronDom(open)] : []),
   ]
 }

@@ -12,9 +12,5 @@ export const getCustomSelectPickerToggleVirtualDom = (
   ariaControls = '',
   selectChevronEnabled = true,
 ): readonly VirtualDomNode[] => {
-<<<<<<< HEAD
-  return getCustomSelectToggleVirtualDom(label, name, open, onClick, renderSelectChevrons, title, ariaLabel, ariaControls)
-=======
-  return getCustomSelectToggleVirtualDom(label, name, open, onClick, title, ariaLabel, ariaControls, selectChevronEnabled)
->>>>>>> origin/main
+  return getCustomSelectToggleVirtualDom(label, name, open, onClick, renderSelectChevrons, title, ariaLabel, ariaControls, selectChevronEnabled)
 }
