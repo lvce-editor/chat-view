@@ -4,6 +4,19 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
+
+export interface HandleSubmitRequestOptions {
+  readonly attachments: readonly unknown[]
+  readonly id: string
+  readonly modelId: string
+  readonly openAiKey: string
+  readonly requestId: string
+  readonly role: 'user' | 'assistant'
+  readonly sessionId: string
+  readonly systemPrompt: string
+  readonly text: string
+}
+
 export interface GetAiResponseRequestOptions {
   readonly agentMode?: AgentMode
   readonly assetDir: string
@@ -36,4 +49,8 @@ export interface GetAiResponseRequestOptions {
 
 export const getAiResponse = async (options: Readonly<GetAiResponseRequestOptions>): Promise<ChatMessage> => {
   return ChatCoordinatorWorker.invoke('ChatCoordinator.getAiResponse', options) as Promise<ChatMessage>
+}
+
+export const handleSubmit = async (options: Readonly<HandleSubmitRequestOptions>): Promise<void> => {
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', options)
 }
