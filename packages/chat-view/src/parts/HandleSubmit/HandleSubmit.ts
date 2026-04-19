@@ -5,7 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
-import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -46,20 +46,6 @@ const updateSessionStatus = (
       status,
     }
   })
-}
-
-const clearComposerAttachments = async (sessionId: string, attachmentIds: readonly string[]): Promise<void> => {
-  if (!sessionId) {
-    return
-  }
-  for (const attachmentId of attachmentIds) {
-    await appendChatViewEvent({
-      attachmentId,
-      sessionId,
-      timestamp: new Date().toISOString(),
-      type: 'chat-attachment-removed',
-    })
-  }
 }
 
 const getProjectUri = (state: ChatState, projectId: string): string => {
@@ -111,10 +97,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     effectiveState.composerAttachments.length > 0
       ? effectiveState.composerAttachments
       : await getComposerAttachments(effectiveState.selectedSessionId)
-  await clearComposerAttachments(
-    effectiveState.selectedSessionId,
-    composerAttachments.map((attachment) => attachment.attachmentId),
-  )
   const userMessage: ChatMessage = {
     ...(composerAttachments.length > 0
       ? {
@@ -160,12 +142,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   let optimisticState: ChatState
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
-    await appendChatViewEvent({
-      sessionId: newSessionId,
-      timestamp: new Date().toISOString(),
-      type: 'handle-submit',
-      value: userText,
-    })
     const newSession: ChatSession = {
       id: newSessionId,
       messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
@@ -174,7 +150,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       title: `Chat ${workingSessions.length + 1}`,
     }
     const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
-    await saveChatSession(provisionedSession)
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...effectiveState,
@@ -196,12 +171,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   } else {
-    await appendChatViewEvent({
-      sessionId: selectedSessionId,
-      timestamp: new Date().toISOString(),
-      type: 'handle-submit',
-      value: userText,
-    })
     const loadedSelectedSession = workingSessions.find((session) => session.id === selectedSessionId)
     const provisionedSelectedSession = loadedSelectedSession ? await withProvisionedBackgroundSession(state, loadedSelectedSession) : undefined
     const workingSessionsWithProvisionedSession = provisionedSelectedSession
@@ -217,10 +186,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)
       : updatedWithUser
     const updatedSessionsWithStatus = updateSessionStatus(updatedSessions, selectedSessionId, 'in-progress')
-    const selectedSession = updatedSessionsWithStatus.find((session) => session.id === selectedSessionId)
-    if (selectedSession) {
-      await saveChatSession(selectedSession)
-    }
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...effectiveState,
@@ -251,9 +216,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     agentMode,
   )
   const mentionContextMessage = await getMentionContextMessage(userText)
-  const attachments = composerAttachments
   await ChatCoordinatorRequest.handleSubmit({
-    attachments,
+    attachments: composerAttachments,
     id: assistantMessageId,
     modelId: getOpenApiModelId(selectedModelId),
     openAiKey: openApiApiKey,
