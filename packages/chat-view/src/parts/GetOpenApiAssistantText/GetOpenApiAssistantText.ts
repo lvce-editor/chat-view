@@ -137,11 +137,56 @@ const getStreamingToolCallStatus = (value: unknown): StreamingToolCall['status']
   if (value === 'in_progress') {
     return 'in-progress'
   }
+  if (value === 'searching') {
+    return 'in-progress'
+  }
+  if (value === 'completed') {
+    return 'success'
+  }
   if (value === 'cancelled' || value === 'canceled') {
     return 'canceled'
   }
   if (value === 'failed' || value === 'error') {
     return 'error'
+  }
+  return undefined
+}
+
+const isStreamingToolCallType = (value: unknown): value is 'function_call' | 'web_search_call' => {
+  return value === 'function_call' || value === 'web_search_call'
+}
+
+const getStreamingToolCallName = (itemType: 'function_call' | 'web_search_call', value: unknown): string => {
+  if (itemType === 'web_search_call') {
+    return 'web_search_call'
+  }
+  return typeof value === 'string' ? value : ''
+}
+
+const getStreamingToolCallId = (itemType: 'function_call' | 'web_search_call', value: unknown): string | undefined => {
+  if (!value || typeof value !== 'object') {
+    return undefined
+  }
+  if (itemType === 'web_search_call') {
+    const id = Reflect.get(value, 'id')
+    return typeof id === 'string' && id ? id : undefined
+  }
+  const callId = Reflect.get(value, 'call_id')
+  return typeof callId === 'string' && callId ? callId : undefined
+}
+
+const getStreamingToolCallStatusFromEventType = (eventType: string): StreamingToolCall['status'] | undefined => {
+  if (eventType === 'response.web_search_call.in_progress' || eventType === 'response.web_search_call.searching') {
+    return 'in-progress'
+  }
+  if (eventType === 'response.web_search_call.completed') {
+    return 'success'
+  }
+  if (eventType === 'response.web_search_call.failed' || eventType === 'response.web_search_call.error') {
+    return 'error'
+  }
+  if (eventType === 'response.web_search_call.cancelled' || eventType === 'response.web_search_call.canceled') {
+    return 'canceled'
   }
   return undefined
 }
@@ -390,7 +435,7 @@ const getResponseFunctionCallsFromStreamingAccumulator = (
   return Object.entries(toolCallAccumulator)
     .toSorted((a: readonly [string, StreamingToolCall], b: readonly [string, StreamingToolCall]) => a[0].localeCompare(b[0]))
     .map((entry: readonly [string, StreamingToolCall]) => entry[1])
-    .filter((toolCall) => typeof toolCall.id === 'string' && !!toolCall.id && !!toolCall.name)
+    .filter((toolCall) => toolCall.name !== 'web_search_call' && typeof toolCall.id === 'string' && !!toolCall.id && !!toolCall.name)
     .map((toolCall) => ({
       arguments: toolCall.arguments,
       callId: toolCall.id as string,
@@ -512,22 +557,22 @@ const parseOpenApiStream = async (
         return
       }
       const itemType = Reflect.get(item, 'type')
-      if (itemType !== 'function_call') {
+      if (!isStreamingToolCallType(itemType)) {
         return
       }
-      const callId = Reflect.get(item, 'call_id')
-      const name = Reflect.get(item, 'name')
+      const id = getStreamingToolCallId(itemType, item)
+      const name = getStreamingToolCallName(itemType, Reflect.get(item, 'name'))
       const rawArguments = Reflect.get(item, 'arguments')
       const rawStatus = Reflect.get(item, 'status')
       const status = getStreamingToolCallStatus(rawStatus)
       const next: StreamingToolCall = {
-        arguments: typeof rawArguments === 'string' ? rawArguments : '',
-        ...(typeof callId === 'string'
+        arguments: itemType === 'function_call' && typeof rawArguments === 'string' ? rawArguments : '',
+        ...(typeof id === 'string'
           ? {
-              id: callId,
+              id,
             }
           : {}),
-        name: typeof name === 'string' ? name : '',
+        name,
         ...(status
           ? {
               status,
@@ -549,11 +594,11 @@ const parseOpenApiStream = async (
         return
       }
       const itemType = Reflect.get(item, 'type')
-      if (itemType !== 'function_call') {
+      if (!isStreamingToolCallType(itemType)) {
         return
       }
-      const callId = Reflect.get(item, 'call_id')
-      const name = Reflect.get(item, 'name')
+      const id = getStreamingToolCallId(itemType, item)
+      const name = getStreamingToolCallName(itemType, Reflect.get(item, 'name'))
       const rawArguments = Reflect.get(item, 'arguments')
       const rawStatus = Reflect.get(item, 'status')
       const status = getStreamingToolCallStatus(rawStatus)
@@ -561,17 +606,54 @@ const parseOpenApiStream = async (
       toolCallAccumulator = {
         ...toolCallAccumulator,
         [toolCallKey]: {
-          arguments: typeof rawArguments === 'string' ? rawArguments : current.arguments,
-          ...(typeof callId === 'string'
+          arguments: itemType === 'function_call' && typeof rawArguments === 'string' ? rawArguments : current.arguments,
+          ...(typeof id === 'string'
             ? {
-                id: callId,
+                id,
               }
             : current.id
               ? {
                   id: current.id,
                 }
               : {}),
-          name: typeof name === 'string' && name ? name : current.name,
+          name: name || current.name,
+          ...(status
+            ? {
+                status,
+              }
+            : current.status
+              ? {
+                  status: current.status,
+                }
+              : {}),
+        },
+      }
+      await emitToolCallAccumulator()
+      return
+    }
+
+    if (typeof eventType === 'string' && eventType.startsWith('response.web_search_call.')) {
+      const toolCallKey = getStreamingToolCallKey(parsed)
+      if (!toolCallKey) {
+        return
+      }
+      const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: 'web_search_call' }
+      const status = getStreamingToolCallStatusFromEventType(eventType)
+      const itemId = Reflect.get(parsed, 'item_id')
+      toolCallAccumulator = {
+        ...toolCallAccumulator,
+        [toolCallKey]: {
+          arguments: current.arguments,
+          ...(typeof itemId === 'string' && itemId
+            ? {
+                id: itemId,
+              }
+            : current.id
+              ? {
+                  id: current.id,
+                }
+              : {}),
+          name: current.name || 'web_search_call',
           ...(status
             ? {
                 status,

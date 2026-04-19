@@ -29,7 +29,7 @@ export const getToolCallLabel = (toolCall: ChatToolCall): string => {
   }
   const argumentPreview = getToolCallArgumentPreview(toolCall.arguments)
   const statusLabel = getToolCallStatusLabel(toolCall)
-  if (argumentPreview === '{}') {
+  if (argumentPreview === '{}' || (toolCall.name === 'web_search_call' && argumentPreview === '""')) {
     return `${displayName}${statusLabel}`
   }
   return `${displayName} ${argumentPreview}${statusLabel}`

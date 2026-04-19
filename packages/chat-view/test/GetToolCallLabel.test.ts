@@ -72,3 +72,13 @@ test('getToolCallLabel should render rename without partial json when arguments 
 
   expect(result).toBe('rename')
 })
+
+test('getToolCallLabel should render web_search_call with status label', () => {
+  const result = getToolCallLabel({
+    arguments: '',
+    name: 'web_search_call',
+    status: 'in-progress',
+  })
+
+  expect(result).toBe('web_search (in progress)')
+})
