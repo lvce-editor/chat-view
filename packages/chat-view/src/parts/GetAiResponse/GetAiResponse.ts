@@ -1,31 +1,12 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
+import type { GetAiResponseRequestOptions } from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 
 export const getAiResponse = async (options: Readonly<GetAiResponseOptions>): Promise<ChatMessage> => {
-  const result = await ChatCoordinatorRequest.getAiResponse({
-    ...(options.agentMode !== undefined
-      ? {
-          agentMode: options.agentMode,
-        }
-      : {}),
+  const requestOptions: GetAiResponseRequestOptions = {
     assetDir: options.assetDir,
-    ...(options.maxToolCalls !== undefined
-      ? {
-          maxToolCalls: options.maxToolCalls,
-        }
-      : {}),
-    ...(options.messageId !== undefined
-      ? {
-          messageId: options.messageId,
-        }
-      : {}),
     messages: options.messages,
-    ...(options.mockAiResponseDelay !== undefined
-      ? {
-          mockAiResponseDelay: options.mockAiResponseDelay,
-        }
-      : {}),
     mockApiCommandId: options.mockApiCommandId,
     models: options.models,
     nextMessageId: options.nextMessageId,
@@ -33,61 +14,54 @@ export const getAiResponse = async (options: Readonly<GetAiResponseOptions>): Pr
     openApiApiKey: options.openApiApiKey,
     openRouterApiBaseUrl: options.openRouterApiBaseUrl,
     openRouterApiKey: options.openRouterApiKey,
-    ...(options.passIncludeObfuscation !== undefined
-      ? {
-          passIncludeObfuscation: options.passIncludeObfuscation,
-        }
-      : {}),
     platform: options.platform,
-    ...(options.questionToolEnabled !== undefined
-      ? {
-          questionToolEnabled: options.questionToolEnabled,
-        }
-      : {}),
-    ...(options.reasoningEffort !== undefined
-      ? {
-          reasoningEffort: options.reasoningEffort,
-        }
-      : {}),
     selectedModelId: options.selectedModelId,
-    ...(options.streamingEnabled !== undefined
-      ? {
-          streamingEnabled: options.streamingEnabled,
-        }
-      : {}),
-    ...(options.systemPrompt !== undefined
-      ? {
-          systemPrompt: options.systemPrompt,
-        }
-      : {}),
-    ...(options.toolEnablement !== undefined
-      ? {
-          toolEnablement: options.toolEnablement,
-        }
-      : {}),
-    ...(options.useChatNetworkWorkerForRequests !== undefined
-      ? {
-          useChatNetworkWorkerForRequests: options.useChatNetworkWorkerForRequests,
-        }
-      : {}),
-    ...(options.useChatToolWorker !== undefined
-      ? {
-          useChatToolWorker: options.useChatToolWorker,
-        }
-      : {}),
     useMockApi: options.useMockApi,
     userText: options.userText,
-    ...(options.webSearchEnabled !== undefined
-      ? {
-          webSearchEnabled: options.webSearchEnabled,
-        }
-      : {}),
-    ...(options.workspaceUri !== undefined
-      ? {
-          workspaceUri: options.workspaceUri,
-        }
-      : {}),
-  })
+  }
+  if (options.agentMode) {
+    requestOptions.agentMode = options.agentMode
+  }
+  if (typeof options.maxToolCalls === 'number') {
+    requestOptions.maxToolCalls = options.maxToolCalls
+  }
+  if (options.messageId) {
+    requestOptions.messageId = options.messageId
+  }
+  if (typeof options.mockAiResponseDelay === 'number') {
+    requestOptions.mockAiResponseDelay = options.mockAiResponseDelay
+  }
+  if (options.passIncludeObfuscation === true) {
+    requestOptions.passIncludeObfuscation = true
+  }
+  if (options.questionToolEnabled === true) {
+    requestOptions.questionToolEnabled = true
+  }
+  if (options.reasoningEffort) {
+    requestOptions.reasoningEffort = options.reasoningEffort
+  }
+  if (options.streamingEnabled === true) {
+    requestOptions.streamingEnabled = true
+  }
+  if (options.systemPrompt) {
+    requestOptions.systemPrompt = options.systemPrompt
+  }
+  if (options.toolEnablement) {
+    requestOptions.toolEnablement = options.toolEnablement
+  }
+  if (options.useChatNetworkWorkerForRequests === true) {
+    requestOptions.useChatNetworkWorkerForRequests = true
+  }
+  if (options.useChatToolWorker === true) {
+    requestOptions.useChatToolWorker = true
+  }
+  if (options.webSearchEnabled === true) {
+    requestOptions.webSearchEnabled = true
+  }
+  if (options.workspaceUri) {
+    requestOptions.workspaceUri = options.workspaceUri
+  }
+  const result = await ChatCoordinatorRequest.getAiResponse(requestOptions)
   if (options.streamingEnabled) {
     if (options.onTextChunk) {
       await options.onTextChunk(result.text)

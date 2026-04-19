@@ -103,11 +103,11 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({
         attachments: [],
-        openAiKey: 'oa-key-123',
         modelId: 'openRouter/anthropic/claude-3.5-haiku',
+        openAiKey: 'oa-key-123',
         requestId: expect.any(String),
-        sessionId: 'session-1',
         role: 'user',
+        sessionId: 'session-1',
         text: 'hello',
       }),
     ])

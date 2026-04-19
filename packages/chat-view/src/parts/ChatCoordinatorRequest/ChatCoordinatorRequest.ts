@@ -6,45 +6,45 @@ import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export interface HandleSubmitRequestOptions {
-  readonly attachments: readonly unknown[]
-  readonly id: string
-  readonly modelId: string
-  readonly openAiKey: string
-  readonly requestId: string
-  readonly role: 'user' | 'assistant'
-  readonly sessionId: string
-  readonly systemPrompt: string
-  readonly text: string
+  attachments: readonly unknown[]
+  id: string
+  modelId: string
+  openAiKey: string
+  requestId: string
+  role: 'user' | 'assistant'
+  sessionId: string
+  systemPrompt: string
+  text: string
 }
 
 export interface GetAiResponseRequestOptions {
-  readonly agentMode?: AgentMode
-  readonly assetDir: string
-  readonly maxToolCalls?: number
-  readonly messageId?: string
-  readonly messages: readonly ChatMessage[]
-  readonly mockAiResponseDelay?: number
-  readonly mockApiCommandId: string
-  readonly models: readonly ChatModel[]
-  readonly nextMessageId: number
-  readonly openApiApiBaseUrl: string
-  readonly openApiApiKey: string
-  readonly openRouterApiBaseUrl: string
-  readonly openRouterApiKey: string
-  readonly passIncludeObfuscation?: boolean
-  readonly platform: number
-  readonly questionToolEnabled?: boolean
-  readonly reasoningEffort?: ReasoningEffort
-  readonly selectedModelId: string
-  readonly streamingEnabled?: boolean
-  readonly systemPrompt?: string
-  readonly toolEnablement?: ToolEnablement
-  readonly useChatNetworkWorkerForRequests?: boolean
-  readonly useChatToolWorker?: boolean
-  readonly useMockApi: boolean
-  readonly userText: string
-  readonly webSearchEnabled?: boolean
-  readonly workspaceUri?: string
+  agentMode?: AgentMode
+  assetDir: string
+  maxToolCalls?: number
+  messageId?: string
+  messages: readonly ChatMessage[]
+  mockAiResponseDelay?: number
+  mockApiCommandId: string
+  models: readonly ChatModel[]
+  nextMessageId: number
+  openApiApiBaseUrl: string
+  openApiApiKey: string
+  openRouterApiBaseUrl: string
+  openRouterApiKey: string
+  passIncludeObfuscation?: boolean
+  platform: number
+  questionToolEnabled?: boolean
+  reasoningEffort?: ReasoningEffort
+  selectedModelId: string
+  streamingEnabled?: boolean
+  systemPrompt?: string
+  toolEnablement?: ToolEnablement
+  useChatNetworkWorkerForRequests?: boolean
+  useChatToolWorker?: boolean
+  useMockApi: boolean
+  userText: string
+  webSearchEnabled?: boolean
+  workspaceUri?: string
 }
 
 export const getAiResponse = async (options: Readonly<GetAiResponseRequestOptions>): Promise<ChatMessage> => {
