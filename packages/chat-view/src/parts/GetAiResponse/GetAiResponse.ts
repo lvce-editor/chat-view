@@ -526,7 +526,7 @@ export const getAiResponse = async ({
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
-  if (useChatCoordinatorWorker && !useOwnBackend) {
+  if (useChatCoordinatorWorker) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,

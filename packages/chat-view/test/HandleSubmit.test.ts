@@ -71,8 +71,8 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
     const state = {
       ...createDefaultState(),
       composerValue: 'hello',
-      openApiApiKey: 'oa-key-123',
-      selectedModelId: 'openapi/gpt-4o-mini',
+      openRouterApiKey: 'or-key-123',
+      selectedModelId: 'openRouter/anthropic/claude-3.5-haiku',
       sessions: [
         {
           id: 'session-1',
@@ -84,14 +84,13 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
       ],
       viewMode: 'detail' as const,
     }
-
     const result = await HandleSubmit.handleSubmit(state)
 
     expect(mockCoordinatorRpc.invocations[0]).toEqual([
       'ChatCoordinator.getAiResponse',
       expect.objectContaining({
-        openApiApiKey: 'oa-key-123',
-        selectedModelId: 'openapi/gpt-4o-mini',
+        openRouterApiKey: 'or-key-123',
+        selectedModelId: 'openRouter/anthropic/claude-3.5-haiku',
         userText: 'hello',
       }),
     ])
