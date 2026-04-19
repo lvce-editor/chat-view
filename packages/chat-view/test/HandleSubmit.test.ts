@@ -102,11 +102,13 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
     expect(mockCoordinatorRpc.invocations[0]).toEqual([
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({
+        attachments: [],
         openAiKey: 'oa-key-123',
         modelId: 'openRouter/anthropic/claude-3.5-haiku',
-        selectedModelId: 'openRouter/anthropic/claude-3.5-haiku',
+        requestId: expect.any(String),
+        sessionId: 'session-1',
         role: 'user',
-        userText: 'hello',
+        text: 'hello',
       }),
     ])
     expect(result.sessions[0].messages[1].inProgress).toBe(true)

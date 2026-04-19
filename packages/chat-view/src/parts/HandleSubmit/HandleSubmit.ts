@@ -5,14 +5,12 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
-import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { appendChatViewEvent, getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
-import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStatus.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getMentionContextMessage } from '../GetMentionContextMessage/GetMentionContextMessage.ts'
@@ -20,9 +18,8 @@ import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollT
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
 import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
 import { getOpenApiModelId } from '../GetOpenApiModelId/GetOpenApiModelId.ts'
-import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { get, set } from '../StatusBarStates/StatusBarStates.ts'
+import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
 const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
@@ -33,11 +30,6 @@ const withUpdatedMessageScrollTop = (state: ChatState): ChatState => {
     ...state,
     messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
   }
-}
-
-const getLiveState = (uid: number): ChatState | undefined => {
-  const entry = get(uid)
-  return entry?.newState
 }
 
 const updateSessionStatus = (
@@ -54,18 +46,6 @@ const updateSessionStatus = (
       status,
     }
   })
-}
-
-const isSessionStopped = (uid: number, sessionId: string): boolean => {
-  const liveState = getLiveState(uid)
-  if (!liveState) {
-    return false
-  }
-  const session = liveState.sessions.find((item) => item.id === sessionId)
-  if (!session) {
-    return false
-  }
-  return getChatSessionStatus(session) === 'stopped'
 }
 
 const clearComposerAttachments = async (sessionId: string, attachmentIds: readonly string[]): Promise<void> => {
@@ -93,18 +73,6 @@ const getWorkspaceUri = (state: ChatState, session: ChatSession | undefined): st
   return getProjectUri(state, session?.projectId || state.selectedProjectId)
 }
 
-const resolveWorkspaceUri = async (state: ChatState, session: ChatSession | undefined): Promise<string> => {
-  const workspaceUri = getWorkspaceUri(state, session)
-  if (workspaceUri) {
-    return workspaceUri
-  }
-  try {
-    return await RendererWorker.getWorkspacePath()
-  } catch {
-    return ''
-  }
-}
-
 const withProvisionedBackgroundSession = async (state: ChatState, session: ChatSession): Promise<ChatSession> => {
   if (state.runMode !== 'background' || session.workspaceUri) {
     return session
@@ -124,48 +92,9 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 }
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
-  const shouldSyncBackendAuth = (state.authEnabled || state.useOwnBackend) && !!state.backendUrl
-  const authState = shouldSyncBackendAuth ? await syncBackendAuth(state.backendUrl) : undefined
-  const effectiveState = authState
-    ? {
-        ...state,
-        ...authState,
-      }
-    : state
-  const {
-    agentMode,
-    aiSessionTitleGenerationEnabled,
-    assetDir,
-    authAccessToken,
-    authEnabled,
-    backendUrl,
-    composerValue,
-    emitStreamingFunctionCallEvents,
-    maxToolCalls,
-    mockAiResponseDelay,
-    mockApiCommandId,
-    models,
-    nextMessageId,
-    openApiApiBaseUrl,
-    openApiApiKey,
-    openRouterApiBaseUrl,
-    openRouterApiKey,
-    passIncludeObfuscation,
-    platform,
-    questionToolEnabled,
-    reasoningEffort,
-    selectedModelId,
-    selectedSessionId,
-    sessions,
-    streamingEnabled,
-    toolEnablement,
-    useChatNetworkWorkerForRequests,
-    useChatToolWorker,
-    useMockApi,
-    useOwnBackend,
-    viewMode,
-    webSearchEnabled,
-  } = effectiveState
+  const effectiveState = state
+  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedSessionId, sessions, streamingEnabled, viewMode } =
+    effectiveState
   const userText = composerValue.trim()
   if (!userText) {
     return effectiveState
@@ -229,7 +158,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
 
   let optimisticState: ChatState
-  const createsNewSession = viewMode === 'list'
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
     await appendChatViewEvent({
