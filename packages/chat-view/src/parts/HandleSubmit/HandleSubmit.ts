@@ -226,6 +226,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     sessionId: optimisticState.selectedSessionId,
     systemPrompt,
     text: mentionContextMessage ? `${userText}\n\n${mentionContextMessage.text}` : userText,
+    turnId: assistantMessageId,
   })
   console.warn('ChatCoordinator.handleSubmit completed')
   return optimisticState

@@ -109,6 +109,7 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
         role: 'user',
         sessionId: 'session-1',
         text: 'hello',
+        turnId: expect.any(String),
       }),
     ])
     expect(result.sessions[0].messages[1].inProgress).toBe(true)
