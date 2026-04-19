@@ -66,7 +66,7 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
       }
     },
   })
-  const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   try {
     const state = {
       ...createDefaultState(),
@@ -96,10 +96,10 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
       }),
     ])
     expect(result.sessions[0].messages[1].text).toBe('Coordinator response')
-    expect(consoleLogSpy).toHaveBeenCalledWith('ChatCoordinator.getAiResponse completed')
+    expect(consoleWarnSpy).toHaveBeenCalledWith('ChatCoordinator.getAiResponse completed')
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toContainEqual(['Chat.rerender'])
   } finally {
-    consoleLogSpy.mockRestore()
+    consoleWarnSpy.mockRestore()
   }
 })
 

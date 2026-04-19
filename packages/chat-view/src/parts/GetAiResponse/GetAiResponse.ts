@@ -581,7 +581,7 @@ export const getAiResponse = async ({
           await onEventStreamFinished()
         }
       }
-      console.log('ChatCoordinator.getAiResponse completed')
+      console.warn('ChatCoordinator.getAiResponse completed')
       return result
     } catch {
       // Fall back to the local implementation if coordinator worker RPC is unavailable.
