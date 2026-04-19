@@ -29,6 +29,42 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     },
   ])
 
+  await Command.execute('Chat.appendChatViewEvents', [
+    {
+      sessionId: 'session-web-search-call-completed',
+      timestamp: '2026-04-19T00:00:00.000Z',
+      title: 'session-web-search-call-completed',
+      type: 'chat-session-created',
+    },
+    {
+      messages: [
+        {
+          id: 'message-user-1',
+          role: 'user',
+          text: 'search the web for release notes',
+          time: '11:10 AM',
+        },
+        {
+          id: 'message-assistant-1',
+          role: 'assistant',
+          text: 'The search finished.',
+          time: '11:11 AM',
+          toolCalls: [
+            {
+              arguments: '{"query":"release notes"}',
+              id: 'web-search-1',
+              name: 'web_search_call',
+              status: 'success',
+            },
+          ],
+        },
+      ],
+      sessionId: 'session-web-search-call-completed',
+      timestamp: '2026-04-19T00:00:01.000Z',
+      type: 'chat-session-messages-replaced',
+    },
+  ])
+
   const messages = Locator('.ChatMessages .Message')
   const toolCalls = messages.nth(1).locator('.ChatOrderedListItem')
 
