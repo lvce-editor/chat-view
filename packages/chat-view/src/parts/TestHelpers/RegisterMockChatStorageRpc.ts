@@ -59,6 +59,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
     'ChatStorage.listSessions': () => {
       return Array.from(sessions.values(), cloneSession)
     },
+    'ChatStorage.registerChangeListener': () => {},
     'ChatStorage.setSession': (session: ChatSession) => {
       const previous = sessions.get(session.id)
       const nextSession = cloneSession(session)

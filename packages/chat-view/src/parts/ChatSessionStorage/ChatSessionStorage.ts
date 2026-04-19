@@ -153,3 +153,10 @@ export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> =
 export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {
   return ChatStorageWorker.getEvents(sessionId) as Promise<readonly ChatViewEvent[]>
 }
+
+export const registerChatStorageChangeListener = async (uid: number, sessionId: string): Promise<void> => {
+  if (!sessionId) {
+    return
+  }
+  await ChatStorageWorker.invoke('ChatStorage.registerChangeListener', uid, sessionId)
+}

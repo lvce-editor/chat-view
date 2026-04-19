@@ -3,7 +3,9 @@ import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-regis
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import * as HandleChatStorageUpdate from '../src/parts/HandleChatStorageUpdate/HandleChatStorageUpdate.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
+import { get as getStatusBarState, set as setStatusBarState } from '../src/parts/StatusBarStates/StatusBarStates.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 import * as ToggleChatFocusMode from '../src/parts/ToggleChatFocusMode/ToggleChatFocusMode.ts'
 
@@ -21,6 +23,7 @@ test('loadContent should initialize view and keep existing session', async () =>
   expect(result.sessions).toHaveLength(1)
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.uid).toBe(1)
+  expect(mockChatStorageRpc.invocations).toContainEqual(['ChatStorage.registerChangeListener', 1, 'session-1'])
 })
 
 test('loadContent should preserve existing state properties', async () => {
@@ -146,6 +149,37 @@ test('loadContent should load only selected session messages from async storage'
   ])
   expect(result.selectedSessionId).toBe('session-b')
   expect(result.viewMode).toBe('detail')
+})
+
+test('handleChatStorageUpdate should refresh the selected session from storage', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [{ id: 'message-1', role: 'assistant', text: 'old', time: '10:00' }], title: 'Chat 1' }],
+    uid: 77,
+    viewMode: 'detail',
+  }
+  setStatusBarState(77, state, state)
+  await saveChatSession({
+    id: 'session-1',
+    messages: [{ id: 'message-1', role: 'assistant', text: 'new', time: '10:01' }],
+    title: 'Chat 1',
+  })
+
+  await HandleChatStorageUpdate.handleChatStorageUpdate(77, 'session-1')
+
+  const liveState = getStatusBarState(77)?.newState
+  expect(liveState?.sessions[0].messages).toEqual([{ id: 'message-1', role: 'assistant', text: 'new', time: '10:01' }])
+  expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
 })
 
 test('loadContent should keep window bounds from current state', async () => {
