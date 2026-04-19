@@ -1,12 +1,12 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-web-search-call-completed'
+export const name = 'chat-view.openai-web-search-call-completed-empty-arguments'
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'session-web-search-call-completed', [
+  await Command.execute('Chat.openMockSession', 'session-web-search-call-completed-empty-arguments', [
     {
       id: 'message-user-1',
       role: 'user',
@@ -20,7 +20,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
       time: '11:11 AM',
       toolCalls: [
         {
-          arguments: '{"query":"release notes"}',
+          arguments: '',
           id: 'web-search-1',
           name: 'web_search_call',
           status: 'success',
@@ -34,6 +34,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(messages).toHaveCount(3)
   await expect(toolCalls).toHaveCount(1)
-  await expect(toolCalls.nth(0)).toHaveText('1.web_search "release notes" (finished)')
+  await expect(toolCalls.nth(0)).toHaveText('1.web_search (finished)')
   await expect(messages.nth(2)).toHaveText('The search finished.')
 }
