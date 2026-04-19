@@ -3,6 +3,7 @@ import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { projectExpandedIds, selectedSessionId, sessions, width } = state
@@ -11,7 +12,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
 
   const visibleSessions = getVisibleSessions(sessions, projectId)
   if (visibleSessions.length === 0) {
-    return {
+    return withUpdatedDisplayMessages({
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
@@ -19,7 +20,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: 'chat-focus',
-    }
+    })
   }
 
   const selectedSessionVisible = visibleSessions.some((session) => session.id === selectedSessionId)
@@ -33,7 +34,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
     return loadedSession
   })
 
-  return {
+  return withUpdatedDisplayMessages({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
@@ -42,5 +43,5 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,
     viewMode: 'chat-focus',
-  }
+  })
 }

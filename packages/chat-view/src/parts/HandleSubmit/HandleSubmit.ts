@@ -31,6 +31,7 @@ import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSession
 import { isStreamingFunctionCallEvent } from '../IsStreamingFunctionCallEvent/IsStreamingFunctionCallEvent.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { get, set } from '../StatusBarStates/StatusBarStates.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 import { updateSessionTitle } from '../UpdateSessionTitle/UpdateSessionTitle.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
@@ -258,23 +259,25 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
     await saveChatSession(provisionedSession)
     optimisticState = withUpdatedMessageScrollTop(
-      FocusInput.focusInput({
-        ...effectiveState,
-        composerAttachments: [],
-        composerAttachmentsHeight: 0,
-        composerHeight: getMinComposerHeightForState(effectiveState),
-        composerSelectionEnd: 0,
-        composerSelectionStart: 0,
-        composerValue: '',
-        inputSource: 'script',
-        lastSubmittedSessionId: newSessionId,
-        nextMessageId: nextMessageId + 1,
-        parsedMessages,
-        selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
-        selectedSessionId: newSessionId,
-        sessions: [...workingSessions, provisionedSession],
-        viewMode: 'detail',
-      }),
+      withUpdatedDisplayMessages(
+        FocusInput.focusInput({
+          ...effectiveState,
+          composerAttachments: [],
+          composerAttachmentsHeight: 0,
+          composerHeight: getMinComposerHeightForState(effectiveState),
+          composerSelectionEnd: 0,
+          composerSelectionStart: 0,
+          composerValue: '',
+          inputSource: 'script',
+          lastSubmittedSessionId: newSessionId,
+          nextMessageId: nextMessageId + 1,
+          parsedMessages,
+          selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
+          selectedSessionId: newSessionId,
+          sessions: [...workingSessions, provisionedSession],
+          viewMode: 'detail',
+        }),
+      ),
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   } else {
@@ -304,20 +307,22 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       await saveChatSession(selectedSession)
     }
     optimisticState = withUpdatedMessageScrollTop(
-      FocusInput.focusInput({
-        ...effectiveState,
-        composerAttachments: [],
-        composerAttachmentsHeight: 0,
-        composerHeight: getMinComposerHeightForState(effectiveState),
-        composerSelectionEnd: 0,
-        composerSelectionStart: 0,
-        composerValue: '',
-        inputSource: 'script',
-        lastSubmittedSessionId: selectedSessionId,
-        nextMessageId: nextMessageId + 1,
-        parsedMessages,
-        sessions: updatedSessionsWithStatus,
-      }),
+      withUpdatedDisplayMessages(
+        FocusInput.focusInput({
+          ...effectiveState,
+          composerAttachments: [],
+          composerAttachmentsHeight: 0,
+          composerHeight: getMinComposerHeightForState(effectiveState),
+          composerSelectionEnd: 0,
+          composerSelectionStart: 0,
+          composerValue: '',
+          inputSource: 'script',
+          lastSubmittedSessionId: selectedSessionId,
+          nextMessageId: nextMessageId + 1,
+          parsedMessages,
+          sessions: updatedSessionsWithStatus,
+        }),
+      ),
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   }
@@ -480,12 +485,14 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
 
   return withUpdatedMessageScrollTop(
-    FocusInput.focusInput({
-      ...latestState,
-      mockOpenApiRequests,
-      nextMessageId: latestState.nextMessageId + 1,
-      parsedMessages: finalParsedMessages,
-      sessions: updatedSessions,
-    }),
+    withUpdatedDisplayMessages(
+      FocusInput.focusInput({
+        ...latestState,
+        mockOpenApiRequests,
+        nextMessageId: latestState.nextMessageId + 1,
+        parsedMessages: finalParsedMessages,
+        sessions: updatedSessions,
+      }),
+    ),
   )
 }

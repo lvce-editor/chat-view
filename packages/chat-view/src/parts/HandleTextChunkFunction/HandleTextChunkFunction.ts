@@ -8,6 +8,7 @@ import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStat
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { get, set } from '../StatusBarStates/StatusBarStates.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export interface HandleTextChunkState {
   latestState: ChatState
@@ -99,10 +100,11 @@ export const handleTextChunkFunction = async (
     parsedMessages: updated.parsedMessages,
     sessions: updated.sessions,
   }
-  set(uid, liveState, nextState)
+  const nextStateWithDisplayMessages = withUpdatedDisplayMessages(nextState)
+  set(uid, liveState, nextStateWithDisplayMessages)
   await RendererWorker.invoke('Chat.rerender')
   return {
-    latestState: nextState,
-    previousState: nextState,
+    latestState: nextStateWithDisplayMessages,
+    previousState: nextStateWithDisplayMessages,
   }
 }

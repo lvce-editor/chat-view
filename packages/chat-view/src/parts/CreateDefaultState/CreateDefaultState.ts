@@ -60,6 +60,7 @@ export const createDefaultState = (): ChatState => {
     composerSelectionEnd: 0,
     composerSelectionStart: 0,
     composerValue: '',
+    displayMessages: [],
     emitStreamingFunctionCallEvents: false,
     errorCount: 0,
     focus: 'composer',

@@ -4,6 +4,7 @@ import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessi
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 const getBlankProjectId = (state: ChatState, removedProjectId: string): string => {
   return state.projects.find((project) => project.id !== removedProjectId && project.name === '_blank')?.id || ''
@@ -68,7 +69,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
   const nextProjectExpandedIds = ensureExpandedProject(state, projectExpandedIds, selectedProjectId, visibleSessions)
 
   if (visibleSessions.length === 0) {
-    return {
+    return withUpdatedDisplayMessages({
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
@@ -78,7 +79,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
       selectedSessionId: '',
       sessions,
       viewMode: getNextViewMode(state, false),
-    }
+    })
   }
 
   const selectedSessionId = visibleSessions.some((session) => session.id === state.selectedSessionId)
@@ -93,7 +94,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     return loadedSession
   })
 
-  return {
+  return withUpdatedDisplayMessages({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
@@ -103,5 +104,5 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     selectedSessionId,
     sessions: hydratedSessions,
     viewMode: getNextViewMode(state, true),
-  }
+  })
 }

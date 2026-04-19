@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
+import { getDisplayMessages } from '../src/parts/GetDisplayMessages/GetDisplayMessages.ts'
 import { getMessagesDom } from '../src/parts/GetMessagesDom/GetMessagesDom.ts'
 
 test('getMessagesDom should render submitted images as a separate user message below the text message', () => {
@@ -48,6 +49,51 @@ test('getMessagesDom should render submitted images as a separate user message b
         text: 'whats in this image',
       },
     ],
+    getDisplayMessages(
+      [
+        {
+          attachments: [
+            {
+              attachmentId: 'attachment-1',
+              displayType: 'image',
+              mimeType: 'image/png',
+              name: 'amp.png',
+              previewSrc: 'data:image/png;base64,abc',
+              size: 77,
+            },
+            {
+              attachmentId: 'attachment-2',
+              displayType: 'text-file',
+              mimeType: 'text/plain',
+              name: 'notes.txt',
+              size: 21,
+              textContent: 'hello',
+            },
+          ],
+          id: 'message-1',
+          role: 'user',
+          text: 'whats in this image',
+          time: '10:00',
+        },
+      ],
+      [
+        {
+          id: 'message-1',
+          parsedContent: [
+            {
+              children: [
+                {
+                  text: 'whats in this image',
+                  type: 'text',
+                },
+              ],
+              type: 'text',
+            },
+          ],
+          text: 'whats in this image',
+        },
+      ],
+    ),
     '',
   )
 

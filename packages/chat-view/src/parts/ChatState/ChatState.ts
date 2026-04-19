@@ -5,6 +5,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { DisplayMessage } from '../GetDisplayMessages/GetDisplayMessages.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
@@ -50,6 +51,7 @@ export interface ChatState {
   readonly composerSelectionEnd: number
   readonly composerSelectionStart: number
   readonly composerValue: string
+  readonly displayMessages: readonly DisplayMessage[]
   readonly disposed?: boolean
   readonly emitStreamingFunctionCallEvents: boolean
   readonly errorCount: number

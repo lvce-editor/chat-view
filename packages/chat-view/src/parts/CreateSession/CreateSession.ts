@@ -3,6 +3,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { focusInput } from '../FocusInput/FocusInput.ts'
 import { generateSessionId } from '../GenerateSessionId/GenerateSessionId.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const createSession = async (state: ChatState, projectIdOverride = ''): Promise<ChatState> => {
   const id = generateSessionId()
@@ -15,14 +16,16 @@ export const createSession = async (state: ChatState, projectIdOverride = ''): P
     title: `Chat ${state.sessions.length + 1}`,
   }
   await saveChatSession(session)
-  return focusInput({
-    ...state,
-    composerAttachments: [],
-    composerAttachmentsHeight: 0,
-    projectExpandedIds: state.projectExpandedIds.includes(projectId) ? state.projectExpandedIds : [...state.projectExpandedIds, projectId],
-    renamingSessionId: '',
-    selectedProjectId: projectId,
-    selectedSessionId: id,
-    sessions: [...state.sessions, session],
-  })
+  return withUpdatedDisplayMessages(
+    focusInput({
+      ...state,
+      composerAttachments: [],
+      composerAttachmentsHeight: 0,
+      projectExpandedIds: state.projectExpandedIds.includes(projectId) ? state.projectExpandedIds : [...state.projectExpandedIds, projectId],
+      renamingSessionId: '',
+      selectedProjectId: projectId,
+      selectedSessionId: id,
+      sessions: [...state.sessions, session],
+    }),
+  )
 }

@@ -530,6 +530,36 @@ test('handleSubmit should update assistant message incrementally when streaming 
     expect(result.sessions[0].messages[1].text).toBe('Streaming')
     expect(result.sessions[0].messages[1].inProgress).toBe(false)
     expect(result.sessions[0].status).toBe('finished')
+    expect(result.displayMessages).toEqual([
+      {
+        message: result.sessions[0].messages[0],
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:hello from streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+      },
+      {
+        message: result.sessions[0].messages[1],
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:Streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+      },
+    ])
     expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender'], ['Chat.rerender'], ['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch

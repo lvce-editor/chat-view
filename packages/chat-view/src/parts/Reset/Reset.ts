@@ -4,11 +4,12 @@ import { clearChatSessions } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { resetRelativeTimeNowForTest } from '../RelativeTimeNow/RelativeTimeNow.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   resetRelativeTimeNowForTest()
-  return {
+  return withUpdatedDisplayMessages({
     ...state,
     agentMode: defaultAgentMode,
     agentModePickerOpen: false,
@@ -38,5 +39,5 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     streamingEnabled: false,
     viewMode: 'list',
     visibleModels: state.models,
-  }
+  })
 }

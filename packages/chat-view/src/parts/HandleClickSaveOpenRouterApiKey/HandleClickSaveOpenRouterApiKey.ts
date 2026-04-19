@@ -6,6 +6,7 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { setOpenRouterApiKey } from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise<ChatState> => {
   const { openRouterApiKeyInput } = state
@@ -84,11 +85,11 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     return updatedSession
   })
 
-  return {
+  return withUpdatedDisplayMessages({
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
     openRouterApiKeyState: 'idle',
     parsedMessages,
     sessions: updatedSessions,
-  }
+  })
 }

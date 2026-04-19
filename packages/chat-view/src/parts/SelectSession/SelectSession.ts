@@ -5,6 +5,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { lastNormalViewMode, sessions, viewMode, width } = state
@@ -25,17 +26,19 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   })
   const selectedSession = hydratedSessions.find((session) => session.id === id)
   const parsedMessages = selectedSession ? await parseAndStoreMessagesContent(state.parsedMessages, selectedSession.messages) : state.parsedMessages
-  return refreshGitBranchPickerVisibility({
-    ...state,
-    composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
-    lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
-    messagesAutoScrollEnabled: true,
-    messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
-    parsedMessages,
-    renamingSessionId: '',
-    selectedSessionId: id,
-    sessions: hydratedSessions,
-    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-  })
+  return withUpdatedDisplayMessages(
+    refreshGitBranchPickerVisibility({
+      ...state,
+      composerAttachments,
+      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+      lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
+      messagesAutoScrollEnabled: true,
+      messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
+      parsedMessages,
+      renamingSessionId: '',
+      selectedSessionId: id,
+      sessions: hydratedSessions,
+      viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+    }),
+  )
 }

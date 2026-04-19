@@ -5,7 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
+import type { DisplayMessage } from '../GetDisplayMessages/GetDisplayMessages.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -36,6 +36,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly displayMessages: readonly DisplayMessage[]
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly messagesAutoScrollEnabled: boolean
@@ -49,7 +50,6 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
-  readonly parsedMessages?: readonly ParsedMessage[]
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
@@ -89,6 +89,7 @@ export const getChatModeDetailVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  displayMessages,
   hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker,
   messagesAutoScrollEnabled,
@@ -102,7 +103,6 @@ export const getChatModeDetailVirtualDom = ({
   openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
-  parsedMessages = [],
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
@@ -150,7 +150,7 @@ export const getChatModeDetailVirtualDom = ({
     ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, userState, userName, authErrorMessage),
     ...getMessagesDom(
       messages,
-      parsedMessages,
+      displayMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
       openApiApiKeyState,

@@ -3,6 +3,7 @@ import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSes
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { renamingSessionId, sessions, width } = state
@@ -34,12 +35,12 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
     }
     return loadedSession
   })
-  return {
+  return withUpdatedDisplayMessages({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
     sessions: hydratedSessions,
-  }
+  })
 }

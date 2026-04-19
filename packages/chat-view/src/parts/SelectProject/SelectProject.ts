@@ -4,6 +4,7 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { selectedProjectId, selectedSessionId, sessions, viewMode, width } = state
@@ -31,13 +32,15 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     }
     return loadedSession
   })
-  return refreshGitBranchPickerVisibility({
-    ...state,
-    composerAttachments,
-    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
-    selectedProjectId: projectId,
-    selectedSessionId: nextSelectedSessionId,
-    sessions: hydratedSessions,
-    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-  })
+  return withUpdatedDisplayMessages(
+    refreshGitBranchPickerVisibility({
+      ...state,
+      composerAttachments,
+      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+      selectedProjectId: projectId,
+      selectedSessionId: nextSelectedSessionId,
+      sessions: hydratedSessions,
+      viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+    }),
+  )
 }
