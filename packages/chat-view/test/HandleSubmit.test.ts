@@ -35,18 +35,37 @@ test('handleSubmit should add a user message from composer value', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
-  const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {},
+  })
+  const state = {
+    ...createDefaultState(),
+    composerValue: 'hello',
+    openApiApiKey: 'oa-key-123',
+    viewMode: 'detail' as const,
+  }
   const result = await HandleSubmit.handleSubmit(state)
   expect(result.sessions[0].messages).toHaveLength(2)
   expect(result.sessions[0].messages[0].role).toBe('user')
   expect(result.sessions[0].messages[0].text).toBe('hello')
   expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.sessions[0].messages[1].text).toBe('Mock AI response: I received "hello".')
+  expect(result.sessions[0].messages[1].inProgress).toBe(true)
+  expect(result.sessions[0].messages[1].text).toBe('')
   expect(result.composerValue).toBe('')
   expect(result.chatInputHistory).toEqual(['hello'])
   expect(result.chatInputHistoryIndex).toBe(-1)
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
+  expect(mockCoordinatorRpc.invocations).toEqual([
+    [
+      'ChatCoordinator.handleSubmit',
+      expect.objectContaining({
+        openAiKey: 'oa-key-123',
+        role: 'user',
+        text: 'hello',
+      }),
+    ],
+  ])
   expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 
@@ -57,20 +76,14 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
     'Chat.rerender': async () => {},
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.getAiResponse': async () => {
-      return {
-        id: 'assistant-1',
-        role: 'assistant',
-        text: 'Coordinator response',
-        time: '10:01',
-      }
-    },
+    'ChatCoordinator.handleSubmit': async () => {},
   })
   const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   try {
     const state = {
       ...createDefaultState(),
       composerValue: 'hello',
+      openApiApiKey: 'oa-key-123',
       openRouterApiKey: 'or-key-123',
       selectedModelId: 'openRouter/anthropic/claude-3.5-haiku',
       sessions: [
@@ -87,15 +100,18 @@ test('handleSubmit should route ai requests through chat coordinator worker', as
     const result = await HandleSubmit.handleSubmit(state)
 
     expect(mockCoordinatorRpc.invocations[0]).toEqual([
-      'ChatCoordinator.getAiResponse',
+      'ChatCoordinator.handleSubmit',
       expect.objectContaining({
-        openRouterApiKey: 'or-key-123',
+        openAiKey: 'oa-key-123',
+        modelId: 'openRouter/anthropic/claude-3.5-haiku',
         selectedModelId: 'openRouter/anthropic/claude-3.5-haiku',
+        role: 'user',
         userText: 'hello',
       }),
     ])
-    expect(result.sessions[0].messages[1].text).toBe('Coordinator response')
-    expect(consoleWarnSpy).toHaveBeenCalledWith('ChatCoordinator.getAiResponse completed')
+    expect(result.sessions[0].messages[1].inProgress).toBe(true)
+    expect(result.sessions[0].messages[1].text).toBe('')
+    expect(consoleWarnSpy).toHaveBeenCalledWith('ChatCoordinator.handleSubmit completed')
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toContainEqual(['Chat.rerender'])
   } finally {
     consoleWarnSpy.mockRestore()

@@ -317,7 +317,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   await RendererWorker.invoke('Chat.rerender')
 
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
-  const systemPrompt = getSystemPromptForAgentMode(optimisticState.systemPrompt, getWorkspaceUri(optimisticState, selectedOptimisticSession), agentMode)
+  const systemPrompt = getSystemPromptForAgentMode(
+    optimisticState.systemPrompt,
+    getWorkspaceUri(optimisticState, selectedOptimisticSession),
+    agentMode,
+  )
   const mentionContextMessage = await getMentionContextMessage(userText)
   const attachments = composerAttachments
   await ChatCoordinatorRequest.handleSubmit({
