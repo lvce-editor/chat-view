@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktree worktrees
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
-import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatCoordinatorWorker, ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
@@ -48,6 +48,62 @@ test('handleSubmit should add a user message from composer value', async () => {
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
   expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
+})
+
+test('handleSubmit should route ai requests through chat coordinator worker', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.getAiResponse': async () => {
+      return {
+        id: 'assistant-1',
+        role: 'assistant',
+        text: 'Coordinator response',
+        time: '10:01',
+      }
+    },
+  })
+  const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'hello',
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      sessions: [
+        {
+          id: 'session-1',
+          messages: [],
+          projectId: 'project-1',
+          status: 'idle' as const,
+          title: 'Chat 1',
+        },
+      ],
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(mockCoordinatorRpc.invocations).toEqual([
+      [
+        'ChatCoordinator.getAiResponse',
+        expect.objectContaining({
+          openApiApiKey: 'oa-key-123',
+          selectedModelId: 'openapi/gpt-4o-mini',
+          useChatCoordinatorWorker: true,
+          userText: 'hello',
+        }),
+      ],
+    ])
+    expect(result.sessions[0].messages[1].text).toBe('Coordinator response')
+    expect(consoleLogSpy).toHaveBeenCalledWith('ChatCoordinator.getAiResponse completed')
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
+  } finally {
+    consoleLogSpy.mockRestore()
+  }
 })
 
 test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker', async () => {

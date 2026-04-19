@@ -526,7 +526,6 @@ export const getAiResponse = async ({
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
-  useChatCoordinatorWorker = false // TODO enable this
   if (useChatCoordinatorWorker && !useOwnBackend) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
@@ -582,6 +581,7 @@ export const getAiResponse = async ({
           await onEventStreamFinished()
         }
       }
+      console.log('ChatCoordinator.getAiResponse completed')
       return result
     } catch {
       // Fall back to the local implementation if coordinator worker RPC is unavailable.

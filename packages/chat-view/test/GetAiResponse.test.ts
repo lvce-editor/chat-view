@@ -15,7 +15,7 @@ import { getImageNotSupportedMessage } from '../src/parts/GetOpenApiErrorMessage
 import * as MockOpenApiRequest from '../src/parts/MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
-test.skip('getAiResponse should use chat coordinator worker when enabled', async () => {
+test('getAiResponse should use chat coordinator worker when enabled', async () => {
   const chunks: string[] = []
   let streamFinished = 0
 
