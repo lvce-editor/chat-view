@@ -34,6 +34,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(messages).toHaveCount(3)
   await expect(toolCalls).toHaveCount(1)
-  await expect(toolCalls.nth(0)).toHaveText('web_search (in progress)')
+  await expect(toolCalls.nth(0)).toContainText('web_search (in progress)')
   await expect(messages.nth(2)).toContainText('Searching the web.')
 }

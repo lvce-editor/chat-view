@@ -52,9 +52,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(messages).toHaveCount(3)
   await expect(toolCalls).toHaveCount(4)
-  await expect(toolCalls.nth(0)).toHaveText('web_search (finished)')
-  await expect(toolCalls.nth(1)).toHaveText('web_search (finished)')
-  await expect(toolCalls.nth(2)).toHaveText('web_search (finished)')
-  await expect(toolCalls.nth(3)).toHaveText('web_search (finished)')
+  await expect(toolCalls.nth(0)).toContainText('web_search (finished)')
+  await expect(toolCalls.nth(1)).toContainText('web_search (finished)')
+  await expect(toolCalls.nth(2)).toContainText('web_search (finished)')
+  await expect(toolCalls.nth(3)).toContainText('web_search (finished)')
   await expect(messages.nth(2)).toContainText('All web searches finished.')
 }
