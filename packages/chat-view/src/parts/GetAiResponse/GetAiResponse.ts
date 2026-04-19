@@ -1,6 +1,6 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import type { GetAiResponseRequestOptions } from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
+import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 
 export const getAiResponse = async (options: Readonly<GetAiResponseOptions>): Promise<ChatMessage> => {
