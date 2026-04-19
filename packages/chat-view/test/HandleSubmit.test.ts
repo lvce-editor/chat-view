@@ -537,7 +537,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
           {
             children: [
               {
-                text: 'worker:hello from streaming',
+                text: 'hello from streaming',
                 type: 'text',
               },
             ],
@@ -551,7 +551,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
           {
             children: [
               {
-                text: 'worker:Streaming',
+                text: 'Streaming',
                 type: 'text',
               },
             ],
@@ -741,6 +741,36 @@ test('handleSubmit should use chat message parsing worker for streaming message 
           },
         ],
         text: 'Streaming',
+      },
+    ])
+    expect(result.displayMessages).toEqual([
+      {
+        message: result.sessions[0].messages[0],
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:hello from streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+      },
+      {
+        message: result.sessions[0].messages[1],
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'worker:Streaming',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
       },
     ])
     expect(mockChatMessageParsingRpc.invocations).toEqual([

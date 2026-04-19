@@ -32,15 +32,14 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     }
     return loadedSession
   })
-  return withUpdatedDisplayMessages(
-    refreshGitBranchPickerVisibility({
-      ...state,
-      composerAttachments,
-      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
-      selectedProjectId: projectId,
-      selectedSessionId: nextSelectedSessionId,
-      sessions: hydratedSessions,
-      viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-    }),
-  )
+  const nextState = await refreshGitBranchPickerVisibility({
+    ...state,
+    composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    selectedProjectId: projectId,
+    selectedSessionId: nextSelectedSessionId,
+    sessions: hydratedSessions,
+    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+  })
+  return withUpdatedDisplayMessages(nextState)
 }

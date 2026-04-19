@@ -26,19 +26,18 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   })
   const selectedSession = hydratedSessions.find((session) => session.id === id)
   const parsedMessages = selectedSession ? await parseAndStoreMessagesContent(state.parsedMessages, selectedSession.messages) : state.parsedMessages
-  return withUpdatedDisplayMessages(
-    refreshGitBranchPickerVisibility({
-      ...state,
-      composerAttachments,
-      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
-      lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
-      messagesAutoScrollEnabled: true,
-      messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
-      parsedMessages,
-      renamingSessionId: '',
-      selectedSessionId: id,
-      sessions: hydratedSessions,
-      viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
-    }),
-  )
+  const nextState = await refreshGitBranchPickerVisibility({
+    ...state,
+    composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
+    messagesAutoScrollEnabled: true,
+    messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
+    parsedMessages,
+    renamingSessionId: '',
+    selectedSessionId: id,
+    sessions: hydratedSessions,
+    viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
+  })
+  return withUpdatedDisplayMessages(nextState)
 }

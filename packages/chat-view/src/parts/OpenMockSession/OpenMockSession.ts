@@ -86,16 +86,15 @@ export const openMockSession = async (
     await saveChatSession(selectedSession)
   }
 
-  return withUpdatedDisplayMessages(
-    refreshGitBranchPickerVisibility({
-      ...state,
-      composerAttachments: [],
-      composerAttachmentsHeight: 0,
-      parsedMessages,
-      renamingSessionId: '',
-      selectedSessionId: mockSessionId,
-      sessions,
-      viewMode: 'detail',
-    }),
-  )
+  const nextState = await refreshGitBranchPickerVisibility({
+    ...state,
+    composerAttachments: [],
+    composerAttachmentsHeight: 0,
+    parsedMessages,
+    renamingSessionId: '',
+    selectedSessionId: mockSessionId,
+    sessions,
+    viewMode: 'detail',
+  })
+  return withUpdatedDisplayMessages(nextState)
 }

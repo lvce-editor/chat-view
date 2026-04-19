@@ -32,23 +32,6 @@ test('getMessagesDom should render submitted images as a separate user message b
         time: '10:00',
       },
     ],
-    [
-      {
-        id: 'message-1',
-        parsedContent: [
-          {
-            children: [
-              {
-                text: 'whats in this image',
-                type: 'text',
-              },
-            ],
-            type: 'text',
-          },
-        ],
-        text: 'whats in this image',
-      },
-    ],
     getDisplayMessages(
       [
         {
