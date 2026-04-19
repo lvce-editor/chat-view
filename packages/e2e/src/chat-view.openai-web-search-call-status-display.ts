@@ -40,7 +40,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(messages).toHaveCount(3)
   await expect(toolCalls).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('web_search (in progress)')
-  await expect(messages.nth(1)).toContainText('web_search (finished)')
-  await expect(messages.nth(2)).toContainText('Showing the current web search state.')
+  await expect(toolCalls.nth(0)).toHaveText('1.web_search (in progress)')
+  await expect(toolCalls.nth(1)).toHaveText('2.web_search (finished)')
+  await expect(messages.nth(2)).toHaveText('Showing the current web search state.')
 }
