@@ -1,10 +1,8 @@
 /* cspell:words worktrees */
 
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
@@ -17,7 +15,6 @@ import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollT
 import { getOpenApiModelId } from '../GetOpenApiModelId/GetOpenApiModelId.ts'
 import { getSlashCommand } from '../GetSlashCommand/GetSlashCommand.ts'
 import { getSystemPromptForAgentMode } from '../GetSystemPromptForAgentMode/GetSystemPromptForAgentMode.ts'
-import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 import { withUpdatedChatInputHistory } from '../WithUpdatedChatInputHistory/WithUpdatedChatInputHistory.ts'
 
@@ -91,39 +88,11 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   }
 
   const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  const userMessageId = crypto.randomUUID()
   const composerAttachments =
     effectiveState.composerAttachments.length > 0
       ? effectiveState.composerAttachments
       : await getComposerAttachments(effectiveState.selectedSessionId)
-  const userMessage: ChatMessage = {
-    ...(composerAttachments.length > 0
-      ? {
-          attachments: composerAttachments,
-        }
-      : {}),
-    id: userMessageId,
-    role: 'user',
-    text: userText,
-    time: userTime,
-  }
   const assistantMessageId = crypto.randomUUID()
-  const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  const inProgressAssistantMessage: ChatMessage = {
-    ...(agentMode === 'plan'
-      ? {
-          agentMode,
-        }
-      : {}),
-    id: assistantMessageId,
-    inProgress: true,
-    role: 'assistant',
-    text: '',
-    time: assistantTime,
-  }
-  let { parsedMessages } = effectiveState
-  parsedMessages = await parseAndStoreMessageContent(parsedMessages, userMessage)
-  parsedMessages = await parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 
   const workingSessions = sessions
   let optimisticState: ChatState
@@ -131,7 +100,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     const newSessionId = generateSessionId()
     const newSession: ChatSession = {
       id: newSessionId,
-      messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
+      messages: [],
       projectId: state.selectedProjectId,
       status: 'in-progress',
       title: `Chat ${workingSessions.length + 1}`,
@@ -149,7 +118,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         inputSource: 'script',
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
-        parsedMessages,
+        parsedMessages: [],
         selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, provisionedSession],
@@ -168,11 +137,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
           return provisionedSelectedSession
         })
       : workingSessions
-    const updatedWithUser = appendMessageToSelectedSession(workingSessionsWithProvisionedSession, selectedSessionId, userMessage)
-    const updatedSessions = streamingEnabled
-      ? appendMessageToSelectedSession(updatedWithUser, selectedSessionId, inProgressAssistantMessage)
-      : updatedWithUser
-    const updatedSessionsWithStatus = updateSessionStatus(updatedSessions, selectedSessionId, 'in-progress')
+    const updatedSessionsWithStatus = updateSessionStatus(workingSessionsWithProvisionedSession, selectedSessionId, 'in-progress')
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...effectiveState,
@@ -185,7 +150,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         inputSource: 'script',
         lastSubmittedSessionId: selectedSessionId,
         nextMessageId: nextMessageId + 1,
-        parsedMessages,
+        parsedMessages: effectiveState.parsedMessages,
         sessions: updatedSessionsWithStatus,
       }),
     )
