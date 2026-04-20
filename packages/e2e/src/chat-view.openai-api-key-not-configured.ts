@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-api-key-not-configured'
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator, ChatDebug }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
@@ -11,6 +11,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   // act
   await Chat.handleSubmit()
+  // await ChatDebug.open('')
 
   // assert
   const messages = Locator('.ChatMessages .Message')
