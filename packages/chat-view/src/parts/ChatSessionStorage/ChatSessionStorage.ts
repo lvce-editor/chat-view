@@ -154,9 +154,29 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
   return ChatStorageWorker.getEvents(sessionId) as Promise<readonly ChatViewEvent[]>
 }
 
-export const registerChatStorageChangeListener = async (uid: number, sessionId: string): Promise<void> => {
-  if (!sessionId) {
-    return
-  }
-  await ChatStorageWorker.invoke('ChatStorage.registerChangeListener', uid, sessionId)
+const activeChatStorageChangeListeners: Record<number, string> = Object.create(null)
+const chatStorageChangeListenerSyncPromises: Record<number, Promise<void>> = Object.create(null)
+
+export const syncChatStorageChangeListener = async (uid: number, sessionId: string): Promise<void> => {
+  const previousPromise = chatStorageChangeListenerSyncPromises[uid]
+  const initialPromise = previousPromise === undefined ? Promise.resolve() : previousPromise
+  const nextPromise = initialPromise.then(async () => {
+    const currentSessionId = activeChatStorageChangeListeners[uid] || ''
+    if (currentSessionId === sessionId) {
+      return
+    }
+    if (sessionId.length > 0) {
+      activeChatStorageChangeListeners[uid] = sessionId
+    } else {
+      delete activeChatStorageChangeListeners[uid]
+    }
+    if (currentSessionId.length > 0) {
+      await ChatStorageWorker.invoke('ChatStorage.unregisterChangeListener', uid, currentSessionId)
+    }
+    if (sessionId.length > 0) {
+      await ChatStorageWorker.invoke('ChatStorage.registerChangeListener', uid, sessionId)
+    }
+  })
+  chatStorageChangeListenerSyncPromises[uid] = nextPromise.catch(() => {})
+  await nextPromise
 }

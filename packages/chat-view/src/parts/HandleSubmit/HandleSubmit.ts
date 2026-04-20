@@ -6,7 +6,6 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { appendMessageToSelectedSession } from '../AppendMessageToSelectedSession/AppendMessageToSelectedSession.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
-import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
@@ -126,19 +125,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   parsedMessages = await parseAndStoreMessageContent(parsedMessages, userMessage)
   parsedMessages = await parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 
-  let workingSessions = sessions
-  if (viewMode === 'detail') {
-    const loadedSession = await getChatSession(selectedSessionId)
-    if (loadedSession) {
-      workingSessions = sessions.map((session) => {
-        if (session.id !== selectedSessionId) {
-          return session
-        }
-        return loadedSession
-      })
-    }
-  }
-
+  const workingSessions = sessions
   let optimisticState: ChatState
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
@@ -226,7 +213,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     sessionId: optimisticState.selectedSessionId,
     systemPrompt,
     text: mentionContextMessage ? `${userText}\n\n${mentionContextMessage.text}` : userText,
-    turnId: assistantMessageId,
   })
   console.warn('ChatCoordinator.handleSubmit completed')
   return optimisticState

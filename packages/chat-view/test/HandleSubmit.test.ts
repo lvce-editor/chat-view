@@ -18,6 +18,9 @@ let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingR
 
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
+  ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {},
+  })
 })
 
 afterEach(() => {

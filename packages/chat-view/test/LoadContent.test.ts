@@ -182,6 +182,40 @@ test('handleChatStorageUpdate should refresh the selected session from storage',
   expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
 })
 
+test('loadContent should switch chat storage listeners when the selected session changes', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-a',
+    sessions: [{ id: 'session-a', messages: [], title: 'Chat A' }],
+    uid: 91,
+  }
+  const nextState: ChatState = {
+    ...state,
+    selectedSessionId: 'session-b',
+    sessions: [
+      { id: 'session-a', messages: [], title: 'Chat A' },
+      { id: 'session-b', messages: [], title: 'Chat B' },
+    ],
+  }
+
+  setStatusBarState(91, state, state)
+  setStatusBarState(91, state, nextState)
+  setStatusBarState(91, nextState, { ...nextState, selectedSessionId: '' })
+
+  await new Promise((resolve) => setTimeout(resolve, 0))
+
+  expect(mockChatStorageRpc.invocations).toEqual(
+    expect.arrayContaining([
+      ['ChatStorage.registerChangeListener', 91, 'session-a'],
+      ['ChatStorage.unregisterChangeListener', 91, 'session-a'],
+      ['ChatStorage.registerChangeListener', 91, 'session-b'],
+      ['ChatStorage.unregisterChangeListener', 91, 'session-b'],
+    ]),
+  )
+})
+
 test('loadContent should keep window bounds from current state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

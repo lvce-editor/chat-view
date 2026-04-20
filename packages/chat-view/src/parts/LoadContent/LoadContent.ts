@@ -1,7 +1,7 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { listChatSessions, registerChatStorageChangeListener, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { listChatSessions, saveChatSession, syncChatStorageChangeListener } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -186,6 +186,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     visibleModels,
     voiceDictationEnabled,
   }
-  await registerChatStorageChangeListener(nextState.uid, nextState.selectedSessionId)
+  await syncChatStorageChangeListener(nextState.uid, nextState.selectedSessionId)
   return refreshGitBranchPickerVisibility(nextState)
 }

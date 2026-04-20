@@ -15,7 +15,6 @@ export interface HandleSubmitRequestOptions {
   sessionId: string
   systemPrompt: string
   text: string
-  turnId: string
 }
 
 export interface GetAiResponseRequestOptions {

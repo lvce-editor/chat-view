@@ -51,7 +51,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
       }
       return events.filter((event) => event.sessionId === sessionId)
     },
-
     'ChatStorage.getSession': (id: string) => {
       const session = sessions.get(id)
       return session ? cloneSession(session) : undefined
@@ -129,5 +128,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
 
       sessions.set(session.id, nextSession)
     },
+    'ChatStorage.unregisterChangeListener': () => {},
   })
 }
