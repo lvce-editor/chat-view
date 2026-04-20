@@ -136,7 +136,6 @@ export const createDefaultState = (): ChatState => {
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
-    selectedSessionViewModel: undefined,
     sessions: [
       {
         id: defaultSessionId,

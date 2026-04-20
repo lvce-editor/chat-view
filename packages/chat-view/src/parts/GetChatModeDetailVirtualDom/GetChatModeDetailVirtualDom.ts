@@ -60,7 +60,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
-  readonly selectedSessionViewModel: ChatViewModel | undefined
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]

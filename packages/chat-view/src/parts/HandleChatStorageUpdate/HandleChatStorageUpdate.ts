@@ -72,7 +72,11 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
       composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
       messagesScrollTop: currentMessagesScrollTop,
       selectedSessionId,
-      selectedSessionViewModel,
+      ...(selectedSessionViewModel
+        ? {
+            selectedSessionViewModel,
+          }
+        : {}),
       sessions,
       viewMode: sessions.length === 0 || !selectedSessionId ? 'list' : viewMode,
     })
@@ -121,7 +125,11 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     messagesScrollTop,
     parsedMessages,
     selectedSessionId,
-    selectedSessionViewModel: currentSelectedSessionViewModel,
+    ...(currentSelectedSessionViewModel
+      ? {
+          selectedSessionViewModel: currentSelectedSessionViewModel,
+        }
+      : {}),
     sessions,
     viewMode: sessions.length === 0 || !selectedSessionId ? 'list' : viewMode,
   })

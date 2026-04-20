@@ -5,11 +5,11 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
-import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
@@ -88,7 +88,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
-  readonly selectedSessionViewModel: ChatViewModel | undefined
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -226,7 +226,11 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
-        selectedSessionViewModel,
+        ...(selectedSessionViewModel
+          ? {
+              selectedSessionViewModel,
+            }
+          : {}),
         sessions,
         showRunMode,
         todoListItems,
@@ -280,7 +284,11 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
-        selectedSessionViewModel,
+        ...(selectedSessionViewModel
+          ? {
+              selectedSessionViewModel,
+            }
+          : {}),
         sessions,
         showRunMode,
         todoListItems,

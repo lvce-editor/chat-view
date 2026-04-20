@@ -174,7 +174,11 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
-    selectedSessionViewModel,
+    ...(selectedSessionViewModel
+      ? {
+          selectedSessionViewModel,
+        }
+      : {}),
     sessions,
     showChatListTime,
     showRunMode: runModePickerEnabled,

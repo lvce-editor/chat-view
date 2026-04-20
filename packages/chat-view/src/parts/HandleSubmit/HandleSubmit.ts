@@ -130,7 +130,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         parsedMessages: [],
         selectedProjectId: provisionedSession.projectId || selectedProjectId,
         selectedSessionId: newSessionId,
-        selectedSessionViewModel: undefined,
         sessions: [...workingSessions, provisionedSession],
         viewMode: 'detail',
       }),
@@ -163,7 +162,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         nextMessageId: nextMessageId + 1,
         parsedMessages: effectiveState.parsedMessages,
         sessions: updatedSessionsWithStatus,
-        selectedSessionViewModel: undefined,
       }),
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)

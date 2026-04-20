@@ -42,7 +42,11 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
-    selectedSessionViewModel,
+    ...(selectedSessionViewModel
+      ? {
+          selectedSessionViewModel,
+        }
+      : {}),
     sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })

@@ -167,10 +167,7 @@ test('loadContent should load selected session view model from chat coordinator 
   })
   void mockChatMessageParsingRpc
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.getChatViewModel': async ({
-      sessionId,
-      useChatMathWorker,
-    }: Readonly<{ sessionId: string; useChatMathWorker: boolean }>) => ({
+    'ChatCoordinator.getChatViewModel': async ({ sessionId, useChatMathWorker }: Readonly<{ sessionId: string; useChatMathWorker: boolean }>) => ({
       items: [
         {
           message: {

@@ -13,7 +13,7 @@ import { getEmptyMessageContent, getParsedMessageContent } from '../ParsedMessag
 interface DisplayMessage {
   readonly message: ChatMessage
   readonly parsedContent: readonly MessageIntermediateNode[]
-  readonly standaloneImageAttachment?: ComposerAttachment
+  readonly standaloneImageAttachment: ComposerAttachment | undefined
 }
 
 const hasMessageText = (message: ChatMessage): boolean => {
@@ -51,6 +51,7 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
           displayMessages.push({
             message: withAttachments(message, nonImageAttachments),
             parsedContent: hasMessageText(message) ? parsedContent : getEmptyMessageContent(),
+            standaloneImageAttachment: undefined,
           })
         }
         for (const attachment of imageAttachments) {
@@ -67,7 +68,7 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
       }
     }
     if (message.role !== 'assistant' || !message.toolCalls || message.toolCalls.length === 0) {
-      displayMessages.push({ message, parsedContent })
+      displayMessages.push({ message, parsedContent, standaloneImageAttachment: undefined })
       continue
     }
     const toolCallMessage: ChatMessage = {
@@ -77,6 +78,7 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
     displayMessages.push({
       message: toolCallMessage,
       parsedContent: getEmptyMessageContent(),
+      standaloneImageAttachment: undefined,
     })
     if (hasMessageText(message)) {
       const { toolCalls: _toolCalls, ...messageWithoutToolCalls } = message
@@ -86,6 +88,7 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
       displayMessages.push({
         message: textMessage,
         parsedContent,
+        standaloneImageAttachment: undefined,
       })
     }
   }
@@ -104,7 +107,7 @@ export const getMessagesDom = (
   messagesScrollTop = 0,
   useChatMathWorker = false,
   hideWelcomeMessage = false,
-  selectedSessionViewModel?: Readonly<ChatViewModel>,
+  selectedSessionViewModel: Readonly<ChatViewModel> | undefined,
 ): readonly VirtualDomNode[] => {
   const displayMessages = selectedSessionViewModel
     ? selectedSessionViewModel.items.map((item) => ({
@@ -139,7 +142,7 @@ export const getMessagesDom = (
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
-    ...displayMessages.flatMap((item: Readonly<DisplayMessage>) =>
+    ...displayMessages.flatMap((item) =>
       GetChatMessageDom.getChatMessageDom(
         item.message,
         item.parsedContent,

@@ -7,10 +7,10 @@ import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
-import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
@@ -121,7 +121,7 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
-  readonly selectedSessionViewModel: ChatViewModel | undefined
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean

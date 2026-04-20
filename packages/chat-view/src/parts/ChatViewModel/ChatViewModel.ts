@@ -176,15 +176,15 @@ const toMessageInlineNode = (node: ChatViewInlineNode): MessageInlineNode => {
         ...node,
         children: node.children.map(toMessageInlineNode),
       }
-    case 'math-inline-dom':
-      return {
-        dom: toVirtualDomNodes(node.dom),
-        type: 'math-inline-dom',
-      }
     case 'italic':
       return {
         ...node,
         children: node.children.map(toMessageInlineNode),
+      }
+    case 'math-inline-dom':
+      return {
+        dom: toVirtualDomNodes(node.dom),
+        type: 'math-inline-dom',
       }
     case 'strikethrough':
       return {

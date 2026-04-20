@@ -57,7 +57,11 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
-    selectedSessionViewModel,
+    ...(selectedSessionViewModel
+      ? {
+          selectedSessionViewModel,
+        }
+      : {}),
     sessions,
     showChatListTime,
     showRunMode,
