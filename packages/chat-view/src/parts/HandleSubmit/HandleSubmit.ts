@@ -4,6 +4,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
+import { syncChatStorageChangeListener } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { createBackgroundChatWorktree } from '../CreateBackgroundChatWorktree/CreateBackgroundChatWorktree.ts'
 import { executeSlashCommand } from '../ExecuteSlashCommand/ExecuteSlashCommand.ts'
 import * as FocusInput from '../FocusInput/FocusInput.ts'
@@ -104,6 +105,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
       title: `Chat ${workingSessions.length + 1}`,
     }
     const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
+    await syncChatStorageChangeListener(effectiveState.uid, newSessionId)
     optimisticState = withUpdatedMessageScrollTop(
       FocusInput.focusInput({
         ...effectiveState,

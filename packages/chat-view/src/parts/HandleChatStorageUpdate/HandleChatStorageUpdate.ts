@@ -20,6 +20,7 @@ const getNextSelectedSessionId = (sessions: readonly ChatSession[], selectedSess
 }
 
 export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
+  console.log('storage update', uid, sessionId)
   const liveState = get(uid)?.newState
   if (!liveState) {
     return
