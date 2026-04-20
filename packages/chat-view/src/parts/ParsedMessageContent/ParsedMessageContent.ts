@@ -184,14 +184,14 @@ export const parseAndStoreMessageContent = async (
   parsedMessages: readonly ParsedMessage[],
   message: ChatMessage,
 ): Promise<readonly ParsedMessage[]> => {
-  return parseAndStoreMessagesContentInWorker(parsedMessages, [message])
+  return parseMessagesContentInWorker(parsedMessages, [message])
 }
 
 export const parseAndStoreMessagesContent = async (
   parsedMessages: readonly ParsedMessage[],
   messages: readonly ChatMessage[],
 ): Promise<readonly ParsedMessage[]> => {
-  return parseAndStoreMessagesContentInWorker(parsedMessages, messages)
+  return parseMessagesContentInWorker(parsedMessages, messages)
 }
 
 const getMessagesNeedingParsing = (parsedMessages: readonly ParsedMessage[], messages: readonly ChatMessage[]): readonly ChatMessage[] => {
@@ -201,7 +201,7 @@ const getMessagesNeedingParsing = (parsedMessages: readonly ParsedMessage[], mes
   })
 }
 
-const parseAndStoreMessagesContentInWorker = async (
+const parseMessagesContentInWorker = async (
   parsedMessages: readonly ParsedMessage[],
   messages: readonly ChatMessage[],
 ): Promise<readonly ParsedMessage[]> => {

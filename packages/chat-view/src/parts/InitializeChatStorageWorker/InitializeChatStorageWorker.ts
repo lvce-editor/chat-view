@@ -1,5 +1,5 @@
 import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
-import { ChatStorageWorker, RendererWorker, RpcId } from '@lvce-editor/rpc-registry'
+import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const sendMessagePortToChatStorageWorker = async (port: MessagePort): Promise<void> => {
   await RendererWorker.invokeAndTransfer(
