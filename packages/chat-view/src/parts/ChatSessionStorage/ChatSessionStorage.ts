@@ -156,6 +156,7 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
 
 const activeChatStorageChangeListeners: Record<number, string> = Object.create(null)
 const chatStorageChangeListenerSyncPromises: Record<number, Promise<void>> = Object.create(null)
+const chatViewWorkerRpcId = 6020
 
 export const syncChatStorageChangeListener = async (uid: number, sessionId: string): Promise<void> => {
   const previousPromise = chatStorageChangeListenerSyncPromises[uid]
@@ -172,7 +173,7 @@ export const syncChatStorageChangeListener = async (uid: number, sessionId: stri
     }
     if (currentSessionId.length > 0) {
       await ChatStorageWorker.invoke('ChatStorage.unsubscribeSessionUpdates', {
-        rpcId: uid,
+        rpcId: chatViewWorkerRpcId,
         uid,
       })
     }
