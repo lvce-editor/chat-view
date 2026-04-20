@@ -59,12 +59,13 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
       viewMode = 'list'
       composerAttachments = []
     }
-    const selectedSessionViewModel = selectedSessionId === sessionId
-      ? await ChatCoordinatorRequest.getChatViewModel({
-          sessionId,
-          useChatMathWorker: liveState.useChatMathWorker,
-        })
-      : currentSelectedSessionViewModel
+    const selectedSessionViewModel =
+      selectedSessionId === sessionId
+        ? await ChatCoordinatorRequest.getChatViewModel({
+            sessionId,
+            useChatMathWorker: liveState.useChatMathWorker,
+          })
+        : currentSelectedSessionViewModel
     const nextState: ChatState = await refreshGitBranchPickerVisibility({
       ...liveState,
       composerAttachments,

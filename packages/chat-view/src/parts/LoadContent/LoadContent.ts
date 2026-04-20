@@ -118,12 +118,13 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
-  const selectedSessionViewModel = state.useChatCoordinatorWorker && selectedSessionId
-    ? await ChatCoordinatorRequest.getChatViewModel({
-        sessionId: selectedSessionId,
-        useChatMathWorker,
-      })
-    : undefined
+  const selectedSessionViewModel =
+    state.useChatCoordinatorWorker && selectedSessionId
+      ? await ChatCoordinatorRequest.getChatViewModel({
+          sessionId: selectedSessionId,
+          useChatMathWorker,
+        })
+      : undefined
   const nextState: ChatState = {
     ...state,
     agentMode,
