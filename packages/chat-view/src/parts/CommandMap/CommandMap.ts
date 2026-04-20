@@ -164,6 +164,7 @@ export const commandMap = {
   'Chat.handleChatListContextMenu': wrapCommand(HandleChatListContextMenu.handleChatListContextMenu),
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleChatStorageUpdate': HandleChatStorageUpdate.handleChatStorageUpdate,
+  handleChatStorageUpdate: HandleChatStorageUpdate.handleChatStorageUpdate,
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
