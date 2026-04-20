@@ -80,7 +80,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
         }
         sessions.set(session.id, nextSession)
         return
-        'ChatStorage.unsubscribeSessionUpdates': () => {},
       }
 
       if (previous.title !== session.title) {
@@ -93,6 +92,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
       }
 
       const previousMessagesById = new Map(previous.messages.map((message) => [message.id, message]))
+          'ChatStorage.unsubscribeSessionUpdates': () => {},
       for (const message of session.messages) {
         const previousMessage = previousMessagesById.get(message.id)
         if (!previousMessage) {
