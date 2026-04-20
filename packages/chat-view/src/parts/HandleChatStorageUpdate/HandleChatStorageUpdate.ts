@@ -1,6 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { getChatSession, getChatViewMessageReplayEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -31,9 +32,53 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     parsedMessages: currentParsedMessages,
     selectedSessionId: currentSelectedSessionId,
     sessions: currentSessions,
+    selectedSessionViewModel: currentSelectedSessionViewModel,
     viewMode: currentViewMode,
     width,
   } = liveState
+  if (liveState.useChatCoordinatorWorker) {
+    const loadedSession = await getChatSession(sessionId)
+    const sessions = loadedSession
+      ? currentSessions.map((session) => {
+          if (session.id !== sessionId) {
+            return session
+          }
+          return loadedSession
+        })
+      : currentSessions.filter((session) => session.id !== sessionId)
+    const selectedSessionId = getNextSelectedSessionId(sessions, currentSelectedSessionId)
+    let composerAttachments = currentComposerAttachments
+    let viewMode = currentViewMode
+    if (selectedSessionId) {
+      const selectedSession = getSelectedSession(sessions, selectedSessionId)
+      if (selectedSession) {
+        composerAttachments = await getComposerAttachments(selectedSessionId)
+      }
+    }
+    if (!selectedSessionId) {
+      viewMode = 'list'
+      composerAttachments = []
+    }
+    const selectedSessionViewModel = selectedSessionId === sessionId
+      ? await ChatCoordinatorRequest.getChatViewModel({
+          sessionId,
+          useChatMathWorker: liveState.useChatMathWorker,
+        })
+      : currentSelectedSessionViewModel
+    const nextState: ChatState = await refreshGitBranchPickerVisibility({
+      ...liveState,
+      composerAttachments,
+      composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+      messagesScrollTop: currentMessagesScrollTop,
+      selectedSessionId,
+      selectedSessionViewModel,
+      sessions,
+      viewMode: sessions.length === 0 || !selectedSessionId ? 'list' : viewMode,
+    })
+    set(uid, liveState, nextState)
+    await RendererWorker.invoke('Chat.rerender')
+    return
+  }
   const events = await getChatViewMessageReplayEvents(sessionId)
   console.log({ events })
   if (events.length === 0) {
@@ -76,6 +121,7 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     messagesScrollTop,
     parsedMessages,
     selectedSessionId,
+    selectedSessionViewModel: currentSelectedSessionViewModel,
     sessions,
     viewMode: sessions.length === 0 || !selectedSessionId ? 'list' : viewMode,
   })

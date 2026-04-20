@@ -128,6 +128,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages: [],
+        selectedSessionViewModel: undefined,
         selectedProjectId: provisionedSession.projectId || selectedProjectId,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, provisionedSession],
@@ -161,6 +162,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: selectedSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages: effectiveState.parsedMessages,
+        selectedSessionViewModel: undefined,
         sessions: updatedSessionsWithStatus,
       }),
     )

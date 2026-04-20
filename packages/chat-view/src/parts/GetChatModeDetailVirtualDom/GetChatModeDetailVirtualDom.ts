@@ -4,6 +4,7 @@ import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
@@ -59,6 +60,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
@@ -112,6 +114,7 @@ export const getChatModeDetailVirtualDom = ({
   selectChevronEnabled,
   selectedModelId,
   selectedSessionId,
+  selectedSessionViewModel,
   sessions,
   showRunMode,
   todoListItems,
@@ -159,6 +162,8 @@ export const getChatModeDetailVirtualDom = ({
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,
+      false,
+      selectedSessionViewModel,
     ),
     ...getChatSendAreaDom(
       composerValue,

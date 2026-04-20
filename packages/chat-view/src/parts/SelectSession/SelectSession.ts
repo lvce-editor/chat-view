@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -25,6 +26,12 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   })
   const selectedSession = hydratedSessions.find((session) => session.id === id)
   const parsedMessages = selectedSession ? await parseAndStoreMessagesContent(state.parsedMessages, selectedSession.messages) : state.parsedMessages
+  const selectedSessionViewModel = state.useChatCoordinatorWorker
+    ? await ChatCoordinatorRequest.getChatViewModel({
+        sessionId: id,
+        useChatMathWorker: state.useChatMathWorker,
+      })
+    : undefined
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
@@ -35,6 +42,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
+    selectedSessionViewModel,
     sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })

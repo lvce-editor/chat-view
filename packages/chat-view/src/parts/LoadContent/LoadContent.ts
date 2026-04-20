@@ -1,5 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as ChatCoordinatorRequest from '../ChatCoordinatorRequest/ChatCoordinatorRequest.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession, syncChatStorageChangeListener } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
@@ -117,6 +118,12 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
+  const selectedSessionViewModel = state.useChatCoordinatorWorker && selectedSessionId
+    ? await ChatCoordinatorRequest.getChatViewModel({
+        sessionId: selectedSessionId,
+        useChatMathWorker,
+      })
+    : undefined
   const nextState: ChatState = {
     ...state,
     agentMode,
@@ -166,6 +173,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     selectedModelId,
     selectedProjectId,
     selectedSessionId,
+    selectedSessionViewModel,
     sessions,
     showChatListTime,
     showRunMode: runModePickerEnabled,

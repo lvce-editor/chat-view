@@ -4,6 +4,7 @@ import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
@@ -70,6 +71,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
@@ -131,6 +133,7 @@ export const getChatModeChatFocusVirtualDom = ({
   selectedModelId,
   selectedProjectId = '',
   selectedSessionId,
+  selectedSessionViewModel,
   sessions,
   showRunMode,
   todoListItems,
@@ -196,6 +199,7 @@ export const getChatModeChatFocusVirtualDom = ({
       messagesScrollTop,
       useChatMathWorker,
       true,
+      selectedSessionViewModel,
     ),
     ...getChatSendAreaDom(
       composerValue,

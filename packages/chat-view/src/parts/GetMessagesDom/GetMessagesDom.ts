@@ -1,8 +1,10 @@
 import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { toMessageIntermediateNodes } from '../ChatViewModel/ChatViewModel.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
@@ -102,8 +104,16 @@ export const getMessagesDom = (
   messagesScrollTop = 0,
   useChatMathWorker = false,
   hideWelcomeMessage = false,
+  selectedSessionViewModel?: ChatViewModel,
 ): readonly VirtualDomNode[] => {
-  if (messages.length === 0) {
+  const displayMessages = selectedSessionViewModel
+    ? selectedSessionViewModel.items.map((item) => ({
+        message: item.message,
+        parsedContent: toMessageIntermediateNodes(item.parsedContent),
+        standaloneImageAttachment: item.standaloneImageAttachment,
+      }))
+    : getDisplayMessages(messages, parsedMessages)
+  if (displayMessages.length === 0) {
     if (!hideWelcomeMessage) {
       return GetEmptyMessagesDom.getEmptyMessagesDom()
     }
@@ -119,7 +129,6 @@ export const getMessagesDom = (
       },
     ]
   }
-  const displayMessages = getDisplayMessages(messages, parsedMessages)
   return [
     {
       childCount: displayMessages.length,

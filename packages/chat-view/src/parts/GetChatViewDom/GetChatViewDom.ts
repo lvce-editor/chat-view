@@ -10,6 +10,7 @@ import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
+import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
 import { getChatModeChatFocusVirtualDom } from '../GetChatModeChatFocusVirtualDom/GetChatModeChatFocusVirtualDom.ts'
 import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts'
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
@@ -87,6 +88,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
+  readonly selectedSessionViewModel?: ChatViewModel
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -156,6 +158,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedModelId,
     selectedProjectId = '',
     selectedSessionId,
+    selectedSessionViewModel,
     sessions,
     showChatListTime,
     showRunMode,
@@ -223,6 +226,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedModelId,
         selectedProjectId,
         selectedSessionId,
+        selectedSessionViewModel,
         sessions,
         showRunMode,
         todoListItems,
@@ -276,6 +280,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectChevronEnabled,
         selectedModelId,
         selectedSessionId,
+        selectedSessionViewModel,
         sessions,
         showRunMode,
         todoListItems,

@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatCoordinatorWorker, ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { appendChatViewEvent, saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -159,6 +159,89 @@ test('loadContent should load only selected session messages from async storage'
   expect(result.viewMode).toBe('detail')
 })
 
+test('loadContent should load selected session view model from chat coordinator worker when enabled in state', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.getChatViewModel': async ({ sessionId, useChatMathWorker }: { sessionId: string; useChatMathWorker: boolean }) => ({
+      items: [
+        {
+          message: {
+            id: 'message-b',
+            role: 'assistant',
+            text: 'B',
+            time: '10:01',
+          },
+          parsedContent: [
+            {
+              children: [
+                {
+                  text: 'B',
+                  type: 'text',
+                },
+              ],
+              type: 'text',
+            },
+          ],
+        },
+      ],
+      sessionId,
+      useChatMathWorker,
+    }),
+  })
+  await saveChatSession({
+    id: 'session-b',
+    messages: [{ id: 'message-b', role: 'assistant', text: 'B', time: '10:01' }],
+    title: 'Saved B',
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-b',
+    sessions: [{ id: 'session-b', messages: [], title: 'Saved B' }],
+    useChatCoordinatorWorker: true,
+    viewMode: 'detail',
+  }
+
+  const result = await LoadContent.loadContent(state, { selectedSessionId: 'session-b', viewMode: 'detail' as const })
+
+  expect(mockCoordinatorRpc.invocations).toContainEqual([
+    'ChatCoordinator.getChatViewModel',
+    {
+      sessionId: 'session-b',
+      useChatMathWorker: result.useChatMathWorker,
+    },
+  ])
+  expect(result.selectedSessionViewModel).toEqual({
+    items: [
+      {
+        message: {
+          id: 'message-b',
+          role: 'assistant',
+          text: 'B',
+          time: '10:01',
+        },
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'B',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+      },
+    ],
+    sessionId: 'session-b',
+    useChatMathWorker: result.useChatMathWorker,
+  })
+})
+
 test('handleChatStorageUpdate should refresh the selected session from storage', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -310,6 +393,95 @@ test('handleChatStorageUpdate should rebuild messages from handle-submit and ai-
   expect(mockChatStorageRpc.invocations.filter((invocation) => invocation[0] === 'ChatStorage.getMessageReplayEvents')).toEqual([
     ['ChatStorage.getMessageReplayEvents', 'session-1'],
   ])
+  expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
+})
+
+test('handleChatStorageUpdate should refresh selected session view model from chat coordinator worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.getChatViewModel': async ({ sessionId }: { sessionId: string }) => ({
+      items: [
+        {
+          message: {
+            id: 'message-1',
+            role: 'assistant',
+            text: 'new',
+            time: '10:01',
+          },
+          parsedContent: [
+            {
+              children: [
+                {
+                  text: 'new',
+                  type: 'text',
+                },
+              ],
+              type: 'text',
+            },
+          ],
+        },
+      ],
+      sessionId,
+    }),
+  })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    selectedSessionViewModel: {
+      items: [],
+      sessionId: 'session-1',
+    },
+    sessions: [{ id: 'session-1', messages: [{ id: 'message-1', role: 'assistant', text: 'old', time: '10:00' }], title: 'Chat 1' }],
+    uid: 79,
+    useChatCoordinatorWorker: true,
+    viewMode: 'detail',
+  }
+  setStatusBarState(79, state, state)
+  await saveChatSession({
+    id: 'session-1',
+    messages: [{ id: 'message-1', role: 'assistant', text: 'new', time: '10:01' }],
+    title: 'Chat 1',
+  })
+
+  await HandleChatStorageUpdate.handleChatStorageUpdate(79, 'session-1')
+
+  const liveState = getStatusBarState(79)?.newState
+  expect(mockCoordinatorRpc.invocations).toContainEqual([
+    'ChatCoordinator.getChatViewModel',
+    {
+      sessionId: 'session-1',
+      useChatMathWorker: state.useChatMathWorker,
+    },
+  ])
+  expect(mockChatStorageRpc.invocations.filter((invocation) => invocation[0] === 'ChatStorage.getMessageReplayEvents')).toEqual([])
+  expect(liveState?.selectedSessionViewModel).toEqual({
+    items: [
+      {
+        message: {
+          id: 'message-1',
+          role: 'assistant',
+          text: 'new',
+          time: '10:01',
+        },
+        parsedContent: [
+          {
+            children: [
+              {
+                text: 'new',
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ],
+      },
+    ],
+    sessionId: 'session-1',
+  })
   expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
 })
 
