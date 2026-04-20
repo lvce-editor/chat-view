@@ -315,7 +315,15 @@ test('handleSubmit should create a new session and switch to detail mode from li
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
-  expect(mockChatStorageRpc.invocations).toContainEqual(['ChatStorage.subscribeSessionUpdates', result.uid, result.selectedSessionId])
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.subscribeSessionUpdates',
+    {
+      rpcId: result.uid,
+      sessionId: result.selectedSessionId,
+      type: 'session',
+      uid: result.uid,
+    },
+  ])
   expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
 })
 

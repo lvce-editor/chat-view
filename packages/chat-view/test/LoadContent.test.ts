@@ -23,7 +23,15 @@ test('loadContent should initialize view and keep existing session', async () =>
   expect(result.sessions).toHaveLength(1)
   expect(result.selectedSessionId).toBe('session-1')
   expect(result.uid).toBe(1)
-  expect(mockChatStorageRpc.invocations).toContainEqual(['ChatStorage.subscribeSessionUpdates', 1, 'session-1'])
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.subscribeSessionUpdates',
+    {
+      rpcId: 1,
+      sessionId: 'session-1',
+      type: 'session',
+      uid: 1,
+    },
+  ])
 })
 
 test('loadContent should preserve existing state properties', async () => {
@@ -208,10 +216,38 @@ test('loadContent should switch chat storage listeners when the selected session
 
   expect(mockChatStorageRpc.invocations).toEqual(
     expect.arrayContaining([
-      ['ChatStorage.subscribeSessionUpdates', 91, 'session-a'],
-      ['ChatStorage.unsubscribeSessionUpdates', 91, 'session-a'],
-      ['ChatStorage.subscribeSessionUpdates', 91, 'session-b'],
-      ['ChatStorage.unsubscribeSessionUpdates', 91, 'session-b'],
+      [
+        'ChatStorage.subscribeSessionUpdates',
+        {
+          rpcId: 91,
+          sessionId: 'session-a',
+          type: 'session',
+          uid: 91,
+        },
+      ],
+      [
+        'ChatStorage.unsubscribeSessionUpdates',
+        {
+          rpcId: 91,
+          uid: 91,
+        },
+      ],
+      [
+        'ChatStorage.subscribeSessionUpdates',
+        {
+          rpcId: 91,
+          sessionId: 'session-b',
+          type: 'session',
+          uid: 91,
+        },
+      ],
+      [
+        'ChatStorage.unsubscribeSessionUpdates',
+        {
+          rpcId: 91,
+          uid: 91,
+        },
+      ],
     ]),
   )
 })

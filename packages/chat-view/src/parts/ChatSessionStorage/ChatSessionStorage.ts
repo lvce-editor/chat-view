@@ -171,10 +171,18 @@ export const syncChatStorageChangeListener = async (uid: number, sessionId: stri
       delete activeChatStorageChangeListeners[uid]
     }
     if (currentSessionId.length > 0) {
-      await ChatStorageWorker.invoke('ChatStorage.unsubscribeSessionUpdates', uid, currentSessionId)
+      await ChatStorageWorker.invoke('ChatStorage.unsubscribeSessionUpdates', {
+        rpcId: uid,
+        uid,
+      })
     }
     if (sessionId.length > 0) {
-      await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', uid, sessionId)
+      await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
+        rpcId: uid,
+        sessionId,
+        type: 'session',
+        uid,
+      })
     }
   })
   chatStorageChangeListenerSyncPromises[uid] = nextPromise.catch(() => {})
