@@ -76,8 +76,18 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const effectiveState = state
-  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedProjectId, selectedSessionId, sessions, viewMode } =
-    effectiveState
+  const {
+    agentMode,
+    composerAttachments: initialComposerAttachments,
+    composerValue,
+    nextMessageId,
+    openApiApiKey,
+    selectedModelId,
+    selectedProjectId,
+    selectedSessionId,
+    sessions,
+    viewMode,
+  } = effectiveState
   const userText = composerValue.trim()
   if (!userText) {
     return effectiveState
@@ -93,7 +103,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const workingSessions = sessions
   const { length: workingSessionCount } = workingSessions
   let optimisticState: ChatState
-  let composerAttachments = effectiveState.composerAttachments
+  let composerAttachments = initialComposerAttachments
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
     const newSession: ChatSession = {
@@ -118,7 +128,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages: [],
-        selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
+        selectedProjectId: provisionedSession.projectId || selectedProjectId,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, provisionedSession],
         viewMode: 'detail',
@@ -126,7 +136,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   } else {
-    composerAttachments = composerAttachments.length > 0 ? composerAttachments : await getComposerAttachments(effectiveState.selectedSessionId)
+    composerAttachments = composerAttachments.length > 0 ? composerAttachments : await getComposerAttachments(selectedSessionId)
     const loadedSelectedSession = workingSessions.find((session) => session.id === selectedSessionId)
     const provisionedSelectedSession = loadedSelectedSession ? await withProvisionedBackgroundSession(state, loadedSelectedSession) : undefined
     const workingSessionsWithProvisionedSession = provisionedSelectedSession
