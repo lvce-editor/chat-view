@@ -79,6 +79,5 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     viewMode: sessions.length === 0 || !selectedSessionId ? 'list' : viewMode,
   })
   set(uid, liveState, nextState)
-  console.log({ nextState })
   await RendererWorker.invoke('Chat.rerender')
 }
