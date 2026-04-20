@@ -10,8 +10,8 @@ import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiReques
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
-import type { RunMode } from '../RunMode/RunMode.ts'
 import type { ChatViewModel } from '../ChatViewModel/ChatViewModel.ts'
+import type { RunMode } from '../RunMode/RunMode.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
 export interface ChatState {
@@ -121,7 +121,7 @@ export interface ChatState {
   readonly selectedModelId: string
   readonly selectedProjectId: string
   readonly selectedSessionId: string
-  readonly selectedSessionViewModel?: ChatViewModel
+  readonly selectedSessionViewModel: ChatViewModel | undefined
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean

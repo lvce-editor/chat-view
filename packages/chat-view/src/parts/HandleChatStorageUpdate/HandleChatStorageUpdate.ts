@@ -31,8 +31,8 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     messagesScrollTop: currentMessagesScrollTop,
     parsedMessages: currentParsedMessages,
     selectedSessionId: currentSelectedSessionId,
-    sessions: currentSessions,
     selectedSessionViewModel: currentSelectedSessionViewModel,
+    sessions: currentSessions,
     viewMode: currentViewMode,
     width,
   } = liveState

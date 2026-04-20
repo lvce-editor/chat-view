@@ -104,7 +104,7 @@ export const getMessagesDom = (
   messagesScrollTop = 0,
   useChatMathWorker = false,
   hideWelcomeMessage = false,
-  selectedSessionViewModel?: ChatViewModel,
+  selectedSessionViewModel?: Readonly<ChatViewModel>,
 ): readonly VirtualDomNode[] => {
   const displayMessages = selectedSessionViewModel
     ? selectedSessionViewModel.items.map((item) => ({
@@ -139,7 +139,7 @@ export const getMessagesDom = (
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
-    ...displayMessages.flatMap((item) =>
+    ...displayMessages.flatMap((item: Readonly<DisplayMessage>) =>
       GetChatMessageDom.getChatMessageDom(
         item.message,
         item.parsedContent,

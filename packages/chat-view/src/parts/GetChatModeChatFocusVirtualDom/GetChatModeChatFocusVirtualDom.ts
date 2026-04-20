@@ -71,7 +71,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly selectedModelId: string
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
-  readonly selectedSessionViewModel?: ChatViewModel
+  readonly selectedSessionViewModel: ChatViewModel | undefined
   readonly sessions: readonly ChatSession[]
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]

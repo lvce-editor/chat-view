@@ -9,8 +9,8 @@ import type {
 } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 export interface ChatViewDomNode {
-  readonly type: number
   readonly [key: string]: unknown
+  readonly type: number
 }
 
 export type ChatViewContentNode =
@@ -176,6 +176,11 @@ const toMessageInlineNode = (node: ChatViewInlineNode): MessageInlineNode => {
         ...node,
         children: node.children.map(toMessageInlineNode),
       }
+    case 'math-inline-dom':
+      return {
+        dom: toVirtualDomNodes(node.dom),
+        type: 'math-inline-dom',
+      }
     case 'italic':
       return {
         ...node,
@@ -185,11 +190,6 @@ const toMessageInlineNode = (node: ChatViewInlineNode): MessageInlineNode => {
       return {
         ...node,
         children: node.children.map(toMessageInlineNode),
-      }
-    case 'math-inline-dom':
-      return {
-        dom: toVirtualDomNodes(node.dom),
-        type: 'math-inline-dom',
       }
     default:
       return node
@@ -217,16 +217,21 @@ const toMessageTableCellNode = (node: ChatViewTableCellNode): MessageTableCellNo
 
 const toMessageIntermediateNode = (node: ChatViewContentNode): MessageIntermediateNode => {
   switch (node.type) {
-    case 'text':
-    case 'heading':
-      return {
-        ...node,
-        children: node.children.map(toMessageInlineNode),
-      }
     case 'blockquote':
       return {
         ...node,
         children: node.children.map(toMessageIntermediateNode),
+      }
+    case 'heading':
+    case 'text':
+      return {
+        ...node,
+        children: node.children.map(toMessageInlineNode),
+      }
+    case 'math-block-dom':
+      return {
+        dom: toVirtualDomNodes(node.dom),
+        type: 'math-block-dom',
       }
     case 'ordered-list':
     case 'unordered-list':
@@ -242,11 +247,6 @@ const toMessageIntermediateNode = (node: ChatViewContentNode): MessageIntermedia
           ...row,
           cells: row.cells.map(toMessageTableCellNode),
         })),
-      }
-    case 'math-block-dom':
-      return {
-        dom: toVirtualDomNodes(node.dom),
-        type: 'math-block-dom',
       }
     default:
       return node
