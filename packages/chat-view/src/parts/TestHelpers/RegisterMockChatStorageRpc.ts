@@ -58,7 +58,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
     'ChatStorage.listSessions': () => {
       return Array.from(sessions.values(), cloneSession)
     },
-    'ChatStorage.registerChangeListener': () => {},
+    'ChatStorage.subscribeSessionUpdates': () => {},
     'ChatStorage.setSession': (session: ChatSession) => {
       const previous = sessions.get(session.id)
       const nextSession = cloneSession(session)
@@ -80,6 +80,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
         }
         sessions.set(session.id, nextSession)
         return
+        'ChatStorage.unsubscribeSessionUpdates': () => {},
       }
 
       if (previous.title !== session.title) {
@@ -128,6 +129,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
 
       sessions.set(session.id, nextSession)
     },
-    'ChatStorage.unregisterChangeListener': () => {},
+    'ChatStorage.unsubscribeSessionUpdates': () => {},
   })
 }

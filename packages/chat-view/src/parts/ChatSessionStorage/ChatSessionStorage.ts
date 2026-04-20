@@ -174,7 +174,7 @@ export const syncChatStorageChangeListener = async (uid: number, sessionId: stri
       await ChatStorageWorker.invoke('ChatStorage.unregisterChangeListener', uid, currentSessionId)
     }
     if (sessionId.length > 0) {
-      await ChatStorageWorker.invoke('ChatStorage.registerChangeListener', uid, sessionId)
+      await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', uid, sessionId)
     }
   })
   chatStorageChangeListenerSyncPromises[uid] = nextPromise.catch(() => {})
