@@ -27,7 +27,7 @@ test('saveState should persist global state without session payloads', () => {
   expect('sessions' in result).toBe(false)
   expect('systemPrompt' in result).toBe(false)
   expect(result.selectedModelId).toBe('codex-5.3')
-  expect(result.selectedSessionId).toBe('session-1')
+  expect(result.selectedSessionId).toBe('')
   expect(result.renamingSessionId).toBe('session-1')
   expect(result.searchFieldVisible).toBe(true)
   expect(result.searchValue).toBe('draft query')

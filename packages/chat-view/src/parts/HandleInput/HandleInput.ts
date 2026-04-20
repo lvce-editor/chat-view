@@ -42,7 +42,7 @@ export const handleInput = async (state: ChatState, name: string, value: string,
   if (name !== InputName.Composer) {
     return state
   }
-  if (state.selectedSessionId) {
+  if (state.viewMode !== 'list' && state.selectedSessionId) {
     await appendChatViewEvent({
       sessionId: state.selectedSessionId,
       timestamp: new Date().toISOString(),

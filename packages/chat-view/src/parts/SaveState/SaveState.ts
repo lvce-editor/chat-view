@@ -25,6 +25,7 @@ export const saveState = (state: ChatState): SavedState => {
     selectedSessionId,
     viewMode,
   } = state
+  const savedSelectedSessionId = viewMode === 'list' ? '' : selectedSessionId
   return {
     agentMode,
     chatListScrollTop,
@@ -45,7 +46,7 @@ export const saveState = (state: ChatState): SavedState => {
     searchValue,
     selectedModelId,
     selectedProjectId,
-    selectedSessionId,
+    selectedSessionId: savedSelectedSessionId,
     viewMode,
   }
 }

@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getChatSession, getChatViewEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatSession, getChatViewMessageReplayEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getSelectedSession } from '../GetSelectedSession/GetSelectedSession.ts'
@@ -34,7 +34,8 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     viewMode: currentViewMode,
     width,
   } = liveState
-  const events = await getChatViewEvents(sessionId)
+  const events = await getChatViewMessageReplayEvents(sessionId)
+  console.log({ events })
   if (events.length === 0) {
     return
   }

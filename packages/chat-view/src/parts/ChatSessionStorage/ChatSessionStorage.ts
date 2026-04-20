@@ -154,6 +154,10 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
   return ChatStorageWorker.getEvents(sessionId) as Promise<readonly ChatViewEvent[]>
 }
 
+export const getChatViewMessageReplayEvents = async (sessionId: string): Promise<readonly ChatViewEvent[]> => {
+  return ChatStorageWorker.invoke('ChatStorage.getMessageReplayEvents', sessionId) as Promise<readonly ChatViewEvent[]>
+}
+
 const activeChatStorageChangeListeners: Record<number, string> = Object.create(null)
 const chatStorageChangeListenerSyncPromises: Record<number, Promise<void>> = Object.create(null)
 const chatViewWorkerRpcId = 6020

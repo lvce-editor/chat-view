@@ -76,7 +76,8 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const effectiveState = state
-  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedSessionId, sessions, viewMode } = effectiveState
+  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedProjectId, selectedSessionId, sessions, viewMode } =
+    effectiveState
   const userText = composerValue.trim()
   if (!userText) {
     return effectiveState
@@ -87,22 +88,20 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     return executeSlashCommand(effectiveState, slashCommand)
   }
 
-  const composerAttachments =
-    effectiveState.composerAttachments.length > 0
-      ? effectiveState.composerAttachments
-      : await getComposerAttachments(effectiveState.selectedSessionId)
   const assistantMessageId = crypto.randomUUID()
 
   const workingSessions = sessions
+  const { length: workingSessionCount } = workingSessions
   let optimisticState: ChatState
+  let composerAttachments = effectiveState.composerAttachments
   if (viewMode === 'list') {
     const newSessionId = generateSessionId()
     const newSession: ChatSession = {
       id: newSessionId,
       messages: [],
-      projectId: state.selectedProjectId,
+      projectId: selectedProjectId,
       status: 'in-progress',
-      title: `Chat ${workingSessions.length + 1}`,
+      title: `Chat ${workingSessionCount + 1}`,
     }
     const provisionedSession = await withProvisionedBackgroundSession(state, newSession)
     await syncChatStorageChangeListener(effectiveState.uid, newSessionId)
@@ -127,6 +126,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     )
     optimisticState = withUpdatedChatInputHistory(optimisticState, userText)
   } else {
+    composerAttachments = composerAttachments.length > 0 ? composerAttachments : await getComposerAttachments(effectiveState.selectedSessionId)
     const loadedSelectedSession = workingSessions.find((session) => session.id === selectedSessionId)
     const provisionedSelectedSession = loadedSelectedSession ? await withProvisionedBackgroundSession(state, loadedSelectedSession) : undefined
     const workingSessionsWithProvisionedSession = provisionedSelectedSession

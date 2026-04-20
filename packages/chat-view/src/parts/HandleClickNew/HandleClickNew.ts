@@ -10,6 +10,7 @@ export const handleClickNew = async (state: ChatState): Promise<ChatState> => {
     composerAttachmentsHeight: 0,
     lastNormalViewMode: 'list',
     renamingSessionId: '',
+    selectedSessionId: '',
     viewMode: 'list',
   })
 }

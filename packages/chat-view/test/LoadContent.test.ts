@@ -26,7 +26,7 @@ test('loadContent should initialize view and keep existing session', async () =>
   expect(mockChatStorageRpc.invocations).toContainEqual([
     'ChatStorage.subscribeSessionUpdates',
     {
-      rpcId: 1,
+      rpcId: 6020,
       sessionId: 'session-1',
       type: 'session',
       uid: 1,
@@ -214,6 +214,12 @@ test('handleChatStorageUpdate should rebuild messages from handle-submit and ai-
     title: 'Chat 1',
   })
   await appendChatViewEvent({
+    sessionId: 'session-1',
+    timestamp: '2026-04-20T09:39:00.950Z',
+    type: 'handle-input',
+    value: '1',
+  })
+  await appendChatViewEvent({
     requestId: 'turn-1',
     sessionId: 'session-1',
     timestamp: '2026-04-20T09:39:00.961Z',
@@ -235,6 +241,14 @@ test('handleChatStorageUpdate should rebuild messages from handle-submit and ai-
     timestamp: '2026-04-20T09:39:00.963Z',
     turnId: 'turn-1',
     type: 'ai-request',
+  })
+  await appendChatViewEvent({
+    sessionId: 'session-1',
+    timestamp: '2026-04-20T09:39:00.970Z',
+    type: 'sse-response-part',
+    value: {
+      type: 'response.in_progress',
+    },
   })
   await appendChatViewEvent({
     requestId: 'request-2',
@@ -293,6 +307,9 @@ test('handleChatStorageUpdate should rebuild messages from handle-submit and ai-
       ],
     },
   ])
+  expect(mockChatStorageRpc.invocations.filter((invocation) => invocation[0] === 'ChatStorage.getMessageReplayEvents')).toEqual([
+    ['ChatStorage.getMessageReplayEvents', 'session-1'],
+  ])
   expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
 })
 
@@ -325,7 +342,7 @@ test('loadContent should switch chat storage listeners when the selected session
       [
         'ChatStorage.subscribeSessionUpdates',
         {
-          rpcId: 91,
+          rpcId: 6020,
           sessionId: 'session-a',
           type: 'session',
           uid: 91,
@@ -334,14 +351,14 @@ test('loadContent should switch chat storage listeners when the selected session
       [
         'ChatStorage.unsubscribeSessionUpdates',
         {
-          rpcId: 91,
+          rpcId: 6020,
           uid: 91,
         },
       ],
       [
         'ChatStorage.subscribeSessionUpdates',
         {
-          rpcId: 91,
+          rpcId: 6020,
           sessionId: 'session-b',
           type: 'session',
           uid: 91,
@@ -350,7 +367,7 @@ test('loadContent should switch chat storage listeners when the selected session
       [
         'ChatStorage.unsubscribeSessionUpdates',
         {
-          rpcId: 91,
+          rpcId: 6020,
           uid: 91,
         },
       ],

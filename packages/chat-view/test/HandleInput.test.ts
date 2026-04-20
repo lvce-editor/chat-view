@@ -42,6 +42,26 @@ test('handleInput should update history draft when not browsing history', async 
   expect(result.chatInputHistoryDraft).toBe('draft text')
 })
 
+test('handleInput should not append session events in list mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  const state = createState({
+    selectedSessionId: 'session-8',
+    viewMode: 'list',
+  })
+
+  const result = await HandleInput.handleInput(state, InputName.Composer, 'fresh draft')
+
+  expect(result.composerValue).toBe('fresh draft')
+  expect(mockChatStorageRpc.invocations).not.toContainEqual([
+    'ChatStorage.appendEvent',
+    expect.objectContaining({
+      sessionId: 'session-8',
+      type: 'handle-input',
+      value: 'fresh draft',
+    }),
+  ])
+})
+
 test('handleInput should keep history draft while browsing history', async () => {
   const state = createState({
     chatInputHistory: ['first', 'second'],

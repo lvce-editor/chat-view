@@ -13,4 +13,5 @@ test('handleClickBack should go back to list mode', async () => {
 
   expect(result.viewMode).toBe('list')
   expect(result.renamingSessionId).toBe('')
+  expect(result.selectedSessionId).toBe('')
 })

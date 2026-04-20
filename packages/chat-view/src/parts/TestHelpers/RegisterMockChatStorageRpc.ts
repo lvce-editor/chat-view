@@ -25,6 +25,16 @@ const now = (): string => {
   return new Date().toISOString()
 }
 
+const isMessageReplayEvent = (event: ChatViewEvent): boolean => {
+  return (
+    event.type === 'chat-session-messages-replaced' ||
+    event.type === 'chat-message-added' ||
+    event.type === 'chat-message-updated' ||
+    event.type === 'handle-submit' ||
+    event.type === 'ai-response-success'
+  )
+}
+
 export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.registerMockRpc> => {
   const sessions = new Map<string, ChatSession>()
   const events: ChatViewEvent[] = []
@@ -50,6 +60,12 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
         return [...events]
       }
       return events.filter((event) => event.sessionId === sessionId)
+    },
+    'ChatStorage.getMessageReplayEvents': (sessionId: string) => {
+      if (!sessionId) {
+        return []
+      }
+      return events.filter((event) => event.sessionId === sessionId && isMessageReplayEvent(event))
     },
     'ChatStorage.getSession': (id: string) => {
       const session = sessions.get(id)

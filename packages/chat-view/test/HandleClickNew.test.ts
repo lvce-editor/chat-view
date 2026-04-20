@@ -17,7 +17,7 @@ test('handleClickNew should clear input, focus composer and switch to list mode 
   const result = await handleClickNew(state)
 
   expect(result.sessions).toHaveLength(state.sessions.length)
-  expect(result.selectedSessionId).toBe(state.selectedSessionId)
+  expect(result.selectedSessionId).toBe('')
   expect(result.composerValue).toBe('')
   expect(result.focus).toBe('composer')
   expect(result.focused).toBe(true)
