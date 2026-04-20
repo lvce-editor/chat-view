@@ -21,10 +21,8 @@ const getNextSelectedSessionId = (sessions: readonly ChatSession[], selectedSess
 }
 
 export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
-  console.log('storage update', uid, sessionId)
   const liveState = get(uid)?.newState
   if (!liveState) {
-    console.log('no live state')
     return
   }
   const {
@@ -37,7 +35,6 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     width,
   } = liveState
   const events = await getChatViewEvents(sessionId)
-  console.log({ events })
   if (events.length === 0) {
     return
   }

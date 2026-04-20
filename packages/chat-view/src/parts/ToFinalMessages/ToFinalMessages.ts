@@ -154,6 +154,7 @@ export const toFinalMessages = (events: readonly ChatViewEvent[]): readonly Chat
     if (event.type === 'ai-response-success') {
       const id = getEventMessageId(event, 'assistant-message', syntheticAssistantIndex)
       syntheticAssistantIndex += 1
+      const responseToolCalls = getResponseToolCalls(event.value)
       const message: ChatMessage = {
         id,
         role: 'assistant',
@@ -163,9 +164,9 @@ export const toFinalMessages = (events: readonly ChatViewEvent[]): readonly Chat
           ? {
               toolCalls: event.toolCalls,
             }
-          : getResponseToolCalls(event.value)
+          : responseToolCalls
             ? {
-                toolCalls: getResponseToolCalls(event.value),
+                toolCalls: responseToolCalls,
               }
             : {}),
       }
