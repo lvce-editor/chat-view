@@ -34,6 +34,7 @@ export const createDefaultState = (): ChatState => {
     authErrorMessage: '',
     authUseRedirect: false,
     backendUrl: '',
+    chatDebugLoggingEnabled: true,
     chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,
     chatInputHistory: [],

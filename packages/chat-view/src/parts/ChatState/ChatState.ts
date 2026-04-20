@@ -26,6 +26,7 @@ export interface ChatState {
   readonly backendUrl: string
   readonly chatFocusContentMaxWidth: number
   readonly chatHistoryEnabled: boolean
+  readonly chatDebugLoggingEnabled: boolean
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string
   readonly chatInputHistoryIndex: number
