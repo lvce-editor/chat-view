@@ -179,7 +179,7 @@ export const syncChatStorageChangeListener = async (uid: number, sessionId: stri
     }
     if (sessionId.length > 0) {
       await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
-        rpcId: uid,
+        rpcId: chatViewWorkerRpcId,
         sessionId,
         type: 'session',
         uid,
