@@ -81,7 +81,6 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     return
   }
   const events = await getChatViewMessageReplayEvents(sessionId)
-  console.log({ events })
   if (events.length === 0) {
     return
   }
