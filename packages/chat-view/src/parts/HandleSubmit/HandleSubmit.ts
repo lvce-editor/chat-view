@@ -75,8 +75,7 @@ const withProvisionedBackgroundSession = async (state: ChatState, session: ChatS
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   const effectiveState = state
-  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedSessionId, sessions, streamingEnabled, viewMode } =
-    effectiveState
+  const { agentMode, composerValue, nextMessageId, openApiApiKey, selectedModelId, selectedSessionId, sessions, viewMode } = effectiveState
   const userText = composerValue.trim()
   if (!userText) {
     return effectiveState
@@ -87,7 +86,6 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     return executeSlashCommand(effectiveState, slashCommand)
   }
 
-  const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const composerAttachments =
     effectiveState.composerAttachments.length > 0
       ? effectiveState.composerAttachments
