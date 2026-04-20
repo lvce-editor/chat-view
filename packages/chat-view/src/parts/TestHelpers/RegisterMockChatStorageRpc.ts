@@ -58,7 +58,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
     'ChatStorage.listSessions': () => {
       return Array.from(sessions.values(), cloneSession)
     },
-    'ChatStorage.subscribeSessionUpdates': () => {},
     'ChatStorage.setSession': (session: ChatSession) => {
       const previous = sessions.get(session.id)
       const nextSession = cloneSession(session)
@@ -92,7 +91,6 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
       }
 
       const previousMessagesById = new Map(previous.messages.map((message) => [message.id, message]))
-          'ChatStorage.unsubscribeSessionUpdates': () => {},
       for (const message of session.messages) {
         const previousMessage = previousMessagesById.get(message.id)
         if (!previousMessage) {
@@ -129,6 +127,7 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
 
       sessions.set(session.id, nextSession)
     },
+    'ChatStorage.subscribeSessionUpdates': () => {},
     'ChatStorage.unsubscribeSessionUpdates': () => {},
   })
 }
