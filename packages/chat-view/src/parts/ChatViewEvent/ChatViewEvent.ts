@@ -44,8 +44,26 @@ export interface HandleInputEvent extends ChatViewEventBase {
 }
 
 export interface HandleSubmitEvent extends ChatViewEventBase {
+  readonly requestId?: string
   readonly type: 'handle-submit'
   readonly value: string
+}
+
+export interface AiRequestEvent extends ChatViewEventBase {
+  readonly body: unknown
+  readonly headers: unknown
+  readonly method: string
+  readonly requestId: string
+  readonly turnId: string
+  readonly type: 'ai-request'
+}
+
+export interface AiResponseSuccessEvent extends ChatViewEventBase {
+  readonly requestId?: string
+  readonly toolCalls?: ChatMessage['toolCalls']
+  readonly turnId?: string
+  readonly type: 'ai-response-success'
+  readonly value: unknown
 }
 
 export interface ChatAttachmentAddedEvent extends ChatViewEventBase {
@@ -103,6 +121,8 @@ export type ChatViewEvent =
   | ChatSessionMessagesReplacedEvent
   | HandleInputEvent
   | HandleSubmitEvent
+  | AiRequestEvent
+  | AiResponseSuccessEvent
   | ChatAttachmentAddedEvent
   | ChatAttachmentRemovedEvent
   | DataEvent

@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-immediate-mutation */
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
+import { toFinalMessages } from '../ToFinalMessages/ToFinalMessages.ts'
 import { escape } from './Escape/Escape.ts'
-import { toFinalMessages } from './ToFinalMessages/ToFinalMessages.ts'
 
 export const copyAsE2eTests = (events: readonly ChatViewEvent[]): string => {
   const messages = toFinalMessages(events).filter((message) => (message.role === 'assistant' ? !message.inProgress : true))

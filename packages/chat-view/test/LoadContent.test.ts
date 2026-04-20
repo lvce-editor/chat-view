@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { appendChatViewEvent, saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleChatStorageUpdate from '../src/parts/HandleChatStorageUpdate/HandleChatStorageUpdate.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
@@ -187,6 +187,112 @@ test('handleChatStorageUpdate should refresh the selected session from storage',
 
   const liveState = getStatusBarState(77)?.newState
   expect(liveState?.sessions[0].messages).toEqual([{ id: 'message-1', role: 'assistant', text: 'new', time: '10:01' }])
+  expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
+})
+
+test('handleChatStorageUpdate should rebuild messages from handle-submit and ai-response-success events', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  void mockChatMessageParsingRpc
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [{ id: 'message-old', role: 'assistant', text: 'old', time: '10:00' }], title: 'Chat 1' }],
+    uid: 78,
+    viewMode: 'detail',
+  }
+  setStatusBarState(78, state, state)
+  await saveChatSession({
+    id: 'session-1',
+    messages: [],
+    title: 'Chat 1',
+  })
+  await appendChatViewEvent({
+    requestId: 'turn-1',
+    sessionId: 'session-1',
+    timestamp: '2026-04-20T09:39:00.961Z',
+    type: 'handle-submit',
+    value: '1',
+  })
+  await appendChatViewEvent({
+    body: {
+      input: [{ content: '1', role: 'user' }],
+      model: 'gpt-4o-mini',
+    },
+    headers: {
+      Authorization: 'Bearer [redacted]',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    requestId: 'request-1',
+    sessionId: 'session-1',
+    timestamp: '2026-04-20T09:39:00.963Z',
+    turnId: 'turn-1',
+    type: 'ai-request',
+  })
+  await appendChatViewEvent({
+    requestId: 'request-2',
+    sessionId: 'session-1',
+    timestamp: '2026-04-20T09:39:01.000Z',
+    toolCalls: [
+      {
+        arguments: '{}',
+        id: 'call-1',
+        name: 'getWorkspaceUri',
+        status: 'success',
+      },
+    ],
+    turnId: 'turn-1',
+    type: 'ai-response-success',
+    value: {
+      id: 'resp_1',
+      object: 'response',
+      output: [
+        {
+          content: [
+            {
+              text: '2',
+              type: 'output_text',
+            },
+          ],
+          type: 'message',
+        },
+      ],
+      status: 'completed',
+    },
+  })
+
+  await HandleChatStorageUpdate.handleChatStorageUpdate(78, 'session-1')
+
+  const liveState = getStatusBarState(78)?.newState
+  expect(liveState?.sessions[0].messages).toEqual([
+    {
+      id: 'turn-1',
+      role: 'user',
+      text: '1',
+      time: '2026-04-20T09:39:00.961Z',
+    },
+    {
+      id: 'request-2',
+      role: 'assistant',
+      text: '2',
+      time: '2026-04-20T09:39:01.000Z',
+      toolCalls: [
+        {
+          arguments: '{}',
+          id: 'call-1',
+          name: 'getWorkspaceUri',
+          status: 'success',
+        },
+      ],
+    },
+  ])
   expect(mockRendererRpc.invocations).toContainEqual(['Chat.rerender'])
 })
 
