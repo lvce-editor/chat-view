@@ -50,7 +50,7 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const parsedMessages =
     overrides.displayMessages || overrides['displayMessages'] === undefined
-      ? selectedSession?.messages.map((message) => toParsedMessage(message.id, message.text)) ?? []
+      ? (selectedSession?.messages.map((message) => toParsedMessage(message.id, message.text)) ?? [])
       : []
   const displayMessages = overrides.displayMessages ?? getDisplayMessages(selectedSession?.messages ?? [], parsedMessages)
   return GetChatViewDom.getChatVirtualDom({
