@@ -181,9 +181,16 @@ const createDependencies = (): LoadContentDependencies => {
       }
       return [{ id: 'message-1', parsedContent: [], text: 'Hello' }]
     },
-    refreshGitBranchPickerVisibility: async (state): Promise<LoadContentState> => state,
-    saveChatSession: async () => {},
-    syncBackendAuth: async () => ({
+    refreshGitBranchPickerVisibility: async (state: Readonly<LoadContentState>): Promise<LoadContentState> => state,
+    saveChatSession: async (_session: Readonly<LoadContentState['sessions'][number]>): Promise<void> => {},
+    syncBackendAuth: async (): Promise<{
+      authAccessToken: string
+      authErrorMessage: string
+      userName: string
+      userState: 'loggedIn'
+      userSubscriptionPlan: string
+      userUsedTokens: number
+    }> => ({
       authAccessToken: 'access-token',
       authErrorMessage: '',
       userName: 'Simon',

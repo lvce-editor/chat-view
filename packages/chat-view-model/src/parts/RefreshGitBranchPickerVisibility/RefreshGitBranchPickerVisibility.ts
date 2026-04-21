@@ -2,10 +2,10 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, GitBranch, Project } from '../ViewModel/ViewModel.ts'
 
 interface BranchPickerState {
+  readonly gitBranches: readonly GitBranch[]
   readonly gitBranchPickerErrorMessage: string
   readonly gitBranchPickerOpen: boolean
   readonly gitBranchPickerVisible: boolean
-  readonly gitBranches: readonly GitBranch[]
   readonly projects: readonly Project[]
   readonly selectedProjectId: string
   readonly selectedSessionId: string

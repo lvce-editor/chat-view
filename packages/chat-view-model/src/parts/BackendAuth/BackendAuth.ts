@@ -31,7 +31,11 @@ const getNumber = (value: unknown): number => {
 }
 
 const trimTrailingSlashes = (value: string): string => {
-  return value.replaceAll(/\/+$/g, '')
+  let trimmed = value
+  while (trimmed.endsWith('/')) {
+    trimmed = trimmed.slice(0, -1)
+  }
+  return trimmed
 }
 
 const getBackendRefreshUrl = (backendUrl: string): string => {
