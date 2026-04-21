@@ -172,7 +172,10 @@ const createDependencies = (): LoadContentDependencies => {
     }),
     loadSelectedSessionMessages: async (sessions): Promise<LoadContentState['sessions']> => sessions,
     normalizeSessionsOnLoad: (sessions: readonly LoadContentState['sessions'][number][]): readonly LoadContentState['sessions'][number][] => sessions,
-    parseAndStoreMessagesContent: async (parsedMessages: readonly LoadContentState['parsedMessages'][number][], messages): Promise<readonly LoadContentState['parsedMessages'][number][]> => {
+    parseAndStoreMessagesContent: async (
+      parsedMessages: readonly LoadContentState['parsedMessages'][number][],
+      messages,
+    ): Promise<readonly LoadContentState['parsedMessages'][number][]> => {
       if (messages.length === 0) {
         return parsedMessages
       }
