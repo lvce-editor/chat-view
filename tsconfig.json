@@ -6,6 +6,9 @@
       "path": "./packages/chat-view"
     },
     {
+      "path": "./packages/chat-view-model"
+    },
+    {
       "path": "./packages/build"
     },
     {
