@@ -1,6 +1,6 @@
+import type { SavedState } from '../SavedState/SavedState.ts'
 import { getNormalizedComposerSelection } from '../GetNormalizedComposerSelection/GetNormalizedComposerSelection.ts'
 import { isObject } from '../IsObject/IsObject.ts'
-import type { SavedState } from '../SavedState/SavedState.ts'
 
 export const getSavedComposerSelection = (savedState: unknown, composerValue: string): readonly [number, number] | undefined => {
   if (!isObject(savedState)) {

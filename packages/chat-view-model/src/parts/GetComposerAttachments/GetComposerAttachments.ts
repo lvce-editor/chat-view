@@ -1,6 +1,6 @@
 import type { ChatAttachmentAddedEvent, ChatAttachmentRemovedEvent, ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
-import { getChatViewEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ViewModel/ViewModel.ts'
+import { getChatViewEvents } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
 const isChatAttachmentAddedEvent = (event: ChatViewEvent): event is ChatAttachmentAddedEvent => {
   return event.type === 'chat-attachment-added'

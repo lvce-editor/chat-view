@@ -1,6 +1,6 @@
-import { isObject } from '../IsObject/IsObject.ts'
 import type { SavedState } from '../SavedState/SavedState.ts'
 import type { Project } from '../ViewModel/ViewModel.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 export const getSavedProjects = (savedState: unknown): readonly Project[] | undefined => {
   if (!isObject(savedState)) {

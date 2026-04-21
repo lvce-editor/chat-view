@@ -1,5 +1,5 @@
-import { isObject } from '../IsObject/IsObject.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 interface LegacySavedState {
   readonly sessions: readonly ChatSession[]

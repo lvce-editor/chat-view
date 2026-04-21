@@ -1,6 +1,6 @@
+import type { SavedState } from '../SavedState/SavedState.ts'
 import { isAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import { isObject } from '../IsObject/IsObject.ts'
-import type { SavedState } from '../SavedState/SavedState.ts'
 
 export const getSavedAgentMode = (savedState: unknown): AgentMode | undefined => {
   if (!isObject(savedState)) {

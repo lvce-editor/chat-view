@@ -1,5 +1,5 @@
-import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
 export const loadSelectedSessionMessages = async (sessions: readonly ChatSession[], selectedSessionId: string): Promise<readonly ChatSession[]> => {
   if (!selectedSessionId) {

@@ -1,5 +1,5 @@
-import { isObject } from '../IsObject/IsObject.ts'
 import type { SavedState } from '../SavedState/SavedState.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 export const getSavedChatListScrollTop = (savedState: unknown): number | undefined => {
   if (!isObject(savedState)) {

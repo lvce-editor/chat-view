@@ -11,8 +11,8 @@ export interface SavedState {
   readonly messagesScrollTop?: number
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
-  readonly projectSidebarWidth?: number
   readonly projects?: readonly Project[]
+  readonly projectSidebarWidth?: number
   readonly reasoningEffort?: ReasoningEffort
   readonly selectedModelId?: string
   readonly selectedProjectId?: string

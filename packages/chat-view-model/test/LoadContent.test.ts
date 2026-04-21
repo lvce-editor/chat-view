@@ -129,8 +129,8 @@ const createDependencies = (): LoadContentDependencies => {
     getSavedMessagesScrollTop: () => 14,
     getSavedProjectExpandedIds: () => ['project-1'],
     getSavedProjectListScrollTop: () => 16,
-    getSavedProjectSidebarWidth: () => 260,
     getSavedProjects: () => undefined,
+    getSavedProjectSidebarWidth: () => 260,
     getSavedReasoningEffort: () => 'high',
     getSavedSelectedModelId: () => 'model-2',
     getSavedSelectedProjectId: () => 'project-1',
@@ -170,15 +170,15 @@ const createDependencies = (): LoadContentDependencies => {
       useOwnBackend: false,
       voiceDictationEnabled: true,
     }),
-    loadSelectedSessionMessages: async (sessions) => sessions,
-    normalizeSessionsOnLoad: (sessions) => sessions,
-    parseAndStoreMessagesContent: async (parsedMessages, messages) => {
+    loadSelectedSessionMessages: async (sessions): Promise<LoadContentState['sessions']> => sessions,
+    normalizeSessionsOnLoad: (sessions: readonly LoadContentState['sessions'][number][]): readonly LoadContentState['sessions'][number][] => sessions,
+    parseAndStoreMessagesContent: async (parsedMessages: readonly LoadContentState['parsedMessages'][number][], messages): Promise<readonly LoadContentState['parsedMessages'][number][]> => {
       if (messages.length === 0) {
         return parsedMessages
       }
       return [{ id: 'message-1', parsedContent: [], text: 'Hello' }]
     },
-    refreshGitBranchPickerVisibility: async (state) => state,
+    refreshGitBranchPickerVisibility: async (state): Promise<LoadContentState> => state,
     saveChatSession: async () => {},
     syncBackendAuth: async () => ({
       authAccessToken: 'access-token',
@@ -188,7 +188,7 @@ const createDependencies = (): LoadContentDependencies => {
       userSubscriptionPlan: 'pro',
       userUsedTokens: 42,
     }),
-    toSummarySession: (session) => session,
+    toSummarySession: (session: Readonly<LoadContentState['sessions'][number]>): LoadContentState['sessions'][number] => session,
   }
 }
 

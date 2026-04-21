@@ -1,6 +1,6 @@
 import type { AuthUserState } from '../ViewModel/ViewModel.ts'
-import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { isObject } from '../IsObject/IsObject.ts'
+import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 
 export interface BackendAuthState {
   readonly authAccessToken: string
@@ -31,7 +31,7 @@ const getNumber = (value: unknown): number => {
 }
 
 const trimTrailingSlashes = (value: string): string => {
-  return value.replace(/\/+$/g, '')
+  return value.replaceAll(/\/+$/g, '')
 }
 
 const getBackendRefreshUrl = (backendUrl: string): string => {

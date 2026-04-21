@@ -1,5 +1,5 @@
-import { isObject } from '../IsObject/IsObject.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 const normalizeSessionOnLoad = (session: ChatSession): ChatSession => {
   if (session.status !== 'in-progress') {

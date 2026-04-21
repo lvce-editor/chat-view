@@ -1,6 +1,6 @@
 import { ChatMessageParsingWorker } from '@lvce-editor/rpc-registry'
-import { isObject } from '../IsObject/IsObject.ts'
 import type { ParsedMessage } from '../ViewModel/ViewModel.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 const emptyMessageContent: readonly unknown[] = [
   {

@@ -147,7 +147,7 @@ const getGitDirUri = async (workspaceUri: string): Promise<string> => {
     await readTextFile(workspaceUri, toGitUri(gitUri, 'HEAD'))
     return gitUri
   } catch {
-    // Support worktrees/submodules where .git is a pointer file.
+    // Support repositories where .git is a pointer file.
   }
   const gitPointer = await readTextFile(workspaceUri, gitUri)
   const match = gitDirPointerRegex.exec(gitPointer)

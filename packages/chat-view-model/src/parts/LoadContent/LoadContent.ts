@@ -1,5 +1,16 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type {
+  ChatModel,
+  ChatSession,
+  ChatViewMode,
+  ComposerAttachment,
+  ParsedMessage,
+  Project,
+  ReasoningEffort,
+  ViewModel,
+} from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, type BackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -12,8 +23,8 @@ import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSav
 import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
 import { getSavedProjectExpandedIds } from '../GetSavedProjectExpandedIds/GetSavedProjectExpandedIds.ts'
 import { getSavedProjectListScrollTop } from '../GetSavedProjectListScrollTop/GetSavedProjectListScrollTop.ts'
-import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
 import { getSavedProjects } from '../GetSavedProjects/GetSavedProjects.ts'
+import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
 import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReasoningEffort.ts'
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
@@ -22,23 +33,12 @@ import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
-import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { loadPreferences, type LoadedPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
-import type {
-  ChatModel,
-  ChatSession,
-  ChatViewMode,
-  ComposerAttachment,
-  ParsedMessage,
-  Project,
-  ReasoningEffort,
-  ViewModel,
-} from '../ViewModel/ViewModel.ts'
 
 export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
 
@@ -88,8 +88,8 @@ export interface LoadContentDependencies<TState extends LoadContentState = LoadC
   readonly getSavedMessagesScrollTop: (savedState: unknown) => number | undefined
   readonly getSavedProjectExpandedIds: (savedState: unknown) => readonly string[] | undefined
   readonly getSavedProjectListScrollTop: (savedState: unknown) => number | undefined
-  readonly getSavedProjectSidebarWidth: (savedState: unknown) => number | undefined
   readonly getSavedProjects: (savedState: unknown) => readonly Project[] | undefined
+  readonly getSavedProjectSidebarWidth: (savedState: unknown) => number | undefined
   readonly getSavedReasoningEffort: (savedState: unknown) => ReasoningEffort | undefined
   readonly getSavedSelectedModelId: (savedState: unknown) => string | undefined
   readonly getSavedSelectedProjectId: (savedState: unknown) => string | undefined
@@ -124,8 +124,8 @@ const getDefaultLoadContentDependencies = <TState extends LoadContentState>(): L
     getSavedMessagesScrollTop,
     getSavedProjectExpandedIds,
     getSavedProjectListScrollTop,
-    getSavedProjectSidebarWidth,
     getSavedProjects,
+    getSavedProjectSidebarWidth,
     getSavedReasoningEffort,
     getSavedSelectedModelId,
     getSavedSelectedProjectId,
@@ -163,8 +163,8 @@ export const loadContent = async <TState extends LoadContentState>(
     getSavedMessagesScrollTop,
     getSavedProjectExpandedIds,
     getSavedProjectListScrollTop,
-    getSavedProjectSidebarWidth,
     getSavedProjects,
+    getSavedProjectSidebarWidth,
     getSavedReasoningEffort,
     getSavedSelectedModelId,
     getSavedSelectedProjectId,

@@ -1,5 +1,5 @@
-import { isObject } from '../IsObject/IsObject.ts'
 import type { SavedState } from '../SavedState/SavedState.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 
 export const getSavedProjectExpandedIds = (savedState: unknown): readonly string[] | undefined => {
   if (!isObject(savedState)) {
