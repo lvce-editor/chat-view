@@ -107,6 +107,10 @@ const createState = (): LoadContentState => {
   }
 }
 
+const passthroughRefresh: LoadContentDependencies['refreshGitBranchPickerVisibility'] = async (
+  ...args: readonly unknown[]
+): Promise<LoadContentState> => args[0] as LoadContentState
+
 const createDependencies = (): LoadContentDependencies => {
   return {
     ensureBlankProject: (projects) => projects,
@@ -181,7 +185,7 @@ const createDependencies = (): LoadContentDependencies => {
       }
       return [{ id: 'message-1', parsedContent: [], text: 'Hello' }]
     },
-    refreshGitBranchPickerVisibility: async (state: Readonly<LoadContentState>): Promise<LoadContentState> => state,
+    refreshGitBranchPickerVisibility: passthroughRefresh,
     saveChatSession: async (_session: Readonly<LoadContentState['sessions'][number]>): Promise<void> => {},
     syncBackendAuth: async (): Promise<{
       authAccessToken: string
