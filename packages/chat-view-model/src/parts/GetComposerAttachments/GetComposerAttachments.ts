@@ -72,10 +72,7 @@ const getComposerAttachmentPreviewSrc = async (
   return `data:${mimeType || 'application/octet-stream'};base64,${base64}`
 }
 
-const getComposerAttachmentTextContent = async (
-  blob: Blob,
-  displayType: ComposerAttachmentDisplayType,
-): Promise<string | undefined> => {
+const getComposerAttachmentTextContent = async (blob: Blob, displayType: ComposerAttachmentDisplayType): Promise<string | undefined> => {
   if (displayType !== 'text-file') {
     return undefined
   }
