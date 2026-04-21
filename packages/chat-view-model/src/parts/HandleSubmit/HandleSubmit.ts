@@ -1,3 +1,5 @@
+/* cspell:ignore worktree worktrees */
+
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
@@ -136,7 +138,7 @@ export interface HandleSubmitDependencies<TState extends HandleSubmitState = Han
     readonly sessionId: string
     readonly timestamp: string
     readonly type: 'chat-attachment-removed' | 'event-stream-finished' | 'handle-submit' | 'sse-response-completed' | 'sse-response-part'
-    readonly value?: '[DONE]' | string | unknown
+    readonly value?: unknown
   }) => Promise<void>
   readonly appendMessageToSelectedSession: (sessions: readonly ChatSession[], sessionId: string, message: ChatMessage) => readonly ChatSession[]
   readonly createBackgroundChatWorktree: (
@@ -150,8 +152,8 @@ export interface HandleSubmitDependencies<TState extends HandleSubmitState = Han
   readonly getChatSession: (sessionId: string) => Promise<ChatSession | undefined>
   readonly getChatSessionStatus: (session: ChatSession) => NonNullable<ChatSession['status']>
   readonly getComposerAttachments: (sessionId: string) => Promise<HandleSubmitState['composerAttachments']>
-  readonly getMinComposerHeightForState: (state: TState) => number
   readonly getMentionContextMessage: (userText: string) => Promise<ChatMessage | undefined>
+  readonly getMinComposerHeightForState: (state: TState) => number
   readonly getNextAutoScrollTop: (messagesScrollTop: number) => number
   readonly getSlashCommand: (userText: string) => unknown
   readonly getSseEventType: (value: unknown) => 'sse-response-completed' | 'sse-response-part'
@@ -177,8 +179,8 @@ export interface HandleSubmitDependencies<TState extends HandleSubmitState = Han
   readonly parseAndStoreMessageContent: (parsedMessages: readonly ParsedMessage[], message: ChatMessage) => Promise<readonly ParsedMessage[]>
   readonly rerender: () => Promise<void>
   readonly saveChatSession: (session: ChatSession) => Promise<void>
-  readonly syncBackendAuth: (backendUrl: string) => Promise<AuthStatePatch | undefined>
   readonly setStatusBarState: (uid: number, oldState: TState, newState: TState) => void
+  readonly syncBackendAuth: (backendUrl: string) => Promise<AuthStatePatch | undefined>
   readonly updateMessageTextInSelectedSession: (
     sessions: readonly ChatSession[],
     parsedMessages: readonly ParsedMessage[],
@@ -346,10 +348,12 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
     questionToolEnabled,
     reasoningEffort,
     selectedModelId,
+    selectedProjectId,
     selectedSessionId,
     sessions,
     streamingEnabled,
     toolEnablement,
+    uid,
     useChatCoordinatorWorker,
     useChatNetworkWorkerForRequests,
     useChatToolWorker,
@@ -404,7 +408,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
     text: '',
     time: assistantTime,
   }
-  let parsedMessages = effectiveState.parsedMessages
+  let { parsedMessages } = effectiveState
   parsedMessages = await dependencies.parseAndStoreMessageContent(parsedMessages, userMessage)
   parsedMessages = await dependencies.parseAndStoreMessageContent(parsedMessages, inProgressAssistantMessage)
 
@@ -434,7 +438,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
     const newSession: ChatSession = {
       id: newSessionId,
       messages: streamingEnabled ? [userMessage, inProgressAssistantMessage] : [userMessage],
-      projectId: state.selectedProjectId,
+      projectId: selectedProjectId,
       status: 'in-progress',
       title: `Chat ${workingSessions.length + 1}`,
     }
@@ -453,7 +457,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
         lastSubmittedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
-        selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
+        selectedProjectId: provisionedSession.projectId || selectedProjectId,
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, provisionedSession],
         viewMode: 'detail',
@@ -509,14 +513,14 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
     optimisticState = dependencies.withUpdatedChatInputHistory(optimisticState, userText)
   }
 
-  dependencies.setStatusBarState(effectiveState.uid, effectiveState, optimisticState)
+  dependencies.setStatusBarState(uid, effectiveState, optimisticState)
   await dependencies.rerender()
 
   let handleTextChunkState: HandleTextChunkState<TState> = {
     latestState: optimisticState,
     previousState: optimisticState,
   }
-  let mockOpenApiRequests = optimisticState.mockOpenApiRequests
+  let { mockOpenApiRequests } = optimisticState
   const selectedOptimisticSession = optimisticState.sessions.find((session) => session.id === optimisticState.selectedSessionId)
   const workspaceUri = useMockApi
     ? getWorkspaceUri(optimisticState, selectedOptimisticSession)
@@ -529,7 +533,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
   const handleTextChunkFunctionRef = streamingEnabled
     ? async (chunk: string): Promise<void> => {
         handleTextChunkState = await dependencies.handleTextChunkFunction(
-          state.uid,
+          uid,
           optimisticState.selectedSessionId,
           assistantMessageId,
           chunk,
@@ -552,7 +556,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
     models,
     nextMessageId: optimisticState.nextMessageId,
     onDataEvent: async (value: unknown): Promise<void> => {
-      if (isSessionStopped(state.uid, optimisticState.selectedSessionId, dependencies)) {
+      if (isSessionStopped(uid, optimisticState.selectedSessionId, dependencies)) {
         return
       }
       if (!emitStreamingFunctionCallEvents && dependencies.isStreamingFunctionCallEvent(value)) {
@@ -567,7 +571,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
       })
     },
     onEventStreamFinished: async (): Promise<void> => {
-      if (isSessionStopped(state.uid, optimisticState.selectedSessionId, dependencies)) {
+      if (isSessionStopped(uid, optimisticState.selectedSessionId, dependencies)) {
         return
       }
       await dependencies.appendChatViewEvent({
@@ -587,7 +591,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
       : {}),
     onToolCallsChunk: async (toolCalls: readonly unknown[]): Promise<void> => {
       handleTextChunkState = await dependencies.handleToolCallsChunkFunction(
-        state.uid,
+        uid,
         optimisticState.selectedSessionId,
         assistantMessageId,
         toolCalls,
@@ -628,8 +632,8 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
         }
       : assistantMessageResponse
 
-  if (isSessionStopped(state.uid, optimisticState.selectedSessionId, dependencies)) {
-    return getLiveState(state.uid, dependencies) || handleTextChunkState.latestState
+  if (isSessionStopped(uid, optimisticState.selectedSessionId, dependencies)) {
+    return getLiveState(uid, dependencies) || handleTextChunkState.latestState
   }
 
   const { latestState } = handleTextChunkState

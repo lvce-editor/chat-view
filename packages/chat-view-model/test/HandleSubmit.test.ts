@@ -1,5 +1,7 @@
 /* cspell:ignore worktree worktrees */
 
+/* cspell:ignore worktree worktrees */
+
 import { expect, test } from '@jest/globals'
 import type { ChatMessage } from '../src/parts/ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
@@ -91,7 +93,7 @@ const createDependencies = (): HandleSubmitDependencies<HandleSubmitState> => {
   const viewEvents: unknown[] = []
   void optimisticStates
   return {
-    appendChatViewEvent: async (event) => {
+    appendChatViewEvent: async (event): Promise<void> => {
       viewEvents.push(event)
     },
     appendMessageToSelectedSession,
