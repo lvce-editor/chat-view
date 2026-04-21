@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { appendChatViewEvent } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../src/parts/GetComposerAttachments/GetComposerAttachments.ts'
-import { registerMockChatStorageRpc } from './TestHelpers/RegisterMockChatStorageRpc.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 const imagePreviewSrcRegex = /^data:image\/svg\+xml;base64,/
 

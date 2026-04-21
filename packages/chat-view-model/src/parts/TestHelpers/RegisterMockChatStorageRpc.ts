@@ -1,7 +1,7 @@
 import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage } from '../../src/parts/ChatMessage/ChatMessage.ts'
-import type { ChatSession } from '../../src/parts/ChatSession/ChatSession.ts'
-import type { ChatViewEvent } from '../../src/parts/ChatViewEvent/ChatViewEvent.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 
 const cloneMessage = (message: ChatMessage): ChatMessage => {
   return {
