@@ -1,11 +1,19 @@
-import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
 
+const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
+  if (session.lastActiveTime) {
+    return session.lastActiveTime
+  }
+  const lastMessage = session.messages.at(-1)
+  if (!lastMessage || typeof lastMessage !== 'object') {
+    return undefined
+  }
+  const time = Reflect.get(lastMessage, 'time')
+  return typeof time === 'string' ? time : undefined
+}
+
 export const toSummarySession = (session: ChatSession): ChatSession => {
-  const lastActiveTime = getSessionLastActiveTime({
-    ...session,
-    messages: session.messages as readonly { readonly time: string }[],
-  })
+  const lastActiveTime = getSessionLastActiveTime(session)
   const summary: ChatSession = {
     ...(session.branchName
       ? {
