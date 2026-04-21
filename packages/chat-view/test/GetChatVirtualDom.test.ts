@@ -42,22 +42,22 @@ const toParsedMessage = (id: string, text: string): ParsedMessage => {
   }
 }
 
+type RenderChatViewOptions = Partial<GetChatViewDom.GetChatVirtualDomOptions> & {
+  readonly parsedMessages?: readonly ParsedMessage[]
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
-  const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
+const renderChatView = (overrides: RenderChatViewOptions = {}) => {
+  const { parsedMessages: _defaultParsedMessages, ...defaultState } = createDefaultState()
   const sessions = overrides.sessions ?? []
   const selectedSessionId = overrides.selectedSessionId ?? ''
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const parsedMessages =
-    overrides.displayMessages || overrides['displayMessages'] === undefined
-      ? (selectedSession?.messages.map((message) => toParsedMessage(message.id, message.text)) ?? [])
-      : []
+  const parsedMessages = overrides.parsedMessages ?? (selectedSession?.messages.map((message) => toParsedMessage(message.id, message.text)) ?? [])
   const displayMessages = overrides.displayMessages ?? getDisplayMessages(selectedSession?.messages ?? [], parsedMessages)
   return GetChatViewDom.getChatVirtualDom({
     ...defaultState,
     displayMessages,
     models,
-    parsedMessages,
     selectedModelId: 'test',
     selectedProjectId: '',
     selectedSessionId,
