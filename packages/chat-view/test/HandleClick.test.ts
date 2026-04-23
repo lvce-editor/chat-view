@@ -377,7 +377,7 @@ test('handleClick should open backend login page and sync backend auth state', a
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
   })
@@ -484,7 +484,7 @@ test('handleClick should logout and clear backend auth state', async () => {
       ok: true,
       status: 204,
     } as Response
-  }) as typeof globalThis.fetch
+  })
   const state: ChatState = {
     ...createDefaultState(),
     authAccessToken: 'backend-token-1',
@@ -582,7 +582,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'OAuthServer.create': async () => 4567,
     'OAuthServer.getCode': async () => 'code-1',
@@ -763,7 +763,7 @@ test('handleClick should retry previous prompt after saving openrouter api key',
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state: ChatState = {
@@ -855,7 +855,7 @@ test('handleClick should retry previous prompt after saving openapi api key', as
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state: ChatState = {

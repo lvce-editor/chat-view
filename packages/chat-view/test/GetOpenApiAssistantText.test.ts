@@ -31,7 +31,7 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -65,9 +65,9 @@ test('getOpenApiAssistantText should include x-client-request-id header', async 
       method: 'POST',
     })
 
-    const requestId = getRequestIdFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestId = getRequestIdFromInit(fetchInvocation?.[1])
     expect(requestId).toMatch(uuidRegex)
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.include_obfuscation).toBeUndefined()
     expect(requestBody.stream_options).toBeUndefined()
   } finally {
@@ -113,7 +113,7 @@ test('getOpenApiAssistantText should omit disabled tools from request payload', 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -142,7 +142,7 @@ test('getOpenApiAssistantText should omit disabled tools from request payload', 
       text: 'ok',
       type: 'success',
     })
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.tools).toEqual([
       {
         description: 'Write file',
@@ -171,7 +171,7 @@ test('getOpenApiAssistantText should omit reasoning effort for unsupported model
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -199,7 +199,7 @@ test('getOpenApiAssistantText should omit reasoning effort for unsupported model
       text: 'ok',
       type: 'success',
     })
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.reasoning).toBeUndefined()
   } finally {
     globalThis.fetch = originalFetch
@@ -216,7 +216,7 @@ test('getOpenApiAssistantText should include reasoning effort for supported mode
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -244,7 +244,7 @@ test('getOpenApiAssistantText should include reasoning effort for supported mode
       text: 'ok',
       type: 'success',
     })
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.reasoning).toEqual({
       effort: 'high',
     })
@@ -284,7 +284,7 @@ test('getOpenApiAssistantText should return tool-iterations-exhausted when model
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -358,7 +358,7 @@ test('getOpenApiAssistantText should send follow-up request when streaming funct
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getOpenApiAssistantText(
@@ -385,7 +385,7 @@ test('getOpenApiAssistantText should send follow-up request when streaming funct
       type: 'success',
     })
     expect(fetchInvocations).toHaveLength(2)
-    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1])
     expect(secondRequestBody.previous_response_id).toBe('resp_item_id')
     expect(secondRequestBody.input).toEqual([
       {
@@ -409,7 +409,7 @@ test('getOpenApiAssistantText should include include_obfuscation in stream_optio
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     await getOpenApiAssistantText(
@@ -431,7 +431,7 @@ test('getOpenApiAssistantText should include include_obfuscation in stream_optio
         stream: true,
       },
     )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.include_obfuscation).toBeUndefined()
     expect(requestBody.stream_options).toEqual({
       include_obfuscation: false,
@@ -451,7 +451,7 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     await getOpenApiAssistantText(
@@ -473,7 +473,7 @@ test('getOpenApiAssistantText should not include include_obfuscation when includ
         stream: true,
       },
     )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.include_obfuscation).toBeUndefined()
     expect(requestBody.stream_options).toBeUndefined()
   } finally {
@@ -491,7 +491,7 @@ test('getOpenApiAssistantText should include web_search tool when webSearchEnabl
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     await getOpenApiAssistantText(
@@ -513,7 +513,7 @@ test('getOpenApiAssistantText should include web_search tool when webSearchEnabl
         webSearchEnabled: true,
       },
     )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     const tools = Array.isArray(requestBody.tools) ? requestBody.tools : []
     expect(tools).toContainEqual({ type: 'web_search' })
   } finally {
@@ -531,7 +531,7 @@ test('getOpenApiAssistantText should not include web_search tool when webSearchE
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     await getOpenApiAssistantText(
@@ -553,7 +553,7 @@ test('getOpenApiAssistantText should not include web_search tool when webSearchE
         webSearchEnabled: false,
       },
     )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     const tools = Array.isArray(requestBody.tools) ? requestBody.tools : []
     expect(tools).not.toContainEqual({ type: 'web_search' })
   } finally {
@@ -571,7 +571,7 @@ test('getOpenApiAssistantText should include instructions when systemPrompt is p
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     await getOpenApiAssistantText(
@@ -593,7 +593,7 @@ test('getOpenApiAssistantText should include instructions when systemPrompt is p
         systemPrompt: 'Always answer in concise bullet points.',
       },
     )
-    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1] as RequestInit | undefined)
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
     expect(requestBody.instructions).toBe('Always answer in concise bullet points.')
   } finally {
     globalThis.fetch = originalFetch
@@ -639,7 +639,7 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   const dataEvents: unknown[] = []
   const toolCallsChunks: unknown[] = []
@@ -679,7 +679,7 @@ test('getOpenApiAssistantText should execute streaming tool calls and send autom
       type: 'success',
     })
     expect(fetchInvocations).toHaveLength(2)
-    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1])
     expect(secondRequestBody.previous_response_id).toBe('resp_1')
     expect(secondRequestBody.input).toEqual([
       {
@@ -748,7 +748,7 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   const toolCallsChunks: unknown[] = []
   try {
@@ -785,7 +785,7 @@ test('getOpenApiAssistantText should include error stack in failed tool call chu
       { assetDir: '', platform: 0 },
     ])
     expect(fetchInvocations).toHaveLength(2)
-    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1] as RequestInit | undefined)
+    const secondRequestBody = getRequestBodyFromInit(fetchInvocations[1][1])
     const input = secondRequestBody.input as readonly Record<string, unknown>[]
     const firstOutput = JSON.parse(String(input[0].output)) as Record<string, unknown>
     expect(firstOutput.errorStack).toBe("TypeError: Cannot read properties of undefined (reading 'invoke')\n    at test:1:1")

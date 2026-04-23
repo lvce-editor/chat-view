@@ -107,7 +107,7 @@ test.skip('getAiResponse should include OpenRouter raw 429 metadata message in a
       ok: false,
       status: 500,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -353,7 +353,7 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -456,7 +456,7 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -590,7 +590,7 @@ test('getAiResponse should execute backend response tool calls and continue with
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -709,7 +709,7 @@ test('getAiResponse should explain invalid successful backend responses', async 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -815,7 +815,7 @@ test('getAiResponse should return backend failure message for non-ok backend res
       ok: false,
       status: 500,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -861,7 +861,7 @@ test('getAiResponse should include backend API error message and status code for
       ok: false,
       status: 403,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -953,7 +953,7 @@ test.skip('getAiResponse should include OpenAI 429 quota error message details i
       ok: false,
       status: 429,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -1001,7 +1001,7 @@ test.skip('getAiResponse should include OpenAI http error details for non-429 re
       ok: false,
       status: 401,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -1064,7 +1064,7 @@ test.skip('getAiResponse should show a helpful message when OpenAI tool-call ite
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -1109,7 +1109,7 @@ test.skip('getAiResponse should fall back to generic OpenAI request failed messa
       ok: false,
       status: 500,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await getAiResponse({
@@ -1170,7 +1170,7 @@ test.skip('getAiResponse should stream OpenAI chunks when enabled', async () => 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   const streamedChunks: string[] = []
   try {
