@@ -16,6 +16,11 @@ export const toSummarySession = (session: ChatSession): ChatSession => {
         }
       : {}),
     messages: [],
+    ...(session.pinned
+      ? {
+          pinned: true,
+        }
+      : {}),
     ...(session.pullRequestUrl
       ? {
           pullRequestUrl: session.pullRequestUrl,

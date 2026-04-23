@@ -53,6 +53,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
+  readonly renderSelectChevrons: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly scrollDownButtonEnabled: boolean
@@ -106,6 +107,7 @@ export const getChatModeDetailVirtualDom = ({
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
+  renderSelectChevrons,
   runMode,
   runModePickerOpen = false,
   scrollDownButtonEnabled,
@@ -182,6 +184,7 @@ export const getChatModeDetailVirtualDom = ({
       tokensUsed,
       tokensMax,
       addContextButtonEnabled,
+      renderSelectChevrons,
       showRunMode,
       hasSpaceForRunModePicker,
       runMode,

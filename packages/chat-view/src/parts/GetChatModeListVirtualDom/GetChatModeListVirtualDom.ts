@@ -41,6 +41,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
+  readonly renderSelectChevrons: boolean
   readonly runMode: RunMode
   readonly runModePickerOpen?: boolean
   readonly searchEnabled?: boolean
@@ -49,6 +50,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
   readonly selectedSessionId: string
+  readonly sessionPinningEnabled: boolean
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
   readonly showRunMode: boolean
@@ -90,6 +92,7 @@ export const getChatModeListVirtualDom = ({
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
+  renderSelectChevrons,
   runMode,
   runModePickerOpen = false,
   searchEnabled = false,
@@ -98,6 +101,7 @@ export const getChatModeListVirtualDom = ({
   selectChevronEnabled,
   selectedModelId,
   selectedSessionId,
+  sessionPinningEnabled,
   sessions,
   showChatListTime,
   showRunMode,
@@ -131,7 +135,15 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(
+      visibleSessions,
+      selectedSessionId,
+      listFocusOutline,
+      listFocusedIndex,
+      showChatListTime,
+      chatListScrollTop,
+      sessionPinningEnabled,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
@@ -154,6 +166,7 @@ export const getChatModeListVirtualDom = ({
       tokensUsed,
       tokensMax,
       addContextButtonEnabled,
+      renderSelectChevrons,
       showRunMode,
       hasSpaceForRunModePicker,
       runMode,

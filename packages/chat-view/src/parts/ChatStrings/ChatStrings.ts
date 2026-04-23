@@ -217,6 +217,14 @@ export const deleteChatSession = (): string => {
   return i18nString(UiStrings.Archive)
 }
 
+export const pinChatSession = (): string => {
+  return i18nString(UiStrings.Pin)
+}
+
+export const unpinChatSession = (): string => {
+  return i18nString(UiStrings.Unpin)
+}
+
 export const defaultSessionTitle = (): string => {
   return i18nString(UiStrings.Chat1)
 }

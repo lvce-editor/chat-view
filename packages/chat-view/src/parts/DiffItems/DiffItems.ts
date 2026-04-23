@@ -37,6 +37,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.reasoningEffort === newState.reasoningEffort &&
     oldState.reasoningEffortPickerOpen === newState.reasoningEffortPickerOpen &&
     oldState.reasoningPickerEnabled === newState.reasoningPickerEnabled &&
+    oldState.renderSelectChevrons === newState.renderSelectChevrons &&
     oldState.renamingSessionId === newState.renamingSessionId &&
     oldState.selectedModelId === newState.selectedModelId &&
     oldState.selectedProjectId === newState.selectedProjectId &&

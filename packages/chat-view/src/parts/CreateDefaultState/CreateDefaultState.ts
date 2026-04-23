@@ -126,6 +126,7 @@ export const createDefaultState = (): ChatState => {
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled: false,
     renamingSessionId: '',
+    renderSelectChevrons: true,
     responsivePickerVisibilityEnabled,
     runMode: 'local',
     runModePickerOpen: false,
@@ -137,6 +138,7 @@ export const createDefaultState = (): ChatState => {
     selectedModelId: defaultModelId,
     selectedProjectId: defaultProjectId,
     selectedSessionId: defaultSessionId,
+    sessionPinningEnabled: true,
     sessions: [
       {
         id: defaultSessionId,

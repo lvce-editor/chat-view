@@ -45,6 +45,7 @@ export const getChatSendAreaDom = (
   tokensUsed: number,
   tokensMax: number,
   addContextButtonEnabled: boolean,
+  renderSelectChevrons: boolean,
   showRunMode: boolean,
   hasSpaceForRunModePicker: boolean,
   runMode: RunMode,
@@ -109,16 +110,25 @@ export const getChatSendAreaDom = (
       role: 'toolbar',
       type: VirtualDomElements.Div,
     },
-    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled),
-    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
-    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []),
+    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, renderSelectChevrons, selectChevronEnabled) : []),
+    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, renderSelectChevrons, selectChevronEnabled),
+    ...(reasoningPickerEnabled
+      ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, renderSelectChevrons, selectChevronEnabled)
+      : []),
+    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, renderSelectChevrons, selectChevronEnabled) : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
     ...(showImplementPlanButton ? getImplementPlanButtonDom() : []),
     ...(showGitBranchPicker
-      ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, selectChevronEnabled)
+      ? getGitBranchPickerVirtualDom(
+          gitBranches,
+          gitBranchPickerOpen,
+          gitBranchPickerErrorMessage,
+          fallbackBranchName,
+          renderSelectChevrons,
+          selectChevronEnabled,
+        )
       : []),
     ...(showScrollDownButton ? getScrollDownButtonDom() : []),
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),

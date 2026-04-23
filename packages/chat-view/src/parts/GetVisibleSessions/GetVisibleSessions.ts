@@ -1,12 +1,18 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import { getPinnedSessionsFirst } from '../GetPinnedSessionsFirst/GetPinnedSessionsFirst.ts'
 
-export const getVisibleSessions = (sessions: readonly ChatSession[], selectedProjectId: string): readonly ChatSession[] => {
+export const getVisibleSessions = (
+  sessions: readonly ChatSession[],
+  selectedProjectId: string,
+  sessionPinningEnabled = true,
+): readonly ChatSession[] => {
   if (!selectedProjectId) {
-    return sessions
+    return sessionPinningEnabled ? getPinnedSessionsFirst(sessions) : sessions
   }
   const hasAssignedProjects = sessions.some((session) => !!session.projectId)
   if (!hasAssignedProjects) {
-    return sessions
+    return sessionPinningEnabled ? getPinnedSessionsFirst(sessions) : sessions
   }
-  return sessions.filter((session) => session.projectId === selectedProjectId)
+  const projectSessions = sessions.filter((session) => session.projectId === selectedProjectId)
+  return sessionPinningEnabled ? getPinnedSessionsFirst(projectSessions) : projectSessions
 }
