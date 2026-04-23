@@ -5,6 +5,7 @@ import { bundleJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
 const dist = join(root, '.tmp', 'dist')
+const distChatViewModel = join(root, '.tmp', 'dist-chat-view-model')
 
 const readJson = async (path) => {
   const content = await readFile(path, 'utf8')
@@ -13,6 +14,27 @@ const readJson = async (path) => {
 
 const writeJson = async (path, json) => {
   await writeFile(path, JSON.stringify(json, null, 2) + '\n')
+}
+
+const preparePackageJson = (packageJson, version, main) => {
+  delete packageJson.scripts
+  delete packageJson.dependencies
+  delete packageJson.devDependencies
+  delete packageJson.prettier
+  delete packageJson.jest
+  delete packageJson.xo
+  delete packageJson.directories
+  delete packageJson.nodemonConfig
+  packageJson.version = version
+  packageJson.main = main
+  return packageJson
+}
+
+const writePackagedArtifact = async (packageName, outputDir, main, version) => {
+  const packageJson = await readJson(join(root, 'packages', packageName, 'package.json'))
+  await writeJson(join(outputDir, 'package.json'), preparePackageJson(packageJson, version, main))
+  await cp(join(root, 'README.md'), join(outputDir, 'README.md'))
+  await cp(join(root, 'LICENSE'), join(outputDir, 'LICENSE'))
 }
 
 const getGitTagFromGit = async () => {
@@ -50,26 +72,13 @@ const getVersion = async () => {
 }
 
 await rm(dist, { recursive: true, force: true })
+await rm(distChatViewModel, { recursive: true, force: true })
 await mkdir(dist, { recursive: true })
+await mkdir(distChatViewModel, { recursive: true })
 
 await bundleJs()
 
 const version = await getVersion()
 
-const packageJson = await readJson(join(root, 'packages', 'chat-view', 'package.json'))
-
-delete packageJson.scripts
-delete packageJson.dependencies
-delete packageJson.devDependencies
-delete packageJson.prettier
-delete packageJson.jest
-delete packageJson.xo
-delete packageJson.directories
-delete packageJson.nodemonConfig
-packageJson.version = version
-packageJson.main = 'dist/chatViewWorkerMain.js'
-
-await writeJson(join(dist, 'package.json'), packageJson)
-
-await cp(join(root, 'README.md'), join(dist, 'README.md'))
-await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+await writePackagedArtifact('chat-view', dist, 'dist/chatViewWorkerMain.js', version)
+await writePackagedArtifact('chat-view-model', distChatViewModel, 'dist/chatViewModelWorkerMain.js', version)

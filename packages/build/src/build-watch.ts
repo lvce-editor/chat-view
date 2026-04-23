@@ -14,6 +14,12 @@ const tasks = [
     outputFile: '.tmp/dist/dist/chatViewWorkerMain.js',
     external: ['node:buffer', 'electron', 'ws', 'node:worker_threads'],
   },
+  {
+    input: 'packages/chat-view-model/src/chatViewModelWorkerMain.ts',
+    outputDir: '.tmp/dist-chat-view-model/dist',
+    outputFile: '.tmp/dist-chat-view-model/dist/chatViewModelWorkerMain.js',
+    external: ['node:buffer', 'electron', 'ws', 'node:worker_threads'],
+  },
 ]
 
 const main = async () => {
