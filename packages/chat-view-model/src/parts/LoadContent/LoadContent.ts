@@ -1,15 +1,9 @@
-import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type {
-  ChatModel,
   ChatSession,
   ChatViewMode,
-  ComposerAttachment,
-  ParsedMessage,
-  Project,
-  ReasoningEffort,
   ViewModel,
 } from '../ViewModel/ViewModel.ts'
-import { getLoggedOutBackendAuthState, type BackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
@@ -33,7 +27,7 @@ import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
-import { loadPreferences, type LoadedPreferences } from '../LoadPreferences/LoadPreferences.ts'
+import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
@@ -74,115 +68,9 @@ export interface LoadContentState extends ViewModel {
   readonly width: number
 }
 
-export interface LoadContentDependencies<TState extends LoadContentState = LoadContentState> {
-  readonly ensureBlankProject: (projects: readonly Project[], blankProject: Project) => readonly Project[]
-  readonly getComposerAttachments: (selectedSessionId: string) => Promise<readonly ComposerAttachment[]>
-  readonly getComposerAttachmentsHeight: (composerAttachments: readonly ComposerAttachment[], width: number) => number
-  readonly getLoggedOutBackendAuthState: () => BackendAuthState
-  readonly getModelPickerHeight: (modelPickerHeaderHeight: number, visibleModelCount: number) => number
-  readonly getSavedAgentMode: (savedState: unknown) => AgentMode | undefined
-  readonly getSavedChatListScrollTop: (savedState: unknown) => number | undefined
-  readonly getSavedComposerSelection: (savedState: unknown, composerValue: string) => readonly [number, number] | undefined
-  readonly getSavedComposerValue: (savedState: unknown) => string | undefined
-  readonly getSavedLastNormalViewMode: (savedState: unknown) => LastNormalViewMode | undefined
-  readonly getSavedMessagesScrollTop: (savedState: unknown) => number | undefined
-  readonly getSavedProjectExpandedIds: (savedState: unknown) => readonly string[] | undefined
-  readonly getSavedProjectListScrollTop: (savedState: unknown) => number | undefined
-  readonly getSavedProjects: (savedState: unknown) => readonly Project[] | undefined
-  readonly getSavedProjectSidebarWidth: (savedState: unknown) => number | undefined
-  readonly getSavedReasoningEffort: (savedState: unknown) => ReasoningEffort | undefined
-  readonly getSavedSelectedModelId: (savedState: unknown) => string | undefined
-  readonly getSavedSelectedProjectId: (savedState: unknown) => string | undefined
-  readonly getSavedSelectedSessionId: (savedState: unknown) => string | undefined
-  readonly getSavedSessions: (savedState: unknown) => readonly ChatSession[] | undefined
-  readonly getSavedViewMode: (savedState: unknown) => ChatViewMode | undefined
-  readonly getVisibleModels: (models: readonly ChatModel[], searchValue: string) => readonly ChatModel[]
-  readonly getVisibleSessions: (sessions: readonly ChatSession[], selectedProjectId: string) => readonly ChatSession[]
-  readonly listChatSessions: () => Promise<readonly ChatSession[]>
-  readonly loadPreferences: () => Promise<LoadedPreferences>
-  readonly loadSelectedSessionMessages: (sessions: readonly ChatSession[], selectedSessionId: string) => Promise<readonly ChatSession[]>
-  readonly normalizeSessionsOnLoad: (sessions: readonly ChatSession[]) => readonly ChatSession[]
-  readonly parseAndStoreMessagesContent: (parsedMessages: readonly ParsedMessage[], messages: readonly unknown[]) => Promise<readonly ParsedMessage[]>
-  readonly refreshGitBranchPickerVisibility: (state: TState) => Promise<TState>
-  readonly saveChatSession: (session: ChatSession) => Promise<void>
-  readonly syncBackendAuth: (backendUrl: string) => Promise<BackendAuthState>
-  readonly toSummarySession: (session: ChatSession) => ChatSession
-}
-
-const getDefaultLoadContentDependencies = <TState extends LoadContentState>(): LoadContentDependencies<TState> => {
-  return {
-    ensureBlankProject,
-    getComposerAttachments,
-    getComposerAttachmentsHeight,
-    getLoggedOutBackendAuthState,
-    getModelPickerHeight,
-    getSavedAgentMode,
-    getSavedChatListScrollTop,
-    getSavedComposerSelection,
-    getSavedComposerValue,
-    getSavedLastNormalViewMode,
-    getSavedMessagesScrollTop,
-    getSavedProjectExpandedIds,
-    getSavedProjectListScrollTop,
-    getSavedProjects,
-    getSavedProjectSidebarWidth,
-    getSavedReasoningEffort,
-    getSavedSelectedModelId,
-    getSavedSelectedProjectId,
-    getSavedSelectedSessionId,
-    getSavedSessions,
-    getSavedViewMode,
-    getVisibleModels,
-    getVisibleSessions,
-    listChatSessions,
-    loadPreferences,
-    loadSelectedSessionMessages,
-    normalizeSessionsOnLoad,
-    parseAndStoreMessagesContent,
-    refreshGitBranchPickerVisibility: async (state: TState) => refreshGitBranchPickerVisibility(state),
-    saveChatSession: async (session: ChatSession) => saveChatSession(session as unknown as Parameters<typeof saveChatSession>[0]),
-    syncBackendAuth,
-    toSummarySession,
-  }
-}
-
 export const loadContent = async <TState extends LoadContentState>(
   state: TState,
   savedState: unknown,
-  {
-    ensureBlankProject,
-    getComposerAttachments,
-    getComposerAttachmentsHeight,
-    getLoggedOutBackendAuthState,
-    getModelPickerHeight,
-    getSavedAgentMode,
-    getSavedChatListScrollTop,
-    getSavedComposerSelection,
-    getSavedComposerValue,
-    getSavedLastNormalViewMode,
-    getSavedMessagesScrollTop,
-    getSavedProjectExpandedIds,
-    getSavedProjectListScrollTop,
-    getSavedProjects,
-    getSavedProjectSidebarWidth,
-    getSavedReasoningEffort,
-    getSavedSelectedModelId,
-    getSavedSelectedProjectId,
-    getSavedSelectedSessionId,
-    getSavedSessions,
-    getSavedViewMode,
-    getVisibleModels,
-    getVisibleSessions,
-    listChatSessions,
-    loadPreferences,
-    loadSelectedSessionMessages,
-    normalizeSessionsOnLoad,
-    parseAndStoreMessagesContent,
-    refreshGitBranchPickerVisibility,
-    saveChatSession,
-    syncBackendAuth,
-    toSummarySession,
-  }: LoadContentDependencies<TState> = getDefaultLoadContentDependencies<TState>(),
 ): Promise<TState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
@@ -224,13 +112,13 @@ export const loadContent = async <TState extends LoadContentState>(
   let sessions: readonly ChatSession[] = storedSessions
   if (sessions.length === 0 && legacySavedSessions && legacySavedSessions.length > 0) {
     for (const session of legacySavedSessions) {
-      await saveChatSession(session)
+      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
     }
     sessions = legacySavedSessions.map(toSummarySession)
   }
   if (sessions.length === 0 && state.sessions.length > 0) {
     for (const session of state.sessions) {
-      await saveChatSession(session)
+      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
     }
     sessions = state.sessions.map(toSummarySession)
   }
