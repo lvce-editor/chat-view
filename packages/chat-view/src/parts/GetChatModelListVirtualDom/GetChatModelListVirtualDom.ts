@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -19,7 +19,7 @@ export const getChatModelListVirtualDom = (visibleModels: readonly ChatModel[], 
       onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpModelPickerList,
       onScroll: DomEventListenerFunctions.HandleModelPickerListScroll,
-      role: 'listbox',
+      role: AriaRoles.ListBox,
       type: VirtualDomElements.Ul,
     },
 

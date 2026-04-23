@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
@@ -113,7 +113,7 @@ export const getMessagesDom = (
         className: 'ChatMessages',
         onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
         onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-        role: 'log',
+        role: AriaRoles.Log,
         scrollTop: messagesScrollTop,
         type: VirtualDomElements.Div,
       },
@@ -126,7 +126,7 @@ export const getMessagesDom = (
       className: 'ChatMessages',
       onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
       onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-      role: 'log',
+      role: AriaRoles.Log,
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },
