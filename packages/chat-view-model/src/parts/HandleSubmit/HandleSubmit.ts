@@ -320,10 +320,10 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
   const shouldSyncBackendAuth = (state.authEnabled || state.useOwnBackend) && !!state.backendUrl
   const authState = shouldSyncBackendAuth ? await dependencies.syncBackendAuth(state.backendUrl) : undefined
   const effectiveState = authState
-    ? ({
+    ? {
         ...state,
         ...authState,
-      })
+      }
     : state
   const {
     agentMode,
