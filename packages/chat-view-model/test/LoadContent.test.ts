@@ -95,6 +95,7 @@ const createState = (): LoadContentState => {
     useChatMathWorker: false,
     useChatNetworkWorkerForRequests: false,
     useChatToolWorker: false,
+    useModelWorker: false,
     useOwnBackend: false,
     userName: '',
     userState: 'loggedOut',

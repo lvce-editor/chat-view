@@ -121,6 +121,7 @@ export interface ViewModel {
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker: boolean
+  readonly useModelWorker: boolean
   readonly userName: string
   readonly userState: AuthUserState
   readonly viewMode: ChatViewMode
