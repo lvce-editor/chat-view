@@ -192,6 +192,7 @@ export const commandMap = {
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
   ),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
+  'Chat.handleInputCopy': wrapCommand(CopyInput.copyInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
