@@ -320,10 +320,10 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
   const shouldSyncBackendAuth = (state.authEnabled || state.useOwnBackend) && !!state.backendUrl
   const authState = shouldSyncBackendAuth ? await dependencies.syncBackendAuth(state.backendUrl) : undefined
   const effectiveState = authState
-    ? ({
+    ? {
         ...state,
         ...authState,
-      } as TState)
+      }
     : state
   const {
     agentMode,
@@ -461,7 +461,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
         selectedSessionId: newSessionId,
         sessions: [...workingSessions, provisionedSession],
         viewMode: 'detail',
-      } as TState),
+      }),
       dependencies.getNextAutoScrollTop,
     )
     optimisticState = dependencies.withUpdatedChatInputHistory(optimisticState, userText)
@@ -507,7 +507,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
         nextMessageId: nextMessageId + 1,
         parsedMessages,
         sessions: updatedSessionsWithStatus,
-      } as TState),
+      }),
       dependencies.getNextAutoScrollTop,
     )
     optimisticState = dependencies.withUpdatedChatInputHistory(optimisticState, userText)
@@ -676,7 +676,7 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
       nextMessageId: latestState.nextMessageId + 1,
       parsedMessages: finalParsedMessages,
       sessions: updatedSessions,
-    } as TState),
+    }),
     dependencies.getNextAutoScrollTop,
   )
 }

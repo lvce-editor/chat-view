@@ -260,13 +260,13 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     return {
       json: async () => ({ choices: [{ message: { content: 'Real OpenRouter response' } }] }),
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -314,9 +314,9 @@ test('handleSubmit should not fall back to mock response for openRouter models w
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     throw new Error('network failure')
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -344,12 +344,12 @@ test('handleSubmit should show too many requests message for OpenRouter 429 resp
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     return {
       ok: false,
       status: 429,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -377,13 +377,13 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     return {
       json: async () => ({ choices: [{ message: { content: 'Real OpenAI response' } }] }),
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -434,7 +434,7 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: unknown) => {
+  globalThis.fetch = async (input: unknown): Promise<Response> => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
@@ -457,7 +457,7 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -489,7 +489,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
     'Chat.rerender': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Stream"}\n\n',
       'data: {"type":"response.output_text.delta","delta":"ing"}\n\n',
@@ -512,7 +512,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -553,7 +553,7 @@ test('handleSubmit should ignore additional streaming events after session is st
   const firstReadPromise = new Promise<void>((resolve) => {
     releaseFirstRead = resolve
   })
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Streaming"}\n\n',
       'data: {"type":"response.completed"}\n\n',
@@ -578,7 +578,7 @@ test('handleSubmit should ignore additional streaming events after session is st
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -642,7 +642,7 @@ test('handleSubmit should use chat message parsing worker for streaming message 
       ]),
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Stream"}\n\n',
       'data: {"type":"response.output_text.delta","delta":"ing"}\n\n',
@@ -665,7 +665,7 @@ test('handleSubmit should use chat message parsing worker for streaming message 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -740,7 +740,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
   })
   const originalFetch = globalThis.fetch
   let requestIndex = 0
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     const chunks =
       requestIndex === 0
         ? [
@@ -767,7 +767,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -841,7 +841,7 @@ test('handleSubmit should emit streaming function call data events when enabled'
   })
   const originalFetch = globalThis.fetch
   let requestIndex = 0
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     const chunks =
       requestIndex === 0
         ? [
@@ -868,7 +868,7 @@ test('handleSubmit should emit streaming function call data events when enabled'
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -1044,7 +1044,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
   })
   const originalFetch = globalThis.fetch
   const requests: { url: string; init?: RequestInit }[] = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args
     const requestInput = input as string | URL | { readonly url: string }
     const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
@@ -1075,7 +1075,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
       ok: false,
       status: 404,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {
@@ -1280,7 +1280,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   })
   const originalFetch = globalThis.fetch
   let capturedBody: Record<string, unknown> | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     const body = init?.body
     if (typeof body === 'string') {
@@ -1291,7 +1291,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   const state = {
     ...createDefaultState(),
@@ -1336,7 +1336,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   })
   const originalFetch = globalThis.fetch
   let capturedBody: Record<string, unknown> | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     const body = init?.body
     if (typeof body === 'string') {
@@ -1347,7 +1347,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   const state = {
     ...createDefaultState(),
@@ -1381,7 +1381,7 @@ test('handleSubmit should generate ai session title for new session when enabled
   })
   const originalFetch = globalThis.fetch
   let requestIndex = 0
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     requestIndex += 1
     if (requestIndex === 1) {
       return {
@@ -1395,7 +1395,7 @@ test('handleSubmit should generate ai session title for new session when enabled
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state = {

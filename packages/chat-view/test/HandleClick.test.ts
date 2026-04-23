@@ -364,7 +364,7 @@ test('handleClick should open backend login page and sync backend auth state', a
   })
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     return {
@@ -377,7 +377,7 @@ test('handleClick should open backend login page and sync backend auth state', a
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
   })
@@ -477,14 +477,14 @@ test('handleClick should logout and clear backend auth state', async () => {
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     return {
       ok: true,
       status: 204,
     } as Response
-  }) as typeof globalThis.fetch
+  }
   const state: ChatState = {
     ...createDefaultState(),
     authAccessToken: 'backend-token-1',
@@ -562,7 +562,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
   let fetchCallCount = 0
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     fetchCallCount++
@@ -582,7 +582,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'OAuthServer.create': async () => 4567,
     'OAuthServer.getCode': async () => 'code-1',
@@ -757,13 +757,13 @@ test('handleClick should retry previous prompt after saving openrouter api key',
     'Preferences.update': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     return {
       json: async () => ({ choices: [{ message: { content: 'Recovered OpenRouter response' } }] }),
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state: ChatState = {
@@ -849,13 +849,13 @@ test('handleClick should retry previous prompt after saving openapi api key', as
     'Preferences.update': async () => {},
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = async (): Promise<Response> => {
     return {
       json: async () => ({ choices: [{ message: { content: 'Recovered OpenAI response' } }] }),
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  }
 
   try {
     const state: ChatState = {
@@ -965,6 +965,7 @@ test('handleClick should create pull request for completed background session', 
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should open detail for session index from y coordinate', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -985,6 +986,7 @@ test.skip('handleClickList should open detail for session index from y coordinat
   expect(result.viewMode).toBe('detail')
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should keep state when click index has no session', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
