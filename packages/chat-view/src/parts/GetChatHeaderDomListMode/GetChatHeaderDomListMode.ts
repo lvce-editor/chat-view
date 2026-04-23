@@ -16,9 +16,8 @@ export const getChatHeaderListModeDom = (
   searchFieldVisible = false,
   searchValue = '',
 ): readonly VirtualDomNode[] => {
-  const hasAuthError = authEnabled && !!authErrorMessage
   const hasSearchField = searchEnabled && searchFieldVisible
-  const headerChildCount = 2 + (authEnabled ? 1 : 0) + (hasAuthError ? 1 : 0) + (hasSearchField ? 1 : 0)
+  const headerChildCount = 2 + (authEnabled ? 1 : 0) + (hasSearchField ? 1 : 0)
   return [
     {
       childCount: headerChildCount,
@@ -26,7 +25,7 @@ export const getChatHeaderListModeDom = (
       onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Header,
     },
-    ...getChatHeaderAuthDom(authEnabled, userState, userName),
+    ...getChatHeaderAuthDom(authEnabled, userState, userName, authErrorMessage),
     {
       childCount: 1,
       className: ClassNames.ChatHeaderLabel,
@@ -35,15 +34,5 @@ export const getChatHeaderListModeDom = (
     text(Strings.chats()),
     ...getChatHeaderActionsDom('list', searchEnabled),
     ...getChatSearchDom(hasSearchField, searchValue),
-    ...(hasAuthError
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatAuthError,
-            type: VirtualDomElements.Span,
-          },
-          text(authErrorMessage),
-        ]
-      : []),
   ]
 }
