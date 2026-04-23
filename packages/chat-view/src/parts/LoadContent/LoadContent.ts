@@ -30,6 +30,7 @@ import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSes
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
+import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
@@ -65,6 +66,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
+  const models = await getDefaultModels()
+
   const authState =
     authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
@@ -102,8 +105,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
   )
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
-  const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
-  const visibleModels = getVisibleModels(state.models, '')
+  const selectedModelId = models.some((model) => model.id === preferredModelId) ? preferredModelId : models[0]?.id || ''
+  const visibleModels = getVisibleModels(models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)

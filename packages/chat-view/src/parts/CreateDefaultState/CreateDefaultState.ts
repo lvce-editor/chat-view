@@ -9,6 +9,7 @@ import { getResponsivePickerState } from '../GetResponsivePickerState/GetRespons
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
+import { ChatModel } from '../ChatModel/ChatModel.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
@@ -20,7 +21,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   const responsivePickerVisibilityEnabled = false
-  const models = getDefaultModels()
+  const models: readonly ChatModel[] = []
   const visibleModels = getVisibleModels(models, '')
   const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
   return {

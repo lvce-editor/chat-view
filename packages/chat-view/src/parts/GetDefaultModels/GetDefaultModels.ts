@@ -7,6 +7,6 @@ export { getDefaultModelsOpenAi } from './GetDefaultModelsOpenAi/GetDefaultModel
 export { getDefaultModelsOpenRouter } from './GetDefaultModelsOpenRouter/GetDefaultModelsOpenRouter.ts'
 export { getDefaultModelsTest } from './GetDefaultModelsTest/GetDefaultModelsTest.ts'
 
-export const getDefaultModels = (): readonly ChatModel[] => {
+export const getDefaultModels = async (): Promise<readonly ChatModel[]> => {
   return [...getDefaultModelsTest(), ...getDefaultModelsOpenAi(), ...getDefaultModelsOpenRouter()]
 }
