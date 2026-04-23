@@ -65,7 +65,9 @@ export const getChatOverlaysVirtualDom = ({
       composerAttachmentPreviewOverlayError,
     ),
     ...(agentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(modelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue, showModelUsageMultiplier) : []),
+    ...(modelPickerVisible
+      ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue, showModelUsageMultiplier)
+      : []),
     ...(runModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
   ]
 }
