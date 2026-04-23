@@ -2,7 +2,9 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 
 export const handleModelInputBlur = async (state: ChatState): Promise<ChatState> => {
-  if (!state.modelPickerOpen) {
+  const { modelPickerHeaderHeight, modelPickerOpen, models } = state
+
+  if (!modelPickerOpen) {
     return state
   }
   return {
@@ -11,10 +13,10 @@ export const handleModelInputBlur = async (state: ChatState): Promise<ChatState>
     focused: true,
     listFocusedIndex: -1,
     listFocusOutline: false,
-    modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
+    modelPickerHeight: getModelPickerHeight(modelPickerHeaderHeight, models.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
-    visibleModels: state.models,
+    visibleModels: models,
   }
 }
