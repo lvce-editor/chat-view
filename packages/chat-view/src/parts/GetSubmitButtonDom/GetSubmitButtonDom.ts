@@ -1,5 +1,6 @@
 import { AriaRoles, mergeClassNames, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'

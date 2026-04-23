@@ -165,6 +165,7 @@ export const createDefaultState = (): ChatState => {
     useChatNetworkWorkerForRequests: false,
     useChatToolWorker: true,
     useMockApi: false,
+    useModelWorker: false,
     userName: '',
     userState: 'loggedOut',
     userSubscriptionPlan: '',

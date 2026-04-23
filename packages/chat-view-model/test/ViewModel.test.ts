@@ -63,6 +63,7 @@ test('ViewModel includes the chat rendering state required by chat-view', () => 
     tokensUsed: 100,
     usageOverviewEnabled: true,
     useChatMathWorker: false,
+    useModelWorker: false,
     userName: 'Simon',
     userState: 'loggedIn',
     viewMode: 'detail',
