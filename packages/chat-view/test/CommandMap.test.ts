@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { commandMap } from '../src/parts/CommandMap/CommandMap.ts'
+import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
 test('commandMap should expose getComposerSelection as a wrapped getter', async () => {
