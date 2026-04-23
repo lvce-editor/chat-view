@@ -4,8 +4,9 @@ export const name = 'chat-view.copy-input'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) => {
   await Chat.show()
+  await ClipBoard.enableMemoryClipBoard()
   const composer = Locator('.ChatInputBox[name="composer"]')
   await expect(composer).toBeVisible()
   await Chat.handleInput('copied text')
