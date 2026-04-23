@@ -3,6 +3,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
@@ -110,7 +111,7 @@ export const getMessagesDom = (
     return [
       {
         childCount: 0,
-        className: 'ChatMessages',
+        className: ClassNames.ChatMessages,
         onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
         onScroll: DomEventListenerFunctions.HandleMessagesScroll,
         role: 'log',
@@ -123,7 +124,7 @@ export const getMessagesDom = (
   return [
     {
       childCount: displayMessages.length,
-      className: 'ChatMessages',
+      className: ClassNames.ChatMessages,
       onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
       onScroll: DomEventListenerFunctions.HandleMessagesScroll,
       role: 'log',

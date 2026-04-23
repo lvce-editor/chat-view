@@ -35,7 +35,7 @@ export const getSessionDom = (
     },
     {
       childCount: 0,
-      className: `${ClassNames.ChatListItemStatusIcon} ${sessionStatusClassName}`,
+      className: mergeClassNames(ClassNames.ChatListItemStatusIcon, sessionStatusClassName),
       type: VirtualDomElements.Div,
     },
     {

@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
-import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ParsedMessage } from '../src/parts/ParsedMessage/ParsedMessage.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -227,13 +227,13 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
   expect(modelPickerToggleLabel).toMatchObject({
     className: ClassNames.SelectLabel,
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Span,
   })
   expect(modelPickerToggleChevron).toMatchObject({
     className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
     name: 'model-picker-toggle',
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Div,
   })
   expect(modelPicker).toBeUndefined()
@@ -297,7 +297,7 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   expect(agentModePickerToggleLabel).toMatchObject({
     className: ClassNames.SelectLabel,
     name: 'agent-mode-picker-toggle',
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Span,
   })
   expect(primaryControls).toMatchObject({

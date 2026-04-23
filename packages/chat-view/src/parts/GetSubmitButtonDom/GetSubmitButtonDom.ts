@@ -1,4 +1,5 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, mergeClassNames, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
@@ -17,8 +18,8 @@ export const getSubmitButtonDom = (isSendDisabled: boolean): readonly VirtualDom
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconArrowUp',
-      role: 'none',
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowUp),
+      role: AriaRoles.None,
       type: VirtualDomElements.Div,
     },
   ]
