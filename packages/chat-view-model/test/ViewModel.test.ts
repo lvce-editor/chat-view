@@ -57,6 +57,7 @@ test('ViewModel includes the chat rendering state required by chat-view', () => 
     selectedSessionId: 'session-1',
     sessions: [{ id: 'session-1', messages: [], title: 'Session' }],
     showChatListTime: true,
+    showModelUsageMultiplier: true,
     showRunMode: true,
     todoListToolEnabled: true,
     tokensMax: 1000,

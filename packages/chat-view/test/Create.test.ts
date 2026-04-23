@@ -21,6 +21,7 @@ test('create should show run mode by default', () => {
   expect(newStateTyped.reasoningEffort).toBe('medium')
   expect(newStateTyped.reasoningPickerEnabled).toBe(false)
   expect(newStateTyped.chatDebugLoggingEnabled).toBe(true)
+  expect(newStateTyped.showModelUsageMultiplier).toBe(true)
   expect(newStateTyped.showRunMode).toBe(true)
   expect(newStateTyped.runMode).toBe('local')
 })

@@ -6,8 +6,12 @@ import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostDom } from '../GetUsageCostDom/GetUsageCostDom.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 
-export const getChatModelListItemVirtualDom = (model: ChatModel, selectedModelId: string): readonly VirtualDomNode[] => {
-  const detail = getUsageCostLabel(model)
+export const getChatModelListItemVirtualDom = (
+  model: ChatModel,
+  selectedModelId: string,
+  showModelUsageMultiplier = true,
+): readonly VirtualDomNode[] => {
+  const detail = showModelUsageMultiplier ? getUsageCostLabel(model) : ''
   const hasDetail = detail !== ''
   const usageCostDom = getUsageCostDom(detail)
   const selected = model.id === selectedModelId

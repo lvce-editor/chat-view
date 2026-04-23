@@ -118,6 +118,7 @@ import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetSc
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetSelectChevronEnabled from '../SetSelectChevronEnabled/SetSelectChevronEnabled.ts'
 import * as SetShowChatListTime from '../SetShowChatListTime/SetShowChatListTime.ts'
+import * as SetShowModelUsageMultiplier from '../SetShowModelUsageMultiplier/SetShowModelUsageMultiplier.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
@@ -261,6 +262,7 @@ export const commandMap = {
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setSelectChevronEnabled': wrapCommand(SetSelectChevronEnabled.setSelectChevronEnabled),
   'Chat.setShowChatListTime': wrapCommand(SetShowChatListTime.setShowChatListTime),
+  'Chat.setShowModelUsageMultiplier': wrapCommand(SetShowModelUsageMultiplier.setShowModelUsageMultiplier),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),

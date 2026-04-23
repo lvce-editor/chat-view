@@ -123,6 +123,7 @@ export interface ChatState {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier: boolean
   readonly showRunMode: boolean
   readonly streamingEnabled: boolean
   readonly systemPrompt: string

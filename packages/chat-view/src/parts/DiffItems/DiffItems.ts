@@ -45,6 +45,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.searchFieldVisible === newState.searchFieldVisible &&
     oldState.searchValue === newState.searchValue &&
     oldState.showChatListTime === newState.showChatListTime &&
+    oldState.showModelUsageMultiplier === newState.showModelUsageMultiplier &&
     oldState.showRunMode === newState.showRunMode &&
     oldState.runMode === newState.runMode &&
     oldState.runModePickerOpen === newState.runModePickerOpen &&

@@ -10,6 +10,7 @@ export const getChatModelPickerPopOverVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,
   modelPickerSearchValue: string,
+  showModelUsageMultiplier = true,
 ): readonly VirtualDomNode[] => {
   const visibleModels = getVisibleModels(models, modelPickerSearchValue)
   return [
@@ -26,6 +27,6 @@ export const getChatModelPickerPopOverVirtualDom = (
       type: VirtualDomElements.Div,
     },
     ...getModelPickerHeaderDom(modelPickerSearchValue),
-    ...getChatModelListVirtualDom(visibleModels, selectedModelId),
+    ...getChatModelListVirtualDom(visibleModels, selectedModelId, showModelUsageMultiplier),
   ]
 }
