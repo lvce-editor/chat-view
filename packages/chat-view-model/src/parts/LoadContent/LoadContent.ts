@@ -1,8 +1,4 @@
-import type {
-  ChatSession,
-  ChatViewMode,
-  ViewModel,
-} from '../ViewModel/ViewModel.ts'
+import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
@@ -68,10 +64,7 @@ export interface LoadContentState extends ViewModel {
   readonly width: number
 }
 
-export const loadContent = async <TState extends LoadContentState>(
-  state: TState,
-  savedState: unknown,
-): Promise<TState> => {
+export const loadContent = async <TState extends LoadContentState>(state: TState, savedState: unknown): Promise<TState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   const savedComposerValue = getSavedComposerValue(savedState)
