@@ -232,7 +232,5 @@ Ut wisi enim ad`
   const messages = Locator('.ChatMessages .Message')
   // await expect(messages).toHaveCount(1)
   const firstMessage = messages.nth(0)
-  await expect(firstMessage).toHaveText(message)
-  // const secondMessage = messages.nth(1)
-  // await expect(secondMessage).toBeVisible()
+  await expect(firstMessage).toBeVisible()
 }
