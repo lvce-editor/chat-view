@@ -19,7 +19,7 @@ export const getMenuEntriesChatInput = (): readonly MenuEntry[] => {
     {
       command: 'Chat.handleInputPaste',
       flags: MenuItemFlags.None,
-      id: 'copy',
+      id: 'paste',
       label: ViewletChatStrings.paste(),
     },
   ]
