@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -106,7 +106,7 @@ export const getChatSendAreaDom = (
     {
       childCount: primaryControlsCount,
       className: ClassNames.ChatSendAreaPrimaryControls,
-      role: 'toolbar',
+      role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
     ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),

@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
@@ -175,7 +175,7 @@ export const getChatModeChatFocusVirtualDom = ({
       childCount: 0,
       className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
       onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
-      role: 'separator',
+      role: AriaRoles.Separator,
       type: VirtualDomElements.Div,
     },
     {
