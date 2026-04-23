@@ -190,6 +190,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleInputFocus', EventExpression.TargetName],
     },
     {
+      name: DomEventListenersFunctions.HandleBlur,
+      params: ['handleInputBlur', EventExpression.TargetName],
+    },
+    {
       name: DomEventListenersFunctions.HandleChatInputContextMenu,
       params: ['handleChatInputContextMenu', EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
@@ -251,6 +255,10 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       name: DomEventListenersFunctions.HandleClickModelPickerList,
       params: ['handleClickModelPickerList', EventExpression.ClientY],
       preventDefault: true,
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickModelPickerContainer,
+      params: ['handleClickModelPickerContainer'],
     },
     {
       name: DomEventListenersFunctions.HandleModelInputBlur,

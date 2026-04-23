@@ -10,6 +10,7 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
   const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
   return GetChatViewDom.getChatVirtualDom({
     ...defaultState,
+    composerFocused: defaultState.focus === 'composer' && defaultState.focused,
     models,
     selectedModelId: 'test',
     selectedProjectId: 'project-1',

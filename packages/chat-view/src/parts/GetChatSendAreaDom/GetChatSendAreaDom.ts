@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -25,6 +25,7 @@ import { getComposerTextAreaDom } from './GetComposerTextAreaDom/GetComposerText
 
 export const getChatSendAreaDom = (
   composerValue: string,
+  composerFocused = false,
   composerAttachments: readonly ComposerAttachment[],
   agentMode: AgentMode,
   agentModePickerOpen: boolean,
@@ -86,7 +87,9 @@ export const getChatSendAreaDom = (
     },
     {
       childCount: 2 + (hasTodoList ? 1 : 0) + (hasComposerAttachments ? 1 : 0),
-      className: ClassNames.ChatSendAreaContent,
+      className: composerFocused
+        ? mergeClassNames(ClassNames.ChatSendAreaContent, ClassNames.ChatSendAreaContentFocused)
+        : ClassNames.ChatSendAreaContent,
       type: VirtualDomElements.Div,
     },
     ...getTodoListDom(hasTodoList, todoListItems),

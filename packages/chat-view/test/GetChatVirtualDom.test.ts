@@ -25,6 +25,7 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
   const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
   return GetChatViewDom.getChatVirtualDom({
     ...defaultState,
+    composerFocused: defaultState.focus === 'composer' && defaultState.focused,
     models,
     selectedModelId: 'test',
     selectedProjectId: '',
@@ -42,6 +43,18 @@ test('getChatVirtualDOm should render root chat container', () => {
     className: `${ClassNames.Viewlet} Chat`,
     type: VirtualDomElements.Div,
   })
+})
+
+test('getChatVirtualDom should add focused class to composer container when composer is focused', () => {
+  const result = renderChatView({
+    composerFocused: true,
+  })
+
+  const composerContainer = result.find(
+    (node) => node.className === mergeClassNames(ClassNames.ChatSendAreaContent, ClassNames.ChatSendAreaContentFocused),
+  )
+
+  expect(composerContainer).toBeDefined()
 })
 
 test('getChatVirtualDOm should structure chat sections as header and list in list mode', () => {
@@ -608,9 +621,7 @@ test('getChatVirtualDOm should render open model picker with search input', () =
   })
   expect(modelPickerSearchInput).toMatchObject({
     inputType: 'search',
-    onClick: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     onInput: DomEventListenerFunctions.HandleInput,
-    onPointerDown: DomEventListenerFunctions.HandlePointerDownModelPickerList,
     placeholder: searchModels(),
     type: VirtualDomElements.Input,
   })

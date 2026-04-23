@@ -34,6 +34,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
+  readonly composerFocused: boolean
   readonly composerFontFamily?: string
   readonly composerFontSize?: number
   readonly composerHeight?: number
@@ -95,6 +96,7 @@ export const getChatModeChatFocusVirtualDom = ({
   composerAttachments,
   composerDropActive = false,
   composerDropEnabled = true,
+  composerFocused,
   composerFontFamily = 'system-ui',
   composerFontSize = 13,
   composerHeight = 28,
@@ -199,6 +201,7 @@ export const getChatModeChatFocusVirtualDom = ({
     ),
     ...getChatSendAreaDom(
       composerValue,
+      composerFocused,
       composerAttachments,
       agentMode,
       agentModePickerOpen,

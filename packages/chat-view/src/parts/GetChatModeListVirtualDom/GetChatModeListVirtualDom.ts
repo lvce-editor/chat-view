@@ -26,6 +26,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerDropActive?: boolean
   readonly composerDropEnabled?: boolean
+  readonly composerFocused: boolean
   readonly composerFontFamily?: string
   readonly composerFontSize?: number
   readonly composerHeight?: number
@@ -75,6 +76,7 @@ export const getChatModeListVirtualDom = ({
   composerAttachments,
   composerDropActive = false,
   composerDropEnabled = true,
+  composerFocused,
   composerFontFamily = 'system-ui',
   composerFontSize = 13,
   composerHeight = 28,
@@ -134,6 +136,7 @@ export const getChatModeListVirtualDom = ({
     ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
+      composerFocused,
       composerAttachments,
       agentMode,
       agentModePickerOpen,
