@@ -1437,10 +1437,15 @@ test('getChatVirtualDOm should render auth error label when login fails', () => 
     authErrorMessage: 'Invalid backend credentials.',
     userState: 'loggedOut',
   })
+  const loginButtonIndex = result.findIndex((node) => node.name === 'login')
+  const authErrorIndex = result.findIndex((node) => node.className === 'ChatAuthError')
+  const headerLabelIndex = result.findIndex((node) => node.className === ClassNames.ChatHeaderLabel)
   const authError = result.find((node) => node.className === 'ChatAuthError')
   expect(authError).toBeDefined()
   const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
   expect(authErrorText).toBeDefined()
+  expect(authErrorIndex).toBeGreaterThan(loginButtonIndex)
+  expect(authErrorIndex).toBeLessThan(headerLabelIndex)
 })
 
 test('getChatVirtualDOm should render user name and logout button when logged in', () => {
