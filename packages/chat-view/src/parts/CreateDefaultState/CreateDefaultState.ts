@@ -19,7 +19,7 @@ export const createDefaultState = (): ChatState => {
   const composerLineHeight = 20
   const responsivePickerVisibilityEnabled = false
   const models: any = []
-  const visibleModels = []
+  const visibleModels: any = []
   const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
   return {
     addContextButtonEnabled: false,
