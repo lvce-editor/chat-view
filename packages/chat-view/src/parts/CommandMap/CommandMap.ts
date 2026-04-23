@@ -17,6 +17,7 @@ import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as GetMockOpenApiRequests from '../GetMockOpenApiRequests/GetMockOpenApiRequests.ts'
+import { getComposerSelection } from '../GetComposerSelection/GetComposerSelection.ts'
 import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPickMenuEntries.ts'
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
@@ -150,6 +151,7 @@ export const commandMap = {
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
+  'Chat.getComposerSelection': wrapGetter(getComposerSelection),
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getMenuEntryIds': getMenuEntryIds,
