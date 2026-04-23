@@ -87,6 +87,7 @@ const createState = (): LoadContentState => {
     selectedSessionId: 'session-1',
     sessions: [{ id: 'session-1', messages: [], title: 'Session 1' }],
     showChatListTime: false,
+    showModelUsageMultiplier: false,
     showRunMode: false,
     streamingEnabled: false,
     todoListToolEnabled: false,
@@ -268,6 +269,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     expect(result.modelPickerHeight).toBe(86)
     expect(result.composerAttachmentsHeight).toBe(34)
     expect(result.projectExpandedIds).toEqual(['project-1'])
+    expect(result.showModelUsageMultiplier).toBe(true)
     expect(result.showRunMode).toBe(true)
     expect(result.userName).toBe('Simon')
     expect(result.userState).toBe('loggedIn')

@@ -71,6 +71,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly selectedProjectId?: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
+  readonly showModelUsageMultiplier?: boolean
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
   readonly todoListToolEnabled: boolean
@@ -132,6 +133,7 @@ export const getChatModeChatFocusVirtualDom = ({
   selectedProjectId = '',
   selectedSessionId,
   sessions,
+  showModelUsageMultiplier = true,
   showRunMode,
   todoListItems,
   todoListToolEnabled,
@@ -245,6 +247,7 @@ export const getChatModeChatFocusVirtualDom = ({
       runMode,
       runModePickerVisible: isRunModePickerVisible,
       selectedModelId,
+      showModelUsageMultiplier,
       visibleModels,
     }),
   ]

@@ -1182,6 +1182,29 @@ test('loadContent should load showRunMode from preferences', async () => {
   expectInvocations(mockRpc.invocations, [['Preferences.get', 'chatView.runModePickerEnabled']])
 })
 
+test('loadContent should load showModelUsageMultiplier from preferences', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chatView.showModelUsageMultiplier') {
+        return false
+      }
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  const state: ChatState = createDefaultState()
+  const result = await LoadContent.loadContent(state, undefined)
+  expect(result.showModelUsageMultiplier).toBe(false)
+  expectInvocations(mockRpc.invocations, [['Preferences.get', 'chatView.showModelUsageMultiplier']])
+})
+
 test('loadContent should load chatHistoryEnabled from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

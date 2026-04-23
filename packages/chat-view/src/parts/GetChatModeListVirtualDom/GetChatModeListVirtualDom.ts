@@ -51,6 +51,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier?: boolean
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
   readonly todoListToolEnabled: boolean
@@ -100,6 +101,7 @@ export const getChatModeListVirtualDom = ({
   selectedSessionId,
   sessions,
   showChatListTime,
+  showModelUsageMultiplier = true,
   showRunMode,
   todoListItems,
   todoListToolEnabled,
@@ -178,6 +180,7 @@ export const getChatModeListVirtualDom = ({
       runMode,
       runModePickerVisible: isRunModePickerVisible,
       selectedModelId,
+      showModelUsageMultiplier,
       visibleModels,
     }),
   ]

@@ -706,6 +706,20 @@ test('getChatVirtualDom should render model picker usage cost text with subdued 
   expect(freeUsageText).toBeDefined()
 })
 
+test('getChatVirtualDom should hide model picker usage cost text when disabled', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    models,
+    selectedModelId: 'test',
+    showModelUsageMultiplier: false,
+    viewMode: 'detail',
+  })
+  const usageCostNode = result.find((node) => node.className === ClassNames.ChatModelPickerItemUsageCost)
+  const usageCostText = result.find((node) => node.text === '0x' || node.text === '1x')
+  expect(usageCostNode).toBeUndefined()
+  expect(usageCostText).toBeUndefined()
+})
+
 test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {
   const result = renderChatView({
     modelPickerOpen: true,

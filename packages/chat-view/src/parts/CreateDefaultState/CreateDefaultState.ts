@@ -147,6 +147,7 @@ export const createDefaultState = (): ChatState => {
       },
     ],
     showChatListTime: true,
+    showModelUsageMultiplier: true,
     showRunMode: true,
     streamingEnabled: true,
     systemPrompt: getDefaultSystemPrompt(),
