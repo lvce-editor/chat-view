@@ -1,10 +1,10 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
+import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
+import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
-import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
-import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 
 const createState = (): LoadContentState => {
   return {
@@ -159,11 +159,12 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       switch (key) {
-        case 'chatView.aiSessionTitleGenerationEnabled':
         case 'chat.authEnabled':
         case 'chat.authUseRedirect':
+        case 'chatView.aiSessionTitleGenerationEnabled':
         case 'chatView.composerDropEnabled':
         case 'chatView.emitStreamingFunctionCallEvents':
+        case 'chatView.passIncludeObfuscation':
         case 'chatView.reasoningPickerEnabled':
         case 'chatView.runModePickerEnabled':
         case 'chatView.scrollDownButtonEnabled':
@@ -171,26 +172,25 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
         case 'chatView.showChatListTime':
         case 'chatView.streamingEnabled':
         case 'chatView.todoListToolEnabled':
-        case 'chatView.passIncludeObfuscation':
+        case 'chatView.useAuthWorker':
         case 'chatView.useChatCoordinatorWorker':
         case 'chatView.useChatMathWorker':
         case 'chatView.useChatNetworkWorkerForRequests':
         case 'chatView.useChatToolWorker':
-        case 'chatView.useAuthWorker':
         case 'chatView.voiceDictationEnabled':
           return true
-        case 'chat.chatHistoryEnabled':
-          return true
-        case 'chat.useOwnBackend':
-          return false
         case 'chat.backendUrl':
           return 'https://example.com'
+        case 'chat.chatHistoryEnabled':
+          return true
+        case 'chat.toolEnablement':
+          return { grep: true }
+        case 'chat.useOwnBackend':
+          return false
         case 'secrets.openApiKey':
           return 'open-api-key'
         case 'secrets.openRouterApiKey':
           return 'open-router-key'
-        case 'chat.toolEnablement':
-          return { grep: true }
         default:
           return undefined
       }
