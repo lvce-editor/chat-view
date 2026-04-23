@@ -120,19 +120,22 @@ const cloneSession = (session: ChatSession): ChatSession => {
 
 const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.registerMockRpc> => {
   const sessions = new Map<string, ChatSession>()
-  const attachmentEvents = new Map<string, readonly unknown[]>()
-
-  attachmentEvents.set('session-2', [
-    {
-      attachmentId: 'attachment-1',
-      blob: new Blob(['hello from file'], { type: 'text/plain' }),
-      mimeType: 'text/plain',
-      name: 'readme.md',
-      sessionId: 'session-2',
-      size: 15,
-      timestamp: new Date().toISOString(),
-      type: 'chat-attachment-added',
-    },
+  const attachmentEvents = new Map<string, readonly unknown[]>([
+    [
+      'session-2',
+      [
+        {
+          attachmentId: 'attachment-1',
+          blob: new Blob(['hello from file'], { type: 'text/plain' }),
+          mimeType: 'text/plain',
+          name: 'readme.md',
+          sessionId: 'session-2',
+          size: 15,
+          timestamp: new Date().toISOString(),
+          type: 'chat-attachment-added',
+        },
+      ],
+    ],
   ])
 
   return ChatStorageWorker.registerMockRpc({
