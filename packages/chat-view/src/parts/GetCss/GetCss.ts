@@ -51,23 +51,7 @@ export const getCss = (
  --WidgetBorder: white;
 }
 
-.ChatHeaderAuth{
-  align-items: center;
-  display: flex;
-  gap: 8px;
-  min-width: 0;
-}
 
-.ChatHeaderAuthName{
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ChatHeaderAuth .Button{
-  white-space: nowrap;
-}
 
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
