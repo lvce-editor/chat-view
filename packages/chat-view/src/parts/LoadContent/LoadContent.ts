@@ -30,6 +30,7 @@ import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSes
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
@@ -117,7 +118,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
-  const nextState: ChatState = {
+  const nextState: ChatState = withUpdatedDisplayMessages({
     ...state,
     agentMode,
     agentModePickerOpen: false,
@@ -185,6 +186,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     viewMode,
     visibleModels,
     voiceDictationEnabled,
-  }
+  })
   return refreshGitBranchPickerVisibility(nextState)
 }

@@ -41,6 +41,36 @@ test('openMockSession should create a mock session and switch to detail mode', a
   expect(result.viewMode).toBe('detail')
   expect(result.selectedSessionId).toBe('mock-session-1')
   expect(result.sessions).toHaveLength(2)
+  expect(result.displayMessages).toEqual([
+    {
+      message: mockChatMessages[0],
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'hello',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+    },
+    {
+      message: mockChatMessages[1],
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'hi',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+    },
+  ])
   expect(result.sessions[1]).toEqual({
     id: 'mock-session-1',
     messages: mockChatMessages,
@@ -85,6 +115,22 @@ test('openMockSession should replace messages for existing session', async () =>
   expect(result.sessions[0].title).toBe('Existing Mock Session')
   expect(result.selectedSessionId).toBe('mock-session-1')
   expect(result.viewMode).toBe('detail')
+  expect(result.displayMessages).toEqual([
+    {
+      message: mockChatMessages[0],
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'new',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+    },
+  ])
 })
 
 test('openMockSession should return same state for empty mockSessionId', async () => {

@@ -7,6 +7,7 @@ import { getCommandHelpText } from '../GetCommandHelpText/GetCommandHelpText.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { clearSlashCommands, registerSlashCommand } from '../SlashCommandRegistry/SlashCommandRegistry.ts'
 import { toMarkdownTranscript } from '../ToMarkdownTranscript/ToMarkdownTranscript.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 import { withClearedComposer } from '../WithClearedComposer/WithClearedComposer.ts'
 
 const appendAssistantMessage = async (state: ChatState, assistantText: string): Promise<ChatState> => {
@@ -22,11 +23,13 @@ const appendAssistantMessage = async (state: ChatState, assistantText: string): 
   if (updatedSelectedSession) {
     await saveChatSession(updatedSelectedSession)
   }
-  return withClearedComposer({
-    ...state,
-    parsedMessages,
-    sessions: updatedSessions,
-  })
+  return withClearedComposer(
+    withUpdatedDisplayMessages({
+      ...state,
+      parsedMessages,
+      sessions: updatedSessions,
+    }),
+  )
 }
 
 export const registerSlashCommands = (): void => {
@@ -57,10 +60,12 @@ export const registerSlashCommands = (): void => {
     if (updatedSelectedSession) {
       await saveChatSession(updatedSelectedSession)
     }
-    return withClearedComposer({
-      ...state,
-      sessions: updatedSessions,
-    })
+    return withClearedComposer(
+      withUpdatedDisplayMessages({
+        ...state,
+        sessions: updatedSessions,
+      }),
+    )
   })
 
   registerSlashCommand('help', async (state) => {

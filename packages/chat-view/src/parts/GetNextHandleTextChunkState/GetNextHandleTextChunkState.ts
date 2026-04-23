@@ -1,13 +1,14 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const getNextHandleTextChunkState = (
   latestState: ChatState,
   parsedMessages: readonly ParsedMessage[],
   sessions: ChatState['sessions'],
 ): ChatState => {
-  return {
+  return withUpdatedDisplayMessages({
     ...latestState,
     ...(latestState.messagesAutoScrollEnabled
       ? {
@@ -16,5 +17,5 @@ export const getNextHandleTextChunkState = (
       : {}),
     parsedMessages,
     sessions,
-  }
+  })
 }

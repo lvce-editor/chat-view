@@ -6,6 +6,7 @@ import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { setOpenApiApiKey } from '../SetOpenApiApiKey/SetOpenApiApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<ChatState> => {
   const { openApiApiKeyInput } = state
@@ -85,11 +86,11 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     return updatedSession
   })
 
-  return {
+  return withUpdatedDisplayMessages({
     ...updatedState,
     nextMessageId: updatedState.nextMessageId + 1,
     openApiApiKeyState: 'idle',
     parsedMessages,
     sessions: updatedSessions,
-  }
+  })
 }

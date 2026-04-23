@@ -4,6 +4,7 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { selectedProjectId, selectedSessionId, sessions, viewMode, width } = state
@@ -31,7 +32,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     }
     return loadedSession
   })
-  return refreshGitBranchPickerVisibility({
+  const nextState = await refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
@@ -40,4 +41,5 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
     sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })
+  return withUpdatedDisplayMessages(nextState)
 }

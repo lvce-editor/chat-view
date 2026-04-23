@@ -4,6 +4,7 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 interface OpenMockSessionOptions {
   readonly branchName?: string
@@ -85,7 +86,7 @@ export const openMockSession = async (
     await saveChatSession(selectedSession)
   }
 
-  return refreshGitBranchPickerVisibility({
+  const nextState = await refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
@@ -95,4 +96,5 @@ export const openMockSession = async (
     sessions,
     viewMode: 'detail',
   })
+  return withUpdatedDisplayMessages(nextState)
 }

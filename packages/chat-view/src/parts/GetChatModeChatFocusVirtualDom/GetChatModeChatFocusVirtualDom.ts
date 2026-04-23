@@ -5,8 +5,8 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { DisplayMessage } from '../GetDisplayMessages/GetDisplayMessages.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
@@ -39,6 +39,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly composerHeight?: number
   readonly composerLineHeight?: number
   readonly composerValue: string
+  readonly displayMessages: readonly DisplayMessage[]
   readonly gitBranches: readonly GitBranch[]
   readonly gitBranchPickerErrorMessage: string
   readonly gitBranchPickerOpen: boolean
@@ -56,7 +57,6 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly openApiApiKeyState?: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
-  readonly parsedMessages?: readonly ParsedMessage[]
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
@@ -100,6 +100,7 @@ export const getChatModeChatFocusVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
+  displayMessages,
   gitBranches,
   gitBranchPickerErrorMessage,
   gitBranchPickerOpen,
@@ -117,7 +118,6 @@ export const getChatModeChatFocusVirtualDom = ({
   openApiApiKeyState = 'idle',
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
-  parsedMessages = [],
   projectExpandedIds = [],
   projectListScrollTop = 0,
   projects = [],
@@ -186,7 +186,7 @@ export const getChatModeChatFocusVirtualDom = ({
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
       messages,
-      parsedMessages,
+      displayMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
       openApiApiKeyState,

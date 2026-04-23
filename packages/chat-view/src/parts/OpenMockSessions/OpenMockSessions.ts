@@ -1,5 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { withUpdatedDisplayMessages } from '../UpdateDisplayMessages/UpdateDisplayMessages.ts'
 
 const getMockSession = (index: number): ChatSession => {
   const sessionNumber = index + 1
@@ -15,7 +16,7 @@ export const openMockSessions = async (state: ChatState, count: number): Promise
     return state
   }
   const sessions = Array.from({ length: count }, (_, index) => getMockSession(index))
-  return {
+  return withUpdatedDisplayMessages({
     ...state,
     chatListScrollTop: 0,
     composerAttachments: [],
@@ -26,5 +27,5 @@ export const openMockSessions = async (state: ChatState, count: number): Promise
     selectedSessionId: '',
     sessions,
     viewMode: 'list',
-  }
+  })
 }

@@ -12,7 +12,9 @@ import {
 import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import { getDisplayMessages } from '../src/parts/GetDisplayMessages/GetDisplayMessages.ts'
 import * as GetChatViewDom from '../src/parts/GetChatViewDom/GetChatViewDom.ts'
+import { getEmptyMessageContent } from '../src/parts/ParsedMessageContent/ParsedMessageContent.ts'
 import { getVisibleModels } from '../src/parts/GetVisibleModels/GetVisibleModels.ts'
 
 const models = [
@@ -20,16 +22,46 @@ const models = [
   { id: 'codex-5.3', name: 'Codex 5.3', usageCost: 1 },
 ] as const
 
+const toParsedMessage = (id: string, text: string): ParsedMessage => {
+  return {
+    id,
+    parsedContent: text
+      ? [
+          {
+            children: [
+              {
+                text,
+                type: 'text',
+              },
+            ],
+            type: 'text',
+          },
+        ]
+      : getEmptyMessageContent(),
+    text,
+  }
+}
+
+type RenderChatViewOptions = Partial<GetChatViewDom.GetChatVirtualDomOptions> & {
+  readonly parsedMessages?: readonly ParsedMessage[]
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptions> = {}) => {
-  const { parsedMessages: _parsedMessages, ...defaultState } = createDefaultState()
+const renderChatView = (overrides: RenderChatViewOptions = {}) => {
+  const { parsedMessages: _defaultParsedMessages, ...defaultState } = createDefaultState()
+  const sessions = overrides.sessions ?? []
+  const selectedSessionId = overrides.selectedSessionId ?? ''
+  const selectedSession = sessions.find((session) => session.id === selectedSessionId)
+  const parsedMessages = overrides.parsedMessages ?? selectedSession?.messages.map((message) => toParsedMessage(message.id, message.text)) ?? []
+  const displayMessages = overrides.displayMessages ?? getDisplayMessages(selectedSession?.messages ?? [], parsedMessages)
   return GetChatViewDom.getChatVirtualDom({
     ...defaultState,
+    displayMessages,
     models,
     selectedModelId: 'test',
     selectedProjectId: '',
-    selectedSessionId: '',
-    sessions: [],
+    selectedSessionId,
+    sessions,
     visibleModels: models,
     ...overrides,
   })

@@ -5,8 +5,8 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { DisplayMessage } from '../GetDisplayMessages/GetDisplayMessages.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
@@ -15,24 +15,6 @@ import { getChatModeDetailVirtualDom } from '../GetChatModeDetailVirtualDom/GetC
 import { getChatModeListVirtualDom } from '../GetChatModeListVirtualDom/GetChatModeListVirtualDom.ts'
 import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtualDom/GetChatModeUnsupportedVirtualDom.ts'
 import { getTodoListItems } from '../GetTodoListItems/GetTodoListItems.ts'
-import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-
-const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly ParsedMessage[] => {
-  const parsedMessages: ParsedMessage[] = []
-  for (const session of sessions) {
-    for (const message of session.messages) {
-      if (parsedMessages.some((item) => item.id === message.id)) {
-        continue
-      }
-      parsedMessages.push({
-        id: message.id,
-        parsedContent: getEmptyMessageContent(),
-        text: message.text,
-      })
-    }
-  }
-  return parsedMessages
-}
 
 export interface GetChatVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -51,6 +33,7 @@ export interface GetChatVirtualDomOptions {
   readonly composerHeight: number
   readonly composerLineHeight: number
   readonly composerValue: string
+  readonly displayMessages: readonly DisplayMessage[]
   readonly gitBranches?: readonly GitBranch[]
   readonly gitBranchPickerErrorMessage?: string
   readonly gitBranchPickerOpen?: boolean
@@ -70,7 +53,6 @@ export interface GetChatVirtualDomOptions {
   readonly openApiApiKeyState: 'idle' | 'saving'
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
-  readonly parsedMessages?: readonly ParsedMessage[]
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
@@ -120,6 +102,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     composerHeight,
     composerLineHeight,
     composerValue,
+    displayMessages,
     gitBranches = [],
     gitBranchPickerErrorMessage = '',
     gitBranchPickerOpen = false,
@@ -139,7 +122,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     openApiApiKeyState,
     openRouterApiKeyInput,
     openRouterApiKeyState,
-    parsedMessages: parsedMessagesInput,
     projectExpandedIds = [],
     projectListScrollTop = 0,
     projects = [],
@@ -171,7 +153,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     voiceDictationEnabled = false,
   } = options
 
-  const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
   const todoListItems = getTodoListItems(sessions, selectedSessionId)
 
   switch (viewMode) {
@@ -192,6 +173,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerHeight,
         composerLineHeight,
         composerValue,
+        displayMessages,
         gitBranches,
         gitBranchPickerErrorMessage,
         gitBranchPickerOpen,
@@ -209,7 +191,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,
-        parsedMessages,
         projectExpandedIds,
         projectListScrollTop,
         projects,
@@ -253,6 +234,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerHeight,
         composerLineHeight,
         composerValue,
+        displayMessages,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         messagesAutoScrollEnabled,
@@ -266,7 +248,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openApiApiKeyState,
         openRouterApiKeyInput,
         openRouterApiKeyState,
-        parsedMessages,
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,

@@ -89,5 +89,21 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
       text: 'loaded from storage',
     },
   ])
+  expect(result.displayMessages).toEqual([
+    {
+      message: result.sessions[1].messages[0],
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'loaded from storage',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+    },
+  ])
   expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['loaded from storage']]])
 })
