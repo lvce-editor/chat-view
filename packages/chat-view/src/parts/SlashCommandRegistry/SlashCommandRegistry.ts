@@ -14,7 +14,7 @@ export const clearSlashCommands = (): void => {
   }
 }
 
-export const hasSlashCommand = (command: string): boolean => {
+export const hasSlashCommand = async (command: string): Promise<boolean> => {
   return command in slashCommandRegistry
 }
 

@@ -181,7 +181,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
     return effectiveState
   }
 
-  const slashCommand = getSlashCommand(userText)
+  const slashCommand = await getSlashCommand(userText)
   if (slashCommand) {
     return executeSlashCommand(effectiveState, slashCommand)
   }
