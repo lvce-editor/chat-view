@@ -22,7 +22,7 @@ const getRequestIdFromInit = (init: unknown): string | undefined => {
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     fetchInvocation = args
     return {
       json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
@@ -92,7 +92,7 @@ test('getOpenRouterAssistantText should return success result when response is o
 test('getOpenRouterAssistantText should prepend system message when systemPrompt is provided', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     fetchInvocation = args
     return {
       json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
@@ -154,7 +154,7 @@ test('getOpenRouterAssistantText should omit disabled tools from request payload
   })
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     fetchInvocation = args
     return {
       json: async () => ({ choices: [{ message: { content: 'hello from openrouter' } }] }),
@@ -202,7 +202,7 @@ test('getOpenRouterAssistantText should omit disabled tools from request payload
 
 test('getOpenRouterAssistantText should return request-failed error result when fetch throws', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     throw new Error('network failure')
   })
 
@@ -233,7 +233,7 @@ test('getOpenRouterAssistantText should return request-failed error result when 
 
 test('getOpenRouterAssistantText should return too-many-requests error result for 429', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       ok: false,
       status: 429,
@@ -270,7 +270,7 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
   const originalFetch = globalThis.fetch
   let invocationCount = 0
   const requestIds: string[] = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     const input = args[0]
     const init = args[1] as RequestInit | undefined
     invocationCount++
@@ -340,7 +340,7 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
 
 test('getOpenRouterAssistantText should include raw metadata message for 429', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: unknown) => {
+  globalThis.fetch = (async (input: unknown): Promise<Response> => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
@@ -403,7 +403,7 @@ test('getOpenRouterAssistantText should execute read_file tool calls and continu
   })
   const originalFetch = globalThis.fetch
   let invocationCount = 0
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     invocationCount++
     if (invocationCount === 1) {
       return {
@@ -480,7 +480,7 @@ test('getOpenRouterAssistantText should block tool paths outside workspace', asy
   })
   const originalFetch = globalThis.fetch
   const requests: Array<{ readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> }> = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     const init = args[1] as RequestInit | undefined
     requests.push((init ? parseJsonRequestBody(init.body) : {}) as { readonly messages?: ReadonlyArray<Readonly<Record<string, unknown>>> })
     if (requests.length === 1) {

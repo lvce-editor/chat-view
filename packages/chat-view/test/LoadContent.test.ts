@@ -477,7 +477,7 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         accessToken: 'access-token-1',
@@ -522,7 +522,7 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         accessToken: 'access-token-2',

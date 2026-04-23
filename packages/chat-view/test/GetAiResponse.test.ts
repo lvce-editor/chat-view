@@ -86,7 +86,7 @@ test.skip('getAiResponse should use chat coordinator worker when enabled', async
 
 test.skip('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (input: unknown) => {
+  globalThis.fetch = (async (input: unknown): Promise<Response> => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     if (url.endsWith('/chat/completions')) {
       return {
@@ -341,7 +341,7 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
   const originalFetch = globalThis.fetch
   let actualUrl = ''
   let actualInit: RequestInit | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args
     const requestInput = input as string | URL | { readonly url: string }
     actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
@@ -447,7 +447,7 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
   })
   const originalFetch = globalThis.fetch
   let actualInit: RequestInit | undefined
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     actualInit = args[1] as RequestInit | undefined
     return {
       json: async () => ({
@@ -545,7 +545,7 @@ test('getAiResponse should execute backend response tool calls and continue with
   const requestBodies: unknown[] = []
   const toolCallChunks: unknown[] = []
   let requestCount = 0
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     requestCount++
     const init = args[1] as RequestInit | undefined
     const body = init?.body
@@ -699,7 +699,7 @@ test('getAiResponse should explain invalid successful backend responses', async 
     'ChatTool.getTools': async () => [],
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         id: 'resp_invalid',
@@ -807,7 +807,7 @@ test('getAiResponse should require backend access token when useOwnBackend is en
 
 test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         error: 'Vercel AI Gateway error (status 500): Upstream request failed.',
@@ -852,7 +852,7 @@ test('getAiResponse should return backend failure message for non-ok backend res
 
 test('getAiResponse should include backend API error message and status code for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         error: 'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
@@ -939,7 +939,7 @@ test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when
 
 test.skip('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         error: {
@@ -989,7 +989,7 @@ test.skip('getAiResponse should include OpenAI 429 quota error message details i
 
 test.skip('getAiResponse should include OpenAI http error details for non-429 responses', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         error: {
@@ -1040,7 +1040,7 @@ test.skip('getAiResponse should show a helpful message when OpenAI tool-call ite
     'ChatTool.getTools': async () => [],
   })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     const chunks = [
       'data: {"type":"response.output_item.added","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"get_workspace_uri","arguments":""}}\n\n',
       'data: {"type":"response.function_call_arguments.delta","item_id":"fc_1","delta":"{}"}\n\n',
@@ -1103,7 +1103,7 @@ test.skip('getAiResponse should show a helpful message when OpenAI tool-call ite
 
 test.skip('getAiResponse should fall back to generic OpenAI request failed message when no error payload is returned', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({}),
       ok: false,
@@ -1146,7 +1146,7 @@ test.skip('getAiResponse should fall back to generic OpenAI request failed messa
 test.skip('getAiResponse should stream OpenAI chunks when enabled', async () => {
   const originalFetch = globalThis.fetch
   let requestedUrl = ''
-  globalThis.fetch = (async (input: unknown) => {
+  globalThis.fetch = (async (input: unknown): Promise<Response> => {
     requestedUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Hello"}\n\n',

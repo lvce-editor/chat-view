@@ -18,7 +18,7 @@ const getRequestUrl = (input: unknown): string => {
 
 test('syncBackendAuth should return logged in state when backend refresh succeeds', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       json: async () => ({
         accessToken: 'access-token-1',
@@ -48,7 +48,7 @@ test('syncBackendAuth should return logged in state when backend refresh succeed
 
 test('syncBackendAuth should return logged out state for unauthorized response', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     return {
       ok: false,
       status: 401,
@@ -72,7 +72,7 @@ test('syncBackendAuth should return logged out state for unauthorized response',
 
 test('syncBackendAuth should use pending mock refresh response', async () => {
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     throw new Error('fetch should not be called when mock refresh response is pending')
   })
 
@@ -106,7 +106,7 @@ test('syncBackendAuth should use pending mock refresh response', async () => {
 test('waitForBackendLogin should retry until backend refresh succeeds', async () => {
   const originalFetch = globalThis.fetch
   let callCount = 0
-  globalThis.fetch = (async () => {
+  globalThis.fetch = (async (): Promise<Response> => {
     callCount++
     if (callCount === 1) {
       return {
@@ -138,7 +138,7 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
   let fetchCallCount = 0
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     fetchCallCount++
@@ -267,7 +267,7 @@ test('getBackendLoginRequest should return login url and redirect uri on electro
 test('logoutFromBackend should post to backend logout endpoint', async () => {
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = (async (...args: readonly unknown[]) => {
+  globalThis.fetch = (async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
     return {
