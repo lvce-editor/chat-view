@@ -992,6 +992,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(sessionLabel).toMatchObject({
     childCount: 1,
   })
+  expect(sessionLabel).not.toHaveProperty('tabIndex', 0)
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
   expect(result.find((node) => node.text === '10:30')).toBeDefined()

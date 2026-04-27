@@ -49,7 +49,6 @@ export const getSessionDom = (
       name: InputName.getSessionInputName(session.id),
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
-      tabIndex: 0,
       type: VirtualDomElements.Div,
     },
     {
