@@ -387,6 +387,7 @@ test('handleClick should open backend login page and sync backend auth state', a
       authEnabled: true,
       authUseRedirect: true,
       backendUrl: 'https://backend.example.com',
+      useAuthWorker: false,
     }
     const result = await HandleClick.handleClick(state, 'login')
     expect(result.authAccessToken).toBe('backend-token-1')
@@ -490,6 +491,7 @@ test('handleClick should logout and clear backend auth state', async () => {
     authAccessToken: 'backend-token-1',
     authEnabled: true,
     backendUrl: 'https://backend.example.com',
+    useAuthWorker: false,
     userName: 'test',
     userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
@@ -597,6 +599,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       backendUrl: 'https://backend.example.com',
       platform: 2,
       uid: 0,
+      useAuthWorker: false,
     }
     const result = await HandleClick.handleClick(state, 'login')
     expect(result.authAccessToken).toBe('backend-token-electron')
