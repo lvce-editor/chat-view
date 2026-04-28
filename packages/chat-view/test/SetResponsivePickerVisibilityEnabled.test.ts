@@ -1,7 +1,34 @@
 import { expect, test } from '@jest/globals'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { minimumWidthForAgentModePicker, minimumWidthForRunModePicker } from '../src/parts/GetResponsivePickerState/GetResponsivePickerState.ts'
 import * as SetResponsivePickerVisibilityEnabled from '../src/parts/SetResponsivePickerVisibilityEnabled/SetResponsivePickerVisibilityEnabled.ts'
+
+const getPrimaryControlWidths = (state: ChatState): readonly number[] => {
+  const chevronWidth = state.selectChevronEnabled ? state.primaryControlSelectIconGap + state.primaryControlSelectIconSize : 0
+  return [
+    state.agentModePickerLabelWidth + chevronWidth,
+    state.modelPickerLabelWidth + chevronWidth,
+    state.runModePickerLabelWidth + chevronWidth,
+  ]
+}
+
+const getComposerWidthForPrimaryControls = (state: ChatState, visibleControlCount: number, includeOverflowButton: boolean): number => {
+  const widths = getPrimaryControlWidths(state).slice(0, visibleControlCount)
+  const controlsWidth = widths.reduce((total, width, index) => {
+    return total + width + (index === 0 ? 0 : state.primaryControlsGap)
+  }, 0)
+  const overflowWidth = includeOverflowButton
+    ? state.primaryControlsOverflowButtonLabelWidth + (visibleControlCount > 0 ? state.primaryControlsGap : 0)
+    : 0
+  return (
+    state.chatSendAreaPaddingLeft +
+    state.chatSendAreaPaddingRight +
+    state.primaryControlsSubmitButtonWidth +
+    state.primaryControlsGap +
+    controlsWidth +
+    overflowWidth
+  )
+}
 
 test('setResponsivePickerVisibilityEnabled should enable responsive picker visibility', () => {
   const state = {
@@ -15,11 +42,12 @@ test('setResponsivePickerVisibilityEnabled should enable responsive picker visib
 })
 
 test('setResponsivePickerVisibilityEnabled should hide optional pickers on narrow widths when enabling', () => {
+  const defaultState = createDefaultState()
   const state = {
-    ...createDefaultState(),
+    ...defaultState,
     agentModePickerOpen: true,
     runModePickerOpen: true,
-    width: minimumWidthForRunModePicker - 1,
+    width: getComposerWidthForPrimaryControls(defaultState, 0, true),
   }
   const result = SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled(state, true)
   expect(result.agentModePickerOpen).toBe(false)
@@ -34,7 +62,7 @@ test('setResponsivePickerVisibilityEnabled should restore optional picker visibi
     hasSpaceForAgentModePicker: false,
     hasSpaceForRunModePicker: false,
     responsivePickerVisibilityEnabled: true,
-    width: minimumWidthForAgentModePicker - 1,
+    width: 1,
   }
   const result = SetResponsivePickerVisibilityEnabled.setResponsivePickerVisibilityEnabled(state, false)
   expect(result.responsivePickerVisibilityEnabled).toBe(false)

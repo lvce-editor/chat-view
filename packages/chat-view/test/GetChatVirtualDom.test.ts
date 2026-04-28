@@ -366,40 +366,53 @@ test('getChatVirtualDom should render remove button for text file attachment', (
   expect(attachmentLabel).toBeDefined()
 })
 
-test('getChatVirtualDom should hide optional pickers when there is not enough horizontal space', () => {
+test('getChatVirtualDom should render an overflow button for hidden primary controls', () => {
   const result = renderChatView({
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: false,
+    hiddenPrimaryControls: ['model-picker-toggle', 'run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
+    visiblePrimaryControls: ['agent-mode-picker-toggle'],
   })
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const overflowToggle = result.find((node) => node.name === 'primary-controls-overflow')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
-    childCount: 1,
+    childCount: 2,
     className: ClassNames.ChatSendAreaPrimaryControls,
     role: 'toolbar',
     type: VirtualDomElements.Div,
   })
-  expect(agentModePickerToggle).toBeUndefined()
-  expect(modelPickerToggle).toBeDefined()
+  expect(agentModePickerToggle).toBeDefined()
+  expect(modelPickerToggle).toBeUndefined()
+  expect(overflowToggle).toMatchObject({
+    'aria-haspopup': 'true',
+    className: ClassNames.ChatSelect,
+    name: 'primary-controls-overflow',
+    type: VirtualDomElements.Button,
+  })
   expect(runModePickerToggle).toBeUndefined()
 })
 
-test('getChatVirtualDom should keep the run mode picker when only the agent picker runs out of space', () => {
+test('getChatVirtualDom should keep visible controls and append overflow when only the last control is hidden', () => {
   const result = renderChatView({
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: true,
+    hiddenPrimaryControls: ['run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
+    visiblePrimaryControls: ['agent-mode-picker-toggle', 'model-picker-toggle'],
   })
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const overflowToggle = result.find((node) => node.name === 'primary-controls-overflow')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
-    childCount: 2,
+    childCount: 3,
     role: 'toolbar',
   })
-  expect(agentModePickerToggle).toBeUndefined()
-  expect(runModePickerToggle).toBeDefined()
+  expect(agentModePickerToggle).toBeDefined()
+  expect(modelPickerToggle).toBeDefined()
+  expect(overflowToggle).toBeDefined()
+  expect(runModePickerToggle).toBeUndefined()
 })
 
 test('getChatVirtualDom should render open run mode picker without search input', () => {
@@ -429,21 +442,22 @@ test('getChatVirtualDom should render open run mode picker without search input'
   expect(pickerContainers).toHaveLength(1)
 })
 
-test('getChatVirtualDom should suppress hidden picker popovers on narrow widths', () => {
+test('getChatVirtualDom should render hidden picker popovers when opened from overflow', () => {
   const result = renderChatView({
     agentModePickerOpen: true,
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: false,
+    hiddenPrimaryControls: ['agent-mode-picker-toggle', 'run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
     runModePickerOpen: true,
+    visiblePrimaryControls: ['model-picker-toggle'],
     viewMode: 'detail',
   })
   const agentModePicker = result.find((node) => node.name === 'agent-mode-picker-item:agent')
   const runModePicker = result.find((node) => node.name === 'run-mode-picker-item:background')
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 4,
   })
-  expect(agentModePicker).toBeUndefined()
-  expect(runModePicker).toBeUndefined()
+  expect(agentModePicker).toBeDefined()
+  expect(runModePicker).toBeDefined()
 })
 
 test('getChatVirtualDom should render open agent mode picker as custom select without search input', () => {

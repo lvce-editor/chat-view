@@ -1,8 +1,34 @@
 import { expect, jest, test } from '@jest/globals'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { minimumWidthForAgentModePicker, minimumWidthForRunModePicker } from '../src/parts/GetResponsivePickerState/GetResponsivePickerState.ts'
 import * as Resize from '../src/parts/Resize/Resize.ts'
+
+const getPrimaryControlWidths = (state: ChatState): readonly number[] => {
+  const chevronWidth = state.selectChevronEnabled ? state.primaryControlSelectIconGap + state.primaryControlSelectIconSize : 0
+  return [
+    state.agentModePickerLabelWidth + chevronWidth,
+    state.modelPickerLabelWidth + chevronWidth,
+    state.runModePickerLabelWidth + chevronWidth,
+  ]
+}
+
+const getComposerWidthForPrimaryControls = (state: ChatState, visibleControlCount: number, includeOverflowButton: boolean): number => {
+  const widths = getPrimaryControlWidths(state).slice(0, visibleControlCount)
+  const controlsWidth = widths.reduce((total, width, index) => {
+    return total + width + (index === 0 ? 0 : state.primaryControlsGap)
+  }, 0)
+  const overflowWidth = includeOverflowButton
+    ? state.primaryControlsOverflowButtonLabelWidth + (visibleControlCount > 0 ? state.primaryControlsGap : 0)
+    : 0
+  return (
+    state.chatSendAreaPaddingLeft +
+    state.chatSendAreaPaddingRight +
+    state.primaryControlsSubmitButtonWidth +
+    state.primaryControlsGap +
+    controlsWidth +
+    overflowWidth
+  )
+}
 
 test('resize should merge dimensions into state', async () => {
   const state: ChatState = { ...createDefaultState(), uid: 1 }
@@ -140,7 +166,7 @@ test('resize should update responsive picker visibility when width changes', asy
     ...createDefaultState(),
     width: 800,
   }
-  const result = await Resize.resize(state, { width: minimumWidthForRunModePicker - 1 })
+  const result = await Resize.resize(state, { width: 1 })
   expect(result.hasSpaceForAgentModePicker).toBe(true)
   expect(result.hasSpaceForRunModePicker).toBe(true)
 })
@@ -151,12 +177,13 @@ test('resize should update responsive picker visibility when enabled', async () 
     responsivePickerVisibilityEnabled: true,
     width: 800,
   }
-  const result = await Resize.resize(state, { width: minimumWidthForRunModePicker - 1 })
+  const result = await Resize.resize(state, { width: getComposerWidthForPrimaryControls(state, 0, true) })
   expect(result.hasSpaceForAgentModePicker).toBe(false)
   expect(result.hasSpaceForRunModePicker).toBe(false)
+  expect(result.primaryControlsOverflowButtonVisible).toBe(true)
 })
 
-test('resize should close optional pickers when the width becomes too narrow', async () => {
+test('resize should close the run mode picker first when it moves into overflow', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     agentModePickerOpen: true,
@@ -164,9 +191,10 @@ test('resize should close optional pickers when the width becomes too narrow', a
     runModePickerOpen: true,
     width: 800,
   }
-  const result = await Resize.resize(state, { width: minimumWidthForAgentModePicker - 1 })
-  expect(result.agentModePickerOpen).toBe(false)
-  expect(result.runModePickerOpen).toBe(true)
-  expect(result.hasSpaceForAgentModePicker).toBe(false)
-  expect(result.hasSpaceForRunModePicker).toBe(true)
+  const result = await Resize.resize(state, { width: getComposerWidthForPrimaryControls(state, 2, true) })
+  expect(result.agentModePickerOpen).toBe(true)
+  expect(result.runModePickerOpen).toBe(false)
+  expect(result.hasSpaceForAgentModePicker).toBe(true)
+  expect(result.hasSpaceForRunModePicker).toBe(false)
+  expect(result.hiddenPrimaryControls).toEqual(['run-mode-picker-toggle'])
 })
