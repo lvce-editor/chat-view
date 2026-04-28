@@ -31,9 +31,8 @@ export const listen = async (): Promise<void> => {
     initializeChatStorageWorker(),
     initializeChatToolWorker(),
     initializeClipBoardWorker(),
-    initializeOpenerWorker(),
     initializeIconThemeWorker(),
+    initializeOpenerWorker(),
     initializeTextMeasurementWorker(),
-    initializeAuthWorker(),
   ])
 }
