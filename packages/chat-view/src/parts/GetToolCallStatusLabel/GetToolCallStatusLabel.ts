@@ -2,7 +2,7 @@ import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 
 export const getToolCallStatusLabel = (toolCall: ChatToolCall): string => {
   if (toolCall.status === 'success') {
-    return ' (finished)'
+    return ''
   }
   if (toolCall.status === 'in-progress') {
     return ' (in progress)'
