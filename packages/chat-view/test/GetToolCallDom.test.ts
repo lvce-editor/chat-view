@@ -257,7 +257,7 @@ test('getToolCallDom should render glob baseUri as clickable folder name with fu
 
   expect(result).toEqual([
     {
-      childCount: 5,
+      childCount: 4,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
