@@ -30,6 +30,7 @@ import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSes
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
+import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
@@ -188,5 +189,6 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     visibleModels,
     voiceDictationEnabled,
   }
-  return refreshGitBranchPickerVisibility(nextState)
+  const refreshedState = await refreshGitBranchPickerVisibility(nextState)
+  return updateResponsivePickerState(refreshedState)
 }

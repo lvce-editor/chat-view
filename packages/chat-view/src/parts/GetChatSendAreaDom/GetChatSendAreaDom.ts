@@ -2,6 +2,7 @@ import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
@@ -14,6 +15,7 @@ import { getChatModelPickerToggleVirtualDom } from '../GetChatModelPickerToggleV
 import { getCreatePullRequestButtonDom } from '../GetCreatePullRequestButtonDom/GetCreatePullRequestButtonDom.ts'
 import { getGitBranchPickerVirtualDom } from '../GetGitBranchPickerVirtualDom/GetGitBranchPickerVirtualDom.ts'
 import { getImplementPlanButtonDom } from '../GetImplementPlanButtonDom/GetImplementPlanButtonDom.ts'
+import { getPrimaryControlsOverflowButtonDom } from '../GetPrimaryControlsOverflowButtonDom/GetPrimaryControlsOverflowButtonDom.ts'
 import { getReasoningEffortPickerVirtualDom } from '../GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts'
 import { getRunModePickerVirtualDom } from '../GetRunModePickerVirtualDom/GetRunModePickerVirtualDom.ts'
 import { getScrollDownButtonDom } from '../GetScrollDownButtonDom/GetScrollDownButtonDom.ts'
@@ -33,7 +35,9 @@ export const getChatSendAreaDom = (
   gitBranchPickerErrorMessage: string,
   gitBranches: readonly GitBranch[],
   fallbackBranchName: string,
-  hasSpaceForAgentModePicker: boolean,
+  visiblePrimaryControls: readonly ComposerPrimaryControl[],
+  hiddenPrimaryControls: readonly ComposerPrimaryControl[],
+  primaryControlsOverflowButtonVisible: boolean,
   selectChevronEnabled: boolean,
   modelPickerOpen: boolean,
   models: readonly ChatModel[],
@@ -46,7 +50,6 @@ export const getChatSendAreaDom = (
   tokensMax: number,
   addContextButtonEnabled: boolean,
   showRunMode: boolean,
-  hasSpaceForRunModePicker: boolean,
   runMode: RunMode,
   runModePickerOpen: boolean,
   todoListToolEnabled: boolean,
@@ -59,9 +62,11 @@ export const getChatSendAreaDom = (
   messagesAutoScrollEnabled = true,
 ): readonly VirtualDomNode[] => {
   const isSendDisabled = composerValue.trim() === ''
-  const showAgentModePicker = hasSpaceForAgentModePicker
+  const showAgentModePicker = visiblePrimaryControls.includes('agent-mode-picker-toggle')
+  const showModelPicker = visiblePrimaryControls.includes('model-picker-toggle')
+  const showReasoningEffortPicker = visiblePrimaryControls.includes('reasoning-effort-picker-toggle')
   const showGitBranchPicker = gitBranchPickerVisible || Boolean(fallbackBranchName)
-  const showResponsiveRunModePicker = showRunMode && hasSpaceForRunModePicker
+  const showResponsiveRunModePicker = visiblePrimaryControls.includes('run-mode-picker-toggle')
   const showScrollDownButton = scrollDownButtonEnabled && !messagesAutoScrollEnabled
   const bottomControlsCount =
     2 +
@@ -72,7 +77,12 @@ export const getChatSendAreaDom = (
     (showGitBranchPicker ? 1 : 0) +
     (voiceDictationEnabled ? 1 : 0) +
     (showScrollDownButton ? 1 : 0)
-  const primaryControlsCount = 1 + (showAgentModePicker ? 1 : 0) + (reasoningPickerEnabled ? 1 : 0) + (showResponsiveRunModePicker ? 1 : 0)
+  const primaryControlsCount =
+    (showAgentModePicker ? 1 : 0) +
+    (showModelPicker ? 1 : 0) +
+    (showReasoningEffortPicker ? 1 : 0) +
+    (showResponsiveRunModePicker ? 1 : 0) +
+    (primaryControlsOverflowButtonVisible && hiddenPrimaryControls.length > 0 ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
 
@@ -110,9 +120,10 @@ export const getChatSendAreaDom = (
       type: VirtualDomElements.Div,
     },
     ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),
-    ...getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled),
-    ...(reasoningPickerEnabled ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
+    ...(showModelPicker ? getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled) : []),
+    ...(showReasoningEffortPicker ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
     ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []),
+    ...(primaryControlsOverflowButtonVisible && hiddenPrimaryControls.length > 0 ? getPrimaryControlsOverflowButtonDom() : []),
     ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
     ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
     ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),

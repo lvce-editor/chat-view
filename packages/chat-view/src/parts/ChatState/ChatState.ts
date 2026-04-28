@@ -5,6 +5,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { MockOpenApiRequest } from '../MockOpenApiRequest/MockOpenApiRequest.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
@@ -16,6 +17,7 @@ import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 export interface ChatState {
   readonly addContextButtonEnabled: boolean
   readonly agentMode: AgentMode
+  readonly agentModePickerLabelWidth: number
   readonly agentModePickerOpen: boolean
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
@@ -64,6 +66,7 @@ export interface ChatState {
   readonly hasSpaceForRunModePicker: boolean
   readonly headerHeight: number
   readonly height: number
+  readonly hiddenPrimaryControls: readonly ComposerPrimaryControl[]
   readonly initial: boolean
   readonly inputSource: 'user' | 'script'
   readonly lastNormalViewMode: 'list' | 'detail'
@@ -80,6 +83,7 @@ export interface ChatState {
   readonly mockOpenApiRequests: readonly MockOpenApiRequest[]
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
+  readonly modelPickerLabelWidth: number
   readonly modelPickerListScrollTop: number
   readonly modelPickerOpen: boolean
   readonly modelPickerSearchValue: string
@@ -100,6 +104,12 @@ export interface ChatState {
   readonly parsedMessages: readonly ParsedMessage[]
   readonly passIncludeObfuscation: boolean
   readonly platform: number
+  readonly primaryControlSelectIconGap: number
+  readonly primaryControlSelectIconSize: number
+  readonly primaryControlsGap: number
+  readonly primaryControlsOverflowButtonLabelWidth: number
+  readonly primaryControlsOverflowButtonVisible: boolean
+  readonly primaryControlsSubmitButtonWidth: number
   readonly projectExpandedIds: readonly string[]
   readonly projectListScrollTop: number
   readonly projects: readonly Project[]
@@ -107,11 +117,13 @@ export interface ChatState {
   readonly projectSidebarWidth: number
   readonly questionToolEnabled?: boolean
   readonly reasoningEffort: ReasoningEffort
+  readonly reasoningEffortPickerLabelWidth: number
   readonly reasoningEffortPickerOpen: boolean
   readonly reasoningPickerEnabled: boolean
   readonly renamingSessionId: string
   readonly responsivePickerVisibilityEnabled: boolean
   readonly runMode: RunMode
+  readonly runModePickerLabelWidth: number
   readonly runModePickerOpen: boolean
   readonly scrollDownButtonEnabled: boolean
   readonly searchEnabled: boolean
@@ -151,6 +163,7 @@ export interface ChatState {
   readonly userUsedTokens: number
   readonly viewMode: ChatViewMode
   readonly visibleModels: readonly ChatModel[]
+  readonly visiblePrimaryControls: readonly ComposerPrimaryControl[]
   readonly voiceDictationEnabled: boolean
   readonly warningCount: number
   readonly webSearchEnabled: boolean

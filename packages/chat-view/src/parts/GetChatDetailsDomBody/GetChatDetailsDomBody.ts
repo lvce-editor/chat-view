@@ -1,6 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -32,6 +33,16 @@ export const getChatDetailsDom = (
   todoListItems: readonly TodoListItem[],
   showCreatePullRequestButton = false,
 ): readonly VirtualDomNode[] => {
+  const visiblePrimaryControls: ComposerPrimaryControl[] = [
+    ...(hasSpaceForAgentModePicker ? (['agent-mode-picker-toggle'] as const) : []),
+    'model-picker-toggle',
+    ...(reasoningPickerEnabled ? (['reasoning-effort-picker-toggle'] as const) : []),
+    ...(showRunMode && hasSpaceForRunModePicker ? (['run-mode-picker-toggle'] as const) : []),
+  ]
+  const hiddenPrimaryControls: ComposerPrimaryControl[] = [
+    ...(hasSpaceForAgentModePicker ? [] : (['agent-mode-picker-toggle'] as const)),
+    ...(showRunMode && !hasSpaceForRunModePicker ? (['run-mode-picker-toggle'] as const) : []),
+  ]
   return [
     {
       childCount: 3,
@@ -54,7 +65,9 @@ export const getChatDetailsDom = (
       '',
       [],
       '',
-      hasSpaceForAgentModePicker,
+      visiblePrimaryControls,
+      hiddenPrimaryControls,
+      hiddenPrimaryControls.length > 0,
       true,
       modelPickerOpen,
       models,
@@ -67,7 +80,6 @@ export const getChatDetailsDom = (
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
-      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,

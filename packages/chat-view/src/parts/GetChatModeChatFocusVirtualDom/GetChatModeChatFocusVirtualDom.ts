@@ -5,6 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
@@ -45,6 +46,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly gitBranchPickerVisible: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
@@ -57,6 +59,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
+  readonly primaryControlsOverflowButtonVisible?: boolean
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
@@ -82,6 +85,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly userName?: string
   readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
+  readonly visiblePrimaryControls?: readonly ComposerPrimaryControl[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -105,8 +109,9 @@ export const getChatModeChatFocusVirtualDom = ({
   gitBranchPickerErrorMessage,
   gitBranchPickerOpen,
   gitBranchPickerVisible,
-  hasSpaceForAgentModePicker,
-  hasSpaceForRunModePicker,
+  hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
+  hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
+  hiddenPrimaryControls = [],
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
@@ -119,6 +124,7 @@ export const getChatModeChatFocusVirtualDom = ({
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
+  primaryControlsOverflowButtonVisible = false,
   projectExpandedIds = [],
   projectListScrollTop = 0,
   projects = [],
@@ -144,6 +150,7 @@ export const getChatModeChatFocusVirtualDom = ({
   userName = '',
   userState = 'loggedOut',
   visibleModels = models,
+  visiblePrimaryControls = [],
   voiceDictationEnabled = false,
 }: GetChatModeChatFocusVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
@@ -155,9 +162,9 @@ export const getChatModeChatFocusVirtualDom = ({
   const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
-  const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
+  const isAgentModePickerVisible = agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
-  const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
+  const isRunModePickerVisible = showRunMode && runModePickerOpen
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 2 + (hasVisibleOverlays ? 1 : 0)
@@ -209,7 +216,9 @@ export const getChatModeChatFocusVirtualDom = ({
       gitBranchPickerErrorMessage,
       gitBranches,
       selectedSession?.branchName || '',
-      hasSpaceForAgentModePicker,
+      visiblePrimaryControls,
+      hiddenPrimaryControls,
+      primaryControlsOverflowButtonVisible,
       selectChevronEnabled,
       modelPickerOpen,
       models,
@@ -222,7 +231,6 @@ export const getChatModeChatFocusVirtualDom = ({
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
-      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,
