@@ -26,6 +26,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     gitBranchPickerVisible,
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
+    hiddenPrimaryControls,
     initial,
     listFocusedIndex,
     listFocusOutline,
@@ -41,6 +42,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     openRouterApiKeyInput,
     openRouterApiKeyState,
     parsedMessages,
+    primaryControlsOverflowButtonVisible,
     projectExpandedIds,
     projectListScrollTop,
     projects,
@@ -71,6 +73,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     userState,
     viewMode,
     visibleModels,
+    visiblePrimaryControls,
     voiceDictationEnabled,
   } = newState
   if (initial) {
@@ -99,6 +102,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     gitBranchPickerVisible,
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
+    hiddenPrimaryControls,
     listFocusedIndex,
     listFocusOutline,
     messagesAutoScrollEnabled,
@@ -113,6 +117,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     openRouterApiKeyInput,
     openRouterApiKeyState,
     parsedMessages,
+    primaryControlsOverflowButtonVisible,
     projectExpandedIds,
     projectListScrollTop,
     projects,
@@ -142,6 +147,7 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
     userState,
     viewMode,
     visibleModels,
+    visiblePrimaryControls,
     voiceDictationEnabled,
   })
   return [ViewletCommand.SetDom2, uid, dom]

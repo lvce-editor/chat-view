@@ -7,6 +7,18 @@ import {
   isEqualVisibleModels,
 } from './IsEqualHelpers/IsEqualHelpers.ts'
 
+const isEqualPrimaryControls = (oldItems: readonly string[], newItems: readonly string[]): boolean => {
+  if (oldItems.length !== newItems.length) {
+    return false
+  }
+  for (let i = 0; i < oldItems.length; i++) {
+    if (oldItems[i] !== newItems[i]) {
+      return false
+    }
+  }
+  return true
+}
+
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
   return (
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
@@ -24,6 +36,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     isEqualGitBranches(oldState.gitBranches, newState.gitBranches) &&
     oldState.hasSpaceForAgentModePicker === newState.hasSpaceForAgentModePicker &&
     oldState.hasSpaceForRunModePicker === newState.hasSpaceForRunModePicker &&
+    isEqualPrimaryControls(oldState.hiddenPrimaryControls, newState.hiddenPrimaryControls) &&
     oldState.initial === newState.initial &&
     oldState.listFocusOutline === newState.listFocusOutline &&
     oldState.modelPickerOpen === newState.modelPickerOpen &&
@@ -32,6 +45,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.listFocusedIndex === newState.listFocusedIndex &&
     oldState.openApiApiKeyInput === newState.openApiApiKeyInput &&
     oldState.openRouterApiKeyInput === newState.openRouterApiKeyInput &&
+    oldState.primaryControlsOverflowButtonVisible === newState.primaryControlsOverflowButtonVisible &&
     isEqualProjectExpandedIds(oldState.projectExpandedIds, newState.projectExpandedIds) &&
     isEqualProjects(oldState.projects, newState.projects) &&
     oldState.reasoningEffort === newState.reasoningEffort &&
@@ -58,6 +72,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.userName === newState.userName &&
     oldState.userState === newState.userState &&
     oldState.viewMode === newState.viewMode &&
+    isEqualPrimaryControls(oldState.visiblePrimaryControls, newState.visiblePrimaryControls) &&
     oldState.voiceDictationEnabled === newState.voiceDictationEnabled
   )
 }

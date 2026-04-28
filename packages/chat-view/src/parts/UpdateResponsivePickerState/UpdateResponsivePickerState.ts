@@ -20,31 +20,11 @@ const getMeasuredTextWidth = async (text: string, fontFamily: string): Promise<n
 }
 
 export const updateResponsivePickerState = async (state: ChatState): Promise<ChatState> => {
-  const agentModeLabel = getPrimaryControlLabel(
-    AgentModeControl,
-    state.agentMode,
-    state.models,
-    state.selectedModelId,
-    state.reasoningEffort,
-    state.runMode,
-  )
-  const modelLabel = getPrimaryControlLabel(ModelControl, state.agentMode, state.models, state.selectedModelId, state.reasoningEffort, state.runMode)
-  const reasoningEffortLabel = getPrimaryControlLabel(
-    ReasoningEffortControl,
-    state.agentMode,
-    state.models,
-    state.selectedModelId,
-    state.reasoningEffort,
-    state.runMode,
-  )
-  const runModeLabel = getPrimaryControlLabel(
-    RunModeControl,
-    state.agentMode,
-    state.models,
-    state.selectedModelId,
-    state.reasoningEffort,
-    state.runMode,
-  )
+  const { agentMode, composerFontFamily, models, reasoningEffort, runMode, selectedModelId } = state
+  const agentModeLabel = getPrimaryControlLabel(AgentModeControl, agentMode, models, selectedModelId, reasoningEffort, runMode)
+  const modelLabel = getPrimaryControlLabel(ModelControl, agentMode, models, selectedModelId, reasoningEffort, runMode)
+  const reasoningEffortLabel = getPrimaryControlLabel(ReasoningEffortControl, agentMode, models, selectedModelId, reasoningEffort, runMode)
+  const runModeLabel = getPrimaryControlLabel(RunModeControl, agentMode, models, selectedModelId, reasoningEffort, runMode)
   const [
     agentModePickerLabelWidth,
     modelPickerLabelWidth,
@@ -52,11 +32,11 @@ export const updateResponsivePickerState = async (state: ChatState): Promise<Cha
     runModePickerLabelWidth,
     primaryControlsOverflowButtonLabelWidth,
   ] = await Promise.all([
-    getMeasuredTextWidth(agentModeLabel, state.composerFontFamily),
-    getMeasuredTextWidth(modelLabel, state.composerFontFamily),
-    getMeasuredTextWidth(reasoningEffortLabel, state.composerFontFamily),
-    getMeasuredTextWidth(runModeLabel, state.composerFontFamily),
-    getMeasuredTextWidth(primaryControlsOverflowLabel, state.composerFontFamily),
+    getMeasuredTextWidth(agentModeLabel, composerFontFamily),
+    getMeasuredTextWidth(modelLabel, composerFontFamily),
+    getMeasuredTextWidth(reasoningEffortLabel, composerFontFamily),
+    getMeasuredTextWidth(runModeLabel, composerFontFamily),
+    getMeasuredTextWidth(primaryControlsOverflowLabel, composerFontFamily),
   ])
   return applyResponsivePickerState({
     ...state,
