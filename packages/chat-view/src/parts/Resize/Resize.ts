@@ -5,7 +5,18 @@ import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
 
-export const resize = async (state: ChatState, dimensions: any, getComposerHeightFn: GetComposerHeightFn = getComposerHeight): Promise<ChatState> => {
+interface Dimensions {
+  readonly height: number
+  readonly width: number
+  readonly x: number
+  readonly y: number
+}
+
+export const resize = async (
+  state: ChatState,
+  dimensions: Dimensions,
+  getComposerHeightFn: GetComposerHeightFn = getComposerHeight,
+): Promise<ChatState> => {
   const { width } = state
   const mergedState = {
     ...state,
