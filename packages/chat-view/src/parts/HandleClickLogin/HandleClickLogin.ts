@@ -54,7 +54,6 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
   }
   try {
     if (useAuthWorker) {
-      console.log('asking for login', authUseRedirect, backendUrl, platform)
       const authState = await AuthWorker.login({
         authUseRedirect,
         backendUrl,
