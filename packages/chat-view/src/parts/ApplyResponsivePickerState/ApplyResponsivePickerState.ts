@@ -39,30 +39,15 @@ export const applyResponsivePickerState = (state: ChatState): ChatState => {
     overflowButtonWidth: primaryControlsOverflowButtonLabelWidth,
     primaryControlGap: primaryControlsGap,
     primaryControlWidths: {
-      [AgentModeControl]: getControlWidth(
-        agentModePickerLabelWidth,
-        selectChevronEnabled,
-        primaryControlSelectIconGap,
-        primaryControlSelectIconSize,
-      ),
-      [ModelControl]: getControlWidth(
-        modelPickerLabelWidth,
-        selectChevronEnabled,
-        primaryControlSelectIconGap,
-        primaryControlSelectIconSize,
-      ),
+      [AgentModeControl]: getControlWidth(agentModePickerLabelWidth, selectChevronEnabled, primaryControlSelectIconGap, primaryControlSelectIconSize),
+      [ModelControl]: getControlWidth(modelPickerLabelWidth, selectChevronEnabled, primaryControlSelectIconGap, primaryControlSelectIconSize),
       [ReasoningEffortControl]: getControlWidth(
         reasoningEffortPickerLabelWidth,
         selectChevronEnabled,
         primaryControlSelectIconGap,
         primaryControlSelectIconSize,
       ),
-      [RunModeControl]: getControlWidth(
-        runModePickerLabelWidth,
-        selectChevronEnabled,
-        primaryControlSelectIconGap,
-        primaryControlSelectIconSize,
-      ),
+      [RunModeControl]: getControlWidth(runModePickerLabelWidth, selectChevronEnabled, primaryControlSelectIconGap, primaryControlSelectIconSize),
     },
     responsivePickerVisibilityEnabled,
     submitButtonWidth: primaryControlsSubmitButtonWidth,
