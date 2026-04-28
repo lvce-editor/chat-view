@@ -448,8 +448,8 @@ test('getChatVirtualDom should render hidden picker popovers when opened from ov
     hiddenPrimaryControls: ['agent-mode-picker-toggle', 'run-mode-picker-toggle'],
     primaryControlsOverflowButtonVisible: true,
     runModePickerOpen: true,
-    visiblePrimaryControls: ['model-picker-toggle'],
     viewMode: 'detail',
+    visiblePrimaryControls: ['model-picker-toggle'],
   })
   const agentModePicker = result.find((node) => node.name === 'agent-mode-picker-item:agent')
   const runModePicker = result.find((node) => node.name === 'run-mode-picker-item:background')

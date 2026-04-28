@@ -5,11 +5,7 @@ import * as Resize from '../src/parts/Resize/Resize.ts'
 
 const getPrimaryControlWidths = (state: ChatState): readonly number[] => {
   const chevronWidth = state.selectChevronEnabled ? state.primaryControlSelectIconGap + state.primaryControlSelectIconSize : 0
-  return [
-    state.agentModePickerLabelWidth + chevronWidth,
-    state.modelPickerLabelWidth + chevronWidth,
-    state.runModePickerLabelWidth + chevronWidth,
-  ]
+  return [state.agentModePickerLabelWidth + chevronWidth, state.modelPickerLabelWidth + chevronWidth, state.runModePickerLabelWidth + chevronWidth]
 }
 
 const getComposerWidthForPrimaryControls = (state: ChatState, visibleControlCount: number, includeOverflowButton: boolean): number => {
@@ -164,6 +160,7 @@ test('resize should preserve composer height when width does not change', async 
 test('resize should update responsive picker visibility when width changes', async () => {
   const state: ChatState = {
     ...createDefaultState(),
+    responsivePickerVisibilityEnabled: false,
     width: 800,
   }
   const result = await Resize.resize(state, { width: 1 })

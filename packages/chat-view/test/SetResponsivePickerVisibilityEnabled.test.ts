@@ -5,11 +5,7 @@ import * as SetResponsivePickerVisibilityEnabled from '../src/parts/SetResponsiv
 
 const getPrimaryControlWidths = (state: ChatState): readonly number[] => {
   const chevronWidth = state.selectChevronEnabled ? state.primaryControlSelectIconGap + state.primaryControlSelectIconSize : 0
-  return [
-    state.agentModePickerLabelWidth + chevronWidth,
-    state.modelPickerLabelWidth + chevronWidth,
-    state.runModePickerLabelWidth + chevronWidth,
-  ]
+  return [state.agentModePickerLabelWidth + chevronWidth, state.modelPickerLabelWidth + chevronWidth, state.runModePickerLabelWidth + chevronWidth]
 }
 
 const getComposerWidthForPrimaryControls = (state: ChatState, visibleControlCount: number, includeOverflowButton: boolean): number => {
