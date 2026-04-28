@@ -6,10 +6,10 @@ import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
 
 interface Dimensions {
-  readonly height: number
-  readonly width: number
-  readonly x: number
-  readonly y: number
+  readonly height?: number
+  readonly width?: number
+  readonly x?: number
+  readonly y?: number
 }
 
 export const resize = async (
