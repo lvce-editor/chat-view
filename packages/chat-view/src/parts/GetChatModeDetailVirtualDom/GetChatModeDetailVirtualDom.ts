@@ -5,6 +5,7 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
@@ -38,6 +39,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
@@ -50,6 +52,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState?: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
+  readonly primaryControlsOverflowButtonVisible?: boolean
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
@@ -71,6 +74,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly userName?: string
   readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
+  readonly visiblePrimaryControls?: readonly ComposerPrimaryControl[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -90,8 +94,9 @@ export const getChatModeDetailVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
-  hasSpaceForAgentModePicker,
-  hasSpaceForRunModePicker,
+  hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
+  hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
+  hiddenPrimaryControls = [],
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
@@ -104,6 +109,7 @@ export const getChatModeDetailVirtualDom = ({
   openRouterApiKeyInput,
   openRouterApiKeyState = 'idle',
   parsedMessages = [],
+  primaryControlsOverflowButtonVisible = false,
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
@@ -125,6 +131,7 @@ export const getChatModeDetailVirtualDom = ({
   userName = '',
   userState = 'loggedOut',
   visibleModels = models,
+  visiblePrimaryControls = [],
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
@@ -135,9 +142,9 @@ export const getChatModeDetailVirtualDom = ({
   const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
-  const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
+  const isAgentModePickerVisible = agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
-  const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
+  const isRunModePickerVisible = showRunMode && runModePickerOpen
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
@@ -172,7 +179,9 @@ export const getChatModeDetailVirtualDom = ({
       '',
       [],
       '',
-      hasSpaceForAgentModePicker,
+      visiblePrimaryControls,
+      hiddenPrimaryControls,
+      primaryControlsOverflowButtonVisible,
       selectChevronEnabled,
       modelPickerOpen,
       models,
@@ -185,7 +194,6 @@ export const getChatModeDetailVirtualDom = ({
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
-      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,

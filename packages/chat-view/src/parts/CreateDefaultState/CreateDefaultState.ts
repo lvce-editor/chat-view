@@ -1,12 +1,21 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
+import { applyResponsivePickerState } from '../ApplyResponsivePickerState/ApplyResponsivePickerState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
+import {
+  primaryControlFontSize,
+  primaryControlSelectIconGap,
+  primaryControlSelectIconSize,
+  primaryControlsGap,
+  primaryControlsOverflowLabel,
+  primaryControlsSubmitButtonWidth,
+} from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
-import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
+import { estimateTextWidth } from '../MeasureTextWidth/MeasureTextWidth.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
@@ -19,13 +28,13 @@ export const createDefaultState = (): ChatState => {
   const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
-  const responsivePickerVisibilityEnabled = false
+  const responsivePickerVisibilityEnabled = true
   const models = getDefaultModels()
   const visibleModels = getVisibleModels(models, '')
-  const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
-  return {
+  const baseState: ChatState = {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,
+    agentModePickerLabelWidth: estimateTextWidth('Agent', primaryControlFontSize),
     agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
@@ -69,11 +78,11 @@ export const createDefaultState = (): ChatState => {
     gitBranchPickerErrorMessage: '',
     gitBranchPickerOpen: false,
     gitBranchPickerVisible: false,
+    hasSpaceForAgentModePicker: true,
+    hasSpaceForRunModePicker: true,
     headerHeight: 50,
     height: 0,
-    useAuthWorker: true,
-    useOwnBackend: false,
-    ...responsivePickerState,
+    hiddenPrimaryControls: [],
     initial: true,
     inputSource: 'script',
     lastNormalViewMode: 'list',
@@ -90,6 +99,7 @@ export const createDefaultState = (): ChatState => {
     mockOpenApiRequests: [],
     modelPickerHeaderHeight,
     modelPickerHeight: getModelPickerHeight(modelPickerHeaderHeight, visibleModels.length),
+    modelPickerLabelWidth: estimateTextWidth('test', primaryControlFontSize),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',
@@ -110,6 +120,12 @@ export const createDefaultState = (): ChatState => {
     parsedMessages: [],
     passIncludeObfuscation: false,
     platform: 0,
+    primaryControlSelectIconGap,
+    primaryControlSelectIconSize,
+    primaryControlsGap,
+    primaryControlsOverflowButtonLabelWidth: estimateTextWidth(primaryControlsOverflowLabel, primaryControlFontSize),
+    primaryControlsOverflowButtonVisible: false,
+    primaryControlsSubmitButtonWidth,
     projectExpandedIds: [defaultProjectId],
     projectListScrollTop: 0,
     projects: [
@@ -123,11 +139,13 @@ export const createDefaultState = (): ChatState => {
     projectSidebarWidth: 280,
     questionToolEnabled: false,
     reasoningEffort: defaultReasoningEffort,
+    reasoningEffortPickerLabelWidth: estimateTextWidth('Medium', primaryControlFontSize),
     reasoningEffortPickerOpen: false,
     reasoningPickerEnabled: false,
     renamingSessionId: '',
     responsivePickerVisibilityEnabled,
     runMode: 'local',
+    runModePickerLabelWidth: estimateTextWidth('local', primaryControlFontSize),
     runModePickerOpen: false,
     scrollDownButtonEnabled: false,
     searchEnabled: false,
@@ -161,23 +179,33 @@ export const createDefaultState = (): ChatState => {
     toolEnablement: parseToolEnablement(undefined),
     uid: 0,
     usageOverviewEnabled: false,
+    useAuthWorker: true,
     useChatCoordinatorWorker: false,
     useChatMathWorker: true,
     useChatNetworkWorkerForRequests: false,
     useChatToolWorker: true,
     useMockApi: false,
     useModelWorker: false,
+    useOwnBackend: false,
     userName: '',
     userState: 'loggedOut',
     userSubscriptionPlan: '',
     userUsedTokens: 0,
     viewMode: 'list',
     visibleModels,
+    visiblePrimaryControls: [],
     voiceDictationEnabled: false,
     warningCount: 0,
     webSearchEnabled: true,
     width: 0,
     x: 0,
     y: 0,
+  }
+  return {
+    ...applyResponsivePickerState({
+      ...baseState,
+      width: 800,
+    }),
+    width: 0,
   }
 }

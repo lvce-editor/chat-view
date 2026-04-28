@@ -1,39 +1,42 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { applyResponsivePickerState } from '../ApplyResponsivePickerState/ApplyResponsivePickerState.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getComposerHeight } from '../GetComposerHeight/GetComposerHeight.ts'
-import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
 
 type GetComposerHeightFn = (state: ChatState, value: string, width: number) => Promise<number>
 
 export const resize = async (state: ChatState, dimensions: any, getComposerHeightFn: GetComposerHeightFn = getComposerHeight): Promise<ChatState> => {
-  const { agentModePickerOpen, responsivePickerVisibilityEnabled, runModePickerOpen, width } = state
-  const responsivePickerState =
-    dimensions.width === undefined ? undefined : getResponsivePickerState(dimensions.width, responsivePickerVisibilityEnabled)
-  const responsivePickerOpenState = responsivePickerState
-    ? {
-        agentModePickerOpen: responsivePickerState.hasSpaceForAgentModePicker ? agentModePickerOpen : false,
-        runModePickerOpen: responsivePickerState.hasSpaceForRunModePicker ? runModePickerOpen : false,
-      }
-    : {}
-  const nextState = {
+  const { width } = state
+  const mergedState = {
     ...state,
     ...dimensions,
-    ...responsivePickerState,
-    ...responsivePickerOpenState,
   }
-  const { composerAttachments, composerValue, width: nextWidth } = nextState
+  const nextState = dimensions.width === undefined ? mergedState : applyResponsivePickerState(mergedState)
+  const closedNextState =
+    dimensions.width === undefined
+      ? nextState
+      : {
+          ...nextState,
+          agentModePickerOpen: nextState.hiddenPrimaryControls.includes('agent-mode-picker-toggle') ? false : nextState.agentModePickerOpen,
+          modelPickerOpen: nextState.hiddenPrimaryControls.includes('model-picker-toggle') ? false : nextState.modelPickerOpen,
+          reasoningEffortPickerOpen: nextState.hiddenPrimaryControls.includes('reasoning-effort-picker-toggle')
+            ? false
+            : nextState.reasoningEffortPickerOpen,
+          runModePickerOpen: nextState.hiddenPrimaryControls.includes('run-mode-picker-toggle') ? false : nextState.runModePickerOpen,
+        }
+  const { composerAttachments, composerValue, width: nextWidth } = closedNextState
   if (dimensions.width !== undefined && dimensions.width !== width && composerValue) {
     return {
-      ...nextState,
+      ...closedNextState,
       composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, nextWidth),
-      composerHeight: await getComposerHeightFn(nextState, composerValue, nextWidth),
+      composerHeight: await getComposerHeightFn(closedNextState, composerValue, nextWidth),
     }
   }
   if (dimensions.width !== undefined && dimensions.width !== width && composerAttachments.length > 0) {
     return {
-      ...nextState,
+      ...closedNextState,
       composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, nextWidth),
     }
   }
-  return nextState
+  return closedNextState
 }
