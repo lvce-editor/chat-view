@@ -18,8 +18,11 @@ test('loadContent should initialize view and keep existing session', async () =>
   const state: ChatState = { ...createDefaultState(), initial: true, uid: 1 }
   const result = await LoadContent.loadContent(state, undefined)
   expect(result.initial).toBe(false)
+  expect(result.models.length).toBeGreaterThan(0)
+  expect(result.visibleModels).toEqual(result.models)
   expect(result.sessions).toHaveLength(1)
   expect(result.selectedSessionId).toBe('session-1')
+  expect(result.selectedModelId).toBe('test')
   expect(result.uid).toBe(1)
 })
 

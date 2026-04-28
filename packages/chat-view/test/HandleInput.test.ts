@@ -8,9 +8,17 @@ import { OpenApiApiKeyInput } from '../src/parts/OpenApiApiKeyNames/OpenApiApiKe
 import { OpenRouterApiKeyInput } from '../src/parts/OpenRouterApiKeyNames/OpenRouterApiKeyNames.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
+const models = [
+  { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' as const },
+  { id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const },
+  { id: 'openapi/codex-5.3', name: 'Codex 5.3', provider: 'openApi' as const },
+] as const
+
 function createState(overrides: Partial<ChatState> = {}): ChatState {
   return {
     ...createDefaultState(),
+    models,
+    visibleModels: models,
     ...overrides,
   }
 }

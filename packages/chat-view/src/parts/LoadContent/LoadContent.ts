@@ -22,6 +22,7 @@ import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSaved
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
 import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
+import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
@@ -32,6 +33,7 @@ import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisib
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
+  const models = await getDefaultModels()
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   const savedComposerValue = getSavedComposerValue(savedState)
@@ -103,8 +105,8 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     projects.some((project: Readonly<{ id: string; name: string; uri: string }>) => project.id === id),
   )
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
-  const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
-  const visibleModels = getVisibleModels(state.models, '')
+  const selectedModelId = models.some((model) => model.id === preferredModelId) ? preferredModelId : models[0]?.id || ''
+  const visibleModels = getVisibleModels(models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
@@ -141,6 +143,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     initial: false,
     lastNormalViewMode,
     messagesScrollTop,
+    models,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,

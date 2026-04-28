@@ -29,6 +29,8 @@ const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]
   return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
 }
 
+const openRouterModels = [{ id: 'claude-code', name: 'Claude Code', provider: 'openRouter' as const }] as const
+
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
 
 beforeEach(() => {
@@ -771,6 +773,7 @@ test('handleClick should retry previous prompt after saving openrouter api key',
   try {
     const state: ChatState = {
       ...createDefaultState(),
+      models: openRouterModels,
       nextMessageId: 3,
       openRouterApiKeyInput: 'or-key-999',
       selectedModelId: 'claude-code',

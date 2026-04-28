@@ -2,11 +2,9 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
-import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
-import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
@@ -20,8 +18,8 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   const responsivePickerVisibilityEnabled = false
-  const models = getDefaultModels()
-  const visibleModels = getVisibleModels(models, '')
+  const models: ChatState['models'] = []
+  const visibleModels: ChatState['visibleModels'] = []
   const responsivePickerState = getResponsivePickerState(800, responsivePickerVisibilityEnabled)
   return {
     addContextButtonEnabled: false,

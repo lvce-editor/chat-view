@@ -29,6 +29,8 @@ const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]
   return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
 }
 
+const openRouterModels = [{ id: 'claude-code', name: 'Claude Code', provider: 'openRouter' as const }] as const
+
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -272,6 +274,7 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
     const state = {
       ...createDefaultState(),
       composerValue: 'hello from openrouter',
+      models: openRouterModels,
       openRouterApiKey: 'or-key-123',
       selectedModelId: 'claude-code',
       viewMode: 'detail' as const,
@@ -1296,6 +1299,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   const state = {
     ...createDefaultState(),
     composerValue: 'hello',
+    models: openRouterModels,
     openRouterApiKey: 'or-key-123',
     projects: [
       {
@@ -1352,6 +1356,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
   const state = {
     ...createDefaultState(),
     composerValue: 'hello',
+    models: openRouterModels,
     openRouterApiKey: 'or-key-123',
     selectedModelId: 'claude-code',
     systemPrompt: 'Environment:\n- Current workspace URI: {{workspaceUri}}',
