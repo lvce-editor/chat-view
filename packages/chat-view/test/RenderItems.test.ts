@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { ViewletCommand } from '@lvce-editor/constants'
-import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
+import * as ClassNames from '../src/parts/ClassNames/ClassNames.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as RenderItems from '../src/parts/RenderItems/RenderItems.ts'
 
