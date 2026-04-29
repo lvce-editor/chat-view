@@ -129,7 +129,6 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
     className: ClassNames.IconButton,
     name: 'stop',
     onClick: DomEventListenerFunctions.HandleClick,
-    title: 'stop',
     type: VirtualDomElements.Button,
   })
   expect(stopIcon).toMatchObject({

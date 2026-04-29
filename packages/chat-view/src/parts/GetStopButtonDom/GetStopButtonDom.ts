@@ -13,7 +13,6 @@ export const getStopButtonDom = (): readonly VirtualDomNode[] => {
       className: ClassNames.IconButton,
       name: InputName.Stop,
       onClick: DomEventListenerFunctions.HandleClick,
-      title: Strings.stop(),
       type: VirtualDomElements.Button,
     },
     {
