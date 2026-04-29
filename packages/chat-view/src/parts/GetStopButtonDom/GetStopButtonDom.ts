@@ -4,6 +4,13 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const stopButtonIcon: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconStopCircle),
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
 export const getStopButtonDom = (): readonly VirtualDomNode[] => {
   return [
     {
@@ -15,11 +22,6 @@ export const getStopButtonDom = (): readonly VirtualDomNode[] => {
       onClick: DomEventListenerFunctions.HandleClick,
       type: VirtualDomElements.Button,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDebugPause),
-      role: AriaRoles.None,
-      type: VirtualDomElements.Div,
-    },
+    stopButtonIcon,
   ]
 }
