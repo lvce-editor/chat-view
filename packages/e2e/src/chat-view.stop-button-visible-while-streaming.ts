@@ -2,16 +2,24 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.stop-button-visible-while-streaming'
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Chat.setStreamingEnabled(true)
-  await Chat.useMockApi()
-  await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Chat.mockOpenApiStreamReset()
-  await Chat.handleInput('hello from e2e')
-
-  const submitPromise = Chat.handleSubmit()
+  await Command.execute('Chat.openMockSession', 'stop-button-visible', [
+    {
+      id: 'message-user-1',
+      role: 'user',
+      text: 'hello from e2e',
+      time: '10:00',
+    },
+    {
+      id: 'message-assistant-1',
+      role: 'assistant',
+      text: 'partial response',
+      time: '10:01',
+    },
+  ])
+  await Command.execute('Chat.setInProgress', true)
 
   const stopButton = Locator('.IconButton[name="stop"]')
   const stopIcon = Locator('.IconButton[name="stop"] .MaskIconDebugPause')
@@ -25,7 +33,4 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await stopButton.click()
   await expect(stopButton).toBeHidden()
   await expect(sendButton).toBeVisible()
-
-  await Chat.mockOpenApiStreamFinish()
-  await submitPromise
 }
