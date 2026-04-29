@@ -36,7 +36,7 @@ test('getMenuEntriesChatProjectList should expose add project when no project ro
 })
 
 test('getMenuEntriesChatProjectList should omit remove project when removal is disabled', () => {
-  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList({ projectId: 'project-1', canRemoveProject: false })
+  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList({ canRemoveProject: false, projectId: 'project-1' })
   expect(entries).toHaveLength(2)
   expect(entries.map((entry) => entry.id)).toEqual(['newChat', 'addProject'])
 })

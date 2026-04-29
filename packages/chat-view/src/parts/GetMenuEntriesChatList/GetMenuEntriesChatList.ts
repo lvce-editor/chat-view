@@ -1,10 +1,9 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as ViewletChatStrings from '../ChatStrings/ChatStrings.ts'
+import type { ContextMenuProps } from '../GetMenuEntries/ContextMenuProps/ContextMenuProps.ts'
 
-interface Props {
-  readonly sessionId?: string
-}
+type Props = Pick<ContextMenuProps, 'sessionId'>
 
 export const getMenuEntriesChatList = ({ sessionId = '' }: Props = {}): readonly MenuEntry[] => {
   return [
