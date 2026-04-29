@@ -121,16 +121,20 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
   })
 
   const stopButton = result.find((node) => node.name === 'stop')
-  const stopLabel = result.find((node) => node.text === 'stop')
+  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`)
 
   expect(stopButton).toMatchObject({
+    'aria-label': 'stop',
     buttonType: 'button',
-    className: ClassNames.Button,
+    className: ClassNames.IconButton,
     name: 'stop',
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
-  expect(stopLabel).toBeDefined()
+  expect(stopIcon).toMatchObject({
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`,
+    type: VirtualDomElements.Div,
+  })
 })
 
 test('getChatVirtualDom should render implement button for the latest successful plan reply in detail mode', () => {

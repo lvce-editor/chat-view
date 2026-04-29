@@ -109,6 +109,7 @@ import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
+import * as SetInProgress from '../SetInProgress/SetInProgress.ts'
 import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
@@ -255,6 +256,7 @@ export const commandMap = {
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
+  'Chat.setInProgress': wrapCommand(SetInProgress.setInProgress),
   'Chat.setNowForTest': wrapCommand(SetNowForTest.setNowForTest),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
