@@ -3,6 +3,14 @@ import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/Composer
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import { getPrimaryControlCommand } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 
+interface Props {
+  readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly agentModeLabel?: string
+  readonly modelLabel?: string
+  readonly reasoningEffortLabel?: string
+  readonly runModeLabel?: string
+}
+
 const getLabel = (
   control: ComposerPrimaryControl,
   agentModeLabel: string,
@@ -24,13 +32,13 @@ const getLabel = (
   }
 }
 
-export const getMenuEntriesPrimaryControlsOverflow = (
-  hiddenPrimaryControls: readonly ComposerPrimaryControl[] = [],
+export const getMenuEntriesPrimaryControlsOverflow = ({
+  hiddenPrimaryControls = [],
   agentModeLabel = '',
   modelLabel = '',
   reasoningEffortLabel = '',
   runModeLabel = '',
-): readonly MenuEntry[] => {
+}: Props = {}): readonly MenuEntry[] => {
   return hiddenPrimaryControls.map((control) => ({
     command: getPrimaryControlCommand(control),
     flags: MenuItemFlags.None,

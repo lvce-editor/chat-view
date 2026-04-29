@@ -3,6 +3,11 @@ import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as GetChatViewDomStrings from '../ChatStrings/ChatStrings.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+interface Props {
+  readonly projectId?: string
+  readonly canRemoveProject?: boolean
+}
+
 const menuEntryAddProject: MenuEntry = {
   args: [InputName.CreateProject],
   command: 'Chat.handleClick',
@@ -11,7 +16,7 @@ const menuEntryAddProject: MenuEntry = {
   label: GetChatViewDomStrings.addProject(),
 }
 
-export const getMenuEntriesChatProjectList = (projectId: string = '', canRemoveProject = true): readonly MenuEntry[] => {
+export const getMenuEntriesChatProjectList = ({ projectId = '', canRemoveProject = true }: Props = {}): readonly MenuEntry[] => {
   if (!projectId) {
     return [menuEntryAddProject]
   }
