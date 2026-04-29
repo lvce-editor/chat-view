@@ -172,7 +172,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleMessagesContextMenu,
-      params: ['handleMessagesContextMenu'],
+      params: ['handleMessagesContextMenu', EventExpression.Button, EventExpression.ClientX, EventExpression.ClientY],
       preventDefault: true,
     },
     {
