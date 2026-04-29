@@ -157,6 +157,11 @@ test('getToolCallDom should render grep_search query and expose raw arguments on
       text: 'grep_search',
       type: VirtualDomElements.Text,
     }),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallDetails,
+      type: VirtualDomElements.Span,
+    },
     expect.objectContaining({
       text: ' "hello"',
       type: VirtualDomElements.Text,
@@ -203,8 +208,48 @@ test('getToolCallDom should expose only nested arguments on hover for wrapped gr
       text: 'grep_search',
       type: VirtualDomElements.Text,
     }),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallDetails,
+      type: VirtualDomElements.Span,
+    },
     expect.objectContaining({
       text: ' "memoryMeasurement|MemoryMeasurement"',
+      type: VirtualDomElements.Text,
+    }),
+  ])
+})
+
+test('getToolCallDom should wrap fallback tool call details in ToolCallDetails span', () => {
+  const result = getToolCallDom({
+    arguments: '{"query":"openai key"}',
+    name: 'grep_search',
+    status: 'success',
+  })
+
+  expect(result).toEqual([
+    {
+      childCount: 2,
+      className: ClassNames.ChatOrderedListItem,
+      title: '{"query":"openai key"}',
+      type: VirtualDomElements.Li,
+    },
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallName,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: 'grep_search',
+      type: VirtualDomElements.Text,
+    }),
+    {
+      childCount: 1,
+      className: ClassNames.ToolCallDetails,
+      type: VirtualDomElements.Span,
+    },
+    expect.objectContaining({
+      text: ' "openai key"',
       type: VirtualDomElements.Text,
     }),
   ])
