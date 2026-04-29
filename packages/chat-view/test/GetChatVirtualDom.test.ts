@@ -1987,6 +1987,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     autocapitalize: 'off',
     autocomplete: 'off',
     autocorrect: 'off',
+    inputType: 'password',
     onInput: DomEventListenerFunctions.HandleInput,
     spellcheck: false,
     type: VirtualDomElements.Input,
@@ -2059,6 +2060,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     autocomplete: 'off',
     autocorrect: 'off',
     className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
+    inputType: 'password',
     onInput: DomEventListenerFunctions.HandleInput,
     pattern: '^sk-.+',
     required: false,
@@ -2094,6 +2096,7 @@ test('getChatVirtualDOm should not mark empty OpenAPI api key input as invalid',
   const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
   expect(apiKeyInput).toMatchObject({
     className: ClassNames.InputBox,
+    inputType: 'password',
     required: false,
   })
 })
