@@ -10,7 +10,7 @@ export interface ContextMenuProps {
   readonly previewSrc?: string
   readonly projectId?: string
   readonly reasoningEffortLabel?: string
-  readonly runModeLabel?: string
   readonly [key: string]: any
+  readonly runModeLabel?: string
   readonly sessionId?: string
 }

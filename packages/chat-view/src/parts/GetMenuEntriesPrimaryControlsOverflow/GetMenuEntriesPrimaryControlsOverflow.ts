@@ -1,10 +1,8 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
 import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
+import type { ContextMenuProps } from '../GetMenuEntries/ContextMenuProps/ContextMenuProps.ts'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import { getPrimaryControlCommand } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
-import type { ContextMenuProps } from '../GetMenuEntries/ContextMenuProps/ContextMenuProps.ts'
-
-type Props = Pick<ContextMenuProps, 'agentModeLabel' | 'hiddenPrimaryControls' | 'modelLabel' | 'reasoningEffortLabel' | 'runModeLabel'>
 
 const getLabel = (
   control: ComposerPrimaryControl,
@@ -33,7 +31,7 @@ export const getMenuEntriesPrimaryControlsOverflow = ({
   modelLabel = '',
   reasoningEffortLabel = '',
   runModeLabel = '',
-}: Props = {}): readonly MenuEntry[] => {
+}: ContextMenuProps): readonly MenuEntry[] => {
   return hiddenPrimaryControls.map((control) => ({
     command: getPrimaryControlCommand(control),
     flags: MenuItemFlags.None,

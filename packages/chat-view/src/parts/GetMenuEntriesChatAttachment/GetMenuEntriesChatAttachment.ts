@@ -1,11 +1,9 @@
 import { MenuItemFlags } from '@lvce-editor/constants'
+import type { ContextMenuProps } from '../GetMenuEntries/ContextMenuProps/ContextMenuProps.ts'
 import type { MenuEntry } from '../MenuEntry/MenuEntry.ts'
 import * as ViewletChatStrings from '../ChatStrings/ChatStrings.ts'
-import type { ContextMenuProps } from '../GetMenuEntries/ContextMenuProps/ContextMenuProps.ts'
 
-type Props = Pick<ContextMenuProps, 'attachmentId' | 'previewSrc'>
-
-export const getMenuEntriesChatAttachment = ({ attachmentId = '', previewSrc = '' }: Props = {}): readonly MenuEntry[] => {
+export const getMenuEntriesChatAttachment = ({ attachmentId = '', previewSrc = '' }: ContextMenuProps): readonly MenuEntry[] => {
   return [
     {
       args: [previewSrc],
