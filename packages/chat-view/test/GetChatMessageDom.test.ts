@@ -192,6 +192,7 @@ test('getChatMessageDom should mark invalid openai api key input with InputInval
   expect(result).toContainEqual(
     expect.objectContaining({
       className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
+      inputType: 'password',
       name: 'open-api-api-key',
       pattern: '^sk-.+',
       required: false,
@@ -226,6 +227,7 @@ test('getChatMessageDom should allow empty openai api key input without InputInv
   expect(result).toContainEqual(
     expect.objectContaining({
       className: ClassNames.InputBox,
+      inputType: 'password',
       name: 'open-api-api-key',
       pattern: '^sk-.+',
       required: false,

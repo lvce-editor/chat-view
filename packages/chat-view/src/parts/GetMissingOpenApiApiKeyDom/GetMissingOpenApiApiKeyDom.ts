@@ -19,6 +19,7 @@ export const getMissingOpenApiApiKeyDom = (
     inputName: OpenApiApiKeyInput,
     inputPattern,
     inputRequired: false,
+    inputType: 'password',
     onSubmit: DomEventListenerFunctions.HandleMissingOpenAiApiKeyFormSubmit,
     openSettingsButtonName: OpenOpenApiApiKeyWebsite,
     openSettingsUrl,
