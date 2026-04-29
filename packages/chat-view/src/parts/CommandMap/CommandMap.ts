@@ -13,6 +13,7 @@ import * as CutInput from '../CutInput/CutInput.ts'
 import { deleteSessionAtIndex } from '../DeleteSessionAtIndex/DeleteSessionAtIndex.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
+import { getComposerSelection } from '../GetComposerSelection/GetComposerSelection.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
@@ -150,6 +151,7 @@ export const commandMap = {
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
+  'Chat.getComposerSelection': wrapGetter(getComposerSelection),
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getMenuEntryIds': getMenuEntryIds,
