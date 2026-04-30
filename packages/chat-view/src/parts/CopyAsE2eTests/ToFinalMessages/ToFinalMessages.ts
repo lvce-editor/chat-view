@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity */
+
 import type { ChatMessage } from '../../ChatMessage/ChatMessage.ts'
 import type { ChatViewEvent } from '../../ChatViewEvent/ChatViewEvent.ts'
 

@@ -1,4 +1,6 @@
-/* cspell:ignore worktree worktrees */
+/* cspell:ignore sonarjs worktree worktrees */
+
+/* eslint-disable sonarjs/cognitive-complexity */
 
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'

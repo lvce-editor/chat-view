@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity */
+
 export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!rawArguments.trim()) {
     return '""'

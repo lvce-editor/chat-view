@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity */
+
 import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'

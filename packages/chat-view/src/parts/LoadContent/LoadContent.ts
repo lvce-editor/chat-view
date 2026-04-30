@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity, sonarjs/no-nested-conditional */
+
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
@@ -68,7 +72,11 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     voiceDictationEnabled,
   } = await loadPreferences()
   const authState =
-    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
+    authEnabled || useOwnBackend
+      ? backendUrl
+        ? await syncBackendAuth(backendUrl, useAuthWorker)
+        : getLoggedOutBackendAuthState()
+      : getLoggedOutBackendAuthState()
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions

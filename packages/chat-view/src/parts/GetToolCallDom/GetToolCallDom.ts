@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity */
+
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import { getToolCallAskQuestionVirtualDom } from '../GetToolCallAskQuestionVirtualDom/GetToolCallAskQuestionVirtualDom.ts'

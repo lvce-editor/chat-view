@@ -1,3 +1,7 @@
+/* cspell:ignore sonarjs */
+
+/* eslint-disable sonarjs/cognitive-complexity */
+
 const isCompleteJson = (value: string): boolean => {
   const trimmed = value.trim()
   if (!trimmed) {

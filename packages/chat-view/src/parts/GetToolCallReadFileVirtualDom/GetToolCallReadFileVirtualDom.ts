@@ -44,7 +44,11 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   const statusLabel = getToolCallStatusLabel(toolCall)
   const globPatternLabel = getGlobPatternLabel(toolCall)
   const globMatchCount = toolCall.name === 'glob' && toolCall.status === 'success' ? getGlobMatchCount(toolCall.result) : undefined
-  const globMatchLabel = typeof globMatchCount === 'number' ? `, ${globMatchCount} ${globMatchCount === 1 ? 'match' : 'matches'}` : ''
+  let globMatchLabel = ''
+  if (typeof globMatchCount === 'number') {
+    const globMatchWord = globMatchCount === 1 ? 'match' : 'matches'
+    globMatchLabel = `, ${globMatchCount} ${globMatchWord}`
+  }
   const childCount = 3 + Number(Boolean(globPatternLabel)) + Number(Boolean(globMatchLabel)) + Number(Boolean(statusLabel))
   const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
   return [

@@ -15,6 +15,19 @@ import { getImageNotSupportedMessage } from '../src/parts/GetOpenApiErrorMessage
 import * as MockOpenApiRequest from '../src/parts/MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input instanceof Request) {
+    return input.url
+  }
+  return ''
+}
+
 test.skip('getAiResponse should use chat coordinator worker when enabled', async () => {
   const chunks: string[] = []
   let streamFinished = 0
@@ -87,7 +100,7 @@ test.skip('getAiResponse should use chat coordinator worker when enabled', async
 test.skip('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = async (input: unknown): Promise<Response> => {
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    const url = getRequestUrl(input)
     if (url.endsWith('/chat/completions')) {
       return {
         json: async () => ({
@@ -1147,7 +1160,7 @@ test.skip('getAiResponse should stream OpenAI chunks when enabled', async () => 
   const originalFetch = globalThis.fetch
   let requestedUrl = ''
   globalThis.fetch = async (input: unknown): Promise<Response> => {
-    requestedUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    requestedUrl = getRequestUrl(input)
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Hello"}\n\n',
       'data: {"type":"response.output_text.delta","delta":" world"}\n\n',

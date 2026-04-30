@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -112,6 +112,7 @@ test('loadContent should load only selected session messages from async storage'
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
+  expect(mockChatMessageParsingRpc).toBeDefined()
   await saveChatSession({
     id: 'session-a',
     messages: [{ id: 'message-a', role: 'user', text: 'A', time: '10:00' }],
@@ -366,6 +367,7 @@ test('loadContent should restore selected detail session with messages from save
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
+  expect(mockChatMessageParsingRpc).toBeDefined()
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -878,6 +880,56 @@ test('loadContent should load useAuthWorker from preferences', async () => {
   ])
 })
 
+test('loadContent should sync backend auth via auth worker when enabled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    throw new Error('fetch should not be called when auth worker is enabled')
+  }
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.useOwnBackend') {
+        return true
+      }
+      if (key === 'chat.backendUrl') {
+        return 'https://backend.example.com'
+      }
+      if (key === 'chatView.useAuthWorker') {
+        return true
+      }
+      if (key === 'secrets.openApiKey' || key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'worker-token-1',
+      authErrorMessage: '',
+      userName: 'worker-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 21,
+    }),
+  })
+
+  try {
+    const result = await LoadContent.loadContent(createDefaultState(), undefined)
+    expect(result.useAuthWorker).toBe(true)
+    expect(result.useOwnBackend).toBe(true)
+    expect(result.authAccessToken).toBe('worker-token-1')
+    expect(result.userName).toBe('worker-user')
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useAuthWorker'])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('loadContent should load useChatMathWorker from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -1231,6 +1283,7 @@ test('loadContent should normalize in-progress sessions to stopped on reload', a
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
+  expect(mockChatMessageParsingRpc).toBeDefined()
   await saveChatSession({
     id: 'session-1',
     messages: [
