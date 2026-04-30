@@ -87,15 +87,8 @@ const appendMessageToSelectedSession = (sessions: readonly ChatSession[], sessio
 }
 
 const createDependencies = (): HandleSubmitDependencies<HandleSubmitState> => {
-  const optimisticStates: Array<readonly [number, HandleSubmitState, HandleSubmitState]> = []
-  const rerenders: string[] = []
-  const savedSessions: ChatSession[] = []
-  const viewEvents: unknown[] = []
-  void optimisticStates
   return {
-    appendChatViewEvent: async (event): Promise<void> => {
-      viewEvents.push(event)
-    },
+    appendChatViewEvent: async (): Promise<void> => {},
     appendMessageToSelectedSession,
     createBackgroundChatWorktree: async (): Promise<{ readonly branchName: string; readonly workspaceUri: string }> => ({
       branchName: 'main',
@@ -127,15 +120,9 @@ const createDependencies = (): HandleSubmitDependencies<HandleSubmitState> => {
     isDefaultSessionTitle: () => true,
     isStreamingFunctionCallEvent: () => false,
     parseAndStoreMessageContent: async (parsedMessages, message) => [...parsedMessages, { id: message.id, parsedContent: [], text: message.text }],
-    rerender: async (): Promise<void> => {
-      rerenders.push('Chat.rerender')
-    },
-    saveChatSession: async (session): Promise<void> => {
-      savedSessions.push(session)
-    },
-    setStatusBarState: (uid, oldState, newState): void => {
-      optimisticStates.push([uid, oldState, newState])
-    },
+    rerender: async (): Promise<void> => {},
+    saveChatSession: async (_session): Promise<void> => {},
+    setStatusBarState: (_uid, _oldState, _newState): void => {},
     syncBackendAuth: async (): Promise<undefined> => undefined,
     updateMessageTextInSelectedSession: async (sessions, parsedMessages, sessionId, messageId, text) => ({
       parsedMessages: [...parsedMessages, { id: messageId, parsedContent: [], text }],

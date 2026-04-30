@@ -8,6 +8,16 @@ import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFil
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 import { parseWriteFileLineCounts } from '../ParseWriteFileLineCounts/ParseWriteFileLineCounts.ts'
 
+const getFileNameClickableProps = (clickableUri: string): Record<string, unknown> => {
+  if (!clickableUri) {
+    return {}
+  }
+  return {
+    'data-uri': clickableUri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+  }
+}
+
 export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)
   if (!target) {
@@ -17,15 +27,11 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
   const statusLabel = getToolCallStatusLabel(toolCall)
   const showDiffStats = toolCall.status !== 'error' && toolCall.status !== 'not-found'
   const { linesAdded, linesDeleted } = parseWriteFileLineCounts(toolCall.result)
-  const fileNameClickableProps = target.clickableUri
-    ? {
-        'data-uri': target.clickableUri,
-        onClick: DomEventListenerFunctions.HandleClickFileName,
-      }
-    : {}
+  const childCount = 3 + Number(showDiffStats) * 2 + Number(Boolean(statusLabel))
+  const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
   return [
     {
-      childCount: showDiffStats ? (statusLabel ? 6 : 5) : statusLabel ? 4 : 3,
+      childCount,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },

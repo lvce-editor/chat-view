@@ -112,7 +112,6 @@ test('loadContent should load only selected session messages from async storage'
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
-  void mockChatMessageParsingRpc
   await saveChatSession({
     id: 'session-a',
     messages: [{ id: 'message-a', role: 'user', text: 'A', time: '10:00' }],
@@ -367,7 +366,6 @@ test('loadContent should restore selected detail session with messages from save
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
-  void mockChatMessageParsingRpc
   const state: ChatState = {
     ...createDefaultState(),
     selectedSessionId: 'session-1',
@@ -1233,7 +1231,6 @@ test('loadContent should normalize in-progress sessions to stopped on reload', a
   using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
-  void mockChatMessageParsingRpc
   await saveChatSession({
     id: 'session-1',
     messages: [
