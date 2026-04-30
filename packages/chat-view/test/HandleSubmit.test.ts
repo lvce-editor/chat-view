@@ -42,6 +42,20 @@ const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]
   return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
 }
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input && typeof input === 'object' && 'url' in input) {
+    const { url } = input as { readonly url: unknown }
+    return typeof url === 'string' ? url : ''
+  }
+  return ''
+}
+
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -1059,8 +1073,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
   const requests: { url: string; init?: RequestInit }[] = []
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args
-    const requestInput = input as string | URL | { readonly url: string }
-    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const url = getRequestUrl(input)
     const requestInit = init as RequestInit | undefined
     requests.push(requestInit ? { init: requestInit, url } : { url })
     if (url.endsWith('/auth/refresh')) {
@@ -1155,8 +1168,7 @@ test('handleSubmit should sync backend auth via auth worker when enabled', async
   const requests: { url: string; init?: RequestInit }[] = []
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args
-    const requestInput = input as string | URL | { readonly url: string }
-    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const url = getRequestUrl(input)
     const requestInit = init as RequestInit | undefined
     requests.push(requestInit ? { init: requestInit, url } : { url })
     if (url.endsWith('/auth/refresh')) {
