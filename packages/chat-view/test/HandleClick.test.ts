@@ -362,22 +362,16 @@ test('handleClick should open backend login page and sync backend auth state', a
       href: 'https://chat.example.com/workbench?view=chat#session-1',
     },
   })
-  const originalFetch = globalThis.fetch
-  const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
-    const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
-    fetchCalls.push([getRequestUrl(input), init])
-    return {
-      json: async () => ({
-        accessToken: 'backend-token-1',
-        subscriptionPlan: 'pro',
-        usedTokens: 321,
-        userName: 'test',
-      }),
-      ok: true,
-      status: 200,
-    } as Response
-  }
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'backend-token-1',
+      authErrorMessage: '',
+      userName: 'test',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 321,
+    }),
+  })
   using mockRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
   })
@@ -403,20 +397,8 @@ test('handleClick should open backend login page and sync backend auth state', a
         true,
       ],
     ])
-    expect(fetchCalls).toEqual([
-      [
-        'https://backend.example.com/auth/refresh',
-        {
-          credentials: 'include',
-          headers: {
-            Accept: 'application/json',
-          },
-          method: 'POST',
-        },
-      ],
-    ])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
   } finally {
-    globalThis.fetch = originalFetch
     if (originalLocation) {
       Object.defineProperty(globalThis, 'location', originalLocation)
     } else {
@@ -563,31 +545,27 @@ test('handleClick should use localhost oauth redirect on electron backend login'
   expect(mockChatStorageRpc).toBeDefined()
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  let fetchCallCount = 0
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
-    fetchCallCount++
-    if (fetchCallCount === 1) {
-      return {
-        ok: true,
-        status: 204,
-      } as Response
-    }
     return {
-      json: async () => ({
-        accessToken: 'backend-token-electron',
-        subscriptionPlan: 'pro',
-        usedTokens: 999,
-        userName: 'electron-user',
-      }),
       ok: true,
-      status: 200,
+      status: 204,
     } as Response
   }
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'OAuthServer.create': async () => 4567,
     'OAuthServer.getCode': async () => 'code-1',
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'backend-token-electron',
+      authErrorMessage: '',
+      userName: 'electron-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 999,
+    }),
   })
   using mockOpenerRpc = OpenerWorker.registerMockRpc({
     'Open.openUrl': async () => {},
@@ -612,7 +590,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       ['OAuthServer.getCode', '0'],
     ])
     expect(mockOpenerRpc.invocations).toEqual([
-      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2, false],
+      ['Open.openUrl', 'https://backend.example.com/login?redirect_uri=http%3A%2F%2Flocalhost%3A4567', 2, true],
     ])
     expect(fetchCalls).toEqual([
       [
@@ -630,17 +608,8 @@ test('handleClick should use localhost oauth redirect on electron backend login'
           method: 'POST',
         },
       ],
-      [
-        'https://backend.example.com/auth/refresh',
-        {
-          credentials: 'include',
-          headers: {
-            Accept: 'application/json',
-          },
-          method: 'POST',
-        },
-      ],
     ])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
   } finally {
     globalThis.fetch = originalFetch
   }

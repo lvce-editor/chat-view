@@ -1,3 +1,4 @@
+import { AuthWorker } from '@lvce-editor/rpc-registry'
 import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
 import * as MockBackendAuth from '../../MockBackendAuth/MockBackendAuth.ts'
 import { getBackendRefreshUrl } from '../GetBackendRefreshUrl/GetBackendRefreshUrl.ts'
@@ -12,6 +13,10 @@ export const syncBackendAuth = async (backendUrl: string): Promise<BackendAuthSt
     if (MockBackendAuth.hasPendingMockRefreshResponse()) {
       const mockResponse = await MockBackendAuth.consumeNextRefreshResponse()
       return parseBackendAuthResponse(mockResponse)
+    }
+    const worker = true
+    if (worker) {
+      return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl) as Promise<BackendAuthState>
     }
     const response = await fetch(getBackendRefreshUrl(backendUrl), {
       credentials: 'include',

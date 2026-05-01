@@ -1,7 +1,6 @@
 import { expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import * as BackendAuth from '../src/parts/BackendAuth/BackendAuth.ts'
-import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
 const getRequestUrl = (input: unknown): string => {
   if (typeof input === 'string') {
@@ -17,146 +16,126 @@ const getRequestUrl = (input: unknown): string => {
 }
 
 test('syncBackendAuth should return logged in state when backend refresh succeeds', async () => {
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async (): Promise<Response> => {
-    return {
-      json: async () => ({
-        accessToken: 'access-token-1',
-        subscriptionPlan: 'pro',
-        usedTokens: 42,
-        userName: 'test-user',
-      }),
-      ok: true,
-      status: 200,
-    } as Response
-  }
-
-  try {
-    const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
-    expect(result).toEqual({
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
       authAccessToken: 'access-token-1',
       authErrorMessage: '',
       userName: 'test-user',
       userState: 'loggedIn',
       userSubscriptionPlan: 'pro',
       userUsedTokens: 42,
-    })
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+    }),
+  })
+
+  const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
+
+  expect(result).toEqual({
+    authAccessToken: 'access-token-1',
+    authErrorMessage: '',
+    userName: 'test-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
 })
 
 test('syncBackendAuth should return logged out state for unauthorized response', async () => {
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async (): Promise<Response> => {
-    return {
-      ok: false,
-      status: 401,
-    } as Response
-  }
-
-  try {
-    const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
-    expect(result).toEqual({
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
       authAccessToken: '',
       authErrorMessage: '',
       userName: '',
       userState: 'loggedOut',
       userSubscriptionPlan: '',
       userUsedTokens: 0,
-    })
-  } finally {
-    globalThis.fetch = originalFetch
-  }
-})
-
-test('syncBackendAuth should use pending mock refresh response', async () => {
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async (): Promise<Response> => {
-    throw new Error('fetch should not be called when mock refresh response is pending')
-  }
-
-  MockBackendAuth.setNextRefreshResponse({
-    delay: 0,
-    response: {
-      accessToken: 'access-token-mock',
-      subscriptionPlan: 'pro',
-      usedTokens: 7,
-      userName: 'mock-user',
-    },
-    type: 'success',
+    }),
   })
 
-  try {
-    const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
-    expect(result).toEqual({
+  const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
+
+  expect(result).toEqual({
+    authAccessToken: '',
+    authErrorMessage: '',
+    userName: '',
+    userState: 'loggedOut',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
+  })
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+})
+
+test('syncBackendAuth should return mocked auth worker response', async () => {
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
       authAccessToken: 'access-token-mock',
       authErrorMessage: '',
       userName: 'mock-user',
       userState: 'loggedIn',
       userSubscriptionPlan: 'pro',
       userUsedTokens: 7,
-    })
-  } finally {
-    MockBackendAuth.clear()
-    globalThis.fetch = originalFetch
-  }
+    }),
+  })
+
+  const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
+
+  expect(result).toEqual({
+    authAccessToken: 'access-token-mock',
+    authErrorMessage: '',
+    userName: 'mock-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 7,
+  })
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
 })
 
 test('waitForBackendLogin should retry until backend refresh succeeds', async () => {
-  const originalFetch = globalThis.fetch
   let callCount = 0
-  globalThis.fetch = async (): Promise<Response> => {
-    callCount++
-    if (callCount === 1) {
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => {
+      callCount++
+      if (callCount === 1) {
+        return {
+          authAccessToken: '',
+          authErrorMessage: '',
+          userName: '',
+          userState: 'loggedOut',
+          userSubscriptionPlan: '',
+          userUsedTokens: 0,
+        }
+      }
       return {
-        ok: false,
-        status: 401,
-      } as Response
-    }
-    return {
-      json: async () => ({
-        accessToken: 'access-token-2',
+        authAccessToken: 'access-token-2',
+        authErrorMessage: '',
         userName: 'second-user',
-      }),
-      ok: true,
-      status: 200,
-    } as Response
-  }
+        userState: 'loggedIn',
+        userSubscriptionPlan: '',
+        userUsedTokens: 0,
+      }
+    },
+  })
 
-  try {
-    const result = await BackendAuth.waitForBackendLogin('https://backend.example.com', 100, 0)
-    expect(result.authAccessToken).toBe('access-token-2')
-    expect(result.userName).toBe('second-user')
-    expect(result.userState).toBe('loggedIn')
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+  const result = await BackendAuth.waitForBackendLogin('https://backend.example.com', 100, 0)
+
+  expect(result.authAccessToken).toBe('access-token-2')
+  expect(result.userName).toBe('second-user')
+  expect(result.userState).toBe('loggedIn')
+  expect(mockAuthRpc.invocations).toEqual([
+    ['Auth.syncBackendAuth', 'https://backend.example.com'],
+    ['Auth.syncBackendAuth', 'https://backend.example.com'],
+  ])
 })
 
 test('waitForElectronBackendLogin should wait for oauth code before syncing backend auth', async () => {
   const originalFetch = globalThis.fetch
   const fetchCalls: Array<readonly [string, Readonly<RequestInit> | undefined]> = []
-  let fetchCallCount = 0
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args as readonly [unknown, Readonly<RequestInit> | undefined]
     fetchCalls.push([getRequestUrl(input), init])
-    fetchCallCount++
-    if (fetchCallCount === 1) {
-      return {
-        ok: true,
-        status: 204,
-      } as Response
-    }
     return {
-      json: async () => ({
-        accessToken: 'access-token-electron',
-        subscriptionPlan: 'pro',
-        usedTokens: 11,
-        userName: 'electron-user',
-      }),
       ok: true,
-      status: 200,
+      status: 204,
     } as Response
   }
   let codeCallCount = 0
@@ -165,6 +144,16 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
       codeCallCount++
       return codeCallCount === 1 ? '' : 'code-1'
     },
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-electron',
+      authErrorMessage: '',
+      userName: 'electron-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 11,
+    }),
   })
 
   try {
@@ -197,17 +186,8 @@ test('waitForElectronBackendLogin should wait for oauth code before syncing back
           method: 'POST',
         },
       ],
-      [
-        'https://backend.example.com/auth/refresh',
-        {
-          credentials: 'include',
-          headers: {
-            Accept: 'application/json',
-          },
-          method: 'POST',
-        },
-      ],
     ])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
   } finally {
     globalThis.fetch = originalFetch
   }
