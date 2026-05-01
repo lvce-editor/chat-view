@@ -1,5 +1,6 @@
-import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
+import { AuthWorker } from '@lvce-editor/rpc-registry'
 import * as MockBackendAuth from '../../MockBackendAuth/MockBackendAuth.ts'
+import type { BackendAuthState } from '../BackendAuthState/BackendAuthState.ts'
 import { getBackendRefreshUrl } from '../GetBackendRefreshUrl/GetBackendRefreshUrl.ts'
 import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
 import { parseBackendAuthResponse } from '../ParseBackendAuthResponse/ParseBackendAuthResponse.ts'
@@ -9,12 +10,13 @@ export const syncBackendAuth = async (backendUrl: string): Promise<BackendAuthSt
     return getLoggedOutBackendAuthState('Backend URL is missing.')
   }
   try {
-    if (true) {
-      return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl) as Promise<BackendAuthState>
-    }
     if (MockBackendAuth.hasPendingMockRefreshResponse()) {
       const mockResponse = await MockBackendAuth.consumeNextRefreshResponse()
       return parseBackendAuthResponse(mockResponse)
+    }
+    const worker = true
+    if (worker) {
+      return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl) as Promise<BackendAuthState>
     }
     const response = await fetch(getBackendRefreshUrl(backendUrl), {
       credentials: 'include',
