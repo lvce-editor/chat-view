@@ -414,7 +414,12 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
     expect(JSON.parse(body)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
@@ -510,7 +515,12 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
     expect(JSON.parse(body)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
@@ -641,7 +651,12 @@ test('getAiResponse should execute backend response tool calls and continue with
       {
         input: [
           {
-            content: 'hello',
+            content: [
+              {
+                text: 'hello',
+                type: 'input_text',
+              },
+            ],
             role: 'user',
           },
         ],

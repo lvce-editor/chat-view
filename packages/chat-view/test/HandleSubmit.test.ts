@@ -16,19 +16,6 @@ registerSlashCommands()
 
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
 
-const getRequestUrl = (input: unknown): string => {
-  if (typeof input === 'string') {
-    return input
-  }
-  if (input instanceof URL) {
-    return input.href
-  }
-  if (input instanceof Request) {
-    return input.url
-  }
-  return ''
-}
-
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
 })
@@ -1130,7 +1117,12 @@ test('handleSubmit should sync backend auth and use backend completions when use
     expect(JSON.parse(requests[1].init?.body as string)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
