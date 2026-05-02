@@ -1056,6 +1056,16 @@ test('handleSubmit should sync backend auth and use backend completions when use
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerender': async () => {},
   })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-1',
+      authErrorMessage: '',
+      userName: 'test-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    }),
+  })
   const originalFetch = globalThis.fetch
   const requests: { url: string; init?: RequestInit }[] = []
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
@@ -1063,18 +1073,6 @@ test('handleSubmit should sync backend auth and use backend completions when use
     const url = getRequestUrl(input)
     const requestInit = init as RequestInit | undefined
     requests.push(requestInit ? { init: requestInit, url } : { url })
-    if (url.endsWith('/auth/refresh')) {
-      return {
-        json: async () => ({
-          accessToken: 'access-token-1',
-          subscriptionPlan: 'pro',
-          usedTokens: 42,
-          userName: 'test-user',
-        }),
-        ok: true,
-        status: 200,
-      } as Response
-    }
     if (url.endsWith('/v1/responses')) {
       return {
         json: async () => ({
@@ -1106,15 +1104,15 @@ test('handleSubmit should sync backend auth and use backend completions when use
 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
-    expect(requests).toHaveLength(2)
-    expect(requests[0].url).toBe('https://backend.example.com/auth/refresh')
-    expect(requests[1].url).toBe('https://backend.example.com/v1/responses')
-    expect(requests[1].init?.headers).toEqual(
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(requests).toHaveLength(1)
+    expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
+    expect(requests[0].init?.headers).toEqual(
       expect.objectContaining({
         Authorization: 'Bearer access-token-1',
       }),
     )
-    expect(JSON.parse(requests[1].init?.body as string)).toEqual({
+    expect(JSON.parse(requests[0].init?.body as string)).toEqual({
       input: [
         {
           content: [

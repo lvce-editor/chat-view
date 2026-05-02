@@ -476,86 +476,74 @@ test('loadContent should load openApiApiKey from preferences', async () => {
 test('loadContent should sync backend auth state when auth is enabled', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async (): Promise<Response> => {
-    return {
-      json: async () => ({
-        accessToken: 'access-token-1',
-        subscriptionPlan: 'pro',
-        usedTokens: 42,
-        userName: 'test-user',
-      }),
-      ok: true,
-      status: 200,
-    } as Response
-  }
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-1',
+      authErrorMessage: '',
+      userName: 'test-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    }),
+  })
 
-  try {
-    using mockRpc = RendererWorker.registerMockRpc({
-      'Preferences.get': async (key: string) => {
-        if (key === 'chat.authEnabled') {
-          return true
-        }
-        if (key === 'chat.authUseRedirect') {
-          return true
-        }
-        if (key === 'chat.backendUrl') {
-          return 'https://backend.example.com'
-        }
-        return undefined
-      },
-    })
-    const result = await LoadContent.loadContent(createDefaultState(), undefined)
-    expect(result.authAccessToken).toBe('access-token-1')
-    expect(result.authUseRedirect).toBe(true)
-    expect(result.userName).toBe('test-user')
-    expect(result.userState).toBe('loggedIn')
-    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
-    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authUseRedirect'])
-    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.authEnabled') {
+        return true
+      }
+      if (key === 'chat.authUseRedirect') {
+        return true
+      }
+      if (key === 'chat.backendUrl') {
+        return 'https://backend.example.com'
+      }
+      return undefined
+    },
+  })
+  const result = await LoadContent.loadContent(createDefaultState(), undefined)
+  expect(result.authAccessToken).toBe('access-token-1')
+  expect(result.authUseRedirect).toBe(true)
+  expect(result.userName).toBe('test-user')
+  expect(result.userState).toBe('loggedIn')
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authUseRedirect'])
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
 })
 
 test('loadContent should load useOwnBackend from preferences and sync backend auth state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async (): Promise<Response> => {
-    return {
-      json: async () => ({
-        accessToken: 'access-token-2',
-        subscriptionPlan: 'pro',
-        usedTokens: 7,
-        userName: 'backend-user',
-      }),
-      ok: true,
-      status: 200,
-    } as Response
-  }
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-2',
+      authErrorMessage: '',
+      userName: 'backend-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 7,
+    }),
+  })
 
-  try {
-    using mockRpc = RendererWorker.registerMockRpc({
-      'Preferences.get': async (key: string) => {
-        if (key === 'chat.useOwnBackend') {
-          return true
-        }
-        if (key === 'chat.backendUrl') {
-          return 'https://backend.example.com'
-        }
-        return undefined
-      },
-    })
-    const result = await LoadContent.loadContent(createDefaultState(), undefined)
-    expect(result.useOwnBackend).toBe(true)
-    expect(result.authAccessToken).toBe('access-token-2')
-    expect(result.userName).toBe('backend-user')
-    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
-    expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
-  } finally {
-    globalThis.fetch = originalFetch
-  }
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.useOwnBackend') {
+        return true
+      }
+      if (key === 'chat.backendUrl') {
+        return 'https://backend.example.com'
+      }
+      return undefined
+    },
+  })
+  const result = await LoadContent.loadContent(createDefaultState(), undefined)
+  expect(result.useOwnBackend).toBe(true)
+  expect(result.authAccessToken).toBe('access-token-2')
+  expect(result.userName).toBe('backend-user')
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
 })
 
 test('loadContent should load emitStreamingFunctionCallEvents from preferences', async () => {

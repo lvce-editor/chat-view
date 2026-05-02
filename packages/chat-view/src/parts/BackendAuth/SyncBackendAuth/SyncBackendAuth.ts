@@ -17,6 +17,10 @@ export const syncBackendAuth = async (backendUrl: string, useAuthWorker = false)
       const mockResponse = await MockBackendAuth.consumeNextRefreshResponse()
       return parseBackendAuthResponse(mockResponse)
     }
+    const worker = true
+    if (worker) {
+      return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl) as Promise<BackendAuthState>
+    }
     const response = await fetch(getBackendRefreshUrl(backendUrl), {
       credentials: 'include',
       headers: {
