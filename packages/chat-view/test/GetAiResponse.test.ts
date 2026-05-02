@@ -956,6 +956,140 @@ test('getAiResponse should include backend API error message and status code for
   }
 })
 
+test('getAiResponse should include backend error codes for usage-limit responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    return {
+      ok: false,
+      status: 402,
+      text: async () =>
+        JSON.stringify({
+          code: 'E_LVCE_USAGE_EXCEEDED',
+          error: 'Monthly virtual token allowance exceeded for your Pro plan.',
+          statusCode: 402,
+        }),
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 402: E_LVCE_USAGE_EXCEEDED). Monthly virtual token allowance exceeded for your Pro plan.',
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should explain html backend error pages', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    return {
+      ok: false,
+      status: 500,
+      text: async () => '<html><body><h1>Internal Server Error</h1></body></html>',
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe('Backend completion request failed (status 500). Backend returned an HTML error page instead of JSON.')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should include helpful backend network error details when fetch fails', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    throw new TypeError('Failed to fetch')
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (network_error). Failed to fetch. Please check that the backend is running, reachable from the browser, and allows this origin.',
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
   MockOpenApiStream.reset()
   MockOpenApiStream.pushChunk('Hel')

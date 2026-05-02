@@ -53,7 +53,21 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
   return !!value && typeof value === 'object'
 }
 
+const isHtmlDocument = (value: string): boolean => {
+  return /^\s*</.test(value)
+}
+
 const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
+  if (typeof body === 'string') {
+    const trimmedBody = body.trim()
+    if (!trimmedBody) {
+      return undefined
+    }
+    if (isHtmlDocument(trimmedBody)) {
+      return 'Backend returned an HTML error page instead of JSON.'
+    }
+    return trimmedBody
+  }
   if (!isObject(body)) {
     return undefined
   }
@@ -73,6 +87,22 @@ const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
     return nestedMessage
   }
   return undefined
+}
+
+const getBackendErrorCodeFromBody = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const directCode = Reflect.get(body, 'code')
+  if (typeof directCode === 'string' && directCode) {
+    return directCode
+  }
+  const directError = Reflect.get(body, 'error')
+  if (!isObject(directError)) {
+    return undefined
+  }
+  const nestedCode = Reflect.get(directError, 'code')
+  return typeof nestedCode === 'string' && nestedCode ? nestedCode : undefined
 }
 
 const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
@@ -333,11 +363,33 @@ const getBackendAssistantText = async ({
   webSearchEnabled = false,
   workspaceUri,
 }: GetBackendAssistantTextOptions): Promise<string> => {
+  const mockRequestFailed = MockBackendCompletion.takeRequestFailedResponse()
+  if (mockRequestFailed) {
+    return getBackendErrorMessage({
+      details: 'request-failed',
+      ...(mockRequestFailed.errorCode
+        ? {
+            errorCode: mockRequestFailed.errorCode,
+          }
+        : {}),
+      ...(mockRequestFailed.errorMessage
+        ? {
+            errorMessage: mockRequestFailed.errorMessage,
+          }
+        : {}),
+    })
+  }
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
     const errorMessage = getBackendErrorMessageFromBody(mockError.body)
+    const errorCode = getBackendErrorCodeFromBody(mockError.body)
     return getBackendErrorMessage({
       details: 'http-error',
+      ...(errorCode
+        ? {
+            errorCode,
+          }
+        : {}),
       ...(typeof mockError.statusCode === 'number'
         ? {
             statusCode: mockError.statusCode,
@@ -392,6 +444,7 @@ const getBackendAssistantText = async ({
         const errorMessage = getErrorMessage(error)
         return getBackendErrorMessage({
           details: 'request-failed',
+          errorCode: 'network_error',
           ...(errorMessage
             ? {
                 errorMessage,
@@ -400,11 +453,29 @@ const getBackendAssistantText = async ({
         })
       }
       if (!response.ok) {
-        const payload: unknown = await response.json().catch(() => undefined)
+        let payload: unknown
+        if (typeof response.text === 'function') {
+          const rawText = await response.text().catch(() => '')
+          if (rawText) {
+            try {
+              payload = JSON.parse(rawText) as unknown
+            } catch {
+              payload = rawText
+            }
+          }
+        } else if (typeof response.json === 'function') {
+          payload = await response.json().catch(() => undefined)
+        }
         const errorMessage = getBackendErrorMessageFromBody(payload)
+        const errorCode = getBackendErrorCodeFromBody(payload)
         const statusCode = response.status || getBackendStatusCodeFromBody(payload)
         return getBackendErrorMessage({
           details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
           ...(typeof statusCode === 'number'
             ? {
                 statusCode,
