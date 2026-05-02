@@ -2,6 +2,7 @@ import { backendCompletionFailedMessage } from '../ChatStrings/ChatStrings.ts'
 
 interface BackendHttpErrorResult {
   readonly details: 'http-error'
+  readonly errorCode?: string
   readonly errorMessage?: string
   readonly statusCode?: number
 }
@@ -18,19 +19,31 @@ interface BackendInvalidResponseErrorResult {
 
 export type GetBackendErrorMessageResult = BackendHttpErrorResult | BackendRequestFailedErrorResult | BackendInvalidResponseErrorResult
 
+const getBackendHttpErrorDetails = (errorCode: string | undefined, errorMessage: string | undefined): string | undefined => {
+  const trimmedErrorCode = errorCode?.trim()
+  const trimmedErrorMessage = errorMessage?.trim()
+  if (trimmedErrorCode && trimmedErrorMessage) {
+    return `Error code: ${trimmedErrorCode}. ${trimmedErrorMessage}`
+  }
+  if (trimmedErrorCode) {
+    return `Error code: ${trimmedErrorCode}.`
+  }
+  return trimmedErrorMessage
+}
+
 export const getBackendErrorMessage = (errorResult: GetBackendErrorMessageResult): string => {
   switch (errorResult.details) {
     case 'http-error': {
-      const errorMessage = errorResult.errorMessage?.trim()
+      const details = getBackendHttpErrorDetails(errorResult.errorCode, errorResult.errorMessage)
       if (typeof errorResult.statusCode === 'number') {
         const prefix = `Backend completion request failed (status ${errorResult.statusCode}).`
-        if (!errorMessage) {
+        if (!details) {
           return prefix
         }
-        return `${prefix} ${errorMessage}`
+        return `${prefix} ${details}`
       }
-      if (errorMessage) {
-        return `Backend completion request failed. ${errorMessage}`
+      if (details) {
+        return `Backend completion request failed. ${details}`
       }
       return backendCompletionFailedMessage
     }

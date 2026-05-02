@@ -14,6 +14,19 @@ test('getBackendErrorMessage should format backend HTTP errors with status code 
   )
 })
 
+test('getBackendErrorMessage should format backend HTTP errors with status code error code and message', () => {
+  const result = getBackendErrorMessage({
+    details: 'http-error',
+    errorCode: 'lvce_openai_not_configured',
+    errorMessage: '  Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.  ',
+    statusCode: 503,
+  })
+
+  expect(result).toBe(
+    'Backend completion request failed (status 503). Error code: lvce_openai_not_configured. Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+  )
+})
+
 test('getBackendErrorMessage should format backend HTTP errors with status code and no message', () => {
   const result = getBackendErrorMessage({
     details: 'http-error',
