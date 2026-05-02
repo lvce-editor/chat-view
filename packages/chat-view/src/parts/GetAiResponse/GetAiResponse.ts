@@ -75,6 +75,25 @@ const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
   return undefined
 }
 
+const getBackendErrorCodeFromBody = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const directCode = Reflect.get(body, 'code')
+  if (typeof directCode === 'string' && directCode) {
+    return directCode
+  }
+  const directError = Reflect.get(body, 'error')
+  if (!isObject(directError)) {
+    return undefined
+  }
+  const nestedCode = Reflect.get(directError, 'code')
+  if (typeof nestedCode === 'string' && nestedCode) {
+    return nestedCode
+  }
+  return undefined
+}
+
 const getBackendStatusCodeFromBody = (body: unknown): number | undefined => {
   if (!isObject(body)) {
     return undefined
@@ -335,9 +354,15 @@ const getBackendAssistantText = async ({
 }: GetBackendAssistantTextOptions): Promise<string> => {
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
+    const errorCode = getBackendErrorCodeFromBody(mockError.body)
     const errorMessage = getBackendErrorMessageFromBody(mockError.body)
     return getBackendErrorMessage({
       details: 'http-error',
+      ...(errorCode
+        ? {
+            errorCode,
+          }
+        : {}),
       ...(typeof mockError.statusCode === 'number'
         ? {
             statusCode: mockError.statusCode,
@@ -401,10 +426,16 @@ const getBackendAssistantText = async ({
       }
       if (!response.ok) {
         const payload: unknown = await response.json().catch(() => undefined)
+        const errorCode = getBackendErrorCodeFromBody(payload)
         const errorMessage = getBackendErrorMessageFromBody(payload)
         const statusCode = response.status || getBackendStatusCodeFromBody(payload)
         return getBackendErrorMessage({
           details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
           ...(typeof statusCode === 'number'
             ? {
                 statusCode,

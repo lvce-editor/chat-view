@@ -956,6 +956,54 @@ test('getAiResponse should include backend API error message and status code for
   }
 })
 
+test('getAiResponse should include backend API status code error code and message for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    return {
+      json: async () => ({
+        code: 'lvce_openai_not_configured',
+        error: 'Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+      }),
+      ok: false,
+      status: 503,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 503). Error code: lvce_openai_not_configured. Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
   MockOpenApiStream.reset()
   MockOpenApiStream.pushChunk('Hel')
