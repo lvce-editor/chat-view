@@ -4,12 +4,19 @@ interface MockBackendCompletionHttpErrorResponse {
   readonly type: 'http-error'
 }
 
+interface MockBackendCompletionRequestFailedResponse {
+  readonly errorCode?: string
+  readonly errorMessage?: string
+  readonly type: 'request-failed'
+}
+
 interface MockBackendCompletionSuccessResponse {
   readonly body: unknown
   readonly type: 'success'
 }
 
 let errorResponse: MockBackendCompletionHttpErrorResponse | undefined
+let requestFailedResponse: MockBackendCompletionRequestFailedResponse | undefined
 let successResponse: MockBackendCompletionSuccessResponse | undefined
 
 export const setHttpErrorResponse = (statusCode: number, body: unknown): void => {
@@ -27,9 +34,31 @@ export const setResponse = (body: unknown): void => {
   }
 }
 
+export const setRequestFailedResponse = (errorMessage?: string, errorCode: string = 'network_error'): void => {
+  requestFailedResponse = {
+    ...(errorCode
+      ? {
+          errorCode,
+        }
+      : {}),
+    ...(errorMessage
+      ? {
+          errorMessage,
+        }
+      : {}),
+    type: 'request-failed',
+  }
+}
+
 export const takeErrorResponse = (): MockBackendCompletionHttpErrorResponse | undefined => {
   const response = errorResponse
   errorResponse = undefined
+  return response
+}
+
+export const takeRequestFailedResponse = (): MockBackendCompletionRequestFailedResponse | undefined => {
+  const response = requestFailedResponse
+  requestFailedResponse = undefined
   return response
 }
 

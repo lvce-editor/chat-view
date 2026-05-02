@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import { backendCompletionFailedMessage } from '../src/parts/ChatStrings/ChatStrings.ts'
 import { getBackendErrorMessage } from '../src/parts/GetBackendErrorMessage/GetBackendErrorMessage.ts'
 
 test('getBackendErrorMessage should format backend HTTP errors with status code and trimmed message', () => {
@@ -23,6 +22,17 @@ test('getBackendErrorMessage should format backend HTTP errors with status code 
   expect(result).toBe('Backend completion request failed (status 500).')
 })
 
+test('getBackendErrorMessage should include backend error code for HTTP errors', () => {
+  const result = getBackendErrorMessage({
+    details: 'http-error',
+    errorCode: 'E_LVCE_USAGE_EXCEEDED',
+    errorMessage: 'Monthly virtual token allowance exceeded.',
+    statusCode: 402,
+  })
+
+  expect(result).toBe('Backend completion request failed (status 402: E_LVCE_USAGE_EXCEEDED). Monthly virtual token allowance exceeded.')
+})
+
 test('getBackendErrorMessage should format backend HTTP errors with message and no status code', () => {
   const result = getBackendErrorMessage({
     details: 'http-error',
@@ -37,16 +47,20 @@ test('getBackendErrorMessage should return the generic request failed message fo
     details: 'request-failed',
   })
 
-  expect(result).toBe(backendCompletionFailedMessage)
+  expect(result).toBe(
+    'Backend completion request failed (network_error). Unable to reach the backend. Please check that the backend is running, reachable from the browser, and allows this origin.',
+  )
 })
 
 test('getBackendErrorMessage should include transport error details when available', () => {
   const result = getBackendErrorMessage({
     details: 'request-failed',
-    errorMessage: 'fetch failed',
+    errorMessage: 'Failed to fetch',
   })
 
-  expect(result).toBe('Backend completion request failed. fetch failed')
+  expect(result).toBe(
+    'Backend completion request failed (network_error). Failed to fetch. Please check that the backend is running, reachable from the browser, and allows this origin.',
+  )
 })
 
 test('getBackendErrorMessage should include invalid response details when available', () => {
