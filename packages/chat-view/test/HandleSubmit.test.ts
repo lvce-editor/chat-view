@@ -286,6 +286,76 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
   }
 })
 
+test('handleSubmit should use backend completions for authenticated users without useOwnBackend', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-1',
+      authErrorMessage: '',
+      userName: 'test-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    }),
+  })
+  const originalFetch = globalThis.fetch
+  const requests: { url: string; init?: RequestInit }[] = []
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const requestInit = init as RequestInit | undefined
+    requests.push(requestInit ? { init: requestInit, url } : { url })
+    if (url.endsWith('/v1/responses')) {
+      return {
+        json: async () => ({
+          output_text: 'Backend completion response',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      ok: false,
+      status: 404,
+    } as Response
+  }
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      composerValue: 'hello',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: '',
+      useOwnBackend: false,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(requests).toHaveLength(1)
+    expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
+    expect(requests[0].init?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer access-token-1',
+      }),
+    )
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleSubmit should not fall back to mock response for openRouter models when api key is missing', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

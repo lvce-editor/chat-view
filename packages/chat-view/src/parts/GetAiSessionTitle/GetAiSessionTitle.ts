@@ -23,12 +23,13 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     useMockApi,
     useOwnBackend,
   } = state
+  const shouldUseBackend = !!backendUrl && !!authAccessToken
   if (useMockApi) {
     return ''
   }
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
-  if (useOwnBackend) {
+  if (useOwnBackend || shouldUseBackend) {
     if (!backendUrl || !authAccessToken) {
       return ''
     }
@@ -74,7 +75,7 @@ export const getAiSessionTitle = async (state: ChatState, userText: string, assi
     useChatNetworkWorkerForRequests: state.useChatNetworkWorkerForRequests,
     useChatToolWorker: state.useChatToolWorker,
     useMockApi,
-    useOwnBackend,
+    useOwnBackend: useOwnBackend || shouldUseBackend,
     userText: titlePrompt,
     webSearchEnabled: false,
   })

@@ -36,6 +36,10 @@ import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts
 
 const trailingSlashesRegex = /\/+$/
 
+const shouldUseBackendResponses = (backendUrl: string, authAccessToken: string): boolean => {
+  return !!backendUrl && !!authAccessToken
+}
+
 const getBackendResponsesEndpoint = (backendUrl: string): string => {
   const trimmedBackendUrl = backendUrl.replace(trailingSlashesRegex, '')
   return `${trimmedBackendUrl}/v1/responses`
@@ -527,7 +531,9 @@ export const getAiResponse = async ({
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   useChatCoordinatorWorker = false // TODO enable this
-  if (useChatCoordinatorWorker && !useOwnBackend) {
+  const authToken = authAccessToken || ''
+  const backendEnabled = shouldUseBackendResponses(backendUrl, authToken)
+  if (useChatCoordinatorWorker && !backendEnabled) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,
@@ -598,14 +604,14 @@ export const getAiResponse = async ({
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
-  if (!text && useOwnBackend) {
+  if (!text && (backendEnabled || useOwnBackend)) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
-    } else if (authAccessToken) {
+    } else if (authToken) {
       text = await getBackendAssistantText({
         agentMode,
         assetDir,
-        authAccessToken,
+        authAccessToken: authToken,
         backendUrl,
         maxToolCalls: safeMaxToolCalls,
         messages,
