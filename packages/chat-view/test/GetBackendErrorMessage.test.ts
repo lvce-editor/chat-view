@@ -27,6 +27,20 @@ test('getBackendErrorMessage should format backend HTTP errors with status code 
   )
 })
 
+test('getBackendErrorMessage should provide a user-friendly message for free-plan model restrictions', () => {
+  const result = getBackendErrorMessage({
+    details: 'http-error',
+    errorCode: 'E_LVCE_MODEL_NOT_ALLOWED_FOR_FREE_PLAN',
+    errorMessage:
+      'The Free plan only supports lower-cost LVCE models such as Claude Haiku and GPT-5.4 Mini. The requested model "gpt-4.1-mini" requires a paid plan.',
+    statusCode: 402,
+  })
+
+  expect(result).toBe(
+    'Backend completion request failed (status 402). The selected model is not available on the Free plan. Choose a lower-cost LVCE model such as Claude Haiku or GPT-5.4 Mini, or upgrade your plan and try again.',
+  )
+})
+
 test('getBackendErrorMessage should format backend HTTP errors with status code and no message', () => {
   const result = getBackendErrorMessage({
     details: 'http-error',
