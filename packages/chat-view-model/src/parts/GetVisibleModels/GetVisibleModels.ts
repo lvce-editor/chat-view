@@ -1,6 +1,9 @@
 import type { ChatModel } from '../ViewModel/ViewModel.ts'
 
 const getModelLabel = (model: ChatModel): string => {
+  if (model.provider === 'backend') {
+    return `${model.name} (Backend)`
+  }
   if (model.provider === 'openRouter') {
     return `${model.name} (OpenRouter)`
   }

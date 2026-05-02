@@ -63,3 +63,22 @@ test('getModelOptionDOm should append OpenAI to openApi model labels', () => {
     }),
   ])
 })
+
+test('getModelOptionDOm should append Backend to backend model labels', () => {
+  const model = {
+    id: 'backend/claude-haiku-4.5',
+    name: 'Claude Haiku 4.5',
+    provider: 'backend' as const,
+  }
+
+  const result = GetModelOptionDom.getModelOptionDom(model, '')
+
+  expect(result).toEqual([
+    expect.objectContaining({
+      value: 'backend/claude-haiku-4.5',
+    }),
+    expect.objectContaining({
+      text: 'Claude Haiku 4.5 (Backend)',
+    }),
+  ])
+})

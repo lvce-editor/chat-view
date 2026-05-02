@@ -11,7 +11,7 @@ import {
   primaryControlsSubmitButtonWidth,
 } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
-import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
+import { getDefaultModelsSync } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
@@ -29,7 +29,7 @@ export const createDefaultState = (): ChatState => {
   const composerFontSize = 13
   const composerLineHeight = 20
   const responsivePickerVisibilityEnabled = true
-  const models = getDefaultModels()
+  const models = getDefaultModelsSync()
   const visibleModels = getVisibleModels(models, '')
   const baseState: ChatState = {
     addContextButtonEnabled: false,
