@@ -1226,7 +1226,7 @@ test('handleSubmit should use backend chat completions for backend Claude models
               },
             },
           ],
-          id: 'chatcmpl_1',
+          id: 'chat_completion_1',
           model: 'claude-haiku-4.5',
           object: 'chat.completion',
         }),

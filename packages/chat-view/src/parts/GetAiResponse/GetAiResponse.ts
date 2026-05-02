@@ -506,7 +506,7 @@ const getBackendChatCompletionsAssistantText = async ({
   for (;;) {
     let json: unknown
     if (useMockResponse) {
-      json = mockResponse.body
+      json = mockResponse!.body
       useMockResponse = false
     } else {
       let response: Response
@@ -977,13 +977,21 @@ export const getAiResponse = async ({
               platform,
               questionToolEnabled,
               reasoningEffort,
-              sessionId,
               supportsReasoningEffort,
               systemPrompt,
               toolEnablement,
               useChatToolWorker,
               webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
-              workspaceUri,
+              ...(sessionId
+                ? {
+                    sessionId,
+                  }
+                : {}),
+              ...(workspaceUri
+                ? {
+                    workspaceUri,
+                  }
+                : {}),
             })
     } else {
       text = backendAccessTokenRequiredMessage
