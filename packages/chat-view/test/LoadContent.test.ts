@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { AuthWorker, ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -476,8 +476,9 @@ test('loadContent should load openApiApiKey from preferences', async () => {
 test('loadContent should sync backend auth state when auth is enabled', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockAuthRpc = AuthWorker.registerMockRpc({
-    'Auth.syncBackendAuth': async () => ({
+
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Layout.getUserInfo': async () => ({
       authAccessToken: 'access-token-1',
       authErrorMessage: '',
       userName: 'test-user',
@@ -485,9 +486,6 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
       userSubscriptionPlan: 'pro',
       userUsedTokens: 42,
     }),
-  })
-
-  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chat.authEnabled') {
         return true
@@ -509,14 +507,19 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authUseRedirect'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+<<<<<<< HEAD
   expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+=======
+  expect(mockRpc.invocations).toContainEqual(['Layout.getUserInfo'])
+>>>>>>> origin/main
 })
 
 test('loadContent should load useOwnBackend from preferences and sync backend auth state', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockAuthRpc = AuthWorker.registerMockRpc({
-    'Auth.syncBackendAuth': async () => ({
+
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Layout.getUserInfo': async () => ({
       authAccessToken: 'access-token-2',
       authErrorMessage: '',
       userName: 'backend-user',
@@ -524,9 +527,6 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
       userSubscriptionPlan: 'pro',
       userUsedTokens: 7,
     }),
-  })
-
-  using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chat.useOwnBackend') {
         return true
@@ -543,7 +543,11 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
   expect(result.userName).toBe('backend-user')
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+<<<<<<< HEAD
   expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+=======
+  expect(mockRpc.invocations).toContainEqual(['Layout.getUserInfo'])
+>>>>>>> origin/main
 })
 
 test('loadContent should default backend url to lvce-editor.dev', async () => {

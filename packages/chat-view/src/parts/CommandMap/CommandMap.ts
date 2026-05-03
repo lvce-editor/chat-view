@@ -22,6 +22,7 @@ import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPick
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
 import * as HandleAgentModeChange from '../HandleAgentModeChange/HandleAgentModeChange.ts'
+import * as HandleAuthStateChange from '../HandleAuthStateChange/HandleAuthStateChange.ts'
 import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
 import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
@@ -161,6 +162,7 @@ export const commandMap = {
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),
   'Chat.handleAgentModeChange': wrapCommand(HandleAgentModeChange.handleAgentModeChange),
+  'Chat.handleAuthStateChange': wrapCommand(HandleAuthStateChange.handleAuthStateChange),
   'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
