@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { AuthWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import * as BackendAuth from '../src/parts/BackendAuth/BackendAuth.ts'
+import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
 const getRequestUrl = (input: unknown): string => {
   if (typeof input === 'string') {
@@ -120,6 +121,42 @@ test('syncBackendAuth should delegate to auth worker when enabled', async () => 
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('syncBackendAuth should consume queued mock refresh response before auth worker when enabled', async () => {
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'worker-token-should-not-be-used',
+      authErrorMessage: '',
+      userName: 'worker-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 13,
+    }),
+  })
+  MockBackendAuth.setNextRefreshResponse({
+    delay: 0,
+    response: {
+      accessToken: 'mock-refresh-token',
+      subscriptionPlan: 'free',
+      type: 'success',
+      usedTokens: 1,
+      userName: 'mock-refresh-user',
+    },
+    type: 'success',
+  })
+
+  const result = await BackendAuth.syncBackendAuth('https://backend.example.com', true)
+
+  expect(result).toEqual({
+    authAccessToken: 'mock-refresh-token',
+    authErrorMessage: '',
+    userName: 'mock-refresh-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'free',
+    userUsedTokens: 1,
+  })
+  expect(mockAuthRpc.invocations).toEqual([])
 })
 
 test('waitForBackendLogin should retry until backend refresh succeeds', async () => {
