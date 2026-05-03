@@ -32,6 +32,7 @@ export interface ChatState {
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string
   readonly chatInputHistoryIndex: number
+  readonly chatListExpanded: boolean
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
