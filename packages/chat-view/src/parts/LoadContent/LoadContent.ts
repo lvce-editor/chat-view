@@ -1,4 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { BackendAuthState } from '../BackendAuth/BackendAuthState/BackendAuthState.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
@@ -33,7 +34,11 @@ import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisib
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
-const getInitialAuthState = async (authEnabled: boolean, useOwnBackend: boolean, backendUrl: string) => {
+const getInitialAuthState = async (
+  authEnabled: boolean,
+  useOwnBackend: boolean,
+  backendUrl: string,
+): Promise<BackendAuthState> => {
   if (!authEnabled && !useOwnBackend) {
     return getLoggedOutBackendAuthState()
   }
