@@ -10,12 +10,12 @@ export const syncBackendAuth = async (backendUrl: string, useAuthWorker = false)
     return getLoggedOutBackendAuthState('Backend URL is missing.')
   }
   try {
-    if (useAuthWorker) {
-      return AuthWorker.invoke('Auth.syncBackendAuth', { backendUrl }) as Promise<BackendAuthState>
-    }
     if (MockBackendAuth.hasPendingMockRefreshResponse()) {
       const mockResponse = await MockBackendAuth.consumeNextRefreshResponse()
       return parseBackendAuthResponse(mockResponse)
+    }
+    if (useAuthWorker) {
+      return AuthWorker.invoke('Auth.syncBackendAuth', { backendUrl }) as Promise<BackendAuthState>
     }
     const worker = true
     if (worker) {
