@@ -1,7 +1,5 @@
 /* cspell:ignore sonarjs */
 /* cspell:words worktrees */
-
-/* eslint-disable sonarjs/cognitive-complexity */
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'

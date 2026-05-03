@@ -1,7 +1,5 @@
 /* cspell:ignore sonarjs */
 
-/* eslint-disable sonarjs/cognitive-complexity, sonarjs/no-nested-conditional */
-
 import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'

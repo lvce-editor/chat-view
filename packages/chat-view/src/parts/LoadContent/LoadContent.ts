@@ -1,7 +1,5 @@
 /* cspell:ignore sonarjs */
 
-/* eslint-disable sonarjs/cognitive-complexity, sonarjs/no-nested-conditional */
-
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'

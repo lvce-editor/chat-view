@@ -1,7 +1,5 @@
 /* cspell:ignore sonarjs */
 
-/* eslint-disable sonarjs/regex-complexity, sonarjs/cognitive-complexity, sonarjs/max-switch-cases */
-
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 
 interface HtmlTextNode {

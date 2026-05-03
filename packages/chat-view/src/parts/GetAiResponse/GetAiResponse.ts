@@ -1,6 +1,6 @@
 /* cspell:ignore sonarjs */
 
-/* eslint-disable prefer-destructuring, sonarjs/cognitive-complexity */
+/* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
 import type { ResponseFunctionCall } from '../ResponseFunctionCall/ResponseFunctionCall.ts'
@@ -563,15 +563,10 @@ export const getAiResponse = async ({
   webSearchEnabled = false,
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
-<<<<<<< HEAD
-  const enableChatCoordinatorWorker = false // TODO enable this
-  if (enableChatCoordinatorWorker && !useOwnBackend) {
-=======
   useChatCoordinatorWorker = false // TODO enable this
   const authToken = authAccessToken || ''
   const backendEnabled = shouldUseBackendResponses(backendUrl, authToken)
   if (useChatCoordinatorWorker && !backendEnabled) {
->>>>>>> origin/main
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,

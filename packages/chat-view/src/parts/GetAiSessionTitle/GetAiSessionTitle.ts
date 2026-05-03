@@ -1,7 +1,5 @@
 /* cspell:ignore sonarjs */
 
-/* eslint-disable sonarjs/cognitive-complexity */
-
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'

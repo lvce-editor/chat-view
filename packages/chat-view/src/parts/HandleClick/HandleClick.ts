@@ -43,7 +43,6 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
   if (!name) {
     return state
   }
-  // eslint-disable-next-line sonarjs/max-switch-cases
   switch (true) {
     case name === InputName.CreateSession:
       return createSession(state)
