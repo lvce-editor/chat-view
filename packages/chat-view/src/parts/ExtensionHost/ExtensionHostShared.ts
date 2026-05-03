@@ -12,6 +12,11 @@ type ExecuteProvidersOptions = {
   readonly platform: number
 }
 
+const invokeExtensionHost = async (method: string, params: readonly any[]): Promise<any> => {
+  // @ts-ignore
+  return ExtensionHost.invoke(method, ...params)
+}
+
 export const executeProviders = async ({
   assetDir,
   combineResults,
@@ -23,8 +28,7 @@ export const executeProviders = async ({
   platform,
 }: ExecuteProvidersOptions): Promise<any> => {
   await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
-  // @ts-ignore
-  return ExtensionHost.invoke(method, ...params)
+  return invokeExtensionHost(method, params)
 }
 
 type ExecuteProviderOptions = {
@@ -45,8 +49,7 @@ export const executeProvider = async ({
   platform,
 }: ExecuteProviderOptions): Promise<any> => {
   await ExtensionHostManagement.activateByEvent(event, assetDir, platform)
-  // @ts-ignore
-  return ExtensionHost.invoke(method, ...params)
+  return invokeExtensionHost(method, params)
 }
 
 type ExecuteOptions = {
@@ -55,6 +58,5 @@ type ExecuteOptions = {
 }
 
 export const execute = async ({ method, params }: ExecuteOptions): Promise<any> => {
-  // @ts-ignore
-  await ExtensionHost.invoke(method, ...params)
+  await invokeExtensionHost(method, params)
 }

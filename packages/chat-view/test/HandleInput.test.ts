@@ -16,8 +16,7 @@ function createState(overrides: Partial<ChatState> = {}): ChatState {
 }
 
 async function invokeHandleInput(state: ChatState, name: string, value: string, inputSource: 'user' | 'script' = 'user'): Promise<ChatState> {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  void mockChatStorageRpc
+  using _mockChatStorageRpc = registerMockChatStorageRpc()
   return await HandleInput.handleInput(state, name, value, inputSource)
 }
 

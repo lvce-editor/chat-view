@@ -23,7 +23,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const stopButton = Locator('.IconButton[name="stop"]')
   const stopIcon = Locator('.IconButton[name="stop"] .MaskIconDebugPause')
-  const sendButton = Locator('.IconButton[name="send"]')
 
   await expect(stopButton).toBeVisible()
   // await expect(stopButton).toHaveAttribute('aria-label', 'stop')

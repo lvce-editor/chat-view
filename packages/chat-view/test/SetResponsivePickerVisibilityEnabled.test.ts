@@ -13,9 +13,13 @@ const getComposerWidthForPrimaryControls = (state: ChatState, visibleControlCoun
   const controlsWidth = widths.reduce((total, width, index) => {
     return total + width + (index === 0 ? 0 : state.primaryControlsGap)
   }, 0)
-  const overflowWidth = includeOverflowButton
-    ? state.primaryControlsOverflowButtonLabelWidth + (visibleControlCount > 0 ? state.primaryControlsGap : 0)
-    : 0
+  let overflowWidth = 0
+  if (includeOverflowButton) {
+    overflowWidth = state.primaryControlsOverflowButtonLabelWidth
+    if (visibleControlCount > 0) {
+      overflowWidth += state.primaryControlsGap
+    }
+  }
   return (
     state.chatSendAreaPaddingLeft +
     state.chatSendAreaPaddingRight +

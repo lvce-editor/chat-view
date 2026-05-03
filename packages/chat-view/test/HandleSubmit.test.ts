@@ -29,6 +29,20 @@ const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]
   return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
 }
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input && typeof input === 'object' && 'url' in input) {
+    const { url } = input as { readonly url: unknown }
+    return typeof url === 'string' ? url : ''
+  }
+  return ''
+}
+
 test('handleSubmit should add a user message from composer value', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -342,7 +356,7 @@ test('handleSubmit should use backend completions for authenticated users withou
 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
-    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
     expect(requests).toHaveLength(1)
     expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
     expect(requests[0].init?.headers).toEqual(
@@ -505,7 +519,7 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
   })
   const originalFetch = globalThis.fetch
   globalThis.fetch = async (input: unknown): Promise<Response> => {
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    const url = getRequestUrl(input)
     if (url.endsWith('/chat/completions')) {
       return {
         headers: {
@@ -1126,8 +1140,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
   const requests: { url: string; init?: RequestInit }[] = []
   globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
     const [input, init] = args
-    const requestInput = input as string | URL | { readonly url: string }
-    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const url = getRequestUrl(input)
     const requestInit = init as RequestInit | undefined
     requests.push(requestInit ? { init: requestInit, url } : { url })
     if (url.endsWith('/v1/responses')) {
@@ -1161,7 +1174,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
-    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
     expect(requests).toHaveLength(1)
     expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
     expect(requests[0].init?.headers).toEqual(
@@ -1172,7 +1185,12 @@ test('handleSubmit should sync backend auth and use backend completions when use
     expect(JSON.parse(requests[0].init?.body as string)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
@@ -1182,6 +1200,80 @@ test('handleSubmit should sync backend auth and use backend completions when use
       tool_choice: 'auto',
       tools: [{ type: 'web_search' }],
     })
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('handleSubmit should sync backend auth via auth worker when enabled', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'worker-token-1',
+      authErrorMessage: '',
+      userName: 'worker-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    }),
+  })
+  const originalFetch = globalThis.fetch
+  const requests: { url: string; init?: RequestInit }[] = []
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    const [input, init] = args
+    const url = getRequestUrl(input)
+    const requestInit = init as RequestInit | undefined
+    requests.push(requestInit ? { init: requestInit, url } : { url })
+    if (url.endsWith('/auth/refresh')) {
+      throw new Error('refresh should be handled by auth worker')
+    }
+    if (url.endsWith('/v1/responses')) {
+      return {
+        json: async () => ({
+          output_text: 'Backend completion response',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      ok: false,
+      status: 404,
+    } as Response
+  }
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      backendUrl: 'https://backend.example.com',
+      composerValue: 'hello',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: '',
+      useAuthWorker: true,
+      useOwnBackend: true,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+    expect(requests).toHaveLength(1)
+    expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
+    expect(requests[0].init?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer worker-token-1',
+      }),
+    )
     expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
   } finally {
     globalThis.fetch = originalFetch

@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'

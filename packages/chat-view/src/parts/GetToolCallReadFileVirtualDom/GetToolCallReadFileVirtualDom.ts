@@ -24,6 +24,16 @@ const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
   }
 }
 
+const getFileNameClickableProps = (clickableUri: string): Record<string, unknown> => {
+  if (!clickableUri) {
+    return {}
+  }
+  return {
+    'data-uri': clickableUri,
+    onClick: DomEventListenerFunctions.HandleClickFileName,
+  }
+}
+
 export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)
   if (!target) {
@@ -34,16 +44,16 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   const statusLabel = getToolCallStatusLabel(toolCall)
   const globPatternLabel = getGlobPatternLabel(toolCall)
   const globMatchCount = toolCall.name === 'glob' && toolCall.status === 'success' ? getGlobMatchCount(toolCall.result) : undefined
-  const globMatchLabel = typeof globMatchCount === 'number' ? `, ${globMatchCount} ${globMatchCount === 1 ? 'match' : 'matches'}` : ''
-  const fileNameClickableProps = target.clickableUri
-    ? {
-        'data-uri': target.clickableUri,
-        onClick: DomEventListenerFunctions.HandleClickFileName,
-      }
-    : {}
+  let globMatchLabel = ''
+  if (typeof globMatchCount === 'number') {
+    const globMatchWord = globMatchCount === 1 ? 'match' : 'matches'
+    globMatchLabel = `, ${globMatchCount} ${globMatchWord}`
+  }
+  const childCount = 3 + Number(Boolean(globPatternLabel)) + Number(Boolean(globMatchLabel)) + Number(Boolean(statusLabel))
+  const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
   return [
     {
-      childCount: 3 + (globPatternLabel ? 1 : 0) + (globMatchLabel ? 1 : 0) + (statusLabel ? 1 : 0),
+      childCount,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },

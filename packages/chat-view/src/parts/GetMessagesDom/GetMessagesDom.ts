@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'

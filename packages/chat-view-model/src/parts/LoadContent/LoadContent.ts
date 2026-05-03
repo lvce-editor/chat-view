@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'

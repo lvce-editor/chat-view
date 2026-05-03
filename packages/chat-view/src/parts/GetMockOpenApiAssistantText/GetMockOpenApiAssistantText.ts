@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { GetOpenApiAssistantTextResult } from '../GetOpenApiAssistantText/GetOpenApiAssistantText.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'

@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteProject } from '../DeleteProject/DeleteProject.ts'

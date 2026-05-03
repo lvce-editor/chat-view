@@ -1,4 +1,4 @@
-/* cspell:ignore worktree worktrees */
+/* cspell:ignore sonarjs worktree worktrees */
 
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'

@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { isDefaultSessionTitle } from '../IsDefaultSessionTitle/IsDefaultSessionTitle.ts'

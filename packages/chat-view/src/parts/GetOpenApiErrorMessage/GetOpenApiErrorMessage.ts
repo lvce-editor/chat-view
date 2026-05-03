@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'

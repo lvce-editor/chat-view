@@ -5,7 +5,7 @@ import { getBackendRefreshUrl } from '../GetBackendRefreshUrl/GetBackendRefreshU
 import { getLoggedOutBackendAuthState } from '../GetLoggedOutBackendAuthState/GetLoggedOutBackendAuthState.ts'
 import { parseBackendAuthResponse } from '../ParseBackendAuthResponse/ParseBackendAuthResponse.ts'
 
-export const syncBackendAuth = async (backendUrl: string): Promise<BackendAuthState> => {
+export const syncBackendAuth = async (backendUrl: string, useAuthWorker = false): Promise<BackendAuthState> => {
   if (!backendUrl) {
     return getLoggedOutBackendAuthState('Backend URL is missing.')
   }
@@ -13,6 +13,9 @@ export const syncBackendAuth = async (backendUrl: string): Promise<BackendAuthSt
     if (MockBackendAuth.hasPendingMockRefreshResponse()) {
       const mockResponse = await MockBackendAuth.consumeNextRefreshResponse()
       return parseBackendAuthResponse(mockResponse)
+    }
+    if (useAuthWorker) {
+      return AuthWorker.invoke('Auth.syncBackendAuth', { backendUrl }) as Promise<BackendAuthState>
     }
     const worker = true
     if (worker) {

@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 
 interface HtmlTextNode {

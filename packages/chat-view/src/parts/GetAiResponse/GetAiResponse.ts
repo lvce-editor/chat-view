@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
