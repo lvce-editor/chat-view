@@ -13,7 +13,7 @@ const getRepresentativeIndices = (count: number): readonly number[] => {
   return [0, middleIndex, count - 1]
 }
 
-export const skip=1
+export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()

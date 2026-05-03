@@ -2,15 +2,15 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-more-expand-collapse'
 
-export const skip=1
+export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openMockSession', 'Chat 1', [])
-  await Command.execute('Chat.openMockSession', 'Chat 2', [])
-  await Command.execute('Chat.openMockSession', 'Chat 3', [])
+  await Chat.openMockSession('Chat 1', [])
+  await Chat.openMockSession('Chat 2', [])
+  await Chat.openMockSession('Chat 3', [])
   await Chat.handleClickBack()
 
   const sessionTitles = Locator('.ChatList .ChatListItemTitle')
@@ -22,8 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(sessionTitles.nth(2)).toHaveText('Chat 3')
   await expect(moreToggle).toHaveCount(0)
 
-  await Command.execute('Chat.openMockSession', 'Chat 4', [])
-  await Command.execute('Chat.openMockSession', 'Chat 5', [])
+  await Chat.openMockSession('Chat 4', [])
+  await Chat.openMockSession('Chat 5', [])
   await Chat.handleClickBack()
 
   await expect(sessionTitles).toHaveCount(3)
