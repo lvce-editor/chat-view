@@ -752,6 +752,211 @@ test('getAiResponse should execute backend response tool calls and continue with
   }
 })
 
+test('getAiResponse should use backend chat completions for backend Claude models', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () => '{"workspaceUri":"file:///workspace"}',
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Get workspace uri',
+          name: 'getWorkspaceUri',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  const originalFetch = globalThis.fetch
+  const requests: { body: unknown; url: string }[] = []
+  const toolCallChunks: unknown[] = []
+  let requestCount = 0
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    requestCount++
+    const input = args[0] as string | URL | { readonly url: string }
+    const init = args[1] as RequestInit | undefined
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+    requests.push({ body: typeof init?.body === 'string' ? JSON.parse(init.body) : init?.body, url })
+    if (requestCount === 1) {
+      return {
+        json: async () => ({
+          choices: [
+            {
+              index: 0,
+              message: {
+                content: 'Checking workspace.',
+                role: 'assistant',
+                tool_calls: [
+                  {
+                    function: {
+                      arguments: '{}',
+                      name: 'getWorkspaceUri',
+                    },
+                    id: 'call_1',
+                    type: 'function',
+                  },
+                ],
+              },
+            },
+          ],
+          id: 'chat_completion_1',
+          model: 'claude-haiku-4.5',
+          object: 'chat.completion',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      json: async () => ({
+        choices: [
+          {
+            index: 0,
+            message: {
+              content: 'Workspace resolved.',
+              role: 'assistant',
+            },
+          },
+        ],
+        id: 'chat_completion_2',
+        model: 'claude-haiku-4.5',
+        object: 'chat.completion',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'backend/claude-haiku-4.5', name: 'Claude Haiku 4.5', provider: 'backend' }],
+      nextMessageId: 2,
+      onToolCallsChunk: async (toolCalls) => {
+        toolCallChunks.push(toolCalls)
+      },
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'backend/claude-haiku-4.5',
+      useMockApi: false,
+      useOwnBackend: false,
+      userText: 'hello',
+      workspaceUri: 'file:///workspace',
+    })
+
+    expect(result.text).toBe('Workspace resolved.')
+    expect(requests).toEqual([
+      {
+        body: {
+          messages: [
+            {
+              content: 'hello',
+              role: 'user',
+            },
+          ],
+          model: 'claude-haiku-4.5',
+          tool_choice: 'auto',
+          tools: [
+            {
+              function: {
+                description: 'Get workspace uri',
+                name: 'getWorkspaceUri',
+                parameters: {
+                  additionalProperties: false,
+                  properties: {},
+                  type: 'object',
+                },
+              },
+              type: 'function',
+            },
+          ],
+        },
+        url: 'https://backend.example.com/v1/chat/completions',
+      },
+      {
+        body: {
+          messages: [
+            {
+              content: 'hello',
+              role: 'user',
+            },
+            {
+              content: 'Checking workspace.',
+              role: 'assistant',
+              tool_calls: [
+                {
+                  function: {
+                    arguments: '{}',
+                    name: 'getWorkspaceUri',
+                  },
+                  id: 'call_1',
+                  type: 'function',
+                },
+              ],
+            },
+            {
+              content: '{"workspaceUri":"file:///workspace"}',
+              role: 'tool',
+              tool_call_id: 'call_1',
+            },
+          ],
+          model: 'claude-haiku-4.5',
+          tool_choice: 'auto',
+          tools: [
+            {
+              function: {
+                description: 'Get workspace uri',
+                name: 'getWorkspaceUri',
+                parameters: {
+                  additionalProperties: false,
+                  properties: {},
+                  type: 'object',
+                },
+              },
+              type: 'function',
+            },
+          ],
+        },
+        url: 'https://backend.example.com/v1/chat/completions',
+      },
+    ])
+    expect(toolCallChunks).toEqual([
+      [
+        {
+          arguments: '{}',
+          id: 'call_1',
+          name: 'getWorkspaceUri',
+          result: 'file:///workspace',
+          status: 'success',
+        },
+      ],
+    ])
+    expect(mockChatToolRpc.invocations).toEqual([
+      ['ChatTool.getTools'],
+      ['ChatTool.execute', 'getWorkspaceUri', '{}', { assetDir: '', platform: 0, workspaceUri: 'file:///workspace' }],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getAiResponse should explain invalid successful backend responses', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.getTools': async () => [],

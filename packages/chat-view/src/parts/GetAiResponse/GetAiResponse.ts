@@ -45,6 +45,49 @@ const getBackendResponsesEndpoint = (backendUrl: string): string => {
   return `${trimmedBackendUrl}/v1/responses`
 }
 
+const getBackendChatCompletionsEndpoint = (backendUrl: string): string => {
+  const trimmedBackendUrl = backendUrl.replace(trailingSlashesRegex, '')
+  return `${trimmedBackendUrl}/v1/chat/completions`
+}
+
+const isBackendModel = (selectedModelId: string, models: readonly GetAiResponseOptions['models'][number][]): boolean => {
+  const selectedModel = models.find((model) => model.id === selectedModelId)
+  if (selectedModel?.provider === 'backend') {
+    return true
+  }
+  return selectedModelId.toLowerCase().startsWith('backend/')
+}
+
+const getBackendModelId = (selectedModelId: string): string => {
+  const backendPrefix = 'backend/'
+  if (selectedModelId.toLowerCase().startsWith(backendPrefix)) {
+    return selectedModelId.slice(backendPrefix.length)
+  }
+  return selectedModelId
+}
+
+const getBackendModelProvider = (modelId: string): 'anthropic' | 'openai' | undefined => {
+  const normalizedModelId = modelId.trim().toLowerCase()
+  if (!normalizedModelId) {
+    return undefined
+  }
+  if (normalizedModelId.startsWith('anthropic/') || normalizedModelId.startsWith('claude') || normalizedModelId.includes('/claude')) {
+    return 'anthropic'
+  }
+  if (
+    normalizedModelId.startsWith('openapi/') ||
+    normalizedModelId.startsWith('openai/') ||
+    normalizedModelId.startsWith('gpt-') ||
+    normalizedModelId.startsWith('chatgpt') ||
+    normalizedModelId.startsWith('o1') ||
+    normalizedModelId.startsWith('o3') ||
+    normalizedModelId.startsWith('o4')
+  ) {
+    return 'openai'
+  }
+  return undefined
+}
+
 const hasImageAttachments = (messages: readonly ChatMessage[]): boolean => {
   return messages.some((message) => message.attachments?.some((attachment) => attachment.displayType === 'image'))
 }
@@ -156,6 +199,51 @@ const getBackendResponseFunctionCalls = (body: unknown): readonly ResponseFuncti
     const name = Reflect.get(outputItem, 'name')
     const rawArguments = Reflect.get(outputItem, 'arguments')
     if (typeof callId !== 'string' || !callId || typeof name !== 'string' || !name) {
+      continue
+    }
+    calls.push({
+      arguments: typeof rawArguments === 'string' ? rawArguments : '',
+      callId,
+      name,
+    })
+  }
+  return calls
+}
+
+const getBackendChatCompletionFunctionCalls = (body: unknown): readonly ResponseFunctionCall[] => {
+  if (!isObject(body)) {
+    return []
+  }
+  const choices = Reflect.get(body, 'choices')
+  if (!Array.isArray(choices)) {
+    return []
+  }
+  const firstChoice = choices[0]
+  if (!isObject(firstChoice)) {
+    return []
+  }
+  const message = Reflect.get(firstChoice, 'message')
+  if (!isObject(message)) {
+    return []
+  }
+  const toolCalls = Reflect.get(message, 'tool_calls')
+  if (!Array.isArray(toolCalls)) {
+    return []
+  }
+  const calls: ResponseFunctionCall[] = []
+  for (const toolCall of toolCalls) {
+    if (!isObject(toolCall)) {
+      continue
+    }
+    const callId = Reflect.get(toolCall, 'id')
+    const toolCallType = Reflect.get(toolCall, 'type')
+    const fn = Reflect.get(toolCall, 'function')
+    if (toolCallType !== 'function' || typeof callId !== 'string' || !callId || !isObject(fn)) {
+      continue
+    }
+    const name = Reflect.get(fn, 'name')
+    const rawArguments = Reflect.get(fn, 'arguments')
+    if (typeof name !== 'string' || !name) {
       continue
     }
     calls.push({
@@ -330,6 +418,211 @@ interface GetBackendAssistantTextOptions {
   readonly useChatToolWorker: boolean
   readonly webSearchEnabled?: boolean
   readonly workspaceUri?: string
+}
+
+interface BackendChatCompletionMessage {
+  readonly content: unknown
+  readonly role: 'assistant' | 'system' | 'tool' | 'user'
+  readonly tool_call_id?: string
+  readonly tool_calls?: readonly {
+    readonly function: {
+      readonly arguments: string
+      readonly name: string
+    }
+    readonly id: string
+    readonly type: 'function'
+  }[]
+}
+
+const getBackendChatCompletionsBody = (
+  messages: readonly BackendChatCompletionMessage[],
+  modelId: string,
+  tools: readonly unknown[],
+): Record<string, unknown> => {
+  const body: Record<string, unknown> = {
+    messages,
+    model: modelId,
+  }
+  if (tools.length > 0) {
+    body.tools = tools
+    body.tool_choice = 'auto'
+  }
+  return body
+}
+
+const getBackendChatCompletionsAssistantText = async ({
+  agentMode = defaultAgentMode,
+  assetDir,
+  authAccessToken,
+  backendUrl,
+  messages,
+  modelId,
+  onToolCallsChunk,
+  platform,
+  questionToolEnabled = false,
+  sessionId,
+  systemPrompt,
+  toolEnablement,
+  useChatToolWorker,
+  workspaceUri,
+}: GetBackendAssistantTextOptions): Promise<string> => {
+  const mockError = MockBackendCompletion.takeErrorResponse()
+  if (mockError) {
+    const errorCode = getBackendErrorCodeFromBody(mockError.body)
+    const errorMessage = getBackendErrorMessageFromBody(mockError.body)
+    return getBackendErrorMessage({
+      details: 'http-error',
+      ...(errorCode
+        ? {
+            errorCode,
+          }
+        : {}),
+      ...(typeof mockError.statusCode === 'number'
+        ? {
+            statusCode: mockError.statusCode,
+          }
+        : {}),
+      ...(errorMessage
+        ? {
+            errorMessage,
+          }
+        : {}),
+    })
+  }
+  const mockResponse = MockBackendCompletion.takeResponse()
+  const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
+  const requestMessages: BackendChatCompletionMessage[] = messages.map((message) => ({
+    content: getChatMessageOpenAiContent(message),
+    role: message.role,
+  }))
+  if (systemPrompt) {
+    requestMessages.unshift({
+      content: systemPrompt,
+      role: 'system',
+    })
+  }
+  let useMockResponse = !!mockResponse
+
+  for (;;) {
+    let json: unknown
+    if (useMockResponse) {
+      json = mockResponse!.body
+      useMockResponse = false
+    } else {
+      let response: Response
+      try {
+        response = await fetch(getBackendChatCompletionsEndpoint(backendUrl), {
+          body: JSON.stringify(getBackendChatCompletionsBody(requestMessages, modelId, tools)),
+          headers: {
+            Authorization: `Bearer ${authAccessToken}`,
+            'Content-Type': 'application/json',
+            ...getClientRequestIdHeader(),
+          },
+          method: 'POST',
+        })
+      } catch (error) {
+        const errorMessage = getErrorMessage(error)
+        return getBackendErrorMessage({
+          details: 'request-failed',
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+        })
+      }
+      if (!response.ok) {
+        const payload: unknown = await response.json().catch(() => undefined)
+        const errorCode = getBackendErrorCodeFromBody(payload)
+        const errorMessage = getBackendErrorMessageFromBody(payload)
+        const statusCode = response.status || getBackendStatusCodeFromBody(payload)
+        return getBackendErrorMessage({
+          details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
+          ...(typeof statusCode === 'number'
+            ? {
+                statusCode,
+              }
+            : {}),
+          ...(errorMessage
+            ? {
+                errorMessage,
+              }
+            : {}),
+        })
+      }
+      try {
+        json = (await response.json()) as unknown
+      } catch {
+        return getBackendErrorMessage({
+          details: 'invalid-response',
+          errorMessage: 'Backend returned invalid JSON.',
+        })
+      }
+    }
+
+    const responseFunctionCalls = getBackendChatCompletionFunctionCalls(json)
+    const content = getBackendResponseOutputText(json)
+    if (responseFunctionCalls.length > 0) {
+      requestMessages.push({
+        content,
+        role: 'assistant',
+        tool_calls: responseFunctionCalls.map((toolCall) => ({
+          function: {
+            arguments: toolCall.arguments,
+            name: toolCall.name,
+          },
+          id: toolCall.callId,
+          type: 'function',
+        })),
+      })
+      const executedToolCalls: StreamingToolCall[] = []
+      for (const toolCall of responseFunctionCalls) {
+        const toolOutput = await executeChatTool(toolCall.name, toolCall.arguments, {
+          assetDir,
+          platform,
+          ...(sessionId
+            ? {
+                sessionId,
+              }
+            : {}),
+          toolCallId: toolCall.callId,
+          ...(toolEnablement
+            ? {
+                toolEnablement,
+              }
+            : {}),
+          useChatToolWorker,
+          ...(workspaceUri
+            ? {
+                workspaceUri,
+              }
+            : {}),
+        })
+        executedToolCalls.push(toExecutedToolCall(toolCall, toolOutput))
+        requestMessages.push({
+          content: toolOutput,
+          role: 'tool',
+          tool_call_id: toolCall.callId,
+        })
+      }
+      if (onToolCallsChunk && executedToolCalls.length > 0) {
+        await onToolCallsChunk(executedToolCalls)
+      }
+      continue
+    }
+    if (content) {
+      return content
+    }
+    return getBackendErrorMessage({
+      details: 'invalid-response',
+      errorMessage: getBackendInvalidResponseDetails(json),
+    })
+  }
 }
 
 const getBackendAssistantText = async ({
@@ -626,6 +919,7 @@ export const getAiResponse = async ({
   }
 
   let text = ''
+  const usesBackendModel = isBackendModel(selectedModelId, models)
   const usesOpenApiModel = isOpenApiModel(selectedModelId, models)
   const usesOpenRouterModel = isOpenRouterModel(selectedModelId, models)
   const selectedModel = models.find((model) => model.id === selectedModelId)
@@ -635,38 +929,70 @@ export const getAiResponse = async ({
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
-  if (!text && (backendEnabled || useOwnBackend)) {
+  if (!text && (usesBackendModel || backendEnabled || useOwnBackend)) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
     } else if (authToken) {
-      text = await getBackendAssistantText({
-        agentMode,
-        assetDir,
-        authAccessToken: authToken,
-        backendUrl,
-        maxToolCalls: safeMaxToolCalls,
-        messages,
-        modelId: getOpenApiModelId(selectedModelId),
-        onToolCallsChunk,
-        platform,
-        questionToolEnabled,
-        reasoningEffort,
-        supportsReasoningEffort,
-        systemPrompt,
-        toolEnablement,
-        useChatToolWorker,
-        webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
-        ...(sessionId
-          ? {
-              sessionId,
-            }
-          : {}),
-        ...(workspaceUri
-          ? {
-              workspaceUri,
-            }
-          : {}),
-      })
+      const backendModelId = usesBackendModel ? getBackendModelId(selectedModelId) : getOpenApiModelId(selectedModelId)
+      const backendModelProvider = getBackendModelProvider(backendModelId)
+      text =
+        backendModelProvider === 'anthropic'
+          ? await getBackendChatCompletionsAssistantText({
+              agentMode,
+              assetDir,
+              authAccessToken: authToken,
+              backendUrl,
+              maxToolCalls: safeMaxToolCalls,
+              messages,
+              modelId: backendModelId,
+              onToolCallsChunk,
+              platform,
+              questionToolEnabled,
+              reasoningEffort,
+              supportsReasoningEffort,
+              systemPrompt,
+              toolEnablement,
+              useChatToolWorker,
+              webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
+              ...(sessionId
+                ? {
+                    sessionId,
+                  }
+                : {}),
+              ...(workspaceUri
+                ? {
+                    workspaceUri,
+                  }
+                : {}),
+            })
+          : await getBackendAssistantText({
+              agentMode,
+              assetDir,
+              authAccessToken: authToken,
+              backendUrl,
+              maxToolCalls: safeMaxToolCalls,
+              messages,
+              modelId: backendModelId,
+              onToolCallsChunk,
+              platform,
+              questionToolEnabled,
+              reasoningEffort,
+              supportsReasoningEffort,
+              systemPrompt,
+              toolEnablement,
+              useChatToolWorker,
+              webSearchEnabled: agentMode === 'plan' ? false : webSearchEnabled,
+              ...(sessionId
+                ? {
+                    sessionId,
+                  }
+                : {}),
+              ...(workspaceUri
+                ? {
+                    workspaceUri,
+                  }
+                : {}),
+            })
     } else {
       text = backendAccessTokenRequiredMessage
     }
@@ -897,7 +1223,7 @@ export const getAiResponse = async ({
       text = openRouterApiKeyRequiredMessage
     }
   }
-  if (!text && !usesOpenApiModel && !usesOpenRouterModel) {
+  if (!text && !usesBackendModel && !usesOpenApiModel && !usesOpenRouterModel) {
     text = await getMockAiResponse(userText, mockAiResponseDelay)
   }
   const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

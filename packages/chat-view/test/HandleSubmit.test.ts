@@ -1188,6 +1188,102 @@ test('handleSubmit should sync backend auth and use backend completions when use
   }
 })
 
+test('handleSubmit should use backend chat completions for backend Claude models', async () => {
+  jest.useFakeTimers()
+  jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'access-token-1',
+      authErrorMessage: '',
+      userName: 'test-user',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'pro',
+      userUsedTokens: 42,
+    }),
+  })
+  const originalFetch = globalThis.fetch
+  const requests: { url: string; init?: RequestInit }[] = []
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    const url = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    const requestInit = init as RequestInit | undefined
+    requests.push(requestInit ? { init: requestInit, url } : { url })
+    if (url.endsWith('/v1/chat/completions')) {
+      return {
+        json: async () => ({
+          choices: [
+            {
+              index: 0,
+              message: {
+                content: 'Backend Claude response',
+                role: 'assistant',
+              },
+            },
+          ],
+          id: 'chat_completion_1',
+          model: 'claude-haiku-4.5',
+          object: 'chat.completion',
+        }),
+        ok: true,
+        status: 200,
+      } as Response
+    }
+    return {
+      ok: false,
+      status: 404,
+    } as Response
+  }
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      authEnabled: true,
+      backendUrl: 'https://backend.example.com',
+      composerValue: 'hello',
+      models: [{ id: 'backend/claude-haiku-4.5', name: 'Claude Haiku 4.5', provider: 'backend' as const }],
+      selectedModelId: 'backend/claude-haiku-4.5',
+      systemPrompt: '',
+      useOwnBackend: false,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+
+    expect(result.sessions[0].messages).toHaveLength(2)
+    expect(result.sessions[0].messages[1].text).toBe('Backend Claude response')
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(requests).toHaveLength(1)
+    expect(requests[0].url).toBe('https://backend.example.com/v1/chat/completions')
+    expect(requests[0].init?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer access-token-1',
+      }),
+    )
+    expect(JSON.parse(requests[0].init?.body as string)).toEqual({
+      messages: [
+        {
+          content: 'Current date: 2026-03-25.\n\nDo not assume your knowledge cutoff is the same as the current date.',
+          role: 'system',
+        },
+        {
+          content: 'hello',
+          role: 'user',
+        },
+      ],
+      model: 'claude-haiku-4.5',
+    })
+    expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleSubmit should render mock OpenAI write_file tool calls from response.completed events', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
