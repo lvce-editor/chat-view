@@ -34,11 +34,7 @@ import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisib
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
-const getInitialAuthState = async (
-  authEnabled: boolean,
-  useOwnBackend: boolean,
-  backendUrl: string,
-): Promise<BackendAuthState> => {
+const getInitialAuthState = async (authEnabled: boolean, useOwnBackend: boolean, backendUrl: string): Promise<BackendAuthState> => {
   if (!authEnabled && !useOwnBackend) {
     return getLoggedOutBackendAuthState()
   }
