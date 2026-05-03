@@ -22,6 +22,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
   readonly chatListScrollTop?: number
+  readonly chatListExpanded: boolean
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
@@ -75,6 +76,7 @@ export const getChatModeListVirtualDom = ({
   authEnabled = false,
   authErrorMessage = '',
   chatListScrollTop = 0,
+  chatListExpanded,
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
@@ -140,7 +142,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(visibleSessions, selectedSessionId, chatListExpanded, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
