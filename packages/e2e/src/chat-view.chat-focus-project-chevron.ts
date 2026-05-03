@@ -11,7 +11,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.reset()
   await Command.execute('Chat.loadContent', {})
   await Command.execute('Chat.resize', { height: 600, width: 800 })
-  await Command.execute('Chat.openMockSession', 'session-1', [])
+  await Chat.openMockSession('session-1', [])
   await Chat.handleClickBack()
 
   const toggleChatFocusButton = Locator('.IconButton[name="toggle-chat-focus"]')

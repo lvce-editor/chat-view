@@ -11,7 +11,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.show()
   await Chat.reset()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
   await expect(items).toHaveCount(19)

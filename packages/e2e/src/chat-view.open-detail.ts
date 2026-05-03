@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.open-detail'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
   const composer = Locator('.ChatInputBox[name="composer"]')
@@ -10,7 +10,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
 
   // act
-  await Command.execute('Chat.openMockSession', 'session-1', [])
+  await Chat.openMockSession('session-1', [])
 
   // assert
   const backButton = Locator('.ChatHeader .IconButton[name="back"]')

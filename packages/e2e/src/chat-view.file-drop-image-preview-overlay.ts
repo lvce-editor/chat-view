@@ -10,7 +10,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-image-preview-overlay', [])
+  await Chat.openMockSession('session-file-drop-image-preview-overlay', [])
 
   const overlay = Locator('.ChatComposerAttachmentPreviewOverlay')
   const overlayImage = Locator('.ChatComposerAttachmentPreviewOverlayImage')

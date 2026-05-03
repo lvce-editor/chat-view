@@ -6,7 +6,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
   await expect(Locator('.ChatModelPicker')).toBeVisible()
 
   await Command.execute('Chat.handleClickModelPickerOverlay')
