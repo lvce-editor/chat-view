@@ -434,6 +434,64 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
   }
 })
 
+test('getAiResponse should use backend completions for authenticated users by default', async () => {
+  const originalFetch = globalThis.fetch
+  let actualUrl = ''
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    actualInit = init as RequestInit | undefined
+    return {
+      json: async () => ({
+        output_text: 'Backend completion response',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: 'You are helpful.',
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('Backend completion response')
+    expect(actualUrl).toBe('https://backend.example.com/v1/responses')
+    expect(actualInit?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer backend-token',
+      }),
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getAiResponse should pass tools to backend responses payload', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.getTools': async () => [
@@ -920,6 +978,54 @@ test('getAiResponse should include backend API error message and status code for
 
     expect(result.text).toBe(
       'Backend completion request failed (status 403). Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should include backend API status code error code and message for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    return {
+      json: async () => ({
+        code: 'lvce_openai_not_configured',
+        error: 'Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+      }),
+      ok: false,
+      status: 503,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 503). Error code: lvce_openai_not_configured. Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
     )
   } finally {
     globalThis.fetch = originalFetch

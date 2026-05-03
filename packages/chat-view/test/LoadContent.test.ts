@@ -546,6 +546,27 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
   expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
 })
 
+test('loadContent should default backend url to lvce-editor.dev', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'secrets.openApiKey') {
+        return ''
+      }
+      if (key === 'secrets.openRouterApiKey') {
+        return ''
+      }
+      return undefined
+    },
+  })
+
+  const result = await LoadContent.loadContent(createDefaultState(), undefined)
+
+  expect(result.backendUrl).toBe('https://lvce-editor.dev')
+  expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
+})
+
 test('loadContent should load emitStreamingFunctionCallEvents from preferences', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
