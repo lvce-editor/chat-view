@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 /* cspell:ignore sonarjs */
 
-=======
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { BackendAuthState } from '../BackendAuth/BackendAuthState/BackendAuthState.ts'
->>>>>>> origin/main
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
@@ -39,7 +36,12 @@ import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisib
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
-const getInitialAuthState = async (authEnabled: boolean, useOwnBackend: boolean, backendUrl: string): Promise<BackendAuthState> => {
+const getInitialAuthState = async (
+  authEnabled: boolean,
+  useOwnBackend: boolean,
+  backendUrl: string,
+  useAuthWorker: boolean,
+): Promise<BackendAuthState> => {
   if (!authEnabled && !useOwnBackend) {
     return getLoggedOutBackendAuthState()
   }
@@ -54,7 +56,7 @@ const getInitialAuthState = async (authEnabled: boolean, useOwnBackend: boolean,
   } catch {
     // Fallback for environments that have not yet exposed layout user info.
   }
-  return backendUrl ? syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
+  return backendUrl ? syncBackendAuth(backendUrl, useAuthWorker) : getLoggedOutBackendAuthState()
 }
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
@@ -92,16 +94,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-<<<<<<< HEAD
-  const authState =
-    authEnabled || useOwnBackend
-      ? backendUrl
-        ? await syncBackendAuth(backendUrl, useAuthWorker)
-        : getLoggedOutBackendAuthState()
-      : getLoggedOutBackendAuthState()
-=======
-  const authState = await getInitialAuthState(authEnabled, useOwnBackend, backendUrl)
->>>>>>> origin/main
+  const authState = await getInitialAuthState(authEnabled, useOwnBackend, backendUrl, useAuthWorker)
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions

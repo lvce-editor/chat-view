@@ -507,11 +507,7 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authEnabled'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.authUseRedirect'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
-<<<<<<< HEAD
-  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
-=======
   expect(mockRpc.invocations).toContainEqual(['Layout.getUserInfo'])
->>>>>>> origin/main
 })
 
 test('loadContent should load useOwnBackend from preferences and sync backend auth state', async () => {
@@ -543,11 +539,7 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
   expect(result.userName).toBe('backend-user')
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
   expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
-<<<<<<< HEAD
-  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
-=======
   expect(mockRpc.invocations).toContainEqual(['Layout.getUserInfo'])
->>>>>>> origin/main
 })
 
 test('loadContent should default backend url to lvce-editor.dev', async () => {
