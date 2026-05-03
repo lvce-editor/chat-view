@@ -1,3 +1,5 @@
+import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { BackendAuthState } from '../BackendAuth/BackendAuthState/BackendAuthState.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
@@ -31,6 +33,24 @@ import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMess
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
+
+const getInitialAuthState = async (authEnabled: boolean, useOwnBackend: boolean, backendUrl: string): Promise<BackendAuthState> => {
+  if (!authEnabled && !useOwnBackend) {
+    return getLoggedOutBackendAuthState()
+  }
+  try {
+    const authState = await RendererWorker.invoke('Layout.getUserInfo')
+    if (authState && typeof authState === 'object') {
+      return {
+        ...getLoggedOutBackendAuthState(),
+        ...authState,
+      }
+    }
+  } catch {
+    // Fallback for environments that have not yet exposed layout user info.
+  }
+  return backendUrl ? syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()
+}
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
@@ -67,8 +87,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const authState =
-    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
+  const authState = await getInitialAuthState(authEnabled, useOwnBackend, backendUrl)
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
