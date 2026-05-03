@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
