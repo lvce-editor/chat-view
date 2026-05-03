@@ -42,6 +42,9 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
   if (!name) {
     return state
   }
+  if (name === InputName.ChatListShowMore) {
+    return toggleChatListExpanded(state)
+  }
   switch (true) {
     case name === InputName.CreateSession:
       return createSession(state)
@@ -63,8 +66,6 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         searchFieldVisible: !state.searchFieldVisible,
         searchValue: state.searchFieldVisible ? '' : state.searchValue,
       }
-    case name === InputName.ChatListShowMore:
-      return toggleChatListExpanded(state)
     case name === InputName.RunModePickerToggle:
       return openRunModePicker(state)
     case name === InputName.AgentModePickerToggle:

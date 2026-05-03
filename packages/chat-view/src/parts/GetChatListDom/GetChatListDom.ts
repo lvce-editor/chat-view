@@ -3,8 +3,8 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getEmptyChatSessionsDom } from '../GetEmptyChatSessionsDom/GetEmptyChatSessionsDom.ts'
-import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
 import { getChatListToggleDom } from '../GetChatListToggleDom/GetChatListToggleDom.ts'
+import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 export const getChatListDom = (

@@ -21,8 +21,8 @@ export interface GetChatModeListVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
-  readonly chatListScrollTop?: number
   readonly chatListExpanded: boolean
+  readonly chatListScrollTop?: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
   readonly composerAttachments: readonly ComposerAttachment[]
@@ -75,8 +75,8 @@ export const getChatModeListVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
-  chatListScrollTop = 0,
   chatListExpanded,
+  chatListScrollTop = 0,
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
   composerAttachments,
