@@ -356,7 +356,7 @@ test('handleSubmit should use backend completions for authenticated users withou
 
     expect(result.sessions[0].messages).toHaveLength(2)
     expect(result.sessions[0].messages[1].text).toBe('Backend completion response')
-    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
     expect(requests).toHaveLength(1)
     expect(requests[0].url).toBe('https://backend.example.com/v1/responses')
     expect(requests[0].init?.headers).toEqual(
