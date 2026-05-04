@@ -28,4 +28,5 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   }
   setState(uid, nextState)
   await RendererWorker.invoke('Chat.applyViewModelState', uid, nextState)
+  await RendererWorker.invoke('Chat.rerender')
 }

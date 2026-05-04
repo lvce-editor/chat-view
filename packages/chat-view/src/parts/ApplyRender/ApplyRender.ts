@@ -10,6 +10,5 @@ export const applyRender = (oldState: ChatState, newState: ChatState, diffResult
       commands.push(result)
     }
   }
-  console.log({ diffResult })
   return commands
 }

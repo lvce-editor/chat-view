@@ -87,6 +87,7 @@ test('handleChatStorageUpdate should reload session state from storage and notif
   })
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.applyViewModelState': async () => {},
+    'Chat.rerender': async () => {},
   })
   const state = {
     ...createState(),
@@ -136,5 +137,6 @@ test('handleChatStorageUpdate should reload session state from storage and notif
         ],
       },
     ],
+    ['Chat.rerender'],
   ])
 })
