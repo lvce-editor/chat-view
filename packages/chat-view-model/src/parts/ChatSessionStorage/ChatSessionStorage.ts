@@ -4,7 +4,7 @@ import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 
-const chatStorageListenerRpcId = RpcId.RendererWorker
+export const rpcIdViewModel = 9999
 
 export const resetChatSessionStorage = (): void => {
   // no-op: chat session storage always goes through ChatStorageWorker
@@ -159,7 +159,7 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
 
 export const subscribeSessionUpdates = async (uid: number, sessionId: string): Promise<void> => {
   await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
-    rpcId: chatStorageListenerRpcId,
+    rpcId: rpcIdViewModel,
     sessionId,
     type: 'session',
     uid,
@@ -168,7 +168,7 @@ export const subscribeSessionUpdates = async (uid: number, sessionId: string): P
 
 export const unsubscribeSessionUpdates = async (uid: number): Promise<void> => {
   await ChatStorageWorker.invoke('ChatStorage.unsubscribeSessionUpdates', {
-    rpcId: chatStorageListenerRpcId,
+    rpcId: rpcIdViewModel,
     uid,
   })
 }
