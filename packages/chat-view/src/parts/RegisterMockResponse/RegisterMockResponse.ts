@@ -1,13 +1,11 @@
+import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 interface MockResponse {
   readonly text: string
 }
 
 export const registerMockResponse = (state: ChatState, mockResponse: MockResponse): ChatState => {
-  MockOpenApiStream.reset()
-  MockOpenApiStream.pushChunk(mockResponse.text)
-  MockOpenApiStream.finish()
+  void ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', mockResponse)
   return state
 }

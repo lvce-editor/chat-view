@@ -8,7 +8,9 @@ import {
   resetChatSessionStorage,
   saveChatSession,
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { handleSubmit } from '../HandleSubmit/HandleSubmit.ts'
+import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
+import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
+import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 
 export const commandMap = {
   'ChatModel.appendChatViewEvent': appendChatViewEvent,
@@ -16,8 +18,11 @@ export const commandMap = {
   'ChatModel.deleteChatSession': deleteChatSession,
   'ChatModel.getChatSession': getChatSession,
   'ChatModel.getChatViewEvents': getChatViewEvents,
-  'ChatModel.handleSubmit': handleSubmit,
+  'ChatModel.handleSubmit': handleRpcSubmit,
   'ChatModel.listChatSessions': listChatSessions,
   'ChatModel.resetChatSessionStorage': resetChatSessionStorage,
   'ChatModel.saveChatSession': saveChatSession,
+  handleChatStorageUpdate,
+  initialize: (_: string, port: MessagePort): Promise<void> => handleMessagePort(port),
+  'ViewModel.handleMessagePort': handleMessagePort,
 }
