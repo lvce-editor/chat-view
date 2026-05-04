@@ -21,6 +21,7 @@ export const openMockSessions = async (state: ChatState, count: number): Promise
     composerAttachments: [],
     composerAttachmentsHeight: 0,
     listFocusedIndex: -1,
+    listSelectedSessionId: '',
     parsedMessages: [],
     renamingSessionId: '',
     selectedSessionId: '',

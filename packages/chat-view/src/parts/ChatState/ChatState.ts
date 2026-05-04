@@ -73,6 +73,7 @@ export interface ChatState {
   readonly lastSubmittedSessionId: string
   readonly listFocusedIndex: number
   readonly listFocusOutline: boolean
+  readonly listSelectedSessionId: string
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly maxToolCalls: number

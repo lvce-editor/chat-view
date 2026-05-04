@@ -191,6 +191,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     searchEnabled,
     searchFieldVisible: false,
     searchValue: '',
+    listSelectedSessionId: selectedSessionId,
     selectedModelId,
     selectedProjectId,
     selectedSessionId,

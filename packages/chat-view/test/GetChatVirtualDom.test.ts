@@ -1415,6 +1415,40 @@ test('getChatVirtualDOm should render focused chat list item highlight', () => {
   expect(focusedItems).toHaveLength(1)
 })
 
+test('getChatVirtualDom should render selected chat list item and listbox aria state', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    { id: 'session-2', messages: [], title: 'Chat 2' },
+  ]
+  const result = renderChatView({
+    listFocusedIndex: 1,
+    listSelectedSessionId: 'session-2',
+    searchValue: '',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const selectedItem = result.find(
+    (node) =>
+      node.className === `${ClassNames.ChatListItem} ${ClassNames.ChatListItemSelected} ${ClassNames.ChatListItemFocused}` &&
+      node['aria-selected'] === 'true',
+  )
+  const unselectedItem = result.find((node) => node.className === ClassNames.ChatListItem && node['aria-selected'] === 'false')
+  expect(chatList).toMatchObject({
+    'aria-activedescendant': 'session:session-2',
+    role: AriaRoles.ListBox,
+  })
+  expect(selectedItem).toMatchObject({
+    id: 'session:session-2',
+    role: AriaRoles.Option,
+  })
+  expect(unselectedItem).toMatchObject({
+    id: 'session:session-1',
+    role: AriaRoles.Option,
+  })
+})
+
 test('getChatVirtualDOm should render context menu outline class for focused chat list item', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },

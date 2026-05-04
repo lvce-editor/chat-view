@@ -113,6 +113,17 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.ChatListItemSelected {
+  background: var(--vscode-list-inactiveSelectionBackground);
+  color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
+}
+
+.ChatList:focus .ChatListItemSelected,
+.ChatListItemSelected.ChatListItemFocused {
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground, var(--vscode-foreground));
+}
+
 
 
 `

@@ -33,6 +33,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     reasoningEffortPickerOpen: false,
     runModePickerOpen: false,
     selectedModelId: 'test',
+    listSelectedSessionId: '',
     selectedSessionId: '',
     sessions: [],
     streamingEnabled: false,

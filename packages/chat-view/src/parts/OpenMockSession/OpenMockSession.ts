@@ -89,6 +89,7 @@ export const openMockSession = async (
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
+    listSelectedSessionId: mockSessionId,
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,

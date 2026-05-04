@@ -39,6 +39,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     isEqualPrimaryControls(oldState.hiddenPrimaryControls, newState.hiddenPrimaryControls) &&
     oldState.initial === newState.initial &&
     oldState.listFocusOutline === newState.listFocusOutline &&
+    oldState.listSelectedSessionId === newState.listSelectedSessionId &&
     oldState.modelPickerOpen === newState.modelPickerOpen &&
     oldState.modelPickerSearchValue === newState.modelPickerSearchValue &&
     isEqualVisibleModels(oldState.visibleModels, newState.visibleModels) &&

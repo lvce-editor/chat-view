@@ -29,6 +29,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    listSelectedSessionId: id,
     lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
     messagesAutoScrollEnabled: true,
     messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),

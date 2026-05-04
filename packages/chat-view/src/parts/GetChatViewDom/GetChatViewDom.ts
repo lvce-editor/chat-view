@@ -61,6 +61,7 @@ export interface GetChatVirtualDomOptions {
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
+  readonly listSelectedSessionId?: string
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
@@ -134,6 +135,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hiddenPrimaryControls = [],
     listFocusedIndex = -1,
     listFocusOutline = false,
+    listSelectedSessionId = '',
     messagesAutoScrollEnabled,
     messagesScrollTop,
     modelPickerOpen = false,
@@ -334,6 +336,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         hiddenPrimaryControls,
         listFocusedIndex,
         listFocusOutline,
+        listSelectedSessionId,
         modelPickerOpen,
         modelPickerSearchValue,
         models,
@@ -348,6 +351,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         searchValue,
         selectChevronEnabled,
         selectedModelId,
+        selectedProjectId,
         selectedSessionId,
         sessions,
         showChatListTime,
