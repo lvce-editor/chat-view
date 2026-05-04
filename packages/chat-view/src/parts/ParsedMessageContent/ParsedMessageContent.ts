@@ -21,6 +21,20 @@ const emptyMessageContent: readonly MessageIntermediateNode[] = [
   },
 ]
 
+export const getPlainTextMessageContent = (text: string): readonly MessageIntermediateNode[] => {
+  return [
+    {
+      children: [
+        {
+          text,
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ]
+}
+
 const parseMathInline = async (children: readonly MessageInlineNode[]): Promise<readonly MessageInlineNode[]> => {
   const nextChildren: MessageInlineNode[] = []
   for (const child of children) {

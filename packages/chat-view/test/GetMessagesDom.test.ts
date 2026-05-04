@@ -87,3 +87,48 @@ test('getMessagesDom should render submitted images as a separate user message b
     }),
   )
 })
+
+test('getMessagesDom should render plain text messages even when parsed message content is temporarily missing', () => {
+  const result = getMessagesDom(
+    [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello from fallback',
+        time: '10:00',
+      },
+      {
+        id: 'message-2',
+        role: 'assistant',
+        text: 'assistant fallback',
+        time: '10:01',
+      },
+    ],
+    [],
+    '',
+  )
+
+  expect(result[0]).toEqual({
+    childCount: 2,
+    className: 'ChatMessages',
+    onContextMenu: expect.any(Number),
+    onScroll: expect.any(Number),
+    role: 'log',
+    scrollTop: 0,
+    type: VirtualDomElements.Div,
+  })
+  expect(result.filter((node) => node.className === `${ClassNames.Message} ${ClassNames.MessageUser}`)).toHaveLength(1)
+  expect(result.filter((node) => node.className === `${ClassNames.Message} ${ClassNames.MessageAssistant}`)).toHaveLength(1)
+  expect(result).toContainEqual(
+    expect.objectContaining({
+      text: 'hello from fallback',
+      type: VirtualDomElements.Text,
+    }),
+  )
+  expect(result).toContainEqual(
+    expect.objectContaining({
+      text: 'assistant fallback',
+      type: VirtualDomElements.Text,
+    }),
+  )
+})
