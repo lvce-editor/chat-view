@@ -40,8 +40,8 @@ export interface LoadContentState extends ViewModel {
   readonly authAccessToken: string
   readonly authUseRedirect: boolean
   readonly backendUrl: string
-  readonly chatInputHistory: readonly string[]
   readonly chatHistoryEnabled: boolean
+  readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryIndex: number
   readonly composerAttachmentsHeight: number
   readonly composerSelectionEnd: number

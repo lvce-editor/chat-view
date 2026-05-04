@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
-import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../src/parts/HandleStorageUpdate/HandleStorageUpdate.ts'
 import { setState } from '../src/parts/ModelState/ModelState.ts'

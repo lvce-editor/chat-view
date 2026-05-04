@@ -9,8 +9,8 @@ import {
   saveChatSession,
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
-import { loadContent } from '../LoadContent/LoadContent.ts'
 import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
+import { loadContent } from '../LoadContent/LoadContent.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 
 export const commandMap = {

@@ -317,7 +317,6 @@ export const handleSubmit = async <TState extends HandleSubmitState>(
   state: TState,
   dependencies: HandleSubmitDependencies<TState>,
 ): Promise<TState> => {
-  console.log('beforee submit', state.composerValue)
   const shouldSyncBackendAuth = (state.authEnabled || state.useOwnBackend) && !!state.backendUrl
   const authState = shouldSyncBackendAuth ? await dependencies.syncBackendAuth(state.backendUrl) : undefined
   const effectiveState = authState
