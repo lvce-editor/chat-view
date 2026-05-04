@@ -27,10 +27,10 @@ import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
+import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
@@ -41,8 +41,8 @@ export interface LoadContentState extends ViewModel {
   readonly authUseRedirect: boolean
   readonly backendUrl: string
   readonly chatInputHistory: readonly string[]
-  readonly chatInputHistoryIndex: number
   readonly chatHistoryEnabled: boolean
+  readonly chatInputHistoryIndex: number
   readonly composerAttachmentsHeight: number
   readonly composerSelectionEnd: number
   readonly composerSelectionStart: number
@@ -50,8 +50,8 @@ export interface LoadContentState extends ViewModel {
   readonly focus: string
   readonly focused: boolean
   readonly initial: boolean
-  readonly lastSubmittedSessionId: string
   readonly lastNormalViewMode: LastNormalViewMode
+  readonly lastSubmittedSessionId: string
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
   readonly modelPickerListScrollTop: number
