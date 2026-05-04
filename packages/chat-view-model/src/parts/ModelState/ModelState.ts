@@ -1,13 +1,13 @@
-import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
+import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 
-const states = new Map<number, PrototypeState>()
+const states = new Map<number, PrototypeStateBase>()
 const subscriptions = new Map<number, string>()
 
-export const getState = (uid: number): PrototypeState | undefined => {
+export const getState = (uid: number): PrototypeStateBase | undefined => {
   return states.get(uid)
 }
 
-export const setState = (uid: number, state: Readonly<PrototypeState>): void => {
+export const setState = (uid: number, state: Readonly<PrototypeStateBase>): void => {
   states.set(uid, state)
 }
 

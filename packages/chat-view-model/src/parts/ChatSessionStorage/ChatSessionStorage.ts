@@ -1,9 +1,10 @@
+import { RpcId } from '@lvce-editor/constants'
 import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 
-const chatViewModelRpcId = 6022
+const chatStorageListenerRpcId = RpcId.RendererWorker
 
 export const resetChatSessionStorage = (): void => {
   // no-op: chat session storage always goes through ChatStorageWorker
@@ -158,7 +159,7 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
 
 export const subscribeSessionUpdates = async (uid: number, sessionId: string): Promise<void> => {
   await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
-    rpcId: chatViewModelRpcId,
+    rpcId: chatStorageListenerRpcId,
     sessionId,
     type: 'session',
     uid,
@@ -167,7 +168,7 @@ export const subscribeSessionUpdates = async (uid: number, sessionId: string): P
 
 export const unsubscribeSessionUpdates = async (uid: number): Promise<void> => {
   await ChatStorageWorker.invoke('ChatStorage.unsubscribeSessionUpdates', {
-    rpcId: chatViewModelRpcId,
+    rpcId: chatStorageListenerRpcId,
     uid,
   })
 }

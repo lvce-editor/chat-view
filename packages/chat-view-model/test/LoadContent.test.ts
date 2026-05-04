@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import { RpcId } from '@lvce-editor/constants'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
 import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
@@ -17,6 +18,8 @@ const createState = (): LoadContentState => {
     authErrorMessage: '',
     authUseRedirect: false,
     backendUrl: '',
+    chatInputHistory: [],
+    chatInputHistoryIndex: -1,
     chatHistoryEnabled: false,
     chatListScrollTop: 0,
     composerAttachmentPreviewOverlayAttachmentId: '',
@@ -33,6 +36,8 @@ const createState = (): LoadContentState => {
     composerSelectionStart: 0,
     composerValue: '',
     emitStreamingFunctionCallEvents: false,
+    focus: 'composer',
+    focused: false,
     gitBranches: [],
     gitBranchPickerErrorMessage: '',
     gitBranchPickerOpen: false,
@@ -40,6 +45,7 @@ const createState = (): LoadContentState => {
     hasSpaceForAgentModePicker: true,
     hasSpaceForRunModePicker: true,
     initial: true,
+    lastSubmittedSessionId: '',
     lastNormalViewMode: 'list',
     listFocusedIndex: 0,
     listFocusOutline: false,
@@ -90,10 +96,12 @@ const createState = (): LoadContentState => {
     showModelUsageMultiplier: false,
     showRunMode: false,
     streamingEnabled: false,
+    systemPrompt: '',
     todoListToolEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     toolEnablement: {},
+    uid: 1,
     usageOverviewEnabled: false,
     useAuthWorker: false,
     useChatCoordinatorWorker: false,
@@ -151,6 +159,7 @@ const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.regis
     'ChatStorage.listSessions': () => {
       return Array.from(sessions.values(), cloneSession)
     },
+    'ChatStorage.subscribeSessionUpdates': async () => {},
     'ChatStorage.setSession': (session: ChatSession) => {
       sessions.set(session.id, cloneSession(session))
     },
@@ -274,6 +283,10 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     expect(result.userName).toBe('Simon')
     expect(result.userState).toBe('loggedIn')
     expect(result.voiceDictationEnabled).toBe(true)
+    expect(mockChatStorageRpc.invocations).toContainEqual([
+      'ChatStorage.subscribeSessionUpdates',
+      { rpcId: RpcId.RendererWorker, sessionId: 'session-2', type: 'session', uid: 1 },
+    ])
   } finally {
     MockBackendAuth.clear()
   }
