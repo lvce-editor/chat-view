@@ -138,7 +138,7 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
-  'Chat.applyViewModelState': applyViewModelState,
+  'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
