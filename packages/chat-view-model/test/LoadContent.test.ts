@@ -19,8 +19,8 @@ const createState = (): LoadContentState => {
     authUseRedirect: false,
     backendUrl: '',
     chatInputHistory: [],
-    chatInputHistoryIndex: -1,
     chatHistoryEnabled: false,
+    chatInputHistoryIndex: -1,
     chatListScrollTop: 0,
     composerAttachmentPreviewOverlayAttachmentId: '',
     composerAttachmentPreviewOverlayError: false,
@@ -45,8 +45,8 @@ const createState = (): LoadContentState => {
     hasSpaceForAgentModePicker: true,
     hasSpaceForRunModePicker: true,
     initial: true,
-    lastSubmittedSessionId: '',
     lastNormalViewMode: 'list',
+    lastSubmittedSessionId: '',
     listFocusedIndex: 0,
     listFocusOutline: false,
     messagesAutoScrollEnabled: true,
@@ -159,10 +159,10 @@ const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.regis
     'ChatStorage.listSessions': () => {
       return Array.from(sessions.values(), cloneSession)
     },
-    'ChatStorage.subscribeSessionUpdates': async () => {},
     'ChatStorage.setSession': (session: ChatSession) => {
       sessions.set(session.id, cloneSession(session))
     },
+    'ChatStorage.subscribeSessionUpdates': async () => {},
   })
 }
 
