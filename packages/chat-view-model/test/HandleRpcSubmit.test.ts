@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatCoordinatorWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatCoordinatorWorker, ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
@@ -82,6 +82,9 @@ test('handleChatStorageUpdate should reload session state from storage and notif
     }),
     'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'finished', title: 'Chat 1' }],
   })
+  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
+  })
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.applyViewModelState': async () => {},
   })
@@ -96,13 +99,27 @@ test('handleChatStorageUpdate should reload session state from storage and notif
   await handleChatStorageUpdate(1, 'session-1')
 
   expect(mockStorageRpc.invocations).toEqual([['ChatStorage.listSessions'], ['ChatStorage.getSession', 'session-1']])
+  expect(mockParsingRpc.invocations).toEqual([
+    ['ChatMessageParsing.parseMessageContents', ['hello from e2e', 'Mock AI response: I received "hello from e2e".']],
+  ])
   expect(mockRendererRpc.invocations).toEqual([
     [
       'Chat.applyViewModelState',
       1,
       {
         ...state,
-        parsedMessages: [],
+        parsedMessages: [
+          {
+            id: 'message-1',
+            parsedContent: [{ type: 'text' }],
+            text: 'hello from e2e',
+          },
+          {
+            id: 'message-2',
+            parsedContent: [{ type: 'text' }],
+            text: 'Mock AI response: I received "hello from e2e".',
+          },
+        ],
         selectedSessionId: 'session-1',
         sessions: [
           {
