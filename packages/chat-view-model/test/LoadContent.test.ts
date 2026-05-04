@@ -1,10 +1,10 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
-import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
-import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
+import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
 const createState = (): LoadContentState => {
@@ -18,8 +18,8 @@ const createState = (): LoadContentState => {
     authErrorMessage: '',
     authUseRedirect: false,
     backendUrl: '',
-    chatInputHistory: [],
     chatHistoryEnabled: false,
+    chatInputHistory: [],
     chatInputHistoryIndex: -1,
     chatListScrollTop: 0,
     composerAttachmentPreviewOverlayAttachmentId: '',

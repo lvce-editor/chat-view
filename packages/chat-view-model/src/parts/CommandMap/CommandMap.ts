@@ -10,8 +10,8 @@ import {
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
-import { loadContent } from '../LoadContent/LoadContent.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
+import { loadContent } from '../LoadContent/LoadContent.ts'
 
 export const commandMap = {
   'ChatModel.appendChatViewEvent': appendChatViewEvent,
