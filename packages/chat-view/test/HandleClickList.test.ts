@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as ChatListFocusNext from '../src/parts/ChatListFocusNext/ChatListFocusNext.ts'
+import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClickList from '../src/parts/HandleClickList/HandleClickList.ts'
 
 test('handleClickList should clear list selection for empty-area click and allow ArrowDown to select first row', async () => {
