@@ -3,7 +3,6 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const chatListFocusLast = async (state: ChatState): Promise<ChatState> => {
   const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
-  const lastVisibleSession = visibleSessions.at(-1)
   if (visibleSessions.length === 0) {
     return {
       ...state,
@@ -14,6 +13,7 @@ export const chatListFocusLast = async (state: ChatState): Promise<ChatState> =>
       listSelectedSessionId: '',
     }
   }
+  const lastVisibleSession = visibleSessions.at(-1)!
   return {
     ...state,
     focus: 'list',
