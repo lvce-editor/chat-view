@@ -2,7 +2,7 @@ import { LazyTransferMessagePortRpcParent } from '@lvce-editor/rpc'
 import { ChatViewModelWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 const sendMessagePortToChatViewModel = async (port: MessagePort): Promise<void> => {
-  await RendererWorker.sendMessagePortToChatViewModel(port)
+  await RendererWorker.invokeAndTransfer('SendMessagePortToExtensionHostWorker.sendMessagePortToChatViewModel', port)
 }
 
 export const initializeChatViewModelWorker = async (): Promise<void> => {
