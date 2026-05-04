@@ -6,17 +6,18 @@ import { getState, setState } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
-const shouldSwitchToDetailMode = (
-  state: { readonly lastSubmittedSessionId?: string; readonly viewMode: string },
-  selectedSession?: ChatSession,
-): boolean => {
-  if (state.viewMode !== 'list') {
-    return false
+const getTargetSessionId = (
+  state: { readonly lastSubmittedSessionId?: string; readonly selectedSessionId: string; readonly viewMode: string },
+  sessionId: string,
+) => {
+  if (state.viewMode === 'list') {
+    return state.lastSubmittedSessionId || sessionId
   }
-  if (!selectedSession) {
-    return false
-  }
-  return state.lastSubmittedSessionId === selectedSession.id && selectedSession.messages.length > 0
+  return state.selectedSessionId || sessionId
+}
+
+const shouldSwitchToDetailMode = (state: { readonly viewMode: string }, selectedSession?: ChatSession): boolean => {
+  return state.viewMode === 'list' && !!selectedSession && selectedSession.messages.length > 0
 }
 
 export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
@@ -24,7 +25,7 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   if (!state) {
     return
   }
-  const selectedSessionId = state.selectedSessionId || sessionId
+  const selectedSessionId = getTargetSessionId(state, sessionId)
   let sessions = (await listChatSessions()) as readonly ChatSession[]
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
   sessions = normalizeSessionsOnLoad(sessions)
@@ -37,7 +38,7 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   const nextState = {
     ...state,
     parsedMessages,
-    selectedSessionId,
+    selectedSessionId: selectedSession?.id || selectedSessionId,
     sessions,
     viewMode: shouldSwitchToDetailMode(state, selectedSession) ? 'detail' : state.viewMode,
   }

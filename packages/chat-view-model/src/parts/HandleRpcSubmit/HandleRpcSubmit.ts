@@ -67,7 +67,9 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   await ensureSubscribed(state.uid, selectedSessionId)
 
-  const nextState = {
+  const viewMode = createdSessionFromList ? 'list' : state.viewMode
+
+  const nextState: PrototypeState = {
     ...state,
     chatInputHistory: getNextChatInputHistory(state.chatInputHistory, userText),
     chatInputHistoryIndex: -1,

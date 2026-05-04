@@ -143,3 +143,69 @@ test('handleChatStorageUpdate should reload session state from storage and notif
     ['Chat.rerender'],
   ])
 })
+
+test('handleChatStorageUpdate should target the submitted session while still in list mode', async () => {
+  using mockStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getSession': async () => ({
+      id: 'session-2',
+      messages: [{ id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' }],
+      projectId: 'project-1',
+      status: 'finished',
+      title: 'Chat 2',
+    }),
+    'ChatStorage.listSessions': async () => [
+      { id: 'session-1', messages: [], projectId: 'project-1', status: 'finished', title: 'Chat 1' },
+      { id: 'session-2', messages: [], projectId: 'project-1', status: 'finished', title: 'Chat 2' },
+    ],
+  })
+  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }]],
+  })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.applyViewModelState': async () => {},
+    'Chat.rerender': async () => {},
+  })
+  const state = {
+    ...createState(),
+    composerValue: '',
+    lastSubmittedSessionId: 'session-2',
+    selectedSessionId: 'session-1',
+    viewMode: 'list' as const,
+  }
+  setState(1, state)
+
+  await handleChatStorageUpdate(1, 'session-2')
+
+  expect(mockStorageRpc.invocations).toEqual([['ChatStorage.listSessions'], ['ChatStorage.getSession', 'session-2']])
+  expect(mockParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['hello from e2e']]])
+  expect(mockRendererRpc.invocations).toEqual([
+    [
+      'Chat.applyViewModelState',
+      1,
+      {
+        ...state,
+        parsedMessages: [
+          {
+            id: 'message-1',
+            parsedContent: [{ type: 'text' }],
+            text: 'hello from e2e',
+          },
+        ],
+        selectedSessionId: 'session-2',
+        sessions: [
+          { id: 'session-1', messages: [], projectId: 'project-1', status: 'finished', title: 'Chat 1' },
+          {
+            id: 'session-2',
+            lastActiveTime: '10:00',
+            messages: [{ id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' }],
+            projectId: 'project-1',
+            status: 'finished',
+            title: 'Chat 2',
+          },
+        ],
+        viewMode: 'detail',
+      },
+    ],
+    ['Chat.rerender'],
+  ])
+})
