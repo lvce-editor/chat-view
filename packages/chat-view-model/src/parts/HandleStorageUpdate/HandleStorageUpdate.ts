@@ -10,7 +10,7 @@ import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMess
 const getTargetSessionId = (
   state: { readonly lastSubmittedSessionId?: string; readonly selectedSessionId: string; readonly viewMode: string },
   sessionId: string,
-) => {
+): string => {
   if (state.viewMode === 'list') {
     return state.lastSubmittedSessionId || sessionId
   }
