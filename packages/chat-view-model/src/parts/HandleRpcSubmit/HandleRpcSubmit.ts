@@ -50,6 +50,7 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<PrototypeState> => {
   const userText = state.composerValue.trim()
+  console.log({ userText })
   if (!userText) {
     return state
   }
@@ -86,6 +87,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   }
 
   setState(state.uid, nextState)
+  console.log('submit to coord', userText)
   await submitToCoordinator(nextState, selectedSessionId, userText)
   return nextState
 }
