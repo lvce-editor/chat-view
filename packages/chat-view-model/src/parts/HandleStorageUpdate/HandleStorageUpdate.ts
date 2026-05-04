@@ -1,4 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { PrototypeState, PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
 import { listChatSessions } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
@@ -20,11 +21,7 @@ const shouldSwitchToDetailMode = (state: { readonly viewMode: string }, selected
   return state.viewMode === 'list' && !!selectedSession && selectedSession.messages.length > 0
 }
 
-export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
-  const state = getState(uid)
-  if (!state) {
-    return
-  }
+export const getNextStateFromStorageUpdate = async (state: Readonly<PrototypeStateBase>, sessionId: string): Promise<PrototypeState> => {
   const selectedSessionId = getTargetSessionId(state, sessionId)
   let sessions = (await listChatSessions()) as readonly ChatSession[]
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
@@ -35,13 +32,21 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
   }
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const nextState = {
+  return {
     ...state,
     parsedMessages,
     selectedSessionId: selectedSession?.id || selectedSessionId,
     sessions,
     viewMode: shouldSwitchToDetailMode(state, selectedSession) ? 'detail' : state.viewMode,
   }
+}
+
+export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
+  const state = getState(uid)
+  if (!state) {
+    return
+  }
+  const nextState = await getNextStateFromStorageUpdate(state, sessionId)
   setState(uid, nextState)
   await RendererWorker.invoke('Chat.applyViewModelState', uid, nextState)
   await RendererWorker.invoke('Chat.rerender')

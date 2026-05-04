@@ -1,5 +1,6 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
@@ -84,5 +85,10 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   setState(state.uid, nextState)
   await submitToCoordinator(nextState, selectedSessionId, userText)
-  return nextState
+  if (nextState.selectedModelId !== 'test') {
+    return nextState
+  }
+  const refreshedState = await getNextStateFromStorageUpdate(nextState, selectedSessionId)
+  setState(state.uid, refreshedState)
+  return refreshedState
 }
