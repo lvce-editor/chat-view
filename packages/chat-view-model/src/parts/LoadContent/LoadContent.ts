@@ -2,7 +2,7 @@
 
 import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { listChatSessions, saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -27,6 +27,7 @@ import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
 import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
+import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
@@ -40,12 +41,17 @@ export interface LoadContentState extends ViewModel {
   readonly authUseRedirect: boolean
   readonly backendUrl: string
   readonly chatHistoryEnabled: boolean
+  readonly chatInputHistory: readonly string[]
+  readonly chatInputHistoryIndex: number
   readonly composerAttachmentsHeight: number
   readonly composerSelectionEnd: number
   readonly composerSelectionStart: number
   readonly emitStreamingFunctionCallEvents: boolean
+  readonly focus: string
+  readonly focused: boolean
   readonly initial: boolean
   readonly lastNormalViewMode: LastNormalViewMode
+  readonly lastSubmittedSessionId: string
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
   readonly modelPickerListScrollTop: number
@@ -55,7 +61,9 @@ export interface LoadContentState extends ViewModel {
   readonly projectSidebarResizing: boolean
   readonly projectSidebarWidth: number
   readonly streamingEnabled: boolean
+  readonly systemPrompt: string
   readonly toolEnablement: Record<string, boolean>
+  readonly uid: number
   readonly useAuthWorker: boolean
   readonly useChatCoordinatorWorker: boolean
   readonly useChatNetworkWorkerForRequests: boolean
@@ -219,5 +227,11 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     visibleModels,
     voiceDictationEnabled,
   } as TState
-  return refreshGitBranchPickerVisibility(nextState)
+  const refreshedState = await refreshGitBranchPickerVisibility(nextState)
+  if (selectedSessionId) {
+    await subscribeSessionUpdates(state.uid, selectedSessionId)
+    setSubscribedSessionId(state.uid, selectedSessionId)
+  }
+  setState(state.uid, refreshedState)
+  return refreshedState
 }
