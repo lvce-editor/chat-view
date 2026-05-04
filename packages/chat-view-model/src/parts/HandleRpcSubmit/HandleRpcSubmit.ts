@@ -56,14 +56,13 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   let { selectedSessionId } = state
   let { sessions } = state
-  let { viewMode } = state
+  const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
 
-  if (!selectedSessionId || state.viewMode === 'list') {
+  if (createdSessionFromList) {
     selectedSessionId = crypto.randomUUID()
     const newSession = createSession(state, selectedSessionId)
     await saveChatSession(newSession)
     sessions = [...state.sessions, newSession]
-    viewMode = 'detail'
   }
 
   await ensureSubscribed(state.uid, selectedSessionId)
@@ -75,14 +74,10 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     composerValue: '',
     focus: 'composer',
     focused: true,
-    ...(typeof state.lastSubmittedSessionId === 'string'
-      ? {
-          lastSubmittedSessionId: selectedSessionId,
-        }
-      : {}),
+    lastSubmittedSessionId: selectedSessionId,
     selectedSessionId,
     sessions,
-    viewMode,
+    viewMode: createdSessionFromList ? 'list' : state.viewMode,
   }
 
   setState(state.uid, nextState)

@@ -5,6 +5,5 @@ export const render2 = (uid: number, diffResult: readonly number[]): readonly an
   const { newState, oldState } = SourceControlStates.get(uid)
   SourceControlStates.set(uid, newState, newState)
   const commands = ApplyRender.applyRender(oldState, newState, diffResult)
-  console.log({ commands })
   return commands
 }

@@ -6,6 +6,19 @@ import { getState, setState } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
+const shouldSwitchToDetailMode = (
+  state: { readonly lastSubmittedSessionId?: string; readonly viewMode: string },
+  selectedSession?: ChatSession,
+): boolean => {
+  if (state.viewMode !== 'list') {
+    return false
+  }
+  if (!selectedSession) {
+    return false
+  }
+  return state.lastSubmittedSessionId === selectedSession.id && selectedSession.messages.length > 0
+}
+
 export const handleChatStorageUpdate = async (uid: number, sessionId: string): Promise<void> => {
   const state = getState(uid)
   if (!state) {
@@ -20,11 +33,13 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   for (const session of sessions) {
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
   }
+  const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const nextState = {
     ...state,
     parsedMessages,
     selectedSessionId,
     sessions,
+    viewMode: shouldSwitchToDetailMode(state, selectedSession) ? 'detail' : state.viewMode,
   }
   setState(uid, nextState)
   await RendererWorker.invoke('Chat.applyViewModelState', uid, nextState)

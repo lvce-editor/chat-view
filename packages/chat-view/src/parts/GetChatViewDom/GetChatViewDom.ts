@@ -189,7 +189,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
 
   const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
 
-  console.log({ parsedMessages, viewMode })
   const todoListItems = getTodoListItems(sessions, selectedSessionId)
 
   switch (viewMode) {

@@ -39,8 +39,9 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
   const result = await handleRpcSubmit(state)
 
   expect(result.composerValue).toBe('')
-  expect(result.viewMode).toBe('detail')
+  expect(result.viewMode).toBe('list')
   expect(result.chatInputHistory).toEqual(['hello from e2e'])
+  expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
   expect(result.selectedSessionId).not.toBe('session-1')
   expect(result.sessions).toEqual([
     { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
@@ -92,8 +93,9 @@ test('handleChatStorageUpdate should reload session state from storage and notif
   const state = {
     ...createState(),
     composerValue: '',
+    lastSubmittedSessionId: 'session-1',
     selectedSessionId: 'session-1',
-    viewMode: 'detail' as const,
+    viewMode: 'list' as const,
   }
   setState(1, state)
 
@@ -135,6 +137,7 @@ test('handleChatStorageUpdate should reload session state from storage and notif
             title: 'Chat 1',
           },
         ],
+        viewMode: 'detail',
       },
     ],
     ['Chat.rerender'],
