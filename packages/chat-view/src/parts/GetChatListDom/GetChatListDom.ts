@@ -29,13 +29,13 @@ export const getChatListDom = (
     : undefined
   return [
     {
+      'aria-activedescendant': activeDescendant,
       childCount,
       className: ClassNames.ChatList,
       name: InputName.ChatList,
       onClick: DomEventListenerFunctions.HandleClickList,
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
-      'aria-activedescendant': activeDescendant,
       onScroll: DomEventListenerFunctions.HandleChatListScroll,
       role: AriaRoles.ListBox,
       scrollTop: chatListScrollTop,
