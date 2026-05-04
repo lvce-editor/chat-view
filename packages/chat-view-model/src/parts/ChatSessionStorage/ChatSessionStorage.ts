@@ -1,4 +1,3 @@
-import { RpcId } from '@lvce-editor/constants'
 import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
