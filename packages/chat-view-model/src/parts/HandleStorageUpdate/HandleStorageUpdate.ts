@@ -20,7 +20,6 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   for (const session of sessions) {
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
   }
-  console.log({ parsedMessages })
   const nextState = {
     ...state,
     parsedMessages,
