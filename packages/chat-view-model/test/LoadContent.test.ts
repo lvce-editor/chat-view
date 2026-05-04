@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
-import { RpcId } from '@lvce-editor/constants'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
@@ -285,7 +285,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     expect(result.voiceDictationEnabled).toBe(true)
     expect(mockChatStorageRpc.invocations).toContainEqual([
       'ChatStorage.subscribeSessionUpdates',
-      { rpcId: RpcId.RendererWorker, sessionId: 'session-2', type: 'session', uid: 1 },
+      { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
     ])
   } finally {
     MockBackendAuth.clear()

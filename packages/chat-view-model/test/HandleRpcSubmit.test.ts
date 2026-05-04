@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import { RpcId } from '@lvce-editor/constants'
 import { ChatCoordinatorWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../src/parts/HandleStorageUpdate/HandleStorageUpdate.ts'
@@ -48,7 +48,7 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
   ])
   expect(mockStorageRpc.invocations).toEqual([
     ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
-    ['ChatStorage.subscribeSessionUpdates', { rpcId: RpcId.RendererWorker, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
   ])
   expect(mockCoordinatorRpc.invocations).toEqual([
     ['ChatCoordinator.registerMockResponse', { text: 'Mock AI response: I received "hello from e2e".' }],
