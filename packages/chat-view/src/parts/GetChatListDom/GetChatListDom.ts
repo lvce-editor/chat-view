@@ -9,12 +9,8 @@ import * as InputName from '../InputName/InputName.ts'
 
 export const getChatListDom = (
   sessions: readonly ChatSession[],
-<<<<<<< HEAD
   listSelectedSessionId: string,
-=======
-  selectedSessionId: string,
   chatListExpanded: boolean,
->>>>>>> origin/main
   listFocusOutline: boolean,
   listFocusedIndex: number,
   showChatListTime: boolean,
@@ -23,16 +19,14 @@ export const getChatListDom = (
   if (sessions.length === 0) {
     return getEmptyChatSessionsDom()
   }
-<<<<<<< HEAD
-  const activeDescendant = sessions.some((session) => session.id === listSelectedSessionId)
-    ? InputName.getSessionInputName(listSelectedSessionId)
-    : undefined
-=======
   const hasHiddenSessions = sessions.length > 3
   const leadingSessions = hasHiddenSessions ? sessions.slice(0, 3) : sessions
   const trailingSessions = hasHiddenSessions && chatListExpanded ? sessions.slice(3) : []
+  const renderedSessions = [...leadingSessions, ...trailingSessions]
   const childCount = leadingSessions.length + trailingSessions.length + (hasHiddenSessions ? 1 : 0)
->>>>>>> origin/main
+  const activeDescendant = renderedSessions.some((session) => session.id === listSelectedSessionId)
+    ? InputName.getSessionInputName(listSelectedSessionId)
+    : undefined
   return [
     {
       childCount,
@@ -48,8 +42,7 @@ export const getChatListDom = (
       tabIndex: 0,
       type: VirtualDomElements.Ul,
     },
-<<<<<<< HEAD
-    ...sessions.flatMap((session, index) =>
+    ...leadingSessions.flatMap((session, index) =>
       getSessionDom(
         session,
         session.id === listSelectedSessionId,
@@ -57,15 +50,17 @@ export const getChatListDom = (
         showChatListTime,
         listFocusOutline && index === listFocusedIndex,
       ),
-=======
-    ...leadingSessions.flatMap((session, index) =>
-      getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex),
->>>>>>> origin/main
     ),
     ...(hasHiddenSessions ? getChatListToggleDom(chatListExpanded, sessions.length - 3) : []),
     ...trailingSessions.flatMap((session, index) => {
       const actualIndex = index + 3
-      return getSessionDom(session, actualIndex === listFocusedIndex, showChatListTime, listFocusOutline && actualIndex === listFocusedIndex)
+      return getSessionDom(
+        session,
+        session.id === listSelectedSessionId,
+        actualIndex === listFocusedIndex,
+        showChatListTime,
+        listFocusOutline && actualIndex === listFocusedIndex,
+      )
     }),
   ]
 }

@@ -145,11 +145,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-<<<<<<< HEAD
-    ...getChatListDom(visibleSessions, listSelectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
-=======
-    ...getChatListDom(visibleSessions, selectedSessionId, chatListExpanded, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
->>>>>>> origin/main
+    ...getChatListDom(visibleSessions, listSelectedSessionId, chatListExpanded, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
