@@ -929,7 +929,7 @@ test('loadContent should sync backend auth via auth worker when enabled', async 
     expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.useOwnBackend'])
     expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chat.backendUrl'])
     expect(mockRpc.invocations).toContainEqual(['Preferences.get', 'chatView.useAuthWorker'])
-    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
   } finally {
     globalThis.fetch = originalFetch
   }
