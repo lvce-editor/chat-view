@@ -157,6 +157,28 @@ test('handleClick should clear search value when toggling search field visibilit
   expect(result.searchValue).toBe('')
 })
 
+test('handleClick should expand collapsed chat list', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatListExpanded: false,
+  }
+  const result = await HandleClick.handleClick(state, InputName.ChatListShowMore)
+  expect(result.chatListExpanded).toBe(true)
+})
+
+test('handleClick should collapse expanded chat list', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatListExpanded: true,
+  }
+  const result = await HandleClick.handleClick(state, InputName.ChatListShowMore)
+  expect(result.chatListExpanded).toBe(false)
+})
+
 test('handleClick should mark session for rename and prefill composer', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

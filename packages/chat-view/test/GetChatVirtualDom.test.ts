@@ -35,6 +35,14 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
   })
 }
 
+const manySessions = [
+  { id: 'session-1', messages: [], title: 'Chat 1' },
+  { id: 'session-2', messages: [], title: 'Chat 2' },
+  { id: 'session-3', messages: [], title: 'Chat 3' },
+  { id: 'session-4', messages: [], title: 'Chat 4' },
+  { id: 'session-5', messages: [], title: 'Chat 5' },
+] as const
+
 test('getChatVirtualDOm should render root chat container', () => {
   const result = renderChatView()
   expect(result.length).toBeGreaterThan(0)
@@ -1397,6 +1405,93 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   const betaLabel = result.find((node) => node.text === 'beta')
   expect(alphaLabel).toBeDefined()
   expect(alphabetLabel).toBeDefined()
+  expect(betaLabel).toBeUndefined()
+})
+
+test('getChatVirtualDom should collapse chat list to first 3 sessions by default', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 4,
+  })
+  expect(visibleSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeUndefined()
+  expect(chat5Label).toBeUndefined()
+})
+
+test('getChatVirtualDom should hide chat list toggle when there are 3 or fewer visible sessions', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions.slice(0, 3),
+    viewMode: 'list',
+  })
+
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+
+  expect(moreToggle).toBeUndefined()
+  expect(visibleSessionLabels).toHaveLength(3)
+})
+
+test('getChatVirtualDom should render all visible sessions when chat list is expanded', () => {
+  const result = renderChatView({
+    chatListExpanded: true,
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 6,
+  })
+  expect(visibleSessionLabels).toHaveLength(5)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeDefined()
+  expect(chat5Label).toBeDefined()
+})
+
+test('getChatVirtualDom should collapse filtered search results to first 3 visible sessions', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'alpha 1' },
+    { id: 'session-2', messages: [], title: 'alpha 2' },
+    { id: 'session-3', messages: [], title: 'alpha 3' },
+    { id: 'session-4', messages: [], title: 'alpha 4' },
+    { id: 'session-5', messages: [], title: 'beta 1' },
+  ]
+  const result = renderChatView({
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'alpha',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+
+  const filteredSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const alpha4Label = result.find((node) => node.text === 'alpha 4')
+  const betaLabel = result.find((node) => node.text === 'beta 1')
+
+  expect(filteredSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(alpha4Label).toBeUndefined()
   expect(betaLabel).toBeUndefined()
 })
 

@@ -41,6 +41,7 @@ export interface GetChatVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
+  readonly chatListExpanded: boolean
   readonly chatListScrollTop: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -115,6 +116,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     agentModePickerOpen = false,
     authEnabled = false,
     authErrorMessage = '',
+    chatListExpanded,
     chatListScrollTop,
     composerAttachmentPreviewOverlayAttachmentId,
     composerAttachmentPreviewOverlayError = false,
@@ -320,6 +322,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
+        chatListExpanded,
         chatListScrollTop,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,

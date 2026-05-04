@@ -49,6 +49,7 @@ export const createDefaultState = (): ChatState => {
     chatInputHistory: [],
     chatInputHistoryDraft: '',
     chatInputHistoryIndex: -1,
+    chatListExpanded: false,
     chatListScrollTop: 0,
     chatMessageFontFamily: 'system-ui',
     chatMessageFontSize,

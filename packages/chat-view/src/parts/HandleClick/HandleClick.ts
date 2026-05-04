@@ -36,12 +36,16 @@ import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 import { toggleChatFocusMode } from '../ToggleChatFocusMode/ToggleChatFocusMode.ts'
+import { toggleChatListExpanded } from '../ToggleChatListExpanded/ToggleChatListExpanded.ts'
 import { toggleProjectExpanded } from '../ToggleProjectExpanded/ToggleProjectExpanded.ts'
 import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
 export const handleClick = async (state: ChatState, name: string, id = '', eventX = 0, eventY = 0): Promise<ChatState> => {
   if (!name) {
     return state
+  }
+  if (name === InputName.ChatListShowMore) {
+    return toggleChatListExpanded(state)
   }
   switch (true) {
     case name === InputName.CreateSession:
