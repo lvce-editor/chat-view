@@ -63,7 +63,11 @@ const getSessionById = (sessions: readonly ChatSession[], sessionId: string): Ch
   return sessions.find((session) => session.id === sessionId)
 }
 
-const shouldKeepOptimisticState = (optimisticState: Readonly<PrototypeState>, refreshedState: Readonly<PrototypeState>, sessionId: string): boolean => {
+const shouldKeepOptimisticState = (
+  optimisticState: Readonly<PrototypeState>,
+  refreshedState: Readonly<PrototypeState>,
+  sessionId: string,
+): boolean => {
   const optimisticSession = getSessionById(optimisticState.sessions, sessionId)
   const refreshedSession = getSessionById(refreshedState.sessions, sessionId)
   return !!optimisticSession && optimisticSession.messages.length > 0 && !!refreshedSession && refreshedSession.messages.length === 0
