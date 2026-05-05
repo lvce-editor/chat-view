@@ -5,6 +5,11 @@ import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/
 import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
+const getComposerAttachments = (state: Readonly<PrototypeState>): readonly unknown[] => {
+  const { composerAttachments } = state
+  return Array.isArray(composerAttachments) ? composerAttachments : []
+}
+
 const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
@@ -38,6 +43,7 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
     })
   }
   await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
+    attachments: getComposerAttachments(state),
     id: crypto.randomUUID(),
     modelId: state.selectedModelId,
     openAiKey: state.openApiApiKey || '',
@@ -78,14 +84,11 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     lastSubmittedSessionId: selectedSessionId,
     selectedSessionId,
     sessions,
-    viewMode: createdSessionFromList ? 'list' : state.viewMode,
+    viewMode: createdSessionFromList ? 'detail' : state.viewMode,
   }
 
   setState(state.uid, nextState)
   await submitToCoordinator(nextState, selectedSessionId, userText)
-  if (nextState.selectedModelId !== 'test') {
-    return nextState
-  }
   const refreshedState = await getNextStateFromStorageUpdate(nextState, selectedSessionId)
   setState(state.uid, refreshedState)
   return refreshedState

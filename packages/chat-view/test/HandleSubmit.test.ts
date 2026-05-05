@@ -27,3 +27,18 @@ test('handleSubmit should delegate to chat view model worker', async () => {
   })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
+
+test('handleSubmit should normalize object-shaped worker errors', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => {
+      throw {
+        message: 'missing attachments',
+      }
+    },
+  })
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
+
+  await expect(HandleSubmit.handleSubmit(state)).rejects.toThrow('missing attachments')
+
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+})
