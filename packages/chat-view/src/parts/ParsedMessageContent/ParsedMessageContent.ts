@@ -231,7 +231,12 @@ const parseAndStoreMessagesContentInWorker = async (
   if (messagesNeedingParsing.length === 0) {
     return parsedMessages
   }
-  const parsedContents = await parseMessageContentsInWorker(messagesNeedingParsing.map((message) => message.text))
+  let parsedContents: readonly (readonly MessageIntermediateNode[])[]
+  try {
+    parsedContents = await parseMessageContentsInWorker(messagesNeedingParsing.map((message) => message.text))
+  } catch {
+    parsedContents = messagesNeedingParsing.map((message) => getPlainTextMessageContent(message.text))
+  }
   let nextParsedMessages = parsedMessages
   for (const [index, message] of messagesNeedingParsing.entries()) {
     const parsedContent = message.text === '' ? emptyMessageContent : parsedContents[index]

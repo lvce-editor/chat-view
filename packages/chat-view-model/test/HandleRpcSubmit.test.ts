@@ -233,6 +233,103 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
   ])
 })
 
+test('handleRpcSubmit should keep an optimistic user message when mock api submission fails for an existing session', async () => {
+  using mockStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getSession': async (id: string) => ({
+      id,
+      messages: [],
+      projectId: 'project-1',
+      status: 'idle',
+      title: 'Chat 1',
+    }),
+    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
+    'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {
+      throw new Error('mock stream not configured')
+    },
+  })
+  const state = {
+    ...createState(),
+    composerAttachments: [
+      {
+        attachmentId: 'attachment-1',
+        displayType: 'image',
+        mimeType: 'image/svg+xml',
+        name: 'photo.svg',
+        previewSrc: 'data:image/svg+xml;base64,PHN2Zw==',
+        size: 67,
+      },
+    ],
+    selectedModelId: 'openapi/gpt-4o-mini',
+    useMockApi: true,
+    viewMode: 'detail' as const,
+  }
+
+  const result = await handleRpcSubmit(state)
+
+  expect(result.composerValue).toBe('')
+  expect(result.selectedSessionId).toBe('session-1')
+  expect(result.sessions).toEqual([
+    {
+      id: 'session-1',
+      messages: [
+        {
+          attachments: [
+            {
+              attachmentId: 'attachment-1',
+              displayType: 'image',
+              mimeType: 'image/svg+xml',
+              name: 'photo.svg',
+              previewSrc: 'data:image/svg+xml;base64,PHN2Zw==',
+              size: 67,
+            },
+          ],
+          id: expect.any(String),
+          role: 'user',
+          text: 'hello from e2e',
+          time: expect.any(String),
+        },
+      ],
+      projectId: 'project-1',
+      status: 'in-progress',
+      title: 'Chat 1',
+    },
+  ])
+  expect(mockStorageRpc.invocations).toEqual([
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: 'session-1', type: 'session', uid: 1 }],
+  ])
+  expect(mockCoordinatorRpc.invocations).toEqual([
+    [
+      'ChatCoordinator.handleSubmit',
+      {
+        attachments: [
+          {
+            attachmentId: 'attachment-1',
+            displayType: 'image',
+            mimeType: 'image/svg+xml',
+            name: 'photo.svg',
+            previewSrc: 'data:image/svg+xml;base64,PHN2Zw==',
+            size: 67,
+          },
+        ],
+        authAccessToken: '',
+        backendUrl: '',
+        id: expect.any(String),
+        modelId: 'test',
+        openAiKey: '',
+        requestId: expect.any(String),
+        role: 'user',
+        sessionId: 'session-1',
+        systemPrompt: '',
+        text: 'hello from e2e',
+        useOwnBackend: false,
+      },
+    ],
+  ])
+})
+
 test('handleRpcSubmit should forward composer attachments to coordinator', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.getSession': async (id: string) => ({

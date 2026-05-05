@@ -47,6 +47,18 @@ const createUserMessage = (userText: string): ChatMessage => {
   }
 }
 
+const createSubmittedUserMessage = (state: Readonly<PrototypeState>, userText: string): ChatMessage => {
+  const attachments = getComposerAttachments(state)
+  const userMessage = createUserMessage(userText)
+  if (attachments.length === 0) {
+    return userMessage
+  }
+  return {
+    ...userMessage,
+    attachments,
+  }
+}
+
 const createSession = (state: Readonly<PrototypeState>, sessionId: string, userText: string): ChatSession => {
   return {
     id: sessionId,
@@ -98,15 +110,31 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     return state
   }
 
+  const optimisticUserMessage = createSubmittedUserMessage(state, userText)
+
   let { selectedSessionId } = state
   let { sessions } = state
   const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
 
   if (createdSessionFromList) {
     selectedSessionId = crypto.randomUUID()
-    const newSession = createSession(state, selectedSessionId, userText)
+    const newSession = {
+      ...createSession(state, selectedSessionId, userText),
+      messages: [optimisticUserMessage],
+    }
     await saveChatSession(newSession)
     sessions = [...state.sessions, newSession]
+  } else {
+    sessions = state.sessions.map((session) => {
+      if (session.id !== selectedSessionId) {
+        return session
+      }
+      return {
+        ...session,
+        messages: [...session.messages, optimisticUserMessage],
+        status: 'in-progress',
+      }
+    })
   }
 
   await ensureSubscribed(state.uid, selectedSessionId)
@@ -141,8 +169,12 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   }
 
   setState(state.uid, effectiveState)
-  await submitToCoordinator(effectiveState, selectedSessionId, userText)
-  const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
-  setState(state.uid, refreshedState)
-  return refreshedState
+  try {
+    await submitToCoordinator(effectiveState, selectedSessionId, userText)
+    const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
+    setState(state.uid, refreshedState)
+    return refreshedState
+  } catch {
+    return effectiveState
+  }
 }
