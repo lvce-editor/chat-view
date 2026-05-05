@@ -1,16 +1,24 @@
-import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
-import type { ChatState } from '../ChatState/ChatState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { setState } from '../ModelState/ModelState.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import type { ViewModel } from '../ViewModel/ViewModel.ts'
 
 interface OpenMockSessionOptions {
   readonly branchName?: string
   readonly lastActiveTime?: string
   readonly projectId?: string
   readonly workspaceUri?: string
+}
+
+interface OpenMockSessionState extends ViewModel {
+  readonly composerAttachments: readonly unknown[]
+  readonly composerAttachmentsHeight: number
+  readonly parsedMessages: readonly unknown[]
+  readonly renamingSessionId: string
+  readonly uid: number
 }
 
 const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptions | undefined): ChatSession => {
@@ -42,32 +50,19 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
   }
 }
 
-export const openMockSession = async (
-  state: ChatState,
+export const openMockSession = async <TState extends OpenMockSessionState>(
+  state: TState,
   mockSessionId: string,
   mockChatMessages: readonly ChatMessage[],
   options?: OpenMockSessionOptions,
-): Promise<ChatState> => {
-  try {
-    return (await ChatViewModelWorker.invoke('ChatModel.openMockSession', state, mockSessionId, mockChatMessages, options)) as ChatState
-  } catch {
-    return openMockSessionLocal(state, mockSessionId, mockChatMessages, options)
-  }
-}
-
-export const openMockSessionLocal = async (
-  state: ChatState,
-  mockSessionId: string,
-  mockChatMessages: readonly ChatMessage[],
-  options?: OpenMockSessionOptions,
-): Promise<ChatState> => {
+): Promise<TState> => {
   const { sessions: currentSessions } = state
 
   if (!mockSessionId) {
     return state
   }
-  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, mockChatMessages)
 
+  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, mockChatMessages)
   const existingSession = currentSessions.find((session) => session.id === mockSessionId)
   const sessions: readonly ChatSession[] = existingSession
     ? currentSessions.map((session) => {
@@ -99,7 +94,7 @@ export const openMockSessionLocal = async (
     await saveChatSession(selectedSession)
   }
 
-  return refreshGitBranchPickerVisibility({
+  const nextState = await refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
@@ -109,4 +104,6 @@ export const openMockSessionLocal = async (
     sessions,
     viewMode: 'detail',
   })
+  setState(state.uid, nextState)
+  return nextState as TState
 }
