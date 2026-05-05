@@ -716,7 +716,7 @@ test('handleChatStorageUpdate should replace an empty placeholder selection in d
     'Chat.applyViewModelState': async () => {},
     'Chat.rerender': async () => {},
   })
-  const state = {
+  const state: PrototypeState = {
     ...createState(),
     composerValue: '',
     selectedSessionId: 'session-1',

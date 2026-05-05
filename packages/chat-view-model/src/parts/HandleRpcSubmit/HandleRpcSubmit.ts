@@ -1,5 +1,6 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
@@ -7,7 +8,7 @@ import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/
 import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
-const getComposerAttachments = (state: Readonly<PrototypeState>): readonly unknown[] => {
+const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
   const { composerAttachments } = state
   return Array.isArray(composerAttachments) ? composerAttachments : []
 }

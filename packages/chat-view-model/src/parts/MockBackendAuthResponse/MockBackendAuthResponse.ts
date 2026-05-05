@@ -1,7 +1,7 @@
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 
-interface MockBackendAuthResponsePayload {
+export interface MockBackendAuthResponsePayload {
   readonly accessToken?: string
   readonly delay?: number
   readonly errorName?: string

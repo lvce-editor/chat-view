@@ -1,22 +1,29 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { GitBranch, ParsedMessage, Project } from '../ViewModel/ViewModel.ts'
+import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { setState } from '../ModelState/ModelState.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import type { ViewModel } from '../ViewModel/ViewModel.ts'
 
-interface OpenMockSessionOptions {
+export interface OpenMockSessionOptions {
   readonly branchName?: string
   readonly lastActiveTime?: string
   readonly projectId?: string
   readonly workspaceUri?: string
 }
 
-interface OpenMockSessionState extends ViewModel {
-  readonly composerAttachments: readonly unknown[]
+export interface OpenMockSessionState extends PrototypeStateBase {
+  readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerAttachmentsHeight: number
-  readonly parsedMessages: readonly unknown[]
+  readonly gitBranches: readonly GitBranch[]
+  readonly gitBranchPickerErrorMessage: string
+  readonly gitBranchPickerOpen: boolean
+  readonly gitBranchPickerVisible: boolean
+  readonly parsedMessages: readonly ParsedMessage[]
+  readonly projects: readonly Project[]
   readonly renamingSessionId: string
   readonly uid: number
 }
