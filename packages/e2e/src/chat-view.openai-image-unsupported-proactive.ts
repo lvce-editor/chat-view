@@ -9,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
-  await Command.execute('Chat.openMockSession', 'session-openai-image-unsupported-proactive', [])
+  await Chat.openMockSession('session-openai-image-unsupported-proactive', [])
   await Chat.handleModelChange('openapi/gpt-5-mini')
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')

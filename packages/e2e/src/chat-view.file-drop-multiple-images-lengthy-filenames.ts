@@ -14,7 +14,7 @@ const filenames = [
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-multiple-images-lengthy-filenames', [])
+  await Chat.openMockSession('session-file-drop-multiple-images-lengthy-filenames', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachment = Locator('.ChatComposerAttachment')

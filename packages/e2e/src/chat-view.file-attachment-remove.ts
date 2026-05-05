@@ -9,7 +9,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-attachment-remove', [])
+  await Chat.openMockSession('session-file-attachment-remove', [])
 
   const attachments = Locator('.ChatComposerAttachments')
   const attachment = Locator('.ChatComposerAttachment')

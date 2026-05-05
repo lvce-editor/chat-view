@@ -7,7 +7,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'Focus Session', [])
+  await Chat.openMockSession('Focus Session', [])
   await Command.execute('Chat.handleClick', 'toggle-chat-focus')
 
   const focusHeader = Locator('.ChatFocusHeader')

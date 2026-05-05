@@ -4,12 +4,12 @@ export const name = 'chat-view.model-picker-select-model'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
   const toggleButton = Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]')
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
   const searchInput = Locator('.ChatModelPicker [name="model-picker-search"]')
   await expect(searchInput).toBeVisible()
   await expect(searchInput).toBeFocused()
