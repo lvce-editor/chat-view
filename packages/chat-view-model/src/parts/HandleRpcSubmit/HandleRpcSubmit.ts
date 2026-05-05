@@ -59,6 +59,16 @@ const createSubmittedUserMessage = (state: Readonly<PrototypeState>, userText: s
   }
 }
 
+const getSessionById = (sessions: readonly ChatSession[], sessionId: string): ChatSession | undefined => {
+  return sessions.find((session) => session.id === sessionId)
+}
+
+const shouldKeepOptimisticState = (optimisticState: Readonly<PrototypeState>, refreshedState: Readonly<PrototypeState>, sessionId: string): boolean => {
+  const optimisticSession = getSessionById(optimisticState.sessions, sessionId)
+  const refreshedSession = getSessionById(refreshedState.sessions, sessionId)
+  return !!optimisticSession && optimisticSession.messages.length > 0 && !!refreshedSession && refreshedSession.messages.length === 0
+}
+
 const createSession = (state: Readonly<PrototypeState>, sessionId: string, userText: string): ChatSession => {
   return {
     id: sessionId,
@@ -162,16 +172,18 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     : nextState
 
   if (useMockApiEnabled(effectiveState)) {
-    const optimisticState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
-    setState(state.uid, optimisticState)
-    void submitToCoordinator(optimisticState, selectedSessionId, userText).catch(() => {})
-    return optimisticState
+    setState(state.uid, effectiveState)
+    void submitToCoordinator(effectiveState, selectedSessionId, userText).catch(() => {})
+    return effectiveState
   }
 
   setState(state.uid, effectiveState)
   try {
     await submitToCoordinator(effectiveState, selectedSessionId, userText)
     const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
+    if (shouldKeepOptimisticState(effectiveState, refreshedState, selectedSessionId)) {
+      return effectiveState
+    }
     setState(state.uid, refreshedState)
     return refreshedState
   } catch {

@@ -416,6 +416,16 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
   const result = await handleRpcSubmit(state)
 
   expect(result.viewMode).toBe('detail')
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
+    {
+      id: result.selectedSessionId,
+      messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+      projectId: 'project-1',
+      status: 'in-progress',
+      title: 'Chat 2',
+    },
+  ])
   expect(mockStorageRpc.invocations).toEqual([
     [
       'ChatStorage.setSession',
@@ -429,12 +439,8 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
       },
     ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
-    ['ChatStorage.listSessions'],
-    ['ChatStorage.getSession', result.selectedSessionId],
   ])
-  expect(mockParsingRpc.invocations).toEqual([
-    ['ChatMessageParsing.parseMessageContents', ['hello from e2e', '[API](https://example.com/query(arg))']],
-  ])
+  expect(mockParsingRpc.invocations).toEqual([])
   expect(mockCoordinatorRpc.invocations).toEqual([
     [
       'ChatCoordinator.handleSubmit',
