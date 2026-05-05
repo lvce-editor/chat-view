@@ -10,6 +10,14 @@ const getComposerAttachments = (state: Readonly<PrototypeState>): readonly unkno
   return Array.isArray(composerAttachments) ? composerAttachments : []
 }
 
+const useMockApiEnabled = (state: Readonly<PrototypeState>): boolean => {
+  return Reflect.get(state, 'useMockApi') === true
+}
+
+const getCoordinatorModelId = (state: Readonly<PrototypeState>): string => {
+  return useMockApiEnabled(state) ? 'test' : state.selectedModelId
+}
+
 const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
@@ -37,7 +45,8 @@ const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> =
 }
 
 const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: string, userText: string): Promise<void> => {
-  if (state.selectedModelId === 'test') {
+  const coordinatorModelId = getCoordinatorModelId(state)
+  if (state.selectedModelId === 'test' && !useMockApiEnabled(state)) {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
       text: `Mock AI response: I received "${userText}".`,
     })
@@ -45,7 +54,7 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
   await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
     attachments: getComposerAttachments(state),
     id: crypto.randomUUID(),
-    modelId: state.selectedModelId,
+    modelId: coordinatorModelId,
     openAiKey: state.openApiApiKey || '',
     requestId: crypto.randomUUID(),
     role: 'user',

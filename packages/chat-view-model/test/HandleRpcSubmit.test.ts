@@ -258,6 +258,64 @@ test('handleRpcSubmit should forward composer attachments to coordinator', async
   ])
 })
 
+test('handleRpcSubmit should route useMockApi submissions through the coordinator test model', async () => {
+  using mockStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getSession': async (id: string) => ({
+      id,
+      messages: [
+        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
+        { id: 'message-2', role: 'assistant', text: '[API](https://example.com/query(arg))', time: '10:01' },
+      ],
+      projectId: 'project-1',
+      status: 'finished',
+      title: 'Chat 2',
+    }),
+    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
+    'ChatStorage.setSession': async () => {},
+    'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
+  })
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {},
+  })
+  const state = {
+    ...createState(),
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    useMockApi: true,
+  }
+
+  const result = await handleRpcSubmit(state)
+
+  expect(result.viewMode).toBe('detail')
+  expect(mockStorageRpc.invocations).toEqual([
+    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
+    ['ChatStorage.listSessions'],
+    ['ChatStorage.getSession', result.selectedSessionId],
+  ])
+  expect(mockParsingRpc.invocations).toEqual([
+    ['ChatMessageParsing.parseMessageContents', ['hello from e2e', '[API](https://example.com/query(arg))']],
+  ])
+  expect(mockCoordinatorRpc.invocations).toEqual([
+    [
+      'ChatCoordinator.handleSubmit',
+      {
+        attachments: [],
+        id: expect.any(String),
+        modelId: 'test',
+        openAiKey: '',
+        requestId: expect.any(String),
+        role: 'user',
+        sessionId: result.selectedSessionId,
+        systemPrompt: '',
+        text: 'hello from e2e',
+      },
+    ],
+  ])
+})
+
 test('handleChatStorageUpdate should reload session state from storage and notify chat view', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.getSession': async () => ({
