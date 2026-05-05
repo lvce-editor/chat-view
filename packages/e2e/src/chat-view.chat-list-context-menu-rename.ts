@@ -6,6 +6,7 @@ export const test: Test = async ({ Chat, ContextMenu, expect, FileSystem, Locato
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
+  await Chat.useMockApi()
   await Chat.handleInput('hello from e2e')
   await Chat.handleSubmit()
   await Chat.handleClickBack()
