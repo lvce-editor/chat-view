@@ -1,4 +1,5 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
@@ -12,6 +13,20 @@ const getComposerAttachments = (state: Readonly<PrototypeState>): readonly unkno
 
 const useMockApiEnabled = (state: Readonly<PrototypeState>): boolean => {
   return Reflect.get(state, 'useMockApi') === true
+}
+
+const useOwnBackendEnabled = (state: Readonly<PrototypeState>): boolean => {
+  return Reflect.get(state, 'useOwnBackend') === true
+}
+
+const getBackendUrl = (state: Readonly<PrototypeState>): string => {
+  const backendUrl = Reflect.get(state, 'backendUrl')
+  return typeof backendUrl === 'string' ? backendUrl : ''
+}
+
+const getAuthAccessToken = (state: Readonly<PrototypeState>): string => {
+  const authAccessToken = Reflect.get(state, 'authAccessToken')
+  return typeof authAccessToken === 'string' ? authAccessToken : ''
 }
 
 const getCoordinatorModelId = (state: Readonly<PrototypeState>): string => {
@@ -53,6 +68,8 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
   }
   await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
     attachments: getComposerAttachments(state),
+    authAccessToken: getAuthAccessToken(state),
+    backendUrl: getBackendUrl(state),
     id: crypto.randomUUID(),
     modelId: coordinatorModelId,
     openAiKey: state.openApiApiKey || '',
@@ -61,6 +78,7 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
     sessionId,
     systemPrompt: state.systemPrompt,
     text: userText,
+    useOwnBackend: useOwnBackendEnabled(state),
   })
 }
 
@@ -96,9 +114,18 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     viewMode: createdSessionFromList ? 'detail' : state.viewMode,
   }
 
-  setState(state.uid, nextState)
-  await submitToCoordinator(nextState, selectedSessionId, userText)
-  const refreshedState = await getNextStateFromStorageUpdate(nextState, selectedSessionId)
+  const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
+  const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
+  const effectiveState = authState
+    ? {
+        ...nextState,
+        ...authState,
+      }
+    : nextState
+
+  setState(state.uid, effectiveState)
+  await submitToCoordinator(effectiveState, selectedSessionId, userText)
+  const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
   setState(state.uid, refreshedState)
   return refreshedState
 }

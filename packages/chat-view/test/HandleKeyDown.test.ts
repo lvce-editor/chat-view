@@ -8,10 +8,6 @@ import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMoc
 
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
 
-const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
-  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
-}
-
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
 })
