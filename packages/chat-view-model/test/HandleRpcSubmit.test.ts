@@ -94,7 +94,17 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
     },
   ])
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    [
+      'ChatStorage.setSession',
+      {
+        id: result.selectedSessionId,
+        lastActiveTime: expect.any(String),
+        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        projectId: 'project-1',
+        status: 'in-progress',
+        title: 'Chat 2',
+      },
+    ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
     ['ChatStorage.listSessions'],
     ['ChatStorage.getSession', result.selectedSessionId],
@@ -183,7 +193,17 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
     },
   ])
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    [
+      'ChatStorage.setSession',
+      {
+        id: result.selectedSessionId,
+        lastActiveTime: expect.any(String),
+        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        projectId: 'project-1',
+        status: 'in-progress',
+        title: 'Chat 2',
+      },
+    ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
     ['ChatStorage.listSessions'],
     ['ChatStorage.getSession', result.selectedSessionId],
@@ -300,7 +320,17 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
 
   expect(result.viewMode).toBe('detail')
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    [
+      'ChatStorage.setSession',
+      {
+        id: result.selectedSessionId,
+        lastActiveTime: expect.any(String),
+        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        projectId: 'project-1',
+        status: 'in-progress',
+        title: 'Chat 2',
+      },
+    ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
     ['ChatStorage.listSessions'],
     ['ChatStorage.getSession', result.selectedSessionId],
@@ -376,7 +406,17 @@ test('handleRpcSubmit should sync backend auth and submit own-backend requests t
 
   expect(result.viewMode).toBe('detail')
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    [
+      'ChatStorage.setSession',
+      {
+        id: result.selectedSessionId,
+        lastActiveTime: expect.any(String),
+        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        projectId: 'project-1',
+        status: 'in-progress',
+        title: 'Chat 2',
+      },
+    ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
     ['ChatStorage.listSessions'],
     ['ChatStorage.getSession', result.selectedSessionId],

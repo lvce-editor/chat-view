@@ -1,4 +1,5 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
@@ -37,10 +38,19 @@ const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: 
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
 
-const createSession = (state: Readonly<PrototypeState>, sessionId: string): ChatSession => {
+const createUserMessage = (userText: string): ChatMessage => {
+  return {
+    id: crypto.randomUUID(),
+    role: 'user',
+    text: userText,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
+}
+
+const createSession = (state: Readonly<PrototypeState>, sessionId: string, userText: string): ChatSession => {
   return {
     id: sessionId,
-    messages: [],
+    messages: [createUserMessage(userText)],
     ...(state.selectedProjectId
       ? {
           projectId: state.selectedProjectId,
@@ -94,7 +104,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   if (createdSessionFromList) {
     selectedSessionId = crypto.randomUUID()
-    const newSession = createSession(state, selectedSessionId)
+    const newSession = createSession(state, selectedSessionId, userText)
     await saveChatSession(newSession)
     sessions = [...state.sessions, newSession]
   }
