@@ -8,17 +8,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const chatMessages = Locator('.ChatMessages .Message')
 
-  await Command.execute('Chat.openMockSession', 'Chat 1', [
-    { id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' },
-  ])
+  await Command.execute('Chat.openMockSession', 'Chat 1', [{ id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' }])
 
-  await Command.execute('Chat.openMockSession', 'Chat 2', [
-    { id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' },
-  ])
+  await Command.execute('Chat.openMockSession', 'Chat 2', [{ id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' }])
 
-  await Command.execute('Chat.openMockSession', 'Chat 1', [
-    { id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' },
-  ])
+  await Command.execute('Chat.openMockSession', 'Chat 1', [{ id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' }])
   await expect(chatMessages).toHaveCount(1)
   await expect(chatMessages.nth(0)).toContainText('chat-1-user')
   await Command.execute('Chat.openMockSession', 'Chat 1', [
@@ -28,9 +22,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(chatMessages).toHaveCount(2)
   await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
 
-  await Command.execute('Chat.openMockSession', 'Chat 2', [
-    { id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' },
-  ])
+  await Command.execute('Chat.openMockSession', 'Chat 2', [{ id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' }])
   await expect(chatMessages).toHaveCount(1)
   await expect(chatMessages.nth(0)).toContainText('chat-2-user')
   await Command.execute('Chat.openMockSession', 'Chat 2', [
