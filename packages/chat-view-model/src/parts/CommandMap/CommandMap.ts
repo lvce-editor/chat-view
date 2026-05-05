@@ -10,12 +10,12 @@ import {
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
+import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { mockBackendAuthResponse } from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
 import { openMockSession } from '../OpenMockSession/OpenMockSession.ts'
-import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { loadContent } from '../LoadContent/LoadContent.ts'
 
-type CommandHandler = (...args: never[]) => unknown
+type CommandHandler = (...args: readonly never[]) => unknown
 
 export const commandMap: Record<string, CommandHandler> = {
   'ChatModel.appendChatViewEvent': appendChatViewEvent,
