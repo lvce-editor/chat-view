@@ -110,6 +110,8 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
       'ChatCoordinator.handleSubmit',
       {
         attachments: [],
+        authAccessToken: '',
+        backendUrl: '',
         id: expect.any(String),
         modelId: 'model-1',
         openAiKey: '',
@@ -118,6 +120,7 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
         sessionId: result.selectedSessionId,
         systemPrompt: '',
         text: 'hello from e2e',
+        useOwnBackend: false,
       },
     ],
   ])
@@ -194,6 +197,8 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
       'ChatCoordinator.handleSubmit',
       {
         attachments: [],
+        authAccessToken: '',
+        backendUrl: '',
         id: expect.any(String),
         modelId: 'test',
         openAiKey: '',
@@ -202,6 +207,7 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
         sessionId: result.selectedSessionId,
         systemPrompt: '',
         text: 'hello from e2e',
+        useOwnBackend: false,
       },
     ],
   ])
@@ -246,6 +252,8 @@ test('handleRpcSubmit should forward composer attachments to coordinator', async
       'ChatCoordinator.handleSubmit',
       {
         attachments: [{ attachmentId: 'attachment-1', name: 'notes.txt' }],
+        authAccessToken: '',
+        backendUrl: '',
         id: expect.any(String),
         modelId: 'model-1',
         openAiKey: '',
@@ -254,6 +262,7 @@ test('handleRpcSubmit should forward composer attachments to coordinator', async
         sessionId: expect.any(String),
         systemPrompt: '',
         text: 'hello from e2e',
+        useOwnBackend: false,
       },
     ],
   ])
@@ -304,6 +313,8 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
       'ChatCoordinator.handleSubmit',
       {
         attachments: [],
+        authAccessToken: '',
+        backendUrl: '',
         id: expect.any(String),
         modelId: 'test',
         openAiKey: '',
@@ -312,6 +323,7 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
         sessionId: result.selectedSessionId,
         systemPrompt: '',
         text: 'hello from e2e',
+        useOwnBackend: false,
       },
     ],
   ])
