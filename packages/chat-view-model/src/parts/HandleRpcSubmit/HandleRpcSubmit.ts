@@ -129,17 +129,17 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   let { selectedSessionId } = state
   const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
-  const sessions = createdSessionFromList
+  const sessions: readonly ChatSession[] = createdSessionFromList
     ? await (async (): Promise<readonly ChatSession[]> => {
         selectedSessionId = crypto.randomUUID()
-        const newSession = {
+        const newSession: ChatSession = {
           ...createSession(state, selectedSessionId, userText),
           messages: [optimisticUserMessage],
         }
         await saveChatSession(newSession)
         return [...state.sessions, newSession]
       })()
-    : state.sessions.map((session) => {
+    : state.sessions.map((session): ChatSession => {
         if (session.id !== selectedSessionId) {
           return session
         }
