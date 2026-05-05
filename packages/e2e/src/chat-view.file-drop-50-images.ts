@@ -13,7 +13,7 @@ const createImageFiles = (count: number): readonly File[] => {
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-50-images', [])
+  await Chat.openMockSession('session-file-drop-50-images', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachments = Locator('.ChatComposerAttachments')

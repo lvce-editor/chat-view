@@ -1467,6 +1467,45 @@ test('getChatVirtualDom should render all visible sessions when chat list is exp
   expect(chat5Label).toBeDefined()
 })
 
+test('getChatVirtualDom should render chat list toggle with dedicated classes', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const toggleItem = result.find((node) => node.className === ClassNames.ChatListMoreToggle)
+  const toggleButton = result.find((node) => node.className === ClassNames.ChatListMoreToggleButton)
+  const toggleChevron = result.find(
+    (node) => node.className === `${ClassNames.ChatListMoreToggleChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronRight}`,
+  )
+  const toggleLabel = result.find((node) => node.className === ClassNames.ChatListMoreToggleLabel)
+
+  expect(toggleItem).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggle,
+    type: VirtualDomElements.Li,
+  })
+  expect(toggleButton).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatListMoreToggleButton,
+    name: 'chat-list-show-more',
+    onClick: DomEventListenerFunctions.HandleClick,
+    onFocus: DomEventListenerFunctions.HandleFocus,
+    tabIndex: 0,
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleChevron).toMatchObject({
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleLabel).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggleLabel,
+    type: VirtualDomElements.Div,
+  })
+  expect(result.find((node) => node.className === ClassNames.ChatListItemLabel && node.name === 'chat-list-show-more')).toBeUndefined()
+})
+
 test('getChatVirtualDom should collapse filtered search results to first 3 visible sessions', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'alpha 1' },

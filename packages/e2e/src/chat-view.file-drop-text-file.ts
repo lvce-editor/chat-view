@@ -5,7 +5,7 @@ export const name = 'chat-view.file-drop-text-file'
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-text-file', [])
+  await Chat.openMockSession('session-file-drop-text-file', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachments = Locator('.ChatComposerAttachments')
