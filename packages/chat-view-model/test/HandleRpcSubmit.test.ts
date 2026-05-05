@@ -4,6 +4,7 @@ import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../src/parts/HandleStorageUpdate/HandleStorageUpdate.ts'
+import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 import { setState } from '../src/parts/ModelState/ModelState.ts'
 
 const createState = (): PrototypeState => {
@@ -311,6 +312,85 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
         sessionId: result.selectedSessionId,
         systemPrompt: '',
         text: 'hello from e2e',
+      },
+    ],
+  ])
+})
+
+test('handleRpcSubmit should sync backend auth and submit own-backend requests through coordinator', async () => {
+  using mockStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getSession': async (id: string) => ({
+      id,
+      messages: [
+        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
+        {
+          id: 'message-2',
+          role: 'assistant',
+          text: 'Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.',
+          time: '10:01',
+        },
+      ],
+      projectId: 'project-1',
+      status: 'finished',
+      title: 'Chat 2',
+    }),
+    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
+    'ChatStorage.setSession': async () => {},
+    'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
+  })
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {},
+  })
+  const state = {
+    ...createState(),
+    backendUrl: 'https://backend.example.com',
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    useOwnBackend: true,
+  }
+  MockBackendAuth.setNextRefreshResponse({
+    delay: 0,
+    response: {
+      accessToken: 'backend-token',
+      userName: 'Test',
+    },
+    type: 'success',
+  })
+  setState(1, state)
+
+  const result = await handleRpcSubmit(state)
+
+  expect(result.viewMode).toBe('detail')
+  expect(mockStorageRpc.invocations).toEqual([
+    ['ChatStorage.setSession', { id: result.selectedSessionId, messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 2' }],
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
+    ['ChatStorage.listSessions'],
+    ['ChatStorage.getSession', result.selectedSessionId],
+  ])
+  expect(mockParsingRpc.invocations).toEqual([
+    [
+      'ChatMessageParsing.parseMessageContents',
+      ['hello from e2e', 'Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.'],
+    ],
+  ])
+  expect(mockCoordinatorRpc.invocations).toEqual([
+    [
+      'ChatCoordinator.handleSubmit',
+      {
+        attachments: [],
+        authAccessToken: 'backend-token',
+        backendUrl: 'https://backend.example.com',
+        id: expect.any(String),
+        modelId: 'openapi/gpt-4.1-mini',
+        openAiKey: '',
+        requestId: expect.any(String),
+        role: 'user',
+        sessionId: result.selectedSessionId,
+        systemPrompt: '',
+        text: 'hello from e2e',
+        useOwnBackend: true,
       },
     ],
   ])

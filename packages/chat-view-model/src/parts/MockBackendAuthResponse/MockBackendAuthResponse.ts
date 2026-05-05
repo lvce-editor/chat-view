@@ -31,9 +31,8 @@ export const mockBackendAuthResponse = (
   payload: MockBackendAuthResponsePayload,
 ): PrototypeState => {
   const delay = getDelay(payload)
-  const setNextResponse = payload.request === 'refresh' ? MockBackendAuth.setNextRefreshResponse : MockBackendAuth.setNextRefreshResponse
   if (payload.type === 'error') {
-    setNextResponse({
+    MockBackendAuth.setNextRefreshResponse({
       delay,
       ...(payload.errorName ? { errorName: payload.errorName } : {}),
       message: payload.message || 'Backend authentication failed.',
@@ -41,7 +40,7 @@ export const mockBackendAuthResponse = (
     })
     return state
   }
-  setNextResponse({
+  MockBackendAuth.setNextRefreshResponse({
     delay,
     response: payload,
     type: 'success',
