@@ -15,7 +15,9 @@ import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { loadContent } from '../LoadContent/LoadContent.ts'
 
-export const commandMap = {
+type CommandHandler = (...args: never[]) => unknown
+
+export const commandMap: Record<string, CommandHandler> = {
   'ChatModel.appendChatViewEvent': appendChatViewEvent,
   'ChatModel.clearChatSessions': clearChatSessions,
   'ChatModel.deleteChatSession': deleteChatSession,
