@@ -8,11 +8,23 @@ import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSes
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 const getTargetSessionId = (
-  state: { readonly lastSubmittedSessionId?: string; readonly selectedSessionId: string; readonly viewMode: string },
+  state: {
+    readonly lastSubmittedSessionId?: string
+    readonly selectedSessionId: string
+    readonly sessions: readonly ChatSession[]
+    readonly viewMode: string
+  },
   sessionId: string,
 ): string => {
   if (state.viewMode === 'list') {
     return state.lastSubmittedSessionId || sessionId
+  }
+  if (state.selectedSessionId === sessionId) {
+    return state.selectedSessionId
+  }
+  const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
+  if (!selectedSession || selectedSession.messages.length === 0) {
+    return sessionId
   }
   return state.selectedSessionId || sessionId
 }
