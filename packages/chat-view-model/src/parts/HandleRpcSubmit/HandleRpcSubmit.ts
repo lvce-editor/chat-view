@@ -133,6 +133,13 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       }
     : nextState
 
+  if (useMockApiEnabled(effectiveState)) {
+    const optimisticState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
+    setState(state.uid, optimisticState)
+    void submitToCoordinator(optimisticState, selectedSessionId, userText).catch(() => {})
+    return optimisticState
+  }
+
   setState(state.uid, effectiveState)
   await submitToCoordinator(effectiveState, selectedSessionId, userText)
   const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)

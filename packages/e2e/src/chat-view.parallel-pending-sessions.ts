@@ -23,6 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const firstSubmitPromise = Chat.handleSubmit()
 
   await Chat.handleClickBack()
+  const stateAfterFirstBack = (await Command.execute('Chat.saveState')) as { readonly sessions?: readonly unknown[] }
+  await expect(stateAfterFirstBack.sessions?.length || 0).toBe(1)
   await expect(chatListItems).toHaveCount(1)
   await expect(chatListLabels.nth(0)).toHaveText('Chat 1')
 
