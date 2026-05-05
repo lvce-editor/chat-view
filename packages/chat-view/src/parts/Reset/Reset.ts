@@ -22,6 +22,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     gitBranchPickerErrorMessage: '',
     gitBranchPickerOpen: false,
     gitBranchPickerVisible: false,
+    listSelectedSessionId: '',
     mockAiResponseDelay: 0,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
     modelPickerListScrollTop: 0,

@@ -167,6 +167,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     emitStreamingFunctionCallEvents,
     initial: false,
     lastNormalViewMode,
+    listSelectedSessionId: selectedSessionId,
     messagesScrollTop,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,

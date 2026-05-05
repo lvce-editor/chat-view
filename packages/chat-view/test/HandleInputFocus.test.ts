@@ -29,6 +29,7 @@ test('handleInputFocus should set list focus for session element', async () => {
     focus: 'list',
     focused: true,
     listFocusedIndex: 0,
+    listSelectedSessionId: 'session-1',
   })
 })
 

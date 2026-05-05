@@ -3,7 +3,7 @@ import { getListFocusIndex } from '../GetListFocusIndex/GetListFocusIndex.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState> => {
-  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
   if (visibleSessions.length === 0) {
     return {
       ...state,
@@ -11,6 +11,7 @@ export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState
       focused: true,
       listFocusedIndex: -1,
       listFocusOutline: false,
+      listSelectedSessionId: '',
     }
   }
   const currentIndex = getListFocusIndex(state)
@@ -21,5 +22,6 @@ export const chatListFocusPrevious = async (state: ChatState): Promise<ChatState
     focused: true,
     listFocusedIndex: previousIndex,
     listFocusOutline: false,
+    listSelectedSessionId: visibleSessions[previousIndex].id,
   }
 }

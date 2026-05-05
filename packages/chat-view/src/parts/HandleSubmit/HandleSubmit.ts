@@ -268,6 +268,7 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
         composerValue: '',
         inputSource: 'script',
         lastSubmittedSessionId: newSessionId,
+        listSelectedSessionId: newSessionId,
         nextMessageId: nextMessageId + 1,
         parsedMessages,
         selectedProjectId: provisionedSession.projectId || state.selectedProjectId,
