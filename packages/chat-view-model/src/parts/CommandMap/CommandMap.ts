@@ -11,9 +11,9 @@ import {
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
+import { loadContent } from '../LoadContent/LoadContent.ts'
 import { mockBackendAuthResponse } from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
 import { openMockSession } from '../OpenMockSession/OpenMockSession.ts'
-import { loadContent } from '../LoadContent/LoadContent.ts'
 
 type CommandHandler = (...args: readonly never[]) => unknown
 
