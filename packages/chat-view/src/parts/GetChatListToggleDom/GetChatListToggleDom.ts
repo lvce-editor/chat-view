@@ -8,12 +8,12 @@ export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): re
   return [
     {
       childCount: 1,
-      className: ClassNames.ChatListItem,
+      className: ClassNames.ChatListMoreToggle,
       type: VirtualDomElements.Li,
     },
     {
       childCount: 2,
-      className: ClassNames.ChatListItemLabel,
+      className: ClassNames.ChatListMoreToggleButton,
       name: InputName.ChatListShowMore,
       onClick: DomEventListenerFunctions.HandleClick,
       onFocus: DomEventListenerFunctions.HandleFocus,
@@ -23,7 +23,7 @@ export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): re
     {
       childCount: 0,
       className: mergeClassNames(
-        ClassNames.ProjectListChevron,
+        ClassNames.ChatListMoreToggleChevron,
         ClassNames.MaskIcon,
         expanded ? ClassNames.MaskIconChevronDown : ClassNames.MaskIconChevronRight,
       ),
@@ -31,7 +31,7 @@ export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): re
     },
     {
       childCount: 1,
-      className: ClassNames.ChatListItemTitle,
+      className: ClassNames.ChatListMoreToggleLabel,
       type: VirtualDomElements.Div,
     },
     text(label),

@@ -113,6 +113,56 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
+.ChatListMoreToggle {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--ChatListItemHeight);
+  padding: 0 6px;
+}
+
+.ChatListMoreToggleButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 22px;
+  padding: 0 6px 0 4px;
+  border-radius: 4px;
+  color: var(--vscode-descriptionForeground, var(--vscode-foreground));
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.ChatListMoreToggleButton:hover {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+}
+
+.ChatListMoreToggleButton:focus {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder, #007fd4);
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+  outline: none;
+}
+
+.ChatListMoreToggleChevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+
+.ChatListMoreToggleLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 
 `
