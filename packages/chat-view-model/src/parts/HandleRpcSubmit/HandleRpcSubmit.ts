@@ -1,8 +1,14 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
+<<<<<<< HEAD
 import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+=======
+import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
+import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
+>>>>>>> origin/main
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
@@ -68,8 +74,11 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   await ensureSubscribed(state.uid, selectedSessionId)
 
+<<<<<<< HEAD
   const viewMode = createdSessionFromList ? 'list' : state.viewMode
 
+=======
+>>>>>>> origin/main
   const nextState: PrototypeState = {
     ...state,
     chatInputHistory: getNextChatInputHistory(state.chatInputHistory, userText),
