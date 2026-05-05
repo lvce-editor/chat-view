@@ -9,6 +9,7 @@ import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
 import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+import { registerMockQuickPickRpc } from '../src/parts/TestHelpers/RegisterMockQuickPickRpc.ts'
 
 const getRequestUrl = (input: unknown): string => {
   if (typeof input === 'string') {
@@ -179,13 +180,25 @@ test('handleClick should collapse expanded chat list', async () => {
   expect(result.chatListExpanded).toBe(false)
 })
 
-test('handleClick should mark session for rename and prefill composer', async () => {
+test('handleClick should rename a session via quick input', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockQuickPickRpc = registerMockQuickPickRpc({
+    'QuickPick.showQuickInput': async (options: { initialValue: string }) => {
+      expect(options).toEqual({ initialValue: 'Chat 1', waitUntil: 'finished' })
+      return {
+        canceled: false,
+        inputValue: 'Renamed Chat',
+      }
+    },
+  })
   const state: ChatState = createDefaultState()
   const result = await HandleClick.handleClick(state, 'session-rename:session-1')
-  expect(result.renamingSessionId).toBe('session-1')
-  expect(result.composerValue).toBe('Chat 1')
+  expect(result.sessions[0].title).toBe('Renamed Chat')
+  expect(mockQuickPickRpc.invocations).toEqual([['QuickPick.showQuickInput', { initialValue: 'Chat 1', waitUntil: 'finished' }]])
+  expect(mockChatStorageRpc.invocations).toEqual([
+    ['ChatStorage.setSession', { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Renamed Chat' }],
+  ])
 })
 
 test('handleClick should delete a session', async () => {
