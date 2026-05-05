@@ -35,6 +35,7 @@ import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
+import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 const trailingSlashesRegex = /\/+$/
 
@@ -686,6 +687,7 @@ export const getAiResponse = async ({
         ...getClientRequestIdHeader(),
       }
       const maxToolIterations = safeMaxToolCalls - 1
+      const mockRequestId = MockOpenApiStream.startRequest()
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
         const tools1 = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
@@ -711,7 +713,14 @@ export const getAiResponse = async ({
         if (onMockOpenApiRequestCaptured) {
           await Promise.resolve(onMockOpenApiRequestCaptured(request))
         }
-        const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
+        const result = await getMockOpenApiAssistantText(
+          streamingEnabled,
+          onTextChunk,
+          onToolCallsChunk,
+          onDataEvent,
+          onEventStreamFinished,
+          mockRequestId,
+        )
         if (result.type !== 'success') {
           text = getOpenApiErrorMessage(result)
           break
