@@ -1,8 +1,8 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
-import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
