@@ -9,9 +9,9 @@ import {
   saveChatSession,
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
+import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
 import { mockBackendAuthResponse } from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
 import { openMockSession } from '../OpenMockSession/OpenMockSession.ts'
-import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { loadContent } from '../LoadContent/LoadContent.ts'
 
@@ -31,6 +31,6 @@ export const commandMap: Record<string, CommandHandler> = {
   'ChatModel.resetChatSessionStorage': resetChatSessionStorage,
   'ChatModel.saveChatSession': saveChatSession,
   handleChatStorageUpdate,
-  initialize: (_: string, port: MessagePort): Promise<void> => handleMessagePort(port),
+  initialize: (_: string, port: Readonly<MessagePort>): Promise<void> => handleMessagePort(port),
   'ViewModel.handleMessagePort': handleMessagePort,
 }

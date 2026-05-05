@@ -26,7 +26,7 @@ const getDelay = (payload: unknown): number => {
   return typeof delay === 'number' && delay > 0 ? delay : 0
 }
 
-export const mockBackendAuthResponse = (state: PrototypeState, payload: MockBackendAuthResponsePayload): PrototypeState => {
+export const mockBackendAuthResponse = (state: Readonly<PrototypeState>, payload: Readonly<MockBackendAuthResponsePayload>): PrototypeState => {
   const delay = getDelay(payload)
   if (payload.type === 'error') {
     MockBackendAuth.setNextRefreshResponse({

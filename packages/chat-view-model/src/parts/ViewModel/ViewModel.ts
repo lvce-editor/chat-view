@@ -1,6 +1,6 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
-import type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 
 export type AuthUserState = 'loggedIn' | 'loggingIn' | 'loggedOut' | 'loggingOut'
 
@@ -108,4 +108,5 @@ export interface ViewModel {
   readonly voiceDictationEnabled: boolean
 }
 
-export type { ChatSession, ComposerAttachment, ComposerAttachmentDisplayType }
+export type { ChatSession } from '../ChatSession/ChatSession.ts'
+export type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'

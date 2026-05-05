@@ -1,8 +1,8 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
@@ -128,29 +128,27 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   const optimisticUserMessage = createSubmittedUserMessage(state, userText)
 
   let { selectedSessionId } = state
-  let { sessions } = state
   const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
-
-  if (createdSessionFromList) {
-    selectedSessionId = crypto.randomUUID()
-    const newSession = {
-      ...createSession(state, selectedSessionId, userText),
-      messages: [optimisticUserMessage],
-    }
-    await saveChatSession(newSession)
-    sessions = [...state.sessions, newSession]
-  } else {
-    sessions = state.sessions.map((session) => {
-      if (session.id !== selectedSessionId) {
-        return session
-      }
-      return {
-        ...session,
-        messages: [...session.messages, optimisticUserMessage],
-        status: 'in-progress',
-      }
-    })
-  }
+  const sessions = createdSessionFromList
+    ? await (async (): Promise<readonly ChatSession[]> => {
+        selectedSessionId = crypto.randomUUID()
+        const newSession = {
+          ...createSession(state, selectedSessionId, userText),
+          messages: [optimisticUserMessage],
+        }
+        await saveChatSession(newSession)
+        return [...state.sessions, newSession]
+      })()
+    : state.sessions.map((session) => {
+        if (session.id !== selectedSessionId) {
+          return session
+        }
+        return {
+          ...session,
+          messages: [...session.messages, optimisticUserMessage],
+          status: 'in-progress',
+        }
+      })
 
   await ensureSubscribed(state.uid, selectedSessionId)
 

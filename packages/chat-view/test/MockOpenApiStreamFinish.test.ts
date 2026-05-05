@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { mockOpenApiStreamPushChunk } from '../src/parts/MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import { mockOpenApiStreamFinish } from '../src/parts/MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
+import { mockOpenApiStreamPushChunk } from '../src/parts/MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 
 test('mockOpenApiStreamFinish should delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
