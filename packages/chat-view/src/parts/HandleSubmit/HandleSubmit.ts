@@ -25,6 +25,8 @@ export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   try {
     return (await ChatViewModelWorker.invoke('ChatModel.handleSubmit', state)) as ChatState
   } catch (error) {
-    throw new Error(getErrorMessage(error))
+    throw new Error(getErrorMessage(error), {
+      cause: error,
+    })
   }
 }
