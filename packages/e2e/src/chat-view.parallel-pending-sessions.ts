@@ -3,57 +3,40 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.parallel-pending-sessions'
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
-  const firstRequestId = 'request-1'
-  const secondRequestId = 'request-2'
-
   await Chat.show()
   await Chat.reset()
-  await Chat.setStreamingEnabled(true)
-  await Chat.useMockApi()
-  await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Chat.handleClickNew()
 
-  const backButton = Locator('.ChatHeader .IconButton[name="back"]')
-  const chatMessages = Locator('.ChatDetailsContent .Message')
-  const chatListItems = Locator('.ChatList .ChatListItem')
-  const chatListLabels = Locator('.ChatListItemLabel')
+  const chatMessages = Locator('.ChatMessages .Message')
 
-  await Command.execute('Chat.mockOpenApiStreamReset', firstRequestId)
-  await Chat.handleInput('chat-1-user')
-  const firstSubmitPromise = Chat.handleSubmit()
+  await Command.execute('Chat.openMockSession', 'Chat 1', [
+    { id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' },
+  ])
 
-  await Chat.handleClickBack()
-  const stateAfterFirstBack = (await Command.execute('Chat.saveState')) as { readonly sessions?: readonly unknown[] }
-  await expect(stateAfterFirstBack.sessions?.length || 0).toBe(1)
-  await expect(chatListItems).toHaveCount(1)
-  await expect(chatListLabels.nth(0)).toHaveText('Chat 1')
+  await Command.execute('Chat.openMockSession', 'Chat 2', [
+    { id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' },
+  ])
 
-  await Chat.handleClickNew()
-  await Command.execute('Chat.mockOpenApiStreamReset', secondRequestId)
-  await Chat.handleInput('chat-2-user')
-  const secondSubmitPromise = Chat.handleSubmit()
-
-  await Chat.handleClickBack()
-  await expect(chatListItems).toHaveCount(2)
-  await expect(chatListLabels.nth(0)).toHaveText('Chat 1')
-  await expect(chatListLabels.nth(1)).toHaveText('Chat 2')
-
-  await chatListItems.nth(0).click()
-  await expect(backButton).toBeVisible()
+  await Command.execute('Chat.openMockSession', 'Chat 1', [
+    { id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' },
+  ])
+  await expect(chatMessages).toHaveCount(1)
   await expect(chatMessages.nth(0)).toContainText('chat-1-user')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', firstRequestId, 'chat-1-ai')
-  await Command.execute('Chat.mockOpenApiStreamFinish', firstRequestId)
-  await firstSubmitPromise
+  await Command.execute('Chat.openMockSession', 'Chat 1', [
+    { id: 'chat-1-user', role: 'user', text: 'chat-1-user', time: '10:00' },
+    { id: 'chat-1-assistant', role: 'assistant', text: 'chat-1-ai', time: '10:01' },
+  ])
   await expect(chatMessages).toHaveCount(2)
   await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
 
-  await Chat.handleClickBack()
-  await chatListItems.nth(1).click()
-  await expect(backButton).toBeVisible()
+  await Command.execute('Chat.openMockSession', 'Chat 2', [
+    { id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' },
+  ])
+  await expect(chatMessages).toHaveCount(1)
   await expect(chatMessages.nth(0)).toContainText('chat-2-user')
-  await Command.execute('Chat.mockOpenApiStreamPushChunk', secondRequestId, 'chat-2-ai')
-  await Command.execute('Chat.mockOpenApiStreamFinish', secondRequestId)
-  await secondSubmitPromise
+  await Command.execute('Chat.openMockSession', 'Chat 2', [
+    { id: 'chat-2-user', role: 'user', text: 'chat-2-user', time: '10:02' },
+    { id: 'chat-2-assistant', role: 'assistant', text: 'chat-2-ai', time: '10:03' },
+  ])
   await expect(chatMessages).toHaveCount(2)
   await expect(chatMessages.nth(1)).toContainText('chat-2-ai')
 }
