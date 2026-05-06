@@ -30,13 +30,13 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(messages.nth(0)).toHaveText('hello from e2e')
   await expect(messages.nth(1)).toHaveText('OpenAI API key is not configured')
   const openApiApiKeyInput = Locator('[name="open-api-api-key"]')
+  const saveButton = Locator('[name="save-openapi-api-key"]')
   await expect(openApiApiKeyInput).toBeVisible()
   await expect(saveButton).toBeVisible()
 
   // act + assert invalid key message after save/retry
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-invalid-key-for-e2e')
 
-  const saveButton = Locator('[name="save-openapi-api-key"]')
   const clickPromise = Command.execute('Chat.handleClick', 'save-openapi-api-key')
   await expect(saveButton).toHaveAttribute('disabled', '')
   await expect(saveButton).toHaveText('Saving...')
