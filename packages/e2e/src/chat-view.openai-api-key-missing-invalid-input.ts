@@ -20,7 +20,9 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'invalid-key')
 
   // assert invalid input red border
+  const invalidOpenAiApiKeyInput = Locator('[name="open-api-api-key"]:invalid')
+  const invalidStyledOpenAiApiKeyInput = Locator('[name="open-api-api-key"].InputInvalid')
   await expect(openAiApiKeyInput).toHaveValue('invalid-key')
-  await expect(Locator('[name="open-api-api-key"]:invalid')).toBeVisible()
-  await expect(Locator('[name="open-api-api-key"].InputInvalid')).toBeVisible()
+  await expect(invalidOpenAiApiKeyInput).toBeVisible()
+  await expect(invalidStyledOpenAiApiKeyInput).toBeVisible()
 }

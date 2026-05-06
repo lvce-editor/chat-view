@@ -21,7 +21,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleClickBack()
 
   const searchButton = Locator('.ChatHeader .IconButton[name="toggle-search"]')
-  await searchButton.click()
+  await expect(searchButton).toBeVisible()
+  await Command.execute('Chat.handleClick', 'toggle-search')
 
   const searchInput = Locator('.ChatHeader .InputBox[name="search"]')
   await expect(searchInput).toBeVisible()
