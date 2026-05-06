@@ -43,6 +43,7 @@ import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
+import * as HandleClickRename from '../HandleClickRename/HandleClickRename.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleContextMenuChatImageAttachment from '../HandleContextMenuChatImageAttachment/HandleContextMenuChatImageAttachment.ts'
@@ -186,6 +187,7 @@ export const commandMap = {
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
+  'Chat.handleClickRename': wrapCommand(HandleClickRename.handleClickRename),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleContextMenuChatImageAttachment': wrapCommand(HandleContextMenuChatImageAttachment.handleContextMenuChatImageAttachment),
