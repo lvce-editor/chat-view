@@ -1,11 +1,9 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
-import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
@@ -39,45 +37,10 @@ const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: 
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
 
-const createUserMessage = (userText: string): ChatMessage => {
-  return {
-    id: crypto.randomUUID(),
-    role: 'user',
-    text: userText,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-  }
-}
-
-const createSubmittedUserMessage = (state: Readonly<PrototypeState>, userText: string): ChatMessage => {
-  const attachments = getComposerAttachments(state)
-  const userMessage = createUserMessage(userText)
-  if (attachments.length === 0) {
-    return userMessage
-  }
-  return {
-    ...userMessage,
-    attachments,
-  }
-}
-
-const getSessionById = (sessions: readonly ChatSession[], sessionId: string): ChatSession | undefined => {
-  return sessions.find((session) => session.id === sessionId)
-}
-
-const shouldKeepOptimisticState = (
-  optimisticState: Readonly<PrototypeState>,
-  refreshedState: Readonly<PrototypeState>,
-  sessionId: string,
-): boolean => {
-  const optimisticSession = getSessionById(optimisticState.sessions, sessionId)
-  const refreshedSession = getSessionById(refreshedState.sessions, sessionId)
-  return !!optimisticSession && optimisticSession.messages.length > 0 && !!refreshedSession && refreshedSession.messages.length === 0
-}
-
-const createSession = (state: Readonly<PrototypeState>, sessionId: string, userText: string): ChatSession => {
+const createSession = (state: Readonly<PrototypeState>, sessionId: string): ChatSession => {
   return {
     id: sessionId,
-    messages: [createUserMessage(userText)],
+    messages: [],
     ...(state.selectedProjectId
       ? {
           projectId: state.selectedProjectId,
@@ -125,30 +88,16 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     return state
   }
 
-  const optimisticUserMessage = createSubmittedUserMessage(state, userText)
-
   let { selectedSessionId } = state
   const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
   const sessions: readonly ChatSession[] = createdSessionFromList
     ? await (async (): Promise<readonly ChatSession[]> => {
         selectedSessionId = crypto.randomUUID()
-        const newSession: ChatSession = {
-          ...createSession(state, selectedSessionId, userText),
-          messages: [optimisticUserMessage],
-        }
+        const newSession = createSession(state, selectedSessionId)
         await saveChatSession(newSession)
         return [...state.sessions, newSession]
       })()
-    : state.sessions.map((session): ChatSession => {
-        if (session.id !== selectedSessionId) {
-          return session
-        }
-        return {
-          ...session,
-          messages: [...session.messages, optimisticUserMessage],
-          status: 'in-progress',
-        }
-      })
+    : state.sessions
 
   await ensureSubscribed(state.uid, selectedSessionId)
 
@@ -183,12 +132,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   setState(state.uid, effectiveState)
   try {
     await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    const refreshedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
-    if (shouldKeepOptimisticState(effectiveState, refreshedState, selectedSessionId)) {
-      return effectiveState
-    }
-    setState(state.uid, refreshedState)
-    return refreshedState
+    return effectiveState
   } catch {
     return effectiveState
   }

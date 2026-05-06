@@ -28,27 +28,8 @@ const createState = (): PrototypeState => {
 
 test('handleRpcSubmit should create a session, subscribe to storage updates and delegate to coordinator', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        {
-          id: 'message-2',
-          role: 'assistant',
-          text: 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.',
-          time: '10:01',
-        },
-      ],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
-  })
-  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
@@ -61,40 +42,19 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
   expect(result.viewMode).toBe('detail')
   expect(result.chatInputHistory).toEqual(['hello from e2e'])
   expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
-  expect(result.selectedSessionId).not.toBe('session-1')
-  expect(result.sessions).toEqual([
-    { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
-    {
-      id: result.selectedSessionId,
-      lastActiveTime: '10:01',
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        {
-          id: 'message-2',
+      messages: [],
           role: 'assistant',
-          text: 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.',
+      status: 'in-progress',
           time: '10:01',
         },
       ],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    },
-  ])
-  expect(result.parsedMessages).toEqual([
-    {
-      id: 'message-1',
-      parsedContent: [{ type: 'text' }],
-      text: 'hello from e2e',
-    },
-    {
+  expect(result.parsedMessages).toEqual([])
       id: 'message-2',
       parsedContent: [{ type: 'text' }],
       text: 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.',
     },
   ])
-  expect(mockStorageRpc.invocations).toEqual([
-    [
+        messages: [],
       'ChatStorage.setSession',
       {
         id: result.selectedSessionId,
@@ -102,12 +62,6 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
         messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
         projectId: 'project-1',
         status: 'in-progress',
-        title: 'Chat 2',
-      },
-    ],
-    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
-    ['ChatStorage.listSessions'],
-    ['ChatStorage.getSession', result.selectedSessionId],
   ])
   expect(mockParsingRpc.invocations).toEqual([
     [
@@ -136,24 +90,10 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
   ])
 })
 
-test('handleRpcSubmit should rehydrate persisted messages immediately for the test model', async () => {
+test('handleRpcSubmit should wait for storage updates instead of rehydrating persisted messages immediately for the test model', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        { id: 'message-2', role: 'assistant', text: 'Mock AI response: I received "hello from e2e".', time: '10:01' },
-      ],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
-  })
-  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
@@ -166,29 +106,14 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
   expect(result.composerValue).toBe('')
   expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
   expect(result.viewMode).toBe('detail')
-  expect(result.parsedMessages).toEqual([
-    {
-      id: 'message-1',
-      parsedContent: [{ type: 'text' }],
-      text: 'hello from e2e',
-    },
-    {
-      id: 'message-2',
-      parsedContent: [{ type: 'text' }],
-      text: 'Mock AI response: I received "hello from e2e".',
-    },
-  ])
+  expect(result.parsedMessages).toEqual([])
   expect(result.sessions).toEqual([
     { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
     {
       id: result.selectedSessionId,
-      lastActiveTime: '10:01',
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        { id: 'message-2', role: 'assistant', text: 'Mock AI response: I received "hello from e2e".', time: '10:01' },
-      ],
+      messages: [],
       projectId: 'project-1',
-      status: 'finished',
+      status: 'in-progress',
       title: 'Chat 2',
     },
   ])
@@ -197,19 +122,13 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
       'ChatStorage.setSession',
       {
         id: result.selectedSessionId,
-        lastActiveTime: expect.any(String),
-        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        messages: [],
         projectId: 'project-1',
         status: 'in-progress',
         title: 'Chat 2',
       },
     ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
-    ['ChatStorage.listSessions'],
-    ['ChatStorage.getSession', result.selectedSessionId],
-  ])
-  expect(mockParsingRpc.invocations).toEqual([
-    ['ChatMessageParsing.parseMessageContents', ['hello from e2e', 'Mock AI response: I received "hello from e2e".']],
   ])
   expect(mockCoordinatorRpc.invocations).toEqual([
     ['ChatCoordinator.registerMockResponse', { text: 'Mock AI response: I received "hello from e2e".' }],
@@ -233,16 +152,8 @@ test('handleRpcSubmit should rehydrate persisted messages immediately for the te
   ])
 })
 
-test('handleRpcSubmit should keep an optimistic user message when mock api submission fails for an existing session', async () => {
+test('handleRpcSubmit should leave existing session messages unchanged when mock api submission fails', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [],
-      projectId: 'project-1',
-      status: 'idle',
-      title: 'Chat 1',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.subscribeSessionUpdates': async () => {},
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
@@ -271,32 +182,7 @@ test('handleRpcSubmit should keep an optimistic user message when mock api submi
 
   expect(result.composerValue).toBe('')
   expect(result.selectedSessionId).toBe('session-1')
-  expect(result.sessions).toEqual([
-    {
-      id: 'session-1',
-      messages: [
-        {
-          attachments: [
-            {
-              attachmentId: 'attachment-1',
-              displayType: 'image',
-              mimeType: 'image/svg+xml',
-              name: 'photo.svg',
-              previewSrc: 'data:image/svg+xml;base64,PHN2Zw==',
-              size: 67,
-            },
-          ],
-          id: expect.any(String),
-          role: 'user',
-          text: 'hello from e2e',
-          time: expect.any(String),
-        },
-      ],
-      projectId: 'project-1',
-      status: 'in-progress',
-      title: 'Chat 1',
-    },
-  ])
+  expect(result.sessions).toEqual(state.sessions)
   expect(mockStorageRpc.invocations).toEqual([
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: 'session-1', type: 'session', uid: 1 }],
   ])
@@ -332,19 +218,8 @@ test('handleRpcSubmit should keep an optimistic user message when mock api submi
 
 test('handleRpcSubmit should forward composer attachments to coordinator', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [{ id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' }],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
-  })
-  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }]],
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
@@ -358,12 +233,18 @@ test('handleRpcSubmit should forward composer attachments to coordinator', async
   await handleRpcSubmit(state)
 
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.setSession', expect.any(Object)],
+    [
+      'ChatStorage.setSession',
+      {
+        id: expect.any(String),
+        messages: [],
+        projectId: 'project-1',
+        status: 'in-progress',
+        title: 'Chat 2',
+      },
+    ],
     ['ChatStorage.subscribeSessionUpdates', expect.any(Object)],
-    ['ChatStorage.listSessions'],
-    ['ChatStorage.getSession', expect.any(String)],
   ])
-  expect(mockParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['hello from e2e']]])
   expect(mockCoordinatorRpc.invocations).toEqual([
     [
       'ChatCoordinator.handleSubmit',
@@ -387,22 +268,8 @@ test('handleRpcSubmit should forward composer attachments to coordinator', async
 
 test('handleRpcSubmit should route useMockApi submissions through the coordinator test model', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        { id: 'message-2', role: 'assistant', text: '[API](https://example.com/query(arg))', time: '10:01' },
-      ],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
-  })
-  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
@@ -420,7 +287,7 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
     { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
     {
       id: result.selectedSessionId,
-      messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+      messages: [],
       projectId: 'project-1',
       status: 'in-progress',
       title: 'Chat 2',
@@ -431,8 +298,7 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
       'ChatStorage.setSession',
       {
         id: result.selectedSessionId,
-        lastActiveTime: expect.any(String),
-        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        messages: [],
         projectId: 'project-1',
         status: 'in-progress',
         title: 'Chat 2',
@@ -440,7 +306,6 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
     ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
   ])
-  expect(mockParsingRpc.invocations).toEqual([])
   expect(mockCoordinatorRpc.invocations).toEqual([
     [
       'ChatCoordinator.handleSubmit',
@@ -464,27 +329,8 @@ test('handleRpcSubmit should route useMockApi submissions through the coordinato
 
 test('handleRpcSubmit should sync backend auth and submit own-backend requests through coordinator', async () => {
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getSession': async (id: string) => ({
-      id,
-      messages: [
-        { id: 'message-1', role: 'user', text: 'hello from e2e', time: '10:00' },
-        {
-          id: 'message-2',
-          role: 'assistant',
-          text: 'Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.',
-          time: '10:01',
-        },
-      ],
-      projectId: 'project-1',
-      status: 'finished',
-      title: 'Chat 2',
-    }),
-    'ChatStorage.listSessions': async () => [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
-  })
-  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async () => [[{ type: 'text' }], [{ type: 'text' }]],
   })
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
@@ -513,22 +359,13 @@ test('handleRpcSubmit should sync backend auth and submit own-backend requests t
       'ChatStorage.setSession',
       {
         id: result.selectedSessionId,
-        lastActiveTime: expect.any(String),
-        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        messages: [],
         projectId: 'project-1',
         status: 'in-progress',
         title: 'Chat 2',
       },
     ],
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
-    ['ChatStorage.listSessions'],
-    ['ChatStorage.getSession', result.selectedSessionId],
-  ])
-  expect(mockParsingRpc.invocations).toEqual([
-    [
-      'ChatMessageParsing.parseMessageContents',
-      ['hello from e2e', 'Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.'],
-    ],
   ])
   expect(mockCoordinatorRpc.invocations).toEqual([
     [
