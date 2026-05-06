@@ -408,9 +408,7 @@ test('handleRpcSubmit should mark an existing session as in progress before dele
 
   const result = await handleRpcSubmit(state)
 
-  expect(result.sessions).toEqual([
-    { id: 'session-1', messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 1' },
-  ])
+  expect(result.sessions).toEqual([{ id: 'session-1', messages: [], projectId: 'project-1', status: 'in-progress', title: 'Chat 1' }])
   expect(result.lastSubmittedSessionId).toBe('session-1')
   expect(mockStorageRpc.invocations).toEqual([
     ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: 'session-1', type: 'session', uid: 1 }],

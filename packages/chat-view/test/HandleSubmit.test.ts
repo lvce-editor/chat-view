@@ -51,7 +51,10 @@ test('handleSubmit should prefer newer local state applied during submit', async
         ...state,
         composerValue: '',
         selectedSessionId: 'session-2',
-        sessions: [...state.sessions, { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' }],
+        sessions: [
+          ...state.sessions,
+          { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' },
+        ],
         viewMode: 'detail' as const,
       }
       set(state.uid, state, newerState)

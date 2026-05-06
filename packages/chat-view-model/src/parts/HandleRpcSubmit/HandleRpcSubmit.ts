@@ -37,11 +37,7 @@ const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: 
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
 
-const updateSessionStatus = (
-  sessions: readonly ChatSession[],
-  sessionId: string,
-  status: ChatSession['status'],
-): readonly ChatSession[] => {
+const updateSessionStatus = (sessions: readonly ChatSession[], sessionId: string, status: ChatSession['status']): readonly ChatSession[] => {
   return sessions.map((session) => {
     if (session.id !== sessionId) {
       return session
