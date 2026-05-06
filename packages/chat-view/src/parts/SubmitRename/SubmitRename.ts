@@ -16,7 +16,7 @@ const getSubmittedRenameState = (state: ChatState): ChatState => {
 }
 
 export const submitRename = async (state: ChatState): Promise<ChatState> => {
-  const { composerValue, renamingSessionId, sessions } = state
+  const { composerValue, renamingSessionId } = state
   const title = composerValue.trim()
   if (!renamingSessionId || !title) {
     return {
