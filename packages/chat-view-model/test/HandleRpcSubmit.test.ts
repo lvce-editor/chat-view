@@ -603,3 +603,102 @@ test('handleChatStorageUpdate should replace an empty placeholder selection in d
     ['Chat.rerender'],
   ])
 })
+
+test('handleChatStorageUpdate should fall back to plain text when parsing fails', async () => {
+  using mockStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getSession': async () => ({
+      id: 'session-2',
+      messages: [
+        { id: 'message-1', role: 'user', text: 'hello from storage', time: '10:00' },
+        { id: 'message-2', role: 'assistant', text: 'response from storage', time: '10:01' },
+      ],
+      projectId: 'project-1',
+      status: 'finished',
+      title: 'Chat 2',
+    }),
+    'ChatStorage.listSessions': async () => [
+      { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
+      { id: 'session-2', messages: [], projectId: 'project-1', status: 'finished', title: 'Chat 2' },
+    ],
+  })
+  using mockParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => {
+      throw new Error('parse failed')
+    },
+  })
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Chat.applyViewModelState': async () => {},
+    'Chat.rerender': async () => {},
+  })
+  const state: PrototypeState = {
+    ...createState(),
+    composerValue: '',
+    selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' }],
+    viewMode: 'detail' as const,
+  }
+  setState(1, state)
+
+  await handleChatStorageUpdate(1, 'session-2')
+
+  expect(mockStorageRpc.invocations).toEqual([['ChatStorage.listSessions'], ['ChatStorage.getSession', 'session-2']])
+  expect(mockParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['hello from storage', 'response from storage']]])
+  expect(mockRendererRpc.invocations).toEqual([
+    [
+      'Chat.applyViewModelState',
+      1,
+      {
+        ...state,
+        parsedMessages: [
+          {
+            id: 'message-1',
+            parsedContent: [
+              {
+                children: [
+                  {
+                    text: 'hello from storage',
+                    type: 'text',
+                  },
+                ],
+                type: 'text',
+              },
+            ],
+            text: 'hello from storage',
+          },
+          {
+            id: 'message-2',
+            parsedContent: [
+              {
+                children: [
+                  {
+                    text: 'response from storage',
+                    type: 'text',
+                  },
+                ],
+                type: 'text',
+              },
+            ],
+            text: 'response from storage',
+          },
+        ],
+        selectedSessionId: 'session-2',
+        sessions: [
+          { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
+          {
+            id: 'session-2',
+            lastActiveTime: '10:01',
+            messages: [
+              { id: 'message-1', role: 'user', text: 'hello from storage', time: '10:00' },
+              { id: 'message-2', role: 'assistant', text: 'response from storage', time: '10:01' },
+            ],
+            projectId: 'project-1',
+            status: 'finished',
+            title: 'Chat 2',
+          },
+        ],
+        viewMode: 'detail',
+      },
+    ],
+    ['Chat.rerender'],
+  ])
+})

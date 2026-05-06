@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { ChatViewModelWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleKeyDown from '../src/parts/HandleKeyDown/HandleKeyDown.ts'
