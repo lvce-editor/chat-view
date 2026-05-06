@@ -3,6 +3,7 @@ import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
+import { set } from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
 test('handleSubmit should delegate to chat view model worker', async () => {
   using mockRpc = ChatViewModelWorker.registerMockRpc({
@@ -40,5 +41,39 @@ test('handleSubmit should normalize object-shaped worker errors', async () => {
 
   await expect(HandleSubmit.handleSubmit(state)).rejects.toThrow('missing attachments')
 
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+})
+
+test('handleSubmit should prefer newer local state applied during submit', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async (state: ChatState) => {
+      const newerState = {
+        ...state,
+        composerValue: '',
+        selectedSessionId: 'session-2',
+        sessions: [...state.sessions, { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' }],
+        viewMode: 'detail' as const,
+      }
+      set(state.uid, state, newerState)
+      return {
+        ...state,
+        composerValue: '',
+        selectedSessionId: 'session-2',
+        sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+        viewMode: 'detail' as const,
+      }
+    },
+  })
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result).toEqual({
+    ...state,
+    composerValue: '',
+    selectedSessionId: 'session-2',
+    sessions: [...state.sessions, { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' }],
+    viewMode: 'detail',
+  })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
