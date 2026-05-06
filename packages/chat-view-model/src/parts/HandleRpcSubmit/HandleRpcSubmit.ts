@@ -7,6 +7,41 @@ import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/
 import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
+const rehydrationRetryDelays = [10, 20, 50, 100, 200]
+
+const wait = async (delay: number): Promise<void> => {
+  await new Promise((resolve) => setTimeout(resolve, delay))
+}
+
+const isHydratedSessionReady = (state: Readonly<PrototypeState>, sessionId: string): boolean => {
+  const selectedSession = state.sessions.find((session) => session.id === sessionId)
+  return !!selectedSession && selectedSession.messages.length > 0 && selectedSession.status !== 'in-progress'
+}
+
+const rehydrateSubmittedSession = async (state: Readonly<PrototypeState>, sessionId: string): Promise<PrototypeState> => {
+  let nextState: PrototypeState
+  try {
+    nextState = await getNextStateFromStorageUpdate(state, sessionId)
+  } catch {
+    return state
+  }
+  if (isHydratedSessionReady(nextState, sessionId)) {
+    return nextState
+  }
+  for (const delay of rehydrationRetryDelays) {
+    await wait(delay)
+    try {
+      nextState = await getNextStateFromStorageUpdate(nextState, sessionId)
+    } catch {
+      return nextState
+    }
+    if (isHydratedSessionReady(nextState, sessionId)) {
+      return nextState
+    }
+  }
+  return nextState
+}
+
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
   const { composerAttachments } = state
   return Array.isArray(composerAttachments) ? composerAttachments : []
@@ -133,7 +168,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   setState(state.uid, effectiveState)
   try {
     await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    const updatedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
+    const updatedState = await rehydrateSubmittedSession(effectiveState, selectedSessionId)
     setState(state.uid, updatedState)
     return updatedState
   } catch {
