@@ -42,32 +42,30 @@ test('handleRpcSubmit should create a session, subscribe to storage updates and 
   expect(result.viewMode).toBe('detail')
   expect(result.chatInputHistory).toEqual(['hello from e2e'])
   expect(result.lastSubmittedSessionId).toBe(result.selectedSessionId)
+  expect(result.selectedSessionId).not.toBe('session-1')
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
+    {
+      id: result.selectedSessionId,
       messages: [],
-          role: 'assistant',
+      projectId: 'project-1',
       status: 'in-progress',
-          time: '10:01',
-        },
-      ],
-  expect(result.parsedMessages).toEqual([])
-      id: 'message-2',
-      parsedContent: [{ type: 'text' }],
-      text: 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.',
+      title: 'Chat 2',
     },
   ])
-        messages: [],
+  expect(result.parsedMessages).toEqual([])
+  expect(mockStorageRpc.invocations).toEqual([
+    [
       'ChatStorage.setSession',
       {
         id: result.selectedSessionId,
-        lastActiveTime: expect.any(String),
-        messages: [{ id: expect.any(String), role: 'user', text: 'hello from e2e', time: expect.any(String) }],
+        messages: [],
         projectId: 'project-1',
         status: 'in-progress',
-  ])
-  expect(mockParsingRpc.invocations).toEqual([
-    [
-      'ChatMessageParsing.parseMessageContents',
-      ['hello from e2e', 'OpenAI API key is not configured. Enter your OpenAI API key below and click Save.'],
+        title: 'Chat 2',
+      },
     ],
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: result.selectedSessionId, type: 'session', uid: 1 }],
   ])
   expect(mockCoordinatorRpc.invocations).toEqual([
     [
