@@ -492,6 +492,105 @@ test('getAiResponse should use backend completions for authenticated users by de
   }
 })
 
+test('getAiResponse should serialize assistant history as output_text for backend completions', async () => {
+  const originalFetch = globalThis.fetch
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    actualInit = args[1] as RequestInit | undefined
+    return {
+      json: async () => ({
+        output_text: 'Backend completion response',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-2',
+          role: 'assistant',
+          text: 'hi there',
+          time: '10:01',
+        },
+        {
+          id: 'message-3',
+          role: 'user',
+          text: 'please continue',
+          time: '10:02',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 4,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'please continue',
+    })
+
+    expect(result.text).toBe('Backend completion response')
+    const body = actualInit?.body
+    expect(typeof body).toBe('string')
+    if (typeof body !== 'string') {
+      throw new TypeError('Expected backend completion request body to be a string')
+    }
+    expect(JSON.parse(body)).toEqual({
+      input: [
+        {
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
+          role: 'user',
+        },
+        {
+          content: [
+            {
+              text: 'hi there',
+              type: 'output_text',
+            },
+          ],
+          role: 'assistant',
+        },
+        {
+          content: [
+            {
+              text: 'please continue',
+              type: 'input_text',
+            },
+          ],
+          role: 'user',
+        },
+      ],
+      max_tool_calls: defaultMaxToolCalls,
+      model: 'gpt-4o-mini',
+      tool_choice: 'auto',
+      tools: [],
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getAiResponse should pass tools to backend responses payload', async () => {
   using mockChatToolRpc = ChatToolWorker.registerMockRpc({
     'ChatTool.getTools': async () => [
