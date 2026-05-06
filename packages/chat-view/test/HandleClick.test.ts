@@ -184,7 +184,7 @@ test('handleClick should rename a session via quick input', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockQuickPickRpc = registerMockQuickPickRpc({
-    'QuickPick.showQuickInput': async (options: { initialValue: string }) => {
+    'QuickPick.showQuickInput': async (options) => {
       expect(options).toEqual({ initialValue: 'Chat 1', waitUntil: 'finished' })
       return {
         canceled: false,

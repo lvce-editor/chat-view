@@ -74,7 +74,7 @@ test('handleKeyDown should rename when in rename mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockQuickPickRpc = registerMockQuickPickRpc({
-    'QuickPick.showQuickInput': async (options: { initialValue: string }) => {
+    'QuickPick.showQuickInput': async (options) => {
       expect(options).toEqual({ initialValue: 'Renamed Chat', waitUntil: 'finished' })
       return {
         canceled: false,

@@ -23,8 +23,7 @@ export const test: Test = async ({ Chat, ContextMenu, expect, FileSystem, Locato
   await expect(renameInput).toBeVisible()
   await expect(renameInput).toHaveValue('Chat 1')
 
-  await renameInput.fill('Renamed Chat')
-  await renameInput.press('Enter')
+  await renameInput.type('Renamed Chat\n')
 
   await expect(chatListItems).toHaveCount(1)
   await expect(chatListLabels).toHaveText('Renamed Chat')

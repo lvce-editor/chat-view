@@ -1,17 +1,16 @@
-import { QuickPickWorker } from '@lvce-editor/rpc-registry'
 import { createMockRpc } from '@lvce-editor/rpc'
+import { QuickPickWorker } from '@lvce-editor/rpc-registry'
 
 type MockCommand = (...args: readonly unknown[]) => unknown
 
-interface MockQuickPickRpc {
-  readonly invocations: readonly (readonly unknown[])[]
+type MockQuickPickRpc = ReturnType<typeof createMockRpc> & {
   [Symbol.dispose](): void
 }
 
-export const registerMockQuickPickRpc = (commandMap: Record<string, MockCommand>): MockQuickPickRpc => {
-  const mockRpc = createMockRpc({ commandMap }) as MockQuickPickRpc
+export const registerMockQuickPickRpc = (commandMap: Readonly<Record<string, MockCommand>>): MockQuickPickRpc => {
+  const mockRpc: MockQuickPickRpc = createMockRpc({ commandMap })
   QuickPickWorker.set(mockRpc)
-  mockRpc[Symbol.dispose] = () => {
+  mockRpc[Symbol.dispose] = (): void => {
     QuickPickWorker.set(createMockRpc({ commandMap: {} }))
   }
   return mockRpc

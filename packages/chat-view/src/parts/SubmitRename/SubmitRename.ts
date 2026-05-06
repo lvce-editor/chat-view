@@ -1,9 +1,8 @@
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { getMinComposerHeightForState } from '../GetComposerHeight/GetComposerHeight.ts'
 import { renameSession } from '../RenameSession/RenameSession.ts'
 
-const getSubmittedRenameState = (state: ChatState, sessions: readonly ChatSession[]): ChatState => {
+const getSubmittedRenameState = (state: ChatState): ChatState => {
   return {
     ...state,
     composerHeight: getMinComposerHeightForState(state),
@@ -12,7 +11,7 @@ const getSubmittedRenameState = (state: ChatState, sessions: readonly ChatSessio
     composerValue: '',
     inputSource: 'script',
     renamingSessionId: '',
-    sessions,
+    sessions: state.sessions,
   }
 }
 
@@ -26,5 +25,5 @@ export const submitRename = async (state: ChatState): Promise<ChatState> => {
     }
   }
   const renamedState = await renameSession(state, renamingSessionId, title)
-  return getSubmittedRenameState(renamedState, renamedState.sessions)
+  return getSubmittedRenameState(renamedState)
 }
