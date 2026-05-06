@@ -33,7 +33,7 @@ const waitForLocalSubmitUpdates = async (fallbackState: Readonly<ChatState>): Pr
       return nextState
     }
   }
-  return get(fallbackState.uid)?.newState || fallbackState
+  return fallbackState
 }
 
 const getErrorMessage = (error: unknown): string => {

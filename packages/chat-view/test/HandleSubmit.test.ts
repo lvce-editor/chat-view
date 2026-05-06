@@ -80,3 +80,28 @@ test('handleSubmit should prefer newer local state applied during submit', async
   })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
+
+test('handleSubmit should not fall back to stale local state when no newer update arrives', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async (state: ChatState) => ({
+      ...state,
+      composerValue: '',
+      selectedSessionId: 'session-2',
+      sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+      viewMode: 'detail' as const,
+    }),
+  })
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
+  set(state.uid, state, state)
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result).toEqual({
+    ...state,
+    composerValue: '',
+    selectedSessionId: 'session-2',
+    sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+    viewMode: 'detail',
+  })
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+})

@@ -436,6 +436,7 @@ test('handleRpcSubmit should mark an existing session as in progress before dele
 })
 
 test('handleRpcSubmit should return state from storage update events received during submit', async () => {
+  const uid = 99
   using mockStorageRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.setSession': async () => {},
     'ChatStorage.subscribeSessionUpdates': async () => {},
@@ -479,11 +480,12 @@ test('handleRpcSubmit should return state from storage update events received du
         ],
         viewMode: 'detail',
       }
-      setState(1, updatedState)
+      setState(uid, updatedState)
     },
   })
   const state = {
     ...createState(),
+    uid,
     selectedSessionId: 'session-1',
     viewMode: 'detail' as const,
   }
@@ -516,7 +518,7 @@ test('handleRpcSubmit should return state from storage update events received du
     },
   ])
   expect(mockStorageRpc.invocations).toEqual([
-    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: 'session-1', type: 'session', uid: 1 }],
+    ['ChatStorage.subscribeSessionUpdates', { rpcId: rpcIdViewModel, sessionId: 'session-1', type: 'session', uid }],
   ])
   expect(mockCoordinatorRpc.invocations).toEqual([
     ['ChatCoordinator.registerMockResponse', { text: 'Mock AI response: I received "hello from e2e".' }],
