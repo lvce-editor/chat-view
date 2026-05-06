@@ -4,6 +4,7 @@ import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachmen
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getNextStateFromStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
@@ -132,7 +133,9 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   setState(state.uid, effectiveState)
   try {
     await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    return effectiveState
+    const updatedState = await getNextStateFromStorageUpdate(effectiveState, selectedSessionId)
+    setState(state.uid, updatedState)
+    return updatedState
   } catch {
     return effectiveState
   }
