@@ -1,10 +1,7 @@
 import type { ComposerAttachment } from '../../ComposerAttachment/ComposerAttachment.ts'
 import type { OpenAiInputTextPart } from '../OpenAiInputPart/OpenAiInputPart.ts'
 
-export const getAttachmentTextPart = (
-  attachment: ComposerAttachment,
-  type: OpenAiInputTextPart['type'] = 'input_text',
-): OpenAiInputTextPart => {
+export const getAttachmentTextPart = (attachment: ComposerAttachment, type: OpenAiInputTextPart['type'] = 'input_text'): OpenAiInputTextPart => {
   switch (attachment.displayType) {
     case 'file':
       return {
