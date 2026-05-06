@@ -8,10 +8,11 @@ type MockQuickPickRpc = ReturnType<typeof createMockRpc> & {
 }
 
 export const registerMockQuickPickRpc = (commandMap: Readonly<Record<string, MockCommand>>): MockQuickPickRpc => {
-  const mockRpc: MockQuickPickRpc = createMockRpc({ commandMap })
+  const mockRpc = Object.assign(createMockRpc({ commandMap }), {
+    [Symbol.dispose](): void {
+      QuickPickWorker.set(createMockRpc({ commandMap: {} }))
+    },
+  })
   QuickPickWorker.set(mockRpc)
-  mockRpc[Symbol.dispose] = (): void => {
-    QuickPickWorker.set(createMockRpc({ commandMap: {} }))
-  }
   return mockRpc
 }
