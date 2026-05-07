@@ -11,7 +11,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleClickBack()
 
   const composer = Locator('.ChatInputBox[name="composer"]')
-  const createSessionButton = Locator('.IconButton[name="create-session"]')
   const backButton = Locator('.ChatHeader .IconButton[name="back"]')
   const chatListItems = Locator('.ChatList .ChatListItem')
 
@@ -30,7 +29,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(composer).toBeFocused()
 
   await composer.type('hello from first message')
-  const sendButton = Locator('.Button[name="send"]')
   await Command.execute('Chat.handleClick', 'send')
 
   await expect(chatListItems).toHaveCount(4)
