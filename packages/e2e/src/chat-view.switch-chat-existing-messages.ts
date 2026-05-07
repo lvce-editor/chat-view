@@ -49,7 +49,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(chatListLabels.nth(0)).toHaveText('Chat B')
   await expect(chatListLabels.nth(1)).toHaveText('Chat A')
 
-  await chatListLabels.nth(1).click()
+  await Command.execute('Chat.handleClick', 'session:Chat A')
 
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toContainText('chat-a-user')
@@ -58,7 +58,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleClickBack()
 
   await expect(chatListLabels.nth(0)).toHaveText('Chat B')
-  await chatListLabels.nth(0).click()
+  await Command.execute('Chat.handleClick', 'session:Chat B')
 
   await expect(messages).toHaveCount(2)
   await expect(messages.nth(0)).toContainText('chat-b-user')

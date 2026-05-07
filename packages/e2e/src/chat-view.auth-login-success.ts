@@ -31,16 +31,18 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const loginButton = Locator('button[name="login"]')
   const logoutButton = Locator('button[name="logout"]')
+  const authError = Locator('.ChatAuthError')
+  const authName = Locator('.ChatHeaderAuthName')
 
   await expect(loginButton).toBeVisible()
   await expect(logoutButton).toHaveCount(0)
 
-  await loginButton.click()
+  await Command.execute('Chat.handleClick', 'login')
 
-  await expect(Locator('.ChatAuthError')).toHaveCount(0)
+  await expect(authError).toHaveCount(0)
   await expect(logoutButton).toBeVisible()
   await expect(loginButton).toHaveCount(0)
-  await expect(Locator('.ChatHeaderAuthName')).toHaveText('test')
+  await expect(authName).toHaveText('test')
 
   const authState = (await Command.execute('Chat.getAuthState')) as AuthState
   assertEqual(authState.authAccessToken, 'access-token-1', 'auth access token')

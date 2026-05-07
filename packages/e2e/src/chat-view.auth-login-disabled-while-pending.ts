@@ -22,7 +22,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(loginButton).toBeVisible()
 
-  const clickPromise = loginButton.click()
+  const clickPromise = Command.execute('Chat.handleClick', 'login')
   await expect(pendingLoginButton).toBeVisible()
   await clickPromise
 

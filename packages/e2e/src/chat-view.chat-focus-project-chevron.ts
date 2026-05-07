@@ -16,7 +16,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   const toggleChatFocusButton = Locator('.IconButton[name="toggle-chat-focus"]')
   await expect(toggleChatFocusButton).toBeVisible()
-  await toggleChatFocusButton.click()
+  await Command.execute('Chat.handleClick', 'toggle-chat-focus')
 
   const projectLabels = Locator('.ProjectListItemLabel')
   const projectLabel = projectLabels.nth(0)
@@ -25,9 +25,9 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(projectLabels).toHaveCount(1)
   await expect(projectChevron).toHaveClass('ProjectListChevron MaskIcon MaskIconChevronDown')
 
-  await projectLabel.click()
+  await Command.execute('Chat.handleClick', 'project:project-1')
   await expect(projectChevron).toHaveClass('ProjectListChevron MaskIcon MaskIconChevronRight')
 
-  await projectLabel.click()
+  await Command.execute('Chat.handleClick', 'project:project-1')
   await expect(projectChevron).toHaveClass('ProjectListChevron MaskIcon MaskIconChevronDown')
 }

@@ -4,14 +4,13 @@ export const name = 'chat-view.create-session-behavior'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.openMockSession('Dummy Chat A', [])
   await Chat.openMockSession('Dummy Chat B', [])
   await Chat.openMockSession('Dummy Chat C', [])
   await Chat.handleClickBack()
 
   const composer = Locator('.ChatInputBox[name="composer"]')
-  const createSessionButton = Locator('.IconButton[name="create-session"]')
   const backButton = Locator('.ChatHeader .IconButton[name="back"]')
   const chatListItems = Locator('.ChatList .ChatListItem')
 
@@ -22,7 +21,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await composer.type('draft before creating a new chat')
   await expect(composer).toHaveValue('draft before creating a new chat')
 
-  await createSessionButton.click()
+  await Command.execute('Chat.handleClick', 'create-session')
 
   await expect(chatListItems).toHaveCount(3)
   await expect(backButton).toHaveCount(0)
@@ -30,8 +29,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(composer).toBeFocused()
 
   await composer.type('hello from first message')
-  const sendButton = Locator('.Button[name="send"]')
-  await sendButton.click()
+  await Command.execute('Chat.handleClick', 'send')
 
   await expect(chatListItems).toHaveCount(4)
 }

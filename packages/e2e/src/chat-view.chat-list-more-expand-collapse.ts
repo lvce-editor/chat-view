@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-list-more-expand-collapse'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
@@ -30,13 +30,13 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(moreToggle).toHaveCount(1)
   await expect(moreToggle).toHaveText('Show 2 More')
 
-  await moreToggle.click()
+  await Command.execute('Chat.handleClick', 'chat-list-show-more')
   await expect(sessionTitles).toHaveCount(5)
   await expect(sessionTitles.nth(3)).toHaveText('Chat 4')
   await expect(sessionTitles.nth(4)).toHaveText('Chat 5')
   await expect(moreToggle).toHaveText('Show Less')
 
-  await moreToggle.click()
+  await Command.execute('Chat.handleClick', 'chat-list-show-more')
   await expect(sessionTitles).toHaveCount(3)
   await expect(moreToggle).toHaveText('Show 2 More')
 }

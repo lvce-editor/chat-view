@@ -4,7 +4,7 @@ export const name = 'chat-view.multi-chat-detail-navigation'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -46,7 +46,11 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // @ts-ignore
   const chatOneLabel = Locator('.ChatListItemLabel').filter({ hasText: 'Chat 1' })
   await expect(chatOneLabel).toHaveCount(1)
-  await chatOneLabel.click()
+  const chatOneLabelName = await chatOneLabel.getAttribute('name')
+  if (!chatOneLabelName) {
+    throw new Error('chat one label is missing name attribute')
+  }
+  await Command.execute('Chat.handleClick', chatOneLabelName)
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
   await expect(chatMessages.nth(0)).toContainText('chat-1-user')
