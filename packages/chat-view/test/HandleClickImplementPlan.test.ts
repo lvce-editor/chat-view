@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { getImplementationPrompt } from '../src/parts/GetImplementationPrompt/GetImplementationPrompt.ts'
 import { handleClickImplementPlan } from '../src/parts/HandleClickImplementPlan/HandleClickImplementPlan.ts'
@@ -19,9 +19,6 @@ afterEach(() => {
 test('handleClickImplementPlan should switch to agent mode and submit the saved plan', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
   const state = {
     ...createDefaultState(),
     agentMode: 'plan' as const,
@@ -51,6 +48,41 @@ test('handleClickImplementPlan should switch to agent mode and submit the saved 
     ],
     viewMode: 'detail' as const,
   }
+  const implementationPrompt = getImplementationPrompt('1. Read the relevant files\n2. Update the code\n3. Run tests')
+  const preparedState = {
+    ...state,
+    agentMode: 'agent' as const,
+    composerSelectionEnd: implementationPrompt.length,
+    composerSelectionStart: implementationPrompt.length,
+    composerValue: implementationPrompt,
+    inputSource: 'script' as const,
+  }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => ({
+      ...preparedState,
+      composerValue: '',
+      sessions: [
+        {
+          ...preparedState.sessions[0],
+          messages: [
+            ...preparedState.sessions[0].messages,
+            {
+              id: 'message-user-2',
+              role: 'user' as const,
+              text: implementationPrompt,
+              time: '10:02',
+            },
+            {
+              id: 'message-assistant-2',
+              role: 'assistant' as const,
+              text: 'Mock AI response: Executed the plan.',
+              time: '10:03',
+            },
+          ],
+        },
+      ],
+    }),
+  })
 
   const result = await handleClickImplementPlan(state)
 
@@ -68,7 +100,7 @@ test('handleClickImplementPlan should switch to agent mode and submit the saved 
       text: expect.stringContaining('Mock AI response:'),
     }),
   )
-  expect(mockRendererRpc.invocations).toEqual([['Chat.rerender']])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', preparedState]])
 })
 
 test('handleClickImplementPlan should ignore sessions without an executable plan', async () => {

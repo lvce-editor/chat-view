@@ -4,7 +4,7 @@ import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachmen
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
+import { getState, getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
   const { composerAttachments } = state
@@ -35,6 +35,18 @@ const getCoordinatorModelId = (state: Readonly<PrototypeState>): string => {
 
 const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
+}
+
+const updateSessionStatus = (sessions: readonly ChatSession[], sessionId: string, status: ChatSession['status']): readonly ChatSession[] => {
+  return sessions.map((session) => {
+    if (session.id !== sessionId) {
+      return session
+    }
+    return {
+      ...session,
+      status,
+    }
+  })
 }
 
 const createSession = (state: Readonly<PrototypeState>, sessionId: string): ChatSession => {
@@ -90,7 +102,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   let { selectedSessionId } = state
   const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
-  const sessions: readonly ChatSession[] = createdSessionFromList
+  const initialSessions: readonly ChatSession[] = createdSessionFromList
     ? await (async (): Promise<readonly ChatSession[]> => {
         selectedSessionId = crypto.randomUUID()
         const newSession = createSession(state, selectedSessionId)
@@ -99,7 +111,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       })()
     : state.sessions
 
-  await ensureSubscribed(state.uid, selectedSessionId)
+  const sessions = createdSessionFromList ? initialSessions : updateSessionStatus(initialSessions, selectedSessionId, 'in-progress')
 
   const nextState: PrototypeState = {
     ...state,
@@ -114,6 +126,10 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     viewMode: createdSessionFromList ? 'detail' : state.viewMode,
   }
 
+  setState(state.uid, nextState)
+
+  await ensureSubscribed(state.uid, selectedSessionId)
+
   const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
   const effectiveState = authState
@@ -123,16 +139,10 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       }
     : nextState
 
-  if (useMockApiEnabled(effectiveState)) {
-    setState(state.uid, effectiveState)
-    void submitToCoordinator(effectiveState, selectedSessionId, userText).catch(() => {})
-    return effectiveState
-  }
-
   setState(state.uid, effectiveState)
   try {
     await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    return effectiveState
+    return (getState(state.uid) as PrototypeState | undefined) || effectiveState
   } catch {
     return effectiveState
   }

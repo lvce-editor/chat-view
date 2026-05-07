@@ -117,7 +117,7 @@ test('syncBackendAuth should delegate to auth worker when enabled', async () => 
       userSubscriptionPlan: 'pro',
       userUsedTokens: 13,
     })
-    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', { backendUrl: 'https://backend.example.com' }]])
+    expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
   } finally {
     globalThis.fetch = originalFetch
   }

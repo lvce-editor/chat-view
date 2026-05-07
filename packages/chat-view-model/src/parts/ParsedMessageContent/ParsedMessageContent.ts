@@ -14,6 +14,20 @@ const emptyMessageContent: readonly unknown[] = [
   },
 ]
 
+const getPlainTextMessageContent = (text: string): readonly unknown[] => {
+  return [
+    {
+      children: [
+        {
+          text,
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ]
+}
+
 interface MessageLike {
   readonly id: string
   readonly text: string
@@ -56,10 +70,15 @@ export const parseAndStoreMessagesContent = async (
   if (messagesNeedingParsing.length === 0) {
     return parsedMessages
   }
-  const parsedContents = (await ChatMessageParsingWorker.invoke(
-    'ChatMessageParsing.parseMessageContents',
-    messagesNeedingParsing.map((message) => message.text),
-  )) as readonly (readonly unknown[])[]
+  let parsedContents: readonly (readonly unknown[])[]
+  try {
+    parsedContents = (await ChatMessageParsingWorker.invoke(
+      'ChatMessageParsing.parseMessageContents',
+      messagesNeedingParsing.map((message) => message.text),
+    )) as readonly (readonly unknown[])[]
+  } catch {
+    parsedContents = messagesNeedingParsing.map((message) => getPlainTextMessageContent(message.text))
+  }
   let nextParsedMessages = parsedMessages
   for (const [index, message] of messagesNeedingParsing.entries()) {
     const parsedContent = message.text === '' ? emptyMessageContent : parsedContents[index]
