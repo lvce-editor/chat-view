@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.two-messages'
+export const name = 'chat-view.two-messages-and-open-debug'
 
 export const test: Test = async ({ Chat, expect, Locator, Command }) => {
   // arrange
