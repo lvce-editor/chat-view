@@ -36,7 +36,6 @@ const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: 
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
 
-
 const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> => {
   if (getSubscribedSessionId(uid) === sessionId) {
     return
@@ -45,9 +44,7 @@ const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> =
   setSubscribedSessionId(uid, sessionId)
 }
 
-
 // const handleSubmitWithExistingSession
-
 
 const createNewSession = async (): Promise<string> => {
   const sessionId = crypto.randomUUID()
@@ -55,17 +52,13 @@ const createNewSession = async (): Promise<string> => {
   const timestamp = date.toISOString()
   await ChatCoordinatorWorker.invoke('ChatCoordinator.createSession', {
     sessionId,
-    timestamp
+    timestamp,
   })
   return sessionId
 }
 
-
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  let { selectedSessionId, composerValue, viewMode, chatInputHistory, uid, systemPrompt, selectedModelId,
-    openApiApiKey
-
-  } = state
+  let { selectedSessionId, composerValue, viewMode, chatInputHistory, uid, systemPrompt, selectedModelId, openApiApiKey } = state
   const userText = composerValue.trim()
   if (!userText) {
     return
@@ -79,7 +72,6 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   if (shouldCreateNewSession) {
     actualSessionId = await createNewSession()
   }
-
 
   const nextState: PrototypeState = {
     ...state,
@@ -95,17 +87,15 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   setState(uid, nextState)
 
-
   await ensureSubscribed(uid, actualSessionId)
-
 
   const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
   const effectiveState = authState
     ? {
-      ...nextState,
-      ...authState,
-    }
+        ...nextState,
+        ...authState,
+      }
     : nextState
 
   setState(uid, effectiveState)
@@ -129,6 +119,4 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     text: userText,
     useOwnBackend: useOwnBackendEnabled(state),
   })
-
-
 }

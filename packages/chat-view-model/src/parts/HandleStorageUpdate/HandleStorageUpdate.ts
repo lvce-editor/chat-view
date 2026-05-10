@@ -57,7 +57,6 @@ export const getNextStateFromStorageUpdate = async (state: Readonly<PrototypeSta
   }
 }
 
-
 const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   // TODO update / requery list
   return state
@@ -80,11 +79,11 @@ const toMessages = (events: readonly any[]): readonly any[] => {
 
 const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): readonly any[] => {
   // TODO store messages independent of sessions
-  const newSessions = state.sessions.map(session => {
+  const newSessions = state.sessions.map((session) => {
     if (session.id === state.selectedSessionId) {
       return {
         ...session,
-        messages
+        messages,
       }
     }
     return session
@@ -93,8 +92,8 @@ const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): re
     return [
       {
         id: state.selectedSessionId,
-        messages
-      }
+        messages,
+      },
     ]
   }
   return newSessions
@@ -102,7 +101,7 @@ const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): re
 
 const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   // TODO requery messages
-  const { selectedSessionId, } = state
+  const { selectedSessionId } = state
   const events = await ChatStorageWorker.invoke('ChatStorage.getEvents', selectedSessionId)
   const messages = toMessages(events)
   const parsedMessages = await parseAndStoreMessagesContent([], messages)
@@ -111,11 +110,9 @@ const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise
   return {
     ...state,
     parsedMessages,
-    sessions: newSessions
-
+    sessions: newSessions,
   }
 }
-
 
 const getNextState = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   if (state.viewMode === 'detail') {
@@ -131,6 +128,5 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   }
   const nextState = await getNextState(state)
   setState(uid, nextState)
-  await RendererWorker.invoke('Chat.rerenderWithQuery', uid,)
-
+  await RendererWorker.invoke('Chat.rerenderWithQuery', uid)
 }

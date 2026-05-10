@@ -187,7 +187,6 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     voiceDictationEnabled = false,
   } = options
 
-
   const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
 
   const todoListItems = getTodoListItems(sessions, selectedSessionId)

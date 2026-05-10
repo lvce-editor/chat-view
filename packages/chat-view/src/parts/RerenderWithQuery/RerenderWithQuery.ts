@@ -8,7 +8,6 @@ export const rerenderWithQuery = async (state: ChatState): Promise<ChatState> =>
   }
   return {
     ...state,
-    ...newState
+    ...newState,
   }
-
 }
