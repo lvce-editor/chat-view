@@ -22,6 +22,4 @@ export const test: Test = async ({ Chat, expect, Locator, Command }) => {
   // assert
   const rows = Locator('.TableRow')
   await expect(rows).toHaveCount(4)
-
-  // TODO verify items are visible
 }
