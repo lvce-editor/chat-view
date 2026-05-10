@@ -16,31 +16,31 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
     const summary: ChatSession = {
       ...(session.branchName
         ? {
-            branchName: session.branchName,
-          }
+          branchName: session.branchName,
+        }
         : {}),
       id: session.id,
       ...(lastActiveTime
         ? {
-            lastActiveTime,
-          }
+          lastActiveTime,
+        }
         : {}),
       messages: [],
       ...(session.pullRequestUrl
         ? {
-            pullRequestUrl: session.pullRequestUrl,
-          }
+          pullRequestUrl: session.pullRequestUrl,
+        }
         : {}),
       ...(session.status
         ? {
-            status: session.status,
-          }
+          status: session.status,
+        }
         : {}),
       title: session.title,
       ...(session.workspaceUri
         ? {
-            workspaceUri: session.workspaceUri,
-          }
+          workspaceUri: session.workspaceUri,
+        }
         : {}),
     }
     if (!session.projectId) {
@@ -55,6 +55,7 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
 
 export const getChatSession = async (id: string): Promise<ChatSession | undefined> => {
   const session = (await ChatStorageWorker.invoke('ChatStorage.getSession', id)) as ChatSession | undefined
+  console.log({ session })
   if (!session) {
     return undefined
   }
@@ -62,38 +63,38 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
   const resultBase: ChatSession = {
     ...(session.branchName
       ? {
-          branchName: session.branchName,
-        }
+        branchName: session.branchName,
+      }
       : {}),
     id: session.id,
     ...(lastActiveTime
       ? {
-          lastActiveTime,
-        }
+        lastActiveTime,
+      }
       : {}),
     messages: [...session.messages],
     ...(session.pullRequestUrl
       ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
+        pullRequestUrl: session.pullRequestUrl,
+      }
       : {}),
     ...(session.status
       ? {
-          status: session.status,
-        }
+        status: session.status,
+      }
       : {}),
     title: session.title,
     ...(session.workspaceUri
       ? {
-          workspaceUri: session.workspaceUri,
-        }
+        workspaceUri: session.workspaceUri,
+      }
       : {}),
   }
   const result = session.projectId
     ? {
-        ...resultBase,
-        projectId: session.projectId,
-      }
+      ...resultBase,
+      projectId: session.projectId,
+    }
     : resultBase
   return result
 }
@@ -103,38 +104,38 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
   const value: ChatSession = {
     ...(session.branchName
       ? {
-          branchName: session.branchName,
-        }
+        branchName: session.branchName,
+      }
       : {}),
     id: session.id,
     ...(lastActiveTime
       ? {
-          lastActiveTime,
-        }
+        lastActiveTime,
+      }
       : {}),
     messages: [...session.messages],
     ...(session.pullRequestUrl
       ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
+        pullRequestUrl: session.pullRequestUrl,
+      }
       : {}),
     ...(session.status
       ? {
-          status: session.status,
-        }
+        status: session.status,
+      }
       : {}),
     title: session.title,
     ...(session.workspaceUri
       ? {
-          workspaceUri: session.workspaceUri,
-        }
+        workspaceUri: session.workspaceUri,
+      }
       : {}),
   }
   const sessionValue = session.projectId
     ? {
-        ...value,
-        projectId: session.projectId,
-      }
+      ...value,
+      projectId: session.projectId,
+    }
     : value
   await ChatStorageWorker.invoke('ChatStorage.setSession', sessionValue)
 }
@@ -157,6 +158,7 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
 }
 
 export const subscribeSessionUpdates = async (uid: number, sessionId: string): Promise<void> => {
+  console.log('subscribe', uid, sessionId)
   await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
     rpcId: rpcIdViewModel,
     sessionId,

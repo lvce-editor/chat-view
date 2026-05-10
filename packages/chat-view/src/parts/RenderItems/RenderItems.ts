@@ -3,6 +3,9 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getChatVirtualDom } from '../GetChatViewDom/GetChatViewDom.ts'
 
 export const renderItems = (oldState: ChatState, newState: ChatState): any => {
+  console.log({
+    p: newState.parsedMessages
+  })
   const {
     addContextButtonEnabled,
     agentMode,

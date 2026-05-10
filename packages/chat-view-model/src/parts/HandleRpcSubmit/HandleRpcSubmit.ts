@@ -71,12 +71,12 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     return
   }
 
-  const shouldCeateNewSession = !selectedSessionId || viewMode === 'list'
+  const shouldCreateNewSession = !selectedSessionId || viewMode === 'list'
 
   // TODO there is a race condition when the user submits another query
   // while the session is being created
   let actualSessionId = selectedSessionId
-  if (shouldCeateNewSession) {
+  if (shouldCreateNewSession) {
     actualSessionId = await createNewSession()
   }
 
@@ -88,15 +88,16 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     composerValue: '',
     focus: 'composer',
     focused: true,
-    lastSubmittedSessionId: selectedSessionId,
-    selectedSessionId,
+    lastSubmittedSessionId: actualSessionId,
+    selectedSessionId: actualSessionId,
     viewMode: 'detail',
   }
 
   setState(uid, nextState)
 
 
-  await ensureSubscribed(uid, selectedSessionId)
+  await ensureSubscribed(uid, actualSessionId)
+
 
   const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined

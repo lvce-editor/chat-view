@@ -103,6 +103,7 @@ import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveCom
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
+import { rerenderWithQuery } from '../RerenderWithQuery/RerenderWithQuery.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
@@ -140,6 +141,7 @@ import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
+  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
