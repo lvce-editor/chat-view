@@ -103,7 +103,6 @@ export const getMessagesDom = (
   useChatMathWorker = false,
   hideWelcomeMessage = false,
 ): readonly VirtualDomNode[] => {
-  console.log(({ messages }))
   if (messages.length === 0) {
     if (!hideWelcomeMessage) {
       return GetEmptyMessagesDom.getEmptyMessagesDom()
