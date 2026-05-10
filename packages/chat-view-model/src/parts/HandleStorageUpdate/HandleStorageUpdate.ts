@@ -62,9 +62,19 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
   return state
 }
 
+
+
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
   for (const event of events) {
+    if (event.type === 'chat-message-added' && event.message && event.message.text) {
+      messages.push({
+        id: event.message.id,
+        role: event.message.role,
+        text: event.message.text,
+        time: event.timestamp
+      })
+    }
     if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {
       messages.push({
         id: event.requestId,
@@ -102,8 +112,10 @@ const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): re
 const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   // TODO requery messages
   const { selectedSessionId } = state
-  const events = await ChatStorageWorker.invoke('ChatStorage.getEvents', selectedSessionId)
+  const events = await ChatStorageWorker.invoke('ChatStorage.getMessages', selectedSessionId)
   const messages = toMessages(events)
+
+  console.log({ events })
   const parsedMessages = await parseAndStoreMessagesContent([], messages)
   // TODO store messages independent of sessions
   const newSessions = getNewSessions(state, messages)
@@ -126,7 +138,9 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   if (!state) {
     return
   }
+  console.log('storage update', uid, sessionId)
   const nextState = await getNextState(state)
   setState(uid, nextState)
+  console.log({ nextState })
   await RendererWorker.invoke('Chat.rerenderWithQuery', uid)
 }
