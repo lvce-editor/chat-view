@@ -6,7 +6,7 @@ export const openDebugView = async (state: any): Promise<any> => {
     return state
   }
 
-  await RendererWorker.invoke(`Main.openUri`, `chat-debug:///${selectedSessionId}`)
+  await RendererWorker.invoke(`Main.openUri`, `chat-debug://${selectedSessionId}`)
 
   return state
 }
