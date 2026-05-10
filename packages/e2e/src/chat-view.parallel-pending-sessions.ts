@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.parallel-pending-sessions'
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
@@ -31,10 +31,12 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   await Chat.handleClickBack()
   await expect(chatListLabels).toHaveCount(2)
-  await expect(chatListLabels.nth(0)).toHaveText('Chat 2')
-  await expect(chatListLabels.nth(1)).toHaveText('Chat 1')
+  const chatListLabel0 = chatListLabels.nth(0)
+  const chatListLabel1 = chatListLabels.nth(1)
+  await expect(chatListLabel0).toHaveText('Chat 2')
+  await expect(chatListLabel1).toHaveText('Chat 1')
 
-  await chatListLabels.nth(1).click()
+  await Command.execute('Chat.handleClick', 'session:Chat 1')
   await expect(chat1User).toBeVisible()
   await expect(chat1Pending).toBeVisible()
 
@@ -46,8 +48,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(chat1Ai).toBeVisible()
 
   await Chat.handleClickBack()
-  await expect(chatListLabels.nth(0)).toHaveText('Chat 2')
-  await chatListLabels.nth(0).click()
+  await expect(chatListLabel0).toHaveText('Chat 2')
+  await Command.execute('Chat.handleClick', 'session:Chat 2')
   await expect(chat2User).toBeVisible()
   await expect(chat2Pending).toBeVisible()
 

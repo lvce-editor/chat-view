@@ -113,7 +113,6 @@ const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise
   const events = await ChatStorageWorker.invoke('ChatStorage.getMessages', selectedSessionId)
   const messages = toMessages(events)
 
-  console.log({ events })
   const parsedMessages = await parseAndStoreMessagesContent([], messages)
   // TODO store messages independent of sessions
   const newSessions = getNewSessions(state, messages)
@@ -136,9 +135,7 @@ export const handleChatStorageUpdate = async (uid: number, sessionId: string): P
   if (!state) {
     return
   }
-  console.log('storage update', uid, sessionId)
   const nextState = await getNextState(state)
   setState(uid, nextState)
-  console.log({ nextState })
   await RendererWorker.invoke('Chat.rerenderWithQuery', uid)
 }
