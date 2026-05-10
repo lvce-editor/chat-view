@@ -136,6 +136,7 @@ import * as SetUseOwnBackend from '../SetUseOwnBackend/SetUseOwnBackend.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
+import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
 
 export const commandMap = {
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
@@ -152,6 +153,7 @@ export const commandMap = {
   'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
+  'Chat.openDebugView': wrapCommand(openDebugView),
   'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getComposerSelection': wrapGetter(getComposerSelection),
