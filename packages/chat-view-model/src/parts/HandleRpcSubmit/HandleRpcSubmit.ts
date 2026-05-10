@@ -1,9 +1,9 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
-import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
   const { composerAttachments } = state
@@ -58,7 +58,7 @@ const createNewSession = async (): Promise<string> => {
 }
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  let { selectedSessionId, composerValue, viewMode, chatInputHistory, uid, systemPrompt, selectedModelId, openApiApiKey } = state
+  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, systemPrompt, uid, viewMode } = state
   const userText = composerValue.trim()
   if (!userText) {
     return

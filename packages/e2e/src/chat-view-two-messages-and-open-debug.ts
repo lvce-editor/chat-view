@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.two-messages-and-open-debug'
 
-export const test: Test = async ({ Chat, expect, Locator, Command, FileSystem, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)

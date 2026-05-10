@@ -91,6 +91,7 @@ import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockO
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
+import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
 import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
@@ -139,11 +140,9 @@ import * as SetUseOwnBackend from '../SetUseOwnBackend/SetUseOwnBackend.ts'
 import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachmentPreviewOverlay/ShowComposerAttachmentPreviewOverlay.ts'
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
-import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
 
 export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
-  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
@@ -158,7 +157,6 @@ export const commandMap = {
   'Chat.deleteSessionAtIndex': wrapCommand(deleteSessionAtIndex),
   'Chat.diff2': diff2,
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
-  'Chat.openDebugView': wrapCommand(openDebugView),
   'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
   'Chat.getComposerSelection': wrapGetter(getComposerSelection),
@@ -246,6 +244,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
   'Chat.openDebugView': wrapCommand(openDebugView),
+  'Chat.openDebugView': wrapCommand(openDebugView),
   'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
@@ -259,6 +258,7 @@ export const commandMap = {
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
+  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
