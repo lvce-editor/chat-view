@@ -23,7 +23,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const implementButton = Locator('.ChatSendAreaBottom .Button[name="implement-plan"]')
   const agentModeSelect = Locator('.ChatSendArea .ChatSelect[name="agent-mode-picker-toggle"]')
-  await implementButton.click()
+  await Command.execute('Chat.handleClick', 'implement-plan')
 
   const messages = Locator('.ChatMessages .Message')
 

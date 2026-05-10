@@ -28,7 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const logoutButton = Locator('button[name="logout"]')
 
   await expect(loginButton).toBeVisible()
-  await loginButton.click()
+  await Command.execute('Chat.handleClick', 'login')
 
   const authError = Locator('.ChatAuthError')
   await expect(authError).toBeVisible()

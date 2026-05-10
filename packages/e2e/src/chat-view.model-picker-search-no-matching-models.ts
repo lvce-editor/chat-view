@@ -7,7 +7,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]').click()
+  await Chat.openModelPicker()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
   await expect(items).toHaveCount(19)

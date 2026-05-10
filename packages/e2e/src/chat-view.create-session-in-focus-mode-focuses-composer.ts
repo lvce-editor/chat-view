@@ -19,7 +19,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(focusTitle).toHaveText('Focus Session')
   await expect(createSessionButton).toBeVisible()
 
-  await createSessionButton.click()
+  await Command.execute('Chat.handleClick', 'create-session-in-project:project-1')
 
   await expect(focusHeader).toBeVisible()
   await expect(focusTitle).toHaveText('Chat 2')

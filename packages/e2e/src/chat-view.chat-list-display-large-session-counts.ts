@@ -33,11 +33,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
     await expect(sessionTitles.nth(0)).toHaveText(getTitle(0))
 
     if (count > 3) {
-      await moreToggle.click()
+      await Command.execute('Chat.handleClick', 'chat-list-show-more')
       await expect(sessionTitles).toHaveCount(count)
       await expect(sessionTitles.nth(Math.floor(count / 2) - 1)).toHaveText(getTitle(Math.floor(count / 2) - 1))
       await expect(sessionTitles.nth(count - 1)).toHaveText(getTitle(count - 1))
-      await moreToggle.click()
+      await Command.execute('Chat.handleClick', 'chat-list-show-more')
       await expect(sessionTitles).toHaveCount(3)
     }
   }
