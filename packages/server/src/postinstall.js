@@ -27,6 +27,7 @@ const rendererWorkerMainPath = join(serverStaticPath, commitHash, 'packages', 'r
 const content = await readFile(rendererWorkerMainPath, 'utf-8')
 
 const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
+const chatViewModelWorkerPath = join(root, '.tmp/dist-chat-view-model/dist/chatViewModelWorkerMain.js')
 
 const replaceWorkerUrl = (currentContent, variableName, packageName, workerMainName, localPath) => {
   const remoteUrl = getRemoteUrl(localPath)
@@ -41,6 +42,7 @@ const ${variableName} = \`${remoteUrl}\``
 
 let newContent = content
 newContent = replaceWorkerUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
+newContent = replaceWorkerUrl(newContent, 'chatViewModelWorkerUrl', 'chat-view-model-worker', 'chatViewModelWorkerMain.js', chatViewModelWorkerPath)
 
 if (newContent !== content) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
