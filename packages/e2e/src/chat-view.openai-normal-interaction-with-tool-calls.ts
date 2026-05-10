@@ -290,16 +290,21 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('what kind of project is this?')
-  await expect(messages.nth(1)).toContainText('Could you share a file or a project description')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('what kind of project is this?')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Could you share a file or a project description')
 
   await Chat.handleInput('use tools')
   await Chat.handleSubmit()
 
   await expect(messages).toHaveCount(5)
-  await expect(messages.nth(2)).toHaveText('use tools')
-  await expect(messages.nth(3)).toContainText('get_workspace_uri')
-  await expect(messages.nth(3)).toContainText('list_files')
-  await expect(messages.nth(3)).toContainText('read_file README.md')
-  await expect(messages.nth(4)).toContainText('chat-view worker project')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('use tools')
+  const message3 = messages.nth(3)
+  await expect(message3).toContainText('get_workspace_uri')
+  await expect(message3).toContainText('list_files')
+  await expect(message3).toContainText('read_file README.md')
+  const message4 = messages.nth(4)
+  await expect(message4).toContainText('chat-view worker project')
 }

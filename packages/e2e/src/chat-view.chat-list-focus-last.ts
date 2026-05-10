@@ -16,5 +16,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const focusedItem = Locator('.ChatList .ChatListItemFocused')
   await expect(focusedItem).toHaveCount(1)
-  await expect(focusedItem.nth(0)).toContainText('Chat 3')
+  const focusedItem0 = focusedItem.nth(0)
+  await expect(focusedItem0).toContainText('Chat 3')
 }

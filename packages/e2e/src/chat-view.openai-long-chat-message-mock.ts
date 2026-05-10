@@ -39,8 +39,10 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('Please give me a long answer')
-  await expect(messages.nth(1)).toContainText('Long assistant response start.')
-  await expect(messages.nth(1)).toContainText('stable text for assertions.')
-  await expect(messages.nth(1)).toContainText('Long assistant response end.')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('Please give me a long answer')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Long assistant response start.')
+  await expect(message1).toContainText('stable text for assertions.')
+  await expect(message1).toContainText('Long assistant response end.')
 }

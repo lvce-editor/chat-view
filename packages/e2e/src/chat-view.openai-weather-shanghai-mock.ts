@@ -47,9 +47,11 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('weather in shanghai')
-  await expect(messages.nth(1)).toContainText('As of 1:12 AM local time in Shanghai')
-  await expect(messages.nth(1)).toContainText('## 上海市 的天气：')
-  await expect(messages.nth(1)).toContainText('星期四, 三月 19')
-  await expect(messages.nth(1)).toContainText('Please note that weather conditions can change rapidly')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('weather in shanghai')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('As of 1:12 AM local time in Shanghai')
+  await expect(message1).toContainText('## 上海市 的天气：')
+  await expect(message1).toContainText('星期四, 三月 19')
+  await expect(message1).toContainText('Please note that weather conditions can change rapidly')
 }

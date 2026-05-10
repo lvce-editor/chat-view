@@ -94,6 +94,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request ended after 100 tool-call rounds without a final assistant response.')
-  await expect(messages.nth(1)).toContainText('model got stuck in a tool loop')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenAI request ended after 100 tool-call rounds without a final assistant response.')
+  await expect(message1).toContainText('model got stuck in a tool loop')
 }

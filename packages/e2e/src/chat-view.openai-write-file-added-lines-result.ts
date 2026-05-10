@@ -44,7 +44,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(0)).toHaveText('create styles.css')
-  await expect(messages.nth(1)).toContainText('write_file styles.css +45 -0')
-  await expect(messages.nth(2)).toHaveText('Created the stylesheet.')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('create styles.css')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('write_file styles.css +45 -0')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('Created the stylesheet.')
 }

@@ -62,9 +62,11 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('Please rename original.txt to renamed.txt')
-  await expect(messages.nth(1)).toContainText('rename_file')
-  await expect(messages.nth(1)).toContainText('renamed.txt')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('Please rename original.txt to renamed.txt')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('rename_file')
+  await expect(message1).toContainText('renamed.txt')
 
   // allow a short moment for the tool execution to complete
   await new Promise((resolve) => setTimeout(resolve, 200))

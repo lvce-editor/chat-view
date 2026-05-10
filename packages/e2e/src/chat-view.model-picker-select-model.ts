@@ -17,7 +17,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
   await expect(items).toHaveCount(19)
-  await expect(items.nth(5)).toContainText('GPT-4.1 Mini')
+  const item5 = items.nth(5)
+  await expect(item5).toContainText('GPT-4.1 Mini')
   await Command.execute('Chat.handleClick', 'model-picker-item:openapi/gpt-4.1-mini')
 
   await expect(modelPicker).toHaveCount(0)

@@ -21,8 +21,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const firstSubmitPromise = Chat.handleInput('chat-1-user').then(() => Chat.handleSubmit())
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-1-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
+  const chatMessage0 = chatMessages.nth(0)
+  await expect(chatMessage0).toContainText('chat-1-user')
+  const chatMessage1 = chatMessages.nth(1)
+  await expect(chatMessage1).toContainText('chat-1-ai')
   await Chat.mockOpenApiStreamFinish()
   await firstSubmitPromise
 
@@ -35,8 +37,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const secondSubmitPromise = Chat.handleInput('chat-2-user').then(() => Chat.handleSubmit())
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-2-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-2-ai')
+  await expect(chatMessage0).toContainText('chat-2-user')
+  await expect(chatMessage1).toContainText('chat-2-ai')
   await Chat.mockOpenApiStreamFinish()
   await secondSubmitPromise
 
@@ -53,6 +55,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Command.execute('Chat.handleClick', chatOneLabelName)
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-1-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
+  await expect(chatMessage0).toContainText('chat-1-user')
+  await expect(chatMessage1).toContainText('chat-1-ai')
 }

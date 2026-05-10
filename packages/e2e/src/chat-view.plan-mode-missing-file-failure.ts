@@ -57,7 +57,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const implementButton = Locator('.ChatSendAreaBottom .Button[name="implement-plan"]')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText("I can't make a reliable plan")
-  await expect(messages.nth(1)).toContainText('read_file missing.ts')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText("I can't make a reliable plan")
+  await expect(message1).toContainText('read_file missing.ts')
   await expect(implementButton).toHaveCount(0)
 }

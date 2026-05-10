@@ -18,12 +18,13 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   const messages = Locator('.ChatDetailsContent .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('First')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('First')
 
   await Chat.mockOpenApiStreamPushChunk(' chunk')
-  await expect(messages.nth(1)).toContainText('First chunk')
+  await expect(message1).toContainText('First chunk')
 
   await Chat.mockOpenApiStreamFinish()
   await submitPromise
-  await expect(messages.nth(1)).toContainText('First chunk')
+  await expect(message1).toContainText('First chunk')
 }
