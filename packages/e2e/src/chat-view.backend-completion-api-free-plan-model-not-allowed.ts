@@ -30,8 +30,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Backend completion request failed (status 402).')
-  await expect(messages.nth(1)).toContainText(
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Backend completion request failed (status 402).')
+  await expect(message1).toContainText(
     'The selected model is not available on the Free plan. Choose a lower-cost LVCE model such as Claude Haiku or GPT-5.4 Mini, or upgrade your plan and try again.',
   )
 }

@@ -57,6 +57,8 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('add one line to notes.txt')
-  await expect(messages.nth(1)).toContainText('write_file notes.txt')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('add one line to notes.txt')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('write_file notes.txt')
 }

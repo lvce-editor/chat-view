@@ -67,6 +67,8 @@ Overall, JSON-RPC is widely used for implementing APIs due to its simplicity and
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('whats jsonrpc')
-  await expect(messages.nth(1)).toHaveText('toolsread_file index.html')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('whats jsonrpc')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('toolsread_file index.html')
 }

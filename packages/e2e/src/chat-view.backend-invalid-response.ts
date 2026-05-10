@@ -27,7 +27,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText(
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText(
     'Backend completion request failed. Unexpected backend response format: no assistant text or tool calls were returned.',
   )
 }

@@ -27,8 +27,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('hello from e2e')
-  await expect(messages.nth(1)).toHaveText('OpenAI API key is not configured')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('hello from e2e')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('OpenAI API key is not configured')
   const openApiApiKeyInput = Locator('[name="open-api-api-key"]')
   const saveButton = Locator('[name="save-openapi-api-key"]')
   await expect(openApiApiKeyInput).toBeVisible()
@@ -43,6 +45,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await clickPromise
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')
+  await expect(message1).toHaveText('OpenAI request failed (Status 401): Invalid API key. Please verify your OpenAI API key in Chat Settings.')
   await expect(openApiApiKeyInput).toHaveCount(0)
 }

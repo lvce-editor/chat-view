@@ -17,7 +17,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const projectLabels = Locator('.ProjectList .ProjectListItemLabel')
   const focusProject = Locator('.ChatFocusHeader .ChatFocusProject')
   await expect(projectLabels).toHaveCount(2)
-  await expect(projectLabels.nth(1)).toHaveText('▾workspace')
+  const projectLabel1 = projectLabels.nth(1)
+  await expect(projectLabel1).toHaveText('▾workspace')
   await expect(focusProject).toHaveText('workspace')
 
   await Command.execute('Chat.handleProjectListContextMenu', 0, 100, 100)
@@ -32,6 +33,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute('Chat.handleClick', 'ProjectDelete', 'project-2')
 
   await expect(projectLabels).toHaveCount(1)
-  await expect(projectLabels.nth(0)).toHaveText('▾_blank')
+  const projectLabel0 = projectLabels.nth(0)
+  await expect(projectLabel0).toHaveText('▾_blank')
   await expect(focusProject).toHaveText('_blank')
 }

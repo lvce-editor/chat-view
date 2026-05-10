@@ -28,6 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request failed (status 400): unknown_parameter [invalid_request_error].')
-  await expect(messages.nth(1)).toContainText("Unknown parameter: 'include_obfuscation'.")
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenAI request failed (status 400): unknown_parameter [invalid_request_error].')
+  await expect(message1).toContainText("Unknown parameter: 'include_obfuscation'.")
 }

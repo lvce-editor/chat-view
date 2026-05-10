@@ -27,5 +27,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(2)).toHaveText('mock-request-summary images=1 text-files=1')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('mock-request-summary images=1 text-files=1')
 }

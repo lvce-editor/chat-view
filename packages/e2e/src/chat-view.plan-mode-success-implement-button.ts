@@ -23,7 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(agentModeSelect).toHaveText('Plan')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('1. Inspect files')
-  await expect(messages.nth(1)).toContainText('3. Verify the result')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('1. Inspect files')
+  await expect(message1).toContainText('3. Verify the result')
   await expect(implementButton).toBeVisible()
 }

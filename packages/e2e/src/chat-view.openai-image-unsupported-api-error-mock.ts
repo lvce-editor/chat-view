@@ -30,6 +30,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(2)).toContainText('does not support image attachments')
-  await expect(messages.nth(2)).toContainText('Choose a vision-capable model like GPT-4o Mini or GPT-4o')
+  const message2 = messages.nth(2)
+  await expect(message2).toContainText('does not support image attachments')
+  await expect(message2).toContainText('Choose a vision-capable model like GPT-4o Mini or GPT-4o')
 }

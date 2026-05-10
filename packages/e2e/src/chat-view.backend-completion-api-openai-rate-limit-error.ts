@@ -28,8 +28,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Backend completion request failed (status 429).')
-  await expect(messages.nth(1)).toContainText('Error code: openai_api_error.')
-  await expect(messages.nth(1)).toContainText('OpenAI API error (status 429): Rate limit reached for gpt-5.4-mini')
-  await expect(messages.nth(1)).toContainText('Please try again in 14.924s.')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Backend completion request failed (status 429).')
+  await expect(message1).toContainText('Error code: openai_api_error.')
+  await expect(message1).toContainText('OpenAI API error (status 429): Rate limit reached for gpt-5.4-mini')
+  await expect(message1).toContainText('Please try again in 14.924s.')
 }

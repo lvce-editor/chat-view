@@ -22,7 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('hello from e2e')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('hello from e2e')
 
   const secondMessage = messages.nth(1)
   await expect(secondMessage).toContainText('OpenRouter request failed. Possible reasons:')
