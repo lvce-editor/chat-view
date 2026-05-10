@@ -893,7 +893,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(bodyRow2).toContainText('18')
   await expect(userMessage).toContainText('GetAiResponse.ts')
   await expect(userMessage).toContainText('54,58,64-71,75-82,87,93-144,192-193,232,258,305-359,437-438,573,594')
-  const bodyRowExpectedrowcount1 = bodyRows.nth(expectedRowCount - 1)
-  await expect(bodyRowExpectedrowcount1).toContainText('MockBackendSetHttpErrorResponse.ts')
+  const lastBodyRow = bodyRows.nth(expectedRowCount - 1)
+  await expect(lastBodyRow).toContainText('MockBackendSetHttpErrorResponse.ts')
   await expect(assistantMessage).toContainText('ok')
 }

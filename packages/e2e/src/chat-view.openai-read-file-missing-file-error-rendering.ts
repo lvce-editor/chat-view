@@ -43,5 +43,6 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   await expect(message1).toContainText('I could not read that file.')
   await expect(message1).toContainText('read_file does-not-exist.txt')
   await expect(message1).toContainText(`(error: ${errorMessage})`)
-  await expect(messages.nth(1).locator('.ChatOrderedListItem')).toHaveAttribute('title', missingPath)
+  const message1OrderedListItem = message1.locator('.ChatOrderedListItem')
+  await expect(message1OrderedListItem).toHaveAttribute('title', missingPath)
 }

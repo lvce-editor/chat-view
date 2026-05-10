@@ -28,6 +28,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(attachment0).toHaveText('xImage · photo.svg')
   const attachment1 = attachment.nth(1)
   await expect(attachment1).toHaveText('xImage · photo.svg')
-  await expect(attachment.nth(0).locator('.ChatComposerAttachmentPreview')).toHaveAttribute('src', svgPreviewSrc)
-  await expect(attachment.nth(1).locator('.ChatComposerAttachmentPreview')).toHaveAttribute('src', svgPreviewSrc)
+  const attachment0Preview = attachment0.locator('.ChatComposerAttachmentPreview')
+  await expect(attachment0Preview).toHaveAttribute('src', svgPreviewSrc)
+  const attachment1Preview = attachment1.locator('.ChatComposerAttachmentPreview')
+  await expect(attachment1Preview).toHaveAttribute('src', svgPreviewSrc)
 }
