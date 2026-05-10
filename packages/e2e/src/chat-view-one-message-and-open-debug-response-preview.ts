@@ -17,8 +17,8 @@ export const test: Test = async ({ ChatDebug, Chat, expect, Locator, Command, Fi
   await expect(secondMessage).toHaveText('Mock AI response: I received "hello from e2e".')
   await Command.execute(`Chat.openDebugView`)
   const rows = Locator('.TableBody .TableRow')
-  await expect(rows).toHaveCount(2)
-  await ChatDebug.selectEventRow(1)
+  await expect(rows).toHaveCount(1)
+  await ChatDebug.selectEventRow(0)
 
   // act
   await ChatDebug.openTabPreview()
