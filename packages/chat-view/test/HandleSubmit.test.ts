@@ -11,7 +11,7 @@ test('handleSubmit should delegate to chat view model worker', async () => {
       ...state,
       composerValue: '',
       selectedSessionId: 'session-2',
-      sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+      sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
       viewMode: 'detail',
     }),
   })
@@ -23,7 +23,7 @@ test('handleSubmit should delegate to chat view model worker', async () => {
     ...state,
     composerValue: '',
     selectedSessionId: 'session-2',
-    sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+    sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
     viewMode: 'detail',
   })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
@@ -53,7 +53,13 @@ test('handleSubmit should prefer newer local state applied during submit', async
         selectedSessionId: 'session-2',
         sessions: [
           ...state.sessions,
-          { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' },
+          {
+            id: 'session-2',
+            messages: [{ id: 'message-1', role: 'user' as const, text: 'hello', time: '10:00' }],
+            projectId: state.selectedProjectId,
+            status: 'idle' as const,
+            title: 'Chat 2',
+          },
         ],
         viewMode: 'detail' as const,
       }
@@ -62,7 +68,7 @@ test('handleSubmit should prefer newer local state applied during submit', async
         ...state,
         composerValue: '',
         selectedSessionId: 'session-2',
-        sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+        sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
         viewMode: 'detail' as const,
       }
     },
@@ -75,7 +81,16 @@ test('handleSubmit should prefer newer local state applied during submit', async
     ...state,
     composerValue: '',
     selectedSessionId: 'session-2',
-    sessions: [...state.sessions, { id: 'session-2', messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }], title: 'Chat 2' }],
+    sessions: [
+      ...state.sessions,
+      {
+        id: 'session-2',
+        messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }],
+        projectId: state.selectedProjectId,
+        status: 'idle',
+        title: 'Chat 2',
+      },
+    ],
     viewMode: 'detail',
   })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
@@ -87,7 +102,7 @@ test('handleSubmit should not fall back to stale local state when no newer updat
       ...state,
       composerValue: '',
       selectedSessionId: 'session-2',
-      sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+      sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
       viewMode: 'detail' as const,
     }),
   })
@@ -100,7 +115,7 @@ test('handleSubmit should not fall back to stale local state when no newer updat
     ...state,
     composerValue: '',
     selectedSessionId: 'session-2',
-    sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+    sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
     viewMode: 'detail',
   })
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])

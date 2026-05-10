@@ -62,8 +62,6 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
   return state
 }
 
-
-
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
   for (const event of events) {
@@ -72,7 +70,7 @@ const toMessages = (events: readonly any[]): readonly any[] => {
         id: event.message.id,
         role: event.message.role,
         text: event.message.text,
-        time: event.timestamp
+        time: event.timestamp,
       })
     }
     if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {

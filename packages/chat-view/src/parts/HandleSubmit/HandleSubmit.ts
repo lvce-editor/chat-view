@@ -59,7 +59,7 @@ const getErrorMessage = (error: unknown): string => {
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   try {
     const nextState = (await ChatViewModelWorker.invoke('ChatModel.handleSubmit', state)) as ChatState
-    return state
+    return waitForLocalSubmitUpdates(nextState)
   } catch (error) {
     throw new Error(getErrorMessage(error), {
       cause: error,
