@@ -37,7 +37,6 @@ const withAttachments = (message: ChatMessage, attachments: readonly ComposerAtt
 }
 
 const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
-  console.log({ messages, parsedMessages })
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
     const parsedContent = getParsedMessageContent(parsedMessages, message.id) || getPlainTextMessageContent(message.text)

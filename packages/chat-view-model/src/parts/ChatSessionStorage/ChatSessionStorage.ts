@@ -55,7 +55,6 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
 
 export const getChatSession = async (id: string): Promise<ChatSession | undefined> => {
   const session = (await ChatStorageWorker.invoke('ChatStorage.getSession', id)) as ChatSession | undefined
-  console.log({ session })
   if (!session) {
     return undefined
   }

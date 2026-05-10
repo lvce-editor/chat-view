@@ -6,7 +6,6 @@ export const loadSelectedSessionMessages = async (sessions: readonly ChatSession
     return sessions
   }
   const loadedSession = await getChatSession(selectedSessionId)
-  console.log({ loadedSession })
   if (!loadedSession) {
     return sessions
   }

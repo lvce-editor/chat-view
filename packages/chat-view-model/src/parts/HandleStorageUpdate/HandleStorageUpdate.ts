@@ -40,11 +40,9 @@ export const getNextStateFromStorageUpdate = async (state: Readonly<PrototypeSta
   const selectedSessionId = getTargetSessionId(state, sessionId)
   let sessions = (await listChatSessions()) as readonly ChatSession[]
   sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
-  console.log({ sessions, selectedSessionId })
   sessions = normalizeSessionsOnLoad(sessions)
   const { parsedMessages: previousParsedMessages } = state
 
-  console.log({ previousParsedMessages })
   let parsedMessages = previousParsedMessages
   for (const session of sessions) {
     parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
@@ -67,7 +65,6 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
 
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
-  console.log({ events })
   for (const event of events) {
     if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {
       messages.push({
