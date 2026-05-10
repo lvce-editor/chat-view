@@ -67,11 +67,12 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
 
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
+  console.log({ events })
   for (const event of events) {
     if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {
       messages.push({
         id: event.requestId,
-        role: event.role,
+        role: event.message.role,
         text: event.message.content[0].text,
         time: event.timestamp,
       })
