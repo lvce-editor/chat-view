@@ -644,6 +644,100 @@ test('getOpenApiAssistantText should not include web_search tool when webSearchE
   }
 })
 
+test('getOpenApiAssistantText should stream web search call status updates without executing follow-up tool calls', async () => {
+  const originalFetch = globalThis.fetch
+  const fetchInvocations: Array<readonly unknown[]> = []
+  globalThis.fetch = (async (...args: readonly unknown[]) => {
+    fetchInvocations.push(args)
+    const chunks = [
+      'data: {"type":"response.created","response":{"id":"resp_web_search","status":"in_progress"}}\n\n',
+      'data: {"type":"response.in_progress","response":{"id":"resp_web_search","status":"in_progress"}}\n\n',
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"web_search_call","id":"ws_1","status":"in_progress"}}\n\n',
+      'data: {"type":"response.web_search_call.searching","output_index":0,"item_id":"ws_1"}\n\n',
+      'data: {"type":"response.web_search_call.completed","output_index":0,"item_id":"ws_1"}\n\n',
+      'data: {"type":"response.completed","response":{"id":"resp_web_search","output":[],"status":"completed"}}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  const toolCallsChunks: unknown[] = []
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'search for status updates',
+          time: '10:00',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        onToolCallsChunk: async (toolCalls) => {
+          toolCallsChunks.push(toolCalls)
+        },
+        stream: true,
+        webSearchEnabled: true,
+      },
+    )
+
+    expect(result).toEqual({
+      text: '',
+      type: 'success',
+    })
+    expect(fetchInvocations).toHaveLength(1)
+    expect(toolCallsChunks).toEqual([
+      [
+        {
+          arguments: '',
+          id: 'ws_1',
+          name: 'web_search_call',
+          status: 'in-progress',
+        },
+      ],
+      [
+        {
+          arguments: '',
+          id: 'ws_1',
+          name: 'web_search_call',
+          status: 'in-progress',
+        },
+      ],
+      [
+        {
+          arguments: '',
+          id: 'ws_1',
+          name: 'web_search_call',
+          status: 'success',
+        },
+      ],
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should include instructions when systemPrompt is provided', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined

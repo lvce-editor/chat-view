@@ -982,6 +982,126 @@ test('handleSubmit should emit streaming function call data events when enabled'
   }
 })
 
+test('handleSubmit should store streamed web search events for debugging', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRpc = RendererWorker.registerMockRpc({
+    'Chat.rerender': async () => {},
+  })
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => {
+    const chunks = [
+      'data: {"type":"response.output_item.added","output_index":0,"item":{"type":"web_search_call","id":"ws_1","status":"in_progress"}}\n\n',
+      'data: {"type":"response.web_search_call.in_progress","output_index":0,"item_id":"ws_1"}\n\n',
+      'data: {"type":"response.web_search_call.completed","output_index":0,"item_id":"ws_1"}\n\n',
+      'data: {"type":"response.output_text.delta","delta":"Done"}\n\n',
+      'data: {"type":"response.completed"}\n\n',
+      'data: [DONE]\n\n',
+    ]
+    let index = 0
+    return {
+      body: {
+        getReader: () => ({
+          read: async (): Promise<ReadableStreamReadResult<Uint8Array>> => {
+            if (index >= chunks.length) {
+              return { done: true, value: undefined }
+            }
+            const value = new TextEncoder().encode(chunks[index++])
+            return { done: false, value }
+          },
+        }),
+      },
+      ok: true,
+      status: 200,
+    } as Response
+  }) as typeof globalThis.fetch
+
+  try {
+    const state = {
+      ...createDefaultState(),
+      composerValue: 'search the web',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' as const }],
+      openApiApiKey: 'oa-key-123',
+      selectedModelId: 'openapi/gpt-4o-mini',
+      streamingEnabled: true,
+      viewMode: 'detail' as const,
+    }
+
+    const result = await HandleSubmit.handleSubmit(state)
+    const events = await getChatViewEvents(result.selectedSessionId)
+    const dataEvents = events.filter((event) => event.type === 'sse-response-part')
+
+    expect(dataEvents).toEqual([
+      expect.objectContaining({
+        type: 'sse-response-part',
+        value: {
+          item: {
+            id: 'ws_1',
+            status: 'in_progress',
+            type: 'web_search_call',
+          },
+          output_index: 0,
+          type: 'response.output_item.added',
+        },
+      }),
+      expect.objectContaining({
+        type: 'sse-response-part',
+        value: {
+          item_id: 'ws_1',
+          output_index: 0,
+          type: 'response.web_search_call.in_progress',
+        },
+      }),
+      expect.objectContaining({
+        type: 'sse-response-part',
+        value: {
+          item_id: 'ws_1',
+          output_index: 0,
+          type: 'response.web_search_call.completed',
+        },
+      }),
+      expect.objectContaining({
+        type: 'sse-response-part',
+        value: {
+          delta: 'Done',
+          type: 'response.output_text.delta',
+        },
+      }),
+    ])
+    expect(result.sessions[0].messages[1].toolCalls).toEqual([
+      {
+        arguments: '',
+        id: 'ws_1',
+        name: 'web_search_call',
+        status: 'success',
+      },
+    ])
+    expect(mockChatStorageRpc.invocations).toContainEqual([
+      'ChatStorage.appendEvent',
+      expect.objectContaining({
+        sessionId: result.selectedSessionId,
+        type: 'sse-response-part',
+        value: expect.objectContaining({
+          type: 'response.web_search_call.in_progress',
+        }),
+      }),
+    ])
+    expect(mockChatStorageRpc.invocations).toContainEqual([
+      'ChatStorage.appendEvent',
+      expect.objectContaining({
+        sessionId: result.selectedSessionId,
+        type: 'sse-response-part',
+        value: expect.objectContaining({
+          type: 'response.web_search_call.completed',
+        }),
+      }),
+    ])
+    expect(mockRpc.invocations.length).toBeGreaterThanOrEqual(2)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('handleSubmit should clear selected session messages for /clear', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
