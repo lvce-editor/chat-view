@@ -40,6 +40,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(images).toHaveCount(50)
   await expect(images.first()).toHaveAttribute('alt', 'photo-1.svg')
   await expect(images.first()).toHaveAttribute('src', svgPreviewSrc)
-  await expect(images.nth(49)).toHaveAttribute('alt', 'photo-50.svg')
-  await expect(images.nth(49)).toHaveAttribute('src', svgPreviewSrc)
+  const image49 = images.nth(49)
+  await expect(image49).toHaveAttribute('alt', 'photo-50.svg')
+  await expect(image49).toHaveAttribute('src', svgPreviewSrc)
 }

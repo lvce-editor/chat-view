@@ -28,6 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(attachment).toHaveCount(10)
 
   for (const [index, file] of files.entries()) {
-    await expect(attachment.nth(index)).toHaveText(`Image · ${file.name}`)
+    const attachmentIndex = attachment.nth(index)
+    await expect(attachmentIndex).toHaveText(`Image · ${file.name}`)
   }
 }

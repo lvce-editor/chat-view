@@ -30,13 +30,16 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
       await expect(sessionTitles).toHaveCount(Math.min(count, 3))
       await expect(moreToggle).toHaveCount(count > 3 ? 1 : 0)
     }
-    await expect(sessionTitles.nth(0)).toHaveText(getTitle(0))
+    const sessionTitle0 = sessionTitles.nth(0)
+    await expect(sessionTitle0).toHaveText(getTitle(0))
 
     if (count > 3) {
       await Command.execute('Chat.handleClick', 'chat-list-show-more')
       await expect(sessionTitles).toHaveCount(count)
-      await expect(sessionTitles.nth(Math.floor(count / 2) - 1)).toHaveText(getTitle(Math.floor(count / 2) - 1))
-      await expect(sessionTitles.nth(count - 1)).toHaveText(getTitle(count - 1))
+      const middleSessionTitle = sessionTitles.nth(Math.floor(count / 2) - 1)
+      await expect(middleSessionTitle).toHaveText(getTitle(Math.floor(count / 2) - 1))
+      const sessionTitleCount1 = sessionTitles.nth(count - 1)
+      await expect(sessionTitleCount1).toHaveText(getTitle(count - 1))
       await Command.execute('Chat.handleClick', 'chat-list-show-more')
       await expect(sessionTitles).toHaveCount(3)
     }

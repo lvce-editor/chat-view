@@ -18,5 +18,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText('OpenAI request failed because you are offline. Please check your internet connection.')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('OpenAI request failed because you are offline. Please check your internet connection.')
 }

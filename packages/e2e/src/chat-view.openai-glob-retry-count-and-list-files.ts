@@ -128,7 +128,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(6)
-  await expect(messages.nth(0)).toHaveText('how many files in this repo? answer with number only, use glob tool to match all.')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('how many files in this repo? answer with number only, use glob tool to match all.')
 
   const firstToolCallMessage = messages.nth(1)
   const firstToolCalls = firstToolCallMessage.locator('.ChatOrderedListItem')
@@ -137,8 +138,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(firstToolCallMessage).toContainText('glob playground (error: Invalid argument: baseUri must be an absolute URI.)')
   await expect(firstToolCallMessage).toContainText('glob playground, 24 matches')
 
-  await expect(messages.nth(2)).toHaveText('24')
-  await expect(messages.nth(3)).toHaveText('what are the files')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('24')
+  const message3 = messages.nth(3)
+  await expect(message3).toHaveText('what are the files')
 
   const secondToolCallMessage = messages.nth(4)
   const secondToolCalls = secondToolCallMessage.locator('.ChatOrderedListItem')
@@ -151,8 +154,12 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const fileItems = assistantReply.locator('li')
   await expect(fileItems).toHaveCount(24)
   await expect(assistantReply).toContainText('Here are the files:')
-  await expect(fileItems.nth(0)).toHaveText('README.md')
-  await expect(fileItems.nth(1)).toHaveText('index.html')
-  await expect(fileItems.nth(20)).toHaveText('languages/scrolling.txt')
-  await expect(fileItems.nth(23)).toHaveText('sample-folder/b.txt')
+  const fileItem0 = fileItems.nth(0)
+  await expect(fileItem0).toHaveText('README.md')
+  const fileItem1 = fileItems.nth(1)
+  await expect(fileItem1).toHaveText('index.html')
+  const fileItem20 = fileItems.nth(20)
+  await expect(fileItem20).toHaveText('languages/scrolling.txt')
+  const fileItem23 = fileItems.nth(23)
+  await expect(fileItem23).toHaveText('sample-folder/b.txt')
 }

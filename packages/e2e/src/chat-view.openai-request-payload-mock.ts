@@ -52,7 +52,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // assert mocked assistant response
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText('2')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('2')
 
   // assert mocked outbound OpenAI request
   const requests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]

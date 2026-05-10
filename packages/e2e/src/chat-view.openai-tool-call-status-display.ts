@@ -52,9 +52,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(1)).toContainText('read_file app.ts (finished)')
-  await expect(messages.nth(1)).toContainText('list_files workspace (in progress)')
-  await expect(messages.nth(1)).toContainText('rename old.ts -> new.ts (canceled)')
-  await expect(messages.nth(1)).toContainText('read_file missing.ts (error: File not found: src/missing.ts)')
-  await expect(messages.nth(2)).toContainText('Here are the current tool states.')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('read_file app.ts (finished)')
+  await expect(message1).toContainText('list_files workspace (in progress)')
+  await expect(message1).toContainText('rename old.ts -> new.ts (canceled)')
+  await expect(message1).toContainText('read_file missing.ts (error: File not found: src/missing.ts)')
+  const message2 = messages.nth(2)
+  await expect(message2).toContainText('Here are the current tool states.')
 }

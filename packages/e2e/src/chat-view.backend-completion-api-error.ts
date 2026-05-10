@@ -28,8 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Backend completion request failed (status 403).')
-  await expect(messages.nth(1)).toContainText(
-    'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
-  )
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Backend completion request failed (status 403).')
+  await expect(message1).toContainText('Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.')
 }

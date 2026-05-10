@@ -19,6 +19,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(picker).toBeVisible()
   await expect(items).toHaveCount(2)
-  await expect(items.nth(0)).toHaveText('Agent')
-  await expect(items.nth(1)).toHaveText('Plan')
+  const item0 = items.nth(0)
+  await expect(item0).toHaveText('Agent')
+  const item1 = items.nth(1)
+  await expect(item1).toHaveText('Plan')
 }

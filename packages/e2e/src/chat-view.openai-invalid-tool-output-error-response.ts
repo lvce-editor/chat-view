@@ -35,8 +35,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI request failed (status 400): invalid_type [invalid_request_error].')
-  await expect(messages.nth(1)).toContainText("Invalid type for 'input[0].output'")
-  await expect(messages.nth(1)).toContainText('get_workspace_uri')
-  await expect(messages.nth(1)).toContainText('(error: Invalid tool output)')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenAI request failed (status 400): invalid_type [invalid_request_error].')
+  await expect(message1).toContainText("Invalid type for 'input[0].output'")
+  await expect(message1).toContainText('get_workspace_uri')
+  await expect(message1).toContainText('(error: Invalid tool output)')
 }

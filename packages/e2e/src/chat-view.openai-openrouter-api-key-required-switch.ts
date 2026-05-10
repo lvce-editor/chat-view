@@ -15,7 +15,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // assert openai api key required
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI API key is not configured')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenAI API key is not configured')
   const openAiApiKeyInput = Locator('[name="open-api-api-key"]')
   await expect(openAiApiKeyInput).toBeVisible()
 
@@ -26,8 +27,10 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   // assert openrouter api key required
   await expect(messages).toHaveCount(4)
-  await expect(messages.nth(2)).toHaveText('try again')
-  await expect(messages.nth(3)).toContainText('OpenRouter API key is not configured')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('try again')
+  const message3 = messages.nth(3)
+  await expect(message3).toContainText('OpenRouter API key is not configured')
   const openRouterApiKeyInput = Locator('[name="open-router-api-key"]')
   await expect(openRouterApiKeyInput).toBeVisible()
 }

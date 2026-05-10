@@ -238,14 +238,16 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(0)).toHaveText('lets migrate from jest to vitest please')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('lets migrate from jest to vitest please')
 
   const toolCallMessage = messages.nth(1)
   const orderedToolCalls = toolCallMessage.locator('.ChatOrderedListItem')
   await expect(orderedToolCalls).toHaveCount(27)
 
   for (const [index, expectedLabel] of expectedToolCallLabels.entries()) {
-    await expect(orderedToolCalls.nth(index)).toContainText(expectedLabel)
+    const orderedToolCallIndex = orderedToolCalls.nth(index)
+    await expect(orderedToolCallIndex).toContainText(expectedLabel)
   }
 
   await expect(toolCallMessage).toContainText('tools')

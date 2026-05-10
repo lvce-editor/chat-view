@@ -30,6 +30,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(preview).toHaveCount(files.length)
 
   for (const [index, file] of files.entries()) {
-    await expect(attachmentLabel.nth(index)).toHaveText(`Image · ${file.name}`)
+    const attachmentLabelIndex = attachmentLabel.nth(index)
+    await expect(attachmentLabelIndex).toHaveText(`Image · ${file.name}`)
   }
 }

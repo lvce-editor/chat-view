@@ -27,5 +27,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1000)
   await expect(attachment.first()).toHaveText('Image · photo-1.svg')
-  await expect(attachment.nth(999)).toHaveText('Image · photo-1000.svg')
+  const attachment999 = attachment.nth(999)
+  await expect(attachment999).toHaveText('Image · photo-1000.svg')
 }
