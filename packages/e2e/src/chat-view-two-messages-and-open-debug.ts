@@ -20,6 +20,8 @@ export const test: Test = async ({ Chat, expect, Locator, Command }) => {
   await Command.execute(`Chat.openDebugView`)
 
   // assert
+  const rows = Locator('.TableRow')
+  await expect(rows).toHaveCount(4)
 
   // TODO verify items are visible
 }
