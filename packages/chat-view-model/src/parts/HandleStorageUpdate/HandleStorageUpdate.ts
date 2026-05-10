@@ -80,16 +80,40 @@ const toMessages = (events: readonly any[]): readonly any[] => {
   return messages
 }
 
+const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): readonly any[] => {
+  // TODO store messages independent of sessions
+  const newSessions = state.sessions.map(session => {
+    if (session.id === state.selectedSessionId) {
+      return {
+        ...session,
+        messages
+      }
+    }
+    return session
+  })
+  if (newSessions.length === 0) {
+    return [
+      {
+        id: state.selectedSessionId,
+        messages
+      }
+    ]
+  }
+  return newSessions
+}
+
 const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   // TODO requery messages
-  const { selectedSessionId } = state
+  const { selectedSessionId, } = state
   const events = await ChatStorageWorker.invoke('ChatStorage.getEvents', selectedSessionId)
   const messages = toMessages(events)
   const parsedMessages = await parseAndStoreMessagesContent([], messages)
-  console.log({ parsedMessages })
+  // TODO store messages independent of sessions
+  const newSessions = getNewSessions(state, messages)
   return {
     ...state,
     parsedMessages,
+    sessions: newSessions
 
   }
 }

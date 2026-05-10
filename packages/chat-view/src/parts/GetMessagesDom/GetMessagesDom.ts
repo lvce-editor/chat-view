@@ -37,6 +37,7 @@ const withAttachments = (message: ChatMessage, attachments: readonly ComposerAtt
 }
 
 const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
+  console.log({ messages, parsedMessages })
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
     const parsedContent = getParsedMessageContent(parsedMessages, message.id) || getPlainTextMessageContent(message.text)
@@ -103,6 +104,7 @@ export const getMessagesDom = (
   useChatMathWorker = false,
   hideWelcomeMessage = false,
 ): readonly VirtualDomNode[] => {
+  console.log(({ messages }))
   if (messages.length === 0) {
     if (!hideWelcomeMessage) {
       return GetEmptyMessagesDom.getEmptyMessagesDom()

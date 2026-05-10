@@ -158,7 +158,6 @@ export const getChatViewEvents = async (sessionId?: string): Promise<readonly Ch
 }
 
 export const subscribeSessionUpdates = async (uid: number, sessionId: string): Promise<void> => {
-  console.log('subscribe', uid, sessionId)
   await ChatStorageWorker.invoke('ChatStorage.subscribeSessionUpdates', {
     rpcId: rpcIdViewModel,
     sessionId,
