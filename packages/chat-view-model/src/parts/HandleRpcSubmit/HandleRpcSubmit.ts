@@ -55,8 +55,8 @@ const createSession = (state: Readonly<PrototypeState>, sessionId: string): Chat
     messages: [],
     ...(state.selectedProjectId
       ? {
-          projectId: state.selectedProjectId,
-        }
+        projectId: state.selectedProjectId,
+      }
       : {}),
     status: 'in-progress',
     title: `Chat ${state.sessions.length + 1}`,
@@ -71,9 +71,71 @@ const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> =
   setSubscribedSessionId(uid, sessionId)
 }
 
-const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: string, userText: string): Promise<void> => {
+
+// const handleSubmitWithExistingSession
+
+
+const createNewSession = async (): Promise<string> => {
+  const sessionId = crypto.randomUUID()
+  const date = new Date()
+  const timestamp = date.toISOString()
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.createSession', {
+    sessionId,
+    timestamp
+  })
+  return sessionId
+}
+
+
+export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
+  let { selectedSessionId, composerValue, viewMode, chatInputHistory, uid, systemPrompt, selectedModelId,
+    openApiApiKey
+
+  } = state
+  const userText = composerValue.trim()
+  if (!userText) {
+    return
+  }
+
+  const shouldCeateNewSession = !selectedSessionId || viewMode === 'list'
+
+  // TODO there is a race condition when the user submits another query
+  // while the session is being created
+  let actualSessionId = selectedSessionId
+  if (shouldCeateNewSession) {
+    actualSessionId = await createNewSession()
+  }
+
+
+  const nextState: PrototypeState = {
+    ...state,
+    chatInputHistory: getNextChatInputHistory(chatInputHistory, userText),
+    chatInputHistoryIndex: -1,
+    composerValue: '',
+    focus: 'composer',
+    focused: true,
+    lastSubmittedSessionId: selectedSessionId,
+    selectedSessionId,
+    viewMode: 'detail',
+  }
+
+  setState(uid, nextState)
+
+
+  await ensureSubscribed(uid, selectedSessionId)
+
+  const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
+  const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
+  const effectiveState = authState
+    ? {
+      ...nextState,
+      ...authState,
+    }
+    : nextState
+
+  setState(uid, effectiveState)
   const coordinatorModelId = getCoordinatorModelId(state)
-  if (state.selectedModelId === 'test' && !useMockApiEnabled(state)) {
+  if (selectedModelId === 'test' && !useMockApiEnabled(state)) {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
       text: `Mock AI response: I received "${userText}".`,
     })
@@ -84,66 +146,14 @@ const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: s
     backendUrl: getBackendUrl(state),
     id: crypto.randomUUID(),
     modelId: coordinatorModelId,
-    openAiKey: state.openApiApiKey || '',
+    openAiKey: openApiApiKey || '',
     requestId: crypto.randomUUID(),
     role: 'user',
-    sessionId,
-    systemPrompt: state.systemPrompt,
+    sessionId: actualSessionId,
+    systemPrompt: systemPrompt,
     text: userText,
     useOwnBackend: useOwnBackendEnabled(state),
   })
-}
 
-export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<PrototypeState> => {
-  const userText = state.composerValue.trim()
-  if (!userText) {
-    return state
-  }
 
-  let { selectedSessionId } = state
-  const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
-  const initialSessions: readonly ChatSession[] = createdSessionFromList
-    ? await (async (): Promise<readonly ChatSession[]> => {
-        selectedSessionId = crypto.randomUUID()
-        const newSession = createSession(state, selectedSessionId)
-        await saveChatSession(newSession)
-        return [...state.sessions, newSession]
-      })()
-    : state.sessions
-
-  const sessions = createdSessionFromList ? initialSessions : updateSessionStatus(initialSessions, selectedSessionId, 'in-progress')
-
-  const nextState: PrototypeState = {
-    ...state,
-    chatInputHistory: getNextChatInputHistory(state.chatInputHistory, userText),
-    chatInputHistoryIndex: -1,
-    composerValue: '',
-    focus: 'composer',
-    focused: true,
-    lastSubmittedSessionId: selectedSessionId,
-    selectedSessionId,
-    sessions,
-    viewMode: createdSessionFromList ? 'detail' : state.viewMode,
-  }
-
-  setState(state.uid, nextState)
-
-  await ensureSubscribed(state.uid, selectedSessionId)
-
-  const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
-  const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
-  const effectiveState = authState
-    ? {
-        ...nextState,
-        ...authState,
-      }
-    : nextState
-
-  setState(state.uid, effectiveState)
-  try {
-    await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    return (getState(state.uid) as PrototypeState | undefined) || effectiveState
-  } catch {
-    return effectiveState
-  }
 }
