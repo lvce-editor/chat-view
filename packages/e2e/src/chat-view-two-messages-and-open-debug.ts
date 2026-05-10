@@ -2,8 +2,10 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.two-messages-and-open-debug'
 
-export const test: Test = async ({ Chat, expect, Locator, Command }) => {
+export const test: Test = async ({ Chat, expect, Locator, Command, FileSystem, Workspace }) => {
   // arrange
+  const tmpDir = await FileSystem.getTmpDir()
+  await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.handleInput('hello from e2e')
   await Chat.handleSubmit()
