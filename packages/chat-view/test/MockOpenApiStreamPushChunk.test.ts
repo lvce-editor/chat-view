@@ -5,7 +5,7 @@ import { mockOpenApiStreamPushChunk } from '../src/parts/MockOpenApiStreamPushCh
 
 test('mockOpenApiStreamPushChunk should delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => {},
+    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => { },
   })
   const state = createDefaultState()
 
@@ -17,7 +17,7 @@ test('mockOpenApiStreamPushChunk should delegate to chat coordinator worker', as
 
 test('mockOpenApiStreamPushChunk should not delegate named requests to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => {},
+    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => { },
   })
   const state = createDefaultState()
 
