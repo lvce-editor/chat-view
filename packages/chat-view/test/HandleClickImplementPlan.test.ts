@@ -58,48 +58,13 @@ test('handleClickImplementPlan should switch to agent mode and submit the saved 
     inputSource: 'script' as const,
   }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => ({
-      ...preparedState,
-      composerValue: '',
-      sessions: [
-        {
-          ...preparedState.sessions[0],
-          messages: [
-            ...preparedState.sessions[0].messages,
-            {
-              id: 'message-user-2',
-              role: 'user' as const,
-              text: implementationPrompt,
-              time: '10:02',
-            },
-            {
-              id: 'message-assistant-2',
-              role: 'assistant' as const,
-              text: 'Mock AI response: Executed the plan.',
-              time: '10:03',
-            },
-          ],
-        },
-      ],
-    }),
+    'ChatModel.handleSubmit': async () => preparedState,
   })
 
   const result = await handleClickImplementPlan(state)
 
-  expect(result.agentMode).toBe('agent')
-  expect(result.sessions[0].messages).toHaveLength(4)
-  expect(result.sessions[0].messages[2]).toEqual(
-    expect.objectContaining({
-      role: 'user',
-      text: getImplementationPrompt('1. Read the relevant files\n2. Update the code\n3. Run tests'),
-    }),
-  )
-  expect(result.sessions[0].messages[3]).toEqual(
-    expect.objectContaining({
-      role: 'assistant',
-      text: expect.stringContaining('Mock AI response:'),
-    }),
-  )
+  expect(result).toEqual(preparedState)
+  expect(result.sessions[0].messages).toHaveLength(2)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', preparedState]])
 })
 
