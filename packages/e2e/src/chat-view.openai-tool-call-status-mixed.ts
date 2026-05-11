@@ -56,9 +56,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(messages).toHaveCount(3)
   await expect(toolCalls).toHaveCount(4)
-  await expect(messages.nth(1)).toContainText('get_workspace_uri workspace (finished)')
-  await expect(messages.nth(1)).toContainText('list_files workspace (in progress)')
-  await expect(messages.nth(1)).toContainText('read_file server.ts (error: permission denied)')
-  await expect(messages.nth(1)).toContainText('rename old.ts -> new.ts (finished)')
-  await expect(messages.nth(2)).toContainText('This run has finished, running, and errored tools at once.')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('get_workspace_uri workspace (finished)')
+  await expect(message1).toContainText('list_files workspace (in progress)')
+  await expect(message1).toContainText('read_file server.ts (error: permission denied)')
+  await expect(message1).toContainText('rename old.ts -> new.ts (finished)')
+  const message2 = messages.nth(2)
+  await expect(message2).toContainText('This run has finished, running, and errored tools at once.')
 }

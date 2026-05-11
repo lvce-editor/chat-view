@@ -1,9 +1,8 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 
 const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
@@ -37,20 +36,6 @@ const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: 
   return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
 }
 
-const createSession = (state: Readonly<PrototypeState>, sessionId: string): ChatSession => {
-  return {
-    id: sessionId,
-    messages: [],
-    ...(state.selectedProjectId
-      ? {
-          projectId: state.selectedProjectId,
-        }
-      : {}),
-    status: 'in-progress',
-    title: `Chat ${state.sessions.length + 1}`,
-  }
-}
-
 const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> => {
   if (getSubscribedSessionId(uid) === sessionId) {
     return
@@ -59,60 +44,50 @@ const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> =
   setSubscribedSessionId(uid, sessionId)
 }
 
-const submitToCoordinator = async (state: Readonly<PrototypeState>, sessionId: string, userText: string): Promise<void> => {
-  const coordinatorModelId = getCoordinatorModelId(state)
-  if (state.selectedModelId === 'test' && !useMockApiEnabled(state)) {
-    await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
-      text: `Mock AI response: I received "${userText}".`,
-    })
-  }
-  await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
-    attachments: getComposerAttachments(state),
-    authAccessToken: getAuthAccessToken(state),
-    backendUrl: getBackendUrl(state),
-    id: crypto.randomUUID(),
-    modelId: coordinatorModelId,
-    openAiKey: state.openApiApiKey || '',
-    requestId: crypto.randomUUID(),
-    role: 'user',
+// const handleSubmitWithExistingSession
+
+const createNewSession = async (): Promise<string> => {
+  const sessionId = crypto.randomUUID()
+  const date = new Date()
+  const timestamp = date.toISOString()
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.createSession', {
     sessionId,
-    systemPrompt: state.systemPrompt,
-    text: userText,
-    useOwnBackend: useOwnBackendEnabled(state),
+    timestamp,
   })
+  return sessionId
 }
 
-export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<PrototypeState> => {
-  const userText = state.composerValue.trim()
+export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
+  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, systemPrompt, uid, viewMode } = state
+  const userText = composerValue.trim()
   if (!userText) {
-    return state
+    return
   }
 
-  let { selectedSessionId } = state
-  const createdSessionFromList = !selectedSessionId || state.viewMode === 'list'
-  const sessions: readonly ChatSession[] = createdSessionFromList
-    ? await (async (): Promise<readonly ChatSession[]> => {
-        selectedSessionId = crypto.randomUUID()
-        const newSession = createSession(state, selectedSessionId)
-        await saveChatSession(newSession)
-        return [...state.sessions, newSession]
-      })()
-    : state.sessions
+  const shouldCreateNewSession = !selectedSessionId || viewMode === 'list'
 
-  await ensureSubscribed(state.uid, selectedSessionId)
+  // TODO there is a race condition when the user submits another query
+  // while the session is being created
+  let actualSessionId = selectedSessionId
+  if (shouldCreateNewSession) {
+    actualSessionId = await createNewSession()
+  }
 
   const nextState: PrototypeState = {
     ...state,
-    chatInputHistory: getNextChatInputHistory(state.chatInputHistory, userText),
+    chatInputHistory: getNextChatInputHistory(chatInputHistory, userText),
     chatInputHistoryIndex: -1,
     composerValue: '',
     focus: 'composer',
     focused: true,
-    lastSubmittedSessionId: selectedSessionId,
-    selectedSessionId,
-    sessions,
-    viewMode: createdSessionFromList ? 'detail' : state.viewMode,
+    lastSubmittedSessionId: actualSessionId,
+    selectedSessionId: actualSessionId,
+    viewMode: 'detail',
   }
+
+  setState(uid, nextState)
+
+  await ensureSubscribed(uid, actualSessionId)
 
   const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
@@ -123,17 +98,25 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       }
     : nextState
 
-  if (useMockApiEnabled(effectiveState)) {
-    setState(state.uid, effectiveState)
-    void submitToCoordinator(effectiveState, selectedSessionId, userText).catch(() => {})
-    return effectiveState
+  setState(uid, effectiveState)
+  const coordinatorModelId = getCoordinatorModelId(state)
+  if (selectedModelId === 'test' && !useMockApiEnabled(state)) {
+    await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
+      text: `Mock AI response: I received "${userText}".`,
+    })
   }
-
-  setState(state.uid, effectiveState)
-  try {
-    await submitToCoordinator(effectiveState, selectedSessionId, userText)
-    return effectiveState
-  } catch {
-    return effectiveState
-  }
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
+    attachments: getComposerAttachments(state),
+    authAccessToken: getAuthAccessToken(state),
+    backendUrl: getBackendUrl(state),
+    id: crypto.randomUUID(),
+    modelId: coordinatorModelId,
+    openAiKey: openApiApiKey || '',
+    requestId: crypto.randomUUID(),
+    role: 'user',
+    sessionId: actualSessionId,
+    systemPrompt: systemPrompt,
+    text: userText,
+    useOwnBackend: useOwnBackendEnabled(state),
+  })
 }

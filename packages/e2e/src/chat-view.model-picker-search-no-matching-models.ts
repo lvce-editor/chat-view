@@ -16,5 +16,6 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await searchInput.type('not-found-query')
 
   await expect(items).toHaveCount(1)
-  await expect(items.nth(0)).toContainText('No matching models have been found.')
+  const item0 = items.nth(0)
+  await expect(item0).toContainText('No matching models have been found.')
 }

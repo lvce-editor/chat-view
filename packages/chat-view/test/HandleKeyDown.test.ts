@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleKeyDown from '../src/parts/HandleKeyDown/HandleKeyDown.ts'
@@ -8,10 +8,6 @@ import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMoc
 import { registerMockQuickPickRpc } from '../src/parts/TestHelpers/RegisterMockQuickPickRpc.ts'
 
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
-
-const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
-  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
-}
 
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
@@ -24,42 +20,32 @@ afterEach(() => {
 test('handleKeyDown should submit on Enter', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
   const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.composerValue).toBe('')
-  expect(result.focus).toBe('composer')
-  expect(result.focused).toBe(true)
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
+  expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should create a new session on Enter from list mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
   const state = {
     ...createDefaultState(),
     composerValue: 'hello',
     lastNormalViewMode: 'detail' as const,
     viewMode: 'list' as const,
   }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
 
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
 
-  expect(result.sessions).toHaveLength(state.sessions.length + 1)
-  const newSession = result.sessions.at(-1)
-  expect(newSession?.id).toBe(result.selectedSessionId)
-  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
-  expect(newSession?.messages[0]?.text).toBe('hello')
-  expect(result.viewMode).toBe('detail')
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
+  expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should not submit on Shift+Enter', async () => {
@@ -139,9 +125,13 @@ test('handleKeyDown should not submit blank message', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state = { ...createDefaultState(), composerValue: '   ' }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].messages).toHaveLength(0)
   expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should ignore non-enter keys', async () => {

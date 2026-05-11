@@ -134,6 +134,67 @@ test('openMockSession should delegate parsing to chat message parsing worker', a
   expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['worker']]])
 })
 
+test('openMockSession should fall back to plain text when parsing worker fails', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = createDefaultState()
+  const mockChatMessages: readonly ChatMessage[] = [
+    {
+      id: 'message-1',
+      role: 'user',
+      text: 'hello',
+      time: '10:00',
+    },
+    {
+      id: 'message-2',
+      role: 'assistant',
+      text: 'world',
+      time: '10:01',
+    },
+  ]
+  using mockRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async () => {
+      throw new Error('parse failed')
+    },
+  })
+
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-1', mockChatMessages)
+
+  expect(result.parsedMessages).toEqual([
+    {
+      id: 'message-1',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'hello',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'hello',
+    },
+    {
+      id: 'message-2',
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'world',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+      text: 'world',
+    },
+  ])
+  expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['hello', 'world']]])
+})
+
 test('openMockSession should apply optional session metadata', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

@@ -247,7 +247,10 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(0)).toHaveText('read file1.txt and file2.txt and tell me about them')
-  await expect(messages.nth(1)).toHaveText('toolsread_file file1.txtread_file file2.txt')
-  await expect(messages.nth(2)).toHaveText('file1.txt says "content of file one" and file2.txt says "content of file two".')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('read file1.txt and file2.txt and tell me about them')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('toolsread_file file1.txtread_file file2.txt')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('file1.txt says "content of file one" and file2.txt says "content of file two".')
 }

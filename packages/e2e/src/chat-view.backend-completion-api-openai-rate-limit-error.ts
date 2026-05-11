@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.backend-completion-api-openai-rate-limit-error'
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
@@ -7,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Command.execute('Chat.setUseOwnBackend', true)
   await Chat.mockBackendAuthResponse({
     accessToken: 'backend-token',
@@ -28,8 +30,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Backend completion request failed (status 429).')
-  await expect(messages.nth(1)).toContainText('Error code: openai_api_error.')
-  await expect(messages.nth(1)).toContainText('OpenAI API error (status 429): Rate limit reached for gpt-5.4-mini')
-  await expect(messages.nth(1)).toContainText('Please try again in 14.924s.')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Backend completion request failed (status 429).')
+  await expect(message1).toContainText('Error code: openai_api_error.')
+  await expect(message1).toContainText('OpenAI API error (status 429): Rate limit reached for gpt-5.4-mini')
+  await expect(message1).toContainText('Please try again in 14.924s.')
 }

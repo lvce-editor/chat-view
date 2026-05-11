@@ -54,7 +54,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('show readme')
-  await expect(messages.nth(1)).toContainText('read_file README.md')
-  await expect(messages.nth(1)).toContainText('(error: Tool "read_file" is disabled in chat.toolEnablement preferences.)')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('show readme')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('read_file README.md')
+  await expect(message1).toContainText('(error: Tool "read_file" is disabled in chat.toolEnablement preferences.)')
 }

@@ -9,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(false)
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Command.execute('Chat.setUseOwnBackend', true)
   await Chat.mockBackendAuthResponse({
     accessToken: 'backend-token',
@@ -28,8 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Backend completion request failed (status 403).')
-  await expect(messages.nth(1)).toContainText(
-    'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
-  )
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Backend completion request failed (status 403).')
+  await expect(message1).toContainText('Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.')
 }

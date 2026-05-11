@@ -17,6 +17,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await searchInput.type('codex')
 
   await expect(items).toHaveCount(2)
-  await expect(items.nth(0)).toContainText('Codex 5.3')
-  await expect(items.nth(1)).toContainText('Codex 5.3')
+  const item0 = items.nth(0)
+  await expect(item0).toContainText('Codex 5.3')
+  const item1 = items.nth(1)
+  await expect(item1).toContainText('Codex 5.3')
 }

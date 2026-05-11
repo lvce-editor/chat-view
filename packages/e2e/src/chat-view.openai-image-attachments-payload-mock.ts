@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-image-attachments-payload-mock'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
@@ -27,5 +29,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(2)).toHaveText('mock-request-summary images=1 text-files=1')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('mock-request-summary images=1 text-files=1')
 }

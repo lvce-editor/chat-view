@@ -20,6 +20,60 @@ test('commandMap should expose getComposerSelection as a wrapped getter', async 
   expect(result).toEqual([2, 5])
 })
 
+test('commandMap should expose getAuthState as a wrapped getter', async () => {
+  const uid = 993
+  const state = {
+    ...createDefaultState(),
+    authAccessToken: 'access-token',
+    authEnabled: true,
+    authErrorMessage: 'failed',
+    backendUrl: 'https://example.com',
+    userName: 'test-user',
+    userState: 'loggedIn' as const,
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 123,
+  }
+
+  StatusBarStates.set(uid, state, state)
+
+  const result = await commandMap['Chat.getAuthState'](uid)
+  expect(result).toEqual({
+    authAccessToken: 'access-token',
+    authEnabled: true,
+    authErrorMessage: 'failed',
+    backendUrl: 'https://example.com',
+    userName: 'test-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 123,
+  })
+})
+
+test('commandMap should expose handleAuthStateChange as a wrapped command', async () => {
+  const uid = 994
+  const state = createDefaultState()
+
+  StatusBarStates.set(uid, state, state)
+
+  await commandMap['Chat.handleAuthStateChange'](uid, {
+    authAccessToken: 'access-token-1',
+    authErrorMessage: '',
+    userName: 'test-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+  const result = StatusBarStates.get(uid)?.newState
+  expect(result).toMatchObject({
+    authAccessToken: 'access-token-1',
+    authErrorMessage: '',
+    userName: 'test-user',
+    userState: 'loggedIn',
+    userSubscriptionPlan: 'pro',
+    userUsedTokens: 42,
+  })
+})
+
 test('commandMap should expose handleClickRename as a wrapped command', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   using mockQuickPickRpc = registerMockQuickPickRpc({

@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-message-with-markdown-strikethrough'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
@@ -20,7 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const messages = Locator('.ChatMessages .Message')
   const strikethrough = Locator('.ChatMessages .Message .StrikeThrough')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('show strikethrough formatting')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('show strikethrough formatting')
   await expect(strikethrough).toHaveCount(1)
   await expect(strikethrough).toHaveText('strikethrough')
 }

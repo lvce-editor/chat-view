@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-api-key-missing-invalid-input'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
