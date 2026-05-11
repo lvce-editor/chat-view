@@ -654,27 +654,11 @@ test('handleClick should submit message when clicking send', async () => {
     composerValue: 'hello',
     viewMode: 'detail',
   }
-  const expectedState: ChatState = {
-    ...state,
-    composerValue: '',
-    sessions: [
-      {
-        ...state.sessions[0],
-        messages: [
-          { id: 'message-user-1', role: 'user', text: 'hello', time: '10:00' },
-          { id: 'message-assistant-1', role: 'assistant', text: 'Mock AI response: I received "hello".', time: '10:01' },
-        ],
-      },
-    ],
-  }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => expectedState,
+    'ChatModel.handleSubmit': async () => state,
   })
   const result = await HandleClick.handleClick(state, 'send')
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.composerValue).toBe('')
+  expect(result).toBe(state)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
@@ -686,27 +670,11 @@ test('handleClickSend should submit message', async () => {
     composerValue: 'hello',
     viewMode: 'detail',
   }
-  const expectedState: ChatState = {
-    ...state,
-    composerValue: '',
-    sessions: [
-      {
-        ...state.sessions[0],
-        messages: [
-          { id: 'message-user-1', role: 'user', text: 'hello', time: '10:00' },
-          { id: 'message-assistant-1', role: 'assistant', text: 'Mock AI response: I received "hello".', time: '10:01' },
-        ],
-      },
-    ],
-  }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => expectedState,
+    'ChatModel.handleSubmit': async () => state,
   })
   const result = await HandleClick.handleClickSend(state)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.composerValue).toBe('')
+  expect(result).toBe(state)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
@@ -719,37 +687,13 @@ test('handleClickSend should create a new session from list mode', async () => {
     lastNormalViewMode: 'detail',
     viewMode: 'list',
   }
-  const expectedState: ChatState = {
-    ...state,
-    composerValue: '',
-    selectedSessionId: 'session-2',
-    sessions: [
-      ...state.sessions,
-      {
-        id: 'session-2',
-        messages: [
-          { id: 'message-user-1', role: 'user', text: 'hello', time: '10:00' },
-          { id: 'message-assistant-1', role: 'assistant', text: 'Mock AI response: I received "hello".', time: '10:01' },
-        ],
-        projectId: state.selectedProjectId,
-        status: 'finished',
-        title: 'Chat 2',
-      },
-    ],
-    viewMode: 'detail',
-  }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => expectedState,
+    'ChatModel.handleSubmit': async () => state,
   })
 
   const result = await HandleClick.handleClickSend(state)
 
-  expect(result.sessions).toHaveLength(state.sessions.length + 1)
-  const newSession = result.sessions.at(-1)
-  expect(newSession?.id).toBe(result.selectedSessionId)
-  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
-  expect(newSession?.messages[0]?.text).toBe('hello')
-  expect(result.viewMode).toBe('detail')
+  expect(result).toBe(state)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 

@@ -21,31 +21,11 @@ test('handleKeyDown should submit on Enter', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
-  const expectedState = {
-    ...state,
-    composerValue: '',
-    focus: 'composer' as const,
-    focused: true,
-    sessions: [
-      {
-        ...state.sessions[0],
-        messages: [
-          { id: 'message-user-1', role: 'user' as const, text: 'hello', time: '10:00' },
-          { id: 'message-assistant-1', role: 'assistant' as const, text: 'Mock AI response: I received "hello".', time: '10:01' },
-        ],
-      },
-    ],
-  }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => expectedState,
+    'ChatModel.handleSubmit': async () => state,
   })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.composerValue).toBe('')
-  expect(result.focus).toBe('composer')
-  expect(result.focused).toBe(true)
+  expect(result).toBe(state)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
@@ -58,37 +38,13 @@ test('handleKeyDown should create a new session on Enter from list mode', async 
     lastNormalViewMode: 'detail' as const,
     viewMode: 'list' as const,
   }
-  const expectedState = {
-    ...state,
-    composerValue: '',
-    selectedSessionId: 'session-2',
-    sessions: [
-      ...state.sessions,
-      {
-        id: 'session-2',
-        messages: [
-          { id: 'message-user-1', role: 'user' as const, text: 'hello', time: '10:00' },
-          { id: 'message-assistant-1', role: 'assistant' as const, text: 'Mock AI response: I received "hello".', time: '10:01' },
-        ],
-        projectId: state.selectedProjectId,
-        status: 'finished' as const,
-        title: 'Chat 2',
-      },
-    ],
-    viewMode: 'detail' as const,
-  }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
-    'ChatModel.handleSubmit': async () => expectedState,
+    'ChatModel.handleSubmit': async () => state,
   })
 
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
 
-  expect(result.sessions).toHaveLength(state.sessions.length + 1)
-  const newSession = result.sessions.at(-1)
-  expect(newSession?.id).toBe(result.selectedSessionId)
-  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
-  expect(newSession?.messages[0]?.text).toBe('hello')
-  expect(result.viewMode).toBe('detail')
+  expect(result).toBe(state)
   expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 

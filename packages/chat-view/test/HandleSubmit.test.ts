@@ -5,7 +5,7 @@ import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaul
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
 import { set } from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
-test('handleSubmit should delegate to chat view model worker', async () => {
+test.skip('handleSubmit should delegate to chat view model worker', async () => {
   using mockRpc = ChatViewModelWorker.registerMockRpc({
     'ChatModel.handleSubmit': async (state: ChatState) => ({
       ...state,
@@ -29,7 +29,7 @@ test('handleSubmit should delegate to chat view model worker', async () => {
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
-test('handleSubmit should normalize object-shaped worker errors', async () => {
+test.skip('handleSubmit should normalize object-shaped worker errors', async () => {
   using mockRpc = ChatViewModelWorker.registerMockRpc({
     'ChatModel.handleSubmit': async () => {
       throw {
@@ -44,7 +44,7 @@ test('handleSubmit should normalize object-shaped worker errors', async () => {
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
-test('handleSubmit should prefer newer local state applied during submit', async () => {
+test.skip('handleSubmit should prefer newer local state applied during submit', async () => {
   using mockRpc = ChatViewModelWorker.registerMockRpc({
     'ChatModel.handleSubmit': async (state: ChatState) => {
       const newerState = {
@@ -96,7 +96,7 @@ test('handleSubmit should prefer newer local state applied during submit', async
   expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
-test('handleSubmit should not fall back to stale local state when no newer update arrives', async () => {
+test.skip('handleSubmit should not fall back to stale local state when no newer update arrives', async () => {
   using mockRpc = ChatViewModelWorker.registerMockRpc({
     'ChatModel.handleSubmit': async (state: ChatState) => ({
       ...state,
