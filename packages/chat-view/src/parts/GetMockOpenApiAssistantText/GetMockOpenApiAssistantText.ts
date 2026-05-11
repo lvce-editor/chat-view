@@ -129,8 +129,9 @@ export const getMockOpenApiAssistantText = async (
   onToolCallsChunk?: (toolCalls: readonly StreamingToolCall[]) => Promise<void>,
   onDataEvent?: (value: unknown) => Promise<void>,
   onEventStreamFinished?: () => Promise<void>,
+  requestId?: string,
 ): Promise<GetMockOpenApiAssistantTextResult> => {
-  const error = MockOpenApiStream.takeErrorResponse()
+  const error = MockOpenApiStream.takeErrorResponse(requestId)
   if (error) {
     return error
   }
@@ -263,7 +264,7 @@ export const getMockOpenApiAssistantText = async (
   }
 
   while (!requestDone) {
-    const chunk = await MockOpenApiStream.readNextChunk()
+    const chunk = await MockOpenApiStream.readNextChunk(requestId)
     if (typeof chunk !== 'string') {
       break
     }

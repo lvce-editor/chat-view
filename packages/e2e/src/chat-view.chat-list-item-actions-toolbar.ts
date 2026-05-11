@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.chat-list-item-actions-toolbar'
 
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {

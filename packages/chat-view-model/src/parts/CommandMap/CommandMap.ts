@@ -13,6 +13,7 @@ import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
 import { handleChatStorageUpdate } from '../HandleStorageUpdate/HandleStorageUpdate.ts'
 import { loadContent } from '../LoadContent/LoadContent.ts'
 import { mockBackendAuthResponse } from '../MockBackendAuthResponse/MockBackendAuthResponse.ts'
+import { getState } from '../ModelState/ModelState.ts'
 import { openMockSession } from '../OpenMockSession/OpenMockSession.ts'
 
 type CommandHandler = (...args: readonly never[]) => unknown
@@ -23,6 +24,7 @@ export const commandMap: Record<string, CommandHandler> = {
   'ChatModel.deleteChatSession': deleteChatSession,
   'ChatModel.getChatSession': getChatSession,
   'ChatModel.getChatViewEvents': getChatViewEvents,
+  'ChatModel.getState': getState,
   'ChatModel.handleSubmit': handleRpcSubmit,
   'ChatModel.listChatSessions': listChatSessions,
   'ChatModel.loadContent': loadContent,

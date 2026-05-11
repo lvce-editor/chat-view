@@ -24,6 +24,7 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
     oldState.agentMode === newState.agentMode &&
     oldState.agentModePickerOpen === newState.agentModePickerOpen &&
+    oldState.authAccessToken === newState.authAccessToken &&
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     isEqualComposerAttachments(oldState.composerAttachments, newState.composerAttachments) &&
@@ -71,6 +72,8 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.useChatMathWorker === newState.useChatMathWorker &&
     oldState.userName === newState.userName &&
     oldState.userState === newState.userState &&
+    oldState.userSubscriptionPlan === newState.userSubscriptionPlan &&
+    oldState.userUsedTokens === newState.userUsedTokens &&
     oldState.viewMode === newState.viewMode &&
     isEqualPrimaryControls(oldState.visiblePrimaryControls, newState.visiblePrimaryControls) &&
     oldState.voiceDictationEnabled === newState.voiceDictationEnabled
