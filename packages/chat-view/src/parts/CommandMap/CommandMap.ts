@@ -1,4 +1,5 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import { applyViewModelState } from '../ApplyViewModelState/ApplyViewModelState.ts'
 import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
 import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
@@ -103,6 +104,7 @@ import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveCom
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
+import { rerenderWithQuery } from '../RerenderWithQuery/RerenderWithQuery.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
@@ -139,6 +141,7 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
+  'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
@@ -253,6 +256,7 @@ export const commandMap = {
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
+  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),

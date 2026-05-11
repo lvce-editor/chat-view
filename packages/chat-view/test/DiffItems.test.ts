@@ -48,6 +48,27 @@ test('isEqual should return false when openrouter api key input changes', () => 
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
 
+test('isEqual should return false when auth access token changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), authAccessToken: '', sessions }
+  const state2: ChatState = { ...createDefaultState(), authAccessToken: 'access-token', sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
+test('isEqual should return false when user subscription plan changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), sessions, userSubscriptionPlan: '' }
+  const state2: ChatState = { ...createDefaultState(), sessions, userSubscriptionPlan: 'pro' }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
+test('isEqual should return false when used token count changes', () => {
+  const { sessions } = createDefaultState()
+  const state1: ChatState = { ...createDefaultState(), sessions, userUsedTokens: 0 }
+  const state2: ChatState = { ...createDefaultState(), sessions, userUsedTokens: 42 }
+  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+})
+
 test('isEqual should return false when sessions reference changes', () => {
   const state1: ChatState = createDefaultState()
   const state2: ChatState = {

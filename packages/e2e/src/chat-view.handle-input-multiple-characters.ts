@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.handle-input-multiple-characters'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
@@ -12,9 +10,9 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   // act
   await Chat.handleInput('a')
-  await Chat.handleInput('b')
-  await Chat.handleInput('c')
-  await Chat.handleInput('d')
+  await Chat.handleInput('ab')
+  await Chat.handleInput('abc')
+  await Chat.handleInput('abcd')
 
   // assert
   await expect(composer).toHaveValue('abcd')

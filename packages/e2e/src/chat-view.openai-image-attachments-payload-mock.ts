@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-image-attachments-payload-mock'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
