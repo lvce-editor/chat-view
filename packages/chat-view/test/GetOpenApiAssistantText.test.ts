@@ -161,6 +161,89 @@ test('getOpenApiAssistantText should omit disabled tools from request payload', 
   }
 })
 
+test('getOpenApiAssistantText should serialize assistant history as output_text', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchInvocation: readonly unknown[] | undefined
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    fetchInvocation = args
+    return {
+      json: async () => ({ output_text: 'ok' }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getOpenApiAssistantText(
+      [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-2',
+          role: 'assistant',
+          text: 'hi there',
+          time: '10:01',
+        },
+        {
+          id: 'message-3',
+          role: 'user',
+          text: 'please continue',
+          time: '10:02',
+        },
+      ],
+      'openai/gpt-4o-mini',
+      'oa-key-123',
+      'https://api.openai.com/v1',
+      '',
+      0,
+      {
+        stream: false,
+      },
+    )
+
+    expect(result).toEqual({
+      text: 'ok',
+      type: 'success',
+    })
+    const requestBody = getRequestBodyFromInit(fetchInvocation?.[1])
+    expect(requestBody.input).toEqual([
+      {
+        content: [
+          {
+            text: 'hello',
+            type: 'input_text',
+          },
+        ],
+        role: 'user',
+      },
+      {
+        content: [
+          {
+            text: 'hi there',
+            type: 'output_text',
+          },
+        ],
+        role: 'assistant',
+      },
+      {
+        content: [
+          {
+            text: 'please continue',
+            type: 'input_text',
+          },
+        ],
+        role: 'user',
+      },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('getOpenApiAssistantText should omit reasoning effort for unsupported models', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined

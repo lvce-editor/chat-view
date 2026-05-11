@@ -6,11 +6,13 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
-  await Command.execute('Chat.openModelPicker')
-  await expect(Locator('.ChatModelPicker')).toBeVisible()
+  await Chat.openModelPicker()
+  const modelPicker = Locator('.ChatModelPicker')
+  const composer = Locator('[name="composer"]')
+  await expect(modelPicker).toBeVisible()
 
   await Command.execute('Chat.handleClickModelPickerOverlay')
 
-  await expect(Locator('.ChatModelPicker')).toHaveCount(0)
-  await expect(Locator('[name="composer"]')).toBeFocused()
+  await expect(modelPicker).toHaveCount(0)
+  await expect(composer).toBeFocused()
 }

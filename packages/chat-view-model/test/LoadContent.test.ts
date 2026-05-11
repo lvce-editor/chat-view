@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
-import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
-import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { loadContent, type LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
 const createState = (): LoadContentState => {
@@ -18,6 +18,8 @@ const createState = (): LoadContentState => {
     authUseRedirect: false,
     backendUrl: '',
     chatHistoryEnabled: false,
+    chatInputHistory: [],
+    chatInputHistoryIndex: -1,
     chatListScrollTop: 0,
     composerAttachmentPreviewOverlayAttachmentId: '',
     composerAttachmentPreviewOverlayError: false,
@@ -33,6 +35,8 @@ const createState = (): LoadContentState => {
     composerSelectionStart: 0,
     composerValue: '',
     emitStreamingFunctionCallEvents: false,
+    focus: 'composer',
+    focused: false,
     gitBranches: [],
     gitBranchPickerErrorMessage: '',
     gitBranchPickerOpen: false,
@@ -41,6 +45,7 @@ const createState = (): LoadContentState => {
     hasSpaceForRunModePicker: true,
     initial: true,
     lastNormalViewMode: 'list',
+    lastSubmittedSessionId: '',
     listFocusedIndex: 0,
     listFocusOutline: false,
     messagesAutoScrollEnabled: true,
@@ -90,10 +95,12 @@ const createState = (): LoadContentState => {
     showModelUsageMultiplier: false,
     showRunMode: false,
     streamingEnabled: false,
+    systemPrompt: '',
     todoListToolEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     toolEnablement: {},
+    uid: 1,
     usageOverviewEnabled: false,
     useAuthWorker: false,
     useChatCoordinatorWorker: false,
@@ -154,6 +161,7 @@ const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.regis
     'ChatStorage.setSession': (session: ChatSession) => {
       sessions.set(session.id, cloneSession(session))
     },
+    'ChatStorage.subscribeSessionUpdates': async () => {},
   })
 }
 
@@ -274,6 +282,10 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     expect(result.userName).toBe('Simon')
     expect(result.userState).toBe('loggedIn')
     expect(result.voiceDictationEnabled).toBe(true)
+    expect(mockChatStorageRpc.invocations).toContainEqual([
+      'ChatStorage.subscribeSessionUpdates',
+      { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
+    ])
   } finally {
     MockBackendAuth.clear()
   }

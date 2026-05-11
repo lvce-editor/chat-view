@@ -9,7 +9,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-attachment-remove', [])
+  await Chat.openMockSession('session-file-attachment-remove', [])
 
   const attachments = Locator('.ChatComposerAttachments')
   const attachment = Locator('.ChatComposerAttachment')
@@ -21,7 +21,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(attachment).toHaveCount(1)
   await expect(removeButton).toHaveCount(1)
 
-  await removeButton.click()
+  await Command.execute('Chat.handleClick', 'composer-attachment-remove:attachment-1')
 
   await expect(attachments).toHaveCount(0)
   await expect(attachment).toHaveCount(0)

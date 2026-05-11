@@ -2,10 +2,10 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.model-picker-item-role-option'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
 
   const pickerList = Locator('.ChatOverlays ul.ChatModelPickerList')
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')

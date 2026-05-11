@@ -1,12 +1,15 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { renameSession } from '../RenameSession/RenameSession.ts'
 
-export const startRename = (state: ChatState, id: string): ChatState => {
+export const startRename = async (state: ChatState, id: string): Promise<ChatState> => {
   const { sessions } = state
   const session = sessions.find((item) => item.id === id)
   if (!session) {
     return state
   }
+  const renamedState = await renameSession(state, id, session.title)
   return {
+<<<<<<< HEAD
     ...state,
     composerSelectionEnd: session.title.length,
     composerSelectionStart: session.title.length,
@@ -14,6 +17,9 @@ export const startRename = (state: ChatState, id: string): ChatState => {
     inputSource: 'script',
     listSelectedSessionId: id,
     renamingSessionId: id,
+=======
+    ...renamedState,
+>>>>>>> main
     selectedSessionId: id,
   }
 }

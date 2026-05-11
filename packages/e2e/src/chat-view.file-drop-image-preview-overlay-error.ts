@@ -9,7 +9,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-image-preview-overlay-error', [])
+  await Chat.openMockSession('session-file-drop-image-preview-overlay-error', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const overlay = Locator('.ChatComposerAttachmentPreviewOverlay')

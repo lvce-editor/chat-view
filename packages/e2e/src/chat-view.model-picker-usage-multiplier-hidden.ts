@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setShowModelUsageMultiplier', false)
-  await Command.execute('Chat.openModelPicker')
+  await Chat.openModelPicker()
 
   const modelPicker = Locator('.ChatModelPicker')
   const usageMultipliers = Locator('.ChatModelPicker .ChatModelPickerItemUsageCost')

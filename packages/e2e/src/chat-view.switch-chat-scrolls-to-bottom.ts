@@ -31,6 +31,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await Chat.openMockSession('Chat A', getMockMessages('chat-a'))
 
   await expect(messages).toHaveCount(80)
-  await expect(messages.nth(79)).toContainText('chat-a message 79')
+  const message79 = messages.nth(79)
+  await expect(message79).toContainText('chat-a message 79')
   await expect(chatMessages).not.toHaveJSProperty('scrollTop', 0)
 }

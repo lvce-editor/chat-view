@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-list-more-expand-collapse'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
@@ -17,9 +17,12 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const moreToggle = Locator('.ChatList .ChatListItemLabel[name="chat-list-show-more"]')
 
   await expect(sessionTitles).toHaveCount(3)
-  await expect(sessionTitles.nth(0)).toHaveText('Chat 1')
-  await expect(sessionTitles.nth(1)).toHaveText('Chat 2')
-  await expect(sessionTitles.nth(2)).toHaveText('Chat 3')
+  const sessionTitle0 = sessionTitles.nth(0)
+  await expect(sessionTitle0).toHaveText('Chat 1')
+  const sessionTitle1 = sessionTitles.nth(1)
+  await expect(sessionTitle1).toHaveText('Chat 2')
+  const sessionTitle2 = sessionTitles.nth(2)
+  await expect(sessionTitle2).toHaveText('Chat 3')
   await expect(moreToggle).toHaveCount(0)
 
   await Chat.openMockSession('Chat 4', [])
@@ -30,13 +33,15 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(moreToggle).toHaveCount(1)
   await expect(moreToggle).toHaveText('Show 2 More')
 
-  await moreToggle.click()
+  await Command.execute('Chat.handleClick', 'chat-list-show-more')
   await expect(sessionTitles).toHaveCount(5)
-  await expect(sessionTitles.nth(3)).toHaveText('Chat 4')
-  await expect(sessionTitles.nth(4)).toHaveText('Chat 5')
+  const sessionTitle3 = sessionTitles.nth(3)
+  await expect(sessionTitle3).toHaveText('Chat 4')
+  const sessionTitle4 = sessionTitles.nth(4)
+  await expect(sessionTitle4).toHaveText('Chat 5')
   await expect(moreToggle).toHaveText('Show Less')
 
-  await moreToggle.click()
+  await Command.execute('Chat.handleClick', 'chat-list-show-more')
   await expect(sessionTitles).toHaveCount(3)
   await expect(moreToggle).toHaveText('Show 2 More')
 }

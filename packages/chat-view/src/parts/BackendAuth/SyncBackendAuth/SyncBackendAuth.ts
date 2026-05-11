@@ -15,7 +15,7 @@ export const syncBackendAuth = async (backendUrl: string, useAuthWorker = false)
       return parseBackendAuthResponse(mockResponse)
     }
     if (useAuthWorker) {
-      return AuthWorker.invoke('Auth.syncBackendAuth', { backendUrl }) as Promise<BackendAuthState>
+      return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl) as Promise<BackendAuthState>
     }
     const worker = true
     if (worker) {

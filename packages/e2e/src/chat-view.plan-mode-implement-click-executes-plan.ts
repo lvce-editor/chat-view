@@ -23,13 +23,15 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const implementButton = Locator('.ChatSendAreaBottom .Button[name="implement-plan"]')
   const agentModeSelect = Locator('.ChatSendArea .ChatSelect[name="agent-mode-picker-toggle"]')
-  await implementButton.click()
+  await Command.execute('Chat.handleClick', 'implement-plan')
 
   const messages = Locator('.ChatMessages .Message')
 
   await expect(agentModeSelect).toHaveText('Agent')
   await expect(messages).toHaveCount(4)
-  await expect(messages.nth(2)).toContainText('Execute this implementation plan in the current workspace.')
-  await expect(messages.nth(3)).toContainText('Implemented the requested plan.')
+  const message2 = messages.nth(2)
+  await expect(message2).toContainText('Execute this implementation plan in the current workspace.')
+  const message3 = messages.nth(3)
+  await expect(message3).toContainText('Implemented the requested plan.')
   await expect(implementButton).toHaveCount(0)
 }

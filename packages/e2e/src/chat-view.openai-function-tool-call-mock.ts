@@ -52,6 +52,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('show readme')
-  await expect(messages.nth(1)).toHaveText('toolsread_file README.md')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('show readme')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('toolsread_file README.md')
 }

@@ -7,7 +7,7 @@ const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-image-emoji-filename', [])
+  await Chat.openMockSession('session-file-drop-image-emoji-filename', [])
 
   const composer = Locator('.ChatInputBox[name="composer"]')
   const attachment = Locator('.ChatComposerAttachment')

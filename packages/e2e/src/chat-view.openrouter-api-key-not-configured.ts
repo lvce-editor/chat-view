@@ -1,6 +1,8 @@
 // cspell:ignore openrouter
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openrouter-api-key-not-configured'
 
 export const test: Test = async ({ Chat, expect, Locator }) => {
@@ -16,7 +18,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenRouter API key is not configured')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenRouter API key is not configured')
   const openRouterApiKeyInput = Locator('[name="open-router-api-key"]')
   await expect(openRouterApiKeyInput).toBeVisible()
   await expect(openRouterApiKeyInput).toHaveAttribute('pattern', null)

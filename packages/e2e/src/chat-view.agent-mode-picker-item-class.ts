@@ -12,8 +12,10 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const selectedListItem = Locator('.ChatOverlays ul.ChatModelPickerList > li.ChatModelPickerItemSelected')
 
   await expect(listItems).toHaveCount(2)
-  await expect(listItems.nth(0)).toHaveText('Agent')
-  await expect(listItems.nth(1)).toHaveText('Plan')
+  const listItem0 = listItems.nth(0)
+  await expect(listItem0).toHaveText('Agent')
+  const listItem1 = listItems.nth(1)
+  await expect(listItem1).toHaveText('Plan')
   await expect(selectedListItem).toHaveCount(1)
   await expect(selectedListItem).toHaveText('Agent')
 }

@@ -38,7 +38,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleSubmit()
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText('ok')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('ok')
 
   const initialRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const initialTools = initialRequests[0]?.payload.tools || []
@@ -58,7 +59,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleSubmit()
 
   await expect(messages).toHaveCount(4)
-  await expect(messages.nth(3)).toHaveText('ok')
+  const message3 = messages.nth(3)
+  await expect(message3).toHaveText('ok')
 
   const disabledRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const disabledTools = disabledRequests[0]?.payload.tools || []

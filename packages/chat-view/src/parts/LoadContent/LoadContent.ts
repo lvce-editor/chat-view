@@ -1,65 +1,8 @@
-/* cspell:ignore sonarjs */
-
-import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { BackendAuthState } from '../BackendAuth/BackendAuthState/BackendAuthState.ts'
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
-import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
-import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
-import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
-import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
-import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
-import { getSavedComposerSelection } from '../GetSavedComposerSelection/GetSavedComposerSelection.ts'
-import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
-import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
-import { getSavedMessagesScrollTop } from '../GetSavedMessagesScrollTop/GetSavedMessagesScrollTop.ts'
-import { getSavedProjectExpandedIds } from '../GetSavedProjectExpandedIds/GetSavedProjectExpandedIds.ts'
-import { getSavedProjectListScrollTop } from '../GetSavedProjectListScrollTop/GetSavedProjectListScrollTop.ts'
-import { getSavedProjects } from '../GetSavedProjects/GetSavedProjects.ts'
-import { getSavedProjectSidebarWidth } from '../GetSavedProjectSidebarWidth/GetSavedProjectSidebarWidth.ts'
-import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReasoningEffort.ts'
-import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
-import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
-import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
-import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
-import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
-import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
-import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
-import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
-import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
-import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
-import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
-import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
-
-const getInitialAuthState = async (
-  authEnabled: boolean,
-  useOwnBackend: boolean,
-  backendUrl: string,
-  useAuthWorker: boolean,
-): Promise<BackendAuthState> => {
-  if (!authEnabled && !useOwnBackend) {
-    return getLoggedOutBackendAuthState()
-  }
-  try {
-    const authState = await RendererWorker.invoke('Layout.getUserInfo')
-    if (authState && typeof authState === 'object') {
-      return {
-        ...getLoggedOutBackendAuthState(),
-        ...authState,
-      }
-    }
-  } catch {
-    // Fallback for environments that have not yet exposed layout user info.
-  }
-  return backendUrl ? syncBackendAuth(backendUrl, useAuthWorker) : getLoggedOutBackendAuthState()
-}
 
 export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
+<<<<<<< HEAD
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   const savedComposerValue = getSavedComposerValue(savedState)
@@ -218,4 +161,7 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
   }
   const refreshedState = await refreshGitBranchPickerVisibility(nextState)
   return updateResponsivePickerState(refreshedState)
+=======
+  return ChatViewModelWorker.invoke('ChatModel.loadContent', state, savedState) as Promise<ChatState>
+>>>>>>> main
 }

@@ -9,7 +9,7 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-image-attachment-context-menu-entries', [])
+  await Chat.openMockSession('session-image-attachment-context-menu-entries', [])
 
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
   const preview = Locator('.ChatComposerAttachmentPreview')

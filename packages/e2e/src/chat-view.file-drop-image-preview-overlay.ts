@@ -10,13 +10,14 @@ export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
-  await Command.execute('Chat.openMockSession', 'session-file-drop-image-preview-overlay', [])
+  await Chat.openMockSession('session-file-drop-image-preview-overlay', [])
 
   const overlay = Locator('.ChatComposerAttachmentPreviewOverlay')
   const overlayImage = Locator('.ChatComposerAttachmentPreviewOverlayImage')
+  const composer = Locator('.ChatInputBox[name="composer"]')
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
 
-  await expect(Locator('.ChatInputBox[name="composer"]')).toBeVisible()
+  await expect(composer).toBeVisible()
 
   await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
   await Command.execute('Chat.showComposerAttachmentPreviewOverlay', 'attachment-1')

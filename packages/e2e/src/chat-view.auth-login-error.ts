@@ -18,7 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setAuthEnabled', true)
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Chat.mockBackendAuthResponse({
     message: 'Invalid backend credentials.',
     type: 'error',
@@ -28,7 +28,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const logoutButton = Locator('button[name="logout"]')
 
   await expect(loginButton).toBeVisible()
-  await loginButton.click()
+  await Command.execute('Chat.handleClick', 'login')
 
   const authError = Locator('.ChatAuthError')
   await expect(authError).toBeVisible()
