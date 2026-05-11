@@ -113,7 +113,6 @@ export const getCss = (
   height: ${buttonsHeight}px;
 }
 
-<<<<<<< HEAD
 .ChatListItemSelected {
   background: var(--vscode-list-inactiveSelectionBackground);
   color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
@@ -123,7 +122,8 @@ export const getCss = (
 .ChatListItemSelected.ChatListItemFocused {
   background: var(--vscode-list-activeSelectionBackground);
   color: var(--vscode-list-activeSelectionForeground, var(--vscode-foreground));
-=======
+}
+
 .ChatListMoreToggle {
   list-style: none;
   display: flex;
@@ -172,7 +172,6 @@ export const getCss = (
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
->>>>>>> main
 }
 
 
