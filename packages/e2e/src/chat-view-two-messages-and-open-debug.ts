@@ -1,22 +1,14 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-<<<<<<< HEAD
 export const name = 'chat-view.two-messages-and-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator, Command }) => {
-  // arrange
-=======
-export const skip = 1
-
-export const name = 'chat-view.two-messages-and-open-debug'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
->>>>>>> origin/main
   await Chat.show()
   await Chat.handleInput('hello from e2e')
   await Chat.handleSubmit()
@@ -33,11 +25,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute(`Chat.openDebugView`)
 
   // assert
-<<<<<<< HEAD
 
   // TODO verify items are visible
-=======
-  const rows = Locator('.TableBody .TableRow')
-  await expect(rows).toHaveCount(4)
->>>>>>> origin/main
+  // const rows = Locator('.TableBody .TableRow')
+  // await expect(rows).toHaveCount(4)
 }
