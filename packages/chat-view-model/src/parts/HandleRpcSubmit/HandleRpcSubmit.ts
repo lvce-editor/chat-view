@@ -93,9 +93,9 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
   const effectiveState = authState
     ? {
-        ...nextState,
-        ...authState,
-      }
+      ...nextState,
+      ...authState,
+    }
     : nextState
 
   setState(uid, effectiveState)
