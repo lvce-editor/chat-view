@@ -4,7 +4,6 @@ export const name = 'chat-view.two-messages-and-open-debug'
 
 export const skip = 1
 
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
