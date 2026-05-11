@@ -1,4 +1,4 @@
-import { ChatState } from '../ChatState/ChatState.ts'
+import type { ChatState } from '../ChatState/ChatState.ts'
 
 export const openAgentModePicker = (state: ChatState): ChatState => {
   const { agentModePickerOpen, focus, focused, models } = state
