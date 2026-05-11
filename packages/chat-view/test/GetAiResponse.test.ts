@@ -1240,13 +1240,6 @@ test('getAiResponse should parse mock OpenAI SSE chunks with response.completed 
         arguments: '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
         id: 'call_01',
         name: 'write_file',
-      },
-    ],
-    [
-      {
-        arguments: '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
-        id: 'call_01',
-        name: 'write_file',
         result: '{"addedLines":1,"linesAdded":1,"linesDeleted":0,"ok":true,"removedLines":0,"uri":"file:///workspace/notes.txt"}',
         status: 'success',
       },
