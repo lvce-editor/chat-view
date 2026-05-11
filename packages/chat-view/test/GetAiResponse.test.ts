@@ -1170,6 +1170,96 @@ test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when
   expect(chunks).toEqual(['Hel', 'lo'])
 })
 
+test('getAiResponse should parse mock OpenAI SSE chunks with response.completed tool calls', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        addedLines: 1,
+        linesAdded: 1,
+        linesDeleted: 0,
+        ok: true,
+        removedLines: 0,
+        uri: 'file:///workspace/notes.txt',
+      }),
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Write file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  MockOpenApiStream.reset()
+  MockOpenApiStream.pushChunk(
+    'data: {"type":"response.completed","response":{"id":"resp_01","output":[{"type":"function_call","id":"fc_01","call_id":"call_01","name":"write_file","arguments":"{\\"content\\":\\"alpha\\nbeta\\ngamma\\",\\"uri\\":\\"file:///workspace/notes.txt\\"}","status":"completed"}],"status":"completed"}}\n\n',
+  )
+  MockOpenApiStream.pushChunk('data: [DONE]\n\n')
+  MockOpenApiStream.finish()
+  const toolCallsChunks: unknown[] = []
+
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    onToolCallsChunk: async (toolCalls) => {
+      toolCallsChunks.push(toolCalls)
+    },
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    streamingEnabled: true,
+    useMockApi: true,
+    userText: 'hello',
+    workspaceUri: 'file:///workspace',
+  })
+
+  expect(result.role).toBe('assistant')
+  expect(result.text).toBe('')
+  expect(toolCallsChunks).toEqual([
+    [
+      {
+        arguments: '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
+        id: 'call_01',
+        name: 'write_file',
+      },
+    ],
+    [
+      {
+        arguments: '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
+        id: 'call_01',
+        name: 'write_file',
+        result: '{"addedLines":1,"linesAdded":1,"linesDeleted":0,"ok":true,"removedLines":0,"uri":"file:///workspace/notes.txt"}',
+        status: 'success',
+      },
+    ],
+  ])
+  expect(mockChatToolRpc.invocations).toContainEqual([
+    'ChatTool.execute',
+    'write_file',
+    '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
+    { assetDir: '', platform: 0, workspaceUri: 'file:///workspace' },
+  ])
+})
+
 test.skip('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = async (): Promise<Response> => {

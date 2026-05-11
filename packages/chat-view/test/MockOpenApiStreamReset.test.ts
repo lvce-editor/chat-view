@@ -5,7 +5,7 @@ import { mockOpenApiStreamReset } from '../src/parts/MockOpenApiStreamReset/Mock
 
 test('mockOpenApiStreamReset should delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamReset': async () => { },
+    'ChatCoordinator.mockOpenApiStreamReset': async () => {},
   })
   const state = createDefaultState()
 
@@ -17,7 +17,7 @@ test('mockOpenApiStreamReset should delegate to chat coordinator worker', async 
 
 test('mockOpenApiStreamReset should not delegate named requests to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamReset': async () => { },
+    'ChatCoordinator.mockOpenApiStreamReset': async () => {},
   })
   const state = createDefaultState()
 
