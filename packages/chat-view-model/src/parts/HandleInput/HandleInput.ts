@@ -4,6 +4,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { setState } from '../ModelState/ModelState.ts'
+import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 import type { ChatModel, ComposerAttachment } from '../ViewModel/ViewModel.ts'
 
 const Composer = 'composer'
@@ -55,10 +56,8 @@ const rerender = async (uid: number): Promise<void> => {
   await RendererWorker.invoke('Chat.rerenderWithQuery', uid)
 }
 
-export interface HandleInputState {
-  readonly chatInputHistory: readonly string[]
+export interface HandleInputState extends PrototypeStateBase {
   readonly chatInputHistoryDraft: string
-  readonly chatInputHistoryIndex: number
   readonly composerAttachments: readonly ComposerAttachment[]
   readonly composerAttachmentsHeight: number
   readonly composerFontFamily: string
@@ -78,9 +77,6 @@ export interface HandleInputState {
   readonly openApiApiKeyInput: string
   readonly openRouterApiKeyInput: string
   readonly searchValue: string
-  readonly selectedModelId: string
-  readonly selectedSessionId: string
-  readonly uid: number
   readonly visibleModels: readonly ChatModel[]
   readonly width: number
 }

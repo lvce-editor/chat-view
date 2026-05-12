@@ -36,11 +36,21 @@ const createState = (overrides: Partial<HandleInputState> = {}): HandleInputStat
       { id: 'openrouter/codex-mini', name: 'Codex Mini', provider: 'openRouter' },
     ],
     openApiApiKeyInput: '',
+    openApiApiKey: '',
     openRouterApiKeyInput: '',
+    focus: 'composer',
+    focused: true,
+    lastSubmittedSessionId: '',
+    parsedMessages: [],
+    projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],
     searchValue: '',
     selectedModelId: 'test',
+    selectedProjectId: 'project-1',
     selectedSessionId: 'session-1',
+    sessions: [{ id: 'session-1', messages: [], title: 'Session 1' }],
+    systemPrompt: '',
     uid: 1,
+    viewMode: 'detail',
     visibleModels: [
       { id: 'test', name: 'Test Model' },
       { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' },
@@ -58,6 +68,7 @@ test('handleInput should update composer value and persist state in the model', 
     'Chat.rerenderWithQuery': async () => {},
     'MeasureTextBlockHeight.measureTextBlockHeight': async () => 44,
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState()
 
   const result = await handleInput(state, Composer, 'hello', 'user')
@@ -78,6 +89,7 @@ test('handleInput should mark script input source', async () => {
     'Chat.rerenderWithQuery': async () => {},
     'MeasureTextBlockHeight.measureTextBlockHeight': async () => 44,
   })
+  expect(mockRendererRpc).toBeDefined()
 
   const result = await handleInput(createState(), Composer, 'hello', 'script')
 
@@ -91,6 +103,7 @@ test('handleInput should keep history draft while browsing history', async () =>
     'Chat.rerenderWithQuery': async () => {},
     'MeasureTextBlockHeight.measureTextBlockHeight': async () => 44,
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState({
     chatInputHistory: ['first', 'second'],
     chatInputHistoryDraft: 'my unsent draft',
@@ -109,6 +122,7 @@ test('handleInput should cap composer height based on maxComposerRows', async ()
     'Chat.rerenderWithQuery': async () => {},
     'MeasureTextBlockHeight.measureTextBlockHeight': async () => 999,
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState({
     composerLineHeight: 20,
     maxComposerRows: 3,
@@ -124,6 +138,7 @@ test('handleInput should update openRouterApiKeyInput when editing api key texta
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
 
   const result = await handleInput(createState(), OpenRouterApiKeyInput, 'or-key-abc')
 
@@ -135,6 +150,7 @@ test('handleInput should update openApiApiKeyInput when editing openapi api key 
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
 
   const result = await handleInput(createState(), OpenApiApiKeyInput, 'oa-key-abc')
 
@@ -146,6 +162,7 @@ test('handleInput should update searchValue when editing search input', async ()
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
 
   const result = await handleInput(createState(), Search, 'dummy')
 
@@ -156,6 +173,7 @@ test('handleInput should update modelPickerSearchValue when editing model picker
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState()
 
   const result = await handleInput(state, ModelPickerSearch, 'gpt')
@@ -168,6 +186,7 @@ test('handleInput should keep selected model when it remains visible after filte
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState({
     selectedModelId: 'openapi/gpt-4.1-mini',
   })
@@ -181,6 +200,7 @@ test('handleInput should select the first visible model when filtering hides the
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Chat.rerenderWithQuery': async () => {},
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState({
     selectedModelId: 'openapi/gpt-4.1-mini',
   })
@@ -198,6 +218,7 @@ test('handleInput should append a handle-input event for composer changes', asyn
     'Chat.rerenderWithQuery': async () => {},
     'MeasureTextBlockHeight.measureTextBlockHeight': async () => 44,
   })
+  expect(mockRendererRpc).toBeDefined()
   const state = createState({
     selectedSessionId: 'session-9',
   })
