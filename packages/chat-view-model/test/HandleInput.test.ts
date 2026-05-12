@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
 import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { handleInput, type HandleInputState } from '../src/parts/HandleInput/HandleInput.ts'
 import { getState } from '../src/parts/ModelState/ModelState.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
-import { handleInput, type HandleInputState } from '../src/parts/HandleInput/HandleInput.ts'
 
 const Composer = 'composer'
 const Search = 'search'
@@ -24,7 +24,10 @@ const createState = (overrides: Partial<HandleInputState> = {}): HandleInputStat
     composerSelectionEnd: 0,
     composerSelectionStart: 0,
     composerValue: '',
+    focus: 'composer',
+    focused: true,
     inputSource: 'user',
+    lastSubmittedSessionId: '',
     maxComposerRows: 5,
     modelPickerHeaderHeight: 40,
     modelPickerHeight: 120,
@@ -35,12 +38,9 @@ const createState = (overrides: Partial<HandleInputState> = {}): HandleInputStat
       { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' },
       { id: 'openrouter/codex-mini', name: 'Codex Mini', provider: 'openRouter' },
     ],
-    openApiApiKeyInput: '',
     openApiApiKey: '',
+    openApiApiKeyInput: '',
     openRouterApiKeyInput: '',
-    focus: 'composer',
-    focused: true,
-    lastSubmittedSessionId: '',
     parsedMessages: [],
     projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],
     searchValue: '',
