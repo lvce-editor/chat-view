@@ -15,6 +15,19 @@ import { getImageNotSupportedMessage } from '../src/parts/GetOpenApiErrorMessage
 import * as MockOpenApiRequest from '../src/parts/MockOpenApiRequest/MockOpenApiRequest.ts'
 import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input instanceof Request) {
+    return input.url
+  }
+  return ''
+}
+
 test.skip('getAiResponse should use chat coordinator worker when enabled', async () => {
   const chunks: string[] = []
   let streamFinished = 0
@@ -86,8 +99,13 @@ test.skip('getAiResponse should use chat coordinator worker when enabled', async
 
 test.skip('getAiResponse should include OpenRouter raw 429 metadata message in assistant text', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async (input: unknown) => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+=======
+  globalThis.fetch = async (input: unknown): Promise<Response> => {
+    const url = getRequestUrl(input)
+>>>>>>> origin/main
     if (url.endsWith('/chat/completions')) {
       return {
         json: async () => ({
@@ -341,7 +359,11 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
   const originalFetch = globalThis.fetch
   let actualUrl = ''
   let actualInit: RequestInit | undefined
+<<<<<<< HEAD
   globalThis.fetch = async (...args: readonly unknown[]) => {
+=======
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+>>>>>>> origin/main
     const [input, init] = args
     const requestInput = input as string | URL | { readonly url: string }
     actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
@@ -401,11 +423,173 @@ test('getAiResponse should use backend completions when useOwnBackend is enabled
     expect(JSON.parse(body)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
       instructions: 'You are helpful.',
+      max_tool_calls: defaultMaxToolCalls,
+      model: 'gpt-4o-mini',
+      tool_choice: 'auto',
+      tools: [],
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should use backend completions for authenticated users by default', async () => {
+  const originalFetch = globalThis.fetch
+  let actualUrl = ''
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    const [input, init] = args
+    const requestInput = input as string | URL | { readonly url: string }
+    actualUrl = typeof requestInput === 'string' ? requestInput : requestInput instanceof URL ? requestInput.href : requestInput.url
+    actualInit = init as RequestInit | undefined
+    return {
+      json: async () => ({
+        output_text: 'Backend completion response',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      systemPrompt: 'You are helpful.',
+      useMockApi: false,
+      userText: 'hello',
+    })
+
+    expect(result.role).toBe('assistant')
+    expect(result.text).toBe('Backend completion response')
+    expect(actualUrl).toBe('https://backend.example.com/v1/responses')
+    expect(actualInit?.headers).toEqual(
+      expect.objectContaining({
+        Authorization: 'Bearer backend-token',
+      }),
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('getAiResponse should serialize assistant history as output_text for backend completions', async () => {
+  const originalFetch = globalThis.fetch
+  let actualInit: RequestInit | undefined
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+    actualInit = args[1] as RequestInit | undefined
+    return {
+      json: async () => ({
+        output_text: 'Backend completion response',
+      }),
+      ok: true,
+      status: 200,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-2',
+          role: 'assistant',
+          text: 'hi there',
+          time: '10:01',
+        },
+        {
+          id: 'message-3',
+          role: 'user',
+          text: 'please continue',
+          time: '10:02',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 4,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'please continue',
+    })
+
+    expect(result.text).toBe('Backend completion response')
+    const body = actualInit?.body
+    expect(typeof body).toBe('string')
+    if (typeof body !== 'string') {
+      throw new TypeError('Expected backend completion request body to be a string')
+    }
+    expect(JSON.parse(body)).toEqual({
+      input: [
+        {
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
+          role: 'user',
+        },
+        {
+          content: [
+            {
+              text: 'hi there',
+              type: 'output_text',
+            },
+          ],
+          role: 'assistant',
+        },
+        {
+          content: [
+            {
+              text: 'please continue',
+              type: 'input_text',
+            },
+          ],
+          role: 'user',
+        },
+      ],
       max_tool_calls: defaultMaxToolCalls,
       model: 'gpt-4o-mini',
       tool_choice: 'auto',
@@ -447,7 +631,11 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
   })
   const originalFetch = globalThis.fetch
   let actualInit: RequestInit | undefined
+<<<<<<< HEAD
   globalThis.fetch = async (...args: readonly unknown[]) => {
+=======
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+>>>>>>> origin/main
     actualInit = args[1] as RequestInit | undefined
     return {
       json: async () => ({
@@ -497,7 +685,12 @@ test('getAiResponse should pass tools to backend responses payload', async () =>
     expect(JSON.parse(body)).toEqual({
       input: [
         {
-          content: 'hello',
+          content: [
+            {
+              text: 'hello',
+              type: 'input_text',
+            },
+          ],
           role: 'user',
         },
       ],
@@ -545,7 +738,11 @@ test('getAiResponse should execute backend response tool calls and continue with
   const requestBodies: unknown[] = []
   const toolCallChunks: unknown[] = []
   let requestCount = 0
+<<<<<<< HEAD
   globalThis.fetch = async (...args: readonly unknown[]) => {
+=======
+  globalThis.fetch = async (...args: readonly unknown[]): Promise<Response> => {
+>>>>>>> origin/main
     requestCount++
     const init = args[1] as RequestInit | undefined
     const body = init?.body
@@ -628,7 +825,12 @@ test('getAiResponse should execute backend response tool calls and continue with
       {
         input: [
           {
-            content: 'hello',
+            content: [
+              {
+                text: 'hello',
+                type: 'input_text',
+              },
+            ],
             role: 'user',
           },
         ],
@@ -699,7 +901,11 @@ test('getAiResponse should explain invalid successful backend responses', async 
     'ChatTool.getTools': async () => [],
   })
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({
         id: 'resp_invalid',
@@ -807,7 +1013,11 @@ test('getAiResponse should require backend access token when useOwnBackend is en
 
 test('getAiResponse should return backend failure message for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({
         error: 'Vercel AI Gateway error (status 500): Upstream request failed.',
@@ -852,7 +1062,11 @@ test('getAiResponse should return backend failure message for non-ok backend res
 
 test('getAiResponse should include backend API error message and status code for non-ok backend responses', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({
         error: 'Vercel AI Gateway error (status 403): AI Gateway requires a valid credit card on file to service requests.',
@@ -898,6 +1112,54 @@ test('getAiResponse should include backend API error message and status code for
   }
 })
 
+test('getAiResponse should include backend API status code error code and message for non-ok backend responses', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> => {
+    return {
+      json: async () => ({
+        code: 'lvce_openai_not_configured',
+        error: 'Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+      }),
+      ok: false,
+      status: 503,
+    } as Response
+  }
+
+  try {
+    const result = await getAiResponse({
+      assetDir: '',
+      authAccessToken: 'backend-token',
+      backendUrl: 'https://backend.example.com',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+      ],
+      mockApiCommandId: '',
+      models: [{ id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi' }],
+      nextMessageId: 2,
+      openApiApiBaseUrl: 'https://api.openai.com/v1',
+      openApiApiKey: '',
+      openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+      openRouterApiKey: '',
+      platform: 0,
+      selectedModelId: 'openapi/gpt-4o-mini',
+      useMockApi: false,
+      useOwnBackend: true,
+      userText: 'hello',
+    })
+
+    expect(result.text).toBe(
+      'Backend completion request failed (status 503). Error code: lvce_openai_not_configured. Lvce AI Gateway is not configured for OpenAI models on the server. Set OPENAI_API_KEY in .env.',
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when mock mode is enabled', async () => {
   MockOpenApiStream.reset()
   MockOpenApiStream.pushChunk('Hel')
@@ -937,9 +1199,96 @@ test.skip('getAiResponse should use mock streaming chunks for OpenAPI model when
   expect(chunks).toEqual(['Hel', 'lo'])
 })
 
+test('getAiResponse should parse mock OpenAI SSE chunks with response.completed tool calls', async () => {
+  using mockChatToolRpc = ChatToolWorker.registerMockRpc({
+    'ChatTool.execute': async () =>
+      JSON.stringify({
+        addedLines: 1,
+        linesAdded: 1,
+        linesDeleted: 0,
+        ok: true,
+        removedLines: 0,
+        uri: 'file:///workspace/notes.txt',
+      }),
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Write file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
+  })
+  MockOpenApiStream.reset()
+  MockOpenApiStream.pushChunk(
+    'data: {"type":"response.completed","response":{"id":"resp_01","output":[{"type":"function_call","id":"fc_01","call_id":"call_01","name":"write_file","arguments":"{\\"content\\":\\"alpha\\nbeta\\ngamma\\",\\"uri\\":\\"file:///workspace/notes.txt\\"}","status":"completed"}],"status":"completed"}}\n\n',
+  )
+  MockOpenApiStream.pushChunk('data: [DONE]\n\n')
+  MockOpenApiStream.finish()
+  const toolCallsChunks: unknown[] = []
+
+  const result = await getAiResponse({
+    assetDir: '',
+    messages: [
+      {
+        id: 'message-1',
+        role: 'user',
+        text: 'hello',
+        time: '10:00',
+      },
+    ],
+    mockApiCommandId: '',
+    models: [{ id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi' }],
+    nextMessageId: 2,
+    onToolCallsChunk: async (toolCalls) => {
+      toolCallsChunks.push(toolCalls)
+    },
+    openApiApiBaseUrl: 'https://api.openai.com/v1',
+    openApiApiKey: '',
+    openRouterApiBaseUrl: 'https://openrouter.ai/api/v1',
+    openRouterApiKey: '',
+    platform: 0,
+    selectedModelId: 'openapi/gpt-4.1-mini',
+    streamingEnabled: true,
+    useMockApi: true,
+    userText: 'hello',
+    workspaceUri: 'file:///workspace',
+  })
+
+  expect(result.role).toBe('assistant')
+  expect(result.text).toBe('')
+  expect(toolCallsChunks).toEqual([
+    [
+      {
+        arguments: '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
+        id: 'call_01',
+        name: 'write_file',
+        result: '{"addedLines":1,"linesAdded":1,"linesDeleted":0,"ok":true,"removedLines":0,"uri":"file:///workspace/notes.txt"}',
+        status: 'success',
+      },
+    ],
+  ])
+  expect(mockChatToolRpc.invocations).toContainEqual([
+    'ChatTool.execute',
+    'write_file',
+    '{"content":"alpha\nbeta\ngamma","uri":"file:///workspace/notes.txt"}',
+    { assetDir: '', platform: 0, workspaceUri: 'file:///workspace' },
+  ])
+})
+
 test.skip('getAiResponse should include OpenAI 429 quota error message details in assistant text', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({
         error: {
@@ -989,7 +1338,11 @@ test.skip('getAiResponse should include OpenAI 429 quota error message details i
 
 test.skip('getAiResponse should include OpenAI http error details for non-429 responses', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({
         error: {
@@ -1040,7 +1393,11 @@ test.skip('getAiResponse should show a helpful message when OpenAI tool-call ite
     'ChatTool.getTools': async () => [],
   })
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     const chunks = [
       'data: {"type":"response.output_item.added","item":{"type":"function_call","id":"fc_1","call_id":"call_1","name":"get_workspace_uri","arguments":""}}\n\n',
       'data: {"type":"response.function_call_arguments.delta","item_id":"fc_1","delta":"{}"}\n\n',
@@ -1103,7 +1460,11 @@ test.skip('getAiResponse should show a helpful message when OpenAI tool-call ite
 
 test.skip('getAiResponse should fall back to generic OpenAI request failed message when no error payload is returned', async () => {
   const originalFetch = globalThis.fetch
+<<<<<<< HEAD
   globalThis.fetch = async () => {
+=======
+  globalThis.fetch = async (): Promise<Response> => {
+>>>>>>> origin/main
     return {
       json: async () => ({}),
       ok: false,
@@ -1146,8 +1507,13 @@ test.skip('getAiResponse should fall back to generic OpenAI request failed messa
 test.skip('getAiResponse should stream OpenAI chunks when enabled', async () => {
   const originalFetch = globalThis.fetch
   let requestedUrl = ''
+<<<<<<< HEAD
   globalThis.fetch = async (input: unknown) => {
     requestedUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+=======
+  globalThis.fetch = async (input: unknown): Promise<Response> => {
+    requestedUrl = getRequestUrl(input)
+>>>>>>> origin/main
     const chunks = [
       'data: {"type":"response.output_text.delta","delta":"Hello"}\n\n',
       'data: {"type":"response.output_text.delta","delta":" world"}\n\n',

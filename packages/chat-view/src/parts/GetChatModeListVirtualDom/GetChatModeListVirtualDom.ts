@@ -4,6 +4,7 @@ import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { ReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import type { RunMode } from '../RunMode/RunMode.ts'
 import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
@@ -20,6 +21,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
+  readonly chatListExpanded: boolean
   readonly chatListScrollTop?: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -33,11 +35,13 @@ export interface GetChatModeListVirtualDomOptions {
   readonly composerValue: string
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
+  readonly primaryControlsOverflowButtonVisible?: boolean
   readonly reasoningEffort: ReasoningEffort
   readonly reasoningEffortPickerOpen?: boolean
   readonly reasoningPickerEnabled: boolean
@@ -51,6 +55,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier?: boolean
   readonly showRunMode: boolean
   readonly todoListItems: readonly TodoListItem[]
   readonly todoListToolEnabled: boolean
@@ -60,6 +65,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly userName?: string
   readonly userState?: AuthUserState
   readonly visibleModels?: readonly ChatModel[]
+  readonly visiblePrimaryControls?: readonly ComposerPrimaryControl[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -69,6 +75,7 @@ export const getChatModeListVirtualDom = ({
   agentModePickerOpen = false,
   authEnabled = false,
   authErrorMessage = '',
+  chatListExpanded,
   chatListScrollTop = 0,
   composerAttachmentPreviewOverlayAttachmentId,
   composerAttachmentPreviewOverlayError = false,
@@ -80,13 +87,15 @@ export const getChatModeListVirtualDom = ({
   composerHeight = 28,
   composerLineHeight = 20,
   composerValue,
-  hasSpaceForAgentModePicker,
-  hasSpaceForRunModePicker,
+  hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
+  hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
+  hiddenPrimaryControls = [],
   listFocusedIndex = -1,
   listFocusOutline = false,
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
+  primaryControlsOverflowButtonVisible = false,
   reasoningEffort,
   reasoningEffortPickerOpen = false,
   reasoningPickerEnabled,
@@ -100,6 +109,7 @@ export const getChatModeListVirtualDom = ({
   selectedSessionId,
   sessions,
   showChatListTime,
+  showModelUsageMultiplier = true,
   showRunMode,
   todoListItems,
   todoListToolEnabled,
@@ -109,13 +119,14 @@ export const getChatModeListVirtualDom = ({
   userName = '',
   userState = 'loggedOut',
   visibleModels = models,
+  visiblePrimaryControls = [],
   voiceDictationEnabled = false,
 }: GetChatModeListVirtualDomOptions): readonly VirtualDomNode[] => {
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
-  const isAgentModePickerVisible = hasSpaceForAgentModePicker && agentModePickerOpen
+  const isAgentModePickerVisible = agentModePickerOpen
   const isNewModelPickerVisible = modelPickerOpen
-  const isRunModePickerVisible = showRunMode && hasSpaceForRunModePicker && runModePickerOpen
+  const isRunModePickerVisible = showRunMode && runModePickerOpen
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
@@ -131,7 +142,7 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(visibleSessions, selectedSessionId, chatListExpanded, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,
@@ -142,7 +153,9 @@ export const getChatModeListVirtualDom = ({
       '',
       [],
       '',
-      hasSpaceForAgentModePicker,
+      visiblePrimaryControls,
+      hiddenPrimaryControls,
+      primaryControlsOverflowButtonVisible,
       selectChevronEnabled,
       modelPickerOpen,
       models,
@@ -155,7 +168,6 @@ export const getChatModeListVirtualDom = ({
       tokensMax,
       addContextButtonEnabled,
       showRunMode,
-      hasSpaceForRunModePicker,
       runMode,
       runModePickerOpen,
       todoListToolEnabled,
@@ -178,6 +190,7 @@ export const getChatModeListVirtualDom = ({
       runMode,
       runModePickerVisible: isRunModePickerVisible,
       selectedModelId,
+      showModelUsageMultiplier,
       visibleModels,
     }),
   ]

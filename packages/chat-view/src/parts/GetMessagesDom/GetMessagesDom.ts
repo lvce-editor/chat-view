@@ -1,12 +1,15 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+/* cspell:ignore sonarjs */
+
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
-import { getEmptyMessageContent, getParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import { getEmptyMessageContent, getParsedMessageContent, getPlainTextMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 interface DisplayMessage {
   readonly message: ChatMessage
@@ -36,10 +39,7 @@ const withAttachments = (message: ChatMessage, attachments: readonly ComposerAtt
 const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
-    const parsedContent = getParsedMessageContent(parsedMessages, message.id)
-    if (!parsedContent) {
-      continue
-    }
+    const parsedContent = getParsedMessageContent(parsedMessages, message.id) || getPlainTextMessageContent(message.text)
     if (message.role === 'user') {
       const attachments = message.attachments ?? []
       const imageAttachments = attachments.filter(isImageAttachment)
@@ -110,10 +110,10 @@ export const getMessagesDom = (
     return [
       {
         childCount: 0,
-        className: 'ChatMessages',
+        className: ClassNames.ChatMessages,
         onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
         onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-        role: 'log',
+        role: AriaRoles.Log,
         scrollTop: messagesScrollTop,
         type: VirtualDomElements.Div,
       },
@@ -123,10 +123,10 @@ export const getMessagesDom = (
   return [
     {
       childCount: displayMessages.length,
-      className: 'ChatMessages',
+      className: ClassNames.ChatMessages,
       onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
       onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-      role: 'log',
+      role: AriaRoles.Log,
       scrollTop: messagesScrollTop,
       type: VirtualDomElements.Div,
     },

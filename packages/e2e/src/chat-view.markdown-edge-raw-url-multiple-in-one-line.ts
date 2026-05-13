@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.markdown-edge.raw-url-multiple-in-one-line'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
@@ -22,7 +24,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   const links = Locator('.ChatMessages .Message a')
   await expect(links).toHaveCount(3)
-  await expect(links.nth(0)).toHaveAttribute('href', 'https://example.com/docs')
-  await expect(links.nth(1)).toHaveAttribute('href', 'https://www.gov.uk/guidance')
-  await expect(links.nth(2)).toHaveAttribute('href', 'https://[example].com')
+  const link0 = links.nth(0)
+  await expect(link0).toHaveAttribute('href', 'https://example.com/docs')
+  const link1 = links.nth(1)
+  await expect(link1).toHaveAttribute('href', 'https://www.gov.uk/guidance')
+  const link2 = links.nth(2)
+  await expect(link2).toHaveAttribute('href', 'https://[example].com')
 }

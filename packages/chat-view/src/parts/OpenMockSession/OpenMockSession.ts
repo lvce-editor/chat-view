@@ -1,3 +1,4 @@
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
@@ -42,6 +43,19 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
 }
 
 export const openMockSession = async (
+  state: ChatState,
+  mockSessionId: string,
+  mockChatMessages: readonly ChatMessage[],
+  options?: OpenMockSessionOptions,
+): Promise<ChatState> => {
+  try {
+    return (await ChatViewModelWorker.invoke('ChatModel.openMockSession', state, mockSessionId, mockChatMessages, options)) as ChatState
+  } catch {
+    return openMockSessionLocal(state, mockSessionId, mockChatMessages, options)
+  }
+}
+
+export const openMockSessionLocal = async (
   state: ChatState,
   mockSessionId: string,
   mockChatMessages: readonly ChatMessage[],

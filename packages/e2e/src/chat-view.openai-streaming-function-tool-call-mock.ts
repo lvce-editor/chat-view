@@ -149,6 +149,8 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('whats the contents of index html')
-  await expect(messages.nth(1)).toHaveText('toolsread_file index.html (error: Invalid argument: uri must be an absolute URI.)')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('whats the contents of index html')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('toolsread_file index.html (error: Invalid argument: uri must be an absolute URI.)')
 }

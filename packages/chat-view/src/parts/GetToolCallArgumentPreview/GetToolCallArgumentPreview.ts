@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!rawArguments.trim()) {
     return '""'

@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 /* eslint-disable prefer-destructuring */
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetAiResponseOptions } from '../GetAiResponseOptions/GetAiResponseOptions.ts'
@@ -33,8 +35,13 @@ import { isOpenApiModel } from '../IsOpenApiModel/IsOpenApiModel.ts'
 import { isOpenRouterModel } from '../IsOpenRouterModel/IsOpenRouterModel.ts'
 import * as MockBackendCompletion from '../MockBackendCompletion/MockBackendCompletion.ts'
 import * as MockOpenApiRequest from '../MockOpenApiRequest/MockOpenApiRequest.ts'
+import * as MockOpenApiStream from '../MockOpenApiStream/MockOpenApiStream.ts'
 
 const trailingSlashesRegex = /\/+$/
+
+const shouldUseBackendResponses = (backendUrl: string, authAccessToken: string): boolean => {
+  return !!backendUrl && !!authAccessToken
+}
 
 const getBackendResponsesEndpoint = (backendUrl: string): string => {
   const trimmedBackendUrl = backendUrl.replace(trailingSlashesRegex, '')
@@ -67,6 +74,25 @@ const getBackendErrorMessageFromBody = (body: unknown): string | undefined => {
   const nestedMessage = Reflect.get(directError, 'message')
   if (typeof nestedMessage === 'string' && nestedMessage) {
     return nestedMessage
+  }
+  return undefined
+}
+
+const getBackendErrorCodeFromBody = (body: unknown): string | undefined => {
+  if (!isObject(body)) {
+    return undefined
+  }
+  const directCode = Reflect.get(body, 'code')
+  if (typeof directCode === 'string' && directCode) {
+    return directCode
+  }
+  const directError = Reflect.get(body, 'error')
+  if (!isObject(directError)) {
+    return undefined
+  }
+  const nestedCode = Reflect.get(directError, 'code')
+  if (typeof nestedCode === 'string' && nestedCode) {
+    return nestedCode
   }
   return undefined
 }
@@ -331,9 +357,15 @@ const getBackendAssistantText = async ({
 }: GetBackendAssistantTextOptions): Promise<string> => {
   const mockError = MockBackendCompletion.takeErrorResponse()
   if (mockError) {
+    const errorCode = getBackendErrorCodeFromBody(mockError.body)
     const errorMessage = getBackendErrorMessageFromBody(mockError.body)
     return getBackendErrorMessage({
       details: 'http-error',
+      ...(errorCode
+        ? {
+            errorCode,
+          }
+        : {}),
       ...(typeof mockError.statusCode === 'number'
         ? {
             statusCode: mockError.statusCode,
@@ -397,10 +429,16 @@ const getBackendAssistantText = async ({
       }
       if (!response.ok) {
         const payload: unknown = await response.json().catch(() => undefined)
+        const errorCode = getBackendErrorCodeFromBody(payload)
         const errorMessage = getBackendErrorMessageFromBody(payload)
         const statusCode = response.status || getBackendStatusCodeFromBody(payload)
         return getBackendErrorMessage({
           details: 'http-error',
+          ...(errorCode
+            ? {
+                errorCode,
+              }
+            : {}),
           ...(typeof statusCode === 'number'
             ? {
                 statusCode,
@@ -527,7 +565,9 @@ export const getAiResponse = async ({
   workspaceUri,
 }: GetAiResponseOptions): Promise<ChatMessage> => {
   useChatCoordinatorWorker = false // TODO enable this
-  if (useChatCoordinatorWorker && !useOwnBackend) {
+  const authToken = authAccessToken || ''
+  const backendEnabled = shouldUseBackendResponses(backendUrl, authToken)
+  if (useChatCoordinatorWorker && !backendEnabled) {
     try {
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,
@@ -598,14 +638,14 @@ export const getAiResponse = async ({
   if (hasImageAttachments(messages) && !supportsImages) {
     text = getImageNotSupportedMessage(selectedModel?.name)
   }
-  if (!text && useOwnBackend) {
+  if (!text && (backendEnabled || useOwnBackend)) {
     if (!backendUrl) {
       text = backendUrlRequiredMessage
-    } else if (authAccessToken) {
+    } else if (authToken) {
       text = await getBackendAssistantText({
         agentMode,
         assetDir,
-        authAccessToken,
+        authAccessToken: authToken,
         backendUrl,
         maxToolCalls: safeMaxToolCalls,
         messages,
@@ -647,6 +687,7 @@ export const getAiResponse = async ({
         ...getClientRequestIdHeader(),
       }
       const maxToolIterations = safeMaxToolCalls - 1
+      const mockRequestId = MockOpenApiStream.startRequest()
       let previousResponseId: string | undefined
       for (let i = 0; i <= maxToolIterations; i++) {
         const tools1 = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
@@ -672,7 +713,14 @@ export const getAiResponse = async ({
         if (onMockOpenApiRequestCaptured) {
           await Promise.resolve(onMockOpenApiRequestCaptured(request))
         }
-        const result = await getMockOpenApiAssistantText(streamingEnabled, onTextChunk, onToolCallsChunk, onDataEvent, onEventStreamFinished)
+        const result = await getMockOpenApiAssistantText(
+          streamingEnabled,
+          onTextChunk,
+          onToolCallsChunk,
+          onDataEvent,
+          onEventStreamFinished,
+          mockRequestId,
+        )
         if (result.type !== 'success') {
           text = getOpenApiErrorMessage(result)
           break

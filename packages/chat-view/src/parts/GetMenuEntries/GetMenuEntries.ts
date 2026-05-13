@@ -5,12 +5,14 @@ import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEnt
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
+import { getMenuEntriesPrimaryControlsOverflow } from '../GetMenuEntriesPrimaryControlsOverflow/GetMenuEntriesPrimaryControlsOverflow.ts'
 import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
 import {
   MenuChatAttachment,
   MenuChatHeader,
   MenuChatInput,
   MenuChatList,
+  MenuChatPrimaryControlsOverflow,
   MenuChatProjectList,
   MenuProjectAddButton,
 } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
@@ -24,7 +26,15 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
     case MenuChatInput:
       return getMenuEntriesChatInput()
     case MenuChatList:
-      return getMenuEntriesChatList()
+      return getMenuEntriesChatList(props.sessionId)
+    case MenuChatPrimaryControlsOverflow:
+      return getMenuEntriesPrimaryControlsOverflow(
+        props.hiddenPrimaryControls,
+        props.agentModeLabel,
+        props.modelLabel,
+        props.reasoningEffortLabel,
+        props.runModeLabel,
+      )
     case MenuChatProjectList:
       return getMenuEntriesChatProjectList(props.projectId, props.canRemoveProject)
     case MenuProjectAddButton:

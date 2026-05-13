@@ -19,7 +19,26 @@ const getButtonTitle = (userState: AuthUserState, isAuthenticated: boolean): str
   return isAuthenticated ? Strings.logoutFromBackend() : Strings.loginToBackend()
 }
 
-export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserState = 'loggedOut', userName = ''): readonly VirtualDomNode[] => {
+const getAuthErrorDom = (authErrorMessage: string): readonly VirtualDomNode[] => {
+  if (!authErrorMessage) {
+    return []
+  }
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatAuthError,
+      type: VirtualDomElements.Span,
+    },
+    text(authErrorMessage),
+  ]
+}
+
+export const getChatHeaderAuthDom = (
+  authEnabled = false,
+  userState: AuthUserState = 'loggedOut',
+  userName = '',
+  authErrorMessage = '',
+): readonly VirtualDomNode[] => {
   if (!authEnabled) {
     return []
   }
@@ -29,9 +48,10 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
   const buttonTitle = getButtonTitle(userState, isAuthenticated)
   const isPending = userState === 'loggingOut'
   const displayName = userName || Strings.signedIn()
+  const hasAuthError = !!authErrorMessage
   return [
     {
-      childCount: isAuthenticated ? 2 : 1,
+      childCount: (isAuthenticated ? 2 : 1) + (hasAuthError ? 1 : 0),
       className: ClassNames.ChatHeaderAuth,
       type: VirtualDomElements.Div,
     },
@@ -57,5 +77,6 @@ export const getChatHeaderAuthDom = (authEnabled = false, userState: AuthUserSta
       type: VirtualDomElements.Button,
     },
     text(buttonLabel),
+    ...getAuthErrorDom(authErrorMessage),
   ]
 }

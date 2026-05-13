@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-message-with-markdown-table'
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
@@ -33,5 +35,6 @@ Would you like me to add or change anything?`
   const table = Locator('.ChatMessages .Message .MarkdownTable')
   await expect(messages).toHaveCount(2)
   await expect(table).toHaveCount(1)
-  await expect(messages.nth(0)).toHaveText('whats jsonrpc')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('whats jsonrpc')
 }

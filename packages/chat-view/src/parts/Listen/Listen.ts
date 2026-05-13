@@ -8,6 +8,7 @@ import { initializeChatMessageParsingWorker } from '../InitializeChatMessagePars
 import { initializeChatNetworkWorker } from '../InitializeChatNetworkWorker/InitializeChatNetworkWorker.ts'
 import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/InitializeChatStorageWorker.ts'
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
+import { initializeChatViewModelWorker } from '../InitializeChatViewModelWorker/InitializeChatViewModelWorker.ts'
 import { initializeClipBoardWorker } from '../InitializeClipBoardWorker/InitializeClipBoardWorker.ts'
 import { initializeIconThemeWorker } from '../InitializeIconThemeWorker/InitializeIconThemeWorker.ts'
 import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
@@ -30,10 +31,10 @@ export const listen = async (): Promise<void> => {
     initializeChatNetworkWorker(),
     initializeChatStorageWorker(),
     initializeChatToolWorker(),
+    initializeChatViewModelWorker(),
     initializeClipBoardWorker(),
-    initializeOpenerWorker(),
     initializeIconThemeWorker(),
+    initializeOpenerWorker(),
     initializeTextMeasurementWorker(),
-    initializeAuthWorker(),
   ])
 }

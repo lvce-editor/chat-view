@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatMessage } from '../../ChatMessage/ChatMessage.ts'
 import type { ChatViewEvent } from '../../ChatViewEvent/ChatViewEvent.ts'
 

@@ -23,6 +23,7 @@ export interface GetChatOverlaysVirtualDomOptions {
   readonly runMode: RunMode
   readonly runModePickerVisible: boolean
   readonly selectedModelId: string
+  readonly showModelUsageMultiplier?: boolean
   readonly visibleModels: readonly ChatModel[]
 }
 
@@ -39,6 +40,7 @@ export const getChatOverlaysVirtualDom = ({
   runMode,
   runModePickerVisible,
   selectedModelId,
+  showModelUsageMultiplier = true,
   visibleModels,
 }: GetChatOverlaysVirtualDomOptions): readonly VirtualDomNode[] => {
   const overlayChildCount =
@@ -63,7 +65,9 @@ export const getChatOverlaysVirtualDom = ({
       composerAttachmentPreviewOverlayError,
     ),
     ...(agentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(modelPickerVisible ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue) : []),
+    ...(modelPickerVisible
+      ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue, showModelUsageMultiplier)
+      : []),
     ...(runModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
   ]
 }

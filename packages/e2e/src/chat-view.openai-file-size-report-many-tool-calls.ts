@@ -82,7 +82,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(0)).toHaveText('whats the file sizes of the files?')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('whats the file sizes of the files?')
 
   const toolCallMessage = messages.nth(1)
   const orderedToolCalls = toolCallMessage.locator('.ChatOrderedListItem')

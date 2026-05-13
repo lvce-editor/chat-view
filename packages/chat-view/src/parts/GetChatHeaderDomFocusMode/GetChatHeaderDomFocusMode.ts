@@ -1,9 +1,7 @@
 import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -21,9 +19,9 @@ const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-con
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
-  authEnabled = false,
-  userState: AuthUserState = 'loggedOut',
-  userName = '',
+  _authEnabled = false,
+  _userState = 'loggedOut',
+  _userName = '',
 ): readonly VirtualDomNode[] => {
   const items = [
     {
@@ -60,12 +58,11 @@ export const getChatHeaderDomFocusMode = (
   const hasProjectName = !!selectedProjectName
   return [
     {
-      childCount: 2 + (authEnabled ? 1 : 0),
+      childCount: 2,
       className: ClassNames.ChatFocusHeader,
       style: focusHeaderStyle,
       type: VirtualDomElements.Header,
     },
-    ...getChatHeaderAuthDom(authEnabled, userState, userName),
     {
       childCount: hasProjectName ? 2 : 1,
       className: ClassNames.ChatName,

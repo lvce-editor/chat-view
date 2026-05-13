@@ -1,117 +1,37 @@
 import { expect, test } from '@jest/globals'
-import { ChatMessageParsingWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
-import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as LoadContent from '../src/parts/LoadContent/LoadContent.ts'
-import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
-import * as ToggleChatFocusMode from '../src/parts/ToggleChatFocusMode/ToggleChatFocusMode.ts'
 
-const expectInvocations = (actual: readonly (readonly [string, string])[], expected: readonly (readonly [string, string])[]): void => {
-  expect(actual.length).toBeGreaterThanOrEqual(expected.length)
-  expect(actual).toEqual(expect.arrayContaining([...expected]))
-}
-
-test('loadContent should initialize view and keep existing session', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = { ...createDefaultState(), initial: true, uid: 1 }
-  const result = await LoadContent.loadContent(state, undefined)
-  expect(result.initial).toBe(false)
-  expect(result.sessions).toHaveLength(1)
-  expect(result.selectedSessionId).toBe('session-1')
-  expect(result.uid).toBe(1)
-})
-
-test('loadContent should preserve existing state properties', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState & { disposed?: boolean } = {
-    ...createDefaultState(),
-    disposed: true,
-    uid: 2,
-  }
-  const result = await LoadContent.loadContent(state, undefined)
-  expect(result.disposed).toBe(true)
-  expect(result.uid).toBe(2)
-  expect(result.initial).toBe(false)
-})
-
-test('loadContent should keep sessions empty when sessions are empty', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    selectedSessionId: '',
-    sessions: [],
-    uid: 3,
-    viewMode: 'detail',
-  }
-  const result = await LoadContent.loadContent(state, undefined)
-  expect(result.sessions).toHaveLength(0)
-  expect(result.selectedSessionId).toBe('')
-  expect(result.viewMode).toBe('list')
-})
-
-test('loadContent should recover selectedSessionId when it does not exist', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    selectedSessionId: 'missing',
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-    ],
-  }
-  const result = await LoadContent.loadContent(state, undefined)
-  expect(result.selectedSessionId).toBe('session-1')
-  expect(result.sessions).toHaveLength(2)
-})
-
-test('loadContent should restore chat list items from savedState', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    selectedSessionId: 'session-1',
-    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
-  }
-  const savedState = {
-    selectedSessionId: 'session-b',
-    sessions: [
-      { id: 'session-a', messages: [], title: 'Saved A' },
-      { id: 'session-b', messages: [], title: 'Saved B' },
-    ],
-  }
-  const result = await LoadContent.loadContent(state, savedState)
-  expect(result.sessions).toEqual(savedState.sessions)
-  expect(result.selectedSessionId).toBe('session-b')
-})
-
-test('loadContent should restore sessions from savedState and recover invalid selected session', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    selectedSessionId: 'session-1',
-    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
-  }
-  const savedState = {
-    selectedSessionId: 'missing',
-    sessions: [{ id: 'session-z', messages: [], title: 'Saved Z' }],
-  }
-  const result = await LoadContent.loadContent(state, savedState)
-  expect(result.sessions).toEqual(savedState.sessions)
-  expect(result.selectedSessionId).toBe('session-z')
-})
-
-test('loadContent should load only selected session messages from async storage', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+test('loadContent should delegate to chat view model worker', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.loadContent': async (state: ChatState, savedState: unknown) => ({
+      ...state,
+      composerValue:
+        savedState && typeof savedState === 'object' && 'composerValue' in savedState && typeof savedState.composerValue === 'string'
+          ? savedState.composerValue
+          : state.composerValue,
+      initial: false,
+      selectedSessionId: 'session-2',
+      sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+      viewMode: 'detail',
+    }),
   })
+  const state = { ...createDefaultState(), uid: 1 }
+  const savedState = { composerValue: 'saved composer' }
+
+  const result = await LoadContent.loadContent(state, savedState)
+
+  expect(result).toEqual({
+    ...state,
+    composerValue: 'saved composer',
+    initial: false,
+    selectedSessionId: 'session-2',
+    sessions: [...state.sessions, { id: 'session-2', messages: [], title: 'Chat 2' }],
+    viewMode: 'detail',
+  })
+<<<<<<< HEAD
   void mockChatMessageParsingRpc
   await saveChatSession({
     id: 'session-a',
@@ -1225,4 +1145,7 @@ test('loadContent should normalize in-progress sessions to stopped on reload', a
   const session = result.sessions.find((s) => s.id === 'session-1')
   expect(session?.status).toBe('stopped')
   expect(session?.messages.find((m) => m.id === 'msg-2')?.inProgress).toBe(false)
+=======
+  expect(mockRpc.invocations).toEqual([['ChatModel.loadContent', state, savedState]])
+>>>>>>> origin/main
 })

@@ -5,6 +5,7 @@ import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
+import type { ComposerPrimaryControl } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { Project } from '../Project/Project.ts'
@@ -40,6 +41,7 @@ export interface GetChatVirtualDomOptions {
   readonly agentModePickerOpen?: boolean
   readonly authEnabled?: boolean
   readonly authErrorMessage?: string
+  readonly chatListExpanded: boolean
   readonly chatListScrollTop: number
   readonly composerAttachmentPreviewOverlayAttachmentId: string
   readonly composerAttachmentPreviewOverlayError?: boolean
@@ -57,6 +59,7 @@ export interface GetChatVirtualDomOptions {
   readonly gitBranchPickerVisible?: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
+  readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
   readonly messagesAutoScrollEnabled: boolean
@@ -71,6 +74,7 @@ export interface GetChatVirtualDomOptions {
   readonly openRouterApiKeyInput: string
   readonly openRouterApiKeyState: 'idle' | 'saving'
   readonly parsedMessages?: readonly ParsedMessage[]
+  readonly primaryControlsOverflowButtonVisible?: boolean
   readonly projectExpandedIds?: readonly string[]
   readonly projectListScrollTop?: number
   readonly projects?: readonly Project[]
@@ -89,6 +93,7 @@ export interface GetChatVirtualDomOptions {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier?: boolean
   readonly showRunMode: boolean
   readonly todoListToolEnabled: boolean
   readonly tokensMax: number
@@ -99,6 +104,7 @@ export interface GetChatVirtualDomOptions {
   readonly userState?: AuthUserState
   readonly viewMode: ChatViewMode
   readonly visibleModels?: readonly ChatModel[]
+  readonly visiblePrimaryControls?: readonly ComposerPrimaryControl[]
   readonly voiceDictationEnabled?: boolean
 }
 
@@ -109,6 +115,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     agentModePickerOpen = false,
     authEnabled = false,
     authErrorMessage = '',
+    chatListExpanded,
     chatListScrollTop,
     composerAttachmentPreviewOverlayAttachmentId,
     composerAttachmentPreviewOverlayError = false,
@@ -126,6 +133,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     gitBranchPickerVisible = false,
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
+    hiddenPrimaryControls = [],
     listFocusedIndex = -1,
     listFocusOutline = false,
     messagesAutoScrollEnabled,
@@ -140,6 +148,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     openRouterApiKeyInput,
     openRouterApiKeyState,
     parsedMessages: parsedMessagesInput,
+    primaryControlsOverflowButtonVisible = false,
     projectExpandedIds = [],
     projectListScrollTop = 0,
     projects = [],
@@ -158,6 +167,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     selectedSessionId,
     sessions,
     showChatListTime,
+    showModelUsageMultiplier = true,
     showRunMode,
     todoListToolEnabled,
     tokensMax,
@@ -168,12 +178,18 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     userState = 'loggedOut',
     viewMode,
     visibleModels = models,
+    visiblePrimaryControls = [
+      'agent-mode-picker-toggle',
+      'model-picker-toggle',
+      ...(reasoningPickerEnabled ? ['reasoning-effort-picker-toggle' as const] : []),
+      ...(showRunMode ? ['run-mode-picker-toggle' as const] : []),
+    ],
     voiceDictationEnabled = false,
   } = options
 
   const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
-  const todoListItems = getTodoListItems(sessions, selectedSessionId)
 
+  const todoListItems = getTodoListItems(sessions, selectedSessionId)
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
@@ -198,6 +214,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         gitBranchPickerVisible,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        hiddenPrimaryControls,
         messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,
@@ -210,6 +227,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openRouterApiKeyInput,
         openRouterApiKeyState,
         parsedMessages,
+        primaryControlsOverflowButtonVisible,
         projectExpandedIds,
         projectListScrollTop,
         projects,
@@ -224,6 +242,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedProjectId,
         selectedSessionId,
         sessions,
+        showModelUsageMultiplier,
         showRunMode,
         todoListItems,
         todoListToolEnabled,
@@ -234,6 +253,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         userName,
         userState,
         visibleModels,
+        visiblePrimaryControls,
         voiceDictationEnabled,
       })
     case 'detail':
@@ -255,6 +275,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        hiddenPrimaryControls,
         messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,
@@ -267,6 +288,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         openRouterApiKeyInput,
         openRouterApiKeyState,
         parsedMessages,
+        primaryControlsOverflowButtonVisible,
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,
@@ -277,6 +299,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedModelId,
         selectedSessionId,
         sessions,
+        showModelUsageMultiplier,
         showRunMode,
         todoListItems,
         todoListToolEnabled,
@@ -287,6 +310,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         userName,
         userState,
         visibleModels,
+        visiblePrimaryControls,
         voiceDictationEnabled,
       })
     case 'list':
@@ -296,6 +320,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         agentModePickerOpen,
         authEnabled,
         authErrorMessage,
+        chatListExpanded,
         chatListScrollTop,
         composerAttachmentPreviewOverlayAttachmentId,
         composerAttachmentPreviewOverlayError,
@@ -309,11 +334,13 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         composerValue,
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
+        hiddenPrimaryControls,
         listFocusedIndex,
         listFocusOutline,
         modelPickerOpen,
         modelPickerSearchValue,
         models,
+        primaryControlsOverflowButtonVisible,
         reasoningEffort,
         reasoningEffortPickerOpen,
         reasoningPickerEnabled,
@@ -327,6 +354,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         selectedSessionId,
         sessions,
         showChatListTime,
+        showModelUsageMultiplier,
         showRunMode,
         todoListItems,
         todoListToolEnabled,
@@ -336,6 +364,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         userName,
         userState,
         visibleModels,
+        visiblePrimaryControls,
         voiceDictationEnabled,
       })
     default:

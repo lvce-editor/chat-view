@@ -17,6 +17,7 @@ export interface LoadedPreferences {
   readonly scrollDownButtonEnabled: boolean
   readonly searchEnabled: boolean
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier: boolean
   readonly streamingEnabled: boolean
   readonly todoListToolEnabled: boolean
   readonly toolEnablement: Readonly<Record<string, boolean>>
@@ -75,6 +76,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
+    showModelUsageMultiplier,
     streamingEnabled,
     todoListToolEnabled,
     savedToolEnablement,
@@ -101,6 +103,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     getBooleanPreference('chatView.scrollDownButtonEnabled', false),
     getBooleanPreference('chatView.searchEnabled', false),
     getBooleanPreference('chatView.showChatListTime', true),
+    getBooleanPreference('chatView.showModelUsageMultiplier', true),
     getBooleanPreference('chatView.streamingEnabled', true),
     getBooleanPreference('chatView.todoListToolEnabled', false),
     Preferences.get('chat.toolEnablement'),
@@ -130,6 +133,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
+    showModelUsageMultiplier,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement: parseToolEnablement(savedToolEnablement),

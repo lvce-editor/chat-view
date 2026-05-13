@@ -1,4 +1,6 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 
 export type AuthUserState = 'loggedIn' | 'loggingIn' | 'loggedOut' | 'loggingOut'
 
@@ -11,31 +13,7 @@ export interface ChatModel {
   readonly usageCost?: number
 }
 
-export interface ChatSession {
-  readonly branchName?: string
-  readonly id: string
-  readonly lastActiveTime?: string
-  readonly messages: readonly unknown[]
-  readonly projectId?: string
-  readonly pullRequestUrl?: string
-  readonly status?: 'idle' | 'in-progress' | 'stopped' | 'finished'
-  readonly title: string
-  readonly workspaceUri?: string
-}
-
 export type ChatViewMode = 'list' | 'detail' | 'chat-focus'
-
-export type ComposerAttachmentDisplayType = 'file' | 'image' | 'invalid-image' | 'text-file'
-
-export interface ComposerAttachment {
-  readonly attachmentId: string
-  readonly displayType: ComposerAttachmentDisplayType
-  readonly mimeType: string
-  readonly name: string
-  readonly previewSrc?: string
-  readonly size: number
-  readonly textContent?: string
-}
 
 export interface GitBranch {
   readonly current: boolean
@@ -115,15 +93,20 @@ export interface ViewModel {
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
+  readonly showModelUsageMultiplier: boolean
   readonly showRunMode: boolean
   readonly todoListToolEnabled: boolean
   readonly tokensMax: number
   readonly tokensUsed: number
   readonly usageOverviewEnabled: boolean
   readonly useChatMathWorker: boolean
+  readonly useModelWorker: boolean
   readonly userName: string
   readonly userState: AuthUserState
   readonly viewMode: ChatViewMode
   readonly visibleModels: readonly ChatModel[]
   readonly voiceDictationEnabled: boolean
 }
+
+export type { ChatSession } from '../ChatSession/ChatSession.ts'
+export type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'

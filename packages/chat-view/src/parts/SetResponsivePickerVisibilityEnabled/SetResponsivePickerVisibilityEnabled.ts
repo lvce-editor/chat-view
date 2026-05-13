@@ -1,13 +1,16 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getResponsivePickerState } from '../GetResponsivePickerState/GetResponsivePickerState.ts'
+import { applyResponsivePickerState } from '../ApplyResponsivePickerState/ApplyResponsivePickerState.ts'
 
 export const setResponsivePickerVisibilityEnabled = (state: ChatState, responsivePickerVisibilityEnabled: boolean): ChatState => {
-  const responsivePickerState = getResponsivePickerState(state.width, responsivePickerVisibilityEnabled)
-  return {
+  const nextState = applyResponsivePickerState({
     ...state,
-    ...responsivePickerState,
-    agentModePickerOpen: responsivePickerState.hasSpaceForAgentModePicker ? state.agentModePickerOpen : false,
     responsivePickerVisibilityEnabled,
-    runModePickerOpen: responsivePickerState.hasSpaceForRunModePicker ? state.runModePickerOpen : false,
+  })
+  return {
+    ...nextState,
+    agentModePickerOpen: nextState.hiddenPrimaryControls.includes('agent-mode-picker-toggle') ? false : state.agentModePickerOpen,
+    modelPickerOpen: nextState.hiddenPrimaryControls.includes('model-picker-toggle') ? false : state.modelPickerOpen,
+    reasoningEffortPickerOpen: nextState.hiddenPrimaryControls.includes('reasoning-effort-picker-toggle') ? false : state.reasoningEffortPickerOpen,
+    runModePickerOpen: nextState.hiddenPrimaryControls.includes('run-mode-picker-toggle') ? false : state.runModePickerOpen,
   }
 }

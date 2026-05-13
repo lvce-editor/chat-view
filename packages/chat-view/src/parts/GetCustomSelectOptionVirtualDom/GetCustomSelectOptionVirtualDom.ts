@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
@@ -12,7 +12,7 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
       className,
       name,
       onClick: DomEventListenerFunctions.HandleClick,
-      role: 'option',
+      role: AriaRoles.Option,
       type: VirtualDomElements.Li,
     },
     {

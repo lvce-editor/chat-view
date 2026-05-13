@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'

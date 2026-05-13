@@ -49,7 +49,7 @@ export const getProjectGroupDom = (
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconFolder',
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
       type: VirtualDomElements.Div,
     },
     text(project.name),

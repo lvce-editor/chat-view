@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(focusHeader).toHaveCount(0)
 
-  await Command.execute('Chat.openMockSession', 'Focus Session', [])
+  await Chat.openMockSession('Focus Session', [])
 
   await expect(detailHeader).toBeVisible()
   await expect(focusHeader).toHaveCount(0)

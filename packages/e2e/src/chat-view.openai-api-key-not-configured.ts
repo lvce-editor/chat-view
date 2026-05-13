@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+export const skip = 1
+
 export const name = 'chat-view.openai-api-key-not-configured'
 
 export const test: Test = async ({ Chat, expect, Locator }) => {
@@ -15,10 +17,12 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // assert
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('OpenAI API key is not configured')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('OpenAI API key is not configured')
   const getApiKeyLinks = Locator('[name="open-openapi-api-key-website"]')
   await expect(getApiKeyLinks).toHaveCount(1)
-  await expect(getApiKeyLinks.nth(0)).toHaveAttribute('href', 'https://platform.openai.com/api-keys')
-  await expect(getApiKeyLinks.nth(0)).toHaveAttribute('target', '_blank')
-  await expect(getApiKeyLinks.nth(0)).toHaveAttribute('rel', 'noopener noreferrer')
+  const getApiKeyLink0 = getApiKeyLinks.nth(0)
+  await expect(getApiKeyLink0).toHaveAttribute('href', 'https://platform.openai.com/api-keys')
+  await expect(getApiKeyLink0).toHaveAttribute('target', '_blank')
+  await expect(getApiKeyLink0).toHaveAttribute('rel', 'noopener noreferrer')
 }

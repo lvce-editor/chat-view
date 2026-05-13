@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { expect, test } from '@jest/globals'
-import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ParsedMessage } from '../src/parts/ParsedMessage/ParsedMessage.ts'
 import {
   openApiApiKeyRequiredMessage,
@@ -34,6 +34,14 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
     ...overrides,
   })
 }
+
+const manySessions = [
+  { id: 'session-1', messages: [], title: 'Chat 1' },
+  { id: 'session-2', messages: [], title: 'Chat 2' },
+  { id: 'session-3', messages: [], title: 'Chat 3' },
+  { id: 'session-4', messages: [], title: 'Chat 4' },
+  { id: 'session-5', messages: [], title: 'Chat 5' },
+] as const
 
 test('getChatVirtualDOm should render root chat container', () => {
   const result = renderChatView()
@@ -121,16 +129,20 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
   })
 
   const stopButton = result.find((node) => node.name === 'stop')
-  const stopLabel = result.find((node) => node.text === 'stop')
+  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`)
 
   expect(stopButton).toMatchObject({
+    'aria-label': 'stop',
     buttonType: 'button',
-    className: ClassNames.Button,
+    className: ClassNames.IconButton,
     name: 'stop',
     onClick: DomEventListenerFunctions.HandleClick,
     type: VirtualDomElements.Button,
   })
-  expect(stopLabel).toBeDefined()
+  expect(stopIcon).toMatchObject({
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`,
+    type: VirtualDomElements.Div,
+  })
 })
 
 test('getChatVirtualDom should render implement button for the latest successful plan reply in detail mode', () => {
@@ -227,13 +239,13 @@ test('getChatVirtualDOm should render model picker toggle button instead of sele
   const modelPickerToggleLabel = result.find((node) => node.type === VirtualDomElements.Span && node.className === ClassNames.SelectLabel)
   expect(modelPickerToggleLabel).toMatchObject({
     className: ClassNames.SelectLabel,
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Span,
   })
   expect(modelPickerToggleChevron).toMatchObject({
     className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
     name: 'model-picker-toggle',
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Div,
   })
   expect(modelPicker).toBeUndefined()
@@ -297,7 +309,7 @@ test('getChatVirtualDom should wrap agent, model picker and run mode controls to
   expect(agentModePickerToggleLabel).toMatchObject({
     className: ClassNames.SelectLabel,
     name: 'agent-mode-picker-toggle',
-    role: 'none',
+    role: AriaRoles.None,
     type: VirtualDomElements.Span,
   })
   expect(primaryControls).toMatchObject({
@@ -366,40 +378,53 @@ test('getChatVirtualDom should render remove button for text file attachment', (
   expect(attachmentLabel).toBeDefined()
 })
 
-test('getChatVirtualDom should hide optional pickers when there is not enough horizontal space', () => {
+test('getChatVirtualDom should render an overflow button for hidden primary controls', () => {
   const result = renderChatView({
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: false,
+    hiddenPrimaryControls: ['model-picker-toggle', 'run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
+    visiblePrimaryControls: ['agent-mode-picker-toggle'],
   })
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
   const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const overflowToggle = result.find((node) => node.name === 'primary-controls-overflow')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
-    childCount: 1,
+    childCount: 2,
     className: ClassNames.ChatSendAreaPrimaryControls,
     role: 'toolbar',
     type: VirtualDomElements.Div,
   })
-  expect(agentModePickerToggle).toBeUndefined()
-  expect(modelPickerToggle).toBeDefined()
+  expect(agentModePickerToggle).toBeDefined()
+  expect(modelPickerToggle).toBeUndefined()
+  expect(overflowToggle).toMatchObject({
+    'aria-haspopup': 'true',
+    className: ClassNames.ChatSelect,
+    name: 'primary-controls-overflow',
+    type: VirtualDomElements.Button,
+  })
   expect(runModePickerToggle).toBeUndefined()
 })
 
-test('getChatVirtualDom should keep the run mode picker when only the agent picker runs out of space', () => {
+test('getChatVirtualDom should keep visible controls and append overflow when only the last control is hidden', () => {
   const result = renderChatView({
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: true,
+    hiddenPrimaryControls: ['run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
+    visiblePrimaryControls: ['agent-mode-picker-toggle', 'model-picker-toggle'],
   })
   const primaryControls = result.find((node) => node.className === ClassNames.ChatSendAreaPrimaryControls)
   const agentModePickerToggle = result.find((node) => node.name === 'agent-mode-picker-toggle')
+  const modelPickerToggle = result.find((node) => node.name === 'model-picker-toggle')
+  const overflowToggle = result.find((node) => node.name === 'primary-controls-overflow')
   const runModePickerToggle = result.find((node) => node.name === 'run-mode-picker-toggle')
   expect(primaryControls).toMatchObject({
-    childCount: 2,
+    childCount: 3,
     role: 'toolbar',
   })
-  expect(agentModePickerToggle).toBeUndefined()
-  expect(runModePickerToggle).toBeDefined()
+  expect(agentModePickerToggle).toBeDefined()
+  expect(modelPickerToggle).toBeDefined()
+  expect(overflowToggle).toBeDefined()
+  expect(runModePickerToggle).toBeUndefined()
 })
 
 test('getChatVirtualDom should render open run mode picker without search input', () => {
@@ -429,21 +454,22 @@ test('getChatVirtualDom should render open run mode picker without search input'
   expect(pickerContainers).toHaveLength(1)
 })
 
-test('getChatVirtualDom should suppress hidden picker popovers on narrow widths', () => {
+test('getChatVirtualDom should render hidden picker popovers when opened from overflow', () => {
   const result = renderChatView({
     agentModePickerOpen: true,
-    hasSpaceForAgentModePicker: false,
-    hasSpaceForRunModePicker: false,
+    hiddenPrimaryControls: ['agent-mode-picker-toggle', 'run-mode-picker-toggle'],
+    primaryControlsOverflowButtonVisible: true,
     runModePickerOpen: true,
     viewMode: 'detail',
+    visiblePrimaryControls: ['model-picker-toggle'],
   })
   const agentModePicker = result.find((node) => node.name === 'agent-mode-picker-item:agent')
   const runModePicker = result.find((node) => node.name === 'run-mode-picker-item:background')
   expect(result[0]).toMatchObject({
-    childCount: 3,
+    childCount: 4,
   })
-  expect(agentModePicker).toBeUndefined()
-  expect(runModePicker).toBeUndefined()
+  expect(agentModePicker).toBeDefined()
+  expect(runModePicker).toBeDefined()
 })
 
 test('getChatVirtualDom should render open agent mode picker as custom select without search input', () => {
@@ -704,6 +730,20 @@ test('getChatVirtualDom should render model picker usage cost text with subdued 
     type: VirtualDomElements.Span,
   })
   expect(freeUsageText).toBeDefined()
+})
+
+test('getChatVirtualDom should hide model picker usage cost text when disabled', () => {
+  const result = renderChatView({
+    modelPickerOpen: true,
+    models,
+    selectedModelId: 'test',
+    showModelUsageMultiplier: false,
+    viewMode: 'detail',
+  })
+  const usageCostNode = result.find((node) => node.className === ClassNames.ChatModelPickerItemUsageCost)
+  const usageCostText = result.find((node) => node.text === '0x' || node.text === '1x')
+  expect(usageCostNode).toBeUndefined()
+  expect(usageCostText).toBeUndefined()
 })
 
 test('getChatVirtualDOm should show model picker empty-state message when search has no results', () => {
@@ -978,6 +1018,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   expect(sessionLabel).toMatchObject({
     childCount: 1,
   })
+  expect(sessionLabel).not.toHaveProperty('tabIndex', 0)
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
   expect(result.find((node) => node.text === '10:30')).toBeDefined()
@@ -1367,6 +1408,132 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   expect(betaLabel).toBeUndefined()
 })
 
+test('getChatVirtualDom should collapse chat list to first 3 sessions by default', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 4,
+  })
+  expect(visibleSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeUndefined()
+  expect(chat5Label).toBeUndefined()
+})
+
+test('getChatVirtualDom should hide chat list toggle when there are 3 or fewer visible sessions', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions.slice(0, 3),
+    viewMode: 'list',
+  })
+
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+
+  expect(moreToggle).toBeUndefined()
+  expect(visibleSessionLabels).toHaveLength(3)
+})
+
+test('getChatVirtualDom should render all visible sessions when chat list is expanded', () => {
+  const result = renderChatView({
+    chatListExpanded: true,
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 6,
+  })
+  expect(visibleSessionLabels).toHaveLength(5)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeDefined()
+  expect(chat5Label).toBeDefined()
+})
+
+test('getChatVirtualDom should render chat list toggle with dedicated classes', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const toggleItem = result.find((node) => node.className === ClassNames.ChatListMoreToggle)
+  const toggleButton = result.find((node) => node.className === ClassNames.ChatListMoreToggleButton)
+  const toggleChevron = result.find(
+    (node) => node.className === `${ClassNames.ChatListMoreToggleChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronRight}`,
+  )
+  const toggleLabel = result.find((node) => node.className === ClassNames.ChatListMoreToggleLabel)
+
+  expect(toggleItem).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggle,
+    type: VirtualDomElements.Li,
+  })
+  expect(toggleButton).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatListMoreToggleButton,
+    name: 'chat-list-show-more',
+    onClick: DomEventListenerFunctions.HandleClick,
+    onFocus: DomEventListenerFunctions.HandleFocus,
+    tabIndex: 0,
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleChevron).toMatchObject({
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleLabel).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggleLabel,
+    type: VirtualDomElements.Div,
+  })
+  expect(result.find((node) => node.className === ClassNames.ChatListItemLabel && node.name === 'chat-list-show-more')).toBeUndefined()
+})
+
+test('getChatVirtualDom should collapse filtered search results to first 3 visible sessions', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'alpha 1' },
+    { id: 'session-2', messages: [], title: 'alpha 2' },
+    { id: 'session-3', messages: [], title: 'alpha 3' },
+    { id: 'session-4', messages: [], title: 'alpha 4' },
+    { id: 'session-5', messages: [], title: 'beta 1' },
+  ]
+  const result = renderChatView({
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'alpha',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+
+  const filteredSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const alpha4Label = result.find((node) => node.text === 'alpha 4')
+  const betaLabel = result.find((node) => node.text === 'beta 1')
+
+  expect(filteredSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(alpha4Label).toBeUndefined()
+  expect(betaLabel).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render focused chat list item highlight', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },
@@ -1402,48 +1569,35 @@ test('getChatVirtualDOm should render context menu outline class for focused cha
   expect(focusedItems).toHaveLength(1)
 })
 
-test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
+test('getChatVirtualDOm should not render login button in header when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggedOut',
   })
   const loginButton = result.find((node) => node.title === 'Login to backend')
-  expect(loginButton).toBeDefined()
-  expect(loginButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
-  })
+  expect(loginButton).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render login button normally while signing in', () => {
+test('getChatVirtualDOm should not render login button while signing in', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggingIn',
   })
   const loginButton = result.find((node) => node.name === 'login')
-  expect(loginButton).toBeDefined()
-  expect(loginButton).toMatchObject({
-    disabled: false,
-    title: 'Login to backend',
-  })
-  const loginLabel = result.find((node) => node.text === 'Login')
-  expect(loginLabel).toBeDefined()
+  expect(loginButton).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render auth error label when login fails', () => {
+test('getChatVirtualDOm should not render auth error label in header when login fails', () => {
   const result = renderChatView({
     authEnabled: true,
     authErrorMessage: 'Invalid backend credentials.',
     userState: 'loggedOut',
   })
   const authError = result.find((node) => node.className === 'ChatAuthError')
-  expect(authError).toBeDefined()
-  const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
-  expect(authErrorText).toBeDefined()
+  expect(authError).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render user name and logout button when logged in', () => {
+test('getChatVirtualDOm should not render user name and logout button in header when logged in', () => {
   const result = renderChatView({
     authEnabled: true,
     userName: 'test-user',
@@ -1451,12 +1605,8 @@ test('getChatVirtualDOm should render user name and logout button when logged in
   })
   const userNameLabel = result.find((node) => node.text === 'test-user')
   const logoutButton = result.find((node) => node.name === 'logout')
-  expect(userNameLabel).toBeDefined()
-  expect(logoutButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
-    title: 'Logout from backend',
-    type: VirtualDomElements.Button,
-  })
+  expect(userNameLabel).toBeUndefined()
+  expect(logoutButton).toBeUndefined()
 })
 
 test('getChatVirtualDOm should hide session list in detail mode', () => {
@@ -1953,6 +2103,7 @@ test('getChatVirtualDOm should render OpenRouter api key input and save button f
     autocapitalize: 'off',
     autocomplete: 'off',
     autocorrect: 'off',
+    inputType: 'password',
     onInput: DomEventListenerFunctions.HandleInput,
     spellcheck: false,
     type: VirtualDomElements.Input,
@@ -2025,6 +2176,7 @@ test('getChatVirtualDOm should render OpenAPI api key input and save button for 
     autocomplete: 'off',
     autocorrect: 'off',
     className: `${ClassNames.InputBox} ${ClassNames.InputInvalid}`,
+    inputType: 'password',
     onInput: DomEventListenerFunctions.HandleInput,
     pattern: '^sk-.+',
     required: false,
@@ -2060,6 +2212,7 @@ test('getChatVirtualDOm should not mark empty OpenAPI api key input as invalid',
   const apiKeyInput = result.find((node) => node.name === 'open-api-api-key')
   expect(apiKeyInput).toMatchObject({
     className: ClassNames.InputBox,
+    inputType: 'password',
     required: false,
   })
 })

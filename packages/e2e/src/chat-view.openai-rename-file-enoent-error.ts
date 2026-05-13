@@ -38,9 +38,12 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('please rename nonexistent.txt to something-else.txt')
-  await expect(messages.nth(1)).toContainText('I could not rename that file.')
-  await expect(messages.nth(1)).toContainText('rename_file')
-  await expect(messages.nth(1)).toContainText('(error: File not found: nonexistent.txt)')
-  await expect(messages.nth(1).locator('.ChatOrderedListItem')).toHaveAttribute('title', 'nonexistent.txt')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('please rename nonexistent.txt to something-else.txt')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('I could not rename that file.')
+  await expect(message1).toContainText('rename_file')
+  await expect(message1).toContainText('(error: File not found: nonexistent.txt)')
+  const message1OrderedListItem = message1.locator('.ChatOrderedListItem')
+  await expect(message1OrderedListItem).toHaveAttribute('title', 'nonexistent.txt')
 }

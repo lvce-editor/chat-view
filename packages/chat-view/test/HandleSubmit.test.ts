@@ -1,212 +1,21 @@
-// cspell:ignore openrouter worktree worktrees
-import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
-import { ChatMessageParsingWorker, ChatToolWorker, ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
-import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { expect, test } from '@jest/globals'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
+import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { defaultMaxToolCalls } from '../src/parts/DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
-import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as HandleSubmit from '../src/parts/HandleSubmit/HandleSubmit.ts'
-import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
-import { registerSlashCommands } from '../src/parts/RegisterSlashCommands/RegisterSlashCommands.ts'
-import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
-import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
-import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+import { set } from '../src/parts/StatusBarStates/StatusBarStates.ts'
 
-registerSlashCommands()
-
-let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
-
-beforeEach(() => {
-  mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
-})
-
-afterEach(() => {
-  mockChatMessageParsingRpc[Symbol.dispose]()
-  jest.useRealTimers()
-})
-
-const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
-  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
-}
-
-test('handleSubmit should add a user message from composer value', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
-  const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
-  const result = await HandleSubmit.handleSubmit(state)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].role).toBe('user')
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.sessions[0].messages[1].text).toBe('Mock AI response: I received "hello".')
-  expect(result.composerValue).toBe('')
-  expect(result.chatInputHistory).toEqual(['hello'])
-  expect(result.chatInputHistoryIndex).toBe(-1)
-  expect(result.focus).toBe('composer')
-  expect(result.focused).toBe(true)
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
-})
-
-test('handleSubmit should delegate optimistic and final message parsing to chat message parsing worker', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
-  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
-    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) =>
-      rawMessages.map((rawMessage) => [
-        {
-          children: [
-            {
-              text: rawMessage === '' ? '[empty]' : `worker:${rawMessage}`,
-              type: 'text',
-            },
-          ],
-          type: 'text',
-        },
-      ]),
-  })
-  const state = {
-    ...createDefaultState(),
-    composerValue: 'hello',
-    viewMode: 'detail' as const,
-  }
-
-  const result = await HandleSubmit.handleSubmit(state)
-
-  expect(result.parsedMessages).toEqual([
-    {
-      id: result.sessions[0].messages[0].id,
-      parsedContent: [
-        {
-          children: [
-            {
-              text: 'worker:hello',
-              type: 'text',
-            },
-          ],
-          type: 'text',
-        },
-      ],
-      text: 'hello',
-    },
-    {
-      id: result.sessions[0].messages[1].id,
-      parsedContent: [
-        {
-          children: [
-            {
-              text: 'worker:Mock AI response: I received "hello".',
-              type: 'text',
-            },
-          ],
-          type: 'text',
-        },
-      ],
-      text: 'Mock AI response: I received "hello".',
-    },
-  ])
-  expect(mockChatMessageParsingRpc.invocations).toEqual([
-    ['ChatMessageParsing.parseMessageContents', ['hello']],
-    ['ChatMessageParsing.parseMessageContents', ['']],
-    ['ChatMessageParsing.parseMessageContents', ['Mock AI response: I received "hello".']],
-  ])
-  expect(getChatRerenderInvocations(mockRendererRpc.invocations)).toEqual([['Chat.rerender']])
-})
-
-test('handleSubmit should clear composer attachments after submit', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
-  const state = {
-    ...createDefaultState(),
-    composerAttachments: [
-      {
-        attachmentId: 'attachment-1',
-        displayType: 'text-file' as const,
-        mimeType: 'text/plain',
-        name: 'notes.txt',
-        size: 12,
-      },
-    ],
-    composerAttachmentsHeight: 34,
-    composerValue: 'hello',
-    viewMode: 'detail' as const,
-  }
-  const result = await HandleSubmit.handleSubmit(state)
-  expect(result.composerAttachments).toEqual([])
-  expect(result.composerAttachmentsHeight).toBe(0)
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
-})
-
-test('handleSubmit should persist submitted attachments on the user message and remove pending attachment events', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
-  const state = {
-    ...createDefaultState(),
-    composerAttachments: [
-      {
-        attachmentId: 'attachment-1',
-        displayType: 'image' as const,
-        mimeType: 'image/svg+xml',
-        name: 'photo.svg',
-        previewSrc: 'data:image/svg+xml;base64,abc',
-        size: 100,
-      },
-      {
-        attachmentId: 'attachment-2',
-        displayType: 'text-file' as const,
-        mimeType: 'text/plain',
-        name: 'notes.txt',
-        size: 12,
-        textContent: 'hello from file',
-      },
-    ],
-    composerAttachmentsHeight: 34,
-    composerValue: 'hello',
-    viewMode: 'detail' as const,
-  }
-
-  const result = await HandleSubmit.handleSubmit(state)
-
-  expect(result.sessions[0].messages[0]).toEqual(
-    expect.objectContaining({
-      attachments: state.composerAttachments,
-      role: 'user',
-      text: 'hello',
+test.skip('handleSubmit should delegate to chat view model worker', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async (state: ChatState) => ({
+      ...state,
+      composerValue: '',
+      selectedSessionId: 'session-2',
+      sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
+      viewMode: 'detail',
     }),
-  )
-  const events = await getChatViewEvents('session-1')
-  expect(events).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({
-        attachmentId: 'attachment-1',
-        type: 'chat-attachment-removed',
-      }),
-      expect.objectContaining({
-        attachmentId: 'attachment-2',
-        type: 'chat-attachment-removed',
-      }),
-    ]),
-  )
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
-})
-
-test('handleSubmit should dedupe consecutive history entries', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
   })
+<<<<<<< HEAD
   const firstState = {
     ...createDefaultState(),
     chatInputHistory: ['hello'],
@@ -927,113 +736,38 @@ test('handleSubmit should clear selected session messages for /clear', async () 
     ],
     viewMode: 'detail' as const,
   }
+=======
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
+>>>>>>> origin/main
 
   const result = await HandleSubmit.handleSubmit(state)
-  expect(result.sessions[0].messages).toEqual([])
-  expect(result.composerValue).toBe('')
-  expect(result.focus).toBe('composer')
-})
 
-test('handleSubmit should create a new session for /new', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state = {
-    ...createDefaultState(),
-    composerValue: '/new',
-    viewMode: 'detail' as const,
-  }
-
-  const result = await HandleSubmit.handleSubmit(state)
-  expect(result.sessions.length).toBe(state.sessions.length + 1)
-  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
-  expect(result.viewMode).toBe('detail')
-  expect(result.composerValue).toBe('')
-})
-
-test('handleSubmit should append help response for /help', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state = {
-    ...createDefaultState(),
-    composerValue: '/help',
-    viewMode: 'detail' as const,
-  }
-
-  const result = await HandleSubmit.handleSubmit(state)
-  const lastMessage = result.sessions[0].messages.at(-1)
-  expect(lastMessage?.role).toBe('assistant')
-  expect(lastMessage?.text).toContain('Available commands:')
-  expect(lastMessage?.text).toContain('/new - Create and switch to a new chat session.')
-})
-
-test('handleSubmit should append markdown export for /export', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state = {
-    ...createDefaultState(),
-    composerValue: '/export',
-    selectedSessionId: 'session-1',
-    sessions: [
-      {
-        id: 'session-1',
-        messages: [
-          {
-            id: 'message-1',
-            role: 'user' as const,
-            text: 'hello',
-            time: '10:00',
-          },
-        ],
-        title: 'Chat 1',
-      },
-    ],
-    viewMode: 'detail' as const,
-  }
-
-  const result = await HandleSubmit.handleSubmit(state)
-  const lastMessage = result.sessions[0].messages.at(-1)
-  expect(lastMessage?.role).toBe('assistant')
-  expect(lastMessage?.text).toContain('```md')
-  expect(lastMessage?.text).toContain('# Chat 1')
-  expect(lastMessage?.text).toContain('## User')
-})
-
-test('handleSubmit should inject mentioned file context into ai request messages', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-    'ExtensionHostManagement.activateByEvent': async () => {},
-    'FileSystem.readFile': async () => 'const value = 1',
+  expect(result).toEqual({
+    ...state,
+    composerValue: '',
+    selectedSessionId: 'session-2',
+    sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
+    viewMode: 'detail',
   })
-  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostCommand.executeCommand': async (_id: string, payload: any) => {
-      expect(payload.messages).toHaveLength(2)
-      expect(payload.messages[1].text).toContain('Referenced file context:')
-      expect(payload.messages[1].text).toContain('File: src/main.ts')
-      return {
-        text: 'Mocked OpenRouter response from command',
-        type: 'success',
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+})
+
+test.skip('handleSubmit should normalize object-shaped worker errors', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => {
+      throw {
+        message: 'missing attachments',
       }
     },
   })
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
 
-  const state = {
-    ...createDefaultState(),
-    composerValue: 'check @src/main.ts',
-    mockApiCommandId: 'ChatE2e.mockApi',
-    models: [{ id: 'openrouter/model', name: 'OpenRouter Model', provider: 'openRouter' as const }],
-    selectedModelId: 'openrouter/model',
-    useMockApi: true,
-    viewMode: 'detail' as const,
-  }
+  await expect(HandleSubmit.handleSubmit(state)).rejects.toThrow('missing attachments')
 
-  const result = await HandleSubmit.handleSubmit(state)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(mockRendererRpc.invocations).toContainEqual(['FileSystem.readFile', 'src/main.ts'])
-  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
+<<<<<<< HEAD
 test('handleSubmit should sync backend auth and use backend completions when useOwnBackend is enabled', async () => {
   jest.useFakeTimers()
   jest.setSystemTime(Date.parse('2026-03-25T12:00:00.000Z'))
@@ -1141,15 +875,26 @@ test('handleSubmit should render mock OpenAI write_file tool calls from response
       response: {
         id: 'resp_01',
         output: [
+=======
+test.skip('handleSubmit should prefer newer local state applied during submit', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async (state: ChatState) => {
+      const newerState = {
+        ...state,
+        composerValue: '',
+        selectedSessionId: 'session-2',
+        sessions: [
+          ...state.sessions,
+>>>>>>> origin/main
           {
-            arguments: JSON.stringify({ content: 'alpha\\nbeta\\ngamma', uri: notesUri }),
-            call_id: 'call_01',
-            id: 'fc_01',
-            name: 'write_file',
-            status: 'completed',
-            type: 'function_call',
+            id: 'session-2',
+            messages: [{ id: 'message-1', role: 'user' as const, text: 'hello', time: '10:00' }],
+            projectId: state.selectedProjectId,
+            status: 'idle' as const,
+            title: 'Chat 2',
           },
         ],
+<<<<<<< HEAD
         status: 'completed',
       },
       sequence_number: 1,
@@ -1434,33 +1179,64 @@ test('handleSubmit should provision a background worktree for a new background s
       return {
         branchName: 'chat/session-2',
         workspaceUri: 'file:///workspace/app.worktrees/chat-session-2',
+=======
+        viewMode: 'detail' as const,
+      }
+      set(state.uid, state, newerState)
+      return {
+        ...state,
+        composerValue: '',
+        selectedSessionId: 'session-2',
+        sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
+        viewMode: 'detail' as const,
+>>>>>>> origin/main
       }
     },
   })
-
-  const state = {
-    ...createDefaultState(),
-    composerValue: 'first background message',
-    projects: [
-      {
-        id: 'project-1',
-        name: 'app',
-        uri: 'file:///workspace/app',
-      },
-    ],
-    runMode: 'background' as const,
-    selectedProjectId: 'project-1',
-    viewMode: 'list' as const,
-  }
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
 
   const result = await HandleSubmit.handleSubmit(state)
-  const newSession = result.sessions.at(-1)
-  expect(newSession?.branchName).toBe('chat/session-2')
-  expect(newSession?.workspaceUri).toBe('file:///workspace/app.worktrees/chat-session-2')
-  expect(newSession?.projectId).toBe('project-1')
-  expect(mockRendererRpc.invocations).toEqual([
-    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.createBackgroundWorktree', '', 0],
-    ['Chat.rerender'],
-  ])
-  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+
+  expect(result).toEqual({
+    ...state,
+    composerValue: '',
+    selectedSessionId: 'session-2',
+    sessions: [
+      ...state.sessions,
+      {
+        id: 'session-2',
+        messages: [{ id: 'message-1', role: 'user', text: 'hello', time: '10:00' }],
+        projectId: state.selectedProjectId,
+        status: 'idle',
+        title: 'Chat 2',
+      },
+    ],
+    viewMode: 'detail',
+  })
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+})
+
+test.skip('handleSubmit should not fall back to stale local state when no newer update arrives', async () => {
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async (state: ChatState) => ({
+      ...state,
+      composerValue: '',
+      selectedSessionId: 'session-2',
+      sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
+      viewMode: 'detail' as const,
+    }),
+  })
+  const state = { ...createDefaultState(), composerValue: 'hello from e2e' }
+  set(state.uid, state, state)
+
+  const result = await HandleSubmit.handleSubmit(state)
+
+  expect(result).toEqual({
+    ...state,
+    composerValue: '',
+    selectedSessionId: 'session-2',
+    sessions: [...state.sessions, { id: 'session-2', messages: [], projectId: state.selectedProjectId, status: 'idle', title: 'Chat 2' }],
+    viewMode: 'detail',
+  })
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })

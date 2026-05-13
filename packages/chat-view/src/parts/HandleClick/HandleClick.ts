@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { createSession } from '../CreateSession/CreateSession.ts'
 import { deleteProject } from '../DeleteProject/DeleteProject.ts'
@@ -16,6 +18,7 @@ import { handleClickOpenApiApiKeySettings } from '../HandleClickOpenApiApiKeySet
 import { handleClickOpenApiApiKeyWebsite } from '../HandleClickOpenApiApiKeyWebsite/HandleClickOpenApiApiKeyWebsite.ts'
 import { handleClickOpenRouterApiKeySettings } from '../HandleClickOpenRouterApiKeySettings/HandleClickOpenRouterApiKeySettings.ts'
 import { handleClickOpenRouterApiKeyWebsite } from '../HandleClickOpenRouterApiKeyWebsite/HandleClickOpenRouterApiKeyWebsite.ts'
+import { handleClickPrimaryControlsOverflow } from '../HandleClickPrimaryControlsOverflow/HandleClickPrimaryControlsOverflow.ts'
 import { handleClickSaveOpenApiApiKey } from '../HandleClickSaveOpenApiApiKey/HandleClickSaveOpenApiApiKey.ts'
 import { handleClickSaveOpenRouterApiKey } from '../HandleClickSaveOpenRouterApiKey/HandleClickSaveOpenRouterApiKey.ts'
 import { handleClickSend } from '../HandleClickSend/HandleClickSend.ts'
@@ -33,11 +36,16 @@ import { selectProject } from '../SelectProject/SelectProject.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 import { startRename } from '../StartRename/StartRename.ts'
 import { toggleChatFocusMode } from '../ToggleChatFocusMode/ToggleChatFocusMode.ts'
+import { toggleChatListExpanded } from '../ToggleChatListExpanded/ToggleChatListExpanded.ts'
 import { toggleProjectExpanded } from '../ToggleProjectExpanded/ToggleProjectExpanded.ts'
+import { updateResponsivePickerState } from '../UpdateResponsivePickerState/UpdateResponsivePickerState.ts'
 
 export const handleClick = async (state: ChatState, name: string, id = '', eventX = 0, eventY = 0): Promise<ChatState> => {
   if (!name) {
     return state
+  }
+  if (name === InputName.ChatListShowMore) {
+    return toggleChatListExpanded(state)
   }
   switch (true) {
     case name === InputName.CreateSession:
@@ -66,9 +74,11 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
       return openAgentModePicker(state)
     case name === InputName.ReasoningEffortPickerToggle:
       return openReasoningEffortPicker(state)
+    case name === InputName.PrimaryControlsOverflow:
+      return handleClickPrimaryControlsOverflow(state, eventX, eventY)
     case InputName.isModelPickerItemInputName(name): {
       const modelId = InputName.getModelIdFromModelPickerItemInputName(name)
-      return {
+      return updateResponsivePickerState({
         ...state,
         agentModePickerOpen: false,
         modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, state.models.length),
@@ -78,7 +88,7 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
         reasoningEffortPickerOpen: false,
         selectedModelId: modelId,
         visibleModels: state.models,
-      }
+      })
     }
     case InputName.isGitBranchPickerItemInputName(name): {
       const branchName = InputName.getGitBranchFromGitBranchPickerItemInputName(name)
@@ -94,13 +104,13 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     }
     case InputName.isRunModePickerItemInputName(name): {
       const runMode = InputName.getRunModeFromRunModePickerItemInputName(name)
-      return {
+      return updateResponsivePickerState({
         ...state,
         agentModePickerOpen: false,
         reasoningEffortPickerOpen: false,
         runMode,
         runModePickerOpen: false,
-      }
+      })
     }
     case name === InputName.ModelPickerList: {
       const itemHeight = 28

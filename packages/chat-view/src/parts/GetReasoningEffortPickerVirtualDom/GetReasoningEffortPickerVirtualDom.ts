@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getCustomSelectOptionVirtualDom } from '../GetCustomSelectOptionVirtualDom/GetCustomSelectOptionVirtualDom.ts'
@@ -54,7 +54,7 @@ export const getReasoningEffortPickerVirtualDom = (
             childCount: reasoningEfforts.length,
             className: ClassNames.ChatModelPickerList,
             name: InputName.PickerList,
-            role: 'listbox',
+            role: AriaRoles.ListBox,
             tabIndex: -1,
             type: VirtualDomElements.Ul,
           },

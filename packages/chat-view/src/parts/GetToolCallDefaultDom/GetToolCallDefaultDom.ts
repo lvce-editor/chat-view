@@ -81,6 +81,15 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
       type: VirtualDomElements.Span,
     },
     text(toolNamePrefix),
-    ...(hasSuffix ? [text(suffix)] : []),
+    ...(hasSuffix
+      ? [
+          {
+            childCount: 1,
+            className: ClassNames.ToolCallDetails,
+            type: VirtualDomElements.Span,
+          },
+          text(suffix),
+        ]
+      : []),
   ]
 }

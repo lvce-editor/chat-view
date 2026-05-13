@@ -56,12 +56,12 @@ test('getToolCallStatusLabel should return generic error label without message',
   expect(result).toBe(' (error)')
 })
 
-test('getToolCallStatusLabel should return finished label for success status', () => {
+test('getToolCallStatusLabel should return empty label for success status', () => {
   const toolCall = createToolCall({ status: 'success' })
 
   const result = getToolCallStatusLabel(toolCall)
 
-  expect(result).toBe(' (finished)')
+  expect(result).toBe('')
 })
 
 test('getToolCallStatusLabel should return in progress label', () => {

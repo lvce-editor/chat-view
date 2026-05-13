@@ -9,10 +9,20 @@ export const loadSelectedSessionMessages = async (sessions: readonly ChatSession
   if (!loadedSession) {
     return sessions
   }
-  return sessions.map((session) => {
+  let found = false
+  const hydratedSessions = sessions.map((session) => {
     if (session.id !== selectedSessionId) {
       return session
     }
-    return loadedSession
+    found = true
+    return {
+      ...session,
+      ...loadedSession,
+      messages: loadedSession.messages,
+    }
   })
+  if (found) {
+    return hydratedSessions
+  }
+  return [...sessions, loadedSession]
 }

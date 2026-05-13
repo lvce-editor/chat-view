@@ -6,6 +6,19 @@ import { rollup } from 'rollup'
 import type { RollupOptions } from 'rollup'
 import { root } from './root.ts'
 
+const bundleTargets = [
+  {
+    input: join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'),
+    outputFile: join(root, '.tmp/dist/dist/chatViewWorkerMain.js'),
+    external: ['ws', 'electron'],
+  },
+  {
+    input: join(root, 'packages/chat-view-model/src/chatViewModelWorkerMain.ts'),
+    outputFile: join(root, '.tmp/dist-chat-view-model/dist/chatViewModelWorkerMain.js'),
+    external: ['node:buffer', 'electron', 'ws', 'node:worker_threads'],
+  },
+]
+
 const getOptions = (input: string, outputFile: string, external: string[] = []): RollupOptions => {
   return {
     input,
@@ -41,9 +54,8 @@ const bundle = async (options: RollupOptions) => {
 }
 
 export const bundleJs = async () => {
-  const options = getOptions(join(root, 'packages/chat-view/src/chatViewWorkerMain.ts'), join(root, '.tmp/dist/dist/chatViewWorkerMain.js'), [
-    'ws',
-    'electron',
-  ])
-  await bundle(options)
+  for (const target of bundleTargets) {
+    const options = getOptions(target.input, target.outputFile, target.external)
+    await bundle(options)
+  }
 }

@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -16,7 +16,7 @@ export const getDictationButtonDom = (): readonly VirtualDomNode[] => {
     },
     {
       childCount: 0,
-      className: 'MaskIcon MaskIconMic',
+      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconMic),
       type: VirtualDomElements.Div,
     },
   ]

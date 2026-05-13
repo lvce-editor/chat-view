@@ -1,4 +1,5 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import { applyViewModelState } from '../ApplyViewModelState/ApplyViewModelState.ts'
 import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
 import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
@@ -13,6 +14,7 @@ import * as CutInput from '../CutInput/CutInput.ts'
 import { deleteSessionAtIndex } from '../DeleteSessionAtIndex/DeleteSessionAtIndex.ts'
 import { diff2 } from '../Diff2/Diff2.ts'
 import * as GetAuthState from '../GetAuthState/GetAuthState.ts'
+import { getComposerSelection } from '../GetComposerSelection/GetComposerSelection.ts'
 import { getKeyBindings } from '../GetKeyBindings/GetKeyBindings.ts'
 import * as GetMenuEntries from '../GetMenuEntries/GetMenuEntries.ts'
 import { getMenuEntryIds } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
@@ -21,6 +23,7 @@ import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPick
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
 import * as HandleAgentModeChange from '../HandleAgentModeChange/HandleAgentModeChange.ts'
+import * as HandleAuthStateChange from '../HandleAuthStateChange/HandleAuthStateChange.ts'
 import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
 import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
@@ -40,6 +43,7 @@ import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
+import * as HandleClickRename from '../HandleClickRename/HandleClickRename.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleContextMenuChatImageAttachment from '../HandleContextMenuChatImageAttachment/HandleContextMenuChatImageAttachment.ts'
@@ -86,6 +90,7 @@ import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApi
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
+import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
 import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
@@ -99,6 +104,7 @@ import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveCom
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
+import { rerenderWithQuery } from '../RerenderWithQuery/RerenderWithQuery.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
@@ -108,6 +114,7 @@ import * as SetBackendUrl from '../SetBackendUrl/SetBackendUrl.ts'
 import * as SetChatHistoryEnabled from '../SetChatHistoryEnabled/SetChatHistoryEnabled.ts'
 import * as SetComposerSelection from '../SetComposerSelection/SetComposerSelection.ts'
 import * as SetEmitStreamingFunctionCallEvents from '../SetEmitStreamingFunctionCallEvents/SetEmitStreamingFunctionCallEvents.ts'
+import * as SetInProgress from '../SetInProgress/SetInProgress.ts'
 import * as SetNowForTest from '../SetNowForTest/SetNowForTest.ts'
 import * as SetOpenRouterApiKey from '../SetOpenRouterApiKey/SetOpenRouterApiKey.ts'
 import * as SetQuestionToolEnabled from '../SetQuestionToolEnabled/SetQuestionToolEnabled.ts'
@@ -118,6 +125,7 @@ import * as SetScrollDownButtonEnabled from '../SetScrollDownButtonEnabled/SetSc
 import * as SetSearchEnabled from '../SetSearchEnabled/SetSearchEnabled.ts'
 import * as SetSelectChevronEnabled from '../SetSelectChevronEnabled/SetSelectChevronEnabled.ts'
 import * as SetShowChatListTime from '../SetShowChatListTime/SetShowChatListTime.ts'
+import * as SetShowModelUsageMultiplier from '../SetShowModelUsageMultiplier/SetShowModelUsageMultiplier.ts'
 import * as SetShowRunMode from '../SetShowRunMode/SetShowRunMode.ts'
 import * as SetStreamingEnabled from '../SetStreamingEnabled/SetStreamingEnabled.ts'
 import * as SetSystemPrompt from '../SetSystemPrompt/SetSystemPrompt.ts'
@@ -133,6 +141,7 @@ import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/Statu
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
 export const commandMap = {
+  'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
@@ -149,6 +158,7 @@ export const commandMap = {
   'Chat.enterNewLine': wrapCommand(HandleNewline.handleNewline),
   'Chat.getAuthState': wrapGetter(GetAuthState.getAuthState),
   'Chat.getCommandIds': getCommandIds,
+  'Chat.getComposerSelection': wrapGetter(getComposerSelection),
   'Chat.getKeyBindings': getKeyBindings,
   'Chat.getMenuEntries': GetMenuEntries.getMenuEntries,
   'Chat.getMenuEntryIds': getMenuEntryIds,
@@ -157,6 +167,7 @@ export const commandMap = {
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),
   'Chat.handleAgentModeChange': wrapCommand(HandleAgentModeChange.handleAgentModeChange),
+  'Chat.handleAuthStateChange': wrapCommand(HandleAuthStateChange.handleAuthStateChange),
   'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
@@ -178,6 +189,7 @@ export const commandMap = {
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
+  'Chat.handleClickRename': wrapCommand(HandleClickRename.handleClickRename),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleContextMenuChatImageAttachment': wrapCommand(HandleContextMenuChatImageAttachment.handleContextMenuChatImageAttachment),
@@ -191,6 +203,7 @@ export const commandMap = {
     HandleErrorComposerAttachmentPreviewOverlay.handleErrorComposerAttachmentPreviewOverlay,
   ),
   'Chat.handleInput': wrapCommand(HandleInput.handleInput),
+  'Chat.handleInputCopy': wrapCommand(CopyInput.copyInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
@@ -229,6 +242,7 @@ export const commandMap = {
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
+  'Chat.openDebugView': wrapCommand(openDebugView),
   'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
@@ -242,6 +256,7 @@ export const commandMap = {
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
+  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),
@@ -251,6 +266,7 @@ export const commandMap = {
   'Chat.setChatHistoryEnabled': wrapCommand(SetChatHistoryEnabled.setChatHistoryEnabled),
   'Chat.setComposerSelection': wrapCommand(SetComposerSelection.setComposerSelection),
   'Chat.setEmitStreamingFunctionCallEvents': wrapCommand(SetEmitStreamingFunctionCallEvents.setEmitStreamingFunctionCallEvents),
+  'Chat.setInProgress': wrapCommand(SetInProgress.setInProgress),
   'Chat.setNowForTest': wrapCommand(SetNowForTest.setNowForTest),
   'Chat.setOpenRouterApiKey': wrapCommand(SetOpenRouterApiKey.setOpenRouterApiKey),
   'Chat.setQuestionToolEnabled': wrapCommand(SetQuestionToolEnabled.setQuestionToolEnabled),
@@ -261,6 +277,7 @@ export const commandMap = {
   'Chat.setSearchEnabled': wrapCommand(SetSearchEnabled.setSearchEnabled),
   'Chat.setSelectChevronEnabled': wrapCommand(SetSelectChevronEnabled.setSelectChevronEnabled),
   'Chat.setShowChatListTime': wrapCommand(SetShowChatListTime.setShowChatListTime),
+  'Chat.setShowModelUsageMultiplier': wrapCommand(SetShowModelUsageMultiplier.setShowModelUsageMultiplier),
   'Chat.setShowRunMode': wrapCommand(SetShowRunMode.setShowRunMode),
   'Chat.setStreamingEnabled': wrapCommand(SetStreamingEnabled.setStreamingEnabled),
   'Chat.setSystemPrompt': wrapCommand(SetSystemPrompt.setSystemPrompt),

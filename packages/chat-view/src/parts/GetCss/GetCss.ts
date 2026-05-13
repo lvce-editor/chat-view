@@ -49,28 +49,118 @@ export const getCss = (
 
 :root{
  --WidgetBorder: white;
+ --ChatScrollbarThickness: 10px;
+ --ChatScrollbarTrack: transparent;
+ --ChatScrollbarThumb: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4));
+ --ChatScrollbarThumbHover: var(--vscode-scrollbarSlider-hoverBackground, rgba(100, 100, 100, 0.7));
+ --ChatScrollbarThumbActive: var(--vscode-scrollbarSlider-activeBackground, rgba(191, 191, 191, 0.4));
 }
 
-.ChatHeaderAuth{
-  align-items: center;
-  display: flex;
-  gap: 8px;
-  min-width: 0;
+.ChatList,
+.ProjectList,
+.ChatMessages {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ChatScrollbarThumb) var(--ChatScrollbarTrack);
 }
 
-.ChatHeaderAuthName{
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.ChatList::-webkit-scrollbar,
+.ProjectList::-webkit-scrollbar,
+.ChatMessages::-webkit-scrollbar {
+  width: var(--ChatScrollbarThickness);
+  height: var(--ChatScrollbarThickness);
 }
 
-.ChatHeaderAuth .Button{
-  white-space: nowrap;
+.ChatList::-webkit-scrollbar-track,
+.ProjectList::-webkit-scrollbar-track,
+.ChatMessages::-webkit-scrollbar-track {
+  background: var(--ChatScrollbarTrack);
 }
+
+.ChatList::-webkit-scrollbar-thumb,
+.ProjectList::-webkit-scrollbar-thumb,
+.ChatMessages::-webkit-scrollbar-thumb {
+  background: var(--ChatScrollbarThumb);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-thumb:hover,
+.ProjectList::-webkit-scrollbar-thumb:hover,
+.ChatMessages::-webkit-scrollbar-thumb:hover {
+  background: var(--ChatScrollbarThumbHover);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-thumb:active,
+.ProjectList::-webkit-scrollbar-thumb:active,
+.ChatMessages::-webkit-scrollbar-thumb:active {
+  background: var(--ChatScrollbarThumbActive);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-corner,
+.ProjectList::-webkit-scrollbar-corner,
+.ChatMessages::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
 
 .ChatSendAreaBottom{
   height: ${buttonsHeight}px;
+}
+
+.ChatListMoreToggle {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--ChatListItemHeight);
+  padding: 0 6px;
+}
+
+.ChatListMoreToggleButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 22px;
+  padding: 0 6px 0 4px;
+  border-radius: 4px;
+  color: var(--vscode-descriptionForeground, var(--vscode-foreground));
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.ChatListMoreToggleButton:hover {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+}
+
+.ChatListMoreToggleButton:focus {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder, #007fd4);
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+  outline: none;
+}
+
+.ChatListMoreToggleChevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+
+.ChatListMoreToggleLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 

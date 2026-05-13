@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { GitBranch } from '../GitBranch/GitBranch.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -90,7 +90,7 @@ export const getGitBranchPickerVirtualDom = (
           {
             childCount: branchOptions.length / 4,
             className: ClassNames.ChatModelPickerList,
-            role: 'listbox',
+            role: AriaRoles.ListBox,
             type: VirtualDomElements.Ul,
           },
           ...branchOptions,

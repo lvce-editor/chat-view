@@ -1,5 +1,6 @@
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
+<<<<<<< HEAD
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
@@ -190,4 +191,9 @@ export const loadContent = async (state: ChatState, savedState: unknown): Promis
     voiceDictationEnabled,
   }
   return refreshGitBranchPickerVisibility(nextState)
+=======
+
+export const loadContent = async (state: ChatState, savedState: unknown): Promise<ChatState> => {
+  return ChatViewModelWorker.invoke('ChatModel.loadContent', state, savedState) as Promise<ChatState>
+>>>>>>> origin/main
 }

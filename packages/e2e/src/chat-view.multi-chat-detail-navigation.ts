@@ -4,7 +4,7 @@ export const name = 'chat-view.multi-chat-detail-navigation'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -21,8 +21,10 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const firstSubmitPromise = Chat.handleInput('chat-1-user').then(() => Chat.handleSubmit())
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-1-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
+  const chatMessage0 = chatMessages.nth(0)
+  await expect(chatMessage0).toContainText('chat-1-user')
+  const chatMessage1 = chatMessages.nth(1)
+  await expect(chatMessage1).toContainText('chat-1-ai')
   await Chat.mockOpenApiStreamFinish()
   await firstSubmitPromise
 
@@ -35,8 +37,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const secondSubmitPromise = Chat.handleInput('chat-2-user').then(() => Chat.handleSubmit())
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-2-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-2-ai')
+  await expect(chatMessage0).toContainText('chat-2-user')
+  await expect(chatMessage1).toContainText('chat-2-ai')
   await Chat.mockOpenApiStreamFinish()
   await secondSubmitPromise
 
@@ -46,9 +48,13 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   // @ts-ignore
   const chatOneLabel = Locator('.ChatListItemLabel').filter({ hasText: 'Chat 1' })
   await expect(chatOneLabel).toHaveCount(1)
-  await chatOneLabel.click()
+  const chatOneLabelName = await chatOneLabel.getAttribute('name')
+  if (!chatOneLabelName) {
+    throw new Error('chat one label is missing name attribute')
+  }
+  await Command.execute('Chat.handleClick', chatOneLabelName)
   await expect(backButton).toBeVisible()
   await expect(chatMessages).toHaveCount(2)
-  await expect(chatMessages.nth(0)).toContainText('chat-1-user')
-  await expect(chatMessages.nth(1)).toContainText('chat-1-ai')
+  await expect(chatMessage0).toContainText('chat-1-user')
+  await expect(chatMessage1).toContainText('chat-1-ai')
 }

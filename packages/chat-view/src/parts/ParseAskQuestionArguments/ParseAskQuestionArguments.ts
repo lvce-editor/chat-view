@@ -3,6 +3,19 @@ interface ParsedAskQuestionArguments {
   readonly question: string
 }
 
+const getAnswersArray = (rawAnswers: unknown, rawChoices: unknown, rawOptions: unknown): readonly unknown[] => {
+  if (Array.isArray(rawAnswers)) {
+    return rawAnswers
+  }
+  if (Array.isArray(rawChoices)) {
+    return rawChoices
+  }
+  if (Array.isArray(rawOptions)) {
+    return rawOptions
+  }
+  return []
+}
+
 export const parseAskQuestionArguments = (rawArguments: string): ParsedAskQuestionArguments => {
   let parsed: unknown
   try {
@@ -23,7 +36,7 @@ export const parseAskQuestionArguments = (rawArguments: string): ParsedAskQuesti
   const rawAnswers = Reflect.get(parsed, 'answers')
   const rawChoices = Reflect.get(parsed, 'choices')
   const rawOptions = Reflect.get(parsed, 'options')
-  const arrayValue = Array.isArray(rawAnswers) ? rawAnswers : Array.isArray(rawChoices) ? rawChoices : Array.isArray(rawOptions) ? rawOptions : []
+  const arrayValue = getAnswersArray(rawAnswers, rawChoices, rawOptions)
   const answers = arrayValue.filter((value) => typeof value === 'string') as readonly string[]
   return {
     answers,

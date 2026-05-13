@@ -21,6 +21,16 @@ test('create should show run mode by default', () => {
   expect(newStateTyped.reasoningEffort).toBe('medium')
   expect(newStateTyped.reasoningPickerEnabled).toBe(false)
   expect(newStateTyped.chatDebugLoggingEnabled).toBe(true)
+  expect(newStateTyped.showModelUsageMultiplier).toBe(true)
   expect(newStateTyped.showRunMode).toBe(true)
   expect(newStateTyped.runMode).toBe('local')
+})
+
+test('create should enable responsive picker visibility by default', () => {
+  const uid = 125
+  Create.create(uid, 10, 20, 300, 400, 0, '')
+  const result = StatusBarStates.get(uid)
+  const { newState } = result
+  const newStateTyped: ChatState = newState
+  expect(newStateTyped.responsivePickerVisibilityEnabled).toBe(true)
 })

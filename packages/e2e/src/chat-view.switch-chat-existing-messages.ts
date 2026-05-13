@@ -41,26 +41,30 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const chatListLabels = Locator('.ChatListItemLabel')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toContainText('chat-b-user')
-  await expect(messages.nth(1)).toContainText('chat-b-assistant')
+  const message0 = messages.nth(0)
+  await expect(message0).toContainText('chat-b-user')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('chat-b-assistant')
 
   await Chat.handleClickBack()
   await expect(chatListLabels).toHaveCount(2)
-  await expect(chatListLabels.nth(0)).toHaveText('Chat B')
-  await expect(chatListLabels.nth(1)).toHaveText('Chat A')
+  const chatListLabel0 = chatListLabels.nth(0)
+  await expect(chatListLabel0).toHaveText('Chat B')
+  const chatListLabel1 = chatListLabels.nth(1)
+  await expect(chatListLabel1).toHaveText('Chat A')
 
-  await chatListLabels.nth(1).click()
+  await Command.execute('Chat.handleClick', 'session:Chat A')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toContainText('chat-a-user')
-  await expect(messages.nth(1)).toContainText('chat-a-assistant')
+  await expect(message0).toContainText('chat-a-user')
+  await expect(message1).toContainText('chat-a-assistant')
 
   await Chat.handleClickBack()
 
-  await expect(chatListLabels.nth(0)).toHaveText('Chat B')
-  await chatListLabels.nth(0).click()
+  await expect(chatListLabel0).toHaveText('Chat B')
+  await Command.execute('Chat.handleClick', 'session:Chat B')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toContainText('chat-b-user')
-  await expect(messages.nth(1)).toContainText('chat-b-assistant')
+  await expect(message0).toContainText('chat-b-user')
+  await expect(message1).toContainText('chat-b-assistant')
 }

@@ -13,6 +13,7 @@ import { loadRunModePickerEnabled } from '../LoadRunModePickerEnabled/LoadRunMod
 import { loadScrollDownButtonEnabled } from '../LoadScrollDownButtonEnabled/LoadScrollDownButtonEnabled.ts'
 import { loadSearchEnabled } from '../LoadSearchEnabled/LoadSearchEnabled.ts'
 import { loadShowChatListTime } from '../LoadShowChatListTime/LoadShowChatListTime.ts'
+import { loadShowModelUsageMultiplier } from '../LoadShowModelUsageMultiplier/LoadShowModelUsageMultiplier.ts'
 import { loadStreamingEnabled } from '../LoadStreamingEnabled/LoadStreamingEnabled.ts'
 import { loadTodoListToolEnabled } from '../LoadTodoListToolEnabled/LoadTodoListToolEnabled.ts'
 import { loadToolEnablement } from '../LoadToolEnablement/LoadToolEnablement.ts'
@@ -40,6 +41,7 @@ export interface LoadedPreferences {
   scrollDownButtonEnabled: boolean
   searchEnabled: boolean
   showChatListTime: boolean
+  showModelUsageMultiplier: boolean
   streamingEnabled: boolean
   todoListToolEnabled: boolean
   toolEnablement: Record<string, boolean>
@@ -68,6 +70,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
+    showModelUsageMultiplier,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,
@@ -94,6 +97,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadScrollDownButtonEnabled(),
     loadSearchEnabled(),
     loadShowChatListTime(),
+    loadShowModelUsageMultiplier(),
     loadStreamingEnabled(),
     loadTodoListToolEnabled(),
     loadToolEnablement(),
@@ -123,6 +127,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     scrollDownButtonEnabled,
     searchEnabled,
     showChatListTime,
+    showModelUsageMultiplier,
     streamingEnabled,
     todoListToolEnabled,
     toolEnablement,

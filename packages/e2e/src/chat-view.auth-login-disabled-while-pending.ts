@@ -7,7 +7,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Command.execute('Chat.setAuthEnabled', true)
-  await Command.execute('Chat.setBackendUrl', 'https://backend.example.com')
+  await Chat.setBackendUrl('https://backend.example.com')
   await Chat.mockBackendAuthResponse({
     accessToken: 'access-token-delayed',
     delay: 900,
@@ -22,7 +22,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(loginButton).toBeVisible()
 
-  const clickPromise = loginButton.click()
+  const clickPromise = Command.execute('Chat.handleClick', 'login')
   await expect(pendingLoginButton).toBeVisible()
   await clickPromise
 

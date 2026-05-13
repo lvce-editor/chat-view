@@ -124,10 +124,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('ask_question: (empty question)')
-  await expect(messages.nth(1)).toContainText('ask_question: Which environment should be used?')
-  await expect(messages.nth(1)).toContainText('(no answers)')
-  await expect(messages.nth(1)).toContainText(longQuestion)
-  await expect(messages.nth(1)).toContainText(longAnswer)
-  await expect(messages.nth(1)).toContainText('(empty answer)')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('ask_question: (empty question)')
+  await expect(message1).toContainText('ask_question: Which environment should be used?')
+  await expect(message1).toContainText('(no answers)')
+  await expect(message1).toContainText(longQuestion)
+  await expect(message1).toContainText(longAnswer)
+  await expect(message1).toContainText('(empty answer)')
 }
