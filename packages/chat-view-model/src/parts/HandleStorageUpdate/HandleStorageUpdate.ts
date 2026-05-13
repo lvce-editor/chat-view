@@ -1,7 +1,7 @@
 import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 import { getState, setState } from '../ModelState/ModelState.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
-import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 
 const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
   // TODO update / requery list
