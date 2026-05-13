@@ -1,10 +1,10 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
+import type { ChatModel, ComposerAttachment } from '../ViewModel/ViewModel.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { setState } from '../ModelState/ModelState.ts'
-import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
-import type { ChatModel, ComposerAttachment } from '../ViewModel/ViewModel.ts'
 
 const Composer = 'composer'
 const Search = 'search'
