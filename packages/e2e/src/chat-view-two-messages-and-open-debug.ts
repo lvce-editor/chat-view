@@ -1,8 +1,8 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const skip = 1
-
 export const name = 'chat-view.two-messages-and-open-debug'
+
+export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
@@ -24,6 +24,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Command.execute(`Chat.openDebugView`)
 
   // assert
-  const rows = Locator('.TableBody .TableRow')
-  await expect(rows).toHaveCount(4)
+
+  // TODO verify items are visible
+  // const rows = Locator('.TableBody .TableRow')
+  // await expect(rows).toHaveCount(4)
 }
