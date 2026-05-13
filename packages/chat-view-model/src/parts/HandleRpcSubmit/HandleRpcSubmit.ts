@@ -1,6 +1,7 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
-import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { setState } from '../ModelState/ModelState.ts'
+import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
 import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
@@ -10,7 +11,6 @@ import { getCoordinatorModelId } from './GetCoordinatorModelId/GetCoordinatorMod
 import { getNextChatInputHistory } from './GetNextChatInputHistory/GetNextChatInputHistory.ts'
 import { useMockApiEnabled } from './UseMockApiEnabled/UseMockApiEnabled.ts'
 import { useOwnBackendEnabled } from './UseOwnBackendEnabled/UseOwnBackendEnabled.ts'
-import { setState } from '../ModelState/ModelState.ts'
 
 // const handleSubmitWithExistingSession
 
