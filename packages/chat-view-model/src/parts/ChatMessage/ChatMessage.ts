@@ -14,9 +14,9 @@ export interface ChatToolCall {
 }
 
 export interface ChatMessageContentPart {
+  readonly [key: string]: unknown
   readonly text?: string
   readonly type?: string
-  readonly [key: string]: unknown
 }
 
 export interface ChatMessage {

@@ -1,3 +1,4 @@
+import { isAgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage, ChatMessageContentPart } from '../ChatMessage/ChatMessage.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
@@ -38,7 +39,7 @@ export const getMessageTextFromContent = (value: unknown): string => {
     .join('')
 }
 
-export const normalizeStoredChatMessage = (value: unknown, options: NormalizeStoredChatMessageOptions = {}): ChatMessage | undefined => {
+export const normalizeStoredChatMessage = (value: unknown, options: Readonly<NormalizeStoredChatMessageOptions> = {}): ChatMessage | undefined => {
   if (!isObject(value)) {
     return undefined
   }
@@ -51,7 +52,7 @@ export const normalizeStoredChatMessage = (value: unknown, options: NormalizeSto
   const content = getMessageContentParts(value.content)
   const derivedText = getMessageTextFromContent(value.content)
   const text = derivedText || (typeof value.text === 'string' ? value.text : '')
-  const agentMode = typeof value.agentMode === 'string' ? value.agentMode : undefined
+  const agentMode = typeof value.agentMode === 'string' && isAgentMode(value.agentMode) ? value.agentMode : undefined
   const attachments = Array.isArray(value.attachments) ? value.attachments : undefined
   const inProgress = typeof value.inProgress === 'boolean' ? value.inProgress : undefined
   const toolCalls = Array.isArray(value.toolCalls) ? value.toolCalls : undefined

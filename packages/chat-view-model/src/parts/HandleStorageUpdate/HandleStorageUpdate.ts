@@ -1,7 +1,7 @@
 import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
-import { getState, setState } from '../ModelState/ModelState.ts'
 import { isObject } from '../IsObject/IsObject.ts'
+import { getState, setState } from '../ModelState/ModelState.ts'
 import { normalizeStoredChatMessage } from '../NormalizeStoredChatMessage/NormalizeStoredChatMessage.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
@@ -10,29 +10,30 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
   return state
 }
 
+const getMessageFromEvent = (event: unknown): unknown => {
+  if (!isObject(event) || typeof event.type !== 'string') {
+    return undefined
+  }
+  if (event.type === 'chat-message-added') {
+    return normalizeStoredChatMessage(event.message, {
+      fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
+    })
+  }
+  if (event.type === 'message') {
+    return normalizeStoredChatMessage(event.message, {
+      fallbackId: typeof event.requestId === 'string' ? event.requestId : undefined,
+      fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
+    })
+  }
+  return undefined
+}
+
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
   for (const event of events) {
-    if (!isObject(event) || typeof event.type !== 'string') {
-      continue
-    }
-    if (event.type === 'chat-message-added') {
-      const message = normalizeStoredChatMessage(event.message, {
-        fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
-      })
-      if (message) {
-        messages.push(message)
-      }
-      continue
-    }
-    if (event.type === 'message') {
-      const message = normalizeStoredChatMessage(event.message, {
-        fallbackId: typeof event.requestId === 'string' ? event.requestId : undefined,
-        fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
-      })
-      if (message) {
-        messages.push(message)
-      }
+    const message = getMessageFromEvent(event)
+    if (message) {
+      messages.push(message)
     }
   }
   return messages
