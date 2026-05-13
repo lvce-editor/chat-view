@@ -1,5 +1,5 @@
-import { isAgentMode } from '../AgentMode/AgentMode.ts'
 import type { ChatMessage, ChatMessageContentPart } from '../ChatMessage/ChatMessage.ts'
+import { isAgentMode } from '../AgentMode/AgentMode.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
 interface NormalizeStoredChatMessageOptions {
@@ -18,7 +18,13 @@ const getMessageContentParts = (value: unknown): readonly ChatMessageContentPart
   if (!Array.isArray(value)) {
     return undefined
   }
-  const parts = value.filter(isObject).map((part) => ({ ...part }))
+  const parts: ChatMessageContentPart[] = []
+  for (const part of value) {
+    if (!isObject(part)) {
+      continue
+    }
+    parts.push({ ...part })
+  }
   return parts
 }
 

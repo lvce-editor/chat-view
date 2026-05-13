@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import { handleChatStorageUpdate } from '../src/parts/HandleStorageUpdate/HandleStorageUpdate.ts'
-import { getState, setState } from '../src/parts/ModelState/ModelState.ts'
 import type { PrototypeStateBase } from '../src/parts/PrototypeState/PrototypeState.ts'
+import { getState, setState } from '../src/parts/ModelState/ModelState.ts'
 
 const createState = (): PrototypeStateBase => {
   return {
