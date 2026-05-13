@@ -1,5 +1,6 @@
 /* cspell:ignore sonarjs */
 
+import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
@@ -29,7 +30,6 @@ import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 
 export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
 
