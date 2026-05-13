@@ -5,7 +5,7 @@ interface MockResponse {
   readonly text: string
 }
 
-export const registerMockResponse = (state: ChatState, mockResponse: MockResponse): ChatState => {
-  void ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', mockResponse)
+export const registerMockResponse = async (state: ChatState, mockResponse: MockResponse): Promise<ChatState> => {
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', mockResponse)
   return state
 }
