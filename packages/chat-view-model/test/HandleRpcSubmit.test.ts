@@ -1,10 +1,10 @@
 import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker, ChatStorageWorker } from '@lvce-editor/rpc-registry'
+import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
-import { getState } from '../src/parts/ModelState/ModelState.ts'
-import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
+import { getState } from '../src/parts/ModelState/ModelState.ts'
 
 const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.registerMockRpc> => {
   return ChatStorageWorker.registerMockRpc({
@@ -12,7 +12,7 @@ const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.regis
   })
 }
 
-const createState = (overrides: Partial<PrototypeState> = {}): PrototypeState => {
+const createState = (overrides: Readonly<Partial<PrototypeState>> = {}): PrototypeState => {
   return {
     authAccessToken: '',
     backendUrl: 'https://backend.example.com',
