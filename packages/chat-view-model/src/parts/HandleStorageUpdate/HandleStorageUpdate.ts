@@ -1,6 +1,8 @@
 import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
+import { isObject } from '../IsObject/IsObject.ts'
 import { getState, setState } from '../ModelState/ModelState.ts'
+import { normalizeStoredChatMessage } from '../NormalizeStoredChatMessage/NormalizeStoredChatMessage.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
@@ -8,24 +10,45 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
   return state
 }
 
+const getMessageFromEvent = (event: unknown): unknown => {
+  if (!isObject(event) || typeof event.type !== 'string') {
+    return undefined
+  }
+  if (event.type === 'chat-message-added') {
+    const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
+    return normalizeStoredChatMessage(event.message, {
+      ...(fallbackTime
+        ? {
+            fallbackTime,
+          }
+        : {}),
+    })
+  }
+  if (event.type === 'message') {
+    const fallbackId = typeof event.requestId === 'string' ? event.requestId : undefined
+    const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
+    return normalizeStoredChatMessage(event.message, {
+      ...(fallbackId
+        ? {
+            fallbackId,
+          }
+        : {}),
+      ...(fallbackTime
+        ? {
+            fallbackTime,
+          }
+        : {}),
+    })
+  }
+  return undefined
+}
+
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
   for (const event of events) {
-    if (event.type === 'chat-message-added' && event.message && event.message.text) {
-      messages.push({
-        id: event.message.id,
-        role: event.message.role,
-        text: event.message.text,
-        time: event.timestamp,
-      })
-    }
-    if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {
-      messages.push({
-        id: event.requestId,
-        role: event.message.role,
-        text: event.message.content[0].text,
-        time: event.timestamp,
-      })
+    const message = getMessageFromEvent(event)
+    if (message) {
+      messages.push(message)
     }
   }
   return messages

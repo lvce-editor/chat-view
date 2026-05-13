@@ -6,6 +6,11 @@ import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 const cloneMessage = (message: ChatMessage): ChatMessage => {
   return {
     ...message,
+    ...(message.content
+      ? {
+          content: message.content.map((part) => ({ ...part })),
+        }
+      : {}),
     ...(message.toolCalls
       ? {
           toolCalls: [...message.toolCalls],

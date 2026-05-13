@@ -2,6 +2,7 @@ import { ChatStorageWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
+import { normalizeStoredChatMessages } from '../NormalizeStoredChatMessage/NormalizeStoredChatMessage.ts'
 
 export const rpcIdViewModel = 9999
 
@@ -71,7 +72,7 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
           lastActiveTime,
         }
       : {}),
-    messages: [...session.messages],
+    messages: normalizeStoredChatMessages(session.messages),
     ...(session.pullRequestUrl
       ? {
           pullRequestUrl: session.pullRequestUrl,
