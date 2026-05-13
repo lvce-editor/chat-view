@@ -1,7 +1,7 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { setState } from '../ModelState/ModelState.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
+import { setState } from '../ModelState/ModelState.ts'
 import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
 import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
