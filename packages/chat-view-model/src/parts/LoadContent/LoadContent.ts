@@ -1,8 +1,7 @@
 /* cspell:ignore sonarjs */
 
-import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { listChatSessions, saveChatSession, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { listChatSessions, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -21,7 +20,6 @@ import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReas
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
-import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
@@ -31,7 +29,7 @@ import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
+import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
 
 export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
 
