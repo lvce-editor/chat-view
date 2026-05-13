@@ -15,7 +15,7 @@ test('syncBackendAuth should return logged in state when backend refresh succeed
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
@@ -39,7 +39,7 @@ test('syncBackendAuth should return logged out state for unauthorized response',
       ok: false,
       status: 401,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const result = await BackendAuth.syncBackendAuth('https://backend.example.com')
@@ -60,7 +60,7 @@ test('syncBackendAuth should use pending mock refresh response', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     throw new Error('fetch should not be called when mock refresh response is pending')
-  }) as typeof globalThis.fetch
+  })
 
   MockBackendAuth.setNextRefreshResponse({
     delay: 0,

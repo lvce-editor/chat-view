@@ -266,7 +266,7 @@ test('handleSubmit should use OpenRouter response for openRouter models', async 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -316,7 +316,7 @@ test('handleSubmit should not fall back to mock response for openRouter models w
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => {
     throw new Error('network failure')
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -349,7 +349,7 @@ test('handleSubmit should show too many requests message for OpenRouter 429 resp
       ok: false,
       status: 429,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -383,7 +383,7 @@ test('handleSubmit should use OpenAPI response for openApi models', async () => 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -457,7 +457,7 @@ test('handleSubmit should include OpenRouter limit reset and usage details in 42
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -512,7 +512,7 @@ test('handleSubmit should update assistant message incrementally when streaming 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -578,7 +578,7 @@ test('handleSubmit should ignore additional streaming events after session is st
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -665,7 +665,7 @@ test('handleSubmit should use chat message parsing worker for streaming message 
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -767,7 +767,7 @@ test('handleSubmit should suppress streaming function call data events by defaul
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -868,7 +868,7 @@ test('handleSubmit should emit streaming function call data events when enabled'
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -1075,7 +1075,7 @@ test('handleSubmit should sync backend auth and use backend completions when use
       ok: false,
       status: 404,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {
@@ -1291,7 +1291,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   const state = {
     ...createDefaultState(),
@@ -1347,7 +1347,7 @@ test('handleSubmit should resolve workspaceUri placeholder in system prompt from
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   const state = {
     ...createDefaultState(),
@@ -1395,7 +1395,7 @@ test('handleSubmit should generate ai session title for new session when enabled
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     const state = {

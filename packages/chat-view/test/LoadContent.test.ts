@@ -488,7 +488,7 @@ test('loadContent should sync backend auth state when auth is enabled', async ()
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     using mockRpc = RendererWorker.registerMockRpc({
@@ -533,7 +533,7 @@ test('loadContent should load useOwnBackend from preferences and sync backend au
       ok: true,
       status: 200,
     } as Response
-  }) as typeof globalThis.fetch
+  })
 
   try {
     using mockRpc = RendererWorker.registerMockRpc({

@@ -1,3 +1,4 @@
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import { defaultAgentMode } from '../AgentMode/AgentMode.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
@@ -9,7 +10,6 @@ import { getResponsivePickerState } from '../GetResponsivePickerState/GetRespons
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
-import { ChatModel } from '../ChatModel/ChatModel.ts'
 
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'

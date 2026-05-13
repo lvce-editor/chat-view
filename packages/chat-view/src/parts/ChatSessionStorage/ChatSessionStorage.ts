@@ -151,5 +151,5 @@ export const appendChatViewEvent = async (event: ChatViewEvent): Promise<void> =
 }
 
 export const getChatViewEvents = async (sessionId?: string): Promise<readonly ChatViewEvent[]> => {
-  return ChatStorageWorker.getEvents(sessionId) as Promise<readonly ChatViewEvent[]>
+  return ChatStorageWorker.getEvents(sessionId)
 }

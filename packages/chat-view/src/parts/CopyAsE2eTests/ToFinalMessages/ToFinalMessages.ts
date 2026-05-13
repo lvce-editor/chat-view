@@ -41,5 +41,5 @@ export const toFinalMessages = (events: readonly ChatViewEvent[]): readonly Chat
       })
     }
   }
-  return order.map((id) => byId.get(id)).filter((message) => !!message) as readonly ChatMessage[]
+  return order.map((id) => byId.get(id)).filter((message) => !!message)
 }
