@@ -9,7 +9,7 @@ test('registerMockResponse should delegate to chat coordinator worker', async ()
   })
   const state = createDefaultState()
 
-  const result = registerMockResponse(state, {
+  const result = await registerMockResponse(state, {
     text: 'hello from e2e mock',
   })
 
