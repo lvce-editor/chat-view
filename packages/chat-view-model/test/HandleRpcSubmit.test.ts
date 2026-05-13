@@ -64,7 +64,7 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
       }),
     )
 
-    const currentState = getState(102)
+    const currentState = getState(102) as PrototypeState | undefined
     expect(currentState?.authAccessToken).toBe('refreshed-token')
     expect(currentState?.userState).toBe('loggedIn')
     expect(mockStorageRpc.invocations).toContainEqual([
@@ -108,7 +108,7 @@ test('handleRpcSubmit does not sync backend auth without own-backend or auth tok
       }),
     )
 
-    const currentState = getState(103)
+    const currentState = getState(103) as PrototypeState | undefined
     expect(currentState?.authAccessToken).toBe('')
     expect(mockCoordinatorRpc.invocations).toContainEqual([
       'ChatCoordinator.handleSubmit',
