@@ -143,14 +143,14 @@ export const handleInput = async (
   value: string,
   inputSource: 'user' | 'script' = 'user',
 ): Promise<HandleInputState> => {
-  if (name === Composer && state.selectedSessionId) {
-    await appendChatViewEvent({
-      sessionId: state.selectedSessionId,
-      timestamp: new Date().toISOString(),
-      type: 'handle-input',
-      value,
-    })
-  }
+  // if (name === Composer && state.selectedSessionId) {
+  //   await appendChatViewEvent({
+  //     sessionId: state.selectedSessionId,
+  //     timestamp: new Date().toISOString(),
+  //     type: 'handle-input',
+  //     value,
+  //   })
+  // }
   const nextState = await getNextState(state, name, value, inputSource)
   setState(state.uid, nextState)
   await rerender(state.uid)
