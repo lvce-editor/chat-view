@@ -1,6 +1,8 @@
 import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
 import { getState, setState } from '../ModelState/ModelState.ts'
+import { isObject } from '../IsObject/IsObject.ts'
+import { normalizeStoredChatMessage } from '../NormalizeStoredChatMessage/NormalizeStoredChatMessage.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<PrototypeStateBase> => {
@@ -11,21 +13,26 @@ const handleStorageUpdateListMode = async (state: PrototypeStateBase): Promise<P
 const toMessages = (events: readonly any[]): readonly any[] => {
   const messages = []
   for (const event of events) {
-    if (event.type === 'chat-message-added' && event.message && event.message.text) {
-      messages.push({
-        id: event.message.id,
-        role: event.message.role,
-        text: event.message.text,
-        time: event.timestamp,
-      })
+    if (!isObject(event) || typeof event.type !== 'string') {
+      continue
     }
-    if (event.type === 'message' && event.message && event.message.content && event.message.content[0] && event.message.content[0].text) {
-      messages.push({
-        id: event.requestId,
-        role: event.message.role,
-        text: event.message.content[0].text,
-        time: event.timestamp,
+    if (event.type === 'chat-message-added') {
+      const message = normalizeStoredChatMessage(event.message, {
+        fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
       })
+      if (message) {
+        messages.push(message)
+      }
+      continue
+    }
+    if (event.type === 'message') {
+      const message = normalizeStoredChatMessage(event.message, {
+        fallbackId: typeof event.requestId === 'string' ? event.requestId : undefined,
+        fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
+      })
+      if (message) {
+        messages.push(message)
+      }
     }
   }
   return messages

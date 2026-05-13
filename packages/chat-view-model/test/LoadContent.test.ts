@@ -275,3 +275,111 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
   ])
 })
+
+test('loadContent parses normalized text from stored multi-part message content', async () => {
+  const state = createState()
+  using mockChatStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getEvents': () => [],
+    'ChatStorage.getSession': (id: string) => {
+      if (id !== 'session-2') {
+        return undefined
+      }
+      return {
+        id: 'session-2',
+        messages: [
+          {
+            content: [
+              { text: 'Hello', type: 'output_text' },
+              { summary: 'thinking', type: 'reasoning' },
+              { text: ' world', type: 'output_text' },
+            ],
+            id: 'message-1',
+            role: 'assistant',
+            time: '10:00',
+          },
+        ],
+        title: 'Session 2',
+      }
+    },
+    'ChatStorage.listSessions': () => [
+      { id: 'session-1', messages: [], title: 'Session 1' },
+      { id: 'session-2', messages: [], title: 'Session 2' },
+    ],
+    'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      switch (key) {
+        case 'chat.authEnabled':
+        case 'chat.authUseRedirect':
+        case 'chatView.aiSessionTitleGenerationEnabled':
+        case 'chatView.composerDropEnabled':
+        case 'chatView.emitStreamingFunctionCallEvents':
+        case 'chatView.passIncludeObfuscation':
+        case 'chatView.reasoningPickerEnabled':
+        case 'chatView.runModePickerEnabled':
+        case 'chatView.scrollDownButtonEnabled':
+        case 'chatView.searchEnabled':
+        case 'chatView.showChatListTime':
+        case 'chatView.streamingEnabled':
+        case 'chatView.todoListToolEnabled':
+        case 'chatView.useAuthWorker':
+        case 'chatView.useChatCoordinatorWorker':
+        case 'chatView.useChatMathWorker':
+        case 'chatView.useChatNetworkWorkerForRequests':
+        case 'chatView.useChatToolWorker':
+        case 'chatView.voiceDictationEnabled':
+          return true
+        case 'chat.backendUrl':
+          return 'https://example.com'
+        case 'chat.chatHistoryEnabled':
+          return true
+        case 'chat.toolEnablement':
+          return { grep: true }
+        case 'chat.useOwnBackend':
+          return false
+        case 'secrets.openApiKey':
+          return 'open-api-key'
+        case 'secrets.openRouterApiKey':
+          return 'open-router-key'
+        default:
+          return undefined
+      }
+    },
+  })
+  expect(mockRendererRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  expect(mockChatMessageParsingRpc).toBeDefined()
+
+  const result = await loadContent(state, {
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-2',
+    viewMode: 'detail' as const,
+  })
+
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], title: 'Session 1' },
+    {
+      id: 'session-2',
+      lastActiveTime: '10:00',
+      messages: [
+        {
+          content: [
+            { text: 'Hello', type: 'output_text' },
+            { summary: 'thinking', type: 'reasoning' },
+            { text: ' world', type: 'output_text' },
+          ],
+          id: 'message-1',
+          role: 'assistant',
+          text: 'Hello world',
+          time: '10:00',
+        },
+      ],
+      title: 'Session 2',
+    },
+  ])
+  expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello world' }])
+})
