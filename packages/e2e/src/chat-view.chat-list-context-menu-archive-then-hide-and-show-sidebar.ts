@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-list-context-menu-archive-then-hide-and-show
 
 export const skip = 1
 
-export const test: Test = async ({ SideBar, Command, Chat, ContextMenu, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, ContextMenu, expect, FileSystem, Locator, SideBar, Workspace }) => {
   // arrange
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
