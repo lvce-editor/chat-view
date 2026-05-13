@@ -46,8 +46,9 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   await ensureSubscribed(uid, actualSessionId)
 
-  const shouldSyncBackendAuth = useOwnBackendEnabled(nextState) && !!getBackendUrl(nextState)
-  const authState = shouldSyncBackendAuth ? await syncBackendAuth(getBackendUrl(nextState)) : undefined
+  const backendUrl = getBackendUrl(nextState)
+  const shouldSyncBackendAuth = !!backendUrl && (useOwnBackendEnabled(nextState) || !!getAuthAccessToken(nextState))
+  const authState = shouldSyncBackendAuth ? await syncBackendAuth(backendUrl) : undefined
   const effectiveState = authState
     ? {
         ...nextState,

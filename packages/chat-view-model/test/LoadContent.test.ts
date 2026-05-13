@@ -4,7 +4,6 @@ import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { loadContent, type LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
-import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
 
 const createState = (): LoadContentState => {
   return {
@@ -214,16 +213,6 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
   expect(mockChatMessageParsingRpc).toBeDefined()
-  MockBackendAuth.setNextRefreshResponse({
-    delay: 0,
-    response: {
-      accessToken: 'access-token',
-      subscriptionPlan: 'pro',
-      usedTokens: 42,
-      userName: 'Simon',
-    },
-    type: 'success',
-  })
   await saveChatSession({ id: 'session-1', messages: [], title: 'Session 1' })
   await saveChatSession({
     id: 'session-2',
@@ -246,47 +235,43 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     viewMode: 'detail' as const,
   }
 
-  try {
-    const result = await loadContent(state, savedState)
+  const result = await loadContent(state, savedState)
 
-    expect(result.selectedSessionId).toBe('session-2')
-    expect(result.selectedModelId).toBe('model-2')
-    expect(result.composerValue).toBe('saved composer')
-    expect(result.composerSelectionStart).toBe(2)
-    expect(result.composerSelectionEnd).toBe(4)
-    expect(result.sessions).toEqual([
-      { id: 'session-1', messages: [], title: 'Session 1' },
-      { id: 'session-2', lastActiveTime: '10:00', messages: [{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }], title: 'Session 2' },
-    ])
-    expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
-    expect(result.visibleModels).toEqual([
-      { id: 'model-1', name: 'Model 1' },
-      { id: 'model-2', name: 'Model 2' },
-    ])
-    expect(result.composerAttachments).toEqual([
-      {
-        attachmentId: 'attachment-1',
-        displayType: 'text-file',
-        mimeType: 'text/plain',
-        name: 'readme.md',
-        size: 15,
-        textContent: 'hello from file',
-      },
-    ])
-    expect(result.initial).toBe(false)
-    expect(result.modelPickerHeight).toBe(86)
-    expect(result.composerAttachmentsHeight).toBe(34)
-    expect(result.projectExpandedIds).toEqual(['project-1'])
-    expect(result.showModelUsageMultiplier).toBe(true)
-    expect(result.showRunMode).toBe(true)
-    expect(result.userName).toBe('Simon')
-    expect(result.userState).toBe('loggedIn')
-    expect(result.voiceDictationEnabled).toBe(true)
-    expect(mockChatStorageRpc.invocations).toContainEqual([
-      'ChatStorage.subscribeSessionUpdates',
-      { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
-    ])
-  } finally {
-    MockBackendAuth.clear()
-  }
+  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.selectedModelId).toBe('model-2')
+  expect(result.composerValue).toBe('saved composer')
+  expect(result.composerSelectionStart).toBe(2)
+  expect(result.composerSelectionEnd).toBe(4)
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], title: 'Session 1' },
+    { id: 'session-2', lastActiveTime: '10:00', messages: [{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }], title: 'Session 2' },
+  ])
+  expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
+  expect(result.visibleModels).toEqual([
+    { id: 'model-1', name: 'Model 1' },
+    { id: 'model-2', name: 'Model 2' },
+  ])
+  expect(result.composerAttachments).toEqual([
+    {
+      attachmentId: 'attachment-1',
+      displayType: 'text-file',
+      mimeType: 'text/plain',
+      name: 'readme.md',
+      size: 15,
+      textContent: 'hello from file',
+    },
+  ])
+  expect(result.initial).toBe(false)
+  expect(result.modelPickerHeight).toBe(86)
+  expect(result.composerAttachmentsHeight).toBe(34)
+  expect(result.projectExpandedIds).toEqual(['project-1'])
+  expect(result.showModelUsageMultiplier).toBe(true)
+  expect(result.showRunMode).toBe(true)
+  expect(result.userName).toBe('')
+  expect(result.userState).toBe('loggedOut')
+  expect(result.voiceDictationEnabled).toBe(true)
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.subscribeSessionUpdates',
+    { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
+  ])
 })

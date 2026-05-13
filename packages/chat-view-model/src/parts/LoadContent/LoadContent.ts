@@ -1,7 +1,7 @@
 /* cspell:ignore sonarjs */
 
 import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
-import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { getLoggedOutBackendAuthState } from '../BackendAuth/BackendAuth.ts'
 import { listChatSessions, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
@@ -107,8 +107,7 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const authState =
-    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
+  const authState = getLoggedOutBackendAuthState()
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
   const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
