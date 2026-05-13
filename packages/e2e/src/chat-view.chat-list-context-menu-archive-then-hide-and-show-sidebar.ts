@@ -25,12 +25,11 @@ export const test: Test = async ({ SideBar, Command, Chat, ContextMenu, expect, 
   await expect(archiveMenuItem).toBeVisible()
   await expect(archiveMenuItem).toHaveText('Archive')
   await ContextMenu.selectItem('Archive')
-  // await Command.execute('Layout.hideSideBar')
   await Command.execute('Layout.hideSecondarySideBar')
 
   // act
   await Command.execute('Layout.showSecondarySideBar')
 
   // assert
-  await expect(chatListItems).toHaveCount(1) // TODO
+  await expect(chatListItems).toHaveCount(0)
 }
