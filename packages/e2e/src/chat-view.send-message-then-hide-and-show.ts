@@ -4,7 +4,7 @@ export const name = 'chat-view.chat-view-send-one-message-then-hide-and-show-sid
 
 export const skip = 1
 
-export const test: Test = async ({ SideBar, Command, Chat, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   // arrange
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
