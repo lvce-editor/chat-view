@@ -1,61 +1,18 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
-import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
-import { getSubscribedSessionId, setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
-
-const getComposerAttachments = (state: Readonly<PrototypeState>): readonly ComposerAttachment[] => {
-  const { composerAttachments } = state
-  return Array.isArray(composerAttachments) ? composerAttachments : []
-}
-
-const useMockApiEnabled = (state: Readonly<PrototypeState>): boolean => {
-  return Reflect.get(state, 'useMockApi') === true
-}
-
-const useOwnBackendEnabled = (state: Readonly<PrototypeState>): boolean => {
-  return Reflect.get(state, 'useOwnBackend') === true
-}
-
-const getBackendUrl = (state: Readonly<PrototypeState>): string => {
-  const backendUrl = Reflect.get(state, 'backendUrl')
-  return typeof backendUrl === 'string' ? backendUrl : ''
-}
-
-const getAuthAccessToken = (state: Readonly<PrototypeState>): string => {
-  const authAccessToken = Reflect.get(state, 'authAccessToken')
-  return typeof authAccessToken === 'string' ? authAccessToken : ''
-}
-
-const getCoordinatorModelId = (state: Readonly<PrototypeState>): string => {
-  return useMockApiEnabled(state) ? 'test' : state.selectedModelId
-}
-
-const getNextChatInputHistory = (chatInputHistory: readonly string[], userText: string): readonly string[] => {
-  return chatInputHistory.at(-1) === userText ? chatInputHistory : [...chatInputHistory, userText]
-}
-
-const ensureSubscribed = async (uid: number, sessionId: string): Promise<void> => {
-  if (getSubscribedSessionId(uid) === sessionId) {
-    return
-  }
-  await subscribeSessionUpdates(uid, sessionId)
-  setSubscribedSessionId(uid, sessionId)
-}
+import { setState } from '../ModelState/ModelState.ts'
+import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
+import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
+import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
+import { getBackendUrl } from './GetBackendUrl/GetBackendUrl.ts'
+import { getComposerAttachments } from './GetComposerAttachments/GetComposerAttachments.ts'
+import { getCoordinatorModelId } from './GetCoordinatorModelId/GetCoordinatorModelId.ts'
+import { getNextChatInputHistory } from './GetNextChatInputHistory/GetNextChatInputHistory.ts'
+import { useMockApiEnabled } from './UseMockApiEnabled/UseMockApiEnabled.ts'
+import { useOwnBackendEnabled } from './UseOwnBackendEnabled/UseOwnBackendEnabled.ts'
 
 // const handleSubmitWithExistingSession
-
-const createNewSession = async (): Promise<string> => {
-  const sessionId = crypto.randomUUID()
-  const date = new Date()
-  const timestamp = date.toISOString()
-  await ChatCoordinatorWorker.invoke('ChatCoordinator.createSession', {
-    sessionId,
-    timestamp,
-  })
-  return sessionId
-}
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
   const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, systemPrompt, uid, viewMode } = state

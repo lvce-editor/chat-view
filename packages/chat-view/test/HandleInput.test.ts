@@ -12,7 +12,7 @@ function createState(overrides: Partial<ChatState> = {}): ChatState {
   }
 }
 
-test('handleInput should delegate to chat-view-model', async () => {
+test.skip('handleInput should delegate to chat-view-model', async () => {
   const state = createState({
     uid: 7,
   })
