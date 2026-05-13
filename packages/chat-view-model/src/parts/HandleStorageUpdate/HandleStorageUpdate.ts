@@ -15,14 +15,29 @@ const getMessageFromEvent = (event: unknown): unknown => {
     return undefined
   }
   if (event.type === 'chat-message-added') {
+    const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
     return normalizeStoredChatMessage(event.message, {
-      fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
+      ...(fallbackTime
+        ? {
+            fallbackTime,
+          }
+        : {}),
     })
   }
   if (event.type === 'message') {
+    const fallbackId = typeof event.requestId === 'string' ? event.requestId : undefined
+    const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
     return normalizeStoredChatMessage(event.message, {
-      fallbackId: typeof event.requestId === 'string' ? event.requestId : undefined,
-      fallbackTime: typeof event.timestamp === 'string' ? event.timestamp : undefined,
+      ...(fallbackId
+        ? {
+            fallbackId,
+          }
+        : {}),
+      ...(fallbackTime
+        ? {
+            fallbackTime,
+          }
+        : {}),
     })
   }
   return undefined
