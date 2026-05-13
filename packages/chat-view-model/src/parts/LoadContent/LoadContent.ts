@@ -114,18 +114,18 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
   const legacySavedSessions = getSavedSessions(savedState)
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
-  // if (sessions.length === 0 && legacySavedSessions && legacySavedSessions.length > 0) {
-  //   for (const session of legacySavedSessions) {
-  //     await saveChatSession(session as Parameters<typeof saveChatSession>[0])
-  //   }
-  //   sessions = legacySavedSessions.map(toSummarySession)
-  // }
-  // if (sessions.length === 0 && state.sessions.length > 0) {
-  //   for (const session of state.sessions) {
-  //     await saveChatSession(session as Parameters<typeof saveChatSession>[0])
-  //   }
-  //   sessions = state.sessions.map(toSummarySession)
-  // }
+  if (sessions.length === 0 && legacySavedSessions && legacySavedSessions.length > 0) {
+    for (const session of legacySavedSessions) {
+      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
+    }
+    sessions = legacySavedSessions.map(toSummarySession)
+  }
+  if (sessions.length === 0 && state.sessions.length > 0) {
+    for (const session of state.sessions) {
+      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
+    }
+    sessions = state.sessions.map(toSummarySession)
+  }
   const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
   const savedProjects = getSavedProjects(savedState)
   const baseProjects = savedProjects && savedProjects.length > 0 ? savedProjects : state.projects
