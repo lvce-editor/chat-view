@@ -7,7 +7,9 @@ const getSelectedSessionToolCallSignature = (state: ChatState): string => {
   if (!state.selectedSessionId) {
     return ''
   }
-  return state.messages.map((message) => `${message.id}:${JSON.stringify(message.toolCalls || [])}`).join('|')
+  const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
+  const selectedMessages = state.messages.length > 0 ? state.messages : selectedSession?.messages || []
+  return selectedMessages.map((message) => `${message.id}:${JSON.stringify(message.toolCalls || [])}`).join('|')
 }
 
 export const renderIncremental = (oldState: ChatState, newState: ChatState): any => {

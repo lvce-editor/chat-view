@@ -7,7 +7,7 @@ export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessi
   if (!selectedSession) {
     return ''
   }
-  const selectedMessages = messages || selectedSession.messages
+  const selectedMessages = messages && messages.length > 0 ? messages : selectedSession.messages
 
   const cssRules = new Set<string>()
 
