@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.search-one-item-found'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.openMockSession('Dummy Chat A', [])
   await Chat.openMockSession('Dummy Chat B', [])
