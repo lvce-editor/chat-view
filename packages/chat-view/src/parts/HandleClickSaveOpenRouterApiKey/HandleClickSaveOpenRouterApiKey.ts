@@ -30,20 +30,21 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   if (!session) {
     return updatedState
   }
+  const selectedMessages = updatedState.messages.length > 0 ? updatedState.messages : session.messages
 
-  const lastMessage = updatedState.messages.at(-1)
+  const lastMessage = selectedMessages.at(-1)
   const shouldRetryOpenRouter = lastMessage?.role === 'assistant' && lastMessage.text === openRouterApiKeyRequiredMessage
 
   if (!shouldRetryOpenRouter) {
     return updatedState
   }
 
-  const previousUserMessage = updatedState.messages.toReversed().find((item) => item.role === 'user')
+  const previousUserMessage = selectedMessages.toReversed().find((item) => item.role === 'user')
   if (!previousUserMessage) {
     return updatedState
   }
 
-  const retryMessages = updatedState.messages.slice(0, -1)
+  const retryMessages = selectedMessages.slice(0, -1)
 
   const assistantMessage = await getAiResponse({
     agentMode: updatedState.agentMode,
@@ -69,7 +70,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   })
 
   const parsedMessages = await parseAndStoreMessageContent(updatedState.parsedMessages, assistantMessage)
-  const messages = [...updatedState.messages.slice(0, -1), assistantMessage]
+  const messages = [...selectedMessages.slice(0, -1), assistantMessage]
 
   const updatedSession = {
     ...session,

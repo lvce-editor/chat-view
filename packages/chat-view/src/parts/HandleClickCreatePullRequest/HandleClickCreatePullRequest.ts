@@ -6,7 +6,8 @@ import { createChatPullRequest } from '../CreateChatPullRequest/CreateChatPullRe
 
 export const handleClickCreatePullRequest = async (state: ChatState): Promise<ChatState> => {
   const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
-  if (!canCreatePullRequest(selectedSession, state.messages) || !selectedSession?.branchName || !selectedSession.workspaceUri) {
+  const selectedMessages = state.messages.length > 0 ? state.messages : selectedSession?.messages || []
+  if (!canCreatePullRequest(selectedSession, selectedMessages) || !selectedSession?.branchName || !selectedSession.workspaceUri) {
     return state
   }
   const { pullRequestUrl } = await createChatPullRequest({
@@ -27,7 +28,7 @@ export const handleClickCreatePullRequest = async (state: ChatState): Promise<Ch
     }
     return updatedSession
   })
-  await saveChatSessionPreservingMessages(updatedSession, state.messages)
+  await saveChatSessionPreservingMessages(updatedSession, selectedMessages)
   await RendererWorker.invoke('Main.openUri', pullRequestUrl)
   return {
     ...state,

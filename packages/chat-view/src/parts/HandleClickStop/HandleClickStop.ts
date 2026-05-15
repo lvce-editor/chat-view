@@ -4,10 +4,11 @@ import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStat
 
 export const handleClickStop = async (state: ChatState): Promise<ChatState> => {
   const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
-  if (!selectedSession || getChatSessionStatus(selectedSession, state.messages) !== 'in-progress') {
+  const selectedMessages = state.messages.length > 0 ? state.messages : selectedSession?.messages || []
+  if (!selectedSession || getChatSessionStatus(selectedSession, selectedMessages) !== 'in-progress') {
     return state
   }
-  const messages = state.messages.map((message) => {
+  const messages = selectedMessages.map((message) => {
     if (message.role !== 'assistant' || !message.inProgress) {
       return message
     }
