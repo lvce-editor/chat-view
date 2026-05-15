@@ -4,11 +4,21 @@ import type { ComposerAttachment } from '../src/parts/ViewModel/ViewModel.ts'
 import { handleClickBack, type HandleClickBackState } from '../src/parts/HandleClickBack/HandleClickBack.ts'
 import { getState, setState } from '../src/parts/ModelState/ModelState.ts'
 
+const composerAttachments: readonly ComposerAttachment[] = [
+  {
+    attachmentId: 'attachment-1',
+    displayType: 'file',
+    mimeType: 'text/plain',
+    name: 'file.txt',
+    size: 1,
+  },
+]
+
 const createState = (overrides: Partial<HandleClickBackState> = {}): HandleClickBackState => {
   return {
     chatInputHistory: [],
     chatInputHistoryIndex: -1,
-    composerAttachments: [{ id: 'attachment-1', name: 'file.txt', type: 'file', uri: 'file:///workspace/file.txt' }] as readonly ComposerAttachment[],
+    composerAttachments,
     composerAttachmentsHeight: 56,
     composerValue: '',
     focus: 'composer',

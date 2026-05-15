@@ -1,12 +1,23 @@
 import { expect, test } from '@jest/globals'
 import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
+import type { ComposerAttachment } from '../src/parts/ComposerAttachment/ComposerAttachment.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import { handleClickBack } from '../src/parts/HandleClickBack/HandleClickBack.ts'
+
+const composerAttachments: readonly ComposerAttachment[] = [
+  {
+    attachmentId: 'attachment-1',
+    displayType: 'file',
+    mimeType: 'text/plain',
+    name: 'file.txt',
+    size: 1,
+  },
+]
 
 test('handleClickBack should delegate to chat-view-model', async () => {
   const state = {
     ...createDefaultState(),
-    composerAttachments: [{ id: 'attachment-1', name: 'file.txt', type: 'file', uri: 'file:///workspace/file.txt' }],
+    composerAttachments,
     composerAttachmentsHeight: 56,
     lastNormalViewMode: 'detail' as const,
     renamingSessionId: 'session-1',
