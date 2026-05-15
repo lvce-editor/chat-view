@@ -42,7 +42,7 @@ const ${variableName} = \`${remoteUrl}\``
 
 let newContent = content
 newContent = replaceWorkerUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
-newContent = replaceWorkerUrl(newContent, 'chatViewModelWorkerUrl', 'chat-view-model-worker', 'chatViewModelWorkerMain.js', chatViewModelWorkerPath)
+newContent = replaceWorkerUrl(newContent, 'chatViewModelWorkerUrl', 'chat-view-model', 'chatViewModelWorkerMain.js', chatViewModelWorkerPath)
 
 if (newContent !== content) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
