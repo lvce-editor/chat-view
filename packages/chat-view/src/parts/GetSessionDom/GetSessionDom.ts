@@ -1,23 +1,14 @@
-import { type VirtualDomNode, mergeClassNames, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { formatChatListTime } from '../FormatChatListTime/FormatChatListTime.ts'
 import { getChatListItemActionsDom } from '../GetChatListItemActionsDom/GetChatListItemActionsDom.ts'
 import { getChatListItemStatusDom } from '../GetChatListItemStatusDom/GetChatListItemStatusDom.ts'
+import { getSessionClassName } from '../GetSessionClassName/GetSessionClassName.ts'
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
-
-const getSessionClassName = (focused: boolean, showFocusOutline: boolean): string => {
-  if (showFocusOutline) {
-    return mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline)
-  }
-  if (focused) {
-    return mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused)
-  }
-  return ClassNames.ChatListItem
-}
 
 export const getSessionDom = (
   session: ChatSession,
