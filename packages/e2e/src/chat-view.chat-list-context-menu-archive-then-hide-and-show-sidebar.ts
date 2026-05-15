@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-context-menu-archive-then-hide-and-show-sidebar'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, ContextMenu, expect, FileSystem, Locator, SideBar, Workspace }) => {
   // arrange
   await SideBar.hide()

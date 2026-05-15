@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-weather-shanghai-mock'
 
-export const skip = 1
-
 const shanghaiWeatherResponse = {
   eventId: 188,
   inProgress: false,

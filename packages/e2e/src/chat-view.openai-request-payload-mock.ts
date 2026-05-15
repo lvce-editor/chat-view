@@ -29,8 +29,6 @@ const assertDeepEqual = (actual: unknown, expected: unknown, context: string): v
   }
 }
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()

@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.plan-mode-request-payload'
 
-export const skip = 1
-
 interface MockOpenApiRequest {
   readonly payload: {
     readonly instructions?: string

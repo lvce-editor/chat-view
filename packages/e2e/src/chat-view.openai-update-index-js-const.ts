@@ -3,8 +3,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-update-index-js-const'
 
-export const skip = 1
-
 const assertEqual = <T>(actual: T, expected: T, message: string): void => {
   if (actual !== expected) {
     throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
