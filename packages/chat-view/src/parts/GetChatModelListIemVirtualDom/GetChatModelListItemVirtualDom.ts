@@ -6,6 +6,17 @@ import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostDom } from '../GetUsageCostDom/GetUsageCostDom.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 
+const getChatModelPickerItemLabelDom = (model: ChatModel): readonly VirtualDomNode[] => {
+  return [
+    {
+      childCount: 1,
+      className: ClassNames.ChatModelPickerItemLabel,
+      type: VirtualDomElements.Span,
+    },
+    text(getModelLabel(model)),
+  ]
+}
+
 export const getChatModelListItemVirtualDom = (
   model: ChatModel,
   selectedModelId: string,
@@ -25,12 +36,7 @@ export const getChatModelListItemVirtualDom = (
       role: AriaRoles.Option,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerItemLabel,
-      type: VirtualDomElements.Span,
-    },
-    text(getModelLabel(model)),
+    ...getChatModelPickerItemLabelDom(model),
     ...usageCostDom,
   ]
 }
