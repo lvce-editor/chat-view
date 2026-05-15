@@ -1,7 +1,7 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeStateBase } from '../PrototypeState/PrototypeState.ts'
-import { setState } from '../ModelState/ModelState.ts'
 import type { ComposerAttachment } from '../ViewModel/ViewModel.ts'
+import { setState } from '../ModelState/ModelState.ts'
 
 export interface HandleClickBackState extends PrototypeStateBase {
   readonly composerAttachments: readonly ComposerAttachment[]
