@@ -72,13 +72,7 @@ export const handleTextChunkFunction = async (
     }
   }
   const updatedText = assistantMessage.text + chunk
-  const updated = await updateMessageTextInSelectedSession(
-    liveState.messages,
-    liveState.parsedMessages,
-    assistantMessageId,
-    updatedText,
-    true,
-  )
+  const updated = await updateMessageTextInSelectedSession(liveState.messages, liveState.parsedMessages, assistantMessageId, updatedText, true)
   const nextState = {
     ...liveState,
     messages: updated.messages,
