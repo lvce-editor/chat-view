@@ -2,6 +2,7 @@ import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -18,19 +19,17 @@ import { getChatModeUnsupportedVirtualDom } from '../GetChatModeUnsupportedVirtu
 import { getTodoListItems } from '../GetTodoListItems/GetTodoListItems.ts'
 import { getEmptyMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
-const getFallbackParsedMessages = (sessions: readonly ChatSession[]): readonly ParsedMessage[] => {
+const getFallbackParsedMessages = (messages: readonly ChatMessage[]): readonly ParsedMessage[] => {
   const parsedMessages: ParsedMessage[] = []
-  for (const session of sessions) {
-    for (const message of session.messages) {
-      if (parsedMessages.some((item) => item.id === message.id)) {
-        continue
-      }
-      parsedMessages.push({
-        id: message.id,
-        parsedContent: getEmptyMessageContent(),
-        text: message.text,
-      })
+  for (const message of messages) {
+    if (parsedMessages.some((item) => item.id === message.id)) {
+      continue
     }
+    parsedMessages.push({
+      id: message.id,
+      parsedContent: getEmptyMessageContent(),
+      text: message.text,
+    })
   }
   return parsedMessages
 }
@@ -63,6 +62,7 @@ export interface GetChatVirtualDomOptions {
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
   readonly messagesAutoScrollEnabled: boolean
+  readonly messages?: readonly ChatMessage[]
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
@@ -136,6 +136,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hiddenPrimaryControls = [],
     listFocusedIndex = -1,
     listFocusOutline = false,
+    messages = [],
     messagesAutoScrollEnabled,
     messagesScrollTop,
     modelPickerOpen = false,
@@ -187,9 +188,9 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     voiceDictationEnabled = false,
   } = options
 
-  const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(sessions)
+  const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(messages)
 
-  const todoListItems = getTodoListItems(sessions, selectedSessionId)
+  const todoListItems = getTodoListItems(sessions, selectedSessionId, messages)
   switch (viewMode) {
     case 'chat-focus':
       return getChatModeChatFocusVirtualDom({
@@ -215,6 +216,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         hiddenPrimaryControls,
+        messages,
         messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,
@@ -276,6 +278,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         hiddenPrimaryControls,
+        messages,
         messagesAutoScrollEnabled,
         messagesScrollTop,
         modelPickerOpen,

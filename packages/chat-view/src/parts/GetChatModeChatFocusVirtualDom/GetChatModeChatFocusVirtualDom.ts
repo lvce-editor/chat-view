@@ -47,6 +47,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
@@ -112,6 +113,7 @@ export const getChatModeChatFocusVirtualDom = ({
   hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
+  messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
@@ -156,10 +158,10 @@ export const getChatModeChatFocusVirtualDom = ({
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const selectedProjectName = projects.find((project) => project.id === selectedProjectId)?.name || ''
-  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
-  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
-  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
+  const selectedMessages: readonly ChatMessage[] = messages || selectedSession?.messages || []
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession, selectedMessages)
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession, selectedMessages) === 'in-progress' : false
+  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession, selectedMessages) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = agentModePickerOpen
@@ -194,7 +196,7 @@ export const getChatModeChatFocusVirtualDom = ({
     },
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
-      messages,
+      selectedMessages,
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,

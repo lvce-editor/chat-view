@@ -2,8 +2,8 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { getRenderHtmlCss } from '../GetRenderHtmlCss/GetRenderHtmlCss.ts'
 
 export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
-  const oldRenderHtmlCss = getRenderHtmlCss(oldState.sessions, oldState.selectedSessionId)
-  const newRenderHtmlCss = getRenderHtmlCss(newState.sessions, newState.selectedSessionId)
+  const oldRenderHtmlCss = getRenderHtmlCss(oldState.sessions, oldState.selectedSessionId, oldState.messages)
+  const newRenderHtmlCss = getRenderHtmlCss(newState.sessions, newState.selectedSessionId, newState.messages)
 
   return (
     oldState.initial === newState.initial &&
