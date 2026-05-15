@@ -14,8 +14,12 @@ import { useOwnBackendEnabled } from './UseOwnBackendEnabled/UseOwnBackendEnable
 
 // const handleSubmitWithExistingSession
 
+const getNewSessionTitle = (userText: string): string => {
+  return userText.slice(0, 30)
+}
+
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, systemPrompt, uid, viewMode } = state
+  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, sessions, systemPrompt, uid, viewMode } = state
   const userText = composerValue.trim()
   if (!userText) {
     return
@@ -29,7 +33,17 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   if (shouldCreateNewSession) {
     actualSessionId = await createNewSession()
   }
-
+  const title = getNewSessionTitle(userText)
+  const newSessions = shouldCreateNewSession
+    ? [
+        ...sessions,
+        {
+          id: actualSessionId,
+          messages: [], // TODO remove this from here
+          title,
+        },
+      ]
+    : sessions
   const nextState: PrototypeState = {
     ...state,
     chatInputHistory: getNextChatInputHistory(chatInputHistory, userText),
@@ -39,6 +53,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     focused: true,
     lastSubmittedSessionId: actualSessionId,
     selectedSessionId: actualSessionId,
+    sessions: newSessions,
     viewMode: 'detail',
   }
 
