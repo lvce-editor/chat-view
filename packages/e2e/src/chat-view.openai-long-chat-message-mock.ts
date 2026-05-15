@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-long-chat-message-mock'
 
-export const skip = 1
-
 const longAssistantMessage =
   'Long assistant response start. ' +
   'This is a detailed answer section with multiple sentences and stable text for assertions. '.repeat(300) +

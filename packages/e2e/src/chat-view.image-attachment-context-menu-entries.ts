@@ -4,8 +4,6 @@ export const name = 'chat-view.image-attachment-context-menu-entries'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()

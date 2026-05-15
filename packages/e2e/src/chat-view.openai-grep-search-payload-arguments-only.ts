@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-grep-search-payload-arguments-only'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const nestedArguments =
     '{"includeIgnoredFiles":false,"includePattern":"**/*","isRegexp":true,"maxResults":100,"query":"memoryMeasurement|MemoryMeasurement","useDefaultExcludes":true}'

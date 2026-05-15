@@ -1,9 +1,9 @@
 // cspell:ignore openrouter
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const skip = 1
-
 export const name = 'chat-view.openrouter-api-key-not-configured'
+
+export const skip = 1
 
 export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
