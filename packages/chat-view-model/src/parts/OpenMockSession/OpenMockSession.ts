@@ -28,7 +28,7 @@ export interface OpenMockSessionState extends PrototypeStateBase {
   readonly uid: number
 }
 
-const getSessionStatus = (messages: readonly ChatMessage[]): ChatSession['status'] => {
+const getSessionStatus = (messages: readonly ChatMessage[]): NonNullable<ChatSession['status']> => {
   return messages.some((message) => message.role === 'assistant') ? 'finished' : 'idle'
 }
 

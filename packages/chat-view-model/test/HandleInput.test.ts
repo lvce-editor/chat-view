@@ -29,6 +29,7 @@ const createState = (overrides: Partial<HandleInputState> = {}): HandleInputStat
     inputSource: 'user',
     lastSubmittedSessionId: '',
     maxComposerRows: 5,
+    messages: [],
     modelPickerHeaderHeight: 40,
     modelPickerHeight: 120,
     modelPickerListScrollTop: 0,

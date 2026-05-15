@@ -25,7 +25,9 @@ test('updateMessageToolCallsInSelectedSession should append multiple tool calls 
       name: 'read_file',
     },
   ])
-  const secondUpdate = updateMessageToolCallsInSelectedSession(firstUpdate.sessions, firstUpdate.parsedMessages, 'session-1', 'message-1', [
+  expect(firstUpdate.sessions).toBeDefined()
+
+  const secondUpdate = updateMessageToolCallsInSelectedSession(firstUpdate.sessions || [], firstUpdate.parsedMessages, 'session-1', 'message-1', [
     {
       arguments: '{"path":"b.txt"}',
       id: 'call_2',
@@ -33,16 +35,31 @@ test('updateMessageToolCallsInSelectedSession should append multiple tool calls 
     },
   ])
 
-  expect(secondUpdate.sessions[0].messages[0].toolCalls).toEqual([
+  expect(secondUpdate.sessions).toBeDefined()
+  expect(secondUpdate.sessions || []).toEqual([
     {
-      arguments: '{"path":"a.txt"}',
-      id: 'call_1',
-      name: 'read_file',
-    },
-    {
-      arguments: '{"path":"b.txt"}',
-      id: 'call_2',
-      name: 'read_file',
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant',
+          text: '',
+          time: '10:00',
+          toolCalls: [
+            {
+              arguments: '{"path":"a.txt"}',
+              id: 'call_1',
+              name: 'read_file',
+            },
+            {
+              arguments: '{"path":"b.txt"}',
+              id: 'call_2',
+              name: 'read_file',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
     },
   ])
 })
@@ -70,7 +87,9 @@ test('updateMessageToolCallsInSelectedSession should update existing tool call b
       name: 'read_file',
     },
   ])
-  const secondUpdate = updateMessageToolCallsInSelectedSession(firstUpdate.sessions, firstUpdate.parsedMessages, 'session-1', 'message-1', [
+  expect(firstUpdate.sessions).toBeDefined()
+
+  const secondUpdate = updateMessageToolCallsInSelectedSession(firstUpdate.sessions || [], firstUpdate.parsedMessages, 'session-1', 'message-1', [
     {
       arguments: '{"path":"a.txt"}',
       id: 'call_1',
@@ -79,12 +98,27 @@ test('updateMessageToolCallsInSelectedSession should update existing tool call b
     },
   ])
 
-  expect(secondUpdate.sessions[0].messages[0].toolCalls).toEqual([
+  expect(secondUpdate.sessions).toBeDefined()
+  expect(secondUpdate.sessions || []).toEqual([
     {
-      arguments: '{"path":"a.txt"}',
-      id: 'call_1',
-      name: 'read_file',
-      status: 'success',
+      id: 'session-1',
+      messages: [
+        {
+          id: 'message-1',
+          role: 'assistant',
+          text: '',
+          time: '10:00',
+          toolCalls: [
+            {
+              arguments: '{"path":"a.txt"}',
+              id: 'call_1',
+              name: 'read_file',
+              status: 'success',
+            },
+          ],
+        },
+      ],
+      title: 'Chat 1',
     },
   ])
 })

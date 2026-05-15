@@ -47,6 +47,7 @@ const createState = (): LoadContentState => {
     lastSubmittedSessionId: '',
     listFocusedIndex: 0,
     listFocusOutline: false,
+    messages: [],
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     modelPickerHeaderHeight: 30,
