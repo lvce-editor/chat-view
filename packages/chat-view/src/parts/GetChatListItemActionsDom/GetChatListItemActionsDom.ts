@@ -5,10 +5,10 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const getChatListActionsDom = (session: ChatSession, sessionPinningEnabled = false): readonly VirtualDomNode[] => {
+export const getChatListItemActionsDom = (session: ChatSession): readonly VirtualDomNode[] => {
   return [
     {
-      childCount: sessionPinningEnabled ? 2 : 1,
+      childCount: 1,
       className: ClassNames.ChatActions,
       role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
