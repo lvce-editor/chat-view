@@ -1,8 +1,8 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
-import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
+import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewMode } from '../ChatViewMode/ChatViewMode.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
@@ -61,8 +61,8 @@ export interface GetChatVirtualDomOptions {
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
-  readonly messagesAutoScrollEnabled: boolean
   readonly messages?: readonly ChatMessage[]
+  readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
