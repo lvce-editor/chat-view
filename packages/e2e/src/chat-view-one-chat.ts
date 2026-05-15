@@ -15,7 +15,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const item = Locator('.ChatListItem')
   await expect(item).toHaveCount(1)
   const title = item.locator('.ChatListItemTitle')
-  await expect(title).toHaveText('undefined') // TODO
+  await expect(title).toHaveText('hello from e2e')
   const subtitle = item.locator('.ChatListItemTime')
   await expect(subtitle).toBeVisible()
 }
