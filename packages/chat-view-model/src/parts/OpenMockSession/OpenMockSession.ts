@@ -28,6 +28,10 @@ export interface OpenMockSessionState extends PrototypeStateBase {
   readonly uid: number
 }
 
+const getSessionStatus = (messages: readonly ChatMessage[]): ChatSession['status'] => {
+  return messages.some((message) => message.role === 'assistant') ? 'finished' : 'idle'
+}
+
 const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptions | undefined): ChatSession => {
   if (!options) {
     return session
@@ -79,7 +83,7 @@ export const openMockSession = async <TState extends OpenMockSessionState>(
         return applySessionOptions(
           {
             ...session,
-            messages: mockChatMessages,
+            status: getSessionStatus(mockChatMessages),
           },
           options,
         )
@@ -89,7 +93,8 @@ export const openMockSession = async <TState extends OpenMockSessionState>(
         applySessionOptions(
           {
             id: mockSessionId,
-            messages: mockChatMessages,
+            messages: [],
+            status: getSessionStatus(mockChatMessages),
             title: mockSessionId,
           },
           options,
@@ -98,13 +103,17 @@ export const openMockSession = async <TState extends OpenMockSessionState>(
 
   const selectedSession = sessions.find((session) => session.id === mockSessionId)
   if (selectedSession) {
-    await saveChatSession(selectedSession)
+    await saveChatSession({
+      ...selectedSession,
+      messages: mockChatMessages,
+    })
   }
 
   const nextState = await refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
+    messages: mockChatMessages,
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,

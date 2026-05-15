@@ -1,38 +1,29 @@
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import type { StreamingToolCall } from '../StreamingToolCall/StreamingToolCall.ts'
 import { mergeToolCalls } from '../MergeToolCalls/MergeToolCalls.ts'
 import { copyParsedMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 export const updateMessageToolCallsInSelectedSession = (
-  sessions: readonly ChatSession[],
+  messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
-  selectedSessionId: string,
   messageId: string,
   toolCalls: readonly StreamingToolCall[],
-): { readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] } => {
+): { readonly messages: readonly ChatMessage[]; readonly parsedMessages: readonly ParsedMessage[] } => {
   let nextParsedMessages = parsedMessages
-  const updatedSessions = sessions.map((session) => {
-    if (session.id !== selectedSessionId) {
-      return session
+  const updatedMessages = messages.map((message) => {
+    if (message.id !== messageId) {
+      return message
     }
-    return {
-      ...session,
-      messages: session.messages.map((message) => {
-        if (message.id !== messageId) {
-          return message
-        }
-        const updatedMessage = {
-          ...message,
-          toolCalls: mergeToolCalls(message.toolCalls, toolCalls),
-        }
-        nextParsedMessages = copyParsedMessageContent(nextParsedMessages, message.id, updatedMessage.id)
-        return updatedMessage
-      }),
+    const updatedMessage = {
+      ...message,
+      toolCalls: mergeToolCalls(message.toolCalls, toolCalls),
     }
+    nextParsedMessages = copyParsedMessageContent(nextParsedMessages, message.id, updatedMessage.id)
+    return updatedMessage
   })
   return {
+    messages: updatedMessages,
     parsedMessages: nextParsedMessages,
-    sessions: updatedSessions,
   }
 }

@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openRouterApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
@@ -31,19 +31,19 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     return updatedState
   }
 
-  const lastMessage = session.messages.at(-1)
+  const lastMessage = updatedState.messages.at(-1)
   const shouldRetryOpenRouter = lastMessage?.role === 'assistant' && lastMessage.text === openRouterApiKeyRequiredMessage
 
   if (!shouldRetryOpenRouter) {
     return updatedState
   }
 
-  const previousUserMessage = session.messages.toReversed().find((item) => item.role === 'user')
+  const previousUserMessage = updatedState.messages.toReversed().find((item) => item.role === 'user')
   if (!previousUserMessage) {
     return updatedState
   }
 
-  const retryMessages = session.messages.slice(0, -1)
+  const retryMessages = updatedState.messages.slice(0, -1)
 
   const assistantMessage = await getAiResponse({
     agentMode: updatedState.agentMode,
@@ -69,13 +69,15 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
   })
 
   const parsedMessages = await parseAndStoreMessageContent(updatedState.parsedMessages, assistantMessage)
+  const messages = [...updatedState.messages.slice(0, -1), assistantMessage]
 
   const updatedSession = {
     ...session,
-    messages: [...session.messages.slice(0, -1), assistantMessage],
+    messages,
+    status: 'finished' as const,
   }
 
-  await saveChatSession(updatedSession)
+  await saveChatSessionPreservingMessages(updatedSession, messages)
 
   const updatedSessions = updatedState.sessions.map((item) => {
     if (item.id !== updatedState.selectedSessionId) {
@@ -86,6 +88,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
 
   return {
     ...updatedState,
+    messages,
     nextMessageId: updatedState.nextMessageId + 1,
     openRouterApiKeyState: 'idle',
     parsedMessages,

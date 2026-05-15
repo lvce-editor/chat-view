@@ -1,6 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openApiApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'
 import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
 import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
@@ -31,19 +31,19 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     return updatedState
   }
 
-  const lastMessage = session.messages.at(-1)
+  const lastMessage = updatedState.messages.at(-1)
   const shouldRetryOpenApi = lastMessage?.role === 'assistant' && lastMessage.text === openApiApiKeyRequiredMessage
 
   if (!shouldRetryOpenApi) {
     return updatedState
   }
 
-  const previousUserMessage = session.messages.toReversed().find((item) => item.role === 'user')
+  const previousUserMessage = updatedState.messages.toReversed().find((item) => item.role === 'user')
   if (!previousUserMessage) {
     return updatedState
   }
 
-  const retryMessages = session.messages.slice(0, -1)
+  const retryMessages = updatedState.messages.slice(0, -1)
 
   const assistantMessage = await getAiResponse({
     agentMode: updatedState.agentMode,
@@ -70,13 +70,15 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
   })
 
   const parsedMessages = await parseAndStoreMessageContent(updatedState.parsedMessages, assistantMessage)
+  const messages = [...updatedState.messages.slice(0, -1), assistantMessage]
 
   const updatedSession = {
     ...session,
-    messages: [...session.messages.slice(0, -1), assistantMessage],
+    messages,
+    status: 'finished' as const,
   }
 
-  await saveChatSession(updatedSession)
+  await saveChatSessionPreservingMessages(updatedSession, messages)
 
   const updatedSessions = updatedState.sessions.map((item) => {
     if (item.id !== updatedState.selectedSessionId) {
@@ -87,6 +89,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
 
   return {
     ...updatedState,
+    messages,
     nextMessageId: updatedState.nextMessageId + 1,
     openApiApiKeyState: 'idle',
     parsedMessages,

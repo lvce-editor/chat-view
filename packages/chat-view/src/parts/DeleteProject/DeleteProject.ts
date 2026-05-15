@@ -1,6 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatSession, saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
@@ -52,7 +52,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
         ...session,
         projectId: blankProjectId,
       }
-      await saveChatSession(updatedSession)
+      await saveChatSessionPreservingMessages(updatedSession, session.id === state.selectedSessionId ? state.messages : undefined)
       return updatedSession
     }),
   )
@@ -72,6 +72,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       projectExpandedIds: nextProjectExpandedIds,
       projects,
       selectedProjectId,
@@ -86,22 +87,17 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     : visibleSessions[0].id
   const loadedSession = await getChatSession(selectedSessionId)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== selectedSessionId || !loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
 
   return {
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
+    messages: loadedSession?.messages || [],
     projectExpandedIds: nextProjectExpandedIds,
     projects,
     selectedProjectId,
     selectedSessionId,
-    sessions: hydratedSessions,
+    sessions,
     viewMode: getNextViewMode(state, true),
   }
 }

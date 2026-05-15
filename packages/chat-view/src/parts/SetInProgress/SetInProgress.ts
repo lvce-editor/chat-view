@@ -1,5 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 
 export const setInProgress = async (state: ChatState, inProgress: boolean): Promise<ChatState> => {
   const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
@@ -7,12 +7,12 @@ export const setInProgress = async (state: ChatState, inProgress: boolean): Prom
     return state
   }
 
-  const lastAssistantMessageIndex = selectedSession.messages.findLastIndex((message) => message.role === 'assistant')
+  const lastAssistantMessageIndex = state.messages.findLastIndex((message) => message.role === 'assistant')
   if (lastAssistantMessageIndex === -1) {
     return state
   }
 
-  const messages = selectedSession.messages.map((message, index) => {
+  const messages = state.messages.map((message, index) => {
     if (index !== lastAssistantMessageIndex) {
       return message
     }
@@ -28,10 +28,11 @@ export const setInProgress = async (state: ChatState, inProgress: boolean): Prom
     status: inProgress ? ('in-progress' as const) : ('finished' as const),
   }
 
-  await saveChatSession(updatedSelectedSession)
+  await saveChatSessionPreservingMessages(updatedSelectedSession, messages)
 
   return {
     ...state,
+    messages,
     sessions: state.sessions.map((session) => {
       if (session.id !== selectedSession.id) {
         return session

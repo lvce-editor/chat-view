@@ -16,6 +16,7 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       renamingSessionId: '',
       selectedSessionId: '',
       sessions: [],
@@ -25,21 +26,13 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   const nextSelectedSessionId = getNextSelectedSessionId(filtered, id)
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
-  const hydratedSessions = filtered.map((session) => {
-    if (session.id !== nextSelectedSessionId) {
-      return session
-    }
-    if (!loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
   return {
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    messages: loadedSession?.messages || [],
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
-    sessions: hydratedSessions,
+    sessions: filtered,
   }
 }

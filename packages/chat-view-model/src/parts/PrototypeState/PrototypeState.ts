@@ -1,4 +1,4 @@
-import type { ChatSession, ChatViewMode, ParsedMessage, Project } from '../ViewModel/ViewModel.ts'
+import type { ChatMessage, ChatSession, ChatViewMode, ParsedMessage, Project } from '../ViewModel/ViewModel.ts'
 
 export interface PrototypeStateBase {
   readonly chatInputHistory: readonly string[]
@@ -7,6 +7,7 @@ export interface PrototypeStateBase {
   readonly focus: string
   readonly focused: boolean
   readonly lastSubmittedSessionId?: string
+  readonly messages: readonly ChatMessage[]
   readonly openApiApiKey?: string
   readonly parsedMessages: readonly ParsedMessage[]
   readonly projects: readonly Project[]

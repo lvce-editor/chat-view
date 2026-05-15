@@ -137,6 +137,20 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
   await ChatStorageWorker.invoke('ChatStorage.setSession', sessionValue)
 }
 
+export const saveChatSessionPreservingMessages = async (
+  session: ChatSession,
+  messages?: ChatSession['messages'],
+): Promise<ChatSession> => {
+  const existingSession = await getChatSession(session.id)
+  const completeSession: ChatSession = {
+    ...(existingSession || session),
+    ...session,
+    messages: messages || existingSession?.messages || session.messages,
+  }
+  await saveChatSession(completeSession)
+  return completeSession
+}
+
 export const deleteChatSession = async (id: string): Promise<void> => {
   await ChatStorageWorker.deleteSession(id)
 }

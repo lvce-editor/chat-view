@@ -14,28 +14,19 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   }
   const loadedSession = await getChatSession(id)
   const composerAttachments = await getComposerAttachments(id)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== id) {
-      return session
-    }
-    if (!loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
-  const selectedSession = hydratedSessions.find((session) => session.id === id)
-  const parsedMessages = selectedSession ? await parseAndStoreMessagesContent(state.parsedMessages, selectedSession.messages) : state.parsedMessages
+  const messages = loadedSession?.messages || []
+  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, messages)
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     lastNormalViewMode: viewMode === 'chat-focus' ? lastNormalViewMode : 'detail',
+    messages,
     messagesAutoScrollEnabled: true,
     messagesScrollTop: getNextAutoScrollTop(state.messagesScrollTop),
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
-    sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })
 }

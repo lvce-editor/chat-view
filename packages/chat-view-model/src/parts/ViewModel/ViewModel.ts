@@ -1,4 +1,5 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 
@@ -63,6 +64,7 @@ export interface ViewModel {
   readonly hasSpaceForRunModePicker: boolean
   readonly listFocusedIndex: number
   readonly listFocusOutline: boolean
+  readonly messages: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly modelPickerOpen: boolean

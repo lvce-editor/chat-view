@@ -16,6 +16,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'list',
@@ -25,19 +26,13 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   const nextSelectedSessionId = currentSessionVisible ? selectedSessionId : visibleSessions[0].id
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== nextSelectedSessionId || !loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    messages: loadedSession?.messages || [],
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
-    sessions: hydratedSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })
 }

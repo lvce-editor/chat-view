@@ -1,6 +1,6 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { sanitizeGeneratedTitle } from '../SanitizeGeneratedTitle/SanitizeGeneratedTitle.ts'
 import { showSessionRenameQuickInput } from '../ShowSessionRenameQuickInput/ShowSessionRenameQuickInput.ts'
 
@@ -26,7 +26,7 @@ export const renameSession = async (state: ChatState, sessionId: string, current
   if (!renamedSession) {
     return state
   }
-  await saveChatSession(renamedSession)
+  await saveChatSessionPreservingMessages(renamedSession, sessionId === state.selectedSessionId ? state.messages : undefined)
   return {
     ...state,
     sessions: updatedSessions,

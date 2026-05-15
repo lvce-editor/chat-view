@@ -6,10 +6,10 @@ import { handleSubmit } from '../HandleSubmit/HandleSubmit.ts'
 
 export const handleClickImplementPlan = async (state: ChatState): Promise<ChatState> => {
   const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
-  if (!selectedSession || getChatSessionStatus(selectedSession) === 'in-progress') {
+  if (!selectedSession || getChatSessionStatus(selectedSession, state.messages) === 'in-progress') {
     return state
   }
-  const latestPlanMessage = getLatestExecutablePlanMessage(selectedSession)
+  const latestPlanMessage = getLatestExecutablePlanMessage(selectedSession, state.messages)
   if (!latestPlanMessage) {
     return state
   }

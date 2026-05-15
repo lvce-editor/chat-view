@@ -77,7 +77,7 @@ export const openMockSessionLocal = async (
         return applySessionOptions(
           {
             ...session,
-            messages: mockChatMessages,
+            status: mockChatMessages.some((message) => message.role === 'assistant') ? 'finished' : 'idle',
           },
           options,
         )
@@ -87,7 +87,8 @@ export const openMockSessionLocal = async (
         applySessionOptions(
           {
             id: mockSessionId,
-            messages: mockChatMessages,
+            messages: [],
+            status: mockChatMessages.some((message) => message.role === 'assistant') ? 'finished' : 'idle',
             title: mockSessionId,
           },
           options,
@@ -96,13 +97,17 @@ export const openMockSessionLocal = async (
 
   const selectedSession = sessions.find((session) => session.id === mockSessionId)
   if (selectedSession) {
-    await saveChatSession(selectedSession)
+    await saveChatSession({
+      ...selectedSession,
+      messages: mockChatMessages,
+    })
   }
 
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
+    messages: mockChatMessages,
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,
