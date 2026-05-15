@@ -1,7 +1,10 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 
-export const getChatSessionStatus = (session: ChatSession, messages: readonly ChatMessage[] = session.messages): NonNullable<ChatSession['status']> => {
+export const getChatSessionStatus = (
+  session: ChatSession,
+  messages: readonly ChatMessage[] = session.messages,
+): NonNullable<ChatSession['status']> => {
   if (session.status) {
     return session.status
   }

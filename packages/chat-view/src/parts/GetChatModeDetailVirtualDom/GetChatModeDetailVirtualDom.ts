@@ -141,7 +141,8 @@ export const getChatModeDetailVirtualDom = ({
   const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession, selectedMessages) === 'in-progress' : false
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const showCreatePullRequestButton = canCreatePullRequest(selectedSession, selectedMessages)
-  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession, selectedMessages) && !isSelectedSessionInProgress
+  const showImplementPlanButton =
+    agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession, selectedMessages) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = agentModePickerOpen
