@@ -109,6 +109,7 @@ export interface GetChatVirtualDomOptions {
 }
 
 export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly VirtualDomNode[] => {
+  const selectedSession = options.sessions.find((session) => session.id === options.selectedSessionId)
   const {
     addContextButtonEnabled,
     agentMode,
@@ -136,7 +137,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hiddenPrimaryControls = [],
     listFocusedIndex = -1,
     listFocusOutline = false,
-    messages = [],
+    messages: messagesInput,
     messagesAutoScrollEnabled,
     messagesScrollTop,
     modelPickerOpen = false,
@@ -187,6 +188,8 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     ],
     voiceDictationEnabled = false,
   } = options
+
+  const messages = messagesInput && messagesInput.length > 0 ? messagesInput : selectedSession?.messages || messagesInput || []
 
   const parsedMessages = parsedMessagesInput ?? getFallbackParsedMessages(messages)
 

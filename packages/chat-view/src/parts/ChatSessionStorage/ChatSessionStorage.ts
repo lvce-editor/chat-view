@@ -138,11 +138,19 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
 }
 
 export const saveChatSessionPreservingMessages = async (session: ChatSession, messages?: ChatSession['messages']): Promise<ChatSession> => {
+  if (messages) {
+    const completeSession: ChatSession = {
+      ...session,
+      messages,
+    }
+    await saveChatSession(completeSession)
+    return completeSession
+  }
   const existingSession = await getChatSession(session.id)
   const completeSession: ChatSession = {
     ...(existingSession || session),
     ...session,
-    messages: messages || existingSession?.messages || session.messages,
+    messages: existingSession?.messages || session.messages,
   }
   await saveChatSession(completeSession)
   return completeSession
