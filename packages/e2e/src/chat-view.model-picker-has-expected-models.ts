@@ -25,8 +25,6 @@ const expectedModelIds = [
   'openRouter/mistralai/mistral-small-3.1-24b-instruct:free',
 ] as const
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)

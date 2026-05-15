@@ -2,7 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.syntax-highlighting-json-package-json'
 
-export const skip = 1
 const mockResponse = `I will create a new package.json file suitable for a new React project. It will include the basic dependencies for React and ReactDOM.
 
 Here is a basic example for a React project:
@@ -35,6 +34,8 @@ Here is a basic example for a React project:
 \`\`\`
 
 Should I create this package.json file for you with this content? If you want any customization like project name or author, please let me know.`
+
+export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()

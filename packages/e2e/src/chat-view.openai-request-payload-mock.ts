@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-request-payload-mock'
 
+export const skip = 1
+
 interface MockOpenApiRequest {
   readonly headers: Readonly<Record<string, string>>
   readonly method: string
@@ -28,8 +30,6 @@ const assertDeepEqual = (actual: unknown, expected: unknown, context: string): v
     throw new Error(`${context}: expected ${expectedJson}, got ${actualJson}`)
   }
 }
-
-export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange

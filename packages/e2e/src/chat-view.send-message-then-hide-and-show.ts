@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-view-send-one-message-then-hide-and-show-sidebar'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   // arrange
   await SideBar.hide()

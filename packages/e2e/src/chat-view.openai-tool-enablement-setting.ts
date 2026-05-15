@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-tool-enablement-setting'
 
+export const skip = 1
+
 interface MockOpenApiRequest {
   readonly payload: {
     readonly tools?: readonly {
@@ -16,8 +18,6 @@ const assert = (condition: boolean, message: string): void => {
     throw new Error(message)
   }
 }
-
-export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()

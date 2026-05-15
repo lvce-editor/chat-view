@@ -1,7 +1,5 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const skip = 1
-
 export const name = 'chat-view.one-messages-and-open-debug-response-preview'
 
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, Workspace }) => {
