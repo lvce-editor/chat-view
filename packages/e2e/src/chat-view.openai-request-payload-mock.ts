@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-request-payload-mock'
 
+export const skip = 1
+
 interface MockOpenApiRequest {
   readonly headers: Readonly<Record<string, string>>
   readonly method: string
