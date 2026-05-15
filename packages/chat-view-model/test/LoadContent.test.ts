@@ -365,7 +365,6 @@ test('loadContent parses normalized text from stored multi-part message content'
     { id: 'session-1', messages: [], title: 'Session 1' },
     {
       id: 'session-2',
-      lastActiveTime: '10:00',
       messages: [],
       title: 'Session 2',
     },

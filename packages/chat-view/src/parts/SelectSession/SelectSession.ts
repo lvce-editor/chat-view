@@ -5,6 +5,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const selectSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { lastNormalViewMode, sessions, viewMode, width } = state
@@ -14,6 +15,14 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   }
   const loadedSession = await getChatSession(id)
   const composerAttachments = await getComposerAttachments(id)
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== id) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
   const messages = loadedSession?.messages || []
   const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, messages)
   return refreshGitBranchPickerVisibility({
@@ -27,6 +36,7 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: id,
+    sessions: nextSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })
 }

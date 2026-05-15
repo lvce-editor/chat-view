@@ -59,6 +59,7 @@ const getNewSessions = (state: PrototypeStateBase): readonly any[] => {
     if (session.id === state.selectedSessionId) {
       return {
         ...session,
+        messages: [],
       }
     }
     return session

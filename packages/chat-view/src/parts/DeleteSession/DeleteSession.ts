@@ -3,6 +3,7 @@ import { deleteChatSession, getChatSession } from '../ChatSessionStorage/ChatSes
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getNextSelectedSessionId } from '../GetNextSelectedSessionId/GetNextSelectedSessionId.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const deleteSession = async (state: ChatState, id: string): Promise<ChatState> => {
   const { renamingSessionId, sessions, width } = state
@@ -26,6 +27,14 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
   const nextSelectedSessionId = getNextSelectedSessionId(filtered, id)
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
+  const nextSessions = loadedSession
+    ? filtered.map((session) => {
+        if (session.id !== nextSelectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : filtered
   return {
     ...state,
     composerAttachments,
@@ -33,6 +42,6 @@ export const deleteSession = async (state: ChatState, id: string): Promise<ChatS
     messages: loadedSession?.messages || [],
     renamingSessionId: renamingSessionId === id ? '' : renamingSessionId,
     selectedSessionId: nextSelectedSessionId,
-    sessions: filtered,
+    sessions: nextSessions,
   }
 }

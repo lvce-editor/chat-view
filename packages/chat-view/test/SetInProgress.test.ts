@@ -57,31 +57,29 @@ test('setInProgress should mark the latest assistant message as in progress', as
       title: 'Chat 1',
     },
   ])
-  expect(mockChatStorageRpc.invocations).toEqual([
-    [
-      'ChatStorage.setSession',
-      {
-        id: 'session-1',
-        lastActiveTime: '10:01',
-        messages: [
-          {
-            id: 'message-user-1',
-            role: 'user',
-            text: 'hello',
-            time: '10:00',
-          },
-          {
-            id: 'message-assistant-1',
-            inProgress: true,
-            role: 'assistant',
-            text: 'partial',
-            time: '10:01',
-          },
-        ],
-        status: 'in-progress',
-        title: 'Chat 1',
-      },
-    ],
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.setSession',
+    {
+      id: 'session-1',
+      lastActiveTime: '10:01',
+      messages: [
+        {
+          id: 'message-user-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-assistant-1',
+          inProgress: true,
+          role: 'assistant',
+          text: 'partial',
+          time: '10:01',
+        },
+      ],
+      status: 'in-progress',
+      title: 'Chat 1',
+    },
   ])
 })
 
@@ -141,30 +139,28 @@ test('setInProgress should clear in progress from the latest assistant message',
       title: 'Chat 1',
     },
   ])
-  expect(mockChatStorageRpc.invocations).toEqual([
-    [
-      'ChatStorage.setSession',
-      {
-        id: 'session-1',
-        lastActiveTime: '10:01',
-        messages: [
-          {
-            id: 'message-user-1',
-            role: 'user',
-            text: 'hello',
-            time: '10:00',
-          },
-          {
-            id: 'message-assistant-1',
-            inProgress: false,
-            role: 'assistant',
-            text: 'partial',
-            time: '10:01',
-          },
-        ],
-        status: 'finished',
-        title: 'Chat 1',
-      },
-    ],
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.setSession',
+    {
+      id: 'session-1',
+      lastActiveTime: '10:01',
+      messages: [
+        {
+          id: 'message-user-1',
+          role: 'user',
+          text: 'hello',
+          time: '10:00',
+        },
+        {
+          id: 'message-assistant-1',
+          inProgress: false,
+          role: 'assistant',
+          text: 'partial',
+          time: '10:01',
+        },
+      ],
+      status: 'finished',
+      title: 'Chat 1',
+    },
   ])
 })

@@ -77,6 +77,7 @@ export const openMockSessionLocal = async (
         return applySessionOptions(
           {
             ...session,
+            messages: [],
             status: mockChatMessages.some((message) => message.role === 'assistant') ? 'finished' : 'idle',
           },
           options,

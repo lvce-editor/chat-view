@@ -3,6 +3,7 @@ import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { projectExpandedIds, selectedSessionId, sessions, width } = state
@@ -27,6 +28,14 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   const nextSelectedSessionId = selectedSessionVisible ? selectedSessionId : visibleSessions[0].id
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== nextSelectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
 
   return {
     ...state,
@@ -36,6 +45,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
     projectExpandedIds: nextProjectExpandedIds,
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
+    sessions: nextSessions,
     viewMode: 'chat-focus',
   }
 }

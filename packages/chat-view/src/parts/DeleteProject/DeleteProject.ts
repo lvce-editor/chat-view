@@ -4,6 +4,7 @@ import { getChatSession, saveChatSessionPreservingMessages } from '../ChatSessio
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 const getBlankProjectId = (state: ChatState, removedProjectId: string): string => {
   return state.projects.find((project) => project.id !== removedProjectId && project.name === '_blank')?.id || ''
@@ -88,6 +89,14 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     : visibleSessions[0].id
   const loadedSession = await getChatSession(selectedSessionId)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== selectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
 
   return {
     ...state,
@@ -98,7 +107,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     projects,
     selectedProjectId,
     selectedSessionId,
-    sessions,
+    sessions: nextSessions,
     viewMode: getNextViewMode(state, true),
   }
 }

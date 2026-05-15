@@ -83,6 +83,7 @@ export const openMockSession = async <TState extends OpenMockSessionState>(
         return applySessionOptions(
           {
             ...session,
+            messages: [],
             status: getSessionStatus(mockChatMessages),
           },
           options,
