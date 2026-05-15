@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-ask-question-tool-call-mock'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const longQuestion =
     'This is a really long question that should still be rendered correctly in the chat UI even when it spans far beyond typical question lengths and contains enough text to validate wrapping and overflow handling.'
