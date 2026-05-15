@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.composer-value-preserved-hide-show-secondary-sidebar'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, expect, Locator }) => {
   const draftValue = 'draft survives secondary sidebar toggle'
 

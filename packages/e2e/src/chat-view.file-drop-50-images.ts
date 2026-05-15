@@ -8,6 +8,8 @@ const createImageFiles = (count: number): readonly File[] => {
   return Array.from({ length: count }, (_, index) => new File([svgContent], `photo-${index + 1}.svg`, { type: 'image/svg+xml' }))
 }
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()

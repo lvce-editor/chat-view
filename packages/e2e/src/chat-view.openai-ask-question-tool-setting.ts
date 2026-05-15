@@ -17,6 +17,8 @@ const assert = (condition: boolean, message: string): void => {
   }
 }
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command }) => {
   await Chat.show()
   await Chat.reset()

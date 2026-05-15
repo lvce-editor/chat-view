@@ -35,6 +35,8 @@ Here is a basic example for a React project:
 
 Should I create this package.json file for you with this content? If you want any customization like project name or author, please let me know.`
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)

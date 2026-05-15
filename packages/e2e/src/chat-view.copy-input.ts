@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.copy-input'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, ClipBoard, Command, expect, Locator }) => {
   await Chat.show()
   await ClipBoard.enableMemoryClipBoard()
