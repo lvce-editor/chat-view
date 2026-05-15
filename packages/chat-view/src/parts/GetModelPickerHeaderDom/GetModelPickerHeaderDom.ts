@@ -4,13 +4,15 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const parentNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerHeader,
+  type: VirtualDomElements.Div,
+}
+
 export const getModelPickerHeaderDom = (modelPickerSearchValue: string): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerHeader,
-      type: VirtualDomElements.Div,
-    },
+    parentNode,
     {
       childCount: 0,
       className: ClassNames.InputBox,
