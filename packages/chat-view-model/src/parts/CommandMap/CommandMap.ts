@@ -8,6 +8,7 @@ import {
   resetChatSessionStorage,
   saveChatSession,
 } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { handleClickBack } from '../HandleClickBack/HandleClickBack.ts'
 import { handleInput } from '../HandleInput/HandleInput.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import { handleRpcSubmit } from '../HandleRpcSubmit/HandleRpcSubmit.ts'
@@ -26,6 +27,7 @@ export const commandMap: Record<string, CommandHandler> = {
   'ChatModel.getChatSession': getChatSession,
   'ChatModel.getChatViewEvents': getChatViewEvents,
   'ChatModel.getState': getState,
+  'ChatModel.handleClickBack': handleClickBack,
   'ChatModel.handleInput': handleInput,
   'ChatModel.handleSubmit': handleRpcSubmit,
   'ChatModel.listChatSessions': listChatSessions,
