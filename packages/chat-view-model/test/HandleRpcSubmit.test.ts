@@ -22,6 +22,7 @@ const createState = (overrides: Readonly<Partial<PrototypeState>> = {}): Prototy
     composerValue: 'hello backend',
     focus: 'composer',
     focused: true,
+    messages: [],
     openApiApiKey: '',
     parsedMessages: [],
     projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],

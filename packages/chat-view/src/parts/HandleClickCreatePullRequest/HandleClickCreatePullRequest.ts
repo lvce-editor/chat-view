@@ -18,6 +18,7 @@ export const handleClickCreatePullRequest = async (state: ChatState): Promise<Ch
   })
   const updatedSession = {
     ...selectedSession,
+    messages: [],
     pullRequestUrl,
   }
   const updatedSessions = state.sessions.map((session) => {

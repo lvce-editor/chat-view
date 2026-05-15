@@ -77,6 +77,11 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     messages,
     status: 'finished' as const,
   }
+  const updatedSessionSummary = {
+    ...session,
+    messages: [],
+    status: 'finished' as const,
+  }
 
   await saveChatSessionPreservingMessages(updatedSession, messages)
 
@@ -84,7 +89,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     if (item.id !== updatedState.selectedSessionId) {
       return item
     }
-    return updatedSession
+    return updatedSessionSummary
   })
 
   return {

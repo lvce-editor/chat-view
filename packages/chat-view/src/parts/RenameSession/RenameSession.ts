@@ -19,6 +19,7 @@ export const renameSession = async (state: ChatState, sessionId: string, current
     }
     return {
       ...session,
+      messages: [],
       title: nextTitle,
     }
   })

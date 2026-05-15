@@ -50,6 +50,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
       }
       const updatedSession: ChatSession = {
         ...session,
+        messages: [],
         projectId: blankProjectId,
       }
       await saveChatSessionPreservingMessages(updatedSession, session.id === state.selectedSessionId ? state.messages : undefined)

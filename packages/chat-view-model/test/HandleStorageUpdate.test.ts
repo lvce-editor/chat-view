@@ -11,6 +11,7 @@ const createState = (): PrototypeStateBase => {
     composerValue: '',
     focus: 'composer',
     focused: true,
+    messages: [],
     parsedMessages: [],
     projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],
     selectedModelId: 'model-1',
@@ -58,6 +59,19 @@ test('handleChatStorageUpdate normalizes multi-part message events when refreshi
     composerValue: '',
     focus: 'composer',
     focused: true,
+    messages: [
+      {
+        content: [
+          { text: 'Hello', type: 'output_text' },
+          { summary: 'thinking', type: 'reasoning' },
+          { text: ' world', type: 'output_text' },
+        ],
+        id: 'request-1',
+        role: 'assistant',
+        text: 'Hello world',
+        time: '10:00',
+      },
+    ],
     parsedMessages: [{ id: 'request-1', parsedContent: [], text: 'Hello world' }],
     projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],
     selectedModelId: 'model-1',
@@ -66,19 +80,7 @@ test('handleChatStorageUpdate normalizes multi-part message events when refreshi
     sessions: [
       {
         id: 'session-1',
-        messages: [
-          {
-            content: [
-              { text: 'Hello', type: 'output_text' },
-              { summary: 'thinking', type: 'reasoning' },
-              { text: ' world', type: 'output_text' },
-            ],
-            id: 'request-1',
-            role: 'assistant',
-            text: 'Hello world',
-            time: '10:00',
-          },
-        ],
+        messages: [],
         title: 'Session 1',
       },
     ],

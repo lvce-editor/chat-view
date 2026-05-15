@@ -76,6 +76,11 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     messages,
     status: 'finished' as const,
   }
+  const updatedSessionSummary = {
+    ...session,
+    messages: [],
+    status: 'finished' as const,
+  }
 
   await saveChatSessionPreservingMessages(updatedSession, messages)
 
@@ -83,7 +88,7 @@ export const handleClickSaveOpenRouterApiKey = async (state: ChatState): Promise
     if (item.id !== updatedState.selectedSessionId) {
       return item
     }
-    return updatedSession
+    return updatedSessionSummary
   })
 
   return {

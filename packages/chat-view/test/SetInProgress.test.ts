@@ -7,24 +7,25 @@ test('setInProgress should mark the latest assistant message as in progress', as
   using mockChatStorageRpc = registerMockChatStorageRpc()
   const state = {
     ...createDefaultState(),
+    messages: [
+      {
+        id: 'message-user-1',
+        role: 'user' as const,
+        text: 'hello',
+        time: '10:00',
+      },
+      {
+        id: 'message-assistant-1',
+        role: 'assistant' as const,
+        text: 'partial',
+        time: '10:01',
+      },
+    ],
     selectedSessionId: 'session-1',
     sessions: [
       {
         id: 'session-1',
-        messages: [
-          {
-            id: 'message-user-1',
-            role: 'user' as const,
-            text: 'hello',
-            time: '10:00',
-          },
-          {
-            id: 'message-assistant-1',
-            role: 'assistant' as const,
-            text: 'partial',
-            time: '10:01',
-          },
-        ],
+        messages: [],
         title: 'Chat 1',
       },
     ],
@@ -32,24 +33,26 @@ test('setInProgress should mark the latest assistant message as in progress', as
 
   const result = await setInProgress(state, true)
 
+  expect(result.messages).toEqual([
+    {
+      id: 'message-user-1',
+      role: 'user',
+      text: 'hello',
+      time: '10:00',
+    },
+    {
+      id: 'message-assistant-1',
+      inProgress: true,
+      role: 'assistant',
+      text: 'partial',
+      time: '10:01',
+    },
+  ])
+
   expect(result.sessions).toEqual([
     {
       id: 'session-1',
-      messages: [
-        {
-          id: 'message-user-1',
-          role: 'user',
-          text: 'hello',
-          time: '10:00',
-        },
-        {
-          id: 'message-assistant-1',
-          inProgress: true,
-          role: 'assistant',
-          text: 'partial',
-          time: '10:01',
-        },
-      ],
+      messages: [],
       status: 'in-progress',
       title: 'Chat 1',
     },
@@ -86,25 +89,26 @@ test('setInProgress should clear in progress from the latest assistant message',
   using mockChatStorageRpc = registerMockChatStorageRpc()
   const state = {
     ...createDefaultState(),
+    messages: [
+      {
+        id: 'message-user-1',
+        role: 'user' as const,
+        text: 'hello',
+        time: '10:00',
+      },
+      {
+        id: 'message-assistant-1',
+        inProgress: true,
+        role: 'assistant' as const,
+        text: 'partial',
+        time: '10:01',
+      },
+    ],
     selectedSessionId: 'session-1',
     sessions: [
       {
         id: 'session-1',
-        messages: [
-          {
-            id: 'message-user-1',
-            role: 'user' as const,
-            text: 'hello',
-            time: '10:00',
-          },
-          {
-            id: 'message-assistant-1',
-            inProgress: true,
-            role: 'assistant' as const,
-            text: 'partial',
-            time: '10:01',
-          },
-        ],
+        messages: [],
         status: 'in-progress' as const,
         title: 'Chat 1',
       },
@@ -113,24 +117,26 @@ test('setInProgress should clear in progress from the latest assistant message',
 
   const result = await setInProgress(state, false)
 
+  expect(result.messages).toEqual([
+    {
+      id: 'message-user-1',
+      role: 'user',
+      text: 'hello',
+      time: '10:00',
+    },
+    {
+      id: 'message-assistant-1',
+      inProgress: false,
+      role: 'assistant',
+      text: 'partial',
+      time: '10:01',
+    },
+  ])
+
   expect(result.sessions).toEqual([
     {
       id: 'session-1',
-      messages: [
-        {
-          id: 'message-user-1',
-          role: 'user',
-          text: 'hello',
-          time: '10:00',
-        },
-        {
-          id: 'message-assistant-1',
-          inProgress: false,
-          role: 'assistant',
-          text: 'partial',
-          time: '10:01',
-        },
-      ],
+      messages: [],
       status: 'finished',
       title: 'Chat 1',
     },

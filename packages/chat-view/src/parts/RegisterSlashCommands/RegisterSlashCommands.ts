@@ -23,6 +23,7 @@ const appendAssistantMessage = async (state: ChatState, assistantText: string): 
     }
     return {
       ...session,
+      messages: [],
       status: 'finished' as const,
     }
   })
@@ -59,6 +60,7 @@ export const registerSlashCommands = (): void => {
       }
       return {
         ...session,
+        messages: [],
         status: 'idle' as const,
       }
     })

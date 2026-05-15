@@ -38,6 +38,7 @@ export const handleGitBranchChange = async (state: ChatState, branchName: string
       return {
         ...session,
         branchName,
+        messages: [],
       }
     })
     const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)

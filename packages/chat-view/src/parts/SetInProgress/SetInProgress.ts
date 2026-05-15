@@ -27,6 +27,11 @@ export const setInProgress = async (state: ChatState, inProgress: boolean): Prom
     messages,
     status: inProgress ? ('in-progress' as const) : ('finished' as const),
   }
+  const updatedSelectedSessionSummary = {
+    ...selectedSession,
+    messages: [],
+    status: inProgress ? ('in-progress' as const) : ('finished' as const),
+  }
 
   await saveChatSessionPreservingMessages(updatedSelectedSession, messages)
 
@@ -37,7 +42,7 @@ export const setInProgress = async (state: ChatState, inProgress: boolean): Prom
       if (session.id !== selectedSession.id) {
         return session
       }
-      return updatedSelectedSession
+      return updatedSelectedSessionSummary
     }),
   }
 }

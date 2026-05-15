@@ -110,5 +110,6 @@ export interface ViewModel {
   readonly voiceDictationEnabled: boolean
 }
 
+export type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 export type { ChatSession } from '../ChatSession/ChatSession.ts'
 export type { ComposerAttachment, ComposerAttachmentDisplayType } from '../ComposerAttachment/ComposerAttachment.ts'

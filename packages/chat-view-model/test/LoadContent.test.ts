@@ -244,8 +244,9 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   expect(result.composerSelectionEnd).toBe(4)
   expect(result.sessions).toEqual([
     { id: 'session-1', messages: [], title: 'Session 1' },
-    { id: 'session-2', lastActiveTime: '10:00', messages: [{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }], title: 'Session 2' },
+    { id: 'session-2', lastActiveTime: '10:00', messages: [], title: 'Session 2' },
   ])
+  expect(result.messages).toEqual([{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }])
   expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
   expect(result.visibleModels).toEqual([
     { id: 'model-1', name: 'Model 1' },
@@ -365,20 +366,21 @@ test('loadContent parses normalized text from stored multi-part message content'
     {
       id: 'session-2',
       lastActiveTime: '10:00',
-      messages: [
-        {
-          content: [
-            { text: 'Hello', type: 'output_text' },
-            { summary: 'thinking', type: 'reasoning' },
-            { text: ' world', type: 'output_text' },
-          ],
-          id: 'message-1',
-          role: 'assistant',
-          text: 'Hello world',
-          time: '10:00',
-        },
-      ],
+      messages: [],
       title: 'Session 2',
+    },
+  ])
+  expect(result.messages).toEqual([
+    {
+      content: [
+        { text: 'Hello', type: 'output_text' },
+        { summary: 'thinking', type: 'reasoning' },
+        { text: ' world', type: 'output_text' },
+      ],
+      id: 'message-1',
+      role: 'assistant',
+      text: 'Hello world',
+      time: '10:00',
     },
   ])
   expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello world' }])

@@ -21,6 +21,11 @@ export const handleClickStop = async (state: ChatState): Promise<ChatState> => {
     messages,
     status: 'stopped' as const,
   }
+  const updatedSelectedSessionSummary = {
+    ...selectedSession,
+    messages: [],
+    status: 'stopped' as const,
+  }
   await saveChatSessionPreservingMessages(updatedSelectedSession, messages)
   return {
     ...state,
@@ -29,7 +34,7 @@ export const handleClickStop = async (state: ChatState): Promise<ChatState> => {
       if (session.id !== updatedSelectedSession.id) {
         return session
       }
-      return updatedSelectedSession
+      return updatedSelectedSessionSummary
     }),
   }
 }
