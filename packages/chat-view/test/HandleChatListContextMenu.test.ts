@@ -24,6 +24,7 @@ test('handleChatListContextMenu should focus the clicked item and invoke Context
     focused: true,
     listFocusedIndex: 0,
     listFocusOutline: true,
+    listSelectedSessionId: 'session-1',
   })
 })
 

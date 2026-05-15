@@ -3,7 +3,7 @@ import { deleteSession } from '../DeleteSession/DeleteSession.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export const deleteSessionAtIndex = async (state: ChatState, index: number): Promise<ChatState> => {
-  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
   const session = visibleSessions[index]
   if (!session) {
     return state

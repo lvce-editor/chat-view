@@ -10,7 +10,7 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
   if (index === -1) {
     return state
   }
-  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
+  const visibleSessions = getVisibleSessions(sessions, selectedProjectId, state.searchValue)
   const item = visibleSessions[index]
   if (!item) {
     return state
@@ -25,5 +25,6 @@ export const handleChatListContextMenu = async (state: ChatState, eventX: number
     focused: true,
     listFocusedIndex: index,
     listFocusOutline: true,
+    listSelectedSessionId: item.id,
   }
 }

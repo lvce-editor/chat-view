@@ -17,16 +17,18 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
     }
   }
   if (name === InputName.ChatList) {
+    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
+    const focusedIndex = state.listSelectedSessionId ? visibleSessions.findIndex((session) => session.id === state.listSelectedSessionId) : -1
     return {
       ...state,
       focus: 'list',
       focused: true,
-      listFocusedIndex: -1,
+      listFocusedIndex: focusedIndex,
       listFocusOutline: false,
     }
   }
   if (InputName.isSessionInputName(name) || name === InputName.SessionDelete) {
-    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+    const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
     const sessionId = InputName.isSessionInputName(name) ? InputName.getSessionIdFromInputName(name) : ''
     const focusedIndex =
       sessionId === ''
@@ -40,6 +42,7 @@ export const handleInputFocus = async (state: ChatState, name: string): Promise<
       focused: true,
       listFocusedIndex: focusedIndex,
       listFocusOutline: false,
+      listSelectedSessionId: sessionId || state.listSelectedSessionId,
     }
   }
   if (

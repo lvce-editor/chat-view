@@ -8,30 +8,43 @@ import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSession
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-const getSessionClassName = (focused: boolean, showFocusOutline: boolean): string => {
+const getSessionClassName = (selected: boolean, focused: boolean, showFocusOutline: boolean): string => {
   if (showFocusOutline) {
-    return mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline)
+    return mergeClassNames(
+      ClassNames.ChatListItem,
+      selected ? ClassNames.ChatListItemSelected : '',
+      ClassNames.ChatListItemFocused,
+      ClassNames.ChatListItemFocusOutline,
+      ClassNames.FocusOutline,
+    )
   }
   if (focused) {
-    return mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused)
+    return mergeClassNames(ClassNames.ChatListItem, selected ? ClassNames.ChatListItemSelected : '', ClassNames.ChatListItemFocused)
+  }
+  if (selected) {
+    return mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemSelected)
   }
   return ClassNames.ChatListItem
 }
 
 export const getSessionDom = (
   session: ChatSession,
+  selected = false,
   focused = false,
   showChatListTime = true,
   showFocusOutline = false,
 ): readonly VirtualDomNode[] => {
-  const sessionClassName = getSessionClassName(focused, showFocusOutline)
+  const sessionClassName = getSessionClassName(selected, focused, showFocusOutline)
   const sessionStatusClassName = getSessionStatusClassName(session)
   const lastActiveTime = getSessionLastActiveTime(session)
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
   return [
     {
+      'aria-selected': selected ? 'true' : 'false',
       childCount: 3,
       className: sessionClassName,
+      id: InputName.getSessionInputName(session.id),
+      role: AriaRoles.Option,
       type: VirtualDomElements.Li,
     },
     {

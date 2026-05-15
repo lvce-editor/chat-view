@@ -9,12 +9,14 @@ test('chatListFocusNext should focus first item from container focus', async () 
   const state = { ...createDefaultState(), listFocusedIndex: -1 }
   const result = await ChatListFocusNext.chatListFocusNext(state)
   expect(result.listFocusedIndex).toBe(0)
+  expect(result.listSelectedSessionId).toBe('session-1')
 })
 
 test('chatListFocusPrevious should focus last item from container focus', async () => {
   const state = {
     ...createDefaultState(),
     listFocusedIndex: -1,
+    listSelectedSessionId: '',
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -22,17 +24,20 @@ test('chatListFocusPrevious should focus last item from container focus', async 
   }
   const result = await ChatListFocusPrevious.chatListFocusPrevious(state)
   expect(result.listFocusedIndex).toBe(1)
+  expect(result.listSelectedSessionId).toBe('session-2')
 })
 
 test('chatListFocusFirst should focus first item', async () => {
   const state = { ...createDefaultState(), listFocusedIndex: 2 }
   const result = await ChatListFocusFirst.chatListFocusFirst(state)
   expect(result.listFocusedIndex).toBe(0)
+  expect(result.listSelectedSessionId).toBe('session-1')
 })
 
 test('chatListFocusLast should focus last item', async () => {
   const state = {
     ...createDefaultState(),
+    listSelectedSessionId: '',
     sessions: [
       { id: 'session-1', messages: [], title: 'Chat 1' },
       { id: 'session-2', messages: [], title: 'Chat 2' },
@@ -41,6 +46,7 @@ test('chatListFocusLast should focus last item', async () => {
   }
   const result = await ChatListFocusLast.chatListFocusLast(state)
   expect(result.listFocusedIndex).toBe(2)
+  expect(result.listSelectedSessionId).toBe('session-3')
 })
 
 test('chatListFocus commands should keep -1 for empty list', async () => {
@@ -57,4 +63,26 @@ test('chatListFocus commands should keep -1 for empty list', async () => {
   expect(last.listFocusedIndex).toBe(-1)
   expect(next.listFocusedIndex).toBe(-1)
   expect(previous.listFocusedIndex).toBe(-1)
+  expect(first.listSelectedSessionId).toBe('')
+  expect(last.listSelectedSessionId).toBe('')
+  expect(next.listSelectedSessionId).toBe('')
+  expect(previous.listSelectedSessionId).toBe('')
+})
+
+test('chatListFocusNext should select first visible search result from empty list area focus', async () => {
+  const state = {
+    ...createDefaultState(),
+    listFocusedIndex: -1,
+    listSelectedSessionId: '',
+    searchEnabled: true,
+    searchValue: 'beta',
+    sessions: [
+      { id: 'session-1', messages: [], title: 'alpha' },
+      { id: 'session-2', messages: [], title: 'beta' },
+      { id: 'session-3', messages: [], title: 'alphabet' },
+    ],
+  }
+  const result = await ChatListFocusNext.chatListFocusNext(state)
+  expect(result.listFocusedIndex).toBe(0)
+  expect(result.listSelectedSessionId).toBe('session-2')
 })

@@ -3,7 +3,7 @@ import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { selectSession } from '../SelectSession/SelectSession.ts'
 
 export const selectListIndex = async (state: ChatState, index: number): Promise<ChatState> => {
-  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
+  const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId, state.searchValue)
   if (index < 0 || index >= visibleSessions.length) {
     return state
   }

@@ -1,29 +1,19 @@
 import { ViewletCommand } from '@lvce-editor/constants'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
 const pickerListSelector = '.ChatOverlays .ChatModelPickerList'
 
 const getFocusSelector = (state: ChatState): string => {
-  const { focus, listFocusedIndex } = state
+  const { focus } = state
   switch (focus) {
     case 'composer':
     case 'input':
       return '[name="composer"]'
     case 'header':
       return '[name="create-session"]'
-    case 'list': {
-      if (listFocusedIndex === -1) {
-        return `[name="${InputName.ChatList}"]`
-      }
-      const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
-      const session = visibleSessions[listFocusedIndex]
-      if (!session) {
-        return `[name="${InputName.ChatList}"]`
-      }
-      return `[name="${InputName.getSessionInputName(session.id)}"]`
-    }
+    case 'list':
+      return `[name="${InputName.ChatList}"]`
     case 'model-picker-input':
       return `[name="${InputName.ModelPickerSearch}"]`
     case 'picker-list':

@@ -14,6 +14,7 @@ import { getChatSendAreaDom } from '../GetChatDetailsDom/GetChatDetailsDom.ts'
 import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHeaderDomListMode.ts'
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
+import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
@@ -38,6 +39,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
+  readonly listSelectedSessionId?: string
   readonly modelPickerOpen?: boolean
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
@@ -52,6 +54,7 @@ export interface GetChatModeListVirtualDomOptions {
   readonly searchValue?: string
   readonly selectChevronEnabled: boolean
   readonly selectedModelId: string
+  readonly selectedProjectId?: string
   readonly selectedSessionId: string
   readonly sessions: readonly ChatSession[]
   readonly showChatListTime: boolean
@@ -92,6 +95,7 @@ export const getChatModeListVirtualDom = ({
   hiddenPrimaryControls = [],
   listFocusedIndex = -1,
   listFocusOutline = false,
+  listSelectedSessionId = '',
   modelPickerOpen = false,
   modelPickerSearchValue = '',
   models,
@@ -106,7 +110,8 @@ export const getChatModeListVirtualDom = ({
   searchValue = '',
   selectChevronEnabled,
   selectedModelId,
-  selectedSessionId,
+  selectedProjectId = '',
+  selectedSessionId: _selectedSessionId,
   sessions,
   showChatListTime,
   showModelUsageMultiplier = true,
@@ -130,9 +135,7 @@ export const getChatModeListVirtualDom = ({
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
-  const searchValueTrimmed = searchValue.trim().toLowerCase()
-  const visibleSessions =
-    searchEnabled && searchValueTrimmed ? sessions.filter((session) => session.title.toLowerCase().includes(searchValueTrimmed)) : sessions
+  const visibleSessions = getVisibleSessions(sessions, selectedProjectId, searchEnabled ? searchValue : '')
   return [
     {
       childCount: chatRootChildCount,
@@ -142,7 +145,15 @@ export const getChatModeListVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getChatHeaderListModeDom(authEnabled, userState, userName, authErrorMessage, searchEnabled, searchFieldVisible, searchValue),
-    ...getChatListDom(visibleSessions, selectedSessionId, chatListExpanded, listFocusOutline, listFocusedIndex, showChatListTime, chatListScrollTop),
+    ...getChatListDom(
+      visibleSessions,
+      listSelectedSessionId,
+      chatListExpanded,
+      listFocusOutline,
+      listFocusedIndex,
+      showChatListTime,
+      chatListScrollTop,
+    ),
     ...getChatSendAreaDom(
       composerValue,
       composerAttachments,

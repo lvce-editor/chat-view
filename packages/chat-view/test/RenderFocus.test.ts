@@ -51,7 +51,7 @@ test('renderFocus should return chat-list selector for list focus when no list i
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="chat-list"]'])
 })
 
-test('renderFocus should return focused session selector for list focus', () => {
+test('renderFocus should keep DOM focus on chat-list for list focus with an active row', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),
@@ -60,7 +60,7 @@ test('renderFocus should return focused session selector for list focus', () => 
     listFocusedIndex: 0,
   }
   const result = RenderFocus.renderFocus(oldState, newState)
-  expect(result).toEqual([ViewletCommand.FocusSelector, '[name="session:session-1"]'])
+  expect(result).toEqual([ViewletCommand.FocusSelector, '[name="chat-list"]'])
 })
 
 test('renderFocus should fallback to chat-list when listFocusedIndex is out of range', () => {
@@ -75,7 +75,7 @@ test('renderFocus should fallback to chat-list when listFocusedIndex is out of r
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="chat-list"]'])
 })
 
-test('renderFocus should use filtered visible sessions for list focus', () => {
+test('renderFocus should keep DOM focus on chat-list when the active row is project-filtered', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),
@@ -99,31 +99,10 @@ test('renderFocus should use filtered visible sessions for list focus', () => {
     ],
   }
   const result = RenderFocus.renderFocus(oldState, newState)
-  expect(result).toEqual([ViewletCommand.FocusSelector, '[name="session:session-2"]'])
-})
-
-test('renderFocus should fallback to chat-list when filtered visible session is missing at index', () => {
-  const oldState: ChatState = createDefaultState()
-  const newState: ChatState = {
-    ...createDefaultState(),
-    focus: 'list',
-    focused: true,
-    listFocusedIndex: 0,
-    selectedProjectId: 'project-2',
-    sessions: [
-      {
-        id: 'session-1',
-        messages: [],
-        projectId: 'project-1',
-        title: 'A',
-      },
-    ],
-  }
-  const result = RenderFocus.renderFocus(oldState, newState)
   expect(result).toEqual([ViewletCommand.FocusSelector, '[name="chat-list"]'])
 })
 
-test('renderFocus should keep all sessions visible when sessions have no assigned projects', () => {
+test('renderFocus should keep DOM focus on chat-list when sessions have no assigned projects', () => {
   const oldState: ChatState = createDefaultState()
   const newState: ChatState = {
     ...createDefaultState(),
@@ -145,7 +124,7 @@ test('renderFocus should keep all sessions visible when sessions have no assigne
     ],
   }
   const result = RenderFocus.renderFocus(oldState, newState)
-  expect(result).toEqual([ViewletCommand.FocusSelector, '[name="session:session-b"]'])
+  expect(result).toEqual([ViewletCommand.FocusSelector, '[name="chat-list"]'])
 })
 
 test('renderFocus should fallback to composer for unknown focus values', () => {
