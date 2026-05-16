@@ -179,7 +179,6 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
       switch (key) {
         case 'chat.authEnabled':
         case 'chat.authUseRedirect':
-        case 'chat.models.builtin':
         case 'chatView.aiSessionTitleGenerationEnabled':
         case 'chatView.composerDropEnabled':
         case 'chatView.emitStreamingFunctionCallEvents':
