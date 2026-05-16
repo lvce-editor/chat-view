@@ -16,7 +16,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.rerender()
 
   const menuItems = Locator('.MenuItem')
-  const moreToggle = Locator('.ChatList .ChatListMoreToggleButton[name="chat-list-show-more"]')
+  const moreToggle = Locator('.ChatList .ChatListMoreToggleLabel')
 
   await expect(moreToggle).toHaveText('Show 2 More')
 
@@ -29,6 +29,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await Command.execute('Chat.handleInputFocus', 'chat-list')
   await Command.execute('Chat.handleClick', 'chat-list-show-more')
+  await Chat.rerender()
   await expect(moreToggle).toHaveText('Show Less')
 
   await Chat.handleChatListContextMenu(0, 220)

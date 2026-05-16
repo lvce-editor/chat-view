@@ -16,10 +16,11 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await Chat.rerender()
 
   const chatListItems = Locator('.ChatList .ChatListItem')
-  const moreToggle = Locator('.ChatList .ChatListMoreToggleButton[name="chat-list-show-more"]')
+  const moreToggle = Locator('.ChatList .ChatListMoreToggleLabel')
 
   await expect(chatListItems).toHaveCount(3)
   await expect(moreToggle).toHaveCount(1)
+  await expect(moreToggle).toHaveText('Show 2 More')
 
   await Chat.handleChatListContextMenu(0, 220)
   await ContextMenu.selectItem('Archive All')

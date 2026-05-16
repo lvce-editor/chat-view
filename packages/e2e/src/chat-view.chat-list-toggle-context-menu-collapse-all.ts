@@ -16,15 +16,17 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await Chat.rerender()
 
   const sessionTitles = Locator('.ChatList .ChatListItemTitle')
-  const moreToggle = Locator('.ChatList .ChatListMoreToggleButton[name="chat-list-show-more"]')
+  const moreToggle = Locator('.ChatList .ChatListMoreToggleLabel')
 
   await Command.execute('Chat.handleClick', 'chat-list-show-more')
+  await Chat.rerender()
   await expect(sessionTitles).toHaveCount(5)
   await expect(moreToggle).toHaveText('Show Less')
 
   await Chat.handleChatListContextMenu(0, 220)
   await ContextMenu.selectItem('Collapse All')
 
+  await Chat.rerender()
   await expect(sessionTitles).toHaveCount(3)
   await expect(moreToggle).toHaveText('Show 2 More')
 }
