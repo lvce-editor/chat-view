@@ -11,7 +11,9 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await Command.execute('Chat.openMockSession', 'Chat 3', [], { unread: true })
   await Command.execute('Chat.openMockSession', 'Chat 4', [], { unread: true })
   await Command.execute('Chat.openMockSession', 'Chat 5', [], { unread: true })
+  await Chat.rerender()
   await Chat.handleClickBack()
+  await Chat.rerender()
 
   const unreadItems = Locator('.ChatList .ChatListItem.ChatListItemUnread')
 

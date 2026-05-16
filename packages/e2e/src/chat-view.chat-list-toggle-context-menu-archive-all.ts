@@ -11,10 +11,12 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await Command.execute('Chat.openMockSession', 'Chat 3', [])
   await Command.execute('Chat.openMockSession', 'Chat 4', [])
   await Command.execute('Chat.openMockSession', 'Chat 5', [])
+  await Chat.rerender()
   await Chat.handleClickBack()
+  await Chat.rerender()
 
   const chatListItems = Locator('.ChatList .ChatListItem')
-  const moreToggle = Locator('.ChatList .ChatListItemLabel[name="chat-list-show-more"]')
+  const moreToggle = Locator('.ChatList .ChatListMoreToggleButton[name="chat-list-show-more"]')
 
   await expect(chatListItems).toHaveCount(3)
   await expect(moreToggle).toHaveCount(1)
