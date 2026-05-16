@@ -19,7 +19,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
 
   await expect(unreadItems).toHaveCount(5)
 
-  await Chat.handleChatListContextMenu(0, 220)
+  await Chat.handleChatListContextMenu(0, 250)
   await ContextMenu.selectItem('Mark All as Read')
 
   await expect(unreadItems).toHaveCount(0)

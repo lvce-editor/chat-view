@@ -22,7 +22,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await expect(moreToggle).toHaveCount(1)
   await expect(moreToggle).toHaveText('Show 2 More')
 
-  await Chat.handleChatListContextMenu(0, 220)
+  await Chat.handleChatListContextMenu(0, 250)
   await ContextMenu.selectItem('Archive All')
 
   await expect(chatListItems).toHaveCount(0)

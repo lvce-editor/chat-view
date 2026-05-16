@@ -20,7 +20,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(moreToggle).toHaveText('Show 2 More')
 
-  await Chat.handleChatListContextMenu(0, 220)
+  await Chat.handleChatListContextMenu(0, 250)
 
   await expect(menuItems).toHaveCount(3)
   await expect(menuItems.nth(0)).toHaveText('Mark All as Read')
@@ -32,7 +32,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.rerender()
   await expect(moreToggle).toHaveText('Show Less')
 
-  await Chat.handleChatListContextMenu(0, 220)
+  await Chat.handleChatListContextMenu(0, 250)
 
   await expect(menuItems).toHaveCount(3)
   await expect(menuItems.nth(0)).toHaveText('Mark All as Read')

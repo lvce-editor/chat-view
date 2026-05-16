@@ -23,7 +23,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, Locator }
   await expect(sessionTitles).toHaveCount(5)
   await expect(moreToggle).toHaveText('Show Less')
 
-  await Chat.handleChatListContextMenu(0, 220)
+  await Chat.handleChatListContextMenu(0, 250)
   await ContextMenu.selectItem('Collapse All')
 
   await Chat.rerender()

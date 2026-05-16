@@ -17,7 +17,10 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
   const loadedSession = await getChatSession(id)
   const nextLoadedSession = loadedSession?.unread ? { ...loadedSession, unread: false } : loadedSession
   if (loadedSession?.unread) {
-    await saveChatSession(nextLoadedSession)
+    await saveChatSession({
+      ...loadedSession,
+      unread: false,
+    })
   }
   const composerAttachments = await getComposerAttachments(id)
   const nextSessions = nextLoadedSession
