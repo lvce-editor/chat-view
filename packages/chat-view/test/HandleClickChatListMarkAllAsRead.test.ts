@@ -2,8 +2,12 @@ import { expect, test } from '@jest/globals'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleClickChatListMarkAllAsRead from '../src/parts/HandleClickChatListMarkAllAsRead/HandleClickChatListMarkAllAsRead.ts'
+import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
 
 test('handleClickChatListMarkAllAsRead should clear unread for visible sessions only', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+
   const state: ChatState = {
     ...createDefaultState(),
     selectedProjectId: 'project-1',

@@ -16,3 +16,7 @@ test('getSessionClassName returns focus outline classes when focus outline is sh
     mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemFocused, ClassNames.ChatListItemFocusOutline, ClassNames.FocusOutline),
   )
 })
+
+test('getSessionClassName returns unread class when session is unread', () => {
+  expect(getSessionClassName(false, false, true)).toBe(mergeClassNames(ClassNames.ChatListItem, ClassNames.ChatListItemUnread))
+})

@@ -35,6 +35,11 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
           }
         : {}),
       title: session.title,
+      ...(typeof session.unread === 'boolean'
+        ? {
+            unread: session.unread,
+          }
+        : {}),
       ...(session.workspaceUri
         ? {
             workspaceUri: session.workspaceUri,
@@ -81,6 +86,11 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
         }
       : {}),
     title: session.title,
+    ...(typeof session.unread === 'boolean'
+      ? {
+          unread: session.unread,
+        }
+      : {}),
     ...(session.workspaceUri
       ? {
           workspaceUri: session.workspaceUri,
@@ -122,6 +132,11 @@ export const saveChatSession = async (session: ChatSession): Promise<void> => {
         }
       : {}),
     title: session.title,
+    ...(typeof session.unread === 'boolean'
+      ? {
+          unread: session.unread,
+        }
+      : {}),
     ...(session.workspaceUri
       ? {
           workspaceUri: session.workspaceUri,

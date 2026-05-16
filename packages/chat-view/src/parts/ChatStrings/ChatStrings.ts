@@ -292,6 +292,18 @@ export const archive = (): string => {
   return i18nString(UiStrings.Archive)
 }
 
+export const archiveAll = (): string => {
+  return i18nString(UiStrings.ArchiveAll)
+}
+
+export const collapseAllChats = (): string => {
+  return i18nString(UiStrings.CollapseAll)
+}
+
+export const markAllAsRead = (): string => {
+  return i18nString(UiStrings.MarkAllAsRead)
+}
+
 export const deleteItem = (): string => {
   return i18nString(UiStrings.Delete)
 }

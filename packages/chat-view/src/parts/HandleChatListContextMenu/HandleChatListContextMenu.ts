@@ -1,29 +1,35 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getListIndex } from '../GetListIndex/GetListIndex.ts'
-import { MenuChatList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
-import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { getChatListTarget } from '../GetChatListTarget/GetChatListTarget.ts'
+import { MenuChatList, MenuChatListToggle } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
 export const handleChatListContextMenu = async (state: ChatState, eventX: number, eventY: number): Promise<ChatState> => {
-  const { selectedProjectId, sessions, uid } = state
-  const index = getListIndex(state, eventX, eventY)
-  if (index === -1) {
+  const { uid } = state
+  const target = getChatListTarget(state, eventX, eventY)
+  if (target.type === 'none') {
     return state
   }
-  const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
-  const item = visibleSessions[index]
-  if (!item) {
-    return state
+  if (target.type === 'toggle') {
+    await RendererWorker.showContextMenu2(uid, MenuChatListToggle, eventX, eventY, {
+      menuId: MenuChatListToggle,
+    })
+    return {
+      ...state,
+      focus: 'list',
+      focused: true,
+      listFocusedIndex: -1,
+      listFocusOutline: false,
+    }
   }
   await RendererWorker.showContextMenu2(uid, MenuChatList, eventX, eventY, {
     menuId: MenuChatList,
-    sessionId: item.id,
+    sessionId: target.session.id,
   })
   return {
     ...state,
     focus: 'list',
     focused: true,
-    listFocusedIndex: index,
+    listFocusedIndex: target.sessionIndex,
     listFocusOutline: true,
   }
 }

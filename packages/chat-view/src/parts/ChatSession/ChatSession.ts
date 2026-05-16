@@ -9,5 +9,6 @@ export interface ChatSession {
   readonly pullRequestUrl?: string
   readonly status?: 'idle' | 'in-progress' | 'stopped' | 'finished'
   readonly title: string
+  readonly unread?: boolean
   readonly workspaceUri?: string
 }

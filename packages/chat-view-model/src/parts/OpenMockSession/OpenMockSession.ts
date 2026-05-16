@@ -12,6 +12,7 @@ export interface OpenMockSessionOptions {
   readonly branchName?: string
   readonly lastActiveTime?: string
   readonly projectId?: string
+  readonly unread?: boolean
   readonly workspaceUri?: string
 }
 
@@ -51,6 +52,11 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
     ...(options.projectId
       ? {
           projectId: options.projectId,
+        }
+      : {}),
+    ...(typeof options.unread === 'boolean'
+      ? {
+          unread: options.unread,
         }
       : {}),
     ...(options.workspaceUri
