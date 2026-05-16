@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatCoordinatorWorker, ChatStorageWorker } from '@lvce-editor/rpc-registry'
+import { ChatCoordinatorWorker, ChatStorageWorker, ChatToolWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
@@ -9,6 +9,37 @@ import { getState } from '../src/parts/ModelState/ModelState.ts'
 const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.registerMockRpc> => {
   return ChatStorageWorker.registerMockRpc({
     'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+}
+
+const registerMockChatToolRpc = (): ReturnType<typeof ChatToolWorker.registerMockRpc> => {
+  return ChatToolWorker.registerMockRpc({
+    'ChatTool.getTools': async () => [
+      {
+        function: {
+          description: 'Read a file',
+          name: 'read_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+      {
+        function: {
+          description: 'Write a file',
+          name: 'write_file',
+          parameters: {
+            additionalProperties: false,
+            properties: {},
+            type: 'object',
+          },
+        },
+        type: 'function',
+      },
+    ],
   })
 }
 
@@ -41,6 +72,7 @@ const createState = (overrides: Readonly<Partial<PrototypeState>> = {}): Prototy
 
 test('handleRpcSubmit syncs backend auth for authenticated backend requests', async () => {
   using mockStorageRpc = registerMockChatStorageRpc()
+  using mockToolRpc = registerMockChatToolRpc()
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
   })
@@ -81,10 +113,38 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({
         backendUrl: 'https://backend.example.com',
+        maxToolCalls: 100,
         text: 'hello backend',
+        tools: [
+          {
+            function: {
+              description: 'Read a file',
+              name: 'read_file',
+              parameters: {
+                additionalProperties: false,
+                properties: {},
+                type: 'object',
+              },
+            },
+            type: 'function',
+          },
+          {
+            function: {
+              description: 'Write a file',
+              name: 'write_file',
+              parameters: {
+                additionalProperties: false,
+                properties: {},
+                type: 'object',
+              },
+            },
+            type: 'function',
+          },
+        ],
         useOwnBackend: false,
       }),
     ])
+    expect(mockToolRpc.invocations).toEqual([['ChatTool.getTools']])
   } finally {
     MockBackendAuth.clear()
   }
@@ -92,6 +152,7 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
 
 test('handleRpcSubmit does not sync backend auth without own-backend or auth token', async () => {
   using _mockStorageRpc = registerMockChatStorageRpc()
+  using mockToolRpc = registerMockChatToolRpc()
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
     'ChatCoordinator.handleSubmit': async () => {},
   })
@@ -115,10 +176,65 @@ test('handleRpcSubmit does not sync backend auth without own-backend or auth tok
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({
         text: 'hello backend',
+        tools: [
+          {
+            function: {
+              description: 'Read a file',
+              name: 'read_file',
+              parameters: {
+                additionalProperties: false,
+                properties: {},
+                type: 'object',
+              },
+            },
+            type: 'function',
+          },
+          {
+            function: {
+              description: 'Write a file',
+              name: 'write_file',
+              parameters: {
+                additionalProperties: false,
+                properties: {},
+                type: 'object',
+              },
+            },
+            type: 'function',
+          },
+        ],
         useOwnBackend: false,
       }),
     ])
+    expect(mockToolRpc.invocations).toEqual([['ChatTool.getTools']])
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test('handleRpcSubmit filters disabled tools and plan mode tools before sending to coordinator', async () => {
+  using _mockStorageRpc = registerMockChatStorageRpc()
+  using mockToolRpc = registerMockChatToolRpc()
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
+    'ChatCoordinator.handleSubmit': async () => {},
+  })
+
+  await handleRpcSubmit(
+    createState({
+      agentMode: 'plan',
+      toolEnablement: {
+        read_file: false,
+      },
+      uid: 104,
+    }),
+  )
+
+  expect(mockCoordinatorRpc.invocations).toEqual([
+    [
+      'ChatCoordinator.handleSubmit',
+      expect.objectContaining({
+        tools: [],
+      }),
+    ],
+  ])
+  expect(mockToolRpc.invocations).toEqual([['ChatTool.getTools']])
 })

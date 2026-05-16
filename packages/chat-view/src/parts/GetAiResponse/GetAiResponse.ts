@@ -569,6 +569,7 @@ export const getAiResponse = async ({
   const backendEnabled = shouldUseBackendResponses(backendUrl, authToken)
   if (useChatCoordinatorWorker && !backendEnabled) {
     try {
+      const tools = await getBasicChatTools(agentMode, questionToolEnabled, toolEnablement)
       const result = await ChatCoordinatorRequest.getAiResponse({
         agentMode,
         assetDir,
@@ -598,6 +599,7 @@ export const getAiResponse = async ({
         selectedModelId,
         streamingEnabled,
         systemPrompt,
+        tools,
         ...(toolEnablement
           ? {
               toolEnablement,
