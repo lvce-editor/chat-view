@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import { MenuChatList } from '../src/parts/GetMenuEntryIds/GetMenuEntryIds.ts'
+import { MenuChatList, MenuChatListToggle } from '../src/parts/GetMenuEntryIds/GetMenuEntryIds.ts'
 import * as HandleChatListContextMenu from '../src/parts/HandleChatListContextMenu/HandleChatListContextMenu.ts'
 
 test('handleChatListContextMenu should focus the clicked item and invoke ContextMenu.show2 for session items', async () => {
@@ -42,4 +42,34 @@ test('handleChatListContextMenu should ignore clicks outside list bounds', async
 
   expect(mockRpc.invocations).toEqual([])
   expect(result).toBe(state)
+})
+
+test('handleChatListContextMenu should show the toggle-row context menu for show more', async () => {
+  using mockRpc = RendererWorker.registerMockRpc({
+    'ContextMenu.show2': async () => {},
+  })
+
+  const state = {
+    ...createDefaultState(),
+    height: 400,
+    sessions: [
+      { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 1' },
+      { id: 'session-2', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 2' },
+      { id: 'session-3', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 3' },
+      { id: 'session-4', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 4' },
+      { id: 'session-5', messages: [], projectId: 'project-1', status: 'idle', title: 'Chat 5' },
+    ],
+    uid: 7,
+    width: 300,
+  }
+  const result = await HandleChatListContextMenu.handleChatListContextMenu(state, 100, 220)
+
+  expect(mockRpc.invocations).toEqual([['ContextMenu.show2', 7, MenuChatListToggle, 100, 220, { menuId: MenuChatListToggle }]])
+  expect(result).toEqual({
+    ...state,
+    focus: 'list',
+    focused: true,
+    listFocusedIndex: -1,
+    listFocusOutline: false,
+  })
 })

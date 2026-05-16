@@ -222,3 +222,21 @@ test('openMockSession should apply optional session metadata', async () => {
     workspaceUri: 'file:///workspace',
   })
 })
+
+test('openMockSession should allow seeding unread state through options', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = createDefaultState()
+
+  const result = await OpenMockSession.openMockSession(state, 'mock-session-unread', [], {
+    unread: true,
+  })
+
+  expect(result.sessions[1]).toEqual({
+    id: 'mock-session-unread',
+    messages: [],
+    status: 'idle',
+    title: 'mock-session-unread',
+    unread: true,
+  })
+})
