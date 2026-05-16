@@ -179,6 +179,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
       switch (key) {
         case 'chat.authEnabled':
         case 'chat.authUseRedirect':
+        case 'chat.models.builtin':
         case 'chatView.aiSessionTitleGenerationEnabled':
         case 'chatView.composerDropEnabled':
         case 'chatView.emitStreamingFunctionCallEvents':
@@ -201,12 +202,12 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
           return 'https://example.com'
         case 'chat.chatHistoryEnabled':
           return true
+        case 'chat.models.anthropic':
+          return false
         case 'chat.models.builtin':
         case 'chat.models.openai':
         case 'chat.models.test':
           return true
-        case 'chat.models.anthropic':
-          return false
         case 'chat.toolEnablement':
           return { grep: true }
         case 'chat.useOwnBackend':
@@ -272,7 +273,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     },
   ])
   expect(result.initial).toBe(false)
-  expect(result.modelPickerHeight).toBe(86)
+  expect(result.modelPickerHeight).toBe(240)
   expect(result.composerAttachmentsHeight).toBe(34)
   expect(result.projectExpandedIds).toEqual(['project-1'])
   expect(result.showModelUsageMultiplier).toBe(true)
@@ -345,12 +346,12 @@ test('loadContent parses normalized text from stored multi-part message content'
           return 'https://example.com'
         case 'chat.chatHistoryEnabled':
           return true
+        case 'chat.models.anthropic':
+          return false
         case 'chat.models.builtin':
         case 'chat.models.openai':
         case 'chat.models.test':
           return true
-        case 'chat.models.anthropic':
-          return false
         case 'chat.toolEnablement':
           return { grep: true }
         case 'chat.useOwnBackend':
@@ -425,21 +426,21 @@ test('loadContent should fall back to first enabled model when saved model is di
         case 'chatView.useChatMathWorker':
         case 'chatView.useChatNetworkWorkerForRequests':
         case 'chatView.useChatToolWorker':
-        case 'chatView.voiceDictationEnabled':
-        case 'chat.models.builtin':
           return true
         case 'chat.backendUrl':
           return 'https://example.com'
         case 'chat.chatHistoryEnabled':
           return true
-        case 'chat.models.openai':
         case 'chat.models.anthropic':
+        case 'chat.models.openai':
         case 'chat.models.test':
           return false
         case 'chat.toolEnablement':
           return { grep: true }
         case 'chat.useOwnBackend':
           return false
+        case 'chatView.voiceDictationEnabled':
+          return true
         case 'secrets.openApiKey':
           return 'open-api-key'
         case 'secrets.openRouterApiKey':

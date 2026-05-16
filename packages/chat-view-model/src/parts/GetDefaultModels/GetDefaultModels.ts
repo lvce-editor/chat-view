@@ -1,9 +1,9 @@
 import type { ChatModel } from '../ViewModel/ViewModel.ts'
 
 export interface DefaultModelProviderSettings {
+  readonly anthropic: boolean
   readonly builtin: boolean
   readonly openai: boolean
-  readonly anthropic: boolean
   readonly test: boolean
 }
 

@@ -10,9 +10,9 @@ export { getDefaultModelsOpenAi } from './GetDefaultModelsOpenAi/GetDefaultModel
 export { getDefaultModelsTest } from './GetDefaultModelsTest/GetDefaultModelsTest.ts'
 
 export interface DefaultModelProviderSettings {
+  readonly anthropic: boolean
   readonly builtin: boolean
   readonly openai: boolean
-  readonly anthropic: boolean
   readonly test: boolean
 }
 
