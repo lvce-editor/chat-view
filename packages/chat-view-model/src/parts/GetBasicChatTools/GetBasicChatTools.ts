@@ -13,10 +13,7 @@ const withAgentMode = (tools: readonly ChatTool[], agentMode: AgentMode): readon
   return tools.filter((tool) => readOnlyToolNames.has(tool.function.name))
 }
 
-export const getBasicChatTools = async (
-  agentMode: AgentMode = defaultAgentMode,
-  toolEnablement?: ToolEnablement,
-): Promise<readonly ChatTool[]> => {
+export const getBasicChatTools = async (agentMode: AgentMode = defaultAgentMode, toolEnablement?: ToolEnablement): Promise<readonly ChatTool[]> => {
   try {
     return withAgentMode(filterEnabledTools(await ChatToolRequest.getTools(), toolEnablement), agentMode)
   } catch {

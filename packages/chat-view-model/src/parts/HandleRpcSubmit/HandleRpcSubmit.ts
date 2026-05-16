@@ -1,12 +1,12 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
 import { setState } from '../ModelState/ModelState.ts'
 import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
 import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
 import { getBackendUrl } from './GetBackendUrl/GetBackendUrl.ts'
-import { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
 import { getComposerAttachments } from './GetComposerAttachments/GetComposerAttachments.ts'
 import { getCoordinatorModelId } from './GetCoordinatorModelId/GetCoordinatorModelId.ts'
 import { getNextChatInputHistory } from './GetNextChatInputHistory/GetNextChatInputHistory.ts'
@@ -22,7 +22,19 @@ const getNewSessionTitle = (userText: string): string => {
 }
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  const { agentMode = 'agent', chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, sessions, systemPrompt, toolEnablement, uid, viewMode } = state
+  const {
+    agentMode = 'agent',
+    chatInputHistory,
+    composerValue,
+    openApiApiKey,
+    selectedModelId,
+    selectedSessionId,
+    sessions,
+    systemPrompt,
+    toolEnablement,
+    uid,
+    viewMode,
+  } = state
   const userText = composerValue.trim()
   if (!userText) {
     return
@@ -77,8 +89,8 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   setState(uid, effectiveState)
   const coordinatorModelId = getCoordinatorModelId(state)
-  const tools = await getBasicChatTools(agentMode, toolEnablement)
-  if (selectedModelId === 'test' && !useMockApiEnabled(state)) {
+  constglectedModelId === 'test' && !us,
+      modelId: coordinatorModelIdeMockApiEnabled(state)) {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
       text: `Mock AI response: I received "${userText}".`,
     })
