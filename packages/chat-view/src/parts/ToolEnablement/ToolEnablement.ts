@@ -3,7 +3,14 @@ import type { ChatTool } from '../Types/Types.ts'
 export type ToolEnablement = Readonly<Record<string, boolean>>
 
 const defaultToolEnablement: ToolEnablement = {
+  close_preview: false,
+  glob: false,
+  open_preview: false,
+  render_html: false,
+  rg: false,
   run_in_terminal: false,
+  spawn_subagent: false,
+  update_todo: false,
 }
 
 export const parseToolEnablement = (value: unknown): ToolEnablement => {
