@@ -1044,3 +1044,55 @@ test('handleClickList should ignore clicks outside chat bounds', async () => {
     listFocusedIndex: -1,
   })
 })
+
+test('handleClickList should ignore clicks on the show more toggle row', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    focused: true,
+    height: 400,
+    selectedSessionId: 'session-1',
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+      { id: 'session-3', messages: [], title: 'Chat 3' },
+      { id: 'session-4', messages: [], title: 'Chat 4' },
+      { id: 'session-5', messages: [], title: 'Chat 5' },
+    ],
+    width: 300,
+    x: 100,
+    y: 200,
+  }
+  const result = await HandleClick.handleClickList(state, 120, 413)
+  expect(result.selectedSessionId).toBe('session-1')
+  expect(result.focus).toBe('list')
+  expect(result.focused).toBe(true)
+  expect(result.listFocusedIndex).toBe(-1)
+})
+
+test('handleClickList should select trailing sessions after the show more toggle row', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  const state: ChatState = {
+    ...createDefaultState(),
+    chatListExpanded: true,
+    height: 500,
+    selectedSessionId: 'session-1',
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2' },
+      { id: 'session-3', messages: [], title: 'Chat 3' },
+      { id: 'session-4', messages: [], title: 'Chat 4' },
+      { id: 'session-5', messages: [], title: 'Chat 5' },
+    ],
+    width: 300,
+    x: 100,
+    y: 200,
+  }
+  const result = await HandleClick.handleClickList(state, 120, 521)
+  expect(result.selectedSessionId).toBe('session-5')
+  expect(result.focus).toBe('list')
+  expect(result.focused).toBe(true)
+  expect(result.listFocusedIndex).toBe(4)
+})

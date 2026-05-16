@@ -30,10 +30,10 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   // TODO there is a race condition when the user submits another query
   // while the session is being created
   let actualSessionId = selectedSessionId
-  if (shouldCreateNewSession) {
-    actualSessionId = await createNewSession()
-  }
   const title = getNewSessionTitle(userText)
+  if (shouldCreateNewSession) {
+    actualSessionId = await createNewSession(title)
+  }
   const newSessions = shouldCreateNewSession
     ? [
         ...sessions,
@@ -79,18 +79,22 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       text: `Mock AI response: I received "${userText}".`,
     })
   }
-  await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
-    attachments: getComposerAttachments(state),
-    authAccessToken: getAuthAccessToken(state),
-    backendUrl: getBackendUrl(state),
-    id: crypto.randomUUID(),
-    modelId: coordinatorModelId,
-    openAiKey: openApiApiKey || '',
-    requestId: crypto.randomUUID(),
-    role: 'user',
-    sessionId: actualSessionId,
-    systemPrompt: systemPrompt,
-    text: userText,
-    useOwnBackend: useOwnBackendEnabled(state),
-  })
+  try {
+    await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
+      attachments: getComposerAttachments(state),
+      authAccessToken: getAuthAccessToken(state),
+      backendUrl: getBackendUrl(state),
+      id: crypto.randomUUID(),
+      modelId: coordinatorModelId,
+      openAiKey: openApiApiKey || '',
+      requestId: crypto.randomUUID(),
+      role: 'user',
+      sessionId: actualSessionId,
+      systemPrompt: systemPrompt,
+      text: userText,
+      useOwnBackend: useOwnBackendEnabled(state),
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
