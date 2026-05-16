@@ -1,9 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { openApiApiKeyRequiredMessage } from '../ChatStrings/ChatStrings.ts'
-import { getAiResponse } from '../GetAiResponse/GetAiResponse.ts'
-import { parseAndStoreMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { setOpenApiApiKey } from '../SetOpenApiApiKey/SetOpenApiApiKey.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -44,61 +41,9 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     return updatedState
   }
 
+  // @ts-ignore
   const retryMessages = selectedMessages.slice(0, -1)
 
-  const assistantMessage = await getAiResponse({
-    agentMode: updatedState.agentMode,
-    assetDir: updatedState.assetDir,
-    maxToolCalls: updatedState.maxToolCalls,
-    messages: retryMessages,
-    mockAiResponseDelay: updatedState.mockAiResponseDelay,
-    mockApiCommandId: updatedState.mockApiCommandId,
-    models: updatedState.models,
-    nextMessageId: updatedState.nextMessageId,
-    openApiApiBaseUrl: updatedState.openApiApiBaseUrl,
-    openApiApiKey: updatedState.openApiApiKey,
-    openRouterApiBaseUrl: updatedState.openRouterApiBaseUrl,
-    openRouterApiKey: updatedState.openRouterApiKey,
-    platform: updatedState.platform,
-    selectedModelId: updatedState.selectedModelId,
-    streamingEnabled: updatedState.streamingEnabled,
-    systemPrompt: updatedState.systemPrompt,
-    useChatCoordinatorWorker: updatedState.useChatCoordinatorWorker,
-    useChatNetworkWorkerForRequests: updatedState.useChatNetworkWorkerForRequests,
-    useMockApi: updatedState.useMockApi,
-    useOwnBackend: updatedState.useOwnBackend,
-    userText: previousUserMessage.text,
-  })
-
-  const parsedMessages = await parseAndStoreMessageContent(updatedState.parsedMessages, assistantMessage)
-  const messages = [...selectedMessages.slice(0, -1), assistantMessage]
-
-  const updatedSession = {
-    ...session,
-    messages,
-    status: 'finished' as const,
-  }
-  const updatedSessionSummary = {
-    ...session,
-    messages: [],
-    status: 'finished' as const,
-  }
-
-  await saveChatSessionPreservingMessages(updatedSession, messages)
-
-  const updatedSessions = updatedState.sessions.map((item) => {
-    if (item.id !== updatedState.selectedSessionId) {
-      return item
-    }
-    return updatedSessionSummary
-  })
-
-  return {
-    ...updatedState,
-    messages,
-    nextMessageId: updatedState.nextMessageId + 1,
-    openApiApiKeyState: 'idle',
-    parsedMessages,
-    sessions: updatedSessions,
-  }
+  // TODO ask view-model to do it
+  return state
 }
