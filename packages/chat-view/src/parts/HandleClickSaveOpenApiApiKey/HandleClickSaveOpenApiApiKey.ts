@@ -41,6 +41,7 @@ export const handleClickSaveOpenApiApiKey = async (state: ChatState): Promise<Ch
     return updatedState
   }
 
+  // @ts-ignore
   const retryMessages = selectedMessages.slice(0, -1)
 
   // TODO ask view-model to do it
