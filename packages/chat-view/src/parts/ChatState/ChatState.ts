@@ -1,5 +1,6 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
@@ -77,6 +78,7 @@ export interface ChatState {
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly maxToolCalls: number
+  readonly messages: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number

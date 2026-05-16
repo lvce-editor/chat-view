@@ -719,7 +719,7 @@ test('handleClick should stop the selected in-progress session', async () => {
   expect(result.sessions[0]).toMatchObject({
     status: 'stopped',
   })
-  expect(result.sessions[0].messages[0]).toMatchObject({
+  expect(result.messages[0]).toMatchObject({
     inProgress: false,
     text: 'partial',
   })
@@ -784,9 +784,9 @@ test('handleClick should retry previous prompt after saving openrouter api key',
     const result = await HandleClick.handleClick(state, 'save-openrouter-api-key')
     expect(result.openRouterApiKey).toBe('or-key-999')
     expect(result.nextMessageId).toBe(4)
-    expect(result.sessions[0].messages).toHaveLength(2)
-    expect(result.sessions[0].messages[1].role).toBe('assistant')
-    expect(result.sessions[0].messages[1].text).toBe('Recovered OpenRouter response')
+    expect(result.messages).toHaveLength(2)
+    expect(result.messages[1].role).toBe('assistant')
+    expect(result.messages[1].text).toBe('Recovered OpenRouter response')
     expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openRouterApiKey': 'or-key-999' }]])
   } finally {
     globalThis.fetch = originalFetch
@@ -878,9 +878,9 @@ test('handleClick should retry previous prompt after saving openapi api key', as
     const result = await HandleClick.handleClick(state, 'save-openapi-api-key')
     expect(result.openApiApiKey).toBe('oa-key-999')
     expect(result.nextMessageId).toBe(4)
-    expect(result.sessions[0].messages).toHaveLength(2)
-    expect(result.sessions[0].messages[1].role).toBe('assistant')
-    expect(result.sessions[0].messages[1].text).toBe('Recovered OpenAI response')
+    expect(result.messages).toHaveLength(2)
+    expect(result.messages[1].role).toBe('assistant')
+    expect(result.messages[1].text).toBe('Recovered OpenAI response')
     expect(mockRpc.invocations).toEqual([['Chat.rerender'], ['Preferences.update', { 'secrets.openApiKey': 'oa-key-999' }]])
   } finally {
     globalThis.fetch = originalFetch

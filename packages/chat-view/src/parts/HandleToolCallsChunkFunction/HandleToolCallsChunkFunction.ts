@@ -22,21 +22,21 @@ export const handleToolCallsChunkFunction = async (
       previousState: liveState,
     }
   }
-  if (getChatSessionStatus(selectedSession) === 'stopped') {
+  if (getChatSessionStatus(selectedSession, liveState.messages) === 'stopped') {
     return {
       latestState: liveState,
       previousState: liveState,
     }
   }
-  const assistantMessage = getMessageById(selectedSession.messages, assistantMessageId)
+  const assistantMessage = getMessageById(liveState.messages, assistantMessageId)
   if (!assistantMessage) {
     return {
       latestState: liveState,
       previousState: liveState,
     }
   }
-  const updated = updateMessageToolCallsInSelectedSession(liveState.sessions, liveState.parsedMessages, sessionId, assistantMessageId, toolCalls)
-  const nextState = getNextHandleTextChunkState(liveState, updated.parsedMessages, updated.sessions)
+  const updated = updateMessageToolCallsInSelectedSession(liveState.messages, liveState.parsedMessages, assistantMessageId, toolCalls)
+  const nextState = getNextHandleTextChunkState(liveState, updated.messages, updated.parsedMessages, liveState.sessions)
   await setAndRerenderHandleTextChunkState(uid, liveState, nextState)
   return {
     latestState: nextState,

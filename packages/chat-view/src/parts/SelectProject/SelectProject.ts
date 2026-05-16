@@ -4,6 +4,7 @@ import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAtt
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const selectProject = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { selectedProjectId, selectedSessionId, sessions, viewMode, width } = state
@@ -16,6 +17,7 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       selectedProjectId: projectId,
       selectedSessionId: '',
       viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'list',
@@ -25,19 +27,22 @@ export const selectProject = async (state: ChatState, projectId: string): Promis
   const nextSelectedSessionId = currentSessionVisible ? selectedSessionId : visibleSessions[0].id
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== nextSelectedSessionId || !loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== nextSelectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    messages: loadedSession?.messages || [],
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
-    sessions: hydratedSessions,
+    sessions: nextSessions,
     viewMode: viewMode === 'chat-focus' ? 'chat-focus' : 'detail',
   })
 }

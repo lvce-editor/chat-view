@@ -24,6 +24,7 @@ const createState = (overrides: Partial<HandleClickBackState> = {}): HandleClick
     focus: 'composer',
     focused: true,
     lastNormalViewMode: 'detail',
+    messages: [],
     parsedMessages: [],
     projects: [{ id: 'project-1', name: 'Project 1', uri: 'file:///workspace' }],
     renamingSessionId: 'session-1',

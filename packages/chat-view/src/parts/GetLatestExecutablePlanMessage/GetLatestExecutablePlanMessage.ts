@@ -11,12 +11,15 @@ export const isExecutablePlanMessage = (message: ChatMessage): boolean => {
   )
 }
 
-export const getLatestExecutablePlanMessage = (session: ChatSession | undefined): ChatMessage | undefined => {
+export const getLatestExecutablePlanMessage = (
+  session: ChatSession | undefined,
+  messages: readonly ChatMessage[] = session?.messages || [],
+): ChatMessage | undefined => {
   if (!session) {
     return undefined
   }
-  for (let index = session.messages.length - 1; index >= 0; index--) {
-    const message = session.messages[index]
+  for (let index = messages.length - 1; index >= 0; index--) {
+    const message = messages[index]
     if (message.role !== 'assistant') {
       continue
     }

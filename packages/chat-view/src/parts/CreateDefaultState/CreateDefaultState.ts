@@ -93,6 +93,7 @@ export const createDefaultState = (): ChatState => {
     listItemHeight: 54,
     maxComposerRows: 5,
     maxToolCalls: defaultMaxToolCalls,
+    messages: [],
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 0,

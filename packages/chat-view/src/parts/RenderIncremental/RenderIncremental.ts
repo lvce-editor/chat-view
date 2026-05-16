@@ -4,11 +4,12 @@ import type { ChatState } from '../ChatState/ChatState.ts'
 import { renderItems } from '../RenderItems/RenderItems.ts'
 
 const getSelectedSessionToolCallSignature = (state: ChatState): string => {
-  const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
-  if (!selectedSession) {
+  if (!state.selectedSessionId) {
     return ''
   }
-  return selectedSession.messages.map((message) => `${message.id}:${JSON.stringify(message.toolCalls || [])}`).join('|')
+  const selectedSession = state.sessions.find((session) => session.id === state.selectedSessionId)
+  const selectedMessages = state.messages.length > 0 ? state.messages : selectedSession?.messages || []
+  return selectedMessages.map((message) => `${message.id}:${JSON.stringify(message.toolCalls || [])}`).join('|')
 }
 
 export const renderIncremental = (oldState: ChatState, newState: ChatState): any => {

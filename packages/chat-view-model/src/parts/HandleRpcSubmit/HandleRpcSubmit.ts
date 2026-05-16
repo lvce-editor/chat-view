@@ -52,6 +52,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     focus: 'composer',
     focused: true,
     lastSubmittedSessionId: actualSessionId,
+    messages: shouldCreateNewSession ? [] : state.messages,
     selectedSessionId: actualSessionId,
     sessions: newSessions,
     viewMode: 'detail',

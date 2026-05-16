@@ -54,13 +54,12 @@ const toMessages = (events: readonly any[]): readonly any[] => {
   return messages
 }
 
-const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): readonly any[] => {
-  // TODO store messages independent of sessions
+const getNewSessions = (state: PrototypeStateBase): readonly any[] => {
   const newSessions = state.sessions.map((session) => {
     if (session.id === state.selectedSessionId) {
       return {
         ...session,
-        messages,
+        messages: [],
       }
     }
     return session
@@ -69,7 +68,7 @@ const getNewSessions = (state: PrototypeStateBase, messages: readonly any[]): re
     return [
       {
         id: state.selectedSessionId,
-        messages,
+        messages: [],
       },
     ]
   }
@@ -83,10 +82,10 @@ const handleStorageUpdateDetailMode = async (state: PrototypeStateBase): Promise
   const messages = toMessages(events)
 
   const parsedMessages = await parseAndStoreMessagesContent([], messages)
-  // TODO store messages independent of sessions
-  const newSessions = getNewSessions(state, messages)
+  const newSessions = getNewSessions(state)
   return {
     ...state,
+    messages,
     parsedMessages,
     sessions: newSessions,
   }
