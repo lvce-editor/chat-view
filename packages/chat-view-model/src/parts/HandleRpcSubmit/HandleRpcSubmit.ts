@@ -6,6 +6,7 @@ import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
 import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
 import { getBackendUrl } from './GetBackendUrl/GetBackendUrl.ts'
+import { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
 import { getComposerAttachments } from './GetComposerAttachments/GetComposerAttachments.ts'
 import { getCoordinatorModelId } from './GetCoordinatorModelId/GetCoordinatorModelId.ts'
 import { getNextChatInputHistory } from './GetNextChatInputHistory/GetNextChatInputHistory.ts'
@@ -14,12 +15,14 @@ import { useOwnBackendEnabled } from './UseOwnBackendEnabled/UseOwnBackendEnable
 
 // const handleSubmitWithExistingSession
 
+const defaultMaxToolCalls = 100
+
 const getNewSessionTitle = (userText: string): string => {
   return userText.slice(0, 30)
 }
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, sessions, systemPrompt, uid, viewMode } = state
+  const { agentMode = 'agent', chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, sessions, systemPrompt, toolEnablement, uid, viewMode } = state
   const userText = composerValue.trim()
   if (!userText) {
     return
@@ -74,6 +77,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   setState(uid, effectiveState)
   const coordinatorModelId = getCoordinatorModelId(state)
+  const tools = await getBasicChatTools(agentMode, toolEnablement)
   if (selectedModelId === 'test' && !useMockApiEnabled(state)) {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
       text: `Mock AI response: I received "${userText}".`,
@@ -86,12 +90,14 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       backendUrl: getBackendUrl(state),
       id: crypto.randomUUID(),
       modelId: coordinatorModelId,
+      maxToolCalls: defaultMaxToolCalls,
       openAiKey: openApiApiKey || '',
       requestId: crypto.randomUUID(),
       role: 'user',
       sessionId: actualSessionId,
       systemPrompt: systemPrompt,
       text: userText,
+      tools,
       useOwnBackend: useOwnBackendEnabled(state),
     })
   } catch (error) {
