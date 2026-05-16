@@ -1,7 +1,9 @@
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
+import { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
 import { setState } from '../ModelState/ModelState.ts'
+import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
 import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
@@ -14,12 +16,28 @@ import { useOwnBackendEnabled } from './UseOwnBackendEnabled/UseOwnBackendEnable
 
 // const handleSubmitWithExistingSession
 
+const defaultMaxToolCalls = 100
+
 const getNewSessionTitle = (userText: string): string => {
   return userText.slice(0, 30)
 }
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
-  const { chatInputHistory, composerValue, openApiApiKey, selectedModelId, selectedSessionId, sessions, systemPrompt, uid, viewMode } = state
+  const {
+    agentMode = 'agent',
+    chatInputHistory,
+    composerValue,
+    openApiApiKey,
+    selectedModelId,
+    selectedSessionId,
+    sessions,
+    systemPrompt,
+    toolEnablement,
+    uid,
+    viewMode,
+  } = state
+  const effectiveAgentMode = agentMode === 'plan' ? 'plan' : 'agent'
+  const effectiveToolEnablement = parseToolEnablement(toolEnablement)
   const userText = composerValue.trim()
   if (!userText) {
     return
@@ -74,6 +92,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
 
   setState(uid, effectiveState)
   const coordinatorModelId = getCoordinatorModelId(state)
+  const tools = await getBasicChatTools(effectiveAgentMode, effectiveToolEnablement)
   if (selectedModelId === 'test' && !useMockApiEnabled(state)) {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.registerMockResponse', {
       text: `Mock AI response: I received "${userText}".`,
@@ -85,6 +104,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       authAccessToken: getAuthAccessToken(state),
       backendUrl: getBackendUrl(state),
       id: crypto.randomUUID(),
+      maxToolCalls: defaultMaxToolCalls,
       modelId: coordinatorModelId,
       openAiKey: openApiApiKey || '',
       requestId: crypto.randomUUID(),
@@ -92,6 +112,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
       sessionId: actualSessionId,
       systemPrompt: systemPrompt,
       text: userText,
+      tools,
       useOwnBackend: useOwnBackendEnabled(state),
     })
   } catch (error) {
