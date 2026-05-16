@@ -8,6 +8,7 @@ import { resetRelativeTimeNowForTest } from '../RelativeTimeNow/RelativeTimeNow.
 export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   resetRelativeTimeNowForTest()
+  const selectedModelId = state.models[0]?.id || ''
   return {
     ...state,
     agentMode: defaultAgentMode,
@@ -32,7 +33,7 @@ export const reset = async (state: ChatState): Promise<ChatState> => {
     openRouterApiKeyInput: '',
     reasoningEffortPickerOpen: false,
     runModePickerOpen: false,
-    selectedModelId: 'test',
+    selectedModelId,
     selectedSessionId: '',
     sessions: [],
     streamingEnabled: false,

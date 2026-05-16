@@ -3,7 +3,15 @@ import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lv
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { getDefaultModels } from '../src/parts/GetDefaultModels/GetDefaultModels.ts'
 import { loadContent, type LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
+
+const defaultModels = getDefaultModels({
+  anthropic: false,
+  builtin: true,
+  openai: true,
+  test: true,
+})
 
 const createState = (): LoadContentState => {
   return {
@@ -55,10 +63,7 @@ const createState = (): LoadContentState => {
     modelPickerListScrollTop: 0,
     modelPickerOpen: true,
     modelPickerSearchValue: 'draft',
-    models: [
-      { id: 'model-1', name: 'Model 1' },
-      { id: 'model-2', name: 'Model 2' },
-    ],
+    models: defaultModels,
     openApiApiKey: '',
     openApiApiKeyInput: '',
     openApiApiKeyInputPattern: '.*',
@@ -87,7 +92,7 @@ const createState = (): LoadContentState => {
     searchFieldVisible: true,
     searchValue: 'draft',
     selectChevronEnabled: true,
-    selectedModelId: 'model-1',
+    selectedModelId: 'builtin/gpt-5.4',
     selectedProjectId: 'project-1',
     selectedSessionId: 'session-1',
     sessions: [{ id: 'session-1', messages: [], title: 'Session 1' }],
@@ -196,6 +201,12 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
           return 'https://example.com'
         case 'chat.chatHistoryEnabled':
           return true
+        case 'chat.models.builtin':
+        case 'chat.models.openai':
+        case 'chat.models.test':
+          return true
+        case 'chat.models.anthropic':
+          return false
         case 'chat.toolEnablement':
           return { grep: true }
         case 'chat.useOwnBackend':
@@ -230,7 +241,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     projectListScrollTop: 16,
     projectSidebarWidth: 260,
     reasoningEffort: 'high' as const,
-    selectedModelId: 'model-2',
+    selectedModelId: 'openapi/gpt-5.4-mini',
     selectedProjectId: 'project-1',
     selectedSessionId: 'session-2',
     viewMode: 'detail' as const,
@@ -239,7 +250,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   const result = await loadContent(state, savedState)
 
   expect(result.selectedSessionId).toBe('session-2')
-  expect(result.selectedModelId).toBe('model-2')
+  expect(result.selectedModelId).toBe('openapi/gpt-5.4-mini')
   expect(result.composerValue).toBe('saved composer')
   expect(result.composerSelectionStart).toBe(2)
   expect(result.composerSelectionEnd).toBe(4)
@@ -249,10 +260,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   ])
   expect(result.messages).toEqual([{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }])
   expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
-  expect(result.visibleModels).toEqual([
-    { id: 'model-1', name: 'Model 1' },
-    { id: 'model-2', name: 'Model 2' },
-  ])
+  expect(result.visibleModels).toEqual(defaultModels)
   expect(result.composerAttachments).toEqual([
     {
       attachmentId: 'attachment-1',
@@ -337,6 +345,12 @@ test('loadContent parses normalized text from stored multi-part message content'
           return 'https://example.com'
         case 'chat.chatHistoryEnabled':
           return true
+        case 'chat.models.builtin':
+        case 'chat.models.openai':
+        case 'chat.models.test':
+          return true
+        case 'chat.models.anthropic':
+          return false
         case 'chat.toolEnablement':
           return { grep: true }
         case 'chat.useOwnBackend':
@@ -384,4 +398,71 @@ test('loadContent parses normalized text from stored multi-part message content'
     },
   ])
   expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello world' }])
+})
+
+test('loadContent should fall back to first enabled model when saved model is disabled', async () => {
+  const state = createState()
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      switch (key) {
+        case 'chat.authEnabled':
+        case 'chat.authUseRedirect':
+        case 'chatView.aiSessionTitleGenerationEnabled':
+        case 'chatView.composerDropEnabled':
+        case 'chatView.emitStreamingFunctionCallEvents':
+        case 'chatView.passIncludeObfuscation':
+        case 'chatView.reasoningPickerEnabled':
+        case 'chatView.runModePickerEnabled':
+        case 'chatView.scrollDownButtonEnabled':
+        case 'chatView.searchEnabled':
+        case 'chatView.showChatListTime':
+        case 'chatView.streamingEnabled':
+        case 'chatView.todoListToolEnabled':
+        case 'chatView.useAuthWorker':
+        case 'chatView.useChatCoordinatorWorker':
+        case 'chatView.useChatMathWorker':
+        case 'chatView.useChatNetworkWorkerForRequests':
+        case 'chatView.useChatToolWorker':
+        case 'chatView.voiceDictationEnabled':
+        case 'chat.models.builtin':
+          return true
+        case 'chat.backendUrl':
+          return 'https://example.com'
+        case 'chat.chatHistoryEnabled':
+          return true
+        case 'chat.models.openai':
+        case 'chat.models.anthropic':
+        case 'chat.models.test':
+          return false
+        case 'chat.toolEnablement':
+          return { grep: true }
+        case 'chat.useOwnBackend':
+          return false
+        case 'secrets.openApiKey':
+          return 'open-api-key'
+        case 'secrets.openRouterApiKey':
+          return 'open-router-key'
+        default:
+          return undefined
+      }
+    },
+  })
+  expect(mockRendererRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  expect(mockChatMessageParsingRpc).toBeDefined()
+  await saveChatSession({ id: 'session-1', messages: [], title: 'Session 1' })
+
+  const result = await loadContent(state, {
+    selectedModelId: 'openapi/gpt-5.4-mini',
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-1',
+    viewMode: 'detail' as const,
+  })
+
+  expect(result.models.map((model) => model.id)).toEqual(['builtin/gpt-5.4', 'builtin/gpt-4.1'])
+  expect(result.selectedModelId).toBe('builtin/gpt-5.4')
 })

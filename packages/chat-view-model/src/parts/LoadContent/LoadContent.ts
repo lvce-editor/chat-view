@@ -6,6 +6,7 @@ import { getChatSession, listChatSessions, subscribeSessionUpdates } from '../Ch
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
+import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
@@ -86,6 +87,10 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     chatHistoryEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
+    modelsAnthropicEnabled,
+    modelsBuiltinEnabled,
+    modelsOpenAiEnabled,
+    modelsTestEnabled,
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,
@@ -106,6 +111,12 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
+  const models = getDefaultModels({
+    anthropic: modelsAnthropicEnabled,
+    builtin: modelsBuiltinEnabled,
+    openai: modelsOpenAiEnabled,
+    test: modelsTestEnabled,
+  })
   const authState = getLoggedOutBackendAuthState()
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
@@ -125,8 +136,8 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
   const savedProjectExpandedIds = getSavedProjectExpandedIds(savedState)
   const projectExpandedIds = (savedProjectExpandedIds || state.projectExpandedIds).filter((id) => projects.some((project) => project.id === id))
   const reasoningEffort = getSavedReasoningEffort(savedState) ?? state.reasoningEffort
-  const selectedModelId = state.models.some((model) => model.id === preferredModelId) ? preferredModelId : state.models[0]?.id || ''
-  const visibleModels = getVisibleModels(state.models, '')
+  const selectedModelId = models.some((model) => model.id === preferredModelId) ? preferredModelId : models[0]?.id || ''
+  const visibleModels = getVisibleModels(models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
   const loadedSession = selectedSessionId ? await getChatSession(selectedSessionId) : undefined
@@ -162,6 +173,7 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     lastNormalViewMode,
     messages,
     messagesScrollTop,
+    models,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
