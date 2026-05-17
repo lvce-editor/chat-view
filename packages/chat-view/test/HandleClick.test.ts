@@ -924,9 +924,7 @@ test('handleClick should create pull request for completed background session', 
 })
 
 // eslint-disable-next-line jest/no-disabled-tests
-test.skip('handleClickList should open detail for session index from y coordinate', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
+test('handleClickList should delegate to chat-view-model', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     height: 400,
@@ -939,15 +937,22 @@ test.skip('handleClickList should open detail for session index from y coordinat
     x: 0,
     y: 0,
   }
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleClickList': async () => ({
+      ...state,
+      selectedSessionId: 'session-3',
+      viewMode: 'detail',
+    }),
+  })
+
   const result = await HandleClick.handleClickList(state, 8, 131)
-  expect(result.selectedSessionId).toBe('session-3')
-  expect(result.viewMode).toBe('detail')
+
+  expect(result).toBe(state)
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleClickList', state, 8, 131]])
 })
 
 // eslint-disable-next-line jest/no-disabled-tests
-test.skip('handleClickList should keep state when click index has no session', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
+test('handleClickList should return current renderer state after delegation', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     height: 120,
@@ -956,109 +961,16 @@ test.skip('handleClickList should keep state when click index has no session', a
     x: 10,
     y: 20,
   }
+  using mockRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleClickList': async () => ({
+      ...state,
+      focus: 'list',
+      focused: true,
+      listFocusedIndex: -1,
+    }),
+  })
+
   const result = await HandleClick.handleClickList(state, 10, 120)
-  expect(result).toEqual({
-    ...state,
-    focus: 'list',
-    focused: true,
-    listFocusedIndex: -1,
-  })
-})
-
-test('handleClickList should ignore clicks in header area', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    height: 300,
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-    ],
-    width: 300,
-    x: 100,
-    y: 200,
-  }
-  const result = await HandleClick.handleClickList(state, 120, 220)
-  expect(result).toEqual({
-    ...state,
-    focus: 'list',
-    focused: true,
-    listFocusedIndex: -1,
-  })
-})
-
-test('handleClickList should ignore clicks outside chat bounds', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    height: 300,
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-    ],
-    width: 300,
-    x: 100,
-    y: 200,
-  }
-  const result = await HandleClick.handleClickList(state, 99, 250)
-  expect(result).toEqual({
-    ...state,
-    focus: 'list',
-    focused: true,
-    listFocusedIndex: -1,
-  })
-})
-
-test('handleClickList should ignore clicks on the show more toggle row', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    focused: true,
-    height: 400,
-    selectedSessionId: 'session-1',
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-      { id: 'session-3', messages: [], title: 'Chat 3' },
-      { id: 'session-4', messages: [], title: 'Chat 4' },
-      { id: 'session-5', messages: [], title: 'Chat 5' },
-    ],
-    width: 300,
-    x: 100,
-    y: 200,
-  }
-  const result = await HandleClick.handleClickList(state, 120, 413)
-  expect(result.selectedSessionId).toBe('session-1')
-  expect(result.focus).toBe('list')
-  expect(result.focused).toBe(true)
-  expect(result.listFocusedIndex).toBe(-1)
-})
-
-test('handleClickList should select trailing sessions after the show more toggle row', async () => {
-  using mockChatStorageRpc = registerMockChatStorageRpc()
-  expect(mockChatStorageRpc).toBeDefined()
-  const state: ChatState = {
-    ...createDefaultState(),
-    chatListExpanded: true,
-    height: 500,
-    selectedSessionId: 'session-1',
-    sessions: [
-      { id: 'session-1', messages: [], title: 'Chat 1' },
-      { id: 'session-2', messages: [], title: 'Chat 2' },
-      { id: 'session-3', messages: [], title: 'Chat 3' },
-      { id: 'session-4', messages: [], title: 'Chat 4' },
-      { id: 'session-5', messages: [], title: 'Chat 5' },
-    ],
-    width: 300,
-    x: 100,
-    y: 200,
-  }
-  const result = await HandleClick.handleClickList(state, 120, 521)
-  expect(result.selectedSessionId).toBe('session-5')
-  expect(result.focus).toBe('list')
-  expect(result.focused).toBe(true)
-  expect(result.listFocusedIndex).toBe(4)
+  expect(result).toBe(state)
+  expect(mockRpc.invocations).toEqual([['ChatModel.handleClickList', state, 10, 120]])
 })
