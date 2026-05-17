@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.model-picker-has-expected-models'

@@ -27,6 +27,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, FileSyste
 
   // act
   await Command.execute('Layout.showSecondarySideBar')
+  await Chat.show()
 
   // assert
   await expect(chatListItems).toHaveCount(0)

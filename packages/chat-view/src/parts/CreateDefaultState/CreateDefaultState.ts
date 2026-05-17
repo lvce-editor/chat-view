@@ -30,8 +30,9 @@ export const createDefaultState = (): ChatState => {
   const responsivePickerVisibilityEnabled = true
   const models = getDefaultModels(defaultModelProviderSettings)
   const visibleModels = getVisibleModels(models, '')
-  const defaultModelId = models[0]?.id || ''
-  const defaultModelName = models[0]?.name || ''
+  const defaultModel = models.find((model) => model.id === 'test') || models[0]
+  const defaultModelId = defaultModel?.id || ''
+  const defaultModelName = defaultModel?.name || ''
   const baseState: ChatState = {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,

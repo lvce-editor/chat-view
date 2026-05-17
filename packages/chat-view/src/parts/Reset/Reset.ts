@@ -8,7 +8,7 @@ import { resetRelativeTimeNowForTest } from '../RelativeTimeNow/RelativeTimeNow.
 export const reset = async (state: ChatState): Promise<ChatState> => {
   await clearChatSessions()
   resetRelativeTimeNowForTest()
-  const selectedModelId = state.models[0]?.id || ''
+  const selectedModelId = state.models.find((model) => model.id === 'test')?.id || state.models[0]?.id || ''
   return {
     ...state,
     agentMode: defaultAgentMode,
