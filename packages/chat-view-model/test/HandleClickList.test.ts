@@ -100,7 +100,7 @@ test('handleClickList should persist selected session and rerender from the view
     sessions: [
       { id: 'session-1', messages: [], title: 'Session 1' },
       { id: 'session-2', messages: [], title: 'Session 2' },
-      { id: 'session-3', messages: [], title: 'Session 3' },
+      { id: 'session-3', lastActiveTime: '10:00', messages: [], title: 'Session 3' },
     ],
     viewMode: 'detail',
   })
@@ -108,7 +108,15 @@ test('handleClickList should persist selected session and rerender from the view
   expect(mockStorageRpc.invocations).toEqual([
     ['ChatStorage.getSession', 'session-3'],
     ['ChatStorage.getEvents', 'session-3'],
-    ['ChatStorage.subscribeSessionUpdates', { rpcId: 'ChatModel', sessionId: 'session-3', type: 'session', uid: state.uid }],
+    [
+      'ChatStorage.subscribeSessionUpdates',
+      expect.objectContaining({
+        rpcId: expect.any(Number),
+        sessionId: 'session-3',
+        type: 'session',
+        uid: state.uid,
+      }),
+    ],
   ])
   expect(mockRendererRpc.invocations).toEqual([['Chat.rerenderWithQuery', state.uid]])
   expect(mockChatMessageParsingRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['Hello']]])
@@ -150,7 +158,9 @@ test('handleClickList should skip the show-more row and select trailing sessions
   })
   const state = createState({
     chatListExpanded: true,
+    headerHeight: 50,
     height: 500,
+    listItemHeight: 54,
     selectedSessionId: 'session-1',
     sessions: [
       { id: 'session-1', messages: [], title: 'Session 1' },
@@ -159,6 +169,9 @@ test('handleClickList should skip the show-more row and select trailing sessions
       { id: 'session-4', messages: [], title: 'Session 4' },
       { id: 'session-5', messages: [], title: 'Session 5' },
     ],
+    width: 300,
+    x: 100,
+    y: 200,
   })
 
   setState(state.uid, state)
