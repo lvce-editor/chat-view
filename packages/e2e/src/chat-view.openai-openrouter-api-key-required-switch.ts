@@ -4,10 +4,11 @@ export const name = 'chat-view.openai-openrouter-api-key-required-switch'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
+  await Command.execute('Chat.setUseOwnBackend', false)
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.handleInput('hello from e2e')
 
