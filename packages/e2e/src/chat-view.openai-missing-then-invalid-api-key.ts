@@ -8,6 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.reset()
+  await Command.execute('Chat.setUseOwnBackend', false)
   await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
