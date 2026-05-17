@@ -12,6 +12,7 @@ import {
 } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
 import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
+import { defaultBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
@@ -42,7 +43,7 @@ export const createDefaultState = (): ChatState => {
     authEnabled: false,
     authErrorMessage: '',
     authUseRedirect: true,
-    backendUrl: '',
+    backendUrl: defaultBackendUrl,
     chatDebugLoggingEnabled: true,
     chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,
