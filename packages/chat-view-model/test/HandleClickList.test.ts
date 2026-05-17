@@ -4,7 +4,7 @@ import type { HandleClickListState } from '../src/parts/HandleClickList/HandleCl
 import { handleClickList } from '../src/parts/HandleClickList/HandleClickList.ts'
 import { getState, setState } from '../src/parts/ModelState/ModelState.ts'
 
-const createState = (overrides: Partial<HandleClickListState> = {}): HandleClickListState => {
+const createState = (overrides: Readonly<Partial<HandleClickListState>> = {}): HandleClickListState => {
   return {
     chatInputHistory: [],
     chatInputHistoryIndex: -1,
