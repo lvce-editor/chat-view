@@ -4,7 +4,7 @@ export const name = 'chat-view.two-messages-and-open-debug-payload'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -19,14 +19,25 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
   await expect(firstMessage).toHaveText('hello from e2e')
   const secondMessage = messages.nth(1)
   await expect(secondMessage).toHaveText('Mock AI response: I received "hello from e2e".')
+  await Chat.openDebugView()
+  await ChatDebug.selectEventRow(1)
 
   // act
-  await Chat.openDebugView()
+  await ChatDebug.openTabPayload()
 
   // assert
+  const payload = Locator('.ChatDebugViewDetailsBottom .EditorRows')
 
-  await ChatDebug.selectEventRow(1)
-  await ChatDebug.openTabPayload()
+  await Command.execute('ChatDebug.shouldHavePayload', {
+    input: [
+      {
+        content:
+          'You are an AI programming assistant running inside a code editor.\n\nUse available project context to provide accurate, practical coding help.\n\nPrefer using available tools to inspect and modify files in the current workspace.\nWhen asked to create or update code, read relevant files first and apply changes directly in files instead of only pasting raw code in chat.\nOnly provide raw code snippets when explicitly requested or when file editing tools are unavailable.\nWhen mentioning inline commands, file names, identifiers, or short code fragments in responses, wrap them in markdown backticks, for example `nvm install 24.14.1`.\nWhen displaying code blocks in responses, use markdown triple backticks (```) fences.\nWhen referencing workspace files in responses (including "files added/changed" lists), use markdown links so users can click them.\nPrefer file links like [src/index.ts]({{workspaceUri}}/src/index.ts) and avoid plain text file paths when a link is appropriate.\n\nEnvironment:\n- Editor: LVCE Chat View\n- Current workspace URI: {{workspaceUri}}',
+        role: 'system',
+      },
+      { content: [{ text: 'hello from e2e', type: 'input_text' }], role: 'user' },
+    ],
+  })
   // TODO verify items are visible
   // const rows = Locator('.TableBody .TableRow')
   // await expect(rows).toHaveCount(4)
