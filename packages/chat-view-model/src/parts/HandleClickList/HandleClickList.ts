@@ -119,8 +119,7 @@ export const handleClickList = async (state: HandleClickListState, eventX: numbe
   const listIndex = getListIndex(state, eventX, eventY)
   const visibleSessions = getVisibleSessions(state.sessions, state.selectedProjectId)
   const sessionIndex = getSessionIndexFromListIndex(listIndex, visibleSessions.length, state.chatListExpanded)
-  const nextState =
-    sessionIndex === -1 ? getListFocusState(state) : await selectSessionFromList(state, sessionIndex)
+  const nextState = sessionIndex === -1 ? getListFocusState(state) : await selectSessionFromList(state, sessionIndex)
   setState(state.uid, nextState)
   if (sessionIndex !== -1) {
     await ensureSubscribed(state.uid, nextState.selectedSessionId)
