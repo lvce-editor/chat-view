@@ -8,6 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
+  await Command.execute('Chat.setUseOwnBackend', false)
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.handleInput('hello from e2e')
   await Chat.handleSubmit()

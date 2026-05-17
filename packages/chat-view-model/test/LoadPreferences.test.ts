@@ -24,6 +24,7 @@ test('loadPreferences enables useOwnBackend by default', async () => {
 
   const result = await loadPreferences()
   expect(result.useOwnBackend).toBe(true)
+<<<<<<< HEAD
   expect(result.backendUrl).toBe('https://lvce-editor.dev')
 })
 
@@ -39,6 +40,8 @@ test('loadPreferences keeps explicit backendUrl preference', async () => {
 
   const result = await loadPreferences()
   expect(result.backendUrl).toBe('https://example.com')
+=======
+>>>>>>> origin/main
 })
 
 test('loadPreferences keeps explicit useOwnBackend disablement', async () => {
