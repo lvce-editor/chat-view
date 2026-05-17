@@ -113,7 +113,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     getBooleanPreference('chatView.useChatNetworkWorkerForRequests', false),
     getBooleanPreference('chatView.useChatToolWorker', true),
     getBooleanPreference('chatView.useAuthWorker', false),
-    getBooleanPreference('chat.useOwnBackend', false),
+    getBooleanPreference('chat.useOwnBackend', true),
     getBooleanPreference('chatView.voiceDictationEnabled', false),
   ])
 

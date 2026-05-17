@@ -188,7 +188,7 @@ export const createDefaultState = (): ChatState => {
     useChatToolWorker: true,
     useMockApi: false,
     useModelWorker: false,
-    useOwnBackend: false,
+    useOwnBackend: true,
     userName: '',
     userState: 'loggedOut',
     userSubscriptionPlan: '',
