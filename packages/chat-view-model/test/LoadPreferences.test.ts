@@ -3,7 +3,7 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import { loadPreferences } from '../src/parts/LoadPreferences/LoadPreferences.ts'
 
 test('loadPreferences enables useOwnBackend by default', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
+  using _ = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       switch (key) {
         case 'chat.chatHistoryEnabled':
@@ -27,7 +27,7 @@ test('loadPreferences enables useOwnBackend by default', async () => {
 })
 
 test('loadPreferences keeps explicit useOwnBackend disablement', async () => {
-  using mockRpc = RendererWorker.registerMockRpc({
+  using _ = RendererWorker.registerMockRpc({
     'Preferences.get': async (key: string) => {
       if (key === 'chat.useOwnBackend') {
         return false
