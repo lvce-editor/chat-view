@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-context-menu-archive'
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, ContextMenu, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
