@@ -10,7 +10,6 @@ const assert = (condition: unknown, message: string): void => {
 
 export const skip = 1
 
-
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const folderName = 'relative-folder'
