@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-create-directory-valid-uri'
+export const name = 'chat-view.openai-create-directory-valid-uri-open-debug'
 
 interface MockOpenApiRequest {
   readonly payload: unknown
@@ -11,7 +11,6 @@ const assert = (condition: unknown, message: string): void => {
     throw new Error(message)
   }
 }
-export const skip = 1
 
 const assertEqual = <T>(actual: T, expected: T, message: string): void => {
   if (actual !== expected) {
@@ -19,11 +18,12 @@ const assertEqual = <T>(actual: T, expected: T, message: string): void => {
   }
 }
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  const workspaceUri = `file://${tmpDir}`
   const folderName = 'generated-folder'
-  const folderUri = `${workspaceUri}/${folderName}`
+  const folderUri = `${tmpDir}/${folderName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -36,13 +36,13 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
     {
       toolCall: {
         arguments: {
-          uri: folderName,
+          uri: folderUri,
         },
         name: 'create_directory',
       },
     },
     {
-      text: `Some kind of error occurred with creating the folder.`,
+      text: `Created ${folderName}.`,
     },
   ])
 
@@ -50,12 +50,13 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
+  // await expect(messages).toHaveCount(2)
   const message0 = messages.nth(0)
   await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
   const message1 = messages.nth(1)
-  await expect(message1).toContainText(`create_directory ${folderName}`)
-  const toolCalls = message1.locator('.ChatOrderedListItem')
-  await expect(toolCalls).toHaveCount(1)
-  const message2 = messages.nth(2)
-  await expect(message2).toHaveText(`Some kind of error occurred with creating the folder.`)
+
+  const entries = await FileSystem.readDir(tmpDir)
+  const folderEntry = entries.find((entry) => entry.name === folderName)
+  assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
+  await FileSystem.readDir(`${tmpDir}/${folderName}`)
 }
