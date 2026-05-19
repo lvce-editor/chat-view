@@ -19,8 +19,6 @@ export const mockOpenApiSetResponse = async (state: ChatState, body: unknown): P
       MockOpenApiStream.finish(requestId)
     }
   }
-  for (const response of responses) {
-    await ChatCoordinatorWorker.invoke('ChatCoordinator.mockOpenApiSetResponse', response)
-  }
+  await ChatCoordinatorWorker.invoke('ChatCoordinator.mockOpenApiSetResponse', body)
   return state
 }
