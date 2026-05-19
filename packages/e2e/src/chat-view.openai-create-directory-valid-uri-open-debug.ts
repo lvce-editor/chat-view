@@ -25,7 +25,6 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const folderName = 'generated-folder'
   const folderUri = `${tmpDir}/${folderName}`
 
-
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -60,8 +59,4 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const folderEntry = entries.find((entry) => entry.name === folderName)
   assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
   await FileSystem.readDir(`${tmpDir}/${folderName}`)
-
-
-
-
 }
