@@ -54,10 +54,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
   const message1 = messages.nth(2)
 
-
   const entries = await FileSystem.readDir(tmpDir)
   const folderEntry = entries.find((entry) => entry.name === folderName)
   assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
   await FileSystem.readDir(`${tmpDir}/${folderName}`)
-
 }
