@@ -64,6 +64,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   await ChatDebug.openTabPayload()
+  // @ts-ignore
   await ChatDebug.shouldHavePayload({
     input: [
       {
