@@ -6,7 +6,7 @@ import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiSt
 
 test('mockOpenApiSetResponse should queue a structured mock response and delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiSetResponse': async () => {},
+    'ChatCoordinator.mockOpenApiSetResponse': async () => { },
   })
   const state = createDefaultState()
   const responseBody = {
