@@ -6,9 +6,7 @@ import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiSt
 
 test('mockOpenApiSetResponse should queue a structured mock response and delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamFinish': async () => { },
-    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => { },
-    'ChatCoordinator.mockOpenApiStreamReset': async () => { },
+    'ChatCoordinator.mockOpenApiSetResponse': async () => {},
   })
   const state = createDefaultState()
   const responseBody = {
@@ -27,9 +25,5 @@ test('mockOpenApiSetResponse should queue a structured mock response and delegat
   expect(requestId).toBe('default')
   await expect(MockOpenApiStream.readNextChunk(requestId)).resolves.toBe(JSON.stringify(responseBody))
   await expect(MockOpenApiStream.readNextChunk(requestId)).resolves.toBeUndefined()
-  expect(mockRpc.invocations).toEqual([
-    ['ChatCoordinator.mockOpenApiStreamReset'],
-    ['ChatCoordinator.mockOpenApiStreamPushChunk', JSON.stringify(responseBody)],
-    ['ChatCoordinator.mockOpenApiStreamFinish'],
-  ])
+  expect(mockRpc.invocations).toEqual([['ChatCoordinator.mockOpenApiSetResponse', responseBody]])
 })
