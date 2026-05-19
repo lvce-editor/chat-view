@@ -54,10 +54,16 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   const message0 = messages.nth(0)
   await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
   const message1 = messages.nth(1)
+  await expect(message1).toContainText(`create_directory ${folderName}`)
+  const toolCalls = message1.locator('.ChatOrderedListItem')
+  await expect(toolCalls).toHaveCount(1)
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText(`Created ${folderName}.`)
+
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
-  await ChatDebug.openTabPayload(2)
-  await ChatDebug.shouldHavePayload({
+  await ChatDebug.openTabPayload()
+  await Command.execute('ChatDebug.shouldHavePayload', {
     input: [
       {
         content:
@@ -86,10 +92,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       },
     ],
   })
-  // await expect(messages).toHaveCount(2)
-  const message0 = messages.nth(0)
-  await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
-  const message1 = messages.nth(1)
 
   const entries = await FileSystem.readDir(tmpDir)
   const folderEntry = entries.find((entry) => entry.name === folderName)
