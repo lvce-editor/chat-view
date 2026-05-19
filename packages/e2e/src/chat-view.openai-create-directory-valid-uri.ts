@@ -83,6 +83,9 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   assertEqual(secondPayload.input.length, 1, 'second request input length')
   assertEqual(secondPayload.input[0].type, 'function_call_output', 'second request first input type')
   assert(secondPayload.input[0].call_id, 'Expected second request first call id to be set')
-  assert(secondPayload.input[0].output.includes('"name":"create_directory"'), 'Expected second request output to include create_directory tool result')
+  assert(
+    secondPayload.input[0].output.includes('"name":"create_directory"'),
+    'Expected second request output to include create_directory tool result',
+  )
   assert(secondPayload.input[0].output.includes(folderUri), 'Expected second request output to include created folder URI')
 }
