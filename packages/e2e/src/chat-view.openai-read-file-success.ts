@@ -1,13 +1,15 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-read-file-error'
+export const name = 'chat-view.openai-read-file-success'
 
 export const skip = 1
 
+
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  const missingPath = 'does-not-exist.txt'
-  const errorMessage = `File not found: ${missingPath}`
+  const fileName = 'notes.txt'
+  const fileContent = 'alpha line\nbeta line\n'
+  await FileSystem.writeFile(`${tmpDir}/${fileName}`, fileContent)
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -24,7 +26,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
       object: 'response',
       output: [
         {
-          arguments: JSON.stringify({ path: missingPath }),
+          arguments: JSON.stringify({ path: fileName }),
           call_id: 'call_01',
           id: 'fc_01',
           name: 'read_file',
@@ -45,7 +47,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
         {
           content: [
             {
-              text: 'I could not read that file because it does not exist in the workspace.',
+              text: 'The first line is "alpha line" and the file has two lines of text.',
               type: 'output_text',
             },
           ],
@@ -60,16 +62,14 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   )
   await Chat.mockOpenApiStreamFinish()
 
-  await Chat.handleInput('whats the contents of the missing file')
+  await Chat.handleInput('Read notes.txt and tell me the first line.')
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
-  await expect(messages).toHaveCount(3)
+  await expect(messages).toHaveCount(2)
   const message0 = messages.nth(0)
-  await expect(message0).toHaveText('whats the contents of the missing file')
+  await expect(message0).toHaveText('Read notes.txt and tell me the first line.')
   const message1 = messages.nth(1)
-  await expect(message1).toContainText(`read_file ${missingPath}`)
-  await expect(message1).toContainText(`(error: ${errorMessage})`)
-  const message2 = messages.nth(2)
-  await expect(message2).toHaveText('I could not read that file because it does not exist in the workspace.')
+  await expect(message1).toContainText(`read_file ${fileName}`)
+  await expect(message1).toContainText('The first line is "alpha line" and the file has two lines of text.')
 }
