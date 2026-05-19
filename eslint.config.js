@@ -37,6 +37,7 @@ export default [
     rules: {
       '@typescript-eslint/no-unnecessary-type-assertion': 'off',
       'sonarjs/no-dead-store': 'off',
+      'unicorn/empty-brace-spaces': 'off',
     },
   },
   {
