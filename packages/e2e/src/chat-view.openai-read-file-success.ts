@@ -4,7 +4,6 @@ export const name = 'chat-view.openai-read-file-success'
 
 export const skip = 1
 
-
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'notes.txt'
