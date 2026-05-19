@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-create-directory-valid-uri-open-debug'
+export const name = 'chat-view.openai-create-directory-valid-uri'
 
 interface MockOpenApiRequest {
   readonly payload: unknown
@@ -23,8 +23,9 @@ export const skip = 1
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
+  const workspaceUri = `file://${tmpDir}`
   const folderName = 'generated-folder'
-  const folderUri = `${tmpDir}/${folderName}`
+  const folderUri = `${workspaceUri}/${folderName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -37,13 +38,13 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          uri: folderUri,
+          uri: folderName,
         },
         name: 'create_directory',
       },
     },
     {
-      text: `Created ${folderName}.`,
+      text: `Some kind of error occurred with creating the folder.`,
     },
   ])
 
@@ -54,9 +55,16 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   const message0 = messages.nth(0)
   await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
   const message1 = messages.nth(1)
+  await expect(message1).toContainText(`create_directory ${folderName}`)
+  const toolCalls = message1.locator('.ChatOrderedListItem')
+  await expect(toolCalls).toHaveCount(1)
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText(`Some kind of error occurred with creating the folder.`)
+
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
-  await ChatDebug.openTabPayload(2)
+  await ChatDebug.openTabPayload()
+  // @ts-ignore
   await ChatDebug.shouldHavePayload({
     input: [
       {
@@ -74,25 +82,16 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
         role: 'user',
       },
       {
-        arguments: '{"uri":"memfs:///workspace/generated-folder"}',
-        call_id: 'call_2c669eff2b669d6c2e66a225',
+        arguments: '{"uri":"generated-folder"}',
+        call_id: 'call_ee15e4f2ef15e685ec15e1cc',
         name: 'create_directory',
         type: 'function_call',
       },
       {
-        call_id: 'call_2c669eff2b669d6c2e66a225',
-        output: '{"ok":true}',
+        call_id: 'call_ee15e4f2ef15e685ec15e1cc',
+        output: '{"error":"Invalid argument: uri must be an absolute URI."}',
         type: 'function_call_output',
       },
     ],
   })
-  // await expect(messages).toHaveCount(2)
-  const message0 = messages.nth(0)
-  await expect(message0).toHaveText(`Create the ${folderName} directory in the workspace`)
-  const message1 = messages.nth(1)
-
-  const entries = await FileSystem.readDir(tmpDir)
-  const folderEntry = entries.find((entry) => entry.name === folderName)
-  assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
-  await FileSystem.readDir(`${tmpDir}/${folderName}`)
 }
