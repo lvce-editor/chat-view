@@ -1,14 +1,14 @@
 import { expect, test } from '@jest/globals'
 import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
-import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 import { mockOpenApiSetResponse } from '../src/parts/MockOpenApiSetResponse/MockOpenApiSetResponse.ts'
+import * as MockOpenApiStream from '../src/parts/MockOpenApiStream/MockOpenApiStream.ts'
 
 test('mockOpenApiSetResponse should queue a structured mock response and delegate to chat coordinator worker', async () => {
   using mockRpc = ChatCoordinatorWorker.registerMockRpc({
-    'ChatCoordinator.mockOpenApiStreamFinish': async () => {},
-    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => {},
-    'ChatCoordinator.mockOpenApiStreamReset': async () => {},
+    'ChatCoordinator.mockOpenApiStreamFinish': async () => { },
+    'ChatCoordinator.mockOpenApiStreamPushChunk': async () => { },
+    'ChatCoordinator.mockOpenApiStreamReset': async () => { },
   })
   const state = createDefaultState()
   const responseBody = {

@@ -84,9 +84,9 @@ import * as MockBackendSetHttpErrorResponse from '../MockBackendSetHttpErrorResp
 import * as MockBackendSetResponse from '../MockBackendSetResponse/MockBackendSetResponse.ts'
 import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenApiRequestGetAll.ts'
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
-import * as MockOpenApiSetResponse from '../MockOpenApiSetResponse/MockOpenApiSetResponse.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
 import * as MockOpenApiSetRequestFailedResponse from '../MockOpenApiSetRequestFailedResponse/MockOpenApiSetRequestFailedResponse.ts'
+import * as MockOpenApiSetResponse from '../MockOpenApiSetResponse/MockOpenApiSetResponse.ts'
 import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
@@ -237,9 +237,9 @@ export const commandMap = {
   'Chat.mockBackendSetResponse': wrapCommand(MockBackendSetResponse.mockBackendSetResponse),
   'Chat.mockOpenApiRequestGetAll': wrapGetter(MockOpenApiRequestGetAll.mockOpenApiRequestGetAll),
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
-  'Chat.mockOpenApiSetResponse': wrapCommand(MockOpenApiSetResponse.mockOpenApiSetResponse),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
   'Chat.mockOpenApiSetRequestFailedResponse': wrapCommand(MockOpenApiSetRequestFailedResponse.mockOpenApiSetRequestFailedResponse),
+  'Chat.mockOpenApiSetResponse': wrapCommand(MockOpenApiSetResponse.mockOpenApiSetResponse),
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
