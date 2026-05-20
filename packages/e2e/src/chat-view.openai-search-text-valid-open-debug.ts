@@ -88,15 +88,20 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
         role: 'user',
       },
       {
-        arguments: '{"exclude":[],"isRegex":false,"matchCase":false,"matchWholeWord":false,"uri":"memfs:///workspace","value":"abc"}',
-        call_id: 'call_f313de01f213dc6ef113dadb',
+        arguments: '{"options":{"exclude":[],"isRegex":false,"matchCase":false,"matchWholeWord":false,"value":"abc"},"uri":"memfs:///workspace"}',
+        call_id: 'call_484e085b474e06c84a4e0b81',
         name: 'search_text',
         type: 'function_call',
       },
       {
-        call_id: 'call_f313de01f213dc6ef113dadb',
-        output:
-          '{"error":"Invalid argument: options must include value (string), isRegex (boolean), matchCase (boolean), machWholeWord (boolean), and exclude (string[])."}',
+        call_id: 'call_484e085b474e06c84a4e0b81',
+        output: JSON.stringify({
+          options: { exclude: [], isRegex: false, matchCase: false, matchWholeWord: false, value: 'abc' },
+          results: [
+            { column: 12, line: 5, text: 'Mock match for "abc" in src/main.ts', uri: 'file:///workspace/src/main.ts' },
+            { column: 3, line: 18, text: 'Mock match for "abc" in src/utils/search.ts', uri: 'file:///workspace/src/utils/search.ts' },
+          ],
+        }),
         type: 'function_call_output',
       },
     ],
