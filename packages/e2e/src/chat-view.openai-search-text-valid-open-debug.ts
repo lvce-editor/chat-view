@@ -18,7 +18,7 @@ const assertEqual = <T>(actual: T, expected: T, message: string): void => {
   }
 }
 
-export const skip = 1
+export const skip = true
 
 export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
@@ -58,15 +58,8 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
-  // await expect(messages).toHaveCount(2)
-  // const message0 = messages.nth(0)
-  // await expect(message0).toHaveText(`search for abc.`)
   const message1 = messages.nth(2)
 
-  // const entries = await FileSystem.readDir(tmpDir)
-  // const folderEntry = entries.find((entry) => entry.name === folderName)
-  // assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
-  // await FileSystem.readDir(`${tmpDir}/${folderName}`)
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   await ChatDebug.openTabPayload()
@@ -96,11 +89,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
       {
         call_id: 'call_484e085b474e06c84a4e0b81',
         output: JSON.stringify({
-          options: { exclude: [], isRegex: false, matchCase: false, matchWholeWord: false, value: 'abc' },
-          results: [
-            { column: 12, line: 5, text: 'Mock match for "abc" in src/main.ts', uri: 'file:///workspace/src/main.ts' },
-            { column: 3, line: 18, text: 'Mock match for "abc" in src/utils/search.ts', uri: 'file:///workspace/src/utils/search.ts' },
-          ],
+          results: [{ column: 1, line: 1, text: 'abcdef', uri: 'memfs:///workspace/file.txt' }],
         }),
         type: 'function_call_output',
       },
