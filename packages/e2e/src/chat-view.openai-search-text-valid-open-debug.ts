@@ -37,12 +37,14 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          exclude: [],
-          isRegex: false,
-          matchCase: false,
-          matchWholeWord: false,
+          options: {
+            exclude: [],
+            isRegex: false,
+            matchCase: false,
+            matchWholeWord: false,
+            value: 'abc',
+          },
           uri: tmpDir,
-          value: 'abc',
         },
         name: 'search_text',
       },
