@@ -20,7 +20,7 @@ const assertEqual = <T>(actual: T, expected: T, message: string): void => {
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command,  FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const folderName = 'generated-folder'
