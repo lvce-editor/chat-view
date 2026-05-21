@@ -7,7 +7,6 @@ export const skip = true
 export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
-  const folderName = 'generated-folder'
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -33,8 +32,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
 
   await Chat.handleInput(`search for abc in the workspace`)
   await Chat.handleSubmit()
-
-  const messages = Locator('.ChatMessages .Message')
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)

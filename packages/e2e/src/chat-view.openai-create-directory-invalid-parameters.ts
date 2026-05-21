@@ -5,7 +5,6 @@ export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  const workspaceUri = `file://${tmpDir}`
   const folderName = 'generated-folder'
 
   await Workspace.setPath(tmpDir)
