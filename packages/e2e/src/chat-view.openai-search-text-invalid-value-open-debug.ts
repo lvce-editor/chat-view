@@ -38,7 +38,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
       toolCall: {
         arguments: {
           options: {
-            value: {}
+            value: {},
           },
           uri: tmpDir,
         },
@@ -79,7 +79,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
       {
         arguments: JSON.stringify({
           options: {
-            value: {}
+            value: {},
           },
           uri: tmpDir,
         }),
