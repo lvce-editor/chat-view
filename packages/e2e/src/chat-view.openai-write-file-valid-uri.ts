@@ -2,19 +2,9 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-create-directory-valid-uri'
 
-interface MockOpenApiRequest {
-  readonly payload: unknown
-}
-
 const assert = (condition: unknown, message: string): void => {
   if (!condition) {
     throw new Error(message)
-  }
-}
-
-const assertEqual = <T>(actual: T, expected: T, message: string): void => {
-  if (actual !== expected) {
-    throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
   }
 }
 

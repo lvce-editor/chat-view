@@ -2,29 +2,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-search-invalid-options-open-debug'
 
-interface MockOpenApiRequest {
-  readonly payload: unknown
-}
-
-const assert = (condition: unknown, message: string): void => {
-  if (!condition) {
-    throw new Error(message)
-  }
-}
-
-const assertEqual = <T>(actual: T, expected: T, message: string): void => {
-  if (actual !== expected) {
-    throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
-  }
-}
-
 export const skip = 1
 
 export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const folderName = 'generated-folder'
-  const folderUri = `${tmpDir}/${folderName}`
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -55,7 +38,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator
   // await expect(messages).toHaveCount(2)
   // const message0 = messages.nth(0)
   // await expect(message0).toHaveText(`search for abc.`)
-  const message1 = messages.nth(2)
 
   // const entries = await FileSystem.readDir(tmpDir)
   // const folderEntry = entries.find((entry) => entry.name === folderName)
