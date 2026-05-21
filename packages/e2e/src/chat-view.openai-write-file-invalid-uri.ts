@@ -2,29 +2,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-invalid-uri'
 
-interface MockOpenApiRequest {
-  readonly payload: unknown
-}
-
-const assert = (condition: unknown, message: string): void => {
-  if (!condition) {
-    throw new Error(message)
-  }
-}
-
-const assertEqual = <T>(actual: T, expected: T, message: string): void => {
-  if (actual !== expected) {
-    throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
-  }
-}
-
 export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
-  const folderUri = `${tmpDir}/${fileName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()

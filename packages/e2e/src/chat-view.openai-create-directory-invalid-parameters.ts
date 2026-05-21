@@ -1,29 +1,11 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-create-directory-valid-uri'
-
-interface MockOpenApiRequest {
-  readonly payload: unknown
-}
-
-const assert = (condition: unknown, message: string): void => {
-  if (!condition) {
-    throw new Error(message)
-  }
-}
 export const skip = 1
-
-const assertEqual = <T>(actual: T, expected: T, message: string): void => {
-  if (actual !== expected) {
-    throw new Error(`${message}: expected ${String(expected)}, got ${String(actual)}`)
-  }
-}
 
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  const workspaceUri = `file://${tmpDir}`
   const folderName = 'generated-folder'
-  const folderUri = `${workspaceUri}/${folderName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
