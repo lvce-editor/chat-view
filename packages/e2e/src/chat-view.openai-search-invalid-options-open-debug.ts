@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-search-invalid-options-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
