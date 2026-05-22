@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-search-invalid-options-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
@@ -33,17 +33,11 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar
   await Chat.handleInput(`search for abc in the workspace`)
   await Chat.handleSubmit()
 
-  // const messages = Locator('.ChatMessages .Message')
-  // await expect(messages).toHaveCount(2)
-  // const message0 = messages.nth(0)
-  // await expect(message0).toHaveText(`search for abc.`)
-
-  // const entries = await FileSystem.readDir(tmpDir)
-  // const folderEntry = entries.find((entry) => entry.name === folderName)
-  // assert(folderEntry, `Expected ${folderName} to be created in ${tmpDir}`)
-  // await FileSystem.readDir(`${tmpDir}/${folderName}`)
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
+  const row1 = Locator('.TableRow[data-index="1"]')
+  const status = row1.locator('.TableCell').nth(2)
+  await expect(status).toHaveText('400')
   await ChatDebug.openTabPayload()
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
