@@ -8,7 +8,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
-  // const folderUri = `${tmpDir}/${fileName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -60,24 +59,14 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
         role: 'user',
       },
       {
-<<<<<<< HEAD
         arguments: '{"content":"test","uri":"generated-file"}',
         call_id: 'call_d525f6f4d625f887d725fa1a',
-=======
-        arguments: '{"content":"test","uri":"memfs:///workspace/generated-file"}',
-        call_id: 'call_87de6ce986de6b5685de69c3',
->>>>>>> origin/main
         name: 'read_file',
         type: 'function_call',
       },
       {
-<<<<<<< HEAD
         call_id: 'call_d525f6f4d625f887d725fa1a',
         output: '{"error":"Invalid argument: uri must be an absolute URI."}',
-=======
-        call_id: 'call_87de6ce986de6b5685de69c3',
-        output: '{"error":"Error: File not found: /workspace/generated-file"}',
->>>>>>> origin/main
         type: 'function_call_output',
       },
     ],
