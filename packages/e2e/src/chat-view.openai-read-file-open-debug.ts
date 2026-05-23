@@ -8,7 +8,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
-  const folderUri = `${tmpDir}/${fileName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -22,13 +21,13 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       toolCall: {
         arguments: {
           content: 'test',
-          uri: folderUri,
+          uri: fileName,
         },
         name: 'read_file',
       },
     },
     {
-      text: `Created ${fileName}.`,
+      text: `Read the file.`,
     },
   ])
 
@@ -37,7 +36,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
 
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
-  await expect(message1).toHaveText(`Created ${fileName}.`)
+  await expect(message1).toHaveText(`Read the file.`)
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
@@ -60,14 +59,14 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
         role: 'user',
       },
       {
-        arguments: '{"content":"test","uri":"memfs:///workspace/generated-file"}',
-        call_id: 'call_87de6ce986de6b5685de69c3',
+        arguments: '{"content":"test","uri":"generated-file"}',
+        call_id: 'call_d525f6f4d625f887d725fa1a',
         name: 'read_file',
         type: 'function_call',
       },
       {
-        call_id: 'call_87de6ce986de6b5685de69c3',
-        output: '{"error":"Error: File not found: /workspace/generated-file"}',
+        call_id: 'call_d525f6f4d625f887d725fa1a',
+        output: '{"error":"Invalid argument: uri must be an absolute URI."}',
         type: 'function_call_output',
       },
     ],
