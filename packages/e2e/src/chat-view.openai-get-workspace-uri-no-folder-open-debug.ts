@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-get-workspace-uri-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, SideBar, Workspace }) => {
   await SideBar.hide()
   await Workspace.setPath('')
   await Chat.show()
