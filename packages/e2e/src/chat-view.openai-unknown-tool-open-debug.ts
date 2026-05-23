@@ -1,10 +1,10 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-search-invalid-options-open-debug'
+export const name = 'chat-view.openai-unknown-tool-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
@@ -18,26 +18,20 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Command.execute('Chat.mockOpenApiSetResponse', [
     {
       toolCall: {
-        arguments: {
-          options: [],
-          uri: tmpDir,
-        },
-        name: 'search_text',
+        arguments: {},
+        name: 'get_workspace_uri',
       },
     },
     {
-      text: `some kind of search error.`,
+      text: `got workspace uri.`,
     },
   ])
 
-  await Chat.handleInput(`search for abc in the workspace`)
+  await Chat.handleInput(`get the workspace uri`)
   await Chat.handleSubmit()
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
-  const row1 = Locator('.TableRow[data-index="1"]')
-  const status = row1.locator('.TableCell').nth(2)
-  await expect(status).toHaveText('400')
   await ChatDebug.openTabPayload()
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
@@ -50,22 +44,23 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       {
         content: [
           {
-            text: 'search for abc in the workspace',
+            text: `get the workspace uri`,
             type: 'input_text',
           },
         ],
         role: 'user',
       },
       {
-        arguments: '{"options":[],"uri":"memfs:///workspace"}',
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        name: 'search_text',
+        arguments: '{}',
+        call_id: 'call_694ef7126a4ef8a5674ef3ec',
+        name: 'get_workspace_uri',
         type: 'function_call',
       },
       {
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        output:
-          '{"error":"Invalid argument: options must include value (string), isRegex (boolean), matchCase (boolean), matchWholeWord (boolean), and exclude (string[])."}',
+        call_id: 'call_694ef7126a4ef8a5674ef3ec',
+        output: JSON.stringify({
+          error: 'Unknown tool: get_workspace_uri',
+        }),
         type: 'function_call_output',
       },
     ],

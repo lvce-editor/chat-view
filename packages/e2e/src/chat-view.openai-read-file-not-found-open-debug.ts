@@ -19,25 +19,24 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          options: [],
-          uri: tmpDir,
+          uri: `${tmpDir}/not-found.txt`,
         },
-        name: 'search_text',
+        name: 'read_file',
       },
     },
     {
-      text: `some kind of search error.`,
+      text: `some kind of read file error.`,
     },
   ])
 
-  await Chat.handleInput(`search for abc in the workspace`)
+  await Chat.handleInput(`read the file`)
   await Chat.handleSubmit()
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   const row1 = Locator('.TableRow[data-index="1"]')
   const status = row1.locator('.TableCell').nth(2)
-  await expect(status).toHaveText('400')
+  await expect(status).toHaveText('404')
   await ChatDebug.openTabPayload()
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
@@ -50,22 +49,21 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       {
         content: [
           {
-            text: 'search for abc in the workspace',
+            text: 'read the file',
             type: 'input_text',
           },
         ],
         role: 'user',
       },
       {
-        arguments: '{"options":[],"uri":"memfs:///workspace"}',
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        name: 'search_text',
+        arguments: '{"uri":"memfs:///workspace/not-found.txt"}',
+        call_id: 'call_adcc93dcaecc956fafcc9702',
+        name: 'read_file',
         type: 'function_call',
       },
       {
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        output:
-          '{"error":"Invalid argument: options must include value (string), isRegex (boolean), matchCase (boolean), matchWholeWord (boolean), and exclude (string[])."}',
+        call_id: 'call_adcc93dcaecc956fafcc9702',
+        output: '{"error":"Error: File not found: /workspace/not-found.txt"}',
         type: 'function_call_output',
       },
     ],

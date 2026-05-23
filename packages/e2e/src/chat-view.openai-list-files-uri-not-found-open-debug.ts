@@ -1,13 +1,12 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-search-invalid-options-open-debug'
+export const name = 'chat-view.openai-list-files-valid-uri-open-debug'
 
 export const skip = 1
 
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
-  await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -19,25 +18,25 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          options: [],
-          uri: tmpDir,
+          uri: `${tmpDir}/non-existent`,
         },
-        name: 'search_text',
+        name: 'list_files',
       },
     },
     {
-      text: `some kind of search error.`,
+      text: `Couldn't find folder.`,
     },
   ])
 
-  await Chat.handleInput(`search for abc in the workspace`)
+  await Chat.handleInput(`List the files`)
   await Chat.handleSubmit()
+
+  const messages = Locator('.ChatMessages .Message')
+  const message1 = messages.nth(2)
+  await expect(message1).toHaveText(`Couldn't find folder.`)
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
-  const row1 = Locator('.TableRow[data-index="1"]')
-  const status = row1.locator('.TableCell').nth(2)
-  await expect(status).toHaveText('400')
   await ChatDebug.openTabPayload()
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
@@ -50,22 +49,21 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       {
         content: [
           {
-            text: 'search for abc in the workspace',
+            text: 'List the files',
             type: 'input_text',
           },
         ],
         role: 'user',
       },
       {
-        arguments: '{"options":[],"uri":"memfs:///workspace"}',
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        name: 'search_text',
+        arguments: '{"uri":"memfs:///workspace/non-existent"}',
+        call_id: 'call_0bbf3cfc0cbf3e8f0dbf4022',
+        name: 'list_files',
         type: 'function_call',
       },
       {
-        call_id: 'call_80fe27a37ffe261082fe2ac9',
-        output:
-          '{"error":"Invalid argument: options must include value (string), isRegex (boolean), matchCase (boolean), matchWholeWord (boolean), and exclude (string[])."}',
+        call_id: 'call_0bbf3cfc0cbf3e8f0dbf4022',
+        output: '{"entries":[]}',
         type: 'function_call_output',
       },
     ],
