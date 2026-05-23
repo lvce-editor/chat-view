@@ -15,6 +15,7 @@ import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
+import { defaultBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { estimateTextWidth } from '../MeasureTextWidth/MeasureTextWidth.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
@@ -42,7 +43,7 @@ export const createDefaultState = (): ChatState => {
     authEnabled: false,
     authErrorMessage: '',
     authUseRedirect: true,
-    backendUrl: '',
+    backendUrl: defaultBackendUrl,
     chatDebugLoggingEnabled: true,
     chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,

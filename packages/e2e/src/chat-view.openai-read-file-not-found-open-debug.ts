@@ -1,32 +1,45 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.two-messages-and-open-debug-payload'
+export const name = 'chat-view.openai-search-invalid-options-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, Workspace }) => {
-  // arrange
+export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
+  await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
   await Workspace.setPath(tmpDir)
   await Chat.show()
-  await Chat.handleInput('hello from e2e')
+  await Chat.reset()
+  await Chat.setStreamingEnabled(false)
+  await Chat.useMockApi()
+  await Chat.handleModelChange('openapi/gpt-4.1-mini')
+  await Chat.mockOpenApiRequestReset()
+  await Command.execute('Chat.mockOpenApiSetResponse', [
+    {
+      toolCall: {
+        arguments: {
+          uri: `${tmpDir}/not-found.txt`,
+        },
+        name: 'read_file',
+      },
+    },
+    {
+      text: `some kind of read file error.`,
+    },
+  ])
+
+  await Chat.handleInput(`read the file`)
   await Chat.handleSubmit()
-  await Chat.handleInput('second message')
-  await Chat.handleSubmit()
-  const messages = Locator('.ChatMessages .Message')
-  await expect(messages).toHaveCount(4)
-  const firstMessage = messages.nth(0)
-  await expect(firstMessage).toHaveText('hello from e2e')
-  // const secondMessage = messages.nth(1)
-  // await expect(secondMessage).toHaveText('Mock AI response: I received "second message".')
+
   await Chat.openDebugView()
-  await ChatDebug.selectEventRow(1)
-
-  // act
+  await ChatDebug.selectEventRow(2)
+  const row1 = Locator('.TableRow[data-index="1"]')
+  const status = row1.locator('.TableCell').nth(2)
+  await expect(status).toHaveText('404')
   await ChatDebug.openTabPayload()
-
-  // assert
-  await Command.execute('ChatDebug.shouldHavePayload', {
+  // @ts-ignore
+  await ChatDebug.shouldHavePayload({
     input: [
       {
         content:
@@ -36,25 +49,23 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       {
         content: [
           {
-            text: 'hello from e2e',
+            text: 'read the file',
             type: 'input_text',
           },
         ],
         role: 'user',
       },
       {
-        content: [
-          {
-            text: 'Mock AI response: I received "hello from e2e".',
-            type: 'input_text',
-          },
-        ],
-        role: 'assistant',
+        arguments: '{"uri":"memfs:///workspace/not-found.txt"}',
+        call_id: 'call_adcc93dcaecc956fafcc9702',
+        name: 'read_file',
+        type: 'function_call',
       },
-      { content: [{ text: 'second message', type: 'input_text' }], role: 'user' },
+      {
+        call_id: 'call_adcc93dcaecc956fafcc9702',
+        output: '{"error":"Error: File not found: /workspace/not-found.txt"}',
+        type: 'function_call_output',
+      },
     ],
   })
-  // TODO verify items are visible
-  // const rows = Locator('.TableBody .TableRow')
-  // await expect(rows).toHaveCount(4)
 }
