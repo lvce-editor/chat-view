@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
-  const folderUri = `${tmpDir}/${fileName}`
+  // const folderUri = `${tmpDir}/${fileName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
