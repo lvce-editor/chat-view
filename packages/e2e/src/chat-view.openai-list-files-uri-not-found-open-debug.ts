@@ -1,15 +1,12 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-read-file-open-debug'
+export const name = 'chat-view.openai-list-files-valid-uri-open-debug'
 
 export const skip = 1
 
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
-  const fileName = 'generated-file'
-  // const folderUri = `${tmpDir}/${fileName}`
-
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
@@ -21,23 +18,22 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          content: 'test',
-          uri: fileName,
+          uri: `${tmpDir}/non-existent`,
         },
-        name: 'read_file',
+        name: 'list_files',
       },
     },
     {
-      text: `Read the file.`,
+      text: `Couldn't find folder.`,
     },
   ])
 
-  await Chat.handleInput(`Create the ${fileName} directory in the workspace`)
+  await Chat.handleInput(`List the files`)
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
-  await expect(message1).toHaveText(`Read the file.`)
+  await expect(message1).toHaveText(`Couldn't find folder.`)
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
@@ -53,31 +49,21 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       {
         content: [
           {
-            text: 'Create the generated-file directory in the workspace',
+            text: 'List the files',
             type: 'input_text',
           },
         ],
         role: 'user',
       },
       {
-<<<<<<< HEAD
-        arguments: '{"content":"test","uri":"generated-file"}',
-        call_id: 'call_d525f6f4d625f887d725fa1a',
-=======
-        arguments: '{"content":"test","uri":"memfs:///workspace/generated-file"}',
-        call_id: 'call_87de6ce986de6b5685de69c3',
->>>>>>> origin/main
-        name: 'read_file',
+        arguments: '{"uri":"memfs:///workspace/non-existent"}',
+        call_id: 'call_0bbf3cfc0cbf3e8f0dbf4022',
+        name: 'list_files',
         type: 'function_call',
       },
       {
-<<<<<<< HEAD
-        call_id: 'call_d525f6f4d625f887d725fa1a',
-        output: '{"error":"Invalid argument: uri must be an absolute URI."}',
-=======
-        call_id: 'call_87de6ce986de6b5685de69c3',
-        output: '{"error":"Error: File not found: /workspace/generated-file"}',
->>>>>>> origin/main
+        call_id: 'call_0bbf3cfc0cbf3e8f0dbf4022',
+        output: '{"entries":[]}',
         type: 'function_call_output',
       },
     ],

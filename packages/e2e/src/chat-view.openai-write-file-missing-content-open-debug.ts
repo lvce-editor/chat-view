@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-read-file-open-debug'
+export const name = 'chat-view.openai-write-file-missing-content'
 
 export const skip = 1
 
@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
-  // const folderUri = `${tmpDir}/${fileName}`
+  const folderUri = `${tmpDir}/${fileName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -21,14 +21,14 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       toolCall: {
         arguments: {
-          content: 'test',
-          uri: fileName,
+          content: undefined,
+          uri: folderUri,
         },
-        name: 'read_file',
+        name: 'write_file',
       },
     },
     {
-      text: `Read the file.`,
+      text: `Created ${fileName}.`,
     },
   ])
 
@@ -37,7 +37,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
 
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
-  await expect(message1).toHaveText(`Read the file.`)
+  await expect(message1).toHaveText(`Created ${fileName}.`)
 
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
@@ -60,24 +60,14 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
         role: 'user',
       },
       {
-<<<<<<< HEAD
-        arguments: '{"content":"test","uri":"generated-file"}',
-        call_id: 'call_d525f6f4d625f887d725fa1a',
-=======
-        arguments: '{"content":"test","uri":"memfs:///workspace/generated-file"}',
-        call_id: 'call_87de6ce986de6b5685de69c3',
->>>>>>> origin/main
-        name: 'read_file',
+        arguments: '{"uri":"memfs:///workspace/generated-file"}',
+        call_id: 'call_6b93c2336a93c0a06d93c559',
+        name: 'write_file',
         type: 'function_call',
       },
       {
-<<<<<<< HEAD
-        call_id: 'call_d525f6f4d625f887d725fa1a',
-        output: '{"error":"Invalid argument: uri must be an absolute URI."}',
-=======
-        call_id: 'call_87de6ce986de6b5685de69c3',
-        output: '{"error":"Error: File not found: /workspace/generated-file"}',
->>>>>>> origin/main
+        call_id: 'call_6b93c2336a93c0a06d93c559',
+        output: '{"addedLines":0,"ok":true,"removedLines":0,"uri":"memfs:///workspace/generated-file"}',
         type: 'function_call_output',
       },
     ],
