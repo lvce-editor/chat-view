@@ -7,7 +7,6 @@ export const skip = 1
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
-  const fileName = 'generated-file'
   const file1 = `${tmpDir}/file-1.txt`
   const file2 = `${tmpDir}/file-2.txt`
   const file3 = `${tmpDir}/file-3.txt`
