@@ -89,6 +89,12 @@ export const getDisplayMessages = (
     }
   }
   if (inProgress) {
+    const inProgressParsedContent: readonly MessageIntermediateNode[] = [
+      {
+        text: ` ${inProgressMessage}`,
+        type: 'loading',
+      },
+    ]
     displayMessages.push({
       message: {
         id: '',
@@ -96,12 +102,7 @@ export const getDisplayMessages = (
         text: inProgressMessage,
         time: '',
       },
-      parsedContent: [
-        {
-          text: ` ${inProgressMessage}`,
-          type: 'loading',
-        },
-      ],
+      parsedContent: inProgressParsedContent,
     })
   }
   return displayMessages
