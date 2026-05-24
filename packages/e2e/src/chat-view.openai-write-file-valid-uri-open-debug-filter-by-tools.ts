@@ -2,15 +2,9 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-valid-uri-open-debug-filter-by-tools'
 
-const assert = (condition: unknown, message: string): void => {
-  if (!condition) {
-    throw new Error(message)
-  }
-}
-
 export const skip = 1
 
-export const test: Test = async ({ Locator, expect, ChatDebug, Chat, Command, FileSystem, Workspace }) => {
+export const test: Test = async ({ Locator, expect, Chat, Command, FileSystem, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
   const folderUri = `${tmpDir}/${fileName}`
