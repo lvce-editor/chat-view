@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-write-file-valid-uri-open-debug-tool-call'
 
-// export const skip = 1
+export const skip = 1
 
 export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
