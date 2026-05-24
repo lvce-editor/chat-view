@@ -40,6 +40,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly inProgress: boolean
   readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
@@ -47,7 +48,6 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly openApiApiKeyInput: string
-  readonly inProgress?: boolean
   readonly openApiApiKeyInputPattern?: string
   readonly openApiApiKeysSettingsUrl?: string
   readonly openApiApiKeyState?: 'idle' | 'saving'
@@ -99,6 +99,7 @@ export const getChatModeDetailVirtualDom = ({
   hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
+  inProgress,
   messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
@@ -136,7 +137,6 @@ export const getChatModeDetailVirtualDom = ({
   visibleModels = models,
   visiblePrimaryControls = [],
   voiceDictationEnabled = false,
-  inProgress = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedMessages: readonly ChatMessage[] = messages || selectedSession?.messages || []
