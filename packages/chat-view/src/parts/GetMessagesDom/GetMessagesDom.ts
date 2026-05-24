@@ -23,6 +23,7 @@ export const getMessagesDom = (
   useChatMathWorker = false,
   hideWelcomeMessage = false,
   inProgress = false,
+  inProgressMessage = 'In Progress',
 ): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     if (!hideWelcomeMessage) {
@@ -40,7 +41,7 @@ export const getMessagesDom = (
       },
     ]
   }
-  const displayMessages = getDisplayMessages(messages, parsedMessages, inProgress)
+  const displayMessages = getDisplayMessages(messages, parsedMessages, inProgress, inProgressMessage)
   return [
     {
       childCount: displayMessages.length,

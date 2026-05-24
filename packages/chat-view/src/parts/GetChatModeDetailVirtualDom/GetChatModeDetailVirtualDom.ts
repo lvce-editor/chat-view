@@ -41,6 +41,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
   readonly inProgress: boolean
+  readonly inProgressMessage: string
   readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
@@ -100,6 +101,7 @@ export const getChatModeDetailVirtualDom = ({
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
   inProgress,
+  inProgressMessage,
   messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
@@ -175,6 +177,7 @@ export const getChatModeDetailVirtualDom = ({
       useChatMathWorker,
       false,
       inProgress,
+      inProgressMessage,
     ),
     ...getChatSendAreaDom(
       composerValue,

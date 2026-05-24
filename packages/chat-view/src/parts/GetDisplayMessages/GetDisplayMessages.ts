@@ -36,6 +36,7 @@ export const getDisplayMessages = (
   messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
   inProgress = false,
+  inProgressMessage = 'In Progress',
 ): readonly DisplayMessage[] => {
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
@@ -92,12 +93,12 @@ export const getDisplayMessages = (
       message: {
         id: '',
         role: 'assistant',
-        text: 'In Progress',
+        text: inProgressMessage,
         time: '',
       },
       parsedContent: [
         {
-          text: ' In Progress',
+          text: ` ${inProgressMessage}`,
           type: 'loading',
         },
       ],
