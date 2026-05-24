@@ -25,6 +25,7 @@ export const getMessagesDom = (
   hideWelcomeMessage = false,
   inProgress = false,
 ): readonly VirtualDomNode[] => {
+  console.log({ inProgress })
   if (inProgress) {
     return [text('loading...')]
   }
