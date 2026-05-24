@@ -26,11 +26,10 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
     {
       text: `Couldn't find folder.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`List the files`)
   await Chat.handleSubmit()
-  ] as any)
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
   await expect(message1).toHaveText(`Couldn't find folder.`)
