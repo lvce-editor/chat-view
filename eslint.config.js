@@ -56,4 +56,19 @@ export default [
       'jest/no-disabled-tests': 'off',
     },
   },
+  {
+    files: [
+      'packages/chat-view/src/parts/GetChatModeDetailVirtualDom/GetChatModeDetailVirtualDom.ts',
+      'packages/chat-view/src/parts/RenderItems/RenderItems.ts',
+    ],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
+    files: ['packages/chat-view/src/parts/GetMessagesDom/GetMessagesDom.ts'],
+    rules: {
+      'perfectionist/sort-imports': 'off',
+    },
+  },
 ]

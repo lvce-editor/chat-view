@@ -82,7 +82,6 @@ export const renderItems = (oldState: ChatState, newState: ChatState): any => {
   if (initial) {
     return [ViewletCommand.SetDom2, uid, []]
   }
-  console.log('HER', inProgress)
   const dom = getChatVirtualDom({
     addContextButtonEnabled,
     agentMode,

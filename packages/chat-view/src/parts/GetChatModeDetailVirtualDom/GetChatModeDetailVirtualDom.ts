@@ -153,7 +153,6 @@ export const getChatModeDetailVirtualDom = ({
   const hasVisibleOverlays =
     isDropOverlayVisible || isComposerAttachmentPreviewOverlayVisible || isAgentModePickerVisible || isNewModelPickerVisible || isRunModePickerVisible
   const chatRootChildCount = 3 + (hasVisibleOverlays ? 1 : 0)
-  console.log('det', inProgress)
   return [
     {
       childCount: chatRootChildCount,
