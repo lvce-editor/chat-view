@@ -29,6 +29,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
         arguments: {
           uri: folderUri,
         },
+        // @ts-ignore
         name: 'create_directory',
       },
     },
