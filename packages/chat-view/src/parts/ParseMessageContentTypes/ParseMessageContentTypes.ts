@@ -76,6 +76,11 @@ export interface MessageTextNode {
   readonly type: 'text'
 }
 
+export interface MessageProgressNode {
+  readonly text: string
+  readonly type: 'loading'
+}
+
 export interface MessageHeadingNode {
   readonly children: readonly MessageInlineNode[]
   readonly level: 1 | 2 | 3 | 4 | 5 | 6
