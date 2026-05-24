@@ -92,3 +92,45 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
   ])
   expect(mockRpc.invocations).toEqual([['ChatMessageParsing.parseMessageContents', ['loaded from storage']]])
 })
+
+test('selectSession should clear unread on the selected session', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+
+  await saveChatSession({
+    id: 'session-2',
+    messages: [
+      {
+        id: 'message-2',
+        role: 'user',
+        text: 'loaded from storage',
+        time: '10:00',
+      },
+    ],
+    title: 'Chat 2',
+    unread: true,
+  })
+
+  const state: ChatState = {
+    ...createDefaultState(),
+    selectedSessionId: 'session-1',
+    sessions: [
+      { id: 'session-1', messages: [], title: 'Chat 1' },
+      { id: 'session-2', messages: [], title: 'Chat 2', unread: true },
+    ],
+    viewMode: 'list',
+  }
+
+  const result = await SelectSession.selectSession(state, 'session-2')
+
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], title: 'Chat 1' },
+    {
+      id: 'session-2',
+      lastActiveTime: '10:00',
+      messages: [],
+      title: 'Chat 2',
+      unread: false,
+    },
+  ])
+})

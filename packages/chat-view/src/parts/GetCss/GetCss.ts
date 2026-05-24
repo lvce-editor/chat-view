@@ -163,6 +163,11 @@ export const getCss = (
   white-space: nowrap;
 }
 
+.ChatListItemUnread .ChatListItemTitle {
+  color: var(--vscode-list-activeSelectionForeground, var(--vscode-foreground));
+  font-weight: 600;
+}
+
 
 
 `

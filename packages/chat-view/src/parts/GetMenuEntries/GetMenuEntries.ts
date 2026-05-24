@@ -4,6 +4,7 @@ import { getMenuEntriesChatAttachment } from '../GetMenuEntriesChatAttachment/Ge
 import { getMenuEntriesChatHeader } from '../GetMenuEntriesChatHeader/GetMenuEntriesChatHeader.ts'
 import { getMenuEntriesChatInput } from '../GetMenuEntriesChatInput/GetMenuEntriesChatInput.ts'
 import { getMenuEntriesChatList } from '../GetMenuEntriesChatList/GetMenuEntriesChatList.ts'
+import { getMenuEntriesChatListToggle } from '../GetMenuEntriesChatListToggle/GetMenuEntriesChatListToggle.ts'
 import { getMenuEntriesChatProjectList } from '../GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
 import { getMenuEntriesPrimaryControlsOverflow } from '../GetMenuEntriesPrimaryControlsOverflow/GetMenuEntriesPrimaryControlsOverflow.ts'
 import { getMenuEntriesProjectAddButton } from '../GetMenuEntriesProjectAddButton/GetMenuEntriesProjectAddButton.ts'
@@ -12,6 +13,7 @@ import {
   MenuChatHeader,
   MenuChatInput,
   MenuChatList,
+  MenuChatListToggle,
   MenuChatPrimaryControlsOverflow,
   MenuChatProjectList,
   MenuProjectAddButton,
@@ -27,6 +29,8 @@ export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonl
       return getMenuEntriesChatInput()
     case MenuChatList:
       return getMenuEntriesChatList(props.sessionId)
+    case MenuChatListToggle:
+      return getMenuEntriesChatListToggle()
     case MenuChatPrimaryControlsOverflow:
       return getMenuEntriesPrimaryControlsOverflow(
         props.hiddenPrimaryControls,

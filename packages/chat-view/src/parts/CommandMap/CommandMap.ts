@@ -32,6 +32,9 @@ import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleClickBack from '../HandleClickBack/HandleClickBack.ts'
 import * as HandleClickClose from '../HandleClickClose/HandleClickClose.ts'
 import * as HandleClickCreatePullRequest from '../HandleClickCreatePullRequest/HandleClickCreatePullRequest.ts'
+import * as HandleClickChatListArchiveAll from '../HandleClickChatListArchiveAll/HandleClickChatListArchiveAll.ts'
+import * as HandleClickChatListCollapseAll from '../HandleClickChatListCollapseAll/HandleClickChatListCollapseAll.ts'
+import * as HandleClickChatListMarkAllAsRead from '../HandleClickChatListMarkAllAsRead/HandleClickChatListMarkAllAsRead.ts'
 import * as HandleClickCustomSelectOverlay from '../HandleClickCustomSelectOverlay/HandleClickCustomSelectOverlay.ts'
 import * as HandleClickDelete from '../HandleClickDelete/HandleClickDelete.ts'
 import * as HandleClickDictationButton from '../HandleClickDictationButton/HandleClickDictationButton.ts'
@@ -176,6 +179,9 @@ export const commandMap = {
   'Chat.handleChatListScroll': wrapCommand(HandleScroll.handleChatListScroll),
   'Chat.handleClick': wrapCommand(HandleClick.handleClick),
   'Chat.handleClickBack': wrapCommand(HandleClickBack.handleClickBack),
+  'Chat.handleClickChatListArchiveAll': wrapCommand(HandleClickChatListArchiveAll.handleClickChatListArchiveAll),
+  'Chat.handleClickChatListCollapseAll': wrapCommand(HandleClickChatListCollapseAll.handleClickChatListCollapseAll),
+  'Chat.handleClickChatListMarkAllAsRead': wrapCommand(HandleClickChatListMarkAllAsRead.handleClickChatListMarkAllAsRead),
   'Chat.handleClickClose': HandleClickClose.handleClickClose,
   'Chat.handleClickCreatePullRequest': wrapCommand(HandleClickCreatePullRequest.handleClickCreatePullRequest),
   'Chat.handleClickCustomSelectOverlay': wrapCommand(HandleClickCustomSelectOverlay.handleClickCustomSelectOverlay),

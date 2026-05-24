@@ -21,6 +21,11 @@ export const toSummarySession = (session: ChatSession): ChatSession => {
           pullRequestUrl: session.pullRequestUrl,
         }
       : {}),
+    ...(typeof session.unread === 'boolean'
+      ? {
+          unread: session.unread,
+        }
+      : {}),
     title: session.title,
     ...(session.workspaceUri
       ? {

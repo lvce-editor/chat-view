@@ -1,4 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -14,16 +15,23 @@ export const selectSession = async (state: ChatState, id: string): Promise<ChatS
     return state
   }
   const loadedSession = await getChatSession(id)
+  const nextLoadedSession = loadedSession?.unread ? { ...loadedSession, unread: false } : loadedSession
+  if (loadedSession?.unread) {
+    await saveChatSession({
+      ...loadedSession,
+      unread: false,
+    })
+  }
   const composerAttachments = await getComposerAttachments(id)
-  const nextSessions = loadedSession
+  const nextSessions = nextLoadedSession
     ? sessions.map((session) => {
         if (session.id !== id) {
           return session
         }
-        return toSummarySession(loadedSession)
+        return toSummarySession(nextLoadedSession)
       })
     : sessions
-  const messages = loadedSession?.messages || []
+  const messages = nextLoadedSession?.messages || []
   const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, messages)
   return refreshGitBranchPickerVisibility({
     ...state,
