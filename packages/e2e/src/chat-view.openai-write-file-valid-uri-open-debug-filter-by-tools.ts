@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-write-file-valid-uri-open-debug-filter-by-
 
 export const skip = 1
 
-export const test: Test = async ({ Locator, expect, Chat, Command, FileSystem, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
   const folderUri = `${tmpDir}/${fileName}`
