@@ -18,7 +18,6 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  // @ts-ignore
   await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
@@ -50,7 +49,7 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
     {
       text: `Created some files.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Create the some files.`)
   await Chat.handleSubmit()

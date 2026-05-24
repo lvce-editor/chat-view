@@ -13,7 +13,6 @@ export const test: Test = async ({ Chat, ChatDebug, SideBar, Workspace }) => {
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  // @ts-ignore
   await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
@@ -24,7 +23,7 @@ export const test: Test = async ({ Chat, ChatDebug, SideBar, Workspace }) => {
     {
       text: `No workspace is open.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`No workspace is open.`)
   await Chat.handleSubmit()

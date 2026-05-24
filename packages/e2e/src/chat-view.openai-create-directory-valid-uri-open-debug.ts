@@ -23,7 +23,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  // @ts-ignore
   await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
@@ -36,7 +35,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       text: `Created ${folderName}.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Create the ${folderName} directory in the workspace`)
   await Chat.handleSubmit()
