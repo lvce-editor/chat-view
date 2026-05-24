@@ -3,6 +3,7 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { AriaRoles, VirtualDomElements } from '@lvce-editor/constants'
 import { text } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'

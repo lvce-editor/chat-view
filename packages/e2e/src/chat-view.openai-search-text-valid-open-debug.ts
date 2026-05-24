@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-create-directory-valid-uri-open-debug'
 
 export const skip = true
 
-export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, FileSystem, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
@@ -15,7 +15,8 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {
@@ -34,11 +35,10 @@ export const test: Test = async ({ Chat, ChatDebug, Command, FileSystem, SideBar
     {
       text: `search for abc.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`search for abc in the workspace`)
   await Chat.handleSubmit()
-
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   await ChatDebug.openTabPayload()

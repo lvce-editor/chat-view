@@ -3,7 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.openai-create-directory-valid-uri'
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const folderName = 'generated-folder'
 
@@ -14,7 +14,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {
@@ -26,7 +27,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
     {
       text: `Some kind of error occurred with creating the folder.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Create the ${folderName} directory in the workspace`)
   await Chat.handleSubmit()
