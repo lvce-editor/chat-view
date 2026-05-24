@@ -41,7 +41,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const row = rows.nth(0)
   const cells = row.locator('.TableCell')
   const cell1 = cells.nth(0)
-  await expect(cell1).toHaveText('write_file')
+  await expect(cell1).toHaveText('ai-request')
   const cell2 = cells.nth(1)
   await expect(cell2).toHaveText('POST')
   const cell3 = cells.nth(2)
