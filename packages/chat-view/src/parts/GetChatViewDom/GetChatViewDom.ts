@@ -56,6 +56,7 @@ export interface GetChatVirtualDomOptions {
   readonly gitBranchPickerErrorMessage?: string
   readonly gitBranchPickerOpen?: boolean
   readonly gitBranchPickerVisible?: boolean
+  readonly inProgress?: boolean
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
@@ -187,6 +188,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
       ...(showRunMode ? ['run-mode-picker-toggle' as const] : []),
     ],
     voiceDictationEnabled = false,
+    inProgress = false,
   } = options
 
   const messages = messagesInput && messagesInput.length > 0 ? messagesInput : selectedSession?.messages || messagesInput || []
@@ -318,6 +320,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         visibleModels,
         visiblePrimaryControls,
         voiceDictationEnabled,
+        inProgress,
       })
     case 'list':
       return getChatModeListVirtualDom({

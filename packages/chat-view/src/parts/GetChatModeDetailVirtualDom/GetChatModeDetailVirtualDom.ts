@@ -47,6 +47,7 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly modelPickerSearchValue?: string
   readonly models: readonly ChatModel[]
   readonly openApiApiKeyInput: string
+  readonly inProgress?: boolean
   readonly openApiApiKeyInputPattern?: string
   readonly openApiApiKeysSettingsUrl?: string
   readonly openApiApiKeyState?: 'idle' | 'saving'
@@ -135,6 +136,7 @@ export const getChatModeDetailVirtualDom = ({
   visibleModels = models,
   visiblePrimaryControls = [],
   voiceDictationEnabled = false,
+  inProgress = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedMessages: readonly ChatMessage[] = messages || selectedSession?.messages || []
@@ -171,6 +173,7 @@ export const getChatModeDetailVirtualDom = ({
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,
+      inProgress,
     ),
     ...getChatSendAreaDom(
       composerValue,

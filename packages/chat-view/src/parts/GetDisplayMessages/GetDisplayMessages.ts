@@ -1,19 +1,10 @@
 /* cspell:ignore sonarjs */
 
-<<<<<<< Updated upstream
-import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-=======
-import { type VirtualDomNode, AriaRoles, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
->>>>>>> Stashed changes
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
-import * as ClassNames from '../ClassNames/ClassNames.ts'
-import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
-import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
 import { getEmptyMessageContent, getParsedMessageContent, getPlainTextMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
+import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
 
 interface DisplayMessage {
   readonly message: ChatMessage
@@ -40,7 +31,11 @@ const withAttachments = (message: ChatMessage, attachments: readonly ComposerAtt
   }
 }
 
-const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
+export const getDisplayMessages = (
+  messages: readonly ChatMessage[],
+  parsedMessages: readonly ParsedMessage[],
+  inProgress = false,
+): readonly DisplayMessage[] => {
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
     const parsedContent = getParsedMessageContent(parsedMessages, message.id) || getPlainTextMessageContent(message.text)
@@ -92,65 +87,4 @@ const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: re
     }
   }
   return displayMessages
-}
-
-export const getMessagesDom = (
-  messages: readonly ChatMessage[],
-  parsedMessages: readonly ParsedMessage[],
-  openRouterApiKeyInput: string,
-  openApiApiKeyInput = '',
-  openApiApiKeyState: 'idle' | 'saving' = 'idle',
-  openApiApiKeysSettingsUrl = 'https://platform.openai.com/api-keys',
-  openApiApiKeyInputPattern = '^sk-.+',
-  openRouterApiKeyState: 'idle' | 'saving' = 'idle',
-  messagesScrollTop = 0,
-  useChatMathWorker = false,
-  hideWelcomeMessage = false,
-  inProgress = false,
-): readonly VirtualDomNode[] => {
-  if (inProgress) {
-    return [text('loading...')]
-  }
-  if (messages.length === 0) {
-    if (!hideWelcomeMessage) {
-      return GetEmptyMessagesDom.getEmptyMessagesDom()
-    }
-    return [
-      {
-        childCount: 0,
-        className: ClassNames.ChatMessages,
-        onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
-        onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-        role: AriaRoles.Log,
-        scrollTop: messagesScrollTop,
-        type: VirtualDomElements.Div,
-      },
-    ]
-  }
-  const displayMessages = getDisplayMessages(messages, parsedMessages, inProgress)
-  return [
-    {
-      childCount: displayMessages.length,
-      className: ClassNames.ChatMessages,
-      onContextMenu: DomEventListenerFunctions.HandleMessagesContextMenu,
-      onScroll: DomEventListenerFunctions.HandleMessagesScroll,
-      role: AriaRoles.Log,
-      scrollTop: messagesScrollTop,
-      type: VirtualDomElements.Div,
-    },
-    ...displayMessages.flatMap((item) =>
-      GetChatMessageDom.getChatMessageDom(
-        item.message,
-        item.parsedContent,
-        openRouterApiKeyInput,
-        openApiApiKeyInput,
-        openApiApiKeyState,
-        openApiApiKeysSettingsUrl,
-        openApiApiKeyInputPattern,
-        openRouterApiKeyState,
-        useChatMathWorker,
-        item.standaloneImageAttachment,
-      ),
-    ),
-  ]
 }
