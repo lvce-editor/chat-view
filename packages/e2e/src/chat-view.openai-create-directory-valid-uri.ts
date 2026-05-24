@@ -9,11 +9,11 @@ const assert = (condition: unknown, message: string): void => {
 }
 
 export const skip = 1
+
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  const workspaceUri = `file://${tmpDir}`
   const folderName = 'generated-folder'
-  const folderUri = `${workspaceUri}/${folderName}`
+  const folderUri = `${tmpDir}/${folderName}`
 
   await Workspace.setPath(tmpDir)
   await Chat.show()
