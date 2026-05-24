@@ -164,10 +164,28 @@ export const getCss = (
 }
 
 
-.LoadingText{
-  color: blue;
+
+
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
 }
 
+.LoadingText {
+  background: linear-gradient(
+    90deg,
+    #888 25%,   /* dim color  */
+    #fff 45%,   /* bright peak */
+    #888 55%,
+    #888 75%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}
 
 `
 
