@@ -87,5 +87,26 @@ export const getDisplayMessages = (
       })
     }
   }
+  if (inProgress) {
+    displayMessages.push({
+      message: {
+        id: '',
+        role: 'assistant',
+        text: 'In Progress',
+        time: '',
+      },
+      parsedContent: [
+        {
+          children: [
+            {
+              text: 'In Progress',
+              type: 'text',
+            },
+          ],
+          type: 'text',
+        },
+      ],
+    })
+  }
   return displayMessages
 }
