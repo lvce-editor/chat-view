@@ -1,5 +1,5 @@
-import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
   if (session.lastActiveTime) {
