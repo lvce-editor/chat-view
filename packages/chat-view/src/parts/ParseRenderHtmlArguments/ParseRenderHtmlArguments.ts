@@ -1,3 +1,5 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 export interface ParsedRenderHtmlArguments {
   readonly css: string
   readonly html: string
@@ -11,13 +13,16 @@ export const parseRenderHtmlArguments = (rawArguments: string): ParsedRenderHtml
       return undefined
     }
 
-    const html = typeof Reflect.get(parsed, 'html') === 'string' ? String(Reflect.get(parsed, 'html')) : ''
+    const rawHtml = getObjectProperty(parsed, 'html')
+    const html = typeof rawHtml === 'string' ? String(rawHtml) : ''
     if (!html) {
       return undefined
     }
 
-    const css = typeof Reflect.get(parsed, 'css') === 'string' ? String(Reflect.get(parsed, 'css')) : ''
-    const title = typeof Reflect.get(parsed, 'title') === 'string' ? String(Reflect.get(parsed, 'title')) : 'visual preview'
+    const rawCss = getObjectProperty(parsed, 'css')
+    const css = typeof rawCss === 'string' ? String(rawCss) : ''
+    const rawTitle = getObjectProperty(parsed, 'title')
+    const title = typeof rawTitle === 'string' ? String(rawTitle) : 'visual preview'
 
     return {
       css,

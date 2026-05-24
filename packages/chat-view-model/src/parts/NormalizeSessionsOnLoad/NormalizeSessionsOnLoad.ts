@@ -1,4 +1,5 @@
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 
 const normalizeSessionOnLoad = (session: ChatSession): ChatSession => {
@@ -8,7 +9,7 @@ const normalizeSessionOnLoad = (session: ChatSession): ChatSession => {
   return {
     ...session,
     messages: session.messages.map((message) => {
-      if (!isObject(message) || Reflect.get(message, 'inProgress') !== true) {
+      if (!isObject(message) || getObjectProperty(message, 'inProgress') !== true) {
         return message
       }
       return {

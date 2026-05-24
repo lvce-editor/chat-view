@@ -1,6 +1,7 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getToolCallLabel } from '../GetToolCallLabel/GetToolCallLabel.ts'
 
 const RE_TOOL_NAME_PREFIX = /^([^ :]+)/
@@ -14,7 +15,7 @@ const getGrepSearchPreviewText = (result: string): string => {
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
       return typeof parsed === 'string' ? parsed : JSON.stringify(parsed)
     }
-    const nestedResult = Reflect.get(parsed, 'result')
+    const nestedResult = getObjectProperty(parsed, 'result')
     if (nestedResult === undefined) {
       return JSON.stringify(parsed)
     }
@@ -37,7 +38,7 @@ const getHoverTitle = (toolCall: ChatToolCall): string | undefined => {
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
       return toolCall.arguments
     }
-    const nestedArguments = Reflect.get(parsed, 'arguments')
+    const nestedArguments = getObjectProperty(parsed, 'arguments')
     if (nestedArguments === undefined) {
       return toolCall.arguments
     }
