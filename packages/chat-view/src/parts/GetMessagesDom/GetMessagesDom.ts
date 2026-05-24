@@ -1,15 +1,14 @@
 /* cspell:ignore sonarjs */
 
-import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { AriaRoles, VirtualDomElements } from '@lvce-editor/constants'
-import { text } from '@lvce-editor/virtual-dom-worker'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
-import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as GetChatMessageDom from '../GetChatMessageDom/GetChatMessageDom.ts'
 import { getDisplayMessages } from '../GetDisplayMessages/GetDisplayMessages.ts'
 import * as GetEmptyMessagesDom from '../GetEmptyMessagesDom/GetEmptyMessagesDom.ts'
+import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 
 export const getMessagesDom = (
   messages: readonly ChatMessage[],

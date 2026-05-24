@@ -97,13 +97,8 @@ export const getDisplayMessages = (
       },
       parsedContent: [
         {
-          children: [
-            {
-              text: 'In Progress',
-              type: 'text',
-            },
-          ],
-          type: 'text',
+          text: ' In Progress',
+          type: 'loading',
         },
       ],
     })

@@ -11,6 +11,7 @@ export type MessageIntermediateNode =
   | MessageMathBlockNode
   | MessageThematicBreakNode
   | MessageMathBlockDomNode
+  | MessageProgressNode
 
 export type MessageInlineNode =
   | MessageInlineTextNode
