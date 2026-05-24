@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.one-message-in-progress'
 
-export const test: Test = async ({ Chat, expect, Locator, Command }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   // arrange
   await Chat.show()
   await Chat.handleInput('hello from e2e')
