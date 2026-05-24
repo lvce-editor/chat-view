@@ -29,11 +29,10 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
     {
       text: `Some kind of error.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Read the ${tmpDir} file in the workspace`)
   await Chat.handleSubmit()
-  ] as any)
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
   await expect(message1).toHaveText(`Some kind of error.`)
