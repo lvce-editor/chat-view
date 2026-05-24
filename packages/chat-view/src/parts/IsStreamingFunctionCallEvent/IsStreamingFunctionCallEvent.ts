@@ -1,5 +1,5 @@
-import { hasLegacyStreamingToolCalls } from '../HasLegacyStreamingToolCalls/HasLegacyStreamingToolCalls.ts'
 import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+import { hasLegacyStreamingToolCalls } from '../HasLegacyStreamingToolCalls/HasLegacyStreamingToolCalls.ts'
 
 export const isStreamingFunctionCallEvent = (parsed: unknown): boolean => {
   if (hasLegacyStreamingToolCalls(parsed)) {

@@ -1,3 +1,4 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
 
 const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
@@ -8,7 +9,7 @@ const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
   if (!lastMessage || typeof lastMessage !== 'object') {
     return undefined
   }
-  const time = Reflect.get(lastMessage, 'time')
+  const time = getObjectProperty(lastMessage, 'time')
   return typeof time === 'string' ? time : undefined
 }
 
