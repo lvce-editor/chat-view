@@ -433,7 +433,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     if (originalLocation) {
       Object.defineProperty(globalThis, 'location', originalLocation)
     } else {
-      Reflect.deleteProperty(globalThis, 'location')
+      delete (globalThis as Record<string, unknown>).location
     }
   }
 })

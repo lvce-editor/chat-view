@@ -1,5 +1,6 @@
 import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error && error.message) {
@@ -9,11 +10,11 @@ const getErrorMessage = (error: unknown): string => {
     return error
   }
   if (error && typeof error === 'object') {
-    const message = Reflect.get(error, 'message')
+    const message = getObjectProperty(error, 'message')
     if (typeof message === 'string' && message) {
       return message
     }
-    const code = Reflect.get(error, 'code')
+    const code = getObjectProperty(error, 'code')
     if (typeof code === 'string' && code) {
       return code
     }

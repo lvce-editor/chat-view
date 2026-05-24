@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, GitBranch, Project } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 interface BranchPickerState {
   readonly gitBranches: readonly GitBranch[]
@@ -104,8 +105,10 @@ const parseEntries = (value: unknown): readonly FileSystemEntry[] => {
     if (Array.isArray(entry) && typeof entry[0] === 'string' && typeof entry[1] === 'number') {
       return [{ name: entry[0], type: entry[1] }]
     }
-    if (entry && typeof entry === 'object' && typeof Reflect.get(entry, 'name') === 'string' && typeof Reflect.get(entry, 'type') === 'number') {
-      return [{ name: Reflect.get(entry, 'name'), type: Reflect.get(entry, 'type') }]
+    const name = getObjectProperty(entry, 'name')
+    const type = getObjectProperty(entry, 'type')
+    if (typeof name === 'string' && typeof type === 'number') {
+      return [{ name, type }]
     }
     return []
   })

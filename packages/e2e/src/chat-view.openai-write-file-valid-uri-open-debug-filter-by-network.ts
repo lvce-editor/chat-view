@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-write-file-valid-uri-open-debug-filter-by-tools'
+export const name = 'chat-view.openai-write-file-valid-uri-open-debug-filter-by-network'
 
 export const skip = 1
 
@@ -36,12 +36,12 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.openDebugView()
   const rows = Locator('.TableBody .TableRow')
   await expect(rows).toHaveCount(3)
-  await Command.execute('ChatDebug.handleEventCategoryFilter', 'tools')
-  await expect(rows).toHaveCount(1)
+  await Command.execute('ChatDebug.handleEventCategoryFilter', 'network')
+  await expect(rows).toHaveCount(2)
   const row = rows.nth(0)
   const cells = row.locator('.TableCell')
   const cell1 = cells.nth(0)
-  await expect(cell1).toHaveText('write_file')
+  await expect(cell1).toHaveText('ai-request')
   const cell2 = cells.nth(1)
   await expect(cell2).toHaveText('POST')
   const cell3 = cells.nth(2)
