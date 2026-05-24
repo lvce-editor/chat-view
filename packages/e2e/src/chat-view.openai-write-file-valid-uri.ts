@@ -8,7 +8,7 @@ const assert = (condition: unknown, message: string): void => {
   }
 }
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
   const folderUri = `${tmpDir}/${fileName}`
@@ -20,7 +20,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {

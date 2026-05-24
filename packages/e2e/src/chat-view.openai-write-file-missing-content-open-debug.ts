@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-write-file-missing-content'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
@@ -17,7 +17,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {
