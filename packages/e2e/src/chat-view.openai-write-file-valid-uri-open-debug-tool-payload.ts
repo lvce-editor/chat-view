@@ -1,6 +1,10 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+<<<<<<< HEAD
 export const name = 'chat-view.openai-write-file-valid-uri-open-debug'
+=======
+export const name = 'chat-view.openai-write-file-valid-uri-open-debug-tool-payload'
+>>>>>>> origin/main
 
 export const skip = 1
 
@@ -44,9 +48,21 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
   await ChatDebug.selectEventRow(1)
   await ChatDebug.openTabPayload()
 
+<<<<<<< HEAD
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
     content: 'test',
     uri: 'memfs:///workspace/generated-file',
+=======
+  // TODO should we show callId and status here?
+  // @ts-ignore
+  await ChatDebug.shouldHavePayload({
+    value: {
+      addedLines: 1,
+      ok: true,
+      removedLines: 0,
+      uri: 'memfs:///workspace/generated-file',
+    },
+>>>>>>> origin/main
   })
 }
