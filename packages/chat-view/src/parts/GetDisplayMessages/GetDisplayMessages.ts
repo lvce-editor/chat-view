@@ -3,8 +3,8 @@
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
-import { getEmptyMessageContent, getParsedMessageContent, getPlainTextMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import type { MessageIntermediateNode } from '../ParseMessageContentTypes/ParseMessageContentTypes.ts'
+import { getEmptyMessageContent, getParsedMessageContent, getPlainTextMessageContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 
 interface DisplayMessage {
   readonly message: ChatMessage
