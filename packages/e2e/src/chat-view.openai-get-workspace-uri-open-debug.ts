@@ -15,6 +15,7 @@ export const test: Test = async ({ Chat, ChatDebug, FileSystem, SideBar, Workspa
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
+  // @ts-ignore
   await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
