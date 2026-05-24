@@ -43,16 +43,9 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await ChatDebug.selectEventRow(1)
   await ChatDebug.openTabPayload()
 
-<<<<<<< HEAD
   // @ts-ignore
   await ChatDebug.shouldHavePayload({
     content: 'test',
     uri: 'memfs:///workspace/generated-file',
-=======
-  // TODO args
-  // @ts-ignore
-  await ChatDebug.shouldHavePayload({
-    name: 'write_file',
->>>>>>> origin/main
   })
 }
