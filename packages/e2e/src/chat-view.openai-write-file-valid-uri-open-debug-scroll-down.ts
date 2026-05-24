@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'chat-view.openai-write-file-valid-uri-open-debug'
+export const name = 'chat-view.openai-write-file-valid-uri-open-debug-tool-call'
 
 export const skip = 1
 
@@ -40,19 +40,15 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await expect(message1).toHaveText(`Created ${fileName}.`)
 
   await Chat.openDebugView()
-  await ChatDebug.selectEventRow(1)
-  await ChatDebug.openTabPayload()
+  await ChatDebug.selectEventRow(2)
+  await ChatDebug.openTabResponse()
 
-<<<<<<< HEAD
+  const line1 = Locator('.ChatDebugViewEventLineNumber', { hasText: '1' })
+  await expect(line1).toBeVisible()
   // @ts-ignore
-  await ChatDebug.shouldHavePayload({
-    content: 'test',
-    uri: 'memfs:///workspace/generated-file',
-=======
-  // TODO args
+  const line39 = Locator('.ChatDebugViewEventLineNumber', { hasText: '39' })
+  // await expect(line39).toBeHidden()
+  // TODO
   // @ts-ignore
-  await ChatDebug.shouldHavePayload({
-    name: 'write_file',
->>>>>>> origin/main
-  })
+  // await ChatDebug.scrollResponseToBottom()
 }
