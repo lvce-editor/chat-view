@@ -19,7 +19,16 @@ const getOrderedListItemDomWithNesting = (
 }
 
 export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
-  // if(node.type==='loading'){}
+  if (node.type === 'loading') {
+    return [
+      {
+        childCount: 1,
+        className: 'LoadingText',
+        type: VirtualDomElements.Div,
+      },
+      text(node.text),
+    ]
+  }
   if (node.type === 'text') {
     if (!hasVisibleInlineContent(node.children)) {
       return []

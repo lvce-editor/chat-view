@@ -164,6 +164,10 @@ export const getCss = (
 }
 
 
+.LoadingText{
+  color: dodgerblue;
+}
+
 
 `
 
