@@ -11,6 +11,7 @@ export type MessageIntermediateNode =
   | MessageMathBlockNode
   | MessageThematicBreakNode
   | MessageMathBlockDomNode
+  | MessageProgressNode
 
 export type MessageInlineNode =
   | MessageInlineTextNode
@@ -74,6 +75,11 @@ export interface MessageMathInlineDomNode {
 export interface MessageTextNode {
   readonly children: readonly MessageInlineNode[]
   readonly type: 'text'
+}
+
+export interface MessageProgressNode {
+  readonly text: string
+  readonly type: 'loading'
 }
 
 export interface MessageHeadingNode {

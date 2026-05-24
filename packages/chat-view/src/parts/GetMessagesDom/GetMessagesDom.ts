@@ -1,6 +1,7 @@
 /* cspell:ignore sonarjs */
 
-import { type VirtualDomNode, AriaRoles, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, VirtualDomElements } from '@lvce-editor/constants'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ParsedMessage } from '../ParsedMessage/ParsedMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -21,6 +22,7 @@ export const getMessagesDom = (
   messagesScrollTop = 0,
   useChatMathWorker = false,
   hideWelcomeMessage = false,
+  inProgress = false,
 ): readonly VirtualDomNode[] => {
   if (messages.length === 0) {
     if (!hideWelcomeMessage) {
@@ -38,7 +40,7 @@ export const getMessagesDom = (
       },
     ]
   }
-  const displayMessages = getDisplayMessages(messages, parsedMessages)
+  const displayMessages = getDisplayMessages(messages, parsedMessages, inProgress)
   return [
     {
       childCount: displayMessages.length,

@@ -59,6 +59,7 @@ export interface GetChatVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly inProgress: boolean
   readonly listFocusedIndex?: number
   readonly listFocusOutline?: boolean
   readonly messages?: readonly ChatMessage[]
@@ -135,6 +136,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
     hasSpaceForAgentModePicker,
     hasSpaceForRunModePicker,
     hiddenPrimaryControls = [],
+    inProgress = false,
     listFocusedIndex = -1,
     listFocusOutline = false,
     messages: messagesInput,
@@ -281,6 +283,7 @@ export const getChatVirtualDom = (options: GetChatVirtualDomOptions): readonly V
         hasSpaceForAgentModePicker,
         hasSpaceForRunModePicker,
         hiddenPrimaryControls,
+        inProgress,
         messages,
         messagesAutoScrollEnabled,
         messagesScrollTop,

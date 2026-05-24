@@ -32,7 +32,11 @@ const withAttachments = (message: ChatMessage, attachments: readonly ComposerAtt
   }
 }
 
-export const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessages: readonly ParsedMessage[]): readonly DisplayMessage[] => {
+export const getDisplayMessages = (
+  messages: readonly ChatMessage[],
+  parsedMessages: readonly ParsedMessage[],
+  inProgress = false,
+): readonly DisplayMessage[] => {
   const displayMessages: DisplayMessage[] = []
   for (const message of messages) {
     const parsedContent = getParsedMessageContent(parsedMessages, message.id) || getPlainTextMessageContent(message.text)
@@ -82,6 +86,22 @@ export const getDisplayMessages = (messages: readonly ChatMessage[], parsedMessa
         parsedContent,
       })
     }
+  }
+  if (inProgress) {
+    displayMessages.push({
+      message: {
+        id: '',
+        role: 'assistant',
+        text: 'In Progress',
+        time: '',
+      },
+      parsedContent: [
+        {
+          text: ' In Progress',
+          type: 'loading',
+        },
+      ],
+    })
   }
   return displayMessages
 }

@@ -86,6 +86,7 @@ export const createDefaultState = (): ChatState => {
     height: 0,
     hiddenPrimaryControls: [],
     initial: true,
+    inProgress: false,
     inputSource: 'script',
     lastNormalViewMode: 'list',
     lastSubmittedSessionId: '',
