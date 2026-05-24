@@ -30,7 +30,7 @@ export const test: Test = async ({ Chat, ChatDebug, FileSystem, SideBar, Workspa
 
   await Chat.handleInput(`get the workspace uri`)
   await Chat.handleSubmit()
-
+  ] as any)
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   await ChatDebug.openTabPayload()

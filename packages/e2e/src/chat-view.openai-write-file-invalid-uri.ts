@@ -30,7 +30,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, SideBar, W
     {
       text: `Some kind of error occurred.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Create the ${fileName} directory in the workspace`)
   await Chat.handleSubmit()

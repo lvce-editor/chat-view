@@ -26,7 +26,7 @@ export const test: Test = async ({ Chat, ChatDebug, FileSystem, SideBar, Workspa
     {
       text: `got workspace uri.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`get the workspace uri`)
   await Chat.handleSubmit()

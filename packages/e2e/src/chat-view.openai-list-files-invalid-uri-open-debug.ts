@@ -29,7 +29,7 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
     {
       text: `some kind of error.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`Create the ${fileName} directory in the workspace`)
   await Chat.handleSubmit()

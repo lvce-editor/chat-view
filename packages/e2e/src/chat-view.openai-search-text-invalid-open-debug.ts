@@ -29,7 +29,7 @@ export const test: Test = async ({ Chat, ChatDebug, FileSystem, SideBar, Workspa
     {
       text: `some kind of error.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`search for abc in the workspace`)
   await Chat.handleSubmit()

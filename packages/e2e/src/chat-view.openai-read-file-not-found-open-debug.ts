@@ -28,11 +28,10 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
     {
       text: `some kind of read file error.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`read the file`)
   await Chat.handleSubmit()
-
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   const row1 = Locator('.TableRow[data-index="1"]')

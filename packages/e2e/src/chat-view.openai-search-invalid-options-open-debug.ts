@@ -33,7 +33,7 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
 
   await Chat.handleInput(`search for abc in the workspace`)
   await Chat.handleSubmit()
-
+  ] as any)
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   const row1 = Locator('.TableRow[data-index="1"]')

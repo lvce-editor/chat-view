@@ -35,7 +35,7 @@ export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator,
 
   await Chat.handleInput(`Some kind of error`)
   await Chat.handleSubmit()
-
+  ] as any)
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
   await expect(message1).toHaveText(`Some kind of error`)
