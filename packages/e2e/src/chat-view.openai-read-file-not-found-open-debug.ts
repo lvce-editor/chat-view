@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-search-invalid-options-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'abcdef')
@@ -15,7 +15,8 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {
@@ -27,11 +28,10 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       text: `some kind of read file error.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`read the file`)
   await Chat.handleSubmit()
-
   await Chat.openDebugView()
   await ChatDebug.selectEventRow(2)
   const row1 = Locator('.TableRow[data-index="1"]')

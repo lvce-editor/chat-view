@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-get-workspace-uri-open-debug'
 
 // export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, SideBar, Workspace }) => {
   await SideBar.hide()
   await Workspace.setPath('')
   await Chat.show()
@@ -13,7 +13,8 @@ export const test: Test = async ({ Chat, ChatDebug, Command, SideBar, Workspace 
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {},
@@ -23,7 +24,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, SideBar, Workspace 
     {
       text: `No workspace is open.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`No workspace is open.`)
   await Chat.handleSubmit()

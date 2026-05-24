@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-list-files-valid-uri-open-debug'
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
+export const test: Test = async ({ Chat, ChatDebug, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -14,7 +14,8 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiRequestReset()
-  await Command.execute('Chat.mockOpenApiSetResponse', [
+  // @ts-ignore
+  await Chat.mockOpenApiSetResponse([
     {
       toolCall: {
         arguments: {
@@ -26,11 +27,10 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
     {
       text: `Couldn't find folder.`,
     },
-  ])
+  ] as any)
 
   await Chat.handleInput(`List the files`)
   await Chat.handleSubmit()
-
   const messages = Locator('.ChatMessages .Message')
   const message1 = messages.nth(2)
   await expect(message1).toHaveText(`Couldn't find folder.`)
