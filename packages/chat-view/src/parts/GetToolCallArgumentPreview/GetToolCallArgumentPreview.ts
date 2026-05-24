@@ -1,5 +1,7 @@
 /* cspell:ignore sonarjs */
 
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!rawArguments.trim()) {
     return '""'
@@ -13,35 +15,35 @@ export const getToolCallArgumentPreview = (rawArguments: string): string => {
   if (!parsed || typeof parsed !== 'object') {
     return rawArguments
   }
-  const command = Reflect.get(parsed, 'command')
+  const command = getObjectProperty(parsed, 'command')
   if (typeof command === 'string') {
     return `"${command}"`
   }
-  const options = Reflect.get(parsed, 'options')
+  const options = getObjectProperty(parsed, 'options')
   if (options && typeof options === 'object') {
-    const optionsCommand = Reflect.get(options, 'command')
+    const optionsCommand = getObjectProperty(options, 'command')
     if (typeof optionsCommand === 'string') {
       return `"${optionsCommand}"`
     }
   }
-  const query = Reflect.get(parsed, 'query')
+  const query = getObjectProperty(parsed, 'query')
   if (typeof query === 'string') {
     return `"${query}"`
   }
-  const nestedArguments = Reflect.get(parsed, 'arguments')
+  const nestedArguments = getObjectProperty(parsed, 'arguments')
   if (nestedArguments && typeof nestedArguments === 'object' && !Array.isArray(nestedArguments)) {
-    const nestedQuery = Reflect.get(nestedArguments, 'query')
+    const nestedQuery = getObjectProperty(nestedArguments, 'query')
     if (typeof nestedQuery === 'string') {
       return `"${nestedQuery}"`
     }
   }
-  const path = Reflect.get(parsed, 'path')
+  const path = getObjectProperty(parsed, 'path')
   if (typeof path === 'string') {
     return `"${path}"`
   }
   const keys = Object.keys(parsed)
   if (keys.length === 1) {
-    const value = Reflect.get(parsed, keys[0])
+    const value = getObjectProperty(parsed, keys[0])
     if (typeof value === 'string') {
       return `"${value}"`
     }

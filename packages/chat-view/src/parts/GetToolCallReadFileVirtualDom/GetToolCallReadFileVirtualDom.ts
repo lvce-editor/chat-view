@@ -4,6 +4,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getGlobMatchCount } from '../GetGlobMatchCount/GetGlobMatchCount.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
@@ -17,7 +18,7 @@ const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
     if (!parsed || typeof parsed !== 'object') {
       return ''
     }
-    const pattern = Reflect.get(parsed, 'pattern')
+    const pattern = getObjectProperty(parsed, 'pattern')
     return typeof pattern === 'string' && pattern ? ` "${pattern}"` : ''
   } catch {
     return ''

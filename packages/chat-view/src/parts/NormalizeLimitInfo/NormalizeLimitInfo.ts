@@ -1,14 +1,15 @@
 import type { GetOpenRouterAssistantTextErrorResult } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 export const normalizeLimitInfo = (value: unknown): GetOpenRouterAssistantTextErrorResult['limitInfo'] | undefined => {
   if (!value || typeof value !== 'object') {
     return undefined
   }
-  const limitRemaining = Reflect.get(value, 'limitRemaining')
-  const limitReset = Reflect.get(value, 'limitReset')
-  const retryAfter = Reflect.get(value, 'retryAfter')
-  const usage = Reflect.get(value, 'usage')
-  const usageDaily = Reflect.get(value, 'usageDaily')
+  const limitRemaining = getObjectProperty(value, 'limitRemaining')
+  const limitReset = getObjectProperty(value, 'limitReset')
+  const retryAfter = getObjectProperty(value, 'retryAfter')
+  const usage = getObjectProperty(value, 'usage')
+  const usageDaily = getObjectProperty(value, 'usageDaily')
   const normalized: GetOpenRouterAssistantTextErrorResult['limitInfo'] = {
     ...(typeof limitRemaining === 'number' || limitRemaining === null
       ? {

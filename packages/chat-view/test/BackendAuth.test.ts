@@ -278,7 +278,7 @@ test('getBackendLoginUrl should include redirect_uri from current location', asy
     if (originalLocation) {
       Object.defineProperty(globalThis, 'location', originalLocation)
     } else {
-      Reflect.deleteProperty(globalThis, 'location')
+      delete (globalThis as Record<string, unknown>).location
     }
   }
 })
