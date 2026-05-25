@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-write-file-valid-uri-response-size'
 
 export const skip = 1
 
-export const test: Test = async ({ SideBar, Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, SideBar, Workspace }) => {
   await SideBar.hide()
   const tmpDir = await FileSystem.getTmpDir()
   const fileName = 'generated-file'
