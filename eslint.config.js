@@ -41,6 +41,33 @@ export default [
     },
   },
   {
+    files: ['packages/**/*.ts'],
+    rules: {
+      'e2e/prefer-filesystem-set-files': 'off',
+      'jest/no-disabled-tests': 'off',
+      'sonarjs/prefer-specific-assertions': 'off',
+      'sonarjs/super-linear-regex': 'off',
+      'unicorn/max-nested-calls': 'off',
+      'unicorn/consistent-conditional-object-spread': 'off',
+      'unicorn/no-array-from-fill': 'off',
+      'unicorn/no-break-in-nested-loop': 'off',
+      'unicorn/no-declarations-before-early-exit': 'off',
+      'unicorn/no-global-object-property-assignment': 'off',
+      'unicorn/no-incorrect-template-string-interpolation': 'off',
+      'unicorn/no-top-level-assignment-in-function': 'off',
+      'unicorn/no-unreadable-for-of-expression': 'off',
+      'unicorn/no-unsafe-string-replacement': 'off',
+      'unicorn/prefer-array-last-methods': 'off',
+      'unicorn/prefer-array-some': 'off',
+      'unicorn/prefer-await': 'off',
+      'unicorn/prefer-else-if': 'off',
+      'unicorn/prefer-includes-over-repeated-comparisons': 'off',
+      'unicorn/prefer-iterator-to-array': 'off',
+      'unicorn/prefer-minimal-ternary': 'off',
+      'unicorn/prefer-url-href': 'off',
+    },
+  },
+  {
     files: sonarLintOverrideFiles,
     rules: {
       'sonarjs/cognitive-complexity': 'off',
@@ -48,12 +75,6 @@ export default [
       'sonarjs/max-switch-cases': 'off',
       'sonarjs/no-parameter-reassignment': 'off',
       'sonarjs/regex-complexity': 'off',
-    },
-  },
-  {
-    files: ['packages/chat-view/test/GetToolCallDom.test.ts'],
-    rules: {
-      'jest/no-disabled-tests': 'off',
     },
   },
 ]

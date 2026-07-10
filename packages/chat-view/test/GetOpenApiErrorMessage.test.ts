@@ -141,7 +141,7 @@ test('getOpenApiErrorMessage should format HTTP errors with only trimmed message
 test('getOpenApiErrorMessage should return default request failed message for HTTP errors with blank message', () => {
   const result = getOpenApiErrorMessage(
     createHttpError({
-      errorMessage: '   ',
+      errorMessage: ' '.repeat(3),
     }),
   )
 

@@ -1,6 +1,6 @@
 {
   "name": "text-search-worker",
-  "image": "mcr.microsoft.com/devcontainers/node:24",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
   "postCreateCommand": "npm ci && cd packages/e2e && npx playwright install",
   "postStartCommand": "npm run dev",
   "features": {

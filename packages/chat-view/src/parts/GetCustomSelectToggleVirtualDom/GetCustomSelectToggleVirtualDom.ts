@@ -23,7 +23,7 @@ export const getCustomSelectToggleVirtualDom = (
 
   return [
     {
-      ...(ariaControls ? { 'aria-controls': ariaControls } : {}),
+      ...(ariaControls && { 'aria-controls': ariaControls }),
       'aria-expanded': open ? 'true' : 'false',
       'aria-haspopup': 'true',
       'aria-label': ariaLabel,

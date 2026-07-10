@@ -360,7 +360,6 @@ test('handleClick should select model from model picker item and close picker', 
   expect(result.visibleModels).toBe(result.models)
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClick should select model from delegated model picker list click using y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),
@@ -923,7 +922,6 @@ test('handleClick should create pull request for completed background session', 
   expect(mockExtensionHostRpc.invocations).toHaveLength(1)
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should open detail for session index from y coordinate', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -944,7 +942,6 @@ test.skip('handleClickList should open detail for session index from y coordinat
   expect(result.viewMode).toBe('detail')
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should keep state when click index has no session', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

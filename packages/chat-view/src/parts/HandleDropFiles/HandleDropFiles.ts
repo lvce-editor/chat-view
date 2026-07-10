@@ -20,13 +20,12 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
       composerDropActive: false,
     }
   }
-  const nextState =
-    composerDropActive === false
-      ? state
-      : {
-          ...state,
-          composerDropActive: false,
-        }
+  const nextState = composerDropActive
+    ? {
+        ...state,
+        composerDropActive: false,
+      }
+    : state
   if (!selectedSessionId || fileHandles.length === 0) {
     return nextState
   }
@@ -54,17 +53,13 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
       displayType,
       mimeType: file.type,
       name: file.name,
-      ...(previewSrc
-        ? {
-            previewSrc,
-          }
-        : {}),
+      ...(previewSrc && {
+        previewSrc,
+      }),
       size: file.size,
-      ...(typeof textContent === 'string'
-        ? {
-            textContent,
-          }
-        : {}),
+      ...(typeof textContent === 'string' && {
+        textContent,
+      }),
     })
   }
   return {

@@ -119,7 +119,6 @@ const getOpenRouterLimitInfo = async (
           Authorization: `Bearer ${openRouterApiKey}`,
           ...getClientRequestIdHeader(),
         },
-        method: 'GET',
       })
     } catch {
       return undefined
@@ -150,26 +149,18 @@ const getOpenRouterLimitInfo = async (
   const usage = getObjectProperty(data, 'usage')
   const usageDaily = getObjectProperty(data, 'usage_daily')
   const normalizedLimitInfo = {
-    ...(typeof limitRemaining === 'number' || limitRemaining === null
-      ? {
-          limitRemaining,
-        }
-      : {}),
-    ...(typeof limitReset === 'string' || limitReset === null
-      ? {
-          limitReset,
-        }
-      : {}),
-    ...(typeof usage === 'number'
-      ? {
-          usage,
-        }
-      : {}),
-    ...(typeof usageDaily === 'number'
-      ? {
-          usageDaily,
-        }
-      : {}),
+    ...((typeof limitRemaining === 'number' || limitRemaining === null) && {
+      limitRemaining,
+    }),
+    ...((typeof limitReset === 'string' || limitReset === null) && {
+      limitReset,
+    }),
+    ...(typeof usage === 'number' && {
+      usage,
+    }),
+    ...(typeof usageDaily === 'number' && {
+      usageDaily,
+    }),
   }
 
   const hasLimitInfo =
@@ -243,23 +234,17 @@ export const getOpenRouterAssistantText = async (
           const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
           return {
             details: 'too-many-requests',
-            ...(limitInfo || retryAfter
-              ? {
-                  limitInfo: {
-                    ...limitInfo,
-                    ...(retryAfter
-                      ? {
-                          retryAfter,
-                        }
-                      : {}),
-                  },
-                }
-              : {}),
-            ...(rawMessage
-              ? {
-                  rawMessage,
-                }
-              : {}),
+            ...((limitInfo || retryAfter) && {
+              limitInfo: {
+                ...limitInfo,
+                ...(retryAfter && {
+                  retryAfter,
+                }),
+              },
+            }),
+            ...(rawMessage && {
+              rawMessage,
+            }),
             statusCode: 429,
             type: 'error',
           }
@@ -302,23 +287,17 @@ export const getOpenRouterAssistantText = async (
           const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
           return {
             details: 'too-many-requests',
-            ...(limitInfo || retryAfter
-              ? {
-                  limitInfo: {
-                    ...limitInfo,
-                    ...(retryAfter
-                      ? {
-                          retryAfter,
-                        }
-                      : {}),
-                  },
-                }
-              : {}),
-            ...(rawMessage
-              ? {
-                  rawMessage,
-                }
-              : {}),
+            ...((limitInfo || retryAfter) && {
+              limitInfo: {
+                ...limitInfo,
+                ...(retryAfter && {
+                  retryAfter,
+                }),
+              },
+            }),
+            ...(rawMessage && {
+              rawMessage,
+            }),
             statusCode: 429,
             type: 'error',
           }
@@ -387,17 +366,13 @@ export const getOpenRouterAssistantText = async (
             ? await executeChatTool(name, rawArguments, {
                 assetDir,
                 platform,
-                ...(sessionId
-                  ? {
-                      sessionId,
-                    }
-                  : {}),
+                ...(sessionId && {
+                  sessionId,
+                }),
                 toolCallId: id,
-                ...(toolEnablement
-                  ? {
-                      toolEnablement,
-                    }
-                  : {}),
+                ...(toolEnablement && {
+                  toolEnablement,
+                }),
                 useChatToolWorker,
                 workspaceUri,
               })

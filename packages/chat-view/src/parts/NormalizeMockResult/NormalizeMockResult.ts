@@ -23,21 +23,15 @@ const getErrorResult = (value: object, details: GetOpenRouterAssistantTextErrorR
   const limitInfo = normalizeLimitInfo(getObjectProperty(value, 'limitInfo'))
   return {
     details,
-    ...(limitInfo
-      ? {
-          limitInfo,
-        }
-      : {}),
-    ...(typeof rawMessage === 'string'
-      ? {
-          rawMessage,
-        }
-      : {}),
-    ...(typeof statusCode === 'number'
-      ? {
-          statusCode,
-        }
-      : {}),
+    ...(limitInfo && {
+      limitInfo,
+    }),
+    ...(typeof rawMessage === 'string' && {
+      rawMessage,
+    }),
+    ...(typeof statusCode === 'number' && {
+      statusCode,
+    }),
     type: 'error',
   }
 }

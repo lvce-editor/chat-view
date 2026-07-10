@@ -153,11 +153,9 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
   const executionOptions = {
     assetDir: options.assetDir,
     platform: options.platform,
-    ...(options.workspaceUri
-      ? {
-          workspaceUri: options.workspaceUri,
-        }
-      : {}),
+    ...(options.workspaceUri && {
+      workspaceUri: options.workspaceUri,
+    }),
   }
   const executionId = options.toolCallId || `${name}-${Date.now()}`
   const startedAt = new Date().toISOString()

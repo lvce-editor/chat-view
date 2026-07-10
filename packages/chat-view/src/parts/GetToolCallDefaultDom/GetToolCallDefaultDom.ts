@@ -73,7 +73,7 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
     {
       childCount: hasSuffix ? 2 : 1,
       className: ClassNames.ChatOrderedListItem,
-      ...(hoverTitle ? { title: hoverTitle } : {}),
+      ...(hoverTitle && { title: hoverTitle }),
       type: VirtualDomElements.Li,
     },
     {

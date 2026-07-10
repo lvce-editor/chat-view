@@ -37,16 +37,12 @@ const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
     const description = getObjectProperty(toolFunction, 'description')
     const parameters = getObjectProperty(toolFunction, 'parameters')
     return {
-      ...(typeof description === 'string'
-        ? {
-            description,
-          }
-        : {}),
-      ...(typeof name === 'string'
-        ? {
-            name,
-          }
-        : {}),
+      ...(typeof description === 'string' && {
+        description,
+      }),
+      ...(typeof name === 'string' && {
+        name,
+      }),
       ...(parameters && typeof parameters === 'object'
         ? {
             parameters,
@@ -73,36 +69,27 @@ export const getOpenAiParams = (
   const openAiTools = getOpenAiTools(tools)
   return {
     input,
-    ...(systemPrompt
-      ? {
-          instructions: systemPrompt,
-        }
-      : {}),
+    ...(systemPrompt && {
+      instructions: systemPrompt,
+    }),
     model: modelId,
-    ...(stream
-      ? {
-          stream: true,
-          ...(includeObfuscation
-            ? {}
-            : {
-                stream_options: {
-                  include_obfuscation: false,
-                },
-              }),
-        }
-      : {}),
-    ...(previousResponseId
-      ? {
-          previous_response_id: previousResponseId,
-        }
-      : {}),
-    ...(reasoningEffort && supportsReasoningEffort
-      ? {
-          reasoning: {
-            effort: reasoningEffort,
-          },
-        }
-      : {}),
+    ...(stream && {
+      stream: true,
+      ...(!includeObfuscation && {
+        stream_options: {
+          include_obfuscation: false,
+        },
+      }),
+    }),
+    ...(previousResponseId && {
+      previous_response_id: previousResponseId,
+    }),
+    ...(reasoningEffort &&
+      supportsReasoningEffort && {
+        reasoning: {
+          effort: reasoningEffort,
+        },
+      }),
     max_tool_calls: maxToolCalls,
     tool_choice: 'auto',
     tools: webSearchEnabled ? [...openAiTools, { type: 'web_search' }] : openAiTools,
@@ -129,7 +116,7 @@ const getStreamChunkText = (content: unknown): string => {
 
 const getShortToolErrorMessage = (error: string): string => {
   const trimmed = error.trim().replace(errorPrefixRegex, '')
-  const firstLine = trimmed.split('\n')[0]
+  const firstLine = trimmed.split('\n', 1)[0]
   if (firstLine.length <= 80) {
     return firstLine
   }
@@ -177,20 +164,16 @@ export const getToolCallExecutionStatus = (content: string): Pick<StreamingToolC
   if (notFoundErrorRegex.test(errorMessage)) {
     return {
       errorMessage,
-      ...(errorStack
-        ? {
-            errorStack,
-          }
-        : {}),
+      ...(errorStack && {
+        errorStack,
+      }),
       status: 'not-found',
     }
   }
   return {
-    ...(errorStack
-      ? {
-          errorStack,
-        }
-      : {}),
+    ...(errorStack && {
+      errorStack,
+    }),
     errorMessage,
     status: 'error',
   }
@@ -525,17 +508,13 @@ const parseOpenApiStream = async (
       const status = getStreamingToolCallStatus(rawStatus)
       const next: StreamingToolCall = {
         arguments: typeof rawArguments === 'string' ? rawArguments : '',
-        ...(typeof callId === 'string'
-          ? {
-              id: callId,
-            }
-          : {}),
+        ...(typeof callId === 'string' && {
+          id: callId,
+        }),
         name: typeof name === 'string' ? name : '',
-        ...(status
-          ? {
-              status,
-            }
-          : {}),
+        ...(status && {
+          status,
+        }),
       }
       toolCallAccumulator = {
         ...toolCallAccumulator,
@@ -708,11 +687,9 @@ const parseOpenApiStream = async (
   const responseFunctionCalls =
     completedResponseFunctionCalls.length > 0 ? completedResponseFunctionCalls : getResponseFunctionCallsFromStreamingAccumulator(toolCallAccumulator)
   return {
-    ...(responseId
-      ? {
-          responseId,
-        }
-      : {}),
+    ...(responseId && {
+      responseId,
+    }),
     responseFunctionCalls,
     text,
     type: 'success',
@@ -743,21 +720,15 @@ const getOpenApiErrorDetails = async (
   const errorType = getObjectProperty(error, 'type')
 
   return {
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
   }
 }
 
@@ -785,21 +756,15 @@ const getOpenApiErrorDetailsFromResponseText = (
   const errorType = getObjectProperty(error, 'type')
 
   return {
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
   }
 }
 
@@ -897,21 +862,15 @@ export const getOpenApiAssistantText = async (
               const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
               return {
                 details: 'http-error',
-                ...(errorCode
-                  ? {
-                      errorCode,
-                    }
-                  : {}),
-                ...(errorMessage
-                  ? {
-                      errorMessage,
-                    }
-                  : {}),
-                ...(errorType
-                  ? {
-                      errorType,
-                    }
-                  : {}),
+                ...(errorCode && {
+                  errorCode,
+                }),
+                ...(errorMessage && {
+                  errorMessage,
+                }),
+                ...(errorType && {
+                  errorType,
+                }),
                 statusCode: requestResult.statusCode,
                 type: 'error',
               }
@@ -942,21 +901,15 @@ export const getOpenApiAssistantText = async (
               const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
               return {
                 details: 'http-error',
-                ...(errorCode
-                  ? {
-                      errorCode,
-                    }
-                  : {}),
-                ...(errorMessage
-                  ? {
-                      errorMessage,
-                    }
-                  : {}),
-                ...(errorType
-                  ? {
-                      errorType,
-                    }
-                  : {}),
+                ...(errorCode && {
+                  errorCode,
+                }),
+                ...(errorMessage && {
+                  errorMessage,
+                }),
+                ...(errorType && {
+                  errorType,
+                }),
                 statusCode: response.status,
                 type: 'error',
               }
@@ -978,17 +931,13 @@ export const getOpenApiAssistantText = async (
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
             platform,
-            ...(sessionId
-              ? {
-                  sessionId,
-                }
-              : {}),
+            ...(sessionId && {
+              sessionId,
+            }),
             toolCallId: toolCall.callId,
-            ...(toolEnablement
-              ? {
-                  toolEnablement,
-                }
-              : {}),
+            ...(toolEnablement && {
+              toolEnablement,
+            }),
             useChatToolWorker,
             workspaceUri,
           })
@@ -996,33 +945,23 @@ export const getOpenApiAssistantText = async (
           const toolCallResult = getToolCallResult(toolCall.name, content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
-            ...(executionStatus.errorStack
-              ? {
-                  errorStack: executionStatus.errorStack,
-                }
-              : {}),
-            ...(executionStatus.errorMessage
-              ? {
-                  errorMessage: executionStatus.errorMessage,
-                }
-              : {}),
-            ...(executionStatus.errorStack
-              ? {
-                  errorStack: executionStatus.errorStack,
-                }
-              : {}),
+            ...(executionStatus.errorStack && {
+              errorStack: executionStatus.errorStack,
+            }),
+            ...(executionStatus.errorMessage && {
+              errorMessage: executionStatus.errorMessage,
+            }),
+            ...(executionStatus.errorStack && {
+              errorStack: executionStatus.errorStack,
+            }),
             id: toolCall.callId,
             name: toolCall.name,
-            ...(toolCallResult
-              ? {
-                  result: toolCallResult,
-                }
-              : {}),
-            ...(executionStatus.status
-              ? {
-                  status: executionStatus.status,
-                }
-              : {}),
+            ...(toolCallResult && {
+              result: toolCallResult,
+            }),
+            ...(executionStatus.status && {
+              status: executionStatus.status,
+            }),
           })
           openAiInput.push({
             call_id: toolCall.callId,
@@ -1068,21 +1007,15 @@ export const getOpenApiAssistantText = async (
         const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
         return {
           details: 'http-error',
-          ...(errorCode
-            ? {
-                errorCode,
-              }
-            : {}),
-          ...(errorMessage
-            ? {
-                errorMessage,
-              }
-            : {}),
-          ...(errorType
-            ? {
-                errorType,
-              }
-            : {}),
+          ...(errorCode && {
+            errorCode,
+          }),
+          ...(errorMessage && {
+            errorMessage,
+          }),
+          ...(errorType && {
+            errorType,
+          }),
           statusCode: requestResult.statusCode,
           type: 'error',
         }
@@ -1111,21 +1044,15 @@ export const getOpenApiAssistantText = async (
         const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
         return {
           details: 'http-error',
-          ...(errorCode
-            ? {
-                errorCode,
-              }
-            : {}),
-          ...(errorMessage
-            ? {
-                errorMessage,
-              }
-            : {}),
-          ...(errorType
-            ? {
-                errorType,
-              }
-            : {}),
+          ...(errorCode && {
+            errorCode,
+          }),
+          ...(errorMessage && {
+            errorMessage,
+          }),
+          ...(errorType && {
+            errorType,
+          }),
           statusCode: response.status,
           type: 'error',
         }
@@ -1161,17 +1088,13 @@ export const getOpenApiAssistantText = async (
         const content = await executeChatTool(toolCall.name, toolCall.arguments, {
           assetDir,
           platform,
-          ...(sessionId
-            ? {
-                sessionId,
-              }
-            : {}),
+          ...(sessionId && {
+            sessionId,
+          }),
           toolCallId: toolCall.callId,
-          ...(toolEnablement
-            ? {
-                toolEnablement,
-              }
-            : {}),
+          ...(toolEnablement && {
+            toolEnablement,
+          }),
           useChatToolWorker,
           workspaceUri,
         })
@@ -1179,33 +1102,23 @@ export const getOpenApiAssistantText = async (
         const toolCallResult = getToolCallResult(toolCall.name, content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
-          ...(executionStatus.errorStack
-            ? {
-                errorStack: executionStatus.errorStack,
-              }
-            : {}),
-          ...(executionStatus.errorMessage
-            ? {
-                errorMessage: executionStatus.errorMessage,
-              }
-            : {}),
-          ...(executionStatus.errorStack
-            ? {
-                errorStack: executionStatus.errorStack,
-              }
-            : {}),
+          ...(executionStatus.errorStack && {
+            errorStack: executionStatus.errorStack,
+          }),
+          ...(executionStatus.errorMessage && {
+            errorMessage: executionStatus.errorMessage,
+          }),
+          ...(executionStatus.errorStack && {
+            errorStack: executionStatus.errorStack,
+          }),
           id: toolCall.callId,
           name: toolCall.name,
-          ...(toolCallResult
-            ? {
-                result: toolCallResult,
-              }
-            : {}),
-          ...(executionStatus.status
-            ? {
-                status: executionStatus.status,
-              }
-            : {}),
+          ...(toolCallResult && {
+            result: toolCallResult,
+          }),
+          ...(executionStatus.status && {
+            status: executionStatus.status,
+          }),
         })
         openAiInput.push({
           call_id: toolCall.callId,
@@ -1263,11 +1176,9 @@ export const getOpenApiAssistantText = async (
               ? await executeChatTool(name, rawArguments, {
                   assetDir,
                   platform,
-                  ...(sessionId
-                    ? {
-                        sessionId,
-                      }
-                    : {}),
+                  ...(sessionId && {
+                    sessionId,
+                  }),
                   toolCallId: id,
                   useChatToolWorker,
                   workspaceUri,
@@ -1278,33 +1189,23 @@ export const getOpenApiAssistantText = async (
             const toolCallResult = getToolCallResult(name, content)
             executedToolCalls.push({
               arguments: typeof rawArguments === 'string' ? rawArguments : '',
-              ...(executionStatus.errorStack
-                ? {
-                    errorStack: executionStatus.errorStack,
-                  }
-                : {}),
-              ...(executionStatus.errorMessage
-                ? {
-                    errorMessage: executionStatus.errorMessage,
-                  }
-                : {}),
-              ...(executionStatus.errorStack
-                ? {
-                    errorStack: executionStatus.errorStack,
-                  }
-                : {}),
+              ...(executionStatus.errorStack && {
+                errorStack: executionStatus.errorStack,
+              }),
+              ...(executionStatus.errorMessage && {
+                errorMessage: executionStatus.errorMessage,
+              }),
+              ...(executionStatus.errorStack && {
+                errorStack: executionStatus.errorStack,
+              }),
               id,
               name,
-              ...(toolCallResult
-                ? {
-                    result: toolCallResult,
-                  }
-                : {}),
-              ...(executionStatus.status
-                ? {
-                    status: executionStatus.status,
-                  }
-                : {}),
+              ...(toolCallResult && {
+                result: toolCallResult,
+              }),
+              ...(executionStatus.status && {
+                status: executionStatus.status,
+              }),
             })
           }
           openAiInput.push({
