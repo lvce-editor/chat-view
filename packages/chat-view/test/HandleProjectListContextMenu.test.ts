@@ -37,7 +37,6 @@ test('handleProjectListContextMenu should map session rows to their parent proje
   ])
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleProjectListContextMenu should allow removal for non-blank projects', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'ContextMenu.show2': async () => {},

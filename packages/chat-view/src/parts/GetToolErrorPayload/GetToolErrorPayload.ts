@@ -4,11 +4,10 @@ export const getToolErrorPayload = (error: unknown): { readonly error: string; r
   const rawStack = getObjectProperty(error, 'stack')
   return {
     error: String(error),
-    ...(typeof rawStack === 'string' && rawStack.trim()
-      ? {
-          errorStack: rawStack,
-          stack: rawStack,
-        }
-      : {}),
+    ...(typeof rawStack === 'string' &&
+      rawStack.trim() && {
+        errorStack: rawStack,
+        stack: rawStack,
+      }),
   }
 }

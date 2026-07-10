@@ -35,6 +35,12 @@ export const test: Test = async ({ Chat, Command }) => {
   const [{ payload }] = requests
 
   assert((payload.instructions || '').includes('Plan mode instructions:'), 'Plan mode instructions should be present in the request payload')
-  assert(!(payload.tools || []).some((tool) => tool.type === 'web_search'), 'Plan mode should not include web_search')
-  assert(!(payload.tools || []).some((tool) => tool.name === 'write_file'), 'Plan mode should not include write_file')
+  assert(
+    (payload.tools || []).every((tool) => tool.type !== 'web_search'),
+    'Plan mode should not include web_search',
+  )
+  assert(
+    (payload.tools || []).every((tool) => tool.name !== 'write_file'),
+    'Plan mode should not include write_file',
+  )
 }

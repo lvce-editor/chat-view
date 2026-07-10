@@ -157,7 +157,7 @@ const getGitDirUri = async (workspaceUri: string): Promise<string> => {
   if (!match) {
     return ''
   }
-  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).toString()
+  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).href
 }
 
 const FileTypeFile = 1
@@ -181,7 +181,7 @@ const collectBranchNames = async (workspaceUri: string, refsHeadsUri: string, pr
 const getGitBranches = async (workspaceUri: string): Promise<readonly GitBranch[]> => {
   const gitDirUri = await getGitDirUri(workspaceUri)
   if (!gitDirUri) {
-    throw new globalThis.Error('Git repository not found.')
+    throw new Error('Git repository not found.')
   }
   const branches = new Set<string>()
   let currentBranch = ''
@@ -203,7 +203,7 @@ const getGitBranches = async (workspaceUri: string): Promise<readonly GitBranch[
     // Repositories without local refs should still open.
   }
   if (branches.size === 0) {
-    throw new globalThis.Error('No local git branches found.')
+    throw new Error('No local git branches found.')
   }
   return [...branches]
     .toSorted((a, b) => a.localeCompare(b))

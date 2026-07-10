@@ -14,15 +14,15 @@ export const parseRenderHtmlArguments = (rawArguments: string): ParsedRenderHtml
     }
 
     const rawHtml = getObjectProperty(parsed, 'html')
-    const html = typeof rawHtml === 'string' ? String(rawHtml) : ''
+    const html = typeof rawHtml === 'string' ? rawHtml : ''
     if (!html) {
       return undefined
     }
 
     const rawCss = getObjectProperty(parsed, 'css')
-    const css = typeof rawCss === 'string' ? String(rawCss) : ''
+    const css = typeof rawCss === 'string' ? rawCss : ''
     const rawTitle = getObjectProperty(parsed, 'title')
-    const title = typeof rawTitle === 'string' ? String(rawTitle) : 'visual preview'
+    const title = typeof rawTitle === 'string' ? rawTitle : 'visual preview'
 
     return {
       css,

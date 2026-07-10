@@ -17,27 +17,21 @@ const getMessageFromEvent = (event: unknown): unknown => {
   if (event.type === 'chat-message-added') {
     const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
     return normalizeStoredChatMessage(event.message, {
-      ...(fallbackTime
-        ? {
-            fallbackTime,
-          }
-        : {}),
+      ...(fallbackTime && {
+        fallbackTime,
+      }),
     })
   }
   if (event.type === 'message') {
     const fallbackId = typeof event.requestId === 'string' ? event.requestId : undefined
     const fallbackTime = typeof event.timestamp === 'string' ? event.timestamp : undefined
     return normalizeStoredChatMessage(event.message, {
-      ...(fallbackId
-        ? {
-            fallbackId,
-          }
-        : {}),
-      ...(fallbackTime
-        ? {
-            fallbackTime,
-          }
-        : {}),
+      ...(fallbackId && {
+        fallbackId,
+      }),
+      ...(fallbackTime && {
+        fallbackTime,
+      }),
     })
   }
   return undefined

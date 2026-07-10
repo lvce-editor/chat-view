@@ -76,11 +76,9 @@ export const handleTextChunkFunction = async (
   const nextState = {
     ...liveState,
     messages: updated.messages,
-    ...(liveState.messagesAutoScrollEnabled
-      ? {
-          messagesScrollTop: getNextAutoScrollTop(liveState.messagesScrollTop),
-        }
-      : {}),
+    ...(liveState.messagesAutoScrollEnabled && {
+      messagesScrollTop: getNextAutoScrollTop(liveState.messagesScrollTop),
+    }),
     parsedMessages: updated.parsedMessages,
   }
   set(uid, liveState, nextState)

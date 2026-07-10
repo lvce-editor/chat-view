@@ -11,31 +11,21 @@ export const normalizeLimitInfo = (value: unknown): GetOpenRouterAssistantTextEr
   const usage = getObjectProperty(value, 'usage')
   const usageDaily = getObjectProperty(value, 'usageDaily')
   const normalized: GetOpenRouterAssistantTextErrorResult['limitInfo'] = {
-    ...(typeof limitRemaining === 'number' || limitRemaining === null
-      ? {
-          limitRemaining,
-        }
-      : {}),
-    ...(typeof limitReset === 'string' || limitReset === null
-      ? {
-          limitReset,
-        }
-      : {}),
-    ...(typeof retryAfter === 'string' || retryAfter === null
-      ? {
-          retryAfter,
-        }
-      : {}),
-    ...(typeof usage === 'number'
-      ? {
-          usage,
-        }
-      : {}),
-    ...(typeof usageDaily === 'number'
-      ? {
-          usageDaily,
-        }
-      : {}),
+    ...((typeof limitRemaining === 'number' || limitRemaining === null) && {
+      limitRemaining,
+    }),
+    ...((typeof limitReset === 'string' || limitReset === null) && {
+      limitReset,
+    }),
+    ...((typeof retryAfter === 'string' || retryAfter === null) && {
+      retryAfter,
+    }),
+    ...(typeof usage === 'number' && {
+      usage,
+    }),
+    ...(typeof usageDaily === 'number' && {
+      usageDaily,
+    }),
   }
   const hasDetails =
     typeof limitRemaining === 'number' ||
