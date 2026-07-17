@@ -51,7 +51,7 @@ export const test: Test = async ({ Chat, Command, expect, KeyBoard, Locator }) =
   const chatListLabel1 = chatListLabels.nth(1)
   await expect(chatListLabel1).toHaveText('Chat A')
 
-  await chatListLabel1.locator('.ChatListItemTitle').click()
+  await chatListLabel1.locator('.ChatListItemTitle').dispatchEvent('click', {})
 
   await expect(messages).toHaveCount(2)
   await expect(message0).toContainText('chat-a-user')
