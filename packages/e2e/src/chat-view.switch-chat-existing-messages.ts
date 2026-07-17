@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.switch-chat-existing-messages'
 
+const clickEventInit = { bubbles: true } as unknown as string
+
 export const test: Test = async ({ Chat, Command, expect, KeyBoard, Locator }) => {
   await Chat.show()
   await Chat.reset()
@@ -47,11 +49,11 @@ export const test: Test = async ({ Chat, Command, expect, KeyBoard, Locator }) =
   await Chat.handleClickBack()
   await expect(chatListLabels).toHaveCount(2)
   const chatListLabel0 = chatListLabels.nth(0)
-  await expect(chatListLabel0).toHaveText('Chat B')
+  await expect(chatListLabel0).toHaveText('Chat A')
   const chatListLabel1 = chatListLabels.nth(1)
-  await expect(chatListLabel1).toHaveText('Chat A')
+  await expect(chatListLabel1).toHaveText('Chat B')
 
-  await chatListLabel1.locator('.ChatListItemTitle').dispatchEvent('click', '{}')
+  await chatListLabel0.locator('.ChatListItemTitle').dispatchEvent('click', clickEventInit)
 
   await expect(messages).toHaveCount(2)
   await expect(message0).toContainText('chat-a-user')
@@ -59,9 +61,9 @@ export const test: Test = async ({ Chat, Command, expect, KeyBoard, Locator }) =
 
   await Chat.handleClickBack()
 
-  await expect(chatListLabel0).toHaveText('Chat B')
-  await Chat.chatListFocusFirst()
-  await expect(chatListLabel0).toBeFocused()
+  await expect(chatListLabel1).toHaveText('Chat B')
+  await Chat.chatListFocusLast()
+  await expect(chatListLabel1).toBeFocused()
   await KeyBoard.press('Enter')
 
   await expect(messages).toHaveCount(2)
