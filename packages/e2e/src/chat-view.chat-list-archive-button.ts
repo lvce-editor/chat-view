@@ -11,7 +11,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const chatListItems = Locator('.ChatList .ChatListItem')
   const archiveIcon = Locator('.SessionArchiveButton .MaskIconArchive')
   await expect(chatListItems).toHaveCount(1)
-  await archiveIcon.dispatchEvent('click', {})
+  await archiveIcon.dispatchEvent('click', '{}')
 
   await expect(chatListItems).toHaveCount(0)
 }
