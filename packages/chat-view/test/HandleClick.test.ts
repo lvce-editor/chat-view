@@ -120,11 +120,47 @@ test('handleClick should switch from normal mode to chat-focus mode', async () =
   expect(mockRendererRpc.invocations).toEqual([['Layout.enterSideBarFocusMode', 'secondary']])
 })
 
+test('handleClick should switch to chat-focus mode when the host does not support side bar focus mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.enterSideBarFocusMode': async () => {
+      throw new Error('module Layout not found')
+    },
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    viewMode: 'detail',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('chat-focus')
+  expect(result.lastNormalViewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.enterSideBarFocusMode', 'secondary']])
+})
+
 test('handleClick should switch from chat-focus mode back to remembered normal mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
     'Layout.leaveSideBarFocusMode': async () => {},
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    lastNormalViewMode: 'detail',
+    viewMode: 'chat-focus',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.leaveSideBarFocusMode']])
+})
+
+test('handleClick should leave chat-focus mode when the host does not support side bar focus mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.leaveSideBarFocusMode': async () => {
+      throw new Error('Command not found Layout.leaveSideBarFocusMode')
+    },
   })
   const state: ChatState = {
     ...createDefaultState(),
