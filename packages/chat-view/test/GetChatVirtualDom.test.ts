@@ -1021,6 +1021,12 @@ test('getChatVirtualDOm should render session list entries', () => {
     role: 'button',
     tabIndex: 0,
   })
+  expect(sessionTitle).toMatchObject({
+    name: 'session:session-1',
+  })
+  expect(sessionTime).toMatchObject({
+    name: 'session:session-1',
+  })
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
   expect(result.find((node) => node.text === '10:30')).toBeDefined()
@@ -1034,6 +1040,7 @@ test('getChatVirtualDOm should render session list entries', () => {
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
   expect(archiveIcon).toMatchObject({
+    'data-id': 'session-1',
     type: VirtualDomElements.Div,
   })
 })
@@ -1418,7 +1425,7 @@ test('getChatVirtualDom should collapse chat list to first 3 sessions by default
   })
 
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
-  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
   const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
   const chat4Label = result.find((node) => node.text === 'Chat 4')
   const chat5Label = result.find((node) => node.text === 'Chat 5')
@@ -1440,7 +1447,7 @@ test('getChatVirtualDom should hide chat list toggle when there are 3 or fewer v
   })
 
   const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
-  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
 
   expect(moreToggle).toBeUndefined()
   expect(visibleSessionLabels).toHaveLength(3)
@@ -1455,7 +1462,7 @@ test('getChatVirtualDom should render all visible sessions when chat list is exp
   })
 
   const chatList = result.find((node) => node.className === ClassNames.ChatList)
-  const visibleSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
   const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
   const chat4Label = result.find((node) => node.text === 'Chat 4')
   const chat5Label = result.find((node) => node.text === 'Chat 5')
@@ -1525,7 +1532,7 @@ test('getChatVirtualDom should collapse filtered search results to first 3 visib
     viewMode: 'list',
   })
 
-  const filteredSessionLabels = result.filter((node) => node.name?.startsWith('session:'))
+  const filteredSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
   const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
   const alpha4Label = result.find((node) => node.text === 'alpha 4')
   const betaLabel = result.find((node) => node.text === 'beta 1')

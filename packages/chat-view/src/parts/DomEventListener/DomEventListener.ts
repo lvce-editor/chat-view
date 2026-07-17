@@ -3,5 +3,4 @@ export interface DomEventListener {
   readonly params: readonly (string | number)[]
   readonly passive?: boolean
   readonly preventDefault?: boolean
-  readonly stopPropagation?: boolean
 }

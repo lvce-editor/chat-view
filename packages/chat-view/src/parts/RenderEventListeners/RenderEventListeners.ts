@@ -15,8 +15,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleClickSession,
-      params: ['handleClick', 'event.currentTarget.name'],
-      stopPropagation: true,
+      params: ['handleClick', EventExpression.TargetName],
     },
     {
       name: DomEventListenersFunctions.HandleMouseOver,
@@ -44,8 +43,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleClickDelete,
-      params: ['handleClickDelete', 'event.currentTarget.dataset.id'],
-      stopPropagation: true,
+      params: ['handleClickDelete', 'event.target.dataset.id'],
     },
     {
       name: DomEventListenersFunctions.HandleClickClose,

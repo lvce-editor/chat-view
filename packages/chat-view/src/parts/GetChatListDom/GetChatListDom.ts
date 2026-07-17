@@ -28,7 +28,6 @@ export const getChatListDom = (
       childCount,
       className: ClassNames.ChatList,
       name: InputName.ChatList,
-      onClick: DomEventListenerFunctions.HandleClickList,
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onScroll: DomEventListenerFunctions.HandleChatListScroll,

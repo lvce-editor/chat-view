@@ -11,14 +11,12 @@ test('renderEventListeners should return expected listeners', () => {
   const sessionClickListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickSession)
   expect(sessionClickListener).toEqual({
     name: DomEventListenerFunctions.HandleClickSession,
-    params: ['handleClick', 'event.currentTarget.name'],
-    stopPropagation: true,
+    params: ['handleClick', EventExpression.TargetName],
   })
   const sessionDeleteListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickDelete)
   expect(sessionDeleteListener).toEqual({
     name: DomEventListenerFunctions.HandleClickDelete,
-    params: ['handleClickDelete', 'event.currentTarget.dataset.id'],
-    stopPropagation: true,
+    params: ['handleClickDelete', 'event.target.dataset.id'],
   })
   const chatInputContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleChatInputContextMenu)
   expect(chatInputContextMenuListener).toEqual({

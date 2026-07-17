@@ -17,6 +17,7 @@ export const getSessionDom = (
   showFocusOutline = false,
 ): readonly VirtualDomNode[] => {
   const sessionClassName = getSessionClassName(focused, showFocusOutline)
+  const sessionInputName = InputName.getSessionInputName(session.id)
   const sessionStatusClassName = getSessionStatusClassName(session)
   const lastActiveTime = getSessionLastActiveTime(session)
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
@@ -35,7 +36,7 @@ export const getSessionDom = (
     {
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
-      name: InputName.getSessionInputName(session.id),
+      name: sessionInputName,
       onClick: DomEventListenerFunctions.HandleClickSession,
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
@@ -46,6 +47,7 @@ export const getSessionDom = (
     {
       childCount: 1,
       className: ClassNames.ChatListItemTitle,
+      name: sessionInputName,
       type: VirtualDomElements.Div,
     },
     text(session.title),
@@ -54,6 +56,7 @@ export const getSessionDom = (
           {
             childCount: 1,
             className: ClassNames.ChatListItemTime,
+            name: sessionInputName,
             type: VirtualDomElements.Div,
           },
           text(formattedLastActiveTime),
