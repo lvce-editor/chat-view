@@ -107,6 +107,9 @@ test('handleClick should select a session', async () => {
 test('handleClick should switch from normal mode to chat-focus mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.enterSideBarFocusMode': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     viewMode: 'detail',
@@ -114,11 +117,15 @@ test('handleClick should switch from normal mode to chat-focus mode', async () =
   const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
   expect(result.viewMode).toBe('chat-focus')
   expect(result.lastNormalViewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.enterSideBarFocusMode', 'secondary']])
 })
 
 test('handleClick should switch from chat-focus mode back to remembered normal mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.leaveSideBarFocusMode': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     lastNormalViewMode: 'detail',
@@ -126,6 +133,7 @@ test('handleClick should switch from chat-focus mode back to remembered normal m
   }
   const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
   expect(result.viewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.leaveSideBarFocusMode']])
 })
 
 test('handleClick should toggle search field visibility on', async () => {
