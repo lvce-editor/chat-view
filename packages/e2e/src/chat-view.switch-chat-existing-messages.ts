@@ -2,9 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.switch-chat-existing-messages'
 
-export const skip = 1
-
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, KeyBoard, Locator }) => {
   await Chat.show()
   await Chat.reset()
 
@@ -53,7 +51,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const chatListLabel1 = chatListLabels.nth(1)
   await expect(chatListLabel1).toHaveText('Chat A')
 
-  await Command.execute('Chat.handleClick', 'session:Chat A')
+  await chatListLabel1.locator('.ChatListItemTitle').click()
 
   await expect(messages).toHaveCount(2)
   await expect(message0).toContainText('chat-a-user')
@@ -62,7 +60,9 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleClickBack()
 
   await expect(chatListLabel0).toHaveText('Chat B')
-  await Command.execute('Chat.handleClick', 'session:Chat B')
+  await Chat.chatListFocusFirst()
+  await expect(chatListLabel0).toBeFocused()
+  await KeyBoard.press('Enter')
 
   await expect(messages).toHaveCount(2)
   await expect(message0).toContainText('chat-b-user')

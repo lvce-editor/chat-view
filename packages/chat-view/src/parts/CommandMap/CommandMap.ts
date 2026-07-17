@@ -2,6 +2,7 @@ import { terminate } from '@lvce-editor/viewlet-registry'
 import { applyViewModelState } from '../ApplyViewModelState/ApplyViewModelState.ts'
 import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
 import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
+import * as ChatListAccept from '../ChatListAccept/ChatListAccept.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
@@ -145,6 +146,7 @@ export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
+  'Chat.chatListAccept': wrapCommand(ChatListAccept.chatListAccept),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
   'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
