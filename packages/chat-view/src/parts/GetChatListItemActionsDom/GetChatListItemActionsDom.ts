@@ -27,6 +27,7 @@ export const getChatListItemActionsDom = (session: ChatSession): readonly Virtua
       childCount: 0,
       className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
       'data-id': session.id,
+      onClick: DomEventListenerFunctions.HandleClickDelete,
       type: VirtualDomElements.Div,
     },
   ]

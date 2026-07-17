@@ -1023,9 +1023,11 @@ test('getChatVirtualDOm should render session list entries', () => {
   })
   expect(sessionTitle).toMatchObject({
     name: 'session:session-1',
+    onClick: DomEventListenerFunctions.HandleClickSession,
   })
   expect(sessionTime).toMatchObject({
     name: 'session:session-1',
+    onClick: DomEventListenerFunctions.HandleClickSession,
   })
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
@@ -1041,6 +1043,7 @@ test('getChatVirtualDOm should render session list entries', () => {
   })
   expect(archiveIcon).toMatchObject({
     'data-id': 'session-1',
+    onClick: DomEventListenerFunctions.HandleClickDelete,
     type: VirtualDomElements.Div,
   })
 })
