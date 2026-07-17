@@ -8,6 +8,18 @@ test('renderEventListeners should return expected listeners', () => {
   expect(result).toBeDefined()
   const searchListener = result.find((listener) => listener.params?.[0] === 'handleSearchValueChange')
   expect(searchListener).toBeDefined()
+  const sessionClickListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickSession)
+  expect(sessionClickListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickSession,
+    params: ['handleClick', EventExpression.TargetName],
+    stopPropagation: true,
+  })
+  const sessionDeleteListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickDelete)
+  expect(sessionDeleteListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickDelete,
+    params: ['handleClickDelete', 'event.target.dataset.id'],
+    stopPropagation: true,
+  })
   const chatInputContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleChatInputContextMenu)
   expect(chatInputContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleChatInputContextMenu,
