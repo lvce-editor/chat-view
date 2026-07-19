@@ -3,13 +3,15 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { OpenOpenApiApiKeySettings } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 
+const actionsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.Actions,
+  type: VirtualDomElements.Div,
+}
+
 export const getOpenApiInvalidApiKeyDom = (): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 1,
-      className: ClassNames.Actions,
-      type: VirtualDomElements.Div,
-    },
+    actionsNode,
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),

@@ -2,22 +2,23 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import { openRouterRequestFailureReasons } from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
+const chatOrderedListNode: VirtualDomNode = {
+  childCount: openRouterRequestFailureReasons.length,
+  className: ClassNames.ChatOrderedList,
+  type: VirtualDomElements.Ol,
+}
+
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
 export const getOpenRouterRequestFailedDom = (): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: openRouterRequestFailureReasons.length,
-      className: ClassNames.ChatOrderedList,
-      type: VirtualDomElements.Ol,
-    },
+    chatOrderedListNode,
     ...openRouterRequestFailureReasons.flatMap((reason) => {
-      return [
-        {
-          childCount: 1,
-          className: ClassNames.ChatOrderedListItem,
-          type: VirtualDomElements.Li,
-        },
-        text(reason),
-      ]
+      return [chatOrderedListItemNode, text(reason)]
     }),
   ]
 }

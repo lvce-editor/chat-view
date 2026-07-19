@@ -6,6 +6,15 @@ import { getChatModelListVirtualDom } from '../GetChatModelListVirtualDom/GetCha
 import { getModelPickerHeaderDom } from '../GetModelPickerHeaderDom/GetModelPickerHeaderDom.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 
+const chatModelPickerContainerNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatModelPickerContainer,
+  onClick: DomEventListenerFunctions.HandleModelInputBlur,
+  onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatModelPickerPopOverVirtualDom = (
   models: readonly ChatModel[],
   selectedModelId: string,
@@ -14,14 +23,7 @@ export const getChatModelPickerPopOverVirtualDom = (
 ): readonly VirtualDomNode[] => {
   const visibleModels = getVisibleModels(models, modelPickerSearchValue)
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatModelPickerContainer,
-      onClick: DomEventListenerFunctions.HandleModelInputBlur,
-      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
-      role: AriaRoles.None,
-      type: VirtualDomElements.Div,
-    },
+    chatModelPickerContainerNode,
     {
       childCount: 2 + visibleModels.length,
       className: ClassNames.ChatModelPicker,

@@ -9,6 +9,18 @@ import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
+const fileIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.FileIcon,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
 const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
   if (toolCall.name !== 'glob') {
     return ''
@@ -58,16 +70,8 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    fileIconNode,
+    toolCallNameNode,
     text(toolNameLabel),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.title }),
     ...(globPatternLabel ? [text(globPatternLabel)] : []),

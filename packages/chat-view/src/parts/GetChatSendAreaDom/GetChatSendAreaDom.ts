@@ -27,6 +27,20 @@ import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.
 import { getComposerAttachmentsDom } from './GetComposerAttachmentsDom/GetComposerAttachmentsDom.ts'
 import { getComposerTextAreaDom } from './GetComposerTextAreaDom/GetComposerTextAreaDom.ts'
 
+const chatSendAreaNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatSendArea,
+  onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+  onSubmit: DomEventListenerFunctions.HandleSubmit,
+  type: VirtualDomElements.Form,
+}
+
+const chatSendAreaContentTopNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatSendAreaContentTop,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatSendAreaDom = (
   composerValue: string,
   composerAttachments: readonly ComposerAttachment[],
@@ -89,13 +103,7 @@ export const getChatSendAreaDom = (
   const hasComposerAttachments = composerAttachments.length > 0
 
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatSendArea,
-      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
-      onSubmit: DomEventListenerFunctions.HandleSubmit,
-      type: VirtualDomElements.Form,
-    },
+    chatSendAreaNode,
     {
       childCount: 2 + (hasTodoList ? 1 : 0) + (hasComposerAttachments ? 1 : 0),
       className: ClassNames.ChatSendAreaContent,
@@ -103,11 +111,7 @@ export const getChatSendAreaDom = (
     },
     ...getTodoListDom(hasTodoList, todoListItems),
     ...getComposerAttachmentsDom(composerAttachments),
-    {
-      childCount: 1,
-      className: ClassNames.ChatSendAreaContentTop,
-      type: VirtualDomElements.Div,
-    },
+    chatSendAreaContentTopNode,
     getComposerTextAreaDom(),
     {
       childCount: bottomControlsCount,

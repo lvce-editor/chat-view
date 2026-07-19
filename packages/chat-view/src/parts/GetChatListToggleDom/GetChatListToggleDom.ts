@@ -4,24 +4,34 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as InputName from '../InputName/InputName.ts'
 import * as TabIndex from '../TabIndex/TabIndex.ts'
 
+const chatListMoreToggleNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatListMoreToggle,
+  type: VirtualDomElements.Li,
+}
+
+const chatListMoreToggleButtonNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatListMoreToggleButton,
+  name: InputName.ChatListShowMore,
+  onClick: DomEventListenerFunctions.HandleClick,
+  onFocus: DomEventListenerFunctions.HandleFocus,
+  role: AriaRoles.Button,
+  tabIndex: TabIndex.Focusable,
+  type: VirtualDomElements.Div,
+}
+
+const chatListMoreToggleLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatListMoreToggleLabel,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): readonly VirtualDomNode[] => {
   const label = expanded ? 'Show Less' : `Show ${hiddenCount} More`
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatListMoreToggle,
-      type: VirtualDomElements.Li,
-    },
-    {
-      childCount: 2,
-      className: ClassNames.ChatListMoreToggleButton,
-      name: InputName.ChatListShowMore,
-      onClick: DomEventListenerFunctions.HandleClick,
-      onFocus: DomEventListenerFunctions.HandleFocus,
-      role: AriaRoles.Button,
-      tabIndex: TabIndex.Focusable,
-      type: VirtualDomElements.Div,
-    },
+    chatListMoreToggleNode,
+    chatListMoreToggleButtonNode,
     {
       childCount: 0,
       className: mergeClassNames(
@@ -31,11 +41,7 @@ export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): re
       ),
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatListMoreToggleLabel,
-      type: VirtualDomElements.Div,
-    },
+    chatListMoreToggleLabelNode,
     text(label),
   ]
 }

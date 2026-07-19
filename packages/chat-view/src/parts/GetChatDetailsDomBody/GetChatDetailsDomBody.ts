@@ -8,6 +8,18 @@ import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getChatSendAreaDom } from '../GetChatSendAreaDom/GetChatSendAreaDom.ts'
 
+const chatDetailsNode: VirtualDomNode = {
+  childCount: 3,
+  className: ClassNames.ChatDetails,
+  type: VirtualDomElements.Div,
+}
+
+const labelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.Label,
+  type: VirtualDomElements.Span,
+}
+
 export const getChatDetailsDom = (
   selectedSessionTitle: string,
   messagesNodes: readonly VirtualDomNode[],
@@ -44,16 +56,8 @@ export const getChatDetailsDom = (
     ...(showRunMode && !hasSpaceForRunModePicker ? (['run-mode-picker-toggle'] as const) : []),
   ]
   return [
-    {
-      childCount: 3,
-      className: ClassNames.ChatDetails,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.Label,
-      type: VirtualDomElements.Span,
-    },
+    chatDetailsNode,
+    labelNode,
     text(selectedSessionTitle),
     ...getChatSendAreaDom(
       composerValue,

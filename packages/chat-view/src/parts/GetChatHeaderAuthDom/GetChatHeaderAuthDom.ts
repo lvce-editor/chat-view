@@ -5,6 +5,12 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const chatAuthErrorNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatAuthError,
+  type: VirtualDomElements.Span,
+}
+
 const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): string => {
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
@@ -23,14 +29,7 @@ const getAuthErrorDom = (authErrorMessage: string): readonly VirtualDomNode[] =>
   if (!authErrorMessage) {
     return []
   }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatAuthError,
-      type: VirtualDomElements.Span,
-    },
-    text(authErrorMessage),
-  ]
+  return [chatAuthErrorNode, text(authErrorMessage)]
 }
 
 export const getChatHeaderAuthDom = (

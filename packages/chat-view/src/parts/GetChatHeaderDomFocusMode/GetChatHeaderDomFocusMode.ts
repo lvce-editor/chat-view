@@ -16,6 +16,20 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
+const chatFocusHeaderNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatFocusHeader,
+  style: focusHeaderStyle,
+  type: VirtualDomElements.Header,
+}
+
+const chatHeaderLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatHeaderLabel,
+  style: focusHeaderTitleStyle,
+  type: VirtualDomElements.H2,
+}
+
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
@@ -57,24 +71,14 @@ export const getChatHeaderDomFocusMode = (
   ] as const
   const hasProjectName = !!selectedProjectName
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatFocusHeader,
-      style: focusHeaderStyle,
-      type: VirtualDomElements.Header,
-    },
+    chatFocusHeaderNode,
     {
       childCount: hasProjectName ? 2 : 1,
       className: ClassNames.ChatName,
       style: focusHeaderMetaStyle,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeaderLabel,
-      style: focusHeaderTitleStyle,
-      type: VirtualDomElements.H2,
-    },
+    chatHeaderLabelNode,
     text(selectedSessionTitle),
     ...(hasProjectName
       ? [
