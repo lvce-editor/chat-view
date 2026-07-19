@@ -5,6 +5,17 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const chatComposerAttachmentPreviewOverlayNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatComposerAttachmentPreviewOverlay,
+  name: InputName.ComposerAttachmentPreviewOverlay,
+  onMouseOut: DomEventListenerFunctions.HandleMouseOut,
+  onMouseOver: DomEventListenerFunctions.HandleMouseOver,
+  onPointerOut: DomEventListenerFunctions.HandleMouseOut,
+  onPointerOver: DomEventListenerFunctions.HandleMouseOver,
+  type: VirtualDomElements.Div,
+}
+
 const getImageCouldNotBeLoadedDom = (): readonly VirtualDomNode[] => {
   return [
     {
@@ -33,16 +44,7 @@ export const getComposerAttachmentPreviewOverlayVirtualDom = (
     return []
   }
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatComposerAttachmentPreviewOverlay,
-      name: InputName.ComposerAttachmentPreviewOverlay,
-      onMouseOut: DomEventListenerFunctions.HandleMouseOut,
-      onMouseOver: DomEventListenerFunctions.HandleMouseOver,
-      onPointerOut: DomEventListenerFunctions.HandleMouseOut,
-      onPointerOver: DomEventListenerFunctions.HandleMouseOver,
-      type: VirtualDomElements.Div,
-    },
+    chatComposerAttachmentPreviewOverlayNode,
     ...(hasError
       ? getImageCouldNotBeLoadedDom()
       : [

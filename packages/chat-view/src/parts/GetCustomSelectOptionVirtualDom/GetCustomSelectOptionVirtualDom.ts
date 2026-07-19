@@ -2,6 +2,18 @@ import { AriaRoles, type VirtualDomNode, mergeClassNames, text, VirtualDomElemen
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
+const chatModelPickerItemLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerItemLabel,
+  type: VirtualDomElements.Span,
+}
+
+const chatModelPickerItemUsageCostNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerItemUsageCost,
+  type: VirtualDomElements.Span,
+}
+
 export const getCustomSelectOptionVirtualDom = (name: string, label: string, selected: boolean, detail = ''): readonly VirtualDomNode[] => {
   const className = mergeClassNames(ClassNames.ChatModelPickerItem, selected ? ClassNames.ChatModelPickerItemSelected : '')
   const hasDetail = detail !== ''
@@ -15,21 +27,8 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
       role: AriaRoles.Option,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerItemLabel,
-      type: VirtualDomElements.Span,
-    },
+    chatModelPickerItemLabelNode,
     text(label),
-    ...(hasDetail
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatModelPickerItemUsageCost,
-            type: VirtualDomElements.Span,
-          },
-          text(detail),
-        ]
-      : []),
+    ...(hasDetail ? [chatModelPickerItemUsageCostNode, text(detail)] : []),
   ]
 }

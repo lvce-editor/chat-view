@@ -8,6 +8,23 @@ import { defaultReasoningEffort, getReasoningEffortLabel, reasoningEfforts, type
 
 const reasoningEffortPickerHeight = reasoningEfforts.length * 28
 
+const chatModelPickerContainerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerContainer,
+  onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
+const chatModelPickerListNode: VirtualDomNode = {
+  childCount: reasoningEfforts.length,
+  className: ClassNames.ChatModelPickerList,
+  name: InputName.PickerList,
+  role: AriaRoles.ListBox,
+  tabIndex: -1,
+  type: VirtualDomElements.Ul,
+}
+
 const getReasoningEffortOptionsVirtualDom = (selectedReasoningEffort: ReasoningEffort): readonly VirtualDomNode[] => {
   return reasoningEfforts.flatMap((reasoningEffort) => {
     const label = getReasoningEffortLabel(reasoningEffort)
@@ -38,27 +55,14 @@ export const getReasoningEffortPickerVirtualDom = (
     ),
     ...(reasoningEffortPickerOpen
       ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatModelPickerContainer,
-            onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
-            role: AriaRoles.None,
-            type: VirtualDomElements.Div,
-          },
+          chatModelPickerContainerNode,
           {
             childCount: 1,
             className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver),
             style: `height: ${reasoningEffortPickerHeight}px;`,
             type: VirtualDomElements.Div,
           },
-          {
-            childCount: reasoningEfforts.length,
-            className: ClassNames.ChatModelPickerList,
-            name: InputName.PickerList,
-            role: AriaRoles.ListBox,
-            tabIndex: -1,
-            type: VirtualDomElements.Ul,
-          },
+          chatModelPickerListNode,
           ...getReasoningEffortOptionsVirtualDom(selectedReasoningEffort),
         ]
       : []),

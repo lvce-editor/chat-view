@@ -4,6 +4,24 @@ import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallDom } from '../GetToolCallDom/GetToolCallDom.ts'
 
+const chatOrderedListMarkerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatOrderedListMarker,
+  type: VirtualDomElements.Span,
+}
+
+const chatToolCallsNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatToolCalls,
+  type: VirtualDomElements.Div,
+}
+
+const chatToolCallsLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatToolCallsLabel,
+  type: VirtualDomElements.Div,
+}
+
 const withOrderedListMarker = (virtualDom: readonly VirtualDomNode[], index: number): readonly VirtualDomNode[] => {
   const [listItem, ...children] = virtualDom
   if (!listItem) {
@@ -14,11 +32,7 @@ const withOrderedListMarker = (virtualDom: readonly VirtualDomNode[], index: num
       ...listItem,
       childCount: 2,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatOrderedListMarker,
-      type: VirtualDomElements.Span,
-    },
+    chatOrderedListMarkerNode,
     text(`${index}.`),
     {
       childCount: listItem.childCount || 0,
@@ -35,16 +49,8 @@ export const getToolCallsDom = (message: ChatMessage): readonly VirtualDomNode[]
   }
 
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatToolCalls,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallsLabel,
-      type: VirtualDomElements.Div,
-    },
+    chatToolCallsNode,
+    chatToolCallsLabelNode,
     text('tools'),
     {
       childCount: message.toolCalls.length,

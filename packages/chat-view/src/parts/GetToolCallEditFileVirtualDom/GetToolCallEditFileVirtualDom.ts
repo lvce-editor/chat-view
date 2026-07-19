@@ -6,6 +6,24 @@ import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 3,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
+const fileIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.FileIcon,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
 export const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const target = getReadFileTarget(toolCall.arguments)
   if (!target) {
@@ -19,21 +37,9 @@ export const getToolCallEditFileVirtualDom = (toolCall: ChatToolCall): readonly 
       }
     : {}
   return [
-    {
-      childCount: 3,
-      className: ClassNames.ChatOrderedListItem,
-      type: VirtualDomElements.Li,
-    },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    chatOrderedListItemNode,
+    fileIconNode,
+    toolCallNameNode,
     text('edit_file '),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.clickableUri }),
   ]

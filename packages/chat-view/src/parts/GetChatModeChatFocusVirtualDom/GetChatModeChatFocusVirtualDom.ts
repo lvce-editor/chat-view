@@ -91,6 +91,12 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly voiceDictationEnabled?: boolean
 }
 
+const chatFocusMainAreaNode: VirtualDomNode = {
+  childCount: 3,
+  className: ClassNames.ChatFocusMainArea,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatModeChatFocusVirtualDom = ({
   addContextButtonEnabled,
   agentMode,
@@ -192,11 +198,7 @@ export const getChatModeChatFocusVirtualDom = ({
       role: AriaRoles.Separator,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 3,
-      className: ClassNames.ChatFocusMainArea,
-      type: VirtualDomElements.Div,
-    },
+    chatFocusMainAreaNode,
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
       selectedMessages,

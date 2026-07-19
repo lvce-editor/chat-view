@@ -5,6 +5,12 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 import { getChatSearchDom } from '../GetChatSearchDom/GetChatSearchDom.ts'
 
+const chatHeaderLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatHeaderLabel,
+  type: VirtualDomElements.H2,
+}
+
 export const getChatHeaderListModeDom = (
   _authEnabled = false,
   _userState = 'loggedOut',
@@ -23,11 +29,7 @@ export const getChatHeaderListModeDom = (
       onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
       type: VirtualDomElements.Header,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeaderLabel,
-      type: VirtualDomElements.H2,
-    },
+    chatHeaderLabelNode,
     text(Strings.chats()),
     ...getChatHeaderActionsDom('list', searchEnabled),
     ...getChatSearchDom(hasSearchField, searchValue),

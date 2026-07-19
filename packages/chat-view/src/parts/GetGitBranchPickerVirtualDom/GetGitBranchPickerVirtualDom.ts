@@ -9,6 +9,14 @@ import * as InputName from '../InputName/InputName.ts'
 const itemHeight = 28
 const messageHeight = 32
 
+const chatModelPickerContainerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerContainer,
+  onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
 const getCurrentBranchLabel = (gitBranches: readonly GitBranch[], fallbackBranchName: string): string => {
   const currentBranch = gitBranches.find((branch) => branch.current)
   if (currentBranch) {
@@ -74,13 +82,7 @@ export const getGitBranchPickerVirtualDom = (
     ),
     ...(gitBranchPickerOpen
       ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatModelPickerContainer,
-            onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
-            role: AriaRoles.None,
-            type: VirtualDomElements.Div,
-          },
+          chatModelPickerContainerNode,
           {
             childCount: (showMessage ? 1 : 0) + 1,
             className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),

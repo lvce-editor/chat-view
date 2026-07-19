@@ -6,14 +6,16 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as InputName from '../InputName/InputName.ts'
 import * as TabIndex from '../TabIndex/TabIndex.ts'
 
+const chatActionsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatActions,
+  role: AriaRoles.ToolBar,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatListItemActionsDom = (session: ChatSession): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatActions,
-      role: AriaRoles.ToolBar,
-      type: VirtualDomElements.Div,
-    },
+    chatActionsNode,
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton),

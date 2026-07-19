@@ -10,6 +10,23 @@ import { getTableDom } from './GetTableDom.ts'
 import { getUnorderedListItemDom } from './GetUnorderedListItemDom.ts'
 import { hasVisibleInlineContent } from './HasVisibleInlineContent.ts'
 
+const loadingTextNode: VirtualDomNode = {
+  childCount: 1,
+  className: 'LoadingText',
+  type: VirtualDomElements.Div,
+}
+
+const markdownMathBlockNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.MarkdownMathBlock,
+  type: VirtualDomElements.Div,
+}
+
+const thematicBreakNode: VirtualDomNode = {
+  childCount: 0,
+  type: VirtualDomElements.Hr,
+}
+
 const getOrderedListItemDomWithNesting = (
   item: MessageListItemNode,
   useChatMathWorker: boolean,
@@ -20,14 +37,7 @@ const getOrderedListItemDomWithNesting = (
 
 export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWorker = false): readonly VirtualDomNode[] => {
   if (node.type === 'loading') {
-    return [
-      {
-        childCount: 1,
-        className: 'LoadingText',
-        type: VirtualDomElements.Div,
-      },
-      text(node.text),
-    ]
+    return [loadingTextNode, text(node.text)]
   }
   if (node.type === 'text') {
     if (!hasVisibleInlineContent(node.children)) {
@@ -49,25 +59,13 @@ export const getMessageNodeDom = (node: MessageIntermediateNode, useChatMathWork
     return getCodeBlockDom(node)
   }
   if (node.type === 'math-block') {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.MarkdownMathBlock,
-        type: VirtualDomElements.Div,
-      },
-      text(`$$\n${node.text}\n$$`),
-    ]
+    return [markdownMathBlockNode, text(`$$\n${node.text}\n$$`)]
   }
   if (node.type === 'math-block-dom') {
     return node.dom
   }
   if (node.type === 'thematic-break') {
-    return [
-      {
-        childCount: 0,
-        type: VirtualDomElements.Hr,
-      },
-    ]
+    return [thematicBreakNode]
   }
   if (node.type === 'heading') {
     return getHeadingDom(node, useChatMathWorker)

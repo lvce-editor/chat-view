@@ -7,6 +7,12 @@ import * as InputName from '../../InputName/InputName.ts'
 import * as TabIndex from '../../TabIndex/TabIndex.ts'
 import { getProjectSessionDom } from '../GetProjectSessionDom/GetProjectSessionDom.ts'
 
+const projectListItemActionsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ProjectListItemActions,
+  type: VirtualDomElements.Div,
+}
+
 export const getProjectGroupDom = (
   project: Project,
   sessions: readonly ChatSession[],
@@ -55,11 +61,7 @@ export const getProjectGroupDom = (
       type: VirtualDomElements.Div,
     },
     text(project.name),
-    {
-      childCount: 1,
-      className: ClassNames.ProjectListItemActions,
-      type: VirtualDomElements.Div,
-    },
+    projectListItemActionsNode,
     {
       childCount: 1,
       className: ClassNames.ProjectListItemAddChatButton,

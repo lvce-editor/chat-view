@@ -2,16 +2,25 @@ import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virt
 import { clampToPercentage } from '../ClampToPercentage/ClampToPercentage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 
+const tokenUsageOverviewNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.TokenUsageOverview,
+  type: VirtualDomElements.Div,
+}
+
+const tokenUsageRingInnerNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.TokenUsageRingInner,
+  style: 'background: var(--vscode-editor-background);',
+  type: VirtualDomElements.Div,
+}
+
 export const getUsageOverviewDom = (tokensUsed: number, tokensMax: number): readonly VirtualDomNode[] => {
   const usagePercent = clampToPercentage(tokensUsed, tokensMax)
   const usageLabel = `${tokensUsed} / ${tokensMax}`
   const usageTitle = `${tokensUsed} of ${tokensMax} tokens used (${Math.round(usagePercent)}%)`
   return [
-    {
-      childCount: 2,
-      className: ClassNames.TokenUsageOverview,
-      type: VirtualDomElements.Div,
-    },
+    tokenUsageOverviewNode,
     {
       childCount: 1,
       className: ClassNames.TokenUsageRing,
@@ -19,12 +28,7 @@ export const getUsageOverviewDom = (tokensUsed: number, tokensMax: number): read
       title: usageTitle,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 0,
-      className: ClassNames.TokenUsageRingInner,
-      style: 'background: var(--vscode-editor-background);',
-      type: VirtualDomElements.Div,
-    },
+    tokenUsageRingInnerNode,
     {
       childCount: 1,
       className: ClassNames.LabelDetail,

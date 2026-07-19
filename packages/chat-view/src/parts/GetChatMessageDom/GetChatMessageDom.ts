@@ -19,6 +19,12 @@ import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequests
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
+const chatAttachmentLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatAttachmentLabel,
+  type: VirtualDomElements.Span,
+}
+
 const getChatAttachmentLabel = (displayType: ComposerAttachmentDisplayType): string => {
   switch (displayType) {
     case 'file':
@@ -83,11 +89,7 @@ const getChatAttachmentsDom = (attachments: readonly NonNullable<ChatMessage['at
           type: VirtualDomElements.Div,
         },
         ...previewDom,
-        {
-          childCount: 1,
-          className: ClassNames.ChatAttachmentLabel,
-          type: VirtualDomElements.Span,
-        },
+        chatAttachmentLabelNode,
         {
           text: `${getChatAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
           type: VirtualDomElements.Text,

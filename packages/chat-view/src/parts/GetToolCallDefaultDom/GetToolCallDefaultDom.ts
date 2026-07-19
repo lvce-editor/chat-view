@@ -6,6 +6,24 @@ import { getToolCallLabel } from '../GetToolCallLabel/GetToolCallLabel.ts'
 
 const RE_TOOL_NAME_PREFIX = /^([^ :]+)/
 
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
+const toolCallDetailsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallDetails,
+  type: VirtualDomElements.Span,
+}
+
 const getGrepSearchPreviewText = (result: string): string => {
   if (!result.trim()) {
     return result
@@ -53,14 +71,7 @@ const getHoverTitle = (toolCall: ChatToolCall): string | undefined => {
 
 export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'grep_search' && toolCall.result) {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.ChatOrderedListItem,
-        type: VirtualDomElements.Li,
-      },
-      text(getGrepSearchPreviewText(toolCall.result)),
-    ]
+    return [chatOrderedListItemNode, text(getGrepSearchPreviewText(toolCall.result))]
   }
 
   const label = getToolCallLabel(toolCall)
@@ -76,21 +87,8 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
       ...(hoverTitle && { title: hoverTitle }),
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    toolCallNameNode,
     text(toolNamePrefix),
-    ...(hasSuffix
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ToolCallDetails,
-            type: VirtualDomElements.Span,
-          },
-          text(suffix),
-        ]
-      : []),
+    ...(hasSuffix ? [toolCallDetailsNode, text(suffix)] : []),
   ]
 }
