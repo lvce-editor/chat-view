@@ -5,6 +5,7 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getBackToChatsButtonDom } from '../GetBackToChatsButtonDom/GetBackToChatsButtonDom.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 import { getProjectGroupDom } from './GetProjectGroupDom/GetProjectGroupDom.ts'
 
 export const getProjectListDom = (
@@ -45,7 +46,7 @@ export const getProjectListDom = (
       name: InputName.CreateProject,
       onClick: DomEventListenerFunctions.HandleClick,
       onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Button,
     },
     text('+ Add Project'),

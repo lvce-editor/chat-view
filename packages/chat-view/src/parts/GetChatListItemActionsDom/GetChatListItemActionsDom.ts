@@ -4,6 +4,7 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getChatListItemActionsDom = (session: ChatSession): readonly VirtualDomNode[] => {
   return [
@@ -19,7 +20,7 @@ export const getChatListItemActionsDom = (session: ChatSession): readonly Virtua
       'data-id': session.id,
       name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       title: Strings.deleteChatSession(),
       type: VirtualDomElements.Button,
     },
@@ -27,7 +28,6 @@ export const getChatListItemActionsDom = (session: ChatSession): readonly Virtua
       childCount: 0,
       className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
       'data-id': session.id,
-      onClick: DomEventListenerFunctions.HandleClickDelete,
       type: VirtualDomElements.Div,
     },
   ]

@@ -9,6 +9,7 @@ import { getSessionClassName } from '../GetSessionClassName/GetSessionClassName.
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getSessionDom = (
   session: ChatSession,
@@ -41,14 +42,13 @@ export const getSessionDom = (
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       role: AriaRoles.Button,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Div,
     },
     {
       childCount: 1,
       className: ClassNames.ChatListItemTitle,
       name: sessionInputName,
-      onClick: DomEventListenerFunctions.HandleClickSession,
       type: VirtualDomElements.Div,
     },
     text(session.title),
@@ -58,7 +58,6 @@ export const getSessionDom = (
             childCount: 1,
             className: ClassNames.ChatListItemTime,
             name: sessionInputName,
-            onClick: DomEventListenerFunctions.HandleClickSession,
             type: VirtualDomElements.Div,
           },
           text(formattedLastActiveTime),

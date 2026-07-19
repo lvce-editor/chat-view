@@ -8,7 +8,7 @@ export const getUsageOverviewDom = (tokensUsed: number, tokensMax: number): read
   const usageTitle = `${tokensUsed} of ${tokensMax} tokens used (${Math.round(usagePercent)}%)`
   return [
     {
-      childCount: 3,
+      childCount: 2,
       className: ClassNames.TokenUsageOverview,
       type: VirtualDomElements.Div,
     },

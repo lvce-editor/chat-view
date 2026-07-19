@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -19,6 +19,7 @@ export const getChatModelPickerPopOverVirtualDom = (
       className: ClassNames.ChatModelPickerContainer,
       onClick: DomEventListenerFunctions.HandleModelInputBlur,
       onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+      role: AriaRoles.None,
       type: VirtualDomElements.Div,
     },
     {

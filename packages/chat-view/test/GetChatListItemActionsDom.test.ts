@@ -36,7 +36,6 @@ test('getChatListItemActionsDom returns delete action nodes for a session', () =
       childCount: 0,
       className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
       'data-id': 'session-1',
-      onClick: DomEventListenerFunctions.HandleClickDelete,
       type: VirtualDomElements.Div,
     },
   ])

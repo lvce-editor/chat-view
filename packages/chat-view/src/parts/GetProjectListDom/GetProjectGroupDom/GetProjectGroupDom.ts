@@ -1,9 +1,10 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../../ChatSession/ChatSession.ts'
 import type { Project } from '../../Project/Project.ts'
 import * as ClassNames from '../../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../../InputName/InputName.ts'
+import * as TabIndex from '../../TabIndex/TabIndex.ts'
 import { getProjectSessionDom } from '../GetProjectSessionDom/GetProjectSessionDom.ts'
 
 export const getProjectGroupDom = (
@@ -35,7 +36,8 @@ export const getProjectGroupDom = (
       name: InputName.getProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
       onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
-      tabIndex: 0,
+      role: AriaRoles.Button,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Div,
     },
     {
@@ -63,7 +65,7 @@ export const getProjectGroupDom = (
       className: ClassNames.ProjectListItemAddChatButton,
       name: InputName.getCreateSessionInProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       title: 'New chat in this project',
       type: VirtualDomElements.Button,
     },
