@@ -6,6 +6,7 @@ import { getChatListToggleDom } from '../GetChatListToggleDom/GetChatListToggleD
 import { getEmptyChatSessionsDom } from '../GetEmptyChatSessionsDom/GetEmptyChatSessionsDom.ts'
 import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getChatListDom = (
   sessions: readonly ChatSession[],
@@ -32,7 +33,7 @@ export const getChatListDom = (
       onFocus: DomEventListenerFunctions.HandleFocus,
       onScroll: DomEventListenerFunctions.HandleChatListScroll,
       scrollTop: chatListScrollTop,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Ul,
     },
     ...leadingSessions.flatMap((session, index) =>

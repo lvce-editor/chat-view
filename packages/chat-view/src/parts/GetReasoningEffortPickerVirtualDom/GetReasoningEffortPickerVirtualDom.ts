@@ -42,6 +42,7 @@ export const getReasoningEffortPickerVirtualDom = (
             childCount: 1,
             className: ClassNames.ChatModelPickerContainer,
             onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+            role: AriaRoles.None,
             type: VirtualDomElements.Div,
           },
           {

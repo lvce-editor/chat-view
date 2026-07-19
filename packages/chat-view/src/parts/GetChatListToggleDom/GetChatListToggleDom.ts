@@ -1,7 +1,8 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): readonly VirtualDomNode[] => {
   const label = expanded ? 'Show Less' : `Show ${hiddenCount} More`
@@ -17,7 +18,8 @@ export const getChatListToggleDom = (expanded: boolean, hiddenCount: number): re
       name: InputName.ChatListShowMore,
       onClick: DomEventListenerFunctions.HandleClick,
       onFocus: DomEventListenerFunctions.HandleFocus,
-      tabIndex: 0,
+      role: AriaRoles.Button,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Div,
     },
     {

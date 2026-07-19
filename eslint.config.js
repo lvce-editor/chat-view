@@ -30,6 +30,7 @@ const sonarLintOverrideFiles = [
 
 export default [
   ...config.default,
+  ...config.recommendedVirtualDom,
   ...actions.default,
   ...tsconfig.default,
   ...regex.default,
@@ -75,6 +76,49 @@ export default [
       'sonarjs/max-switch-cases': 'off',
       'sonarjs/no-parameter-reassignment': 'off',
       'sonarjs/regex-complexity': 'off',
+    },
+  },
+  {
+    files: ['packages/*/test/**/*.ts', 'packages/e2e/src/**/*.ts'],
+    rules: {
+      'virtual-dom/clickable-div-needs-role': 'off',
+      'virtual-dom/no-inline-style': 'off',
+      'virtual-dom/no-object-attribute-values': 'off',
+      'virtual-dom/no-raw-text-children': 'off',
+      'virtual-dom/prefer-constants': 'off',
+      'virtual-dom/prefer-merge-class-names': 'off',
+      'virtual-dom/prefer-state-destructuring': 'off',
+    },
+  },
+  {
+    files: ['packages/chat-view{,-model}/src/**/*.ts'],
+    rules: {
+      'virtual-dom/prefer-state-destructuring': 'off',
+    },
+  },
+  {
+    files: [
+      'packages/chat-view-model/src/parts/ParsedMessageContent/ParsedMessageContent.ts',
+      'packages/chat-view/src/parts/GetBasicChatTools/GetBasicChatTools.ts',
+      'packages/chat-view/src/parts/ParseHtmlToVirtualDom/ParseHtmlToVirtualDom.ts',
+      'packages/chat-view/src/parts/ParsedMessageContent/ParsedMessageContent.ts',
+      'packages/chat-view/src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts',
+    ],
+    rules: {
+      'virtual-dom/no-object-attribute-values': 'off',
+    },
+  },
+  {
+    files: [
+      'packages/chat-view/src/parts/GetChatHeaderDomFocusMode/GetChatHeaderDomFocusMode.ts',
+      'packages/chat-view/src/parts/GetCustomSelectPopOverVirtualDom/GetCustomSelectPopOverVirtualDom.ts',
+      'packages/chat-view/src/parts/GetGitBranchPickerVirtualDom/GetGitBranchPickerVirtualDom.ts',
+      'packages/chat-view/src/parts/GetMessageNodeDom/GetTableDom.ts',
+      'packages/chat-view/src/parts/GetReasoningEffortPickerVirtualDom/GetReasoningEffortPickerVirtualDom.ts',
+      'packages/chat-view/src/parts/GetUsageOverviewDom/GetUsageOverviewDom.ts',
+    ],
+    rules: {
+      'virtual-dom/no-inline-style': 'off',
     },
   },
 ]
