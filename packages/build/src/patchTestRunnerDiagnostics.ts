@@ -97,7 +97,7 @@ const replacements = [
       fullPage: true,
       path: screenshotPath
     }).catch(() => {});
-    console.log(\`[e2e-diagnostic] \${diagnosticPath}\`);
+    console.log(\`[e2e-diagnostic] \${JSON.stringify(diagnostic)}\`);
     return {`,
   },
 ] as const
