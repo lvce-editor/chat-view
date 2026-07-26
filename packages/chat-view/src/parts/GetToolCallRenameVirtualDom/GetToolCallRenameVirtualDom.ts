@@ -35,6 +35,7 @@ export const getToolCallRenameVirtualDom = (toolCall: ChatToolCall): readonly Vi
     onClick: DomEventListenerFunctions.HandleClickFileName,
   }
   const statusLabel = getToolCallStatusLabel(toolCall)
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount: statusLabel ? 6 : 5,
@@ -48,6 +49,6 @@ export const getToolCallRenameVirtualDom = (toolCall: ChatToolCall): readonly Vi
     ...getToolCallFileNameDom(fromFileName, { clickableProps: fromClickableProps, title: targets.from.title }),
     text(' -> '),
     ...getToolCallFileNameDom(toFileName, { clickableProps: toClickableProps, title: targets.to.title }),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...statusDom,
   ]
 }

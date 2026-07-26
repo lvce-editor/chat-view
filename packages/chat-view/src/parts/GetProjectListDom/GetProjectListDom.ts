@@ -35,6 +35,7 @@ export const getProjectListDom = (
     })
     return getProjectGroupDom(project, projectSessions, projectExpandedIds, selectedProjectId, selectedSessionId)
   })
+  const backToChatsButtonDom = showBackToChatsButton ? getBackToChatsButtonDom() : []
 
   return [
     {
@@ -52,6 +53,6 @@ export const getProjectListDom = (
     ...projectGroups.flat(),
     projectAddButtonNode,
     text('+ Add Project'),
-    ...(showBackToChatsButton ? getBackToChatsButtonDom() : []),
+    ...backToChatsButtonDom,
   ]
 }

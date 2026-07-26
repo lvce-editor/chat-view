@@ -70,6 +70,17 @@ export const getChatHeaderDomFocusMode = (
     },
   ] as const
   const hasProjectName = !!selectedProjectName
+  const projectNameDom = hasProjectName
+    ? [
+        {
+          childCount: 1,
+          className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
+          style: focusHeaderProjectStyle,
+          type: VirtualDomElements.Span,
+        },
+        text(selectedProjectName),
+      ]
+    : []
   return [
     chatFocusHeaderNode,
     {
@@ -80,17 +91,7 @@ export const getChatHeaderDomFocusMode = (
     },
     chatHeaderLabelNode,
     text(selectedSessionTitle),
-    ...(hasProjectName
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
-            style: focusHeaderProjectStyle,
-            type: VirtualDomElements.Span,
-          },
-          text(selectedProjectName),
-        ]
-      : []),
+    ...projectNameDom,
     {
       'aria-label': 'focus header actions',
       childCount: items.length,

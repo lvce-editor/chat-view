@@ -25,6 +25,7 @@ export const getProjectGroupDom = (
     ClassNames.ProjectListItem,
     project.id === selectedProjectId ? ClassNames.ProjectListItemSelected : ClassNames.Empty,
   )
+  const sessionDom = expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []
   return [
     {
       childCount: 1 + (expanded ? sessions.length : 0),
@@ -72,6 +73,6 @@ export const getProjectGroupDom = (
       type: VirtualDomElements.Button,
     },
     text('+'),
-    ...(expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []),
+    ...sessionDom,
   ]
 }

@@ -23,6 +23,7 @@ export const getChatListDom = (
   const hasHiddenSessions = sessions.length > 3
   const leadingSessions = hasHiddenSessions ? sessions.slice(0, 3) : sessions
   const trailingSessions = hasHiddenSessions && chatListExpanded ? sessions.slice(3) : []
+  const toggleDom = hasHiddenSessions ? getChatListToggleDom(chatListExpanded, sessions.length - 3) : []
   const childCount = leadingSessions.length + trailingSessions.length + (hasHiddenSessions ? 1 : 0)
   return [
     {
@@ -39,7 +40,7 @@ export const getChatListDom = (
     ...leadingSessions.flatMap((session, index) =>
       getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex),
     ),
-    ...(hasHiddenSessions ? getChatListToggleDom(chatListExpanded, sessions.length - 3) : []),
+    ...toggleDom,
     ...trailingSessions.flatMap((session, index) => {
       const actualIndex = index + 3
       return getSessionDom(session, actualIndex === listFocusedIndex, showChatListTime, listFocusOutline && actualIndex === listFocusedIndex)

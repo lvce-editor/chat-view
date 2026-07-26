@@ -20,6 +20,7 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Div,
     }
   }
+  const chevronDom = selectChevronEnabled ? [getChevronDom(open)] : []
 
   return [
     {
@@ -44,6 +45,6 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Span,
     },
     text(label),
-    ...(selectChevronEnabled ? [getChevronDom(open)] : []),
+    ...chevronDom,
   ]
 }

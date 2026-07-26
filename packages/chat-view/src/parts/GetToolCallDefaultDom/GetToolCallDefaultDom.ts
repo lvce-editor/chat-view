@@ -80,6 +80,7 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
   const suffix = label.slice(toolNamePrefix.length)
   const hasSuffix = suffix.length > 0
   const hoverTitle = hasSuffix ? getHoverTitle(toolCall) : undefined
+  const suffixDom = hasSuffix ? [toolCallDetailsNode, text(suffix)] : []
   return [
     {
       childCount: hasSuffix ? 2 : 1,
@@ -89,6 +90,6 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
     },
     toolCallNameNode,
     text(toolNamePrefix),
-    ...(hasSuffix ? [toolCallDetailsNode, text(suffix)] : []),
+    ...suffixDom,
   ]
 }

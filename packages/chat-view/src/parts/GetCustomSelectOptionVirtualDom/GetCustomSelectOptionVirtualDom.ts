@@ -17,6 +17,7 @@ const chatModelPickerItemUsageCostNode: VirtualDomNode = {
 export const getCustomSelectOptionVirtualDom = (name: string, label: string, selected: boolean, detail = ''): readonly VirtualDomNode[] => {
   const className = mergeClassNames(ClassNames.ChatModelPickerItem, selected ? ClassNames.ChatModelPickerItemSelected : '')
   const hasDetail = detail !== ''
+  const detailDom = hasDetail ? [chatModelPickerItemUsageCostNode, text(detail)] : []
   return [
     {
       'aria-selected': selected ? 'true' : 'false',
@@ -29,6 +30,6 @@ export const getCustomSelectOptionVirtualDom = (name: string, label: string, sel
     },
     chatModelPickerItemLabelNode,
     text(label),
-    ...(hasDetail ? [chatModelPickerItemUsageCostNode, text(detail)] : []),
+    ...detailDom,
   ]
 }
