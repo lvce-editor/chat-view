@@ -123,6 +123,15 @@ const replacements = [
   try {`,
   },
   {
+    occurrence: `  try {
+    const url = getUrlFromTestFile(test, port, traceFocus);
+    await page.goto(url, {`,
+    replacement: `  try {
+    await page.goto('about:blank');
+    const url = getUrlFromTestFile(test, port, traceFocus);
+    await page.goto(url, {`,
+  },
+  {
     occurrence: `  } catch (error) {
     const end = performance.now();
     const message = error instanceof Error ? error.message : \`\${error}\`;
