@@ -21,17 +21,92 @@ const rendererWorkerPath = join(staticRoot, 'renderer-worker', 'dist', 'renderer
 let rendererWorker = await readFile(rendererWorkerPath, 'utf8')
 rendererWorker = replaceExactlyOnce(
   rendererWorker,
+  `const create$Y = (url, args) => {
+  const webSocket = new WebSocket(url, args);
+  const reconnect = () => {
+    const originalOnMessage = context.webSocket.onmessage;
+    context.webSocket = new WebSocket(url, args);
+    context.webSocket.onmessage = originalOnMessage;
+    context.webSocket.onclose = handleClose;
+  };
+  const handleClose = event => {
+    setTimeout(reconnect, 2000);
+  };
+  const context = {
+    webSocket,
+    get onmessage() {
+      return this.webSocket.onmessage;
+    },
+    set onmessage(value) {
+      this.webSocket.onmessage = value;
+    },
+    send(message) {
+      this.webSocket.send(message);
+    },
+    addEventListener(type, listener) {
+      this.webSocket.addEventListener(type, listener);
+    },
+    removeEventListener(type, listener) {
+      this.webSocket.removeEventListener(type, listener);
+    }
+  };
+  webSocket.onclose = handleClose;
+  return context;
+};`,
+  `const create$Y = (url, args) => {
+  const webSocket = new WebSocket(url, args);
+  const listeners = Object.create(null);
+  const reconnect = () => {
+    const originalOnMessage = context.webSocket.onmessage;
+    context.webSocket = new WebSocket(url, args);
+    context.webSocket.onmessage = originalOnMessage;
+    context.webSocket.onclose = handleClose;
+    for (const [type, typeListeners] of Object.entries(listeners)) {
+      for (const listener of typeListeners) {
+        context.webSocket.addEventListener(type, listener);
+      }
+    }
+  };
+  const handleClose = event => {
+    setTimeout(reconnect, 2000);
+  };
+  const context = {
+    webSocket,
+    get onmessage() {
+      return this.webSocket.onmessage;
+    },
+    set onmessage(value) {
+      this.webSocket.onmessage = value;
+    },
+    send(message) {
+      this.webSocket.send(message);
+    },
+    addEventListener(type, listener) {
+      listeners[type] ||= new Set();
+      listeners[type].add(listener);
+      this.webSocket.addEventListener(type, listener);
+    },
+    removeEventListener(type, listener) {
+      listeners[type]?.delete(listener);
+      this.webSocket.removeEventListener(type, listener);
+    }
+  };
+  webSocket.onclose = handleClose;
+  return context;
+};`,
+  rendererWorkerPath,
+)
+rendererWorker = replaceExactlyOnce(
+  rendererWorker,
   `  const webSocket = create$Y(wsUrl);
   const firstWebSocketEvent = await waitForWebSocketToBeOpen(webSocket);
   if (firstWebSocketEvent.type === Close) {
     throw new IpcError('Websocket connection was immediately closed');
   }
   return webSocket;`,
-  `  let webSocket = create$Y(wsUrl);
+  `  const webSocket = create$Y(wsUrl);
   let firstWebSocketEvent = await waitForWebSocketToBeOpen(webSocket);
   if (firstWebSocketEvent.type === Close) {
-${retryDelay}
-    webSocket = create$Y(wsUrl);
     firstWebSocketEvent = await waitForWebSocketToBeOpen(webSocket);
   }
   if (firstWebSocketEvent.type === Close) {
