@@ -33,6 +33,8 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
       - name: patch test runner diagnostics
         run: node packages/build/src/patchTestRunnerDiagnostics.ts
+      - name: patch WebSocket startup retry
+        run: node packages/build/src/patchWebSocketStartupRetry.ts
       - run: npm run build
       - run: npm run build:static
       - run: npm test
