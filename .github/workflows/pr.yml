@@ -31,10 +31,6 @@ jobs:
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
-      - name: patch test runner diagnostics
-        run: node packages/build/src/patchTestRunnerDiagnostics.ts
-      - name: patch WebSocket startup retry
-        run: node packages/build/src/patchWebSocketStartupRetry.ts
       - run: npm run build
       - run: npm run build:static
       - run: npm test
@@ -52,16 +48,6 @@ jobs:
         env:
           E2E_ATTEMPT: ${{ matrix.attempt }}
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: upload e2e artifacts
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: e2e-windows-${{ matrix.attempt }}
-          path: |
-            .tmp
-            packages/e2e/.tmp
-          if-no-files-found: ignore
-          include-hidden-files: true
       - name: measure
         working-directory: ./packages/build
         run: npm run measure
