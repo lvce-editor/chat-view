@@ -31,6 +31,8 @@ jobs:
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: patch test runner diagnostics
+        run: node packages/build/src/patchTestRunnerDiagnostics.ts
       - run: npm run build
       - run: npm run build:static
       - run: npm test
@@ -41,6 +43,7 @@ jobs:
         run: npx playwright install chromium
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
+          E2E_ATTEMPT: ${{ matrix.attempt }}
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: e2e
         working-directory: ./packages/e2e

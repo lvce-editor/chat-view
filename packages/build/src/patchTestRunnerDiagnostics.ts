@@ -1,0 +1,117 @@
+import { readFile, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { root } from './root.ts'
+
+const workerPath = join(root, 'packages', 'e2e', 'node_modules', '@lvce-editor', 'test-with-playwright-worker', 'dist', 'workerMain.js')
+
+const replacements = [
+  {
+    occurrence: `  const page = await browserInstance.newPage();
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises`,
+    replacement: `  const page = await browserInstance.newPage();
+  page.__diagnosticEvents = [];
+  page.on('console', message => {
+    page.__diagnosticEvents.push({
+      kind: 'console',
+      text: message.text(),
+      type: message.type(),
+      wallTime: Date.now()
+    });
+  });
+  page.on('pageerror', error => {
+    page.__diagnosticEvents.push({
+      kind: 'pageerror',
+      message: error.message,
+      stack: error.stack,
+      wallTime: Date.now()
+    });
+  });
+  page.on('requestfailed', request => {
+    if (request.resourceType() === 'document') {
+      page.__diagnosticEvents.push({
+        failure: request.failure(),
+        kind: 'document-request-failed',
+        url: request.url(),
+        wallTime: Date.now()
+      });
+    }
+  });
+  page.on('response', response => {
+    if (response.request().resourceType() === 'document') {
+      page.__diagnosticEvents.push({
+        kind: 'document-response',
+        status: response.status(),
+        url: response.url(),
+        wallTime: Date.now()
+      });
+    }
+  });
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises`,
+  },
+  {
+    occurrence: `  const start = performance.now();
+  try {`,
+    replacement: `  const start = performance.now();
+  page.__diagnosticEvents.length = 0;
+  try {`,
+  },
+  {
+    occurrence: `  } catch (error) {
+    const end = performance.now();
+    const message = error instanceof Error ? error.message : \`\${error}\`;
+    return {`,
+    replacement: `  } catch (error) {
+    const end = performance.now();
+    const message = error instanceof Error ? error.message : \`\${error}\`;
+    const { mkdir, writeFile } = await import('node:fs/promises');
+    const diagnosticDirectory = join(process.cwd(), '.tmp', 'e2e-diagnostics');
+    await mkdir(diagnosticDirectory, {
+      recursive: true
+    });
+    const diagnosticName = basename(test).replaceAll(/[^a-zA-Z0-9.-]/g, '_');
+    const attempt = process.env.E2E_ATTEMPT || 'unknown';
+    const diagnosticPath = join(diagnosticDirectory, \`diagnostic-\${attempt}-\${diagnosticName}.json\`);
+    const screenshotPath = join(diagnosticDirectory, \`diagnostic-\${attempt}-\${diagnosticName}.png\`);
+    const domState = await page.evaluate(() => {
+      return {
+        bodyChildCount: document.body?.childElementCount ?? -1,
+        bodyText: document.body?.innerText.slice(0, 2000) ?? '',
+        readyState: document.readyState,
+        scripts: [...document.scripts].map(script => script.src),
+        title: document.title,
+        url: location.href
+      };
+    }).catch(captureError => ({
+      captureError: String(captureError)
+    }));
+    const diagnostic = {
+      attempt,
+      domState,
+      error: message,
+      events: page.__diagnosticEvents,
+      test: diagnosticName,
+      wallTime: Date.now()
+    };
+    await writeFile(diagnosticPath, JSON.stringify(diagnostic, null, 2));
+    await page.screenshot({
+      fullPage: true,
+      path: screenshotPath
+    }).catch(() => {});
+    console.log(\`[e2e-diagnostic] \${diagnosticPath}\`);
+    return {`,
+  },
+] as const
+
+let content = await readFile(workerPath, 'utf8')
+
+for (const { occurrence, replacement } of replacements) {
+  const firstIndex = content.indexOf(occurrence)
+  const lastIndex = content.lastIndexOf(occurrence)
+  if (firstIndex === -1 || firstIndex !== lastIndex) {
+    throw new Error(`Expected exactly one diagnostic patch occurrence in ${workerPath}`)
+  }
+  content = content.replace(occurrence, replacement)
+}
+
+await writeFile(workerPath, content)
+process.stdout.write(`Patched test runner diagnostics: ${workerPath}\n`)
