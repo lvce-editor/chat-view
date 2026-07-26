@@ -53,6 +53,8 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
   const { linesAdded, linesDeleted } = parseWriteFileLineCounts(toolCall.result)
   const childCount = 3 + Number(showDiffStats) * 2 + Number(Boolean(statusLabel))
   const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
+  const diffStatsDom = showDiffStats ? ([insertionNode, text(` +${linesAdded}`), deletionNode, text(` -${linesDeleted}`)] as const) : []
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount,
@@ -63,7 +65,7 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
     toolCallNameNode,
     text('write_file '),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
-    ...(showDiffStats ? ([insertionNode, text(` +${linesAdded}`), deletionNode, text(` -${linesDeleted}`)] as const) : []),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...diffStatsDom,
+    ...statusDom,
   ]
 }

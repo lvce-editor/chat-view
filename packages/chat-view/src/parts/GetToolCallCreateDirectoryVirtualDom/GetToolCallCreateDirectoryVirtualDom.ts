@@ -32,6 +32,7 @@ export const getToolCallCreateDirectoryVirtualDom = (toolCall: ChatToolCall): re
         onClick: DomEventListenerFunctions.HandleClickFileName,
       }
     : {}
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount: statusLabel ? 4 : 3,
@@ -42,6 +43,6 @@ export const getToolCallCreateDirectoryVirtualDom = (toolCall: ChatToolCall): re
     toolCallNameNode,
     text('create_directory '),
     ...getToolCallFileNameDom(directoryName, { clickableProps: fileNameClickableProps }),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...statusDom,
   ]
 }

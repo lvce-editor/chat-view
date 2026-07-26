@@ -144,6 +144,12 @@ export const getChatMessageDom = (
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
       ? messageDomChildCount + 1 + toolCallsChildCount + attachmentsChildCount
       : messageDomChildCount + toolCallsChildCount + attachmentsChildCount
+  const missingOpenApiApiKeyDom = isOpenApiApiKeyMissingMessage
+    ? getMissingOpenApiApiKeyDom(openApiApiKeyInput, openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern)
+    : []
+  const missingOpenRouterApiKeyDom = isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []
+  const openRouterRequestFailedDom = isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []
+  const openRouterTooManyRequestsDom = isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []
   return [
     {
       childCount: 1,
@@ -160,11 +166,9 @@ export const getChatMessageDom = (
     ...toolCallsDom,
     ...messageDom,
     ...attachmentsDom,
-    ...(isOpenApiApiKeyMissingMessage
-      ? getMissingOpenApiApiKeyDom(openApiApiKeyInput, openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern)
-      : []),
-    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
-    ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
-    ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
+    ...missingOpenApiApiKeyDom,
+    ...missingOpenRouterApiKeyDom,
+    ...openRouterRequestFailedDom,
+    ...openRouterTooManyRequestsDom,
   ]
 }

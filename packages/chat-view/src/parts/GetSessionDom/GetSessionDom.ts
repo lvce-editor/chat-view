@@ -22,6 +22,17 @@ export const getSessionDom = (
   const sessionStatusClassName = getSessionStatusClassName(session)
   const lastActiveTime = getSessionLastActiveTime(session)
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
+  const lastActiveTimeDom = showChatListTime
+    ? [
+        {
+          childCount: 1,
+          className: ClassNames.ChatListItemTime,
+          name: sessionInputName,
+          type: VirtualDomElements.Div,
+        },
+        text(formattedLastActiveTime),
+      ]
+    : []
   return [
     {
       childCount: 3,
@@ -52,17 +63,7 @@ export const getSessionDom = (
       type: VirtualDomElements.Div,
     },
     text(session.title),
-    ...(showChatListTime
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatListItemTime,
-            name: sessionInputName,
-            type: VirtualDomElements.Div,
-          },
-          text(formattedLastActiveTime),
-        ]
-      : []),
+    ...lastActiveTimeDom,
     ...getChatListItemActionsDom(session),
   ]
 }

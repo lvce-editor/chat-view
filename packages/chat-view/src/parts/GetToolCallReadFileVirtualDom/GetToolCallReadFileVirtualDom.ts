@@ -64,6 +64,9 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   }
   const childCount = 3 + Number(Boolean(globPatternLabel)) + Number(Boolean(globMatchLabel)) + Number(Boolean(statusLabel))
   const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
+  const globPatternDom = globPatternLabel ? [text(globPatternLabel)] : []
+  const globMatchDom = globMatchLabel ? [text(globMatchLabel)] : []
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount,
@@ -74,8 +77,8 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
     toolCallNameNode,
     text(toolNameLabel),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.title }),
-    ...(globPatternLabel ? [text(globPatternLabel)] : []),
-    ...(globMatchLabel ? [text(globMatchLabel)] : []),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...globPatternDom,
+    ...globMatchDom,
+    ...statusDom,
   ]
 }

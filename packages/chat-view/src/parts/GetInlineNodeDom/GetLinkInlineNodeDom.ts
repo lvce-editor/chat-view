@@ -13,6 +13,8 @@ export const getLinkInlineNodeDom = (inlineNode: MessageInlineLinkNode): readonl
         'data-uri': inlineNode.href,
         href: '#',
         onClick: DomEventListenerFunctions.HandleClickReadFile,
+        rel: 'noopener noreferrer',
+        target: '_blank',
         title: inlineNode.href,
         type: VirtualDomElements.A,
       },

@@ -48,23 +48,24 @@ export const getChatHeaderAuthDom = (
   const isPending = userState === 'loggingOut'
   const displayName = userName || Strings.signedIn()
   const hasAuthError = !!authErrorMessage
+  const authNameDom = isAuthenticated
+    ? [
+        {
+          childCount: 1,
+          className: ClassNames.ChatHeaderAuthName,
+          title: displayName,
+          type: VirtualDomElements.Span,
+        },
+        text(displayName),
+      ]
+    : []
   return [
     {
       childCount: (isAuthenticated ? 2 : 1) + (hasAuthError ? 1 : 0),
       className: ClassNames.ChatHeaderAuth,
       type: VirtualDomElements.Div,
     },
-    ...(isAuthenticated
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatHeaderAuthName,
-            title: displayName,
-            type: VirtualDomElements.Span,
-          },
-          text(displayName),
-        ]
-      : []),
+    ...authNameDom,
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),

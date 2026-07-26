@@ -43,20 +43,18 @@ export const getComposerAttachmentPreviewOverlayVirtualDom = (
   if (!attachment || attachment.displayType !== 'image' || !attachment.previewSrc) {
     return []
   }
-  return [
-    chatComposerAttachmentPreviewOverlayNode,
-    ...(hasError
-      ? getImageCouldNotBeLoadedDom()
-      : [
-          {
-            alt: `Large image preview for ${attachment.name}`,
-            childCount: 0,
-            className: ClassNames.ChatComposerAttachmentPreviewOverlayImage,
-            name: InputName.ComposerAttachmentPreviewOverlay,
-            onError: DomEventListenerFunctions.HandleErrorComposerAttachmentPreviewOverlay,
-            src: attachment.previewSrc,
-            type: VirtualDomElements.Img,
-          },
-        ]),
-  ]
+  const contentDom = hasError
+    ? getImageCouldNotBeLoadedDom()
+    : [
+        {
+          alt: `Large image preview for ${attachment.name}`,
+          childCount: 0,
+          className: ClassNames.ChatComposerAttachmentPreviewOverlayImage,
+          name: InputName.ComposerAttachmentPreviewOverlay,
+          onError: DomEventListenerFunctions.HandleErrorComposerAttachmentPreviewOverlay,
+          src: attachment.previewSrc,
+          type: VirtualDomElements.Img,
+        },
+      ]
+  return [chatComposerAttachmentPreviewOverlayNode, ...contentDom]
 }

@@ -69,6 +69,25 @@ export const getGitBranchPickerVirtualDom = (
   const messageDom = getBranchPickerMessageDom(gitBranches, gitBranchPickerErrorMessage)
   const showMessage = messageDom.length > 0
   const popOverHeight = gitBranches.length * itemHeight + (showMessage ? messageHeight : 0)
+  const popOverDom = gitBranchPickerOpen
+    ? [
+        chatModelPickerContainerNode,
+        {
+          childCount: (showMessage ? 1 : 0) + 1,
+          className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
+          style: `height: ${popOverHeight}px;`,
+          type: VirtualDomElements.Div,
+        },
+        ...messageDom,
+        {
+          childCount: branchOptions.length / 4,
+          className: ClassNames.ChatModelPickerList,
+          role: AriaRoles.ListBox,
+          type: VirtualDomElements.Ul,
+        },
+        ...branchOptions,
+      ]
+    : []
   return [
     ...getCustomSelectPickerToggleVirtualDom(
       label,
@@ -80,24 +99,6 @@ export const getGitBranchPickerVirtualDom = (
       undefined,
       selectChevronEnabled,
     ),
-    ...(gitBranchPickerOpen
-      ? [
-          chatModelPickerContainerNode,
-          {
-            childCount: (showMessage ? 1 : 0) + 1,
-            className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
-            style: `height: ${popOverHeight}px;`,
-            type: VirtualDomElements.Div,
-          },
-          ...messageDom,
-          {
-            childCount: branchOptions.length / 4,
-            className: ClassNames.ChatModelPickerList,
-            role: AriaRoles.ListBox,
-            type: VirtualDomElements.Ul,
-          },
-          ...branchOptions,
-        ]
-      : []),
+    ...popOverDom,
   ]
 }
