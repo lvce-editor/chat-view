@@ -3,18 +3,6 @@ import { join } from 'node:path'
 import { root } from './root.ts'
 
 const workerPath = join(root, 'packages', 'e2e', 'node_modules', '@lvce-editor', 'test-with-playwright-worker', 'dist', 'workerMain.js')
-const serverPath = join(root, 'node_modules', '@lvce-editor', 'server', 'src', 'server.js')
-const sharedProcessPath = join(
-  root,
-  'node_modules',
-  '@lvce-editor',
-  'shared-process',
-  'src',
-  'parts',
-  'HandleIncomingIpcWebSocket',
-  'HandleIncomingIpcWebSocket.js',
-)
-const sharedProcessSendPath = join(root, 'node_modules', '@lvce-editor', 'shared-process', 'src', 'parts', 'SendIncomingIpc', 'SendIncomingIpc.js')
 
 const replaceExactlyOnce = (content: string, occurrence: string, replacement: string, path: string): string => {
   const firstIndex = content.indexOf(occurrence)
@@ -31,6 +19,64 @@ const replacements = [
   // eslint-disable-next-line @typescript-eslint/no-misused-promises`,
     replacement: `  const page = await browserInstance.newPage();
   page.__diagnosticEvents = [];
+  page.__diagnosticWebSocketRequestIds = new Set();
+  page.on('websocket', webSocket => {
+    page.__diagnosticEvents.push({
+      kind: 'playwright-websocket-created',
+      url: webSocket.url(),
+      wallTime: Date.now()
+    });
+    webSocket.on('close', () => {
+      page.__diagnosticEvents.push({
+        kind: 'playwright-websocket-closed',
+        url: webSocket.url(),
+        wallTime: Date.now()
+      });
+    });
+    webSocket.on('socketerror', error => {
+      page.__diagnosticEvents.push({
+        error: String(error),
+        kind: 'playwright-websocket-error',
+        url: webSocket.url(),
+        wallTime: Date.now()
+      });
+    });
+  });
+  const cdpSession = await page.context().newCDPSession(page);
+  await cdpSession.send('Network.enable');
+  cdpSession.on('Network.webSocketCreated', event => {
+    page.__diagnosticWebSocketRequestIds.add(event.requestId);
+    page.__diagnosticEvents.push({
+      event,
+      kind: 'cdp-websocket-created',
+      wallTime: Date.now()
+    });
+  });
+  for (const eventName of [
+    'Network.webSocketWillSendHandshakeRequest',
+    'Network.webSocketHandshakeResponseReceived',
+    'Network.webSocketFrameError',
+    'Network.webSocketClosed'
+  ]) {
+    cdpSession.on(eventName, event => {
+      if (page.__diagnosticWebSocketRequestIds.has(event.requestId)) {
+        page.__diagnosticEvents.push({
+          event,
+          kind: eventName,
+          wallTime: Date.now()
+        });
+      }
+    });
+  }
+  cdpSession.on('Network.loadingFailed', event => {
+    if (page.__diagnosticWebSocketRequestIds.has(event.requestId)) {
+      page.__diagnosticEvents.push({
+        event,
+        kind: 'Network.loadingFailed',
+        wallTime: Date.now()
+      });
+    }
+  });
   page.on('console', message => {
     page.__diagnosticEvents.push({
       kind: 'console',
@@ -130,102 +176,5 @@ for (const { occurrence, replacement } of replacements) {
 }
 
 await writeFile(workerPath, content)
-
-let serverContent = await readFile(serverPath, 'utf8')
-serverContent = replaceExactlyOnce(
-  serverContent,
-  `const sendHandleSharedProcess = async (request, socket, method, ...params) => {
-  request.on('error', handleRequestError)
-  socket.on('error', handleSocketUpgradeError)
-  const sharedProcess = await getOrCreateSharedProcess()
-  sharedProcess.send(
-    {
-      jsonrpc: '2.0',
-      method,
-      params: [getHandleMessage(request), ...params],
-    },
-    socket,
-    {
-      keepOpen: false,
-    },
-  )
-}`,
-  `let diagnosticUpgradeId = 0
-
-const sendHandleSharedProcess = async (request, socket, method, ...params) => {
-  request.on('error', handleRequestError)
-  socket.on('error', handleSocketUpgradeError)
-  const upgradeId = ++diagnosticUpgradeId
-  const url = request.url
-  console.log(\`[ws-diagnostic] server start id=\${upgradeId} url=\${url} destroyed=\${socket.destroyed}\`)
-  const sharedProcess = await getOrCreateSharedProcess()
-  const queued = sharedProcess.send(
-    {
-      jsonrpc: '2.0',
-      method,
-      params: [getHandleMessage(request), ...params],
-    },
-    socket,
-    {
-      keepOpen: false,
-    },
-    error => {
-      console.log(\`[ws-diagnostic] server sent id=\${upgradeId} url=\${url} error=\${error ? error.stack || error : 'none'}\`)
-    },
-  )
-  console.log(\`[ws-diagnostic] server queued id=\${upgradeId} url=\${url} accepted=\${queued}\`)
-}`,
-  serverPath,
-)
-await writeFile(serverPath, serverContent)
-
-let sharedProcessContent = await readFile(sharedProcessPath, 'utf8')
-sharedProcessContent = replaceExactlyOnce(
-  sharedProcessContent,
-  `export const handleIncomingIpcWebSocket = async (module, handle, message) => {
-    const target = await module.targetWebSocket(handle, message);
-    const response = module.upgradeWebSocket(handle, message);
-    return {
-        target,
-        response,
-    };
-};`,
-  `let diagnosticUpgradeId = 0;
-export const handleIncomingIpcWebSocket = async (module, handle, message) => {
-    const upgradeId = ++diagnosticUpgradeId;
-    const url = message.url;
-    console.log(\`[ws-diagnostic] shared received id=\${upgradeId} url=\${url} destroyed=\${handle.destroyed}\`);
-    handle.once('close', hadError => {
-        console.log(\`[ws-diagnostic] shared close id=\${upgradeId} url=\${url} hadError=\${hadError}\`);
-    });
-    handle.once('error', error => {
-        console.log(\`[ws-diagnostic] shared error id=\${upgradeId} url=\${url} error=\${error.stack || error}\`);
-    });
-    const target = await module.targetWebSocket(handle, message);
-    console.log(\`[ws-diagnostic] shared target id=\${upgradeId} url=\${url} destroyed=\${handle.destroyed}\`);
-    const response = module.upgradeWebSocket(handle, message);
-    return {
-        target,
-        response,
-    };
-};`,
-  sharedProcessPath,
-)
-await writeFile(sharedProcessPath, sharedProcessContent)
-
-let sharedProcessSendContent = await readFile(sharedProcessSendPath, 'utf8')
-sharedProcessSendContent = replaceExactlyOnce(
-  sharedProcessSendContent,
-  `    await JsonRpc.invokeAndTransfer(target, response.method, ...response.params);
-    IpcTransferState.remove(ipcId);`,
-  `    const handle = response.params[0];
-    const url = response.params[1]?.url;
-    console.log(\`[ws-diagnostic] shared transfer start ipcId=\${ipcId} url=\${url} destroyed=\${handle?.destroyed}\`);
-    await JsonRpc.invokeAndTransfer(target, response.method, ...response.params);
-    console.log(\`[ws-diagnostic] shared transfer complete ipcId=\${ipcId} url=\${url} destroyed=\${handle?.destroyed}\`);
-    IpcTransferState.remove(ipcId);`,
-  sharedProcessSendPath,
-)
-await writeFile(sharedProcessSendPath, sharedProcessSendContent)
 
 process.stdout.write(`Patched E2E diagnostics\n`)
