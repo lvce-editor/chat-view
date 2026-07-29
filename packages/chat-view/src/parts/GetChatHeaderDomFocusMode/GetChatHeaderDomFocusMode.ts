@@ -30,6 +30,13 @@ const chatHeaderLabelNode: VirtualDomNode = {
   type: VirtualDomElements.H2,
 }
 
+const chatFocusProjectNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
+  style: focusHeaderProjectStyle,
+  type: VirtualDomElements.Span,
+}
+
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
@@ -70,17 +77,7 @@ export const getChatHeaderDomFocusMode = (
     },
   ] as const
   const hasProjectName = !!selectedProjectName
-  const projectNameDom = hasProjectName
-    ? [
-        {
-          childCount: 1,
-          className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
-          style: focusHeaderProjectStyle,
-          type: VirtualDomElements.Span,
-        },
-        text(selectedProjectName),
-      ]
-    : []
+  const projectNameDom = hasProjectName ? [chatFocusProjectNode, text(selectedProjectName)] : []
   return [
     chatFocusHeaderNode,
     {

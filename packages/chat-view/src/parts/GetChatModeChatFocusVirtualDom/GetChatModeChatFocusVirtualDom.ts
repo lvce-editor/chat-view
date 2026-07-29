@@ -97,6 +97,15 @@ const chatFocusMainAreaNode: VirtualDomNode = {
   type: VirtualDomElements.Div,
 }
 
+const projectSidebarSashNode: VirtualDomNode = {
+  'aria-orientation': 'vertical',
+  childCount: 0,
+  className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
+  onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
+  role: AriaRoles.Separator,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatModeChatFocusVirtualDom = ({
   addContextButtonEnabled,
   agentMode,
@@ -190,14 +199,7 @@ export const getChatModeChatFocusVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
-    {
-      'aria-orientation': 'vertical',
-      childCount: 0,
-      className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
-      onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
-      role: AriaRoles.Separator,
-      type: VirtualDomElements.Div,
-    },
+    projectSidebarSashNode,
     chatFocusMainAreaNode,
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(

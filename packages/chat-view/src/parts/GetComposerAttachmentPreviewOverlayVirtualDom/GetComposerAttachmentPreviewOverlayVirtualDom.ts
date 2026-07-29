@@ -16,14 +16,16 @@ const chatComposerAttachmentPreviewOverlayNode: VirtualDomNode = {
   type: VirtualDomElements.Div,
 }
 
+const imageCouldNotBeLoadedNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
+  name: InputName.ComposerAttachmentPreviewOverlay,
+  type: VirtualDomElements.Div,
+}
+
 const getImageCouldNotBeLoadedDom = (): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
-      name: InputName.ComposerAttachmentPreviewOverlay,
-      type: VirtualDomElements.Div,
-    },
+    imageCouldNotBeLoadedNode,
     {
       text: Strings.imageCouldNotBeLoaded(),
       type: VirtualDomElements.Text,

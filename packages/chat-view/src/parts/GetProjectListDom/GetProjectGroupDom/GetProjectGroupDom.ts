@@ -13,6 +13,12 @@ const projectListItemActionsNode: VirtualDomNode = {
   type: VirtualDomElements.Div,
 }
 
+const projectListFolderIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
+  type: VirtualDomElements.Div,
+}
+
 export const getProjectGroupDom = (
   project: Project,
   sessions: readonly ChatSession[],
@@ -56,11 +62,7 @@ export const getProjectGroupDom = (
       ),
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
-      type: VirtualDomElements.Div,
-    },
+    projectListFolderIconNode,
     text(project.name),
     projectListItemActionsNode,
     {
