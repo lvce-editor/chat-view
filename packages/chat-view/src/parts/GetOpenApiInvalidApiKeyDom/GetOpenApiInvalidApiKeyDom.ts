@@ -9,16 +9,14 @@ const actionsNode: VirtualDomNode = {
   type: VirtualDomElements.Div,
 }
 
+const settingsButtonNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+  name: OpenOpenApiApiKeySettings,
+  onClick: DomEventListenerFunctions.HandleClick,
+  type: VirtualDomElements.Button,
+}
+
 export const getOpenApiInvalidApiKeyDom = (): readonly VirtualDomNode[] => {
-  return [
-    actionsNode,
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
-      name: OpenOpenApiApiKeySettings,
-      onClick: DomEventListenerFunctions.HandleClick,
-      type: VirtualDomElements.Button,
-    },
-    text('Settings'),
-  ]
+  return [actionsNode, settingsButtonNode, text('Settings')]
 }

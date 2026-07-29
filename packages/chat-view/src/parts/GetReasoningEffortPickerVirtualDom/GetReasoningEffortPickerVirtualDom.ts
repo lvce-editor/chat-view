@@ -25,6 +25,13 @@ const chatModelPickerListNode: VirtualDomNode = {
   type: VirtualDomElements.Ul,
 }
 
+const chatModelPickerNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver),
+  style: `height: ${reasoningEffortPickerHeight}px;`,
+  type: VirtualDomElements.Div,
+}
+
 const getReasoningEffortOptionsVirtualDom = (selectedReasoningEffort: ReasoningEffort): readonly VirtualDomNode[] => {
   return reasoningEfforts.flatMap((reasoningEffort) => {
     const label = getReasoningEffortLabel(reasoningEffort)
@@ -43,17 +50,7 @@ export const getReasoningEffortPickerVirtualDom = (
   selectChevronEnabled = true,
 ): readonly VirtualDomNode[] => {
   const popOverDom = reasoningEffortPickerOpen
-    ? [
-        chatModelPickerContainerNode,
-        {
-          childCount: 1,
-          className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver),
-          style: `height: ${reasoningEffortPickerHeight}px;`,
-          type: VirtualDomElements.Div,
-        },
-        chatModelPickerListNode,
-        ...getReasoningEffortOptionsVirtualDom(selectedReasoningEffort),
-      ]
+    ? [chatModelPickerContainerNode, chatModelPickerNode, chatModelPickerListNode, ...getReasoningEffortOptionsVirtualDom(selectedReasoningEffort)]
     : []
   return [
     ...getCustomSelectPickerToggleVirtualDom(
