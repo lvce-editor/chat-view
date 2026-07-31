@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ExtensionHost, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ExtensionManagementWorker } from '@lvce-editor/rpc-registry'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleGitBranchChange from '../src/parts/HandleGitBranchChange/HandleGitBranchChange.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
@@ -7,11 +7,8 @@ import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMoc
 test('handleGitBranchChange should update the selected session branch on success', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
-  })
-  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostCommand.executeCommand': async () => {},
+  using mockExtensionManagementRpc = ExtensionManagementWorker.registerMockRpc({
+    'Extensions.executeCommand': async () => {},
   })
 
   const state = {
@@ -37,22 +34,16 @@ test('handleGitBranchChange should update the selected session branch on success
     { current: false, name: 'main' },
     { current: true, name: 'feature' },
   ])
-  expect(mockRendererRpc.invocations).toEqual([
-    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.switchGitBranch', '/assets', state.platform],
-  ])
-  expect(mockExtensionHostRpc.invocations).toEqual([
-    ['ExtensionHostCommand.executeCommand', 'Chat.switchGitBranch', { branchName: 'feature', workspaceUri: 'file:///workspace' }],
+  expect(mockExtensionManagementRpc.invocations).toEqual([
+    ['Extensions.executeCommand', 'Chat.switchGitBranch', { branchName: 'feature', workspaceUri: 'file:///workspace' }],
   ])
 })
 
 test('handleGitBranchChange should keep the picker open and show an error when switching fails', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
-  })
-  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostCommand.executeCommand': async () => {
+  using mockExtensionManagementRpc = ExtensionManagementWorker.registerMockRpc({
+    'Extensions.executeCommand': async () => {
       throw new Error('No git branch switch command found')
     },
   })
@@ -76,10 +67,7 @@ test('handleGitBranchChange should keep the picker open and show an error when s
   expect(result.gitBranchPickerOpen).toBe(true)
   expect(result.sessions[0].branchName).toBe('main')
   expect(result.gitBranchPickerErrorMessage).toBe('Failed to switch to branch "feature". No git branch switch command found')
-  expect(mockRendererRpc.invocations).toEqual([
-    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.switchGitBranch', '/assets', state.platform],
-  ])
-  expect(mockExtensionHostRpc.invocations).toEqual([
-    ['ExtensionHostCommand.executeCommand', 'Chat.switchGitBranch', { branchName: 'feature', workspaceUri: 'file:///workspace' }],
+  expect(mockExtensionManagementRpc.invocations).toEqual([
+    ['Extensions.executeCommand', 'Chat.switchGitBranch', { branchName: 'feature', workspaceUri: 'file:///workspace' }],
   ])
 })
