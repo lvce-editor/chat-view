@@ -1,5 +1,5 @@
+import { defineConfig } from 'eslint/config'
 import * as config from '@lvce-editor/eslint-config'
-import * as actions from '@lvce-editor/eslint-plugin-github-actions'
 import * as tsconfig from '@lvce-editor/eslint-plugin-tsconfig'
 import * as regex from '@lvce-editor/eslint-plugin-regex'
 
@@ -28,10 +28,10 @@ const sonarLintOverrideFiles = [
   'packages/chat-view/test/HandleSubmit.test.ts',
 ]
 
-export default [
+export default defineConfig([
   ...config.default,
   ...config.recommendedVirtualDom,
-  ...actions.default,
+  ...config.recommendedActions,
   ...tsconfig.default,
   ...regex.default,
   {
@@ -121,4 +121,4 @@ export default [
       'virtual-dom/no-inline-style': 'off',
     },
   },
-]
+])
