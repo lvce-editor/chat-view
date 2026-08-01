@@ -3,8 +3,7 @@ import type {
   GetOpenRouterAssistantTextErrorResult,
   GetOpenRouterAssistantTextSuccessResult,
 } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.ts'
 import { normalizeMockResult } from '../NormalizeMockResult/NormalizeMockResult.ts'
 
 export const getMockOpenRouterAssistantText = async (
@@ -23,21 +22,11 @@ export const getMockOpenRouterAssistantText = async (
     }
   }
   try {
-    const result = await ExtensionHostShared.executeProvider({
-      assetDir,
-      event: `onCommand:${mockApiCommandId}`,
-      method: CommandExecute,
-      noProviderFoundMessage: 'No mock api command found',
-      params: [
-        mockApiCommandId,
-        {
-          messages,
-          modelId,
-          openRouterApiBaseUrl,
-          openRouterApiKey,
-        },
-      ],
-      platform,
+    const result = await ExtensionManagement.executeCommand(mockApiCommandId, {
+      messages,
+      modelId,
+      openRouterApiBaseUrl,
+      openRouterApiKey,
     })
     return normalizeMockResult(result)
   } catch {

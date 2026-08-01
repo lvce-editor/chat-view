@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { AuthWorker, ChatViewModelWorker, ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatViewModelWorker, ExtensionManagementWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -924,11 +924,10 @@ test('handleClick should create pull request for completed background session', 
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
     'Main.openUri': async () => {},
   })
-  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostCommand.executeCommand': async (id: string, payload: any) => {
+  using mockExtensionManagementRpc = ExtensionManagementWorker.registerMockRpc({
+    'Extensions.executeCommand': async (id: string, payload: any) => {
       expect(id).toBe('Chat.createPullRequest')
       expect(payload).toEqual({
         branchName: 'chat/session-1',
@@ -959,11 +958,8 @@ test('handleClick should create pull request for completed background session', 
   }
   const result = await HandleClick.handleClick(state, 'create-pull-request')
   expect(result.sessions[0].pullRequestUrl).toBe('https://github.com/lvce-editor/chat-view/pull/123')
-  expect(mockRendererRpc.invocations).toEqual([
-    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.createPullRequest', '', 0],
-    ['Main.openUri', 'https://github.com/lvce-editor/chat-view/pull/123'],
-  ])
-  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+  expect(mockRendererRpc.invocations).toEqual([['Main.openUri', 'https://github.com/lvce-editor/chat-view/pull/123']])
+  expect(mockExtensionManagementRpc.invocations).toHaveLength(1)
 })
 
 test.skip('handleClickList should open detail for session index from y coordinate', async () => {
