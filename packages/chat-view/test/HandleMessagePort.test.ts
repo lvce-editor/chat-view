@@ -35,6 +35,7 @@ test('connects the view directly to the renderer process', async () => {
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleInput', 'hello')
   expect(handleInput).toHaveBeenCalledWith(7, 'hello')
   expect(requestRender).toHaveBeenCalledWith(7)
+  await expect(rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'missing')).rejects.toThrow('Viewlet command not found: missing')
 
   await RendererProcessRegistry.dispose()
   await RendererWorker.dispose()
