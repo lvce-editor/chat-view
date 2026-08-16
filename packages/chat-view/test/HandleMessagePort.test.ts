@@ -6,9 +6,16 @@ import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.t
 
 test('connects the view directly to the renderer process', async () => {
   const queueCommands = jest.fn((_uid: number, _commands: readonly unknown[]) => 31)
+  const { promise: forwardedCommand, resolve: resolveForwardedCommand } = Promise.withResolvers<void>()
+  const forwardRendererWorkerCommand = jest.fn((_method: string) => {
+    resolveForwardedCommand()
+  })
   const { port1, port2 } = new MessageChannel()
   const rendererProcessRpc = await PlainMessagePortRpcParent.create({
-    commandMap: { 'Viewlet.queueCommands': queueCommands },
+    commandMap: {
+      'Viewlet.forwardRendererWorkerCommand': forwardRendererWorkerCommand,
+      'Viewlet.queueCommands': queueCommands,
+    },
     messagePort: port1,
   })
   const handleInput = jest.fn(async (_uid: number, _value: string) => {})
@@ -23,13 +30,10 @@ test('connects the view directly to the renderer process', async () => {
   expect(queueCommands).toHaveBeenCalledWith(7, [['Viewlet.setDom2', 7, []]])
 
   const requestRender = jest.fn(async (_uid: number) => {})
-  const pendingLayoutCommand = new Promise<void>(() => {})
-  const hideSecondarySideBar = jest.fn(() => pendingLayoutCommand)
   RendererWorker.set(
     Object.assign(
       createMockRpc({
         commandMap: {
-          'Layout.hideSecondarySideBar': hideSecondarySideBar,
           'Viewlet.requestRender': requestRender,
         },
       }),
@@ -41,7 +45,8 @@ test('connects the view directly to the renderer process', async () => {
   expect(requestRender).toHaveBeenCalledWith(7)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleClickClose')
-  expect(hideSecondarySideBar).toHaveBeenCalledTimes(1)
+  await forwardedCommand
+  expect(forwardRendererWorkerCommand).toHaveBeenCalledWith('Layout.hideSecondarySideBar')
   expect(handleClickClose).not.toHaveBeenCalled()
   expect(requestRender).toHaveBeenCalledTimes(1)
 
