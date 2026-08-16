@@ -58,7 +58,7 @@ import * as HandleErrorComposerAttachmentPreviewOverlay from '../HandleErrorComp
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
-import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
+import { handleMessagePort, setCommandMap } from '../HandleMessagePort/HandleMessagePort.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
@@ -298,3 +298,5 @@ export const commandMap = {
   'Chat.terminate': terminate,
   'Chat.useMockApi': wrapCommand(UseMockApi.useMockApi),
 }
+
+setCommandMap(commandMap)
