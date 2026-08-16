@@ -23,7 +23,8 @@ test('connects the view directly to the renderer process', async () => {
   expect(queueCommands).toHaveBeenCalledWith(7, [['Viewlet.setDom2', 7, []]])
 
   const requestRender = jest.fn(async (_uid: number) => {})
-  const hideSecondarySideBar = jest.fn(async () => {})
+  const pendingLayoutCommand = new Promise<void>(() => {})
+  const hideSecondarySideBar = jest.fn(() => pendingLayoutCommand)
   RendererWorker.set(
     Object.assign(
       createMockRpc({
