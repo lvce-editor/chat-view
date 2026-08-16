@@ -5,7 +5,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.ts'
 export const handleMessagePort = async (port: MessagePort, viewletCommandMap: Readonly<Record<string, unknown>>): Promise<void> => {
   const executeViewletCommand = async (uid: number, command: string, ...args: readonly any[]): Promise<void> => {
     if (command === 'handleClickClose') {
-      await RendererWorker.invoke('Layout.hideSecondarySideBar')
+      // The layout command can resize this worker before it completes.
+      void RendererWorker.invoke('Layout.hideSecondarySideBar')
       return
     }
     const fn = viewletCommandMap[`Chat.${command}`]
