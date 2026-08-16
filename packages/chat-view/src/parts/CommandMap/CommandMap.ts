@@ -143,6 +143,8 @@ import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachment
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
+const handleDirectMessagePort = (port: MessagePort): Promise<void> => handleMessagePort(port, commandMap)
+
 export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
@@ -210,7 +212,7 @@ export const commandMap = {
   'Chat.handleInputCopy': wrapCommand(CopyInput.copyInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
-  'Chat.handleMessagePort': handleMessagePort,
+  'Chat.handleMessagePort': handleDirectMessagePort,
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
