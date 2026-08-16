@@ -23,12 +23,12 @@ test('connects the view directly to the renderer process', async () => {
   expect(queueCommands).toHaveBeenCalledWith(7, [['Viewlet.setDom2', 7, []]])
 
   const requestRender = jest.fn(async (_uid: number) => {})
-  const executeViewletCommand = jest.fn(async (_uid: number, _command: string, ..._args: readonly unknown[]) => {})
+  const hideSecondarySideBar = jest.fn(async () => {})
   RendererWorker.set(
     Object.assign(
       createMockRpc({
         commandMap: {
-          'Viewlet.executeViewletCommand': executeViewletCommand,
+          'Layout.hideSecondarySideBar': hideSecondarySideBar,
           'Viewlet.requestRender': requestRender,
         },
       }),
@@ -40,7 +40,7 @@ test('connects the view directly to the renderer process', async () => {
   expect(requestRender).toHaveBeenCalledWith(7)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleClickClose')
-  expect(executeViewletCommand).toHaveBeenCalledWith(7, 'handleClickClose')
+  expect(hideSecondarySideBar).toHaveBeenCalledTimes(1)
   expect(handleClickClose).not.toHaveBeenCalled()
   expect(requestRender).toHaveBeenCalledTimes(1)
 
