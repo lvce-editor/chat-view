@@ -8,7 +8,11 @@ const forwardLayoutCommand = (layoutCommand: string): void => {
   }, 0)
 }
 
-export const handleMessagePort = async (port: MessagePort, viewletCommandMap: Readonly<Record<string, unknown>>): Promise<void> => {
+export const handleMessagePort = async (
+  port: MessagePort,
+  viewletCommandMap: Readonly<Record<string, unknown>>,
+  setAsRendererProcess = true,
+): Promise<void> => {
   const executeViewletCommand = async (uid: number, command: string, ...args: readonly any[]): Promise<void> => {
     if (command === 'handleClickClose') {
       // Forward after this direct event returns so layout callbacks use an idle worker RPC.
@@ -29,5 +33,7 @@ export const handleMessagePort = async (port: MessagePort, viewletCommandMap: Re
     },
     messagePort: port,
   })
-  RendererProcess.set(rpc)
+  if (setAsRendererProcess) {
+    RendererProcess.set(rpc)
+  }
 }

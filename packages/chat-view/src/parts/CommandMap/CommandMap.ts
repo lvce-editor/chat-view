@@ -143,7 +143,8 @@ import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachment
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
-const handleDirectMessagePort = (port: MessagePort): Promise<void> => handleMessagePort(port, commandMap)
+const handleDirectMessagePort = (port: MessagePort, setAsRendererProcess = true): Promise<void> =>
+  handleMessagePort(port, commandMap, setAsRendererProcess)
 
 export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
