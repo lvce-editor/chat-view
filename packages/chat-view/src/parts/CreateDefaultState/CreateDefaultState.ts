@@ -11,7 +11,7 @@ import {
   primaryControlsSubmitButtonWidth,
 } from '../ComposerPrimaryControls/ComposerPrimaryControls.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
-import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
+import { defaultModelProviderSettings, getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
@@ -23,15 +23,17 @@ import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 export const createDefaultState = (): ChatState => {
   const defaultProjectId = 'project-1'
   const defaultSessionId = 'session-1'
-  const defaultModelId = 'test'
   const modelPickerHeaderHeight = 40
   const chatMessageFontSize = 13
   const chatMessageLineHeight = 20
   const composerFontSize = 13
   const composerLineHeight = 20
   const responsivePickerVisibilityEnabled = true
-  const models = getDefaultModels()
+  const models = getDefaultModels(defaultModelProviderSettings)
   const visibleModels = getVisibleModels(models, '')
+  const defaultModel = models.find((model) => model.id === 'test') || models[0]
+  const defaultModelId = defaultModel?.id || ''
+  const defaultModelName = defaultModel?.name || ''
   const baseState: ChatState = {
     addContextButtonEnabled: false,
     agentMode: defaultAgentMode,
@@ -104,7 +106,7 @@ export const createDefaultState = (): ChatState => {
     mockOpenApiRequests: [],
     modelPickerHeaderHeight,
     modelPickerHeight: getModelPickerHeight(modelPickerHeaderHeight, visibleModels.length),
-    modelPickerLabelWidth: estimateTextWidth('test', primaryControlFontSize),
+    modelPickerLabelWidth: estimateTextWidth(defaultModelName, primaryControlFontSize),
     modelPickerListScrollTop: 0,
     modelPickerOpen: false,
     modelPickerSearchValue: '',

@@ -11,6 +11,10 @@ export interface LoadedPreferences {
   readonly chatHistoryEnabled: boolean
   readonly composerDropEnabled: boolean
   readonly emitStreamingFunctionCallEvents: boolean
+  readonly modelsAnthropicEnabled: boolean
+  readonly modelsBuiltinEnabled: boolean
+  readonly modelsOpenAiEnabled: boolean
+  readonly modelsTestEnabled: boolean
   readonly openApiApiKey: string
   readonly openRouterApiKey: string
   readonly passIncludeObfuscation: boolean
@@ -70,6 +74,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
+    modelsBuiltinEnabled,
+    modelsOpenAiEnabled,
+    modelsAnthropicEnabled,
+    modelsTestEnabled,
     openApiApiKey,
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
@@ -97,6 +105,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     getStringPreference('chat.backendUrl', defaultBackendUrl),
     getBooleanPreference('chat.chatHistoryEnabled', true),
     getBooleanPreference('chatView.composerDropEnabled', true),
+    getBooleanPreference('chat.models.builtin', true),
+    getBooleanPreference('chat.models.openai', false),
+    getBooleanPreference('chat.models.anthropic', false),
+    getBooleanPreference('chat.models.test', true),
     loadOpenApiApiKey(),
     getStringPreference('secrets.openRouterApiKey', ''),
     getBooleanPreference('chatView.emitStreamingFunctionCallEvents', false),
@@ -127,6 +139,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     chatHistoryEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
+    modelsAnthropicEnabled,
+    modelsBuiltinEnabled,
+    modelsOpenAiEnabled,
+    modelsTestEnabled,
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,

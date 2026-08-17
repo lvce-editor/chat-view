@@ -5,6 +5,10 @@ import { loadBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { loadChatHistoryEnabled } from '../LoadChatHistoryEnabled/LoadChatHistoryEnabled.ts'
 import { loadComposerDropEnabled } from '../LoadComposerDropEnabled/LoadComposerDropEnabled.ts'
 import { loadEmitStreamingFunctionCallEvents } from '../LoadEmitStreamingFunctionCallEvents/LoadEmitStreamingFunctionCallEvents.ts'
+import { loadModelsAnthropicEnabled } from '../LoadModelsAnthropicEnabled/LoadModelsAnthropicEnabled.ts'
+import { loadModelsBuiltinEnabled } from '../LoadModelsBuiltinEnabled/LoadModelsBuiltinEnabled.ts'
+import { loadModelsOpenAiEnabled } from '../LoadModelsOpenAiEnabled/LoadModelsOpenAiEnabled.ts'
+import { loadModelsTestEnabled } from '../LoadModelsTestEnabled/LoadModelsTestEnabled.ts'
 import { loadOpenApiApiKey } from '../LoadOpenApiApiKey/LoadOpenApiApiKey.ts'
 import { loadOpenRouterApiKey } from '../LoadOpenRouterApiKey/LoadOpenRouterApiKey.ts'
 import { loadPassIncludeObfuscation } from '../LoadPassIncludeObfuscation/LoadPassIncludeObfuscation.ts'
@@ -33,6 +37,10 @@ export interface LoadedPreferences {
   chatHistoryEnabled: boolean
   composerDropEnabled: boolean
   emitStreamingFunctionCallEvents: boolean
+  modelsAnthropicEnabled: boolean
+  modelsBuiltinEnabled: boolean
+  modelsOpenAiEnabled: boolean
+  modelsTestEnabled: boolean
   openApiApiKey: string
   openRouterApiKey: string
   passIncludeObfuscation: boolean
@@ -62,6 +70,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     backendUrl,
     chatHistoryEnabled,
     composerDropEnabled,
+    modelsBuiltinEnabled,
+    modelsOpenAiEnabled,
+    modelsAnthropicEnabled,
+    modelsTestEnabled,
     openApiApiKey,
     openRouterApiKey,
     emitStreamingFunctionCallEvents,
@@ -89,6 +101,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     loadBackendUrl(),
     loadChatHistoryEnabled(),
     loadComposerDropEnabled(),
+    loadModelsBuiltinEnabled(),
+    loadModelsOpenAiEnabled(),
+    loadModelsAnthropicEnabled(),
+    loadModelsTestEnabled(),
     loadOpenApiApiKey(),
     loadOpenRouterApiKey(),
     loadEmitStreamingFunctionCallEvents(),
@@ -119,6 +135,10 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     chatHistoryEnabled,
     composerDropEnabled,
     emitStreamingFunctionCallEvents,
+    modelsAnthropicEnabled,
+    modelsBuiltinEnabled,
+    modelsOpenAiEnabled,
+    modelsTestEnabled,
     openApiApiKey,
     openRouterApiKey,
     passIncludeObfuscation,
