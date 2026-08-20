@@ -1,13 +1,16 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { DragAndDropWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 
 interface FileHandleTransportItem {
   readonly value: FileSystemHandle
 }
 
-export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<readonly FileSystemFileHandle[]> => {
+export const getDroppedFiles = async (dropIdOrFileHandles: number | readonly number[]): Promise<readonly FileSystemFileHandle[]> => {
+  if (typeof dropIdOrFileHandles === 'number') {
+    return DragAndDropWorker.getDroppedFileHandlesByDropId(dropIdOrFileHandles)
+  }
   // TODO adjust e2e test and remove this code
-  if (fileHandles.some((item: any): boolean => typeof item !== 'number')) {
-    return fileHandles.map((item: any): any => {
+  if (dropIdOrFileHandles.some((item: any): boolean => typeof item !== 'number')) {
+    return dropIdOrFileHandles.map((item: any): any => {
       return {
         getFile(): any {
           return item
@@ -15,7 +18,7 @@ export const getDroppedFiles = async (fileHandles: readonly number[]): Promise<r
       }
     })
   }
-  const actualHandles = await RendererWorker.getFileHandles(fileHandles)
+  const actualHandles = await RendererWorker.getFileHandles(dropIdOrFileHandles)
   return (
     actualHandles
       // @ts-ignore

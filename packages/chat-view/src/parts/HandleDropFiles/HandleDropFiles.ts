@@ -1,3 +1,4 @@
+import { DragAndDropWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import type { ComposerAttachment } from '../ComposerAttachment/ComposerAttachment.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
@@ -8,13 +9,20 @@ import { getComposerAttachmentTextContent } from '../GetComposerAttachmentTextCo
 import { getDroppedFiles } from '../GetDroppedFiles/GetDroppedFiles.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const handleDropFiles = async (state: ChatState, name: string, fileHandles: readonly number[] = []): Promise<ChatState> => {
-  const droppedFileHandles = await getDroppedFiles(fileHandles)
+export const handleDropFiles = async (state: ChatState, name: string, dropIdOrFileHandles: number | readonly number[] = []): Promise<ChatState> => {
+  const isDropSession = typeof dropIdOrFileHandles === 'number'
+  const legacyDroppedFileHandles = isDropSession ? undefined : await getDroppedFiles(dropIdOrFileHandles)
   const { composerDropActive, composerDropEnabled, nextAttachmentId, selectedSessionId, width } = state
   if (name !== InputName.ComposerDropTarget) {
+    if (isDropSession) {
+      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
+    }
     return state
   }
   if (!composerDropEnabled) {
+    if (isDropSession) {
+      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
+    }
     return {
       ...state,
       composerDropActive: false,
@@ -26,9 +34,13 @@ export const handleDropFiles = async (state: ChatState, name: string, fileHandle
         composerDropActive: false,
       }
     : state
-  if (!selectedSessionId || fileHandles.length === 0) {
+  if (!selectedSessionId || (!isDropSession && dropIdOrFileHandles.length === 0)) {
+    if (isDropSession) {
+      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
+    }
     return nextState
   }
+  const droppedFileHandles = legacyDroppedFileHandles || (await getDroppedFiles(dropIdOrFileHandles))
   const nextAttachments: ComposerAttachment[] = []
   for (const droppedFileHandle of droppedFileHandles) {
     const file = await droppedFileHandle.getFile()
