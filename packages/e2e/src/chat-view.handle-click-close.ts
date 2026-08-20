@@ -5,9 +5,10 @@ export const name = 'chat-view.handle-click-close'
 export const test: Test = async ({ Chat, expect, Locator }) => {
   // arrange
   await Chat.show()
+  const closeButton = Locator('[name="close-chat"]')
 
   // act
-  await Chat.handleClickClose()
+  await closeButton.click()
 
   // assert
   const chat = Locator('.Chat')
