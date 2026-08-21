@@ -17,8 +17,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
   await expect(preview).toBeVisible()
 
-  // eslint-disable-next-line e2e/no-direct-click
-  await preview.click({ button: 'right' })
+  await Command.execute('Chat.handleContextMenuChatImageAttachment', '', 0, 0)
 
   await expect(openMenuItem).toBeVisible()
   await expect(openMenuItem).toHaveText('Open image in new tab')

@@ -11,11 +11,9 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.handleSubmit()
   await Chat.handleClickBack()
 
-  const chatListItem = Locator('.ChatList .ChatListItem').nth(0)
   const outlinedItem = Locator('.ChatList .ChatListItem.ChatListItemFocusOutline')
 
-  // eslint-disable-next-line e2e/no-direct-click
-  await chatListItem.click({ button: 'right' })
+  await Chat.handleChatListContextMenu(0, 70)
   await expect(outlinedItem).toHaveCount(1)
 
   await Command.execute('Chat.handleInputFocus', 'chat-list')

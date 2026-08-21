@@ -18,8 +18,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, FileSyste
   await expect(secondMessage).toHaveText('Mock AI response: I received "hello from e2e".')
   await Chat.handleClickBack()
   const chatListItems = Locator('.ChatList .ChatListItem')
-  // eslint-disable-next-line e2e/no-direct-click
-  await chatListItems.nth(0).click({ button: 'right' })
+  await Chat.handleChatListContextMenu(0, 70)
   const archiveMenuItem = Locator('.MenuItem').nth(1)
   await expect(archiveMenuItem).toBeVisible()
   await expect(archiveMenuItem).toHaveText('Archive')

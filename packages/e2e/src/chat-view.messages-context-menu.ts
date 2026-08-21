@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.messages-context-menu'
 
-export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
@@ -12,9 +12,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   const messages = Locator('.ChatMessages')
   await expect(messages).toBeVisible()
 
-  const firstMessage = Locator('.ChatMessages .Message').nth(0)
-  // eslint-disable-next-line e2e/no-direct-click
-  await firstMessage.click({ button: 'right' })
+  await Command.execute('Chat.handleMessagesContextMenu', 0, 0, 0)
 
   const cutMenuItem = Locator('.MenuItem').nth(0)
   await expect(cutMenuItem).toBeVisible()

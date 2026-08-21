@@ -19,8 +19,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await expect(archiveButton).toHaveAttribute('title', 'Archive')
 
   // act
-  // eslint-disable-next-line e2e/no-direct-click
-  await chatListItems.nth(0).click({ button: 'right' })
+  await Chat.handleChatListContextMenu(0, 70)
 
   // assert
   await expect(outlinedItem).toHaveCount(1)
