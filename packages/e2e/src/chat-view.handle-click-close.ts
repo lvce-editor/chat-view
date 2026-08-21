@@ -8,7 +8,8 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const closeButton = Locator('[name="close-chat"]')
 
   // act
-  await closeButton.dispatchEvent('click', {} as any)
+  // eslint-disable-next-line e2e/no-direct-click
+  await closeButton.click()
 
   // assert
   const chat = Locator('.Chat')

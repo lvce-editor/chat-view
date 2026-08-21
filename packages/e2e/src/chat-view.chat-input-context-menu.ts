@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-input-context-menu-entries'
 
-export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -11,7 +11,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(composer).toBeVisible()
 
   // act
-  await Command.execute('Chat.handleChatInputContextMenu', 0, 0)
+  // eslint-disable-next-line e2e/no-direct-click
+  await composer.click({ button: 'right' })
 
   // assert
   const renameMenuItem = Locator('.MenuItem').nth(0)
