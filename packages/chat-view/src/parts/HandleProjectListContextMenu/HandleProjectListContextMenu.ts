@@ -1,8 +1,8 @@
 /* cspell:ignore sonarjs */
 
-import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import type { Project } from '../Project/Project.ts'
+import * as ContextMenu from '../ContextMenu/ContextMenu.ts'
 import { MenuChatProjectList } from '../GetMenuEntryIds/GetMenuEntryIds.ts'
 
 const getProjectAtIndex = (state: ChatState, index: number): Project | undefined => {
@@ -44,7 +44,7 @@ export const handleProjectListContextMenu = async (state: ChatState, button: num
   if (!project) {
     return state
   }
-  await RendererWorker.showContextMenu2(uid, MenuChatProjectList, x, y, {
+  await ContextMenu.show2(uid, MenuChatProjectList, x, y, {
     canRemoveProject: project.name !== '_blank',
     menuId: MenuChatProjectList,
     projectId: project.id,

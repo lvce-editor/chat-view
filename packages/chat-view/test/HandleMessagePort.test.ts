@@ -20,10 +20,7 @@ test('connects the view directly to the renderer process', async () => {
   })
   const handleInput = jest.fn(async (_uid: number, _value: string) => {})
   const handleClickClose = jest.fn(async (_uid: number) => {})
-  const { promise: contextMenuHandled, resolve: resolveContextMenuHandled } = Promise.withResolvers<void>()
-  const handleChatInputContextMenu = jest.fn(async (_uid: number, _x: number, _y: number) => {
-    resolveContextMenuHandled()
-  })
+  const handleChatInputContextMenu = jest.fn(async (_uid: number, _x: number, _y: number) => {})
 
   await handleMessagePort(port2, {
     'Chat.handleChatInputContextMenu': handleChatInputContextMenu,
@@ -56,8 +53,6 @@ test('connects the view directly to the renderer process', async () => {
   expect(requestRender).toHaveBeenCalledTimes(1)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleChatInputContextMenu', 10, 20)
-  await contextMenuHandled
-  await new Promise<void>((resolve) => setTimeout(resolve, 0))
   expect(handleChatInputContextMenu).toHaveBeenCalledWith(7, 10, 20)
   expect(requestRender).toHaveBeenCalledTimes(2)
 
