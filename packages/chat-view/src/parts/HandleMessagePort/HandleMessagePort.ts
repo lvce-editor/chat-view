@@ -8,6 +8,15 @@ const forwardLayoutCommand = (layoutCommand: string): void => {
   }, 0)
 }
 
+const deferredRendererWorkerCommands = new Set([
+  'handleChatInputContextMenu',
+  'handleChatListContextMenu',
+  'handleContextMenuChatImageAttachment',
+  'handleMessagesContextMenu',
+  'handleProjectAddButtonContextMenu',
+  'handleProjectListContextMenu',
+])
+
 export const handleMessagePort = async (
   port: MessagePort,
   viewletCommandMap: Readonly<Record<string, unknown>>,
@@ -22,6 +31,17 @@ export const handleMessagePort = async (
     const fn = viewletCommandMap[`Chat.${command}`]
     if (typeof fn !== 'function') {
       throw new TypeError(`Viewlet command not found: ${command}`)
+    }
+    if (deferredRendererWorkerCommands.has(command)) {
+      // These handlers call back into the renderer worker. Let the originating
+      // renderer-worker -> renderer-process pointer action finish first.
+      setTimeout(() => {
+        void (async (): Promise<void> => {
+          await fn(uid, ...args)
+          await RendererWorker.invoke('Viewlet.requestRender', uid)
+        })()
+      }, 0)
+      return
     }
     await fn(uid, ...args)
     await RendererWorker.invoke('Viewlet.requestRender', uid)
