@@ -45,8 +45,14 @@ test('connects the view directly to the renderer process', async () => {
   expect(handleClickClose).toHaveBeenCalledWith(7)
   expect(requestRender).toHaveBeenCalledTimes(1)
 
+  const { promise: rendered, resolve } = Promise.withResolvers<void>()
+  requestRender.mockImplementationOnce(async () => {
+    resolve()
+  })
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleChatInputContextMenu', 10, 20)
   expect(handleChatInputContextMenu).toHaveBeenCalledWith(7, 10, 20)
+  expect(requestRender).toHaveBeenCalledTimes(1)
+  await rendered
   expect(requestRender).toHaveBeenCalledTimes(2)
 
   await expect(rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'missing')).rejects.toThrow('Viewlet command not found: missing')
