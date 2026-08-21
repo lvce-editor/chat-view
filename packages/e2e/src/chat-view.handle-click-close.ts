@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const closeButton = Locator('[name="close-chat"]')
 
   // act
-  await closeButton.dispatchEvent('click')
+  await closeButton.dispatchEvent('click', {} as any)
 
   // assert
   const chat = Locator('.Chat')
