@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "e2e": "test-with-playwright --only-extension=. --test-path=. --reuse-page",
-    "e2e:headless": "test-with-playwright --only-extension=. --test-path=. --headless --reuse-page",
+    "e2e": "node ./scripts/run-e2e.js",
+    "e2e:headless": "node ./scripts/run-e2e.js --headless",
     "type-check": "tsc"
   },
   "devDependencies": {
