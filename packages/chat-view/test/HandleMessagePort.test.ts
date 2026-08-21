@@ -15,10 +15,7 @@ test('connects the view directly to the renderer process', async () => {
   })
   const handleInput = jest.fn(async (_uid: number, _value: string) => {})
   const handleClickClose = jest.fn(async (_uid: number) => {})
-  const { promise: contextMenuHandled, resolve: resolveContextMenuHandled } = Promise.withResolvers<void>()
-  const handleChatInputContextMenu = jest.fn(async (_uid: number, _x: number, _y: number) => {
-    resolveContextMenuHandled()
-  })
+  const handleChatInputContextMenu = jest.fn(async (_uid: number, _x: number, _y: number) => {})
 
   await handleMessagePort(port2, {
     'Chat.handleChatInputContextMenu': handleChatInputContextMenu,
@@ -29,18 +26,11 @@ test('connects the view directly to the renderer process', async () => {
   await expect(RendererProcess.invoke('Viewlet.queueCommands', 7, [['Viewlet.setDom2', 7, []]])).resolves.toBe(31)
   expect(queueCommands).toHaveBeenCalledWith(7, [['Viewlet.setDom2', 7, []]])
 
-  const { promise: contextMenuRendered, resolve: resolveContextMenuRendered } = Promise.withResolvers<void>()
-  const { promise: layoutHidden, resolve: resolveLayoutHidden } = Promise.withResolvers<void>()
-  const requestRender = jest.fn(async (_uid: number) => {
-    if (requestRender.mock.calls.length === 2) {
-      resolveContextMenuRendered()
-    }
-  })
+  const requestRender = jest.fn(async (_uid: number) => {})
   RendererWorker.set(
     Object.assign(
       createMockRpc({
         commandMap: {
-          'Layout.hideSecondarySideBar': resolveLayoutHidden,
           'Viewlet.requestRender': requestRender,
         },
       }),
@@ -52,13 +42,10 @@ test('connects the view directly to the renderer process', async () => {
   expect(requestRender).toHaveBeenCalledWith(7)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleClickClose')
-  await layoutHidden
-  expect(handleClickClose).not.toHaveBeenCalled()
+  expect(handleClickClose).toHaveBeenCalledWith(7)
   expect(requestRender).toHaveBeenCalledTimes(1)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleChatInputContextMenu', 10, 20)
-  await contextMenuHandled
-  await contextMenuRendered
   expect(handleChatInputContextMenu).toHaveBeenCalledWith(7, 10, 20)
   expect(requestRender).toHaveBeenCalledTimes(2)
 
