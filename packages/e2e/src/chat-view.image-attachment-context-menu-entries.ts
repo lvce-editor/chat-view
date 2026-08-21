@@ -18,6 +18,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(preview).toBeVisible()
 
   await Command.execute('Chat.handleContextMenuChatImageAttachment', '', 0, 0)
+  await new Promise((resolve) => setTimeout(resolve, 50))
 
   await expect(openMenuItem).toBeVisible()
   await expect(openMenuItem).toHaveText('Open image in new tab')

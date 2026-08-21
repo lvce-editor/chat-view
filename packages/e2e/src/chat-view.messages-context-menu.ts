@@ -13,6 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toBeVisible()
 
   await Command.execute('Chat.handleMessagesContextMenu', 0, 0, 0)
+  await new Promise((resolve) => setTimeout(resolve, 50))
 
   const cutMenuItem = Locator('.MenuItem').nth(0)
   await expect(cutMenuItem).toBeVisible()
