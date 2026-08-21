@@ -10,6 +10,7 @@ import { initializeChatStorageWorker } from '../InitializeChatStorageWorker/Init
 import { initializeChatToolWorker } from '../InitializeChatToolWorker/InitializeChatToolWorker.ts'
 import { initializeChatViewModelWorker } from '../InitializeChatViewModelWorker/InitializeChatViewModelWorker.ts'
 import { initializeClipBoardWorker } from '../InitializeClipBoardWorker/InitializeClipBoardWorker.ts'
+import { initializeDragAndDropWorker } from '../InitializeDragAndDropWorker/InitializeDragAndDropWorker.ts'
 import { initializeIconThemeWorker } from '../InitializeIconThemeWorker/InitializeIconThemeWorker.ts'
 import { initializeOpenerWorker } from '../InitializeOpenerWorker/InitializeOpenerWorker.ts'
 import { initializeTextMeasurementWorker } from '../InitializeTextMeasurementWorker/InitializeTextMeasurementWorker.ts'
@@ -33,6 +34,7 @@ export const listen = async (): Promise<void> => {
     initializeChatToolWorker(),
     initializeChatViewModelWorker(),
     initializeClipBoardWorker(),
+    initializeDragAndDropWorker(),
     initializeIconThemeWorker(),
     initializeOpenerWorker(),
     initializeTextMeasurementWorker(),

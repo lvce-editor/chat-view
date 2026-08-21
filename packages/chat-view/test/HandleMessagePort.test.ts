@@ -6,22 +6,19 @@ import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.t
 
 test('connects the view directly to the renderer process', async () => {
   const queueCommands = jest.fn((_uid: number, _commands: readonly unknown[]) => 31)
-  const { promise: forwardedCommand, resolve: resolveForwardedCommand } = Promise.withResolvers<void>()
-  const forwardRendererWorkerCommand = jest.fn((_method: string) => {
-    resolveForwardedCommand()
-  })
   const { port1, port2 } = new MessageChannel()
   const rendererProcessRpc = await PlainMessagePortRpcParent.create({
     commandMap: {
-      'Viewlet.forwardRendererWorkerCommand': forwardRendererWorkerCommand,
       'Viewlet.queueCommands': queueCommands,
     },
     messagePort: port1,
   })
   const handleInput = jest.fn(async (_uid: number, _value: string) => {})
   const handleClickClose = jest.fn(async (_uid: number) => {})
+  const handleChatInputContextMenu = jest.fn(async (_uid: number, _x: number, _y: number) => {})
 
   await handleMessagePort(port2, {
+    'Chat.handleChatInputContextMenu': handleChatInputContextMenu,
     'Chat.handleClickClose': handleClickClose,
     'Chat.handleInput': handleInput,
   })
@@ -45,10 +42,18 @@ test('connects the view directly to the renderer process', async () => {
   expect(requestRender).toHaveBeenCalledWith(7)
 
   await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleClickClose')
-  await forwardedCommand
-  expect(forwardRendererWorkerCommand).toHaveBeenCalledWith('Layout.hideSecondarySideBar')
-  expect(handleClickClose).not.toHaveBeenCalled()
+  expect(handleClickClose).toHaveBeenCalledWith(7)
   expect(requestRender).toHaveBeenCalledTimes(1)
+
+  const { promise: rendered, resolve } = Promise.withResolvers<void>()
+  requestRender.mockImplementationOnce(async () => {
+    resolve()
+  })
+  await rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'handleChatInputContextMenu', 10, 20)
+  expect(handleChatInputContextMenu).toHaveBeenCalledWith(7, 10, 20)
+  expect(requestRender).toHaveBeenCalledTimes(1)
+  await rendered
+  expect(requestRender).toHaveBeenCalledTimes(2)
 
   await expect(rendererProcessRpc.invoke('Viewlet.executeViewletCommand', 7, 'missing')).rejects.toThrow('Viewlet command not found: missing')
 

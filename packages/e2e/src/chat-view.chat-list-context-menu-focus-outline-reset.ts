@@ -14,6 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const outlinedItem = Locator('.ChatList .ChatListItem.ChatListItemFocusOutline')
 
   await Chat.handleChatListContextMenu(0, 70)
+  await new Promise((resolve) => setTimeout(resolve, 500))
   await expect(outlinedItem).toHaveCount(1)
 
   await Command.execute('Chat.handleInputFocus', 'chat-list')

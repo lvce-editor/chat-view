@@ -71,4 +71,16 @@ test('renderEventListeners should return expected listeners', () => {
     name: DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,
     params: ['handlePointerMoveProjectSidebarSash', EventExpression.ClientX],
   })
+  const dragEnterListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleDragEnter)
+  expect(dragEnterListener).toEqual({
+    name: DomEventListenerFunctions.HandleDragEnter,
+    params: ['handleDragEnter', EventExpression.TargetName],
+    preventDefault: true,
+  })
+  const dropListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleDrop)
+  expect(dropListener).toEqual({
+    name: DomEventListenerFunctions.HandleDrop,
+    params: ['handleDropFiles', EventExpression.TargetName, EventExpression.DropId],
+    preventDefault: true,
+  })
 })
