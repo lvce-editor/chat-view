@@ -82,3 +82,5 @@ const version = await getVersion()
 
 await writePackagedArtifact('chat-view', dist, 'dist/chatViewWorkerMain.js', version)
 await writePackagedArtifact('chat-view-model', distChatViewModel, 'dist/chatViewModelWorkerMain.js', version)
+await cp(join(root, 'packages', 'chat-view-model', 'settings.json'), join(dist, 'dist', 'settings.json'))
+await cp(join(root, 'packages', 'chat-view-model', 'settings.json'), join(distChatViewModel, 'dist', 'settings.json'))
