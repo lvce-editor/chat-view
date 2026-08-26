@@ -1,6 +1,6 @@
 export interface OpenAiInputTextPart {
   readonly text: string
-  readonly type: 'input_text'
+  readonly type: 'input_text' | 'output_text'
 }
 
 export interface OpenAiInputImagePart {

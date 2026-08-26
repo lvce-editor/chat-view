@@ -1,15 +1,17 @@
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import { parseRenderHtmlArguments } from '../ParseRenderHtmlArguments/ParseRenderHtmlArguments.ts'
 
-export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessionId: string): string => {
+export const getRenderHtmlCss = (sessions: readonly ChatSession[], selectedSessionId: string, messages?: readonly ChatMessage[]): string => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   if (!selectedSession) {
     return ''
   }
+  const selectedMessages = messages && messages.length > 0 ? messages : selectedSession.messages
 
   const cssRules = new Set<string>()
 
-  for (const message of selectedSession.messages) {
+  for (const message of selectedMessages) {
     if (message.role !== 'assistant' || !message.toolCalls) {
       continue
     }

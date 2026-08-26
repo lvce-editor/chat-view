@@ -11,8 +11,8 @@
   "type": "module",
   "main": "src/chatViewWorkerMain.ts",
   "scripts": {
-    "test": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
   },
   "jest": {
     "injectGlobals": false,
@@ -43,16 +43,16 @@
     }
   },
   "devDependencies": {
-    "@jest/globals": "^30.3.0",
+    "@jest/globals": "^30.4.1",
     "@lvce-editor/assert": "^1.5.1",
-    "@lvce-editor/constants": "^5.11.0",
+    "@lvce-editor/constants": "^5.29.0",
     "@lvce-editor/i18n": "^2.1.0",
     "@lvce-editor/rpc": "^6.4.0",
-    "@lvce-editor/rpc-registry": "^9.22.0",
+    "@lvce-editor/rpc-registry": "^9.53.1",
     "@lvce-editor/verror": "^1.7.0",
     "@lvce-editor/viewlet-registry": "^4.1.0",
-    "@lvce-editor/virtual-dom-worker": "^9.8.0",
-    "jest": "^30.3.0",
-    "ts-jest": "^29.4.9"
+    "@lvce-editor/virtual-dom-worker": "^9.13.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11"
   }
 }

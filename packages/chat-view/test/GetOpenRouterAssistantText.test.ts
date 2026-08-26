@@ -19,6 +19,19 @@ const getRequestIdFromInit = (init: unknown): string | undefined => {
   return typeof value === 'string' ? value : undefined
 }
 
+const getRequestUrl = (input: unknown): string => {
+  if (typeof input === 'string') {
+    return input
+  }
+  if (input instanceof URL) {
+    return input.href
+  }
+  if (input instanceof Request) {
+    return input.url
+  }
+  return ''
+}
+
 test('getOpenRouterAssistantText should return success result when response is ok', async () => {
   const originalFetch = globalThis.fetch
   let fetchInvocation: readonly unknown[] | undefined
@@ -278,7 +291,7 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
     if (requestId) {
       requestIds.push(requestId)
     }
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    const url = getRequestUrl(input)
     if (url.endsWith('/chat/completions')) {
       return {
         headers: {
@@ -341,7 +354,7 @@ test('getOpenRouterAssistantText should include limit info for 429 when auth key
 test('getOpenRouterAssistantText should include raw metadata message for 429', async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = async (input: unknown): Promise<Response> => {
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : ''
+    const url = getRequestUrl(input)
     if (url.endsWith('/chat/completions')) {
       return {
         json: async () => ({

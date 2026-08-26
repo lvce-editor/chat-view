@@ -1,5 +1,6 @@
 import type { AgentMode } from '../AgentMode/AgentMode.ts'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatModel } from '../ChatModel/ChatModel.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatViewFocus } from '../ChatViewFocus/ChatViewFocus.ts'
@@ -32,6 +33,7 @@ export interface ChatState {
   readonly chatInputHistory: readonly string[]
   readonly chatInputHistoryDraft: string
   readonly chatInputHistoryIndex: number
+  readonly chatListExpanded: boolean
   readonly chatListScrollTop: number
   readonly chatMessageFontFamily: string
   readonly chatMessageFontSize: number
@@ -68,6 +70,8 @@ export interface ChatState {
   readonly height: number
   readonly hiddenPrimaryControls: readonly ComposerPrimaryControl[]
   readonly initial: boolean
+  readonly inProgress: boolean
+  readonly inProgressMessage: string
   readonly inputSource: 'user' | 'script'
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly lastSubmittedSessionId: string
@@ -76,6 +80,7 @@ export interface ChatState {
   readonly listItemHeight: number
   readonly maxComposerRows: number
   readonly maxToolCalls: number
+  readonly messages: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop: number
   readonly mockAiResponseDelay: number

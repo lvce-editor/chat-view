@@ -2,7 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.code-block-data-lang'
 
-export const skip = 1
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -23,8 +22,12 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   await expect(preBlocks).toHaveCount(2)
   await expect(codeBlocks).toHaveCount(2)
-  await expect(preBlocks.nth(0)).toHaveAttribute('data-lang', 'ts')
-  await expect(codeBlocks.nth(0)).toHaveAttribute('data-lang', 'ts')
-  await expect(preBlocks.nth(1)).toHaveAttribute('data-lang', null)
-  await expect(codeBlocks.nth(1)).toHaveAttribute('data-lang', null)
+  const preBlock0 = preBlocks.nth(0)
+  await expect(preBlock0).toHaveAttribute('data-lang', 'ts')
+  const codeBlock0 = codeBlocks.nth(0)
+  await expect(codeBlock0).toHaveAttribute('data-lang', 'ts')
+  const preBlock1 = preBlocks.nth(1)
+  await expect(preBlock1).toHaveAttribute('data-lang', null)
+  const codeBlock1 = codeBlocks.nth(1)
+  await expect(codeBlock1).toHaveAttribute('data-lang', null)
 }

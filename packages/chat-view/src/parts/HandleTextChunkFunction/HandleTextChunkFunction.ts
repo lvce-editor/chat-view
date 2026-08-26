@@ -1,5 +1,5 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
-import type { ChatSession } from '../ChatSession/ChatSession.ts'
+import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
 export { handleToolCallsChunkFunction } from '../HandleToolCallsChunkFunction/HandleToolCallsChunkFunction.ts'
 export { updateMessageToolCallsInSelectedSession } from '../UpdateMessageToolCallsInSelectedSession/UpdateMessageToolCallsInSelectedSession.ts'
@@ -15,40 +15,31 @@ export interface HandleTextChunkState {
 }
 
 export const updateMessageTextInSelectedSession = async (
-  sessions: readonly ChatSession[],
+  messages: readonly ChatMessage[],
   parsedMessages: readonly ParsedMessage[],
-  selectedSessionId: string,
   messageId: string,
   text: string,
   inProgress: boolean,
-): Promise<{ readonly parsedMessages: readonly ParsedMessage[]; readonly sessions: readonly ChatSession[] }> => {
-  let updatedMessage: ChatSession['messages'][number] | undefined
-  const updatedSessions = sessions.map((session) => {
-    if (session.id !== selectedSessionId) {
-      return session
+): Promise<{ readonly messages: readonly ChatMessage[]; readonly parsedMessages: readonly ParsedMessage[] }> => {
+  let updatedMessage: ChatMessage | undefined
+  const updatedMessages = messages.map((message) => {
+    if (message.id !== messageId) {
+      return message
     }
-    return {
-      ...session,
-      messages: session.messages.map((message) => {
-        if (message.id !== messageId) {
-          return message
-        }
-        updatedMessage = {
-          ...message,
-          inProgress,
-          text,
-        }
-        return updatedMessage
-      }),
+    updatedMessage = {
+      ...message,
+      inProgress,
+      text,
     }
+    return updatedMessage
   })
   let nextParsedMessages = parsedMessages
   if (updatedMessage) {
     nextParsedMessages = await parseAndStoreMessageContent(parsedMessages, updatedMessage)
   }
   return {
+    messages: updatedMessages,
     parsedMessages: nextParsedMessages,
-    sessions: updatedSessions,
   }
 }
 
@@ -67,13 +58,13 @@ export const handleTextChunkFunction = async (
       previousState: liveState,
     }
   }
-  if (getChatSessionStatus(selectedSession) === 'stopped') {
+  if (getChatSessionStatus(selectedSession, liveState.messages) === 'stopped') {
     return {
       latestState: liveState,
       previousState: liveState,
     }
   }
-  const assistantMessage = selectedSession.messages.find((message) => message.id === assistantMessageId)
+  const assistantMessage = liveState.messages.find((message) => message.id === assistantMessageId)
   if (!assistantMessage) {
     return {
       latestState: liveState,
@@ -81,23 +72,14 @@ export const handleTextChunkFunction = async (
     }
   }
   const updatedText = assistantMessage.text + chunk
-  const updated = await updateMessageTextInSelectedSession(
-    liveState.sessions,
-    liveState.parsedMessages,
-    sessionId,
-    assistantMessageId,
-    updatedText,
-    true,
-  )
+  const updated = await updateMessageTextInSelectedSession(liveState.messages, liveState.parsedMessages, assistantMessageId, updatedText, true)
   const nextState = {
     ...liveState,
-    ...(liveState.messagesAutoScrollEnabled
-      ? {
-          messagesScrollTop: getNextAutoScrollTop(liveState.messagesScrollTop),
-        }
-      : {}),
+    messages: updated.messages,
+    ...(liveState.messagesAutoScrollEnabled && {
+      messagesScrollTop: getNextAutoScrollTop(liveState.messagesScrollTop),
+    }),
     parsedMessages: updated.parsedMessages,
-    sessions: updated.sessions,
   }
   set(uid, liveState, nextState)
   await RendererWorker.invoke('Chat.rerender')

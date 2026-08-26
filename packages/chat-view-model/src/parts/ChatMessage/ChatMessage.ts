@@ -13,9 +13,16 @@ export interface ChatToolCall {
   readonly status?: ChatToolCallStatus
 }
 
+export interface ChatMessageContentPart {
+  readonly [key: string]: unknown
+  readonly text?: string
+  readonly type?: string
+}
+
 export interface ChatMessage {
   readonly agentMode?: AgentMode
   readonly attachments?: readonly ComposerAttachment[]
+  readonly content?: readonly ChatMessageContentPart[]
   readonly id: string
   readonly inProgress?: boolean
   readonly role: 'user' | 'assistant'

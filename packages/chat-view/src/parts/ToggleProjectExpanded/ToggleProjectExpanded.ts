@@ -3,6 +3,7 @@ import { getChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export const toggleProjectExpanded = async (state: ChatState, projectId: string): Promise<ChatState> => {
   const { projectExpandedIds, selectedSessionId, sessions, width } = state
@@ -15,6 +16,7 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       projectExpandedIds: nextProjectExpandedIds,
       selectedProjectId: projectId,
       selectedSessionId: '',
@@ -26,21 +28,24 @@ export const toggleProjectExpanded = async (state: ChatState, projectId: string)
   const nextSelectedSessionId = selectedSessionVisible ? selectedSessionId : visibleSessions[0].id
   const loadedSession = await getChatSession(nextSelectedSessionId)
   const composerAttachments = await getComposerAttachments(nextSelectedSessionId)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== nextSelectedSessionId || !loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== nextSelectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
 
   return {
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
+    messages: loadedSession?.messages || [],
     projectExpandedIds: nextProjectExpandedIds,
     selectedProjectId: projectId,
     selectedSessionId: nextSelectedSessionId,
-    sessions: hydratedSessions,
+    sessions: nextSessions,
     viewMode: 'chat-focus',
   }
 }

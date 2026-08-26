@@ -1,9 +1,7 @@
 import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
-import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
-import { getChatHeaderAuthDom } from '../GetChatHeaderAuthDom/GetChatHeaderAuthDom.ts'
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
@@ -18,12 +16,33 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
+const chatFocusHeaderNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatFocusHeader,
+  style: focusHeaderStyle,
+  type: VirtualDomElements.Header,
+}
+
+const chatHeaderLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatHeaderLabel,
+  style: focusHeaderTitleStyle,
+  type: VirtualDomElements.H2,
+}
+
+const chatFocusProjectNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
+  style: focusHeaderProjectStyle,
+  type: VirtualDomElements.Span,
+}
+
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
-  authEnabled = false,
-  userState: AuthUserState = 'loggedOut',
-  userName = '',
+  _authEnabled = false,
+  _userState = 'loggedOut',
+  _userName = '',
 ): readonly VirtualDomNode[] => {
   const items = [
     {
@@ -58,38 +77,18 @@ export const getChatHeaderDomFocusMode = (
     },
   ] as const
   const hasProjectName = !!selectedProjectName
+  const projectNameDom = hasProjectName ? [chatFocusProjectNode, text(selectedProjectName)] : []
   return [
-    {
-      childCount: 2 + (authEnabled ? 1 : 0),
-      className: ClassNames.ChatFocusHeader,
-      style: focusHeaderStyle,
-      type: VirtualDomElements.Header,
-    },
-    ...getChatHeaderAuthDom(authEnabled, userState, userName),
+    chatFocusHeaderNode,
     {
       childCount: hasProjectName ? 2 : 1,
       className: ClassNames.ChatName,
       style: focusHeaderMetaStyle,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeaderLabel,
-      style: focusHeaderTitleStyle,
-      type: VirtualDomElements.H2,
-    },
+    chatHeaderLabelNode,
     text(selectedSessionTitle),
-    ...(hasProjectName
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
-            style: focusHeaderProjectStyle,
-            type: VirtualDomElements.Span,
-          },
-          text(selectedProjectName),
-        ]
-      : []),
+    ...projectNameDom,
     {
       'aria-label': 'focus header actions',
       childCount: items.length,

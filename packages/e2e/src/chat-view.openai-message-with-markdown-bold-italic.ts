@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-message-with-markdown-bold-italic'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const mockText = 'Here is **test** in bold and *test* in italic.'
   const tmpDir = await FileSystem.getTmpDir()
@@ -23,7 +21,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   const bold = Locator('.ChatMessages .Message strong')
   const italic = Locator('.ChatMessages .Message em')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('show test formatting')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('show test formatting')
   await expect(bold).toHaveCount(1)
   await expect(italic).toHaveCount(1)
   await expect(bold).toHaveText('test')

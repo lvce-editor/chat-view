@@ -27,6 +27,7 @@ test('ViewModel includes the chat rendering state required by chat-view', () => 
     hasSpaceForRunModePicker: true,
     listFocusedIndex: 0,
     listFocusOutline: false,
+    messages: [],
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     modelPickerOpen: false,

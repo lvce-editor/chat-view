@@ -5,7 +5,18 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getBackToChatsButtonDom } from '../GetBackToChatsButtonDom/GetBackToChatsButtonDom.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 import { getProjectGroupDom } from './GetProjectGroupDom/GetProjectGroupDom.ts'
+
+const projectAddButtonNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ProjectAddButton,
+  name: InputName.CreateProject,
+  onClick: DomEventListenerFunctions.HandleClick,
+  onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
+  tabIndex: TabIndex.Focusable,
+  type: VirtualDomElements.Button,
+}
 
 export const getProjectListDom = (
   projects: readonly Project[],
@@ -24,6 +35,7 @@ export const getProjectListDom = (
     })
     return getProjectGroupDom(project, projectSessions, projectExpandedIds, selectedProjectId, selectedSessionId)
   })
+  const backToChatsButtonDom = showBackToChatsButton ? getBackToChatsButtonDom() : []
 
   return [
     {
@@ -39,16 +51,8 @@ export const getProjectListDom = (
       type: VirtualDomElements.Div,
     },
     ...projectGroups.flat(),
-    {
-      childCount: 1,
-      className: ClassNames.ProjectAddButton,
-      name: InputName.CreateProject,
-      onClick: DomEventListenerFunctions.HandleClick,
-      onContextMenu: DomEventListenerFunctions.HandleProjectAddButtonContextMenu,
-      tabIndex: 0,
-      type: VirtualDomElements.Button,
-    },
+    projectAddButtonNode,
     text('+ Add Project'),
-    ...(showBackToChatsButton ? getBackToChatsButtonDom() : []),
+    ...backToChatsButtonDom,
   ]
 }

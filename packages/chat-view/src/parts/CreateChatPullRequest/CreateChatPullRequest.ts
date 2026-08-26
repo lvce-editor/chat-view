@@ -1,6 +1,5 @@
 import { CreatePullRequest } from '../BackgroundChatCommandIds/BackgroundChatCommandIds.ts'
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.ts'
 
 export interface CreateChatPullRequestOptions {
   readonly assetDir: string
@@ -14,26 +13,10 @@ export interface ChatPullRequestResult {
   readonly pullRequestUrl: string
 }
 
-export const createChatPullRequest = async ({
-  assetDir,
-  branchName,
-  platform,
-  title,
-  workspaceUri,
-}: CreateChatPullRequestOptions): Promise<ChatPullRequestResult> => {
-  return ExtensionHostShared.executeProvider({
-    assetDir,
-    event: `onCommand:${CreatePullRequest}`,
-    method: CommandExecute,
-    noProviderFoundMessage: 'No create pull request command found',
-    params: [
-      CreatePullRequest,
-      {
-        branchName,
-        title,
-        workspaceUri,
-      },
-    ],
-    platform,
+export const createChatPullRequest = async ({ branchName, title, workspaceUri }: CreateChatPullRequestOptions): Promise<ChatPullRequestResult> => {
+  return ExtensionManagement.executeCommand(CreatePullRequest, {
+    branchName,
+    title,
+    workspaceUri,
   }) as Promise<ChatPullRequestResult>
 }

@@ -103,17 +103,13 @@ export const getComposerAttachments = async (sessionId: string): Promise<readonl
       displayType,
       mimeType: event.mimeType,
       name: event.name,
-      ...(previewSrc
-        ? {
-            previewSrc,
-          }
-        : {}),
+      ...(previewSrc && {
+        previewSrc,
+      }),
       size: event.size,
-      ...(typeof textContent === 'string'
-        ? {
-            textContent,
-          }
-        : {}),
+      ...(typeof textContent === 'string' && {
+        textContent,
+      }),
     })
   }
   return [...attachments.values()]

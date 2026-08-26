@@ -11,7 +11,7 @@ export const getRemoteUrl = (path) => {
   return `/remote/${url}`
 }
 
-const nodeModulesPath = join(root, 'packages', 'server', 'node_modules')
+const nodeModulesPath = join(root, 'node_modules')
 
 const serverStaticPath = join(nodeModulesPath, '@lvce-editor', 'static-server', 'static')
 
@@ -23,10 +23,12 @@ const isCommitHash = (dirent) => {
 const dirents = await readdir(serverStaticPath)
 const commitHash = dirents.find(isCommitHash) || ''
 const rendererWorkerMainPath = join(serverStaticPath, commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js')
+const testWorkerMainPath = join(serverStaticPath, commitHash, 'packages', 'test-worker', 'dist', 'testWorkerMain.js')
 
 const content = await readFile(rendererWorkerMainPath, 'utf-8')
 
 const chatViewWorkerPath = join(root, '.tmp/dist/dist/chatViewWorkerMain.js')
+const chatViewModelWorkerPath = join(root, '.tmp/dist-chat-view-model/dist/chatViewModelWorkerMain.js')
 
 const replaceWorkerUrl = (currentContent, variableName, packageName, workerMainName, localPath) => {
   const remoteUrl = getRemoteUrl(localPath)
@@ -41,8 +43,22 @@ const ${variableName} = \`${remoteUrl}\``
 
 let newContent = content
 newContent = replaceWorkerUrl(newContent, 'chatViewWorkerUrl', 'chat-view', 'chatViewWorkerMain.js', chatViewWorkerPath)
+newContent = replaceWorkerUrl(newContent, 'chatViewModelWorkerUrl', 'chat-view-model', 'chatViewModelWorkerMain.js', chatViewModelWorkerPath)
 
 if (newContent !== content) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
   await writeFile(rendererWorkerMainPath, newContent)
+}
+
+const testWorkerContent = await readFile(testWorkerMainPath, 'utf-8')
+const workspaceReset = /    await invoke[^\n(]*\('FileSystem\.mkdir', 'memfs:\/\/\/workspace'\);\n    await invoke[^\n(]*\('Layout\.reset'\);/
+if (!workspaceReset.test(testWorkerContent)) {
+  const occurrence = /    await (invoke[^\n(]*)\('Layout\.reset'\);/
+  if (!occurrence.test(testWorkerContent)) {
+    throw new Error('test worker workspace reset occurrence not found')
+  }
+  const replacement = `    await $1('FileSystem.remove', 'memfs:///workspace');
+    await $1('FileSystem.mkdir', 'memfs:///workspace');
+    await $1('Layout.reset');`
+  await writeFile(testWorkerMainPath, testWorkerContent.replace(occurrence, replacement))
 }

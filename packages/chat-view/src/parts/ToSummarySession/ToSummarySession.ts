@@ -4,29 +4,21 @@ import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSession
 export const toSummarySession = (session: ChatSession): ChatSession => {
   const lastActiveTime = getSessionLastActiveTime(session)
   const summary: ChatSession = {
-    ...(session.branchName
-      ? {
-          branchName: session.branchName,
-        }
-      : {}),
+    ...(session.branchName && {
+      branchName: session.branchName,
+    }),
     id: session.id,
-    ...(lastActiveTime
-      ? {
-          lastActiveTime,
-        }
-      : {}),
+    ...(lastActiveTime && {
+      lastActiveTime,
+    }),
     messages: [],
-    ...(session.pullRequestUrl
-      ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
-      : {}),
+    ...(session.pullRequestUrl && {
+      pullRequestUrl: session.pullRequestUrl,
+    }),
     title: session.title,
-    ...(session.workspaceUri
-      ? {
-          workspaceUri: session.workspaceUri,
-        }
-      : {}),
+    ...(session.workspaceUri && {
+      workspaceUri: session.workspaceUri,
+    }),
   }
   if (!session.projectId) {
     return summary

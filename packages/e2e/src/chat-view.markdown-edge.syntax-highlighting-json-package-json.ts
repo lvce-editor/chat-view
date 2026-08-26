@@ -2,7 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.markdown-edge.syntax-highlighting-json-package-json'
 
-export const skip = 1
 const mockResponse = `I will create a new package.json file suitable for a new React project. It will include the basic dependencies for React and ReactDOM.
 
 Here is a basic example for a React project:
@@ -36,6 +35,8 @@ Here is a basic example for a React project:
 
 Should I create this package.json file for you with this content? If you want any customization like project name or author, please let me know.`
 
+export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -56,9 +57,13 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   await expect(codeBlocks).toHaveCount(1)
   await expect(jsonProperties).toHaveCount(16)
-  await expect(jsonProperties.nth(0)).toHaveText('"name"')
-  await expect(jsonProperties.nth(15)).toHaveText('"react-scripts"')
+  const jsonProperty0 = jsonProperties.nth(0)
+  await expect(jsonProperty0).toHaveText('"name"')
+  const jsonProperty15 = jsonProperties.nth(15)
+  await expect(jsonProperty15).toHaveText('"react-scripts"')
   await expect(jsonStrings).toHaveCount(16)
-  await expect(jsonStrings.nth(0)).toHaveText('"my-react-app"')
-  await expect(jsonStrings.nth(15)).toHaveText('"5.0.1"')
+  const jsonString0 = jsonStrings.nth(0)
+  await expect(jsonString0).toHaveText('"my-react-app"')
+  const jsonString15 = jsonStrings.nth(15)
+  await expect(jsonString15).toHaveText('"5.0.1"')
 }

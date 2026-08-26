@@ -1,6 +1,21 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 interface ParsedAskQuestionArguments {
   readonly answers: readonly string[]
   readonly question: string
+}
+
+const getAnswersArray = (rawAnswers: unknown, rawChoices: unknown, rawOptions: unknown): readonly unknown[] => {
+  if (Array.isArray(rawAnswers)) {
+    return rawAnswers
+  }
+  if (Array.isArray(rawChoices)) {
+    return rawChoices
+  }
+  if (Array.isArray(rawOptions)) {
+    return rawOptions
+  }
+  return []
 }
 
 export const parseAskQuestionArguments = (rawArguments: string): ParsedAskQuestionArguments => {
@@ -19,11 +34,11 @@ export const parseAskQuestionArguments = (rawArguments: string): ParsedAskQuesti
       question: '',
     }
   }
-  const question = Reflect.get(parsed, 'question')
-  const rawAnswers = Reflect.get(parsed, 'answers')
-  const rawChoices = Reflect.get(parsed, 'choices')
-  const rawOptions = Reflect.get(parsed, 'options')
-  const arrayValue = Array.isArray(rawAnswers) ? rawAnswers : Array.isArray(rawChoices) ? rawChoices : Array.isArray(rawOptions) ? rawOptions : []
+  const question = getObjectProperty(parsed, 'question')
+  const rawAnswers = getObjectProperty(parsed, 'answers')
+  const rawChoices = getObjectProperty(parsed, 'choices')
+  const rawOptions = getObjectProperty(parsed, 'options')
+  const arrayValue = getAnswersArray(rawAnswers, rawChoices, rawOptions)
   const answers = arrayValue.filter((value) => typeof value === 'string') as readonly string[]
   return {
     answers,

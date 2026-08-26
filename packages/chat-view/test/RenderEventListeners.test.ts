@@ -8,6 +8,18 @@ test('renderEventListeners should return expected listeners', () => {
   expect(result).toBeDefined()
   const searchListener = result.find((listener) => listener.params?.[0] === 'handleSearchValueChange')
   expect(searchListener).toBeDefined()
+  const sessionClickListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickSession)
+  expect(sessionClickListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickSession,
+    params: ['handleClick', EventExpression.TargetName],
+    stopPropagation: true,
+  })
+  const sessionDeleteListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleClickDelete)
+  expect(sessionDeleteListener).toEqual({
+    name: DomEventListenerFunctions.HandleClickDelete,
+    params: ['handleClickDelete', 'event.target.dataset.id'],
+    stopPropagation: true,
+  })
   const chatInputContextMenuListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleChatInputContextMenu)
   expect(chatInputContextMenuListener).toEqual({
     name: DomEventListenerFunctions.HandleChatInputContextMenu,
@@ -58,5 +70,17 @@ test('renderEventListeners should return expected listeners', () => {
   expect(projectSidebarSashPointerMoveListener).toEqual({
     name: DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,
     params: ['handlePointerMoveProjectSidebarSash', EventExpression.ClientX],
+  })
+  const dragEnterListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleDragEnter)
+  expect(dragEnterListener).toEqual({
+    name: DomEventListenerFunctions.HandleDragEnter,
+    params: ['handleDragEnter', EventExpression.TargetName],
+    preventDefault: true,
+  })
+  const dropListener = result.find((listener) => listener.name === DomEventListenerFunctions.HandleDrop)
+  expect(dropListener).toEqual({
+    name: DomEventListenerFunctions.HandleDrop,
+    params: ['handleDropFiles', EventExpression.TargetName, EventExpression.DropId],
+    preventDefault: true,
   })
 })

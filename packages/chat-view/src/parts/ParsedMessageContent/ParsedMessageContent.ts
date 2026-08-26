@@ -21,6 +21,20 @@ const emptyMessageContent: readonly MessageIntermediateNode[] = [
   },
 ]
 
+export const getPlainTextMessageContent = (text: string): readonly MessageIntermediateNode[] => {
+  return [
+    {
+      children: [
+        {
+          text,
+          type: 'text',
+        },
+      ],
+      type: 'text',
+    },
+  ]
+}
+
 const parseMathInline = async (children: readonly MessageInlineNode[]): Promise<readonly MessageInlineNode[]> => {
   const nextChildren: MessageInlineNode[] = []
   for (const child of children) {
@@ -84,6 +98,40 @@ const parseMathTableCell = async (cell: MessageTableCellNode): Promise<MessageTa
   }
 }
 
+const parseMathBlockquote = async (node: Extract<MessageIntermediateNode, { readonly type: 'blockquote' }>): Promise<MessageIntermediateNode> => {
+  const children: MessageIntermediateNode[] = []
+  for (const child of node.children) {
+    children.push(await parseMathNode(child))
+  }
+  return {
+    ...node,
+    children,
+  }
+}
+
+const parseMathTable = async (node: Extract<MessageIntermediateNode, { readonly type: 'table' }>): Promise<MessageIntermediateNode> => {
+  const headers: MessageTableCellNode[] = []
+  for (const header of node.headers) {
+    headers.push(await parseMathTableCell(header))
+  }
+  const rows = []
+  for (const row of node.rows) {
+    const cells: MessageTableCellNode[] = []
+    for (const cell of row.cells) {
+      cells.push(await parseMathTableCell(cell))
+    }
+    rows.push({
+      ...row,
+      cells,
+    })
+  }
+  return {
+    ...node,
+    headers,
+    rows,
+  }
+}
+
 const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageIntermediateNode> => {
   if (node.type === 'math-block') {
     const dom = await ChatMathWorker.getMathBlockDom(node)
@@ -99,14 +147,7 @@ const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageInte
     }
   }
   if (node.type === 'blockquote') {
-    const children: MessageIntermediateNode[] = []
-    for (const child of node.children) {
-      children.push(await parseMathNode(child))
-    }
-    return {
-      ...node,
-      children,
-    }
+    return parseMathBlockquote(node)
   }
   if (node.type === 'ordered-list' || node.type === 'unordered-list') {
     const items: MessageListItemNode[] = []
@@ -119,26 +160,7 @@ const parseMathNode = async (node: MessageIntermediateNode): Promise<MessageInte
     }
   }
   if (node.type === 'table') {
-    const headers: MessageTableCellNode[] = []
-    for (const header of node.headers) {
-      headers.push(await parseMathTableCell(header))
-    }
-    const rows = []
-    for (const row of node.rows) {
-      const cells: MessageTableCellNode[] = []
-      for (const cell of row.cells) {
-        cells.push(await parseMathTableCell(cell))
-      }
-      rows.push({
-        ...row,
-        cells,
-      })
-    }
-    return {
-      ...node,
-      headers,
-      rows,
-    }
+    return parseMathTable(node)
   }
   return node
 }
@@ -209,7 +231,12 @@ const parseAndStoreMessagesContentInWorker = async (
   if (messagesNeedingParsing.length === 0) {
     return parsedMessages
   }
-  const parsedContents = await parseMessageContentsInWorker(messagesNeedingParsing.map((message) => message.text))
+  let parsedContents: readonly (readonly MessageIntermediateNode[])[]
+  try {
+    parsedContents = await parseMessageContentsInWorker(messagesNeedingParsing.map((message) => message.text))
+  } catch {
+    parsedContents = messagesNeedingParsing.map((message) => getPlainTextMessageContent(message.text))
+  }
   let nextParsedMessages = parsedMessages
   for (const [index, message] of messagesNeedingParsing.entries()) {
     const parsedContent = message.text === '' ? emptyMessageContent : parsedContents[index]

@@ -25,16 +25,15 @@ const expectedModelIds = [
   'openRouter/mistralai/mistral-small-3.1-24b-instruct:free',
 ] as const
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
-  await Locator('.ChatSendArea button.ChatSelect[name="model-picker-toggle"]').click()
+  await Chat.openModelPicker()
 
   for (const modelId of expectedModelIds) {
-    await expect(Locator(`.ChatModelPicker .ChatModelPickerItem[data-id="${modelId}"]`)).toHaveCount(1)
+    const modelItem = Locator(`.ChatModelPicker .ChatModelPickerItem[data-id="${modelId}"]`)
+    await expect(modelItem).toHaveCount(1)
   }
 }

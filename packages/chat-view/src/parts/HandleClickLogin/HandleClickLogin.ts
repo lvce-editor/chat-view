@@ -14,10 +14,7 @@ interface LoginResponse {
 }
 
 const isLoginResponse = (value: unknown): value is LoginResponse => {
-  if (!value || typeof value !== 'object') {
-    return false
-  }
-  return true
+  return !!value && typeof value === 'object'
 }
 
 const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState => {

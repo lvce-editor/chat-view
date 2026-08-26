@@ -35,6 +35,14 @@ const renderChatView = (overrides: Partial<GetChatViewDom.GetChatVirtualDomOptio
   })
 }
 
+const manySessions = [
+  { id: 'session-1', messages: [], title: 'Chat 1' },
+  { id: 'session-2', messages: [], title: 'Chat 2' },
+  { id: 'session-3', messages: [], title: 'Chat 3' },
+  { id: 'session-4', messages: [], title: 'Chat 4' },
+  { id: 'session-5', messages: [], title: 'Chat 5' },
+] as const
+
 test('getChatVirtualDOm should render root chat container', () => {
   const result = renderChatView()
   expect(result.length).toBeGreaterThan(0)
@@ -121,7 +129,7 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
   })
 
   const stopButton = result.find((node) => node.name === 'stop')
-  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`)
+  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconStopCircle}`)
 
   expect(stopButton).toMatchObject({
     'aria-label': 'stop',
@@ -132,7 +140,7 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
     type: VirtualDomElements.Button,
   })
   expect(stopIcon).toMatchObject({
-    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconStopCircle}`,
     type: VirtualDomElements.Div,
   })
 })
@@ -1009,8 +1017,16 @@ test('getChatVirtualDOm should render session list entries', () => {
   })
   expect(sessionLabel).toMatchObject({
     childCount: 1,
+    onClick: DomEventListenerFunctions.HandleClickSession,
+    role: 'button',
+    tabIndex: 0,
   })
-  expect(sessionLabel).not.toHaveProperty('tabIndex', 0)
+  expect(sessionTitle).toMatchObject({
+    name: 'session:session-1',
+  })
+  expect(sessionTime).toMatchObject({
+    name: 'session:session-1',
+  })
   expect(sessionStatusRow).toBeDefined()
   expect(sessionStatusIcon).toBeDefined()
   expect(result.find((node) => node.text === '10:30')).toBeDefined()
@@ -1024,6 +1040,7 @@ test('getChatVirtualDOm should render session list entries', () => {
     onClick: DomEventListenerFunctions.HandleClickDelete,
   })
   expect(archiveIcon).toMatchObject({
+    'data-id': 'session-1',
     type: VirtualDomElements.Div,
   })
 })
@@ -1400,6 +1417,132 @@ test('getChatVirtualDOm should filter chat list by search value when search enab
   expect(betaLabel).toBeUndefined()
 })
 
+test('getChatVirtualDom should collapse chat list to first 3 sessions by default', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 4,
+  })
+  expect(visibleSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeUndefined()
+  expect(chat5Label).toBeUndefined()
+})
+
+test('getChatVirtualDom should hide chat list toggle when there are 3 or fewer visible sessions', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions.slice(0, 3),
+    viewMode: 'list',
+  })
+
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
+
+  expect(moreToggle).toBeUndefined()
+  expect(visibleSessionLabels).toHaveLength(3)
+})
+
+test('getChatVirtualDom should render all visible sessions when chat list is expanded', () => {
+  const result = renderChatView({
+    chatListExpanded: true,
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const chatList = result.find((node) => node.className === ClassNames.ChatList)
+  const visibleSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const chat4Label = result.find((node) => node.text === 'Chat 4')
+  const chat5Label = result.find((node) => node.text === 'Chat 5')
+
+  expect(chatList).toMatchObject({
+    childCount: 6,
+  })
+  expect(visibleSessionLabels).toHaveLength(5)
+  expect(moreToggle).toBeDefined()
+  expect(chat4Label).toBeDefined()
+  expect(chat5Label).toBeDefined()
+})
+
+test('getChatVirtualDom should render chat list toggle with dedicated classes', () => {
+  const result = renderChatView({
+    selectedSessionId: 'session-1',
+    sessions: manySessions,
+    viewMode: 'list',
+  })
+
+  const toggleItem = result.find((node) => node.className === ClassNames.ChatListMoreToggle)
+  const toggleButton = result.find((node) => node.className === ClassNames.ChatListMoreToggleButton)
+  const toggleChevron = result.find(
+    (node) => node.className === `${ClassNames.ChatListMoreToggleChevron} ${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronRight}`,
+  )
+  const toggleLabel = result.find((node) => node.className === ClassNames.ChatListMoreToggleLabel)
+
+  expect(toggleItem).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggle,
+    type: VirtualDomElements.Li,
+  })
+  expect(toggleButton).toMatchObject({
+    childCount: 2,
+    className: ClassNames.ChatListMoreToggleButton,
+    name: 'chat-list-show-more',
+    onClick: DomEventListenerFunctions.HandleClick,
+    onFocus: DomEventListenerFunctions.HandleFocus,
+    tabIndex: 0,
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleChevron).toMatchObject({
+    type: VirtualDomElements.Div,
+  })
+  expect(toggleLabel).toMatchObject({
+    childCount: 1,
+    className: ClassNames.ChatListMoreToggleLabel,
+    type: VirtualDomElements.Div,
+  })
+  expect(result.find((node) => node.className === ClassNames.ChatListItemLabel && node.name === 'chat-list-show-more')).toBeUndefined()
+})
+
+test('getChatVirtualDom should collapse filtered search results to first 3 visible sessions', () => {
+  const sessions = [
+    { id: 'session-1', messages: [], title: 'alpha 1' },
+    { id: 'session-2', messages: [], title: 'alpha 2' },
+    { id: 'session-3', messages: [], title: 'alpha 3' },
+    { id: 'session-4', messages: [], title: 'alpha 4' },
+    { id: 'session-5', messages: [], title: 'beta 1' },
+  ]
+  const result = renderChatView({
+    searchEnabled: true,
+    searchFieldVisible: true,
+    searchValue: 'alpha',
+    selectedSessionId: 'session-1',
+    sessions,
+    viewMode: 'list',
+  })
+
+  const filteredSessionLabels = result.filter((node) => node.className === ClassNames.ChatListItemLabel && node.name?.startsWith('session:'))
+  const moreToggle = result.find((node) => node.name === 'chat-list-show-more')
+  const alpha4Label = result.find((node) => node.text === 'alpha 4')
+  const betaLabel = result.find((node) => node.text === 'beta 1')
+
+  expect(filteredSessionLabels).toHaveLength(3)
+  expect(moreToggle).toBeDefined()
+  expect(alpha4Label).toBeUndefined()
+  expect(betaLabel).toBeUndefined()
+})
+
 test('getChatVirtualDOm should render focused chat list item highlight', () => {
   const sessions = [
     { id: 'session-1', messages: [], title: 'Chat 1' },
@@ -1435,53 +1578,35 @@ test('getChatVirtualDOm should render context menu outline class for focused cha
   expect(focusedItems).toHaveLength(1)
 })
 
-test('getChatVirtualDOm should render login button in header actions when auth is enabled and signed out', () => {
+test('getChatVirtualDOm should not render login button in header when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggedOut',
   })
   const loginButton = result.find((node) => node.title === 'Login to backend')
-  expect(loginButton).toBeDefined()
-  expect(loginButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
-    onClick: DomEventListenerFunctions.HandleClick,
-    type: VirtualDomElements.Button,
-  })
+  expect(loginButton).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render login button normally while signing in', () => {
+test('getChatVirtualDOm should not render login button while signing in', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggingIn',
   })
   const loginButton = result.find((node) => node.name === 'login')
-  expect(loginButton).toBeDefined()
-  expect(loginButton).toMatchObject({
-    disabled: false,
-    title: 'Login to backend',
-  })
-  const loginLabel = result.find((node) => node.text === 'Login')
-  expect(loginLabel).toBeDefined()
+  expect(loginButton).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render auth error label when login fails', () => {
+test('getChatVirtualDOm should not render auth error label in header when login fails', () => {
   const result = renderChatView({
     authEnabled: true,
     authErrorMessage: 'Invalid backend credentials.',
     userState: 'loggedOut',
   })
-  const loginButtonIndex = result.findIndex((node) => node.name === 'login')
-  const authErrorIndex = result.findIndex((node) => node.className === 'ChatAuthError')
-  const headerLabelIndex = result.findIndex((node) => node.className === ClassNames.ChatHeaderLabel)
   const authError = result.find((node) => node.className === 'ChatAuthError')
-  expect(authError).toBeDefined()
-  const authErrorText = result.find((node) => node.text === 'Invalid backend credentials.')
-  expect(authErrorText).toBeDefined()
-  expect(authErrorIndex).toBeGreaterThan(loginButtonIndex)
-  expect(authErrorIndex).toBeLessThan(headerLabelIndex)
+  expect(authError).toBeUndefined()
 })
 
-test('getChatVirtualDOm should render user name and logout button when logged in', () => {
+test('getChatVirtualDOm should not render user name and logout button in header when logged in', () => {
   const result = renderChatView({
     authEnabled: true,
     userName: 'test-user',
@@ -1489,12 +1614,8 @@ test('getChatVirtualDOm should render user name and logout button when logged in
   })
   const userNameLabel = result.find((node) => node.text === 'test-user')
   const logoutButton = result.find((node) => node.name === 'logout')
-  expect(userNameLabel).toBeDefined()
-  expect(logoutButton).toMatchObject({
-    className: `${ClassNames.Button} ${ClassNames.ButtonSecondary}`,
-    title: 'Logout from backend',
-    type: VirtualDomElements.Button,
-  })
+  expect(userNameLabel).toBeUndefined()
+  expect(logoutButton).toBeUndefined()
 })
 
 test('getChatVirtualDOm should hide session list in detail mode', () => {

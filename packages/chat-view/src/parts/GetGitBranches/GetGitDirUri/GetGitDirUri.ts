@@ -17,5 +17,5 @@ export const getGitDirUri = async (workspaceUri: string): Promise<string> => {
   if (!match) {
     return ''
   }
-  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).toString()
+  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).href
 }

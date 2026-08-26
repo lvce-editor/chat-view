@@ -3,6 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-edge.syntax-highlighting-html-500-code-blocks'
 
 export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -33,10 +34,16 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(htmlTags).toHaveCount(blockCount * 3)
   await expect(htmlAttributes).toHaveCount(blockCount)
   await expect(htmlStrings).toHaveCount(blockCount)
-  await expect(htmlTags.nth(0)).toHaveText('<div')
-  await expect(htmlTags.nth(blockCount * 3 - 1)).toHaveText('</div>')
-  await expect(htmlAttributes.nth(0)).toHaveText('class')
-  await expect(htmlAttributes.nth(blockCount - 1)).toHaveText('class')
-  await expect(htmlStrings.nth(0)).toHaveText('"hero-1"')
-  await expect(htmlStrings.nth(blockCount - 1)).toHaveText(`"hero-${blockCount}"`)
+  const htmlTag0 = htmlTags.nth(0)
+  await expect(htmlTag0).toHaveText('<div')
+  const htmlTagBlockcount31 = htmlTags.nth(blockCount * 3 - 1)
+  await expect(htmlTagBlockcount31).toHaveText('</div>')
+  const htmlAttribute0 = htmlAttributes.nth(0)
+  await expect(htmlAttribute0).toHaveText('class')
+  const htmlAttributeBlockcount1 = htmlAttributes.nth(blockCount - 1)
+  await expect(htmlAttributeBlockcount1).toHaveText('class')
+  const htmlString0 = htmlStrings.nth(0)
+  await expect(htmlString0).toHaveText('"hero-1"')
+  const htmlStringBlockcount1 = htmlStrings.nth(blockCount - 1)
+  await expect(htmlStringBlockcount1).toHaveText(`"hero-${blockCount}"`)
 }

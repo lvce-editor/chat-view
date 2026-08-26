@@ -13,9 +13,9 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   await expect(sendButton).toHaveAttribute('disabled', '')
 
   // act
-  await Chat.handleInput('\u00A0')
+  await Chat.handleInput('\u{A0}')
 
   // assert
-  await expect(composer).toHaveValue('\u00A0')
+  await expect(composer).toHaveValue('\u{A0}')
   await expect(sendButton).toHaveAttribute('disabled', '')
 }

@@ -4,6 +4,12 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
+const actionsNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.Actions,
+  type: VirtualDomElements.Div,
+}
+
 const getMissingApiActionsDom = ({
   getApiKeyText,
   openSettingsButtonName,
@@ -16,11 +22,7 @@ const getMissingApiActionsDom = ({
   'getApiKeyText' | 'openSettingsButtonName' | 'openSettingsUrl' | 'saveButtonDisabled' | 'saveButtonName' | 'saveButtonText'
 >): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 2,
-      className: ClassNames.Actions,
-      type: VirtualDomElements.Div,
-    },
+    actionsNode,
     {
       childCount: 1,
       className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
@@ -72,10 +74,10 @@ export const getMissingApiKeyDom = ({
       autocorrect: 'off',
       childCount: 0,
       className: inputClassName ? mergeClassNames(ClassNames.InputBox, inputClassName) : ClassNames.InputBox,
-      ...(inputType ? { inputType } : {}),
+      ...(inputType && { inputType }),
       name: inputName,
       onInput: DomEventListenerFunctions.HandleInput,
-      ...(inputPattern ? { pattern: inputPattern } : {}),
+      ...(inputPattern && { pattern: inputPattern }),
       placeholder,
       required: inputRequired,
       spellcheck: false,

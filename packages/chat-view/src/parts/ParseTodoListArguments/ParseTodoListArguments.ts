@@ -1,4 +1,5 @@
 import type { TodoListItem, TodoListItemStatus } from '../TodoListItem/TodoListItem.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 const isTodoStatus = (status: unknown): status is TodoListItemStatus => {
   return status === 'todo' || status === 'inProgress' || status === 'completed'
@@ -14,7 +15,7 @@ export const parseTodoListArguments = (rawArguments: string): readonly TodoListI
   if (!parsed || typeof parsed !== 'object') {
     return []
   }
-  const rawTodos = Reflect.get(parsed, 'todos')
+  const rawTodos = getObjectProperty(parsed, 'todos')
   if (!Array.isArray(rawTodos)) {
     return []
   }
@@ -23,8 +24,8 @@ export const parseTodoListArguments = (rawArguments: string): readonly TodoListI
     if (!rawTodo || typeof rawTodo !== 'object') {
       continue
     }
-    const text = Reflect.get(rawTodo, 'text')
-    const status = Reflect.get(rawTodo, 'status')
+    const text = getObjectProperty(rawTodo, 'text')
+    const status = getObjectProperty(rawTodo, 'status')
     if (typeof text !== 'string' || !isTodoStatus(status)) {
       continue
     }

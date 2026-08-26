@@ -1,6 +1,8 @@
 import * as Preferences from '../Preferences/Preferences.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 
+const defaultBackendUrl = 'https://lvce-editor.dev'
+
 export interface LoadedPreferences {
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly authEnabled: boolean
@@ -92,7 +94,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     getBooleanPreference('chatView.aiSessionTitleGenerationEnabled', false),
     getBooleanPreference('chat.authEnabled', false),
     getBooleanPreference('chat.authUseRedirect', false),
-    getStringPreference('chat.backendUrl', ''),
+    getStringPreference('chat.backendUrl', defaultBackendUrl),
     getBooleanPreference('chat.chatHistoryEnabled', true),
     getBooleanPreference('chatView.composerDropEnabled', true),
     loadOpenApiApiKey(),
@@ -113,7 +115,7 @@ export const loadPreferences = async (): Promise<LoadedPreferences> => {
     getBooleanPreference('chatView.useChatNetworkWorkerForRequests', false),
     getBooleanPreference('chatView.useChatToolWorker', true),
     getBooleanPreference('chatView.useAuthWorker', false),
-    getBooleanPreference('chat.useOwnBackend', false),
+    getBooleanPreference('chat.useOwnBackend', true),
     getBooleanPreference('chatView.voiceDictationEnabled', false),
   ])
 

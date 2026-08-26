@@ -23,7 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const implementButton = Locator('.ChatSendAreaBottom .Button[name="implement-plan"]')
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toContainText('Plan mode is for implementation planning')
-  await expect(messages.nth(1)).toContainText('1. Clarify the desired hello-world target')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText('Plan mode is for implementation planning')
+  await expect(message1).toContainText('1. Clarify the desired hello-world target')
   await expect(implementButton).toBeVisible()
 }

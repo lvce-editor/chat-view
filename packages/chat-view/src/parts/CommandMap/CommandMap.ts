@@ -1,6 +1,8 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import { applyViewModelState } from '../ApplyViewModelState/ApplyViewModelState.ts'
 import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
 import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
+import * as ChatListAccept from '../ChatListAccept/ChatListAccept.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
@@ -22,6 +24,7 @@ import { getQuickPickMenuEntries } from '../GetQuickPickMenuEntries/GetQuickPick
 import { getSelectedSessionId } from '../GetSelectedSessionId/GetSelectedSessionId.ts'
 import * as GetSystemPrompt from '../GetSystemPrompt/GetSystemPrompt.ts'
 import * as HandleAgentModeChange from '../HandleAgentModeChange/HandleAgentModeChange.ts'
+import * as HandleAuthStateChange from '../HandleAuthStateChange/HandleAuthStateChange.ts'
 import * as HandleChatDetailWelcomeContextMenu from '../HandleChatDetailWelcomeContextMenu/HandleChatDetailWelcomeContextMenu.ts'
 import * as HandleChatHeaderContextMenu from '../HandleChatHeaderContextMenu/HandleChatHeaderContextMenu.ts'
 import * as HandleChatInputContextMenu from '../HandleChatInputContextMenu/HandleChatInputContextMenu.ts'
@@ -41,6 +44,7 @@ import * as HandleClickModelPickerOverlay from '../HandleClickModelPickerOverlay
 import * as HandleClickModelPickerToggle from '../HandleClickModelPickerToggle/HandleClickModelPickerToggle.ts'
 import * as HandleClickNew from '../HandleClickNew/HandleClickNew.ts'
 import * as HandleClickReadFile from '../HandleClickReadFile/HandleClickReadFile.ts'
+import * as HandleClickRename from '../HandleClickRename/HandleClickRename.ts'
 import * as HandleClickSessionDebug from '../HandleClickSessionDebug/HandleClickSessionDebug.ts'
 import * as HandleClickSettings from '../HandleClickSettings/HandleClickSettings.ts'
 import * as HandleContextMenuChatImageAttachment from '../HandleContextMenuChatImageAttachment/HandleContextMenuChatImageAttachment.ts'
@@ -54,6 +58,7 @@ import * as HandleErrorComposerAttachmentPreviewOverlay from '../HandleErrorComp
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
@@ -83,10 +88,12 @@ import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenA
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
 import * as MockOpenApiSetRequestFailedResponse from '../MockOpenApiSetRequestFailedResponse/MockOpenApiSetRequestFailedResponse.ts'
+import * as MockOpenApiSetResponse from '../MockOpenApiSetResponse/MockOpenApiSetResponse.ts'
 import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
+import { openDebugView } from '../OpenDebugView/OpenDebugView.ts'
 import { openGitBranchPicker } from '../OpenGitBranchPicker/OpenGitBranchPicker.ts'
 import * as OpenMockProject from '../OpenMockProject/OpenMockProject.ts'
 import * as OpenMockSession from '../OpenMockSession/OpenMockSession.ts'
@@ -100,6 +107,7 @@ import * as RemoveComposerAttachment from '../RemoveComposerAttachment/RemoveCom
 import { render2 } from '../Render2/Render2.ts'
 import { renderEventListeners } from '../RenderEventListeners/RenderEventListeners.ts'
 import { rerender } from '../Rerender/Rerender.ts'
+import { rerenderWithQuery } from '../RerenderWithQuery/RerenderWithQuery.ts'
 import * as Reset from '../Reset/Reset.ts'
 import { resize } from '../Resize/Resize.ts'
 import { saveState } from '../SaveState/SaveState.ts'
@@ -135,9 +143,14 @@ import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachment
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
+const handleDirectMessagePort = (port: MessagePort, setAsRendererProcess = true): Promise<void> =>
+  handleMessagePort(port, commandMap, setAsRendererProcess)
+
 export const commandMap = {
+  'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
+  'Chat.chatListAccept': wrapCommand(ChatListAccept.chatListAccept),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
   'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
@@ -161,6 +174,7 @@ export const commandMap = {
   'Chat.getSelectedSessionId': wrapGetter(getSelectedSessionId),
   'Chat.getSystemPrompt': wrapGetter(GetSystemPrompt.getSystemPrompt),
   'Chat.handleAgentModeChange': wrapCommand(HandleAgentModeChange.handleAgentModeChange),
+  'Chat.handleAuthStateChange': wrapCommand(HandleAuthStateChange.handleAuthStateChange),
   'Chat.handleChatDetailWelcomeContextMenu': wrapCommand(HandleChatDetailWelcomeContextMenu.handleChatDetailWelcomeContextMenu),
   'Chat.handleChatHeaderContextMenu': wrapCommand(HandleChatHeaderContextMenu.handleChatHeaderContextMenu),
   'Chat.handleChatInputContextMenu': wrapCommand(HandleChatInputContextMenu.handleChatInputContextMenu),
@@ -182,6 +196,7 @@ export const commandMap = {
   'Chat.handleClickModelPickerToggle': wrapCommand(HandleClickModelPickerToggle.handleClickModelPickerToggle),
   'Chat.handleClickNew': wrapCommand(HandleClickNew.handleClickNew),
   'Chat.handleClickReadFile': wrapCommand(HandleClickReadFile.handleClickReadFile),
+  'Chat.handleClickRename': wrapCommand(HandleClickRename.handleClickRename),
   'Chat.handleClickSessionDebug': wrapCommand(HandleClickSessionDebug.handleClickSessionDebug),
   'Chat.handleClickSettings': HandleClickSettings.handleClickSettings,
   'Chat.handleContextMenuChatImageAttachment': wrapCommand(HandleContextMenuChatImageAttachment.handleContextMenuChatImageAttachment),
@@ -198,6 +213,7 @@ export const commandMap = {
   'Chat.handleInputCopy': wrapCommand(CopyInput.copyInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
+  'Chat.handleMessagePort': handleDirectMessagePort,
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
@@ -230,10 +246,12 @@ export const commandMap = {
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
   'Chat.mockOpenApiSetRequestFailedResponse': wrapCommand(MockOpenApiSetRequestFailedResponse.mockOpenApiSetRequestFailedResponse),
+  'Chat.mockOpenApiSetResponse': wrapCommand(MockOpenApiSetResponse.mockOpenApiSetResponse),
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),
   'Chat.openAgentModePicker': wrapCommand(openAgentModePicker),
+  'Chat.openDebugView': wrapCommand(openDebugView),
   'Chat.openGitBranchPicker': wrapCommand(openGitBranchPicker),
   'Chat.openMockProject': wrapCommand(OpenMockProject.openMockProject),
   'Chat.openMockSession': wrapCommand(OpenMockSession.openMockSession),
@@ -247,6 +265,7 @@ export const commandMap = {
   'Chat.render2': render2,
   'Chat.renderEventListeners': renderEventListeners,
   'Chat.rerender': wrapCommand(rerender),
+  'Chat.rerenderWithQuery': wrapCommand(rerenderWithQuery),
   'Chat.reset': wrapCommand(Reset.reset),
   'Chat.resize': wrapCommand(resize),
   'Chat.saveState': wrapGetter(saveState),

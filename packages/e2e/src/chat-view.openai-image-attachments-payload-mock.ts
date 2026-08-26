@@ -9,7 +9,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
-  await Command.execute('Chat.openMockSession', 'session-openai-image-attachments-payload-mock', [])
+  await Chat.openMockSession('session-openai-image-attachments-payload-mock', [])
   await Chat.handleModelChange('openapi/gpt-4o-mini')
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
@@ -27,5 +27,6 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(3)
-  await expect(messages.nth(2)).toHaveText('mock-request-summary images=1 text-files=1')
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('mock-request-summary images=1 text-files=1')
 }

@@ -1,4 +1,5 @@
 import type { ChatSession } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
   if (session.lastActiveTime) {
@@ -8,36 +9,28 @@ const getSessionLastActiveTime = (session: ChatSession): string | undefined => {
   if (!lastMessage || typeof lastMessage !== 'object') {
     return undefined
   }
-  const time = Reflect.get(lastMessage, 'time')
+  const time = getObjectProperty(lastMessage, 'time')
   return typeof time === 'string' ? time : undefined
 }
 
 export const toSummarySession = (session: ChatSession): ChatSession => {
   const lastActiveTime = getSessionLastActiveTime(session)
   const summary: ChatSession = {
-    ...(session.branchName
-      ? {
-          branchName: session.branchName,
-        }
-      : {}),
+    ...(session.branchName && {
+      branchName: session.branchName,
+    }),
     id: session.id,
-    ...(lastActiveTime
-      ? {
-          lastActiveTime,
-        }
-      : {}),
+    ...(lastActiveTime && {
+      lastActiveTime,
+    }),
     messages: [],
-    ...(session.pullRequestUrl
-      ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
-      : {}),
+    ...(session.pullRequestUrl && {
+      pullRequestUrl: session.pullRequestUrl,
+    }),
     title: session.title,
-    ...(session.workspaceUri
-      ? {
-          workspaceUri: session.workspaceUri,
-        }
-      : {}),
+    ...(session.workspaceUri && {
+      workspaceUri: session.workspaceUri,
+    }),
   }
   if (!session.projectId) {
     return summary

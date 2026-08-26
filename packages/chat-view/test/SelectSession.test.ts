@@ -56,19 +56,20 @@ test('selectSession should hydrate parsed messages for the selected stored sessi
   expect(result.viewMode).toBe('detail')
   expect(result.messagesAutoScrollEnabled).toBe(true)
   expect(result.messagesScrollTop).toBe(getNextAutoScrollTop(120))
+  expect(result.messages).toEqual([
+    {
+      id: 'message-2',
+      role: 'user',
+      text: 'loaded from storage',
+      time: '10:00',
+    },
+  ])
   expect(result.sessions).toEqual([
     { id: 'session-1', messages: [], title: 'Chat 1' },
     {
       id: 'session-2',
       lastActiveTime: '10:00',
-      messages: [
-        {
-          id: 'message-2',
-          role: 'user',
-          text: 'loaded from storage',
-          time: '10:00',
-        },
-      ],
+      messages: [],
       title: 'Chat 2',
     },
   ])

@@ -1,9 +1,10 @@
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { getChatSession, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getChatSession, saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
+import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 const getBlankProjectId = (state: ChatState, removedProjectId: string): string => {
   return state.projects.find((project) => project.id !== removedProjectId && project.name === '_blank')?.id || ''
@@ -50,15 +51,16 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
       }
       const updatedSession: ChatSession = {
         ...session,
+        messages: [],
         projectId: blankProjectId,
       }
-      await saveChatSession(updatedSession)
+      await saveChatSessionPreservingMessages(updatedSession, session.id === state.selectedSessionId ? state.messages : undefined)
       return updatedSession
     }),
   )
 
   const selectedProjectId =
-    !state.selectedProjectId || state.selectedProjectId === projectId || !projects.some((candidate) => candidate.id === state.selectedProjectId)
+    !state.selectedProjectId || state.selectedProjectId === projectId || projects.every((candidate) => candidate.id !== state.selectedProjectId)
       ? blankProjectId
       : state.selectedProjectId
   const projectExpandedIds = state.projectExpandedIds.filter(
@@ -72,6 +74,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
       ...state,
       composerAttachments: [],
       composerAttachmentsHeight: 0,
+      messages: [],
       projectExpandedIds: nextProjectExpandedIds,
       projects,
       selectedProjectId,
@@ -86,22 +89,25 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
     : visibleSessions[0].id
   const loadedSession = await getChatSession(selectedSessionId)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
-  const hydratedSessions = sessions.map((session) => {
-    if (session.id !== selectedSessionId || !loadedSession) {
-      return session
-    }
-    return loadedSession
-  })
+  const nextSessions = loadedSession
+    ? sessions.map((session) => {
+        if (session.id !== selectedSessionId) {
+          return session
+        }
+        return toSummarySession(loadedSession)
+      })
+    : sessions
 
   return {
     ...state,
     composerAttachments,
     composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, state.width),
+    messages: loadedSession?.messages || [],
     projectExpandedIds: nextProjectExpandedIds,
     projects,
     selectedProjectId,
     selectedSessionId,
-    sessions: hydratedSessions,
+    sessions: nextSessions,
     viewMode: getNextViewMode(state, true),
   }
 }

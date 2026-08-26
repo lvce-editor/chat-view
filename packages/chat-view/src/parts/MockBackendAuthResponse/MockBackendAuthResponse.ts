@@ -1,3 +1,4 @@
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 
@@ -29,10 +30,11 @@ const getDelay = (payload: unknown): number => {
 export const mockBackendAuthResponse = (state: ChatState, payload: MockBackendAuthResponsePayload): ChatState => {
   const delay = getDelay(payload)
   const setNextResponse = payload.request === 'refresh' ? MockBackendAuth.setNextRefreshResponse : MockBackendAuth.setNextLoginResponse
+  void ChatViewModelWorker.invoke('ChatModel.mockBackendAuthResponse', payload)
   if (payload.type === 'error') {
     setNextResponse({
       delay,
-      ...(payload.errorName ? { errorName: payload.errorName } : {}),
+      ...(payload.errorName && { errorName: payload.errorName }),
       message: payload.message || 'Backend authentication failed.',
       type: 'error',
     })

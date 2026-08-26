@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-read-file-error'
@@ -7,106 +6,70 @@ export const skip = 1
 
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
+  const missingPath = 'does-not-exist.txt'
+  const errorMessage = `File not found: ${missingPath}`
   await Workspace.setPath(tmpDir)
   await Chat.show()
   await Chat.reset()
-  await Chat.setStreamingEnabled(true)
+  await Chat.setStreamingEnabled(false)
   await Chat.useMockApi()
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
   await Chat.mockOpenApiStreamReset()
 
-  const sseResponseParts = [
-    {
-      eventId: 96,
-      sessionId: '01',
-      timestamp: '2026-03-09T10:31:30.803Z',
-      type: 'sse-response-completed',
-      value: {
-        response: {
-          background: false,
-          completed_at: 1_773_052_290,
-          created_at: 1_773_052_289,
-          error: null,
-          frequency_penalty: 0,
-          id: 'resp_01',
-          incomplete_details: null,
-          instructions: null,
-          max_output_tokens: null,
-          max_tool_calls: null,
-          metadata: {},
-          model: 'gpt-4.1-mini-2025-04-14',
-          object: 'response',
-          output: [
+  await Chat.mockOpenApiStreamPushChunk(
+    JSON.stringify({
+      created_at: 1,
+      id: 'resp_01',
+      model: 'gpt-4.1-mini-2025-04-14',
+      object: 'response',
+      output: [
+        {
+          arguments: JSON.stringify({ path: missingPath }),
+          call_id: 'call_01',
+          id: 'fc_01',
+          name: 'read_file',
+          status: 'completed',
+          type: 'function_call',
+        },
+      ],
+      status: 'completed',
+    }),
+  )
+  await Chat.mockOpenApiStreamPushChunk(
+    JSON.stringify({
+      created_at: 2,
+      id: 'resp_02',
+      model: 'gpt-4.1-mini-2025-04-14',
+      object: 'response',
+      output: [
+        {
+          content: [
             {
-              content: [
-                {
-                  annotations: [],
-                  logprobs: [],
-                  text: 'It seems I am unable to access the file "index.html" at the moment. Could you please provide the file or check if it\'s correctly placed in the workspace? Alternatively, you can paste the contents here and I can help you with it.',
-                  type: 'output_text',
-                },
-              ],
-              id: 'msg_01',
-              role: 'assistant',
-              status: 'completed',
-              type: 'message',
+              text: 'I could not read that file because it does not exist in the workspace.',
+              type: 'output_text',
             },
           ],
-          parallel_tool_calls: true,
-          presence_penalty: 0,
-          previous_response_id: 'resp_01',
-          prompt_cache_key: null,
-          prompt_cache_retention: null,
-          reasoning: {
-            effort: null,
-            summary: null,
-          },
-          safety_identifier: null,
-          service_tier: 'default',
+          id: 'msg_01',
+          role: 'assistant',
           status: 'completed',
-          store: true,
-          temperature: 1,
-          text: {
-            format: {
-              type: 'text',
-            },
-            verbosity: 'medium',
-          },
-          tool_choice: 'auto',
-          tools: [],
-          top_logprobs: 0,
-          top_p: 1,
-          truncation: 'disabled',
-          usage: {
-            input_tokens: 538,
-            input_tokens_details: {
-              cached_tokens: 0,
-            },
-            output_tokens: 51,
-            output_tokens_details: {
-              reasoning_tokens: 0,
-            },
-            total_tokens: 589,
-          },
-          user: null,
+          type: 'message',
         },
-        sequence_number: 56,
-        type: 'response.completed',
-      },
-    },
-  ]
-
-  for (const responsePart of sseResponseParts) {
-    await Chat.mockOpenApiStreamPushChunk(`data: ${JSON.stringify(responsePart)}\n\n`)
-  }
-  await Chat.mockOpenApiStreamPushChunk('data: [DONE]\n\n')
+      ],
+      status: 'completed',
+    }),
+  )
   await Chat.mockOpenApiStreamFinish()
 
-  await Chat.handleInput('whats the contents of index html')
+  await Chat.handleInput('whats the contents of the missing file')
   await Chat.handleSubmit()
 
   const messages = Locator('.ChatMessages .Message')
-  await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('whats the contents of index html')
-  await expect(messages.nth(1)).toHaveText('read_file index.html')
+  await expect(messages).toHaveCount(3)
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('whats the contents of the missing file')
+  const message1 = messages.nth(1)
+  await expect(message1).toContainText(`read_file ${missingPath}`)
+  await expect(message1).toContainText(`(error: ${errorMessage})`)
+  const message2 = messages.nth(2)
+  await expect(message2).toHaveText('I could not read that file because it does not exist in the workspace.')
 }

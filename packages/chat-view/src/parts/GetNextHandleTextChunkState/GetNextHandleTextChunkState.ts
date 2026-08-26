@@ -4,16 +4,16 @@ import { getNextAutoScrollTop } from '../GetNextAutoScrollTop/GetNextAutoScrollT
 
 export const getNextHandleTextChunkState = (
   latestState: ChatState,
+  messages: ChatState['messages'],
   parsedMessages: readonly ParsedMessage[],
   sessions: ChatState['sessions'],
 ): ChatState => {
   return {
     ...latestState,
-    ...(latestState.messagesAutoScrollEnabled
-      ? {
-          messagesScrollTop: getNextAutoScrollTop(latestState.messagesScrollTop),
-        }
-      : {}),
+    messages,
+    ...(latestState.messagesAutoScrollEnabled && {
+      messagesScrollTop: getNextAutoScrollTop(latestState.messagesScrollTop),
+    }),
     parsedMessages,
     sessions,
   }

@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.openai-tool-enablement-setting'
 
+export const skip = 1
+
 interface MockOpenApiRequest {
   readonly payload: {
     readonly tools?: readonly {
@@ -16,8 +18,6 @@ const assert = (condition: boolean, message: string): void => {
     throw new Error(message)
   }
 }
-
-export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
@@ -38,7 +38,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleSubmit()
 
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(1)).toHaveText('ok')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('ok')
 
   const initialRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const initialTools = initialRequests[0]?.payload.tools || []
@@ -58,9 +59,13 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleSubmit()
 
   await expect(messages).toHaveCount(4)
-  await expect(messages.nth(3)).toHaveText('ok')
+  const message3 = messages.nth(3)
+  await expect(message3).toHaveText('ok')
 
   const disabledRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const disabledTools = disabledRequests[0]?.payload.tools || []
-  assert(!disabledTools.some((tool) => tool.type === 'function' && tool.name === 'read_file'), 'read_file should be removed when disabled')
+  assert(
+    disabledTools.every((tool) => !(tool.type === 'function' && tool.name === 'read_file')),
+    'read_file should be removed when disabled',
+  )
 }

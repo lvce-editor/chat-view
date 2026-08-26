@@ -1,3 +1,4 @@
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import type { ChatState } from '../ChatState/ChatState.ts'
@@ -18,30 +19,35 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
   }
   return {
     ...session,
-    ...(options.branchName
-      ? {
-          branchName: options.branchName,
-        }
-      : {}),
-    ...(options.lastActiveTime
-      ? {
-          lastActiveTime: options.lastActiveTime,
-        }
-      : {}),
-    ...(options.projectId
-      ? {
-          projectId: options.projectId,
-        }
-      : {}),
-    ...(options.workspaceUri
-      ? {
-          workspaceUri: options.workspaceUri,
-        }
-      : {}),
+    ...(options.branchName && {
+      branchName: options.branchName,
+    }),
+    ...(options.lastActiveTime && {
+      lastActiveTime: options.lastActiveTime,
+    }),
+    ...(options.projectId && {
+      projectId: options.projectId,
+    }),
+    ...(options.workspaceUri && {
+      workspaceUri: options.workspaceUri,
+    }),
   }
 }
 
 export const openMockSession = async (
+  state: ChatState,
+  mockSessionId: string,
+  mockChatMessages: readonly ChatMessage[],
+  options?: OpenMockSessionOptions,
+): Promise<ChatState> => {
+  try {
+    return (await ChatViewModelWorker.invoke('ChatModel.openMockSession', state, mockSessionId, mockChatMessages, options)) as ChatState
+  } catch {
+    return openMockSessionLocal(state, mockSessionId, mockChatMessages, options)
+  }
+}
+
+export const openMockSessionLocal = async (
   state: ChatState,
   mockSessionId: string,
   mockChatMessages: readonly ChatMessage[],
@@ -63,7 +69,8 @@ export const openMockSession = async (
         return applySessionOptions(
           {
             ...session,
-            messages: mockChatMessages,
+            messages: [],
+            status: mockChatMessages.some((message) => message.role === 'assistant') ? 'finished' : 'idle',
           },
           options,
         )
@@ -73,7 +80,8 @@ export const openMockSession = async (
         applySessionOptions(
           {
             id: mockSessionId,
-            messages: mockChatMessages,
+            messages: [],
+            status: mockChatMessages.some((message) => message.role === 'assistant') ? 'finished' : 'idle',
             title: mockSessionId,
           },
           options,
@@ -82,13 +90,17 @@ export const openMockSession = async (
 
   const selectedSession = sessions.find((session) => session.id === mockSessionId)
   if (selectedSession) {
-    await saveChatSession(selectedSession)
+    await saveChatSession({
+      ...selectedSession,
+      messages: mockChatMessages,
+    })
   }
 
   return refreshGitBranchPickerVisibility({
     ...state,
     composerAttachments: [],
     composerAttachmentsHeight: 0,
+    messages: mockChatMessages,
     parsedMessages,
     renamingSessionId: '',
     selectedSessionId: mockSessionId,

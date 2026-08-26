@@ -1,91 +1,133 @@
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
-let queue: string[] = []
-let waiters: Array<(chunk: string | undefined) => void> = []
-let finished = false
-let errorResult: GetOpenApiAssistantTextErrorResult | undefined
-
-export const reset = (): void => {
-  queue = []
-  waiters = []
-  finished = false
-  errorResult = undefined
+type MockStreamState = {
+  readonly queue: string[]
+  readonly waiters: Array<(chunk: string | undefined) => void>
+  finished: boolean
+  errorResult: GetOpenApiAssistantTextErrorResult | undefined
 }
 
-export const setHttpErrorResponse = (statusCode: number, body: unknown): void => {
-  const rawError = body && typeof body === 'object' ? Reflect.get(body, 'error') : undefined
-  const errorCode = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'code') : undefined
-  const errorMessage = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'message') : undefined
-  const errorType = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'type') : undefined
-  errorResult = {
+const defaultRequestId = 'default'
+
+let streamStates = new Map<string, MockStreamState>()
+let preparedRequestIds: string[] = []
+
+const createState = (): MockStreamState => {
+  return {
+    errorResult: undefined,
+    finished: false,
+    queue: [],
+    waiters: [],
+  }
+}
+
+const getOrCreateState = (requestId: string): MockStreamState => {
+  const existing = streamStates.get(requestId)
+  if (existing) {
+    return existing
+  }
+  const state = createState()
+  streamStates.set(requestId, state)
+  return state
+}
+
+const enqueuePreparedRequest = (requestId: string): void => {
+  if (preparedRequestIds.includes(requestId)) {
+    return
+  }
+  preparedRequestIds.push(requestId)
+}
+
+export const reset = (requestId: string = defaultRequestId): void => {
+  if (requestId === defaultRequestId) {
+    streamStates = new Map()
+    preparedRequestIds = []
+    streamStates.set(defaultRequestId, createState())
+    return
+  }
+  streamStates.set(requestId, createState())
+  enqueuePreparedRequest(requestId)
+}
+
+export const startRequest = (): string => {
+  const requestId = preparedRequestIds.shift() || defaultRequestId
+  getOrCreateState(requestId)
+  return requestId
+}
+
+export const setHttpErrorResponse = (statusCode: number, body: unknown, requestId: string = defaultRequestId): void => {
+  const rawError = getObjectProperty(body, 'error')
+  const errorCode = getObjectProperty(rawError, 'code')
+  const errorMessage = getObjectProperty(rawError, 'message')
+  const errorType = getObjectProperty(rawError, 'type')
+  const state = getOrCreateState(requestId)
+  state.errorResult = {
     details: 'http-error',
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
     statusCode,
     type: 'error',
   }
 }
 
-export const setRequestFailedResponse = (isOffline: boolean = false): void => {
-  errorResult = {
+export const setRequestFailedResponse = (isOffline: boolean = false, requestId: string = defaultRequestId): void => {
+  const state = getOrCreateState(requestId)
+  state.errorResult = {
     details: 'request-failed',
-    ...(isOffline
-      ? {
-          isOffline: true,
-        }
-      : {}),
+    ...(isOffline && {
+      isOffline: true,
+    }),
     type: 'error',
   }
 }
 
-export const takeErrorResponse = (): GetOpenApiAssistantTextErrorResult | undefined => {
-  const error = errorResult
-  errorResult = undefined
+export const takeErrorResponse = (requestId: string = defaultRequestId): GetOpenApiAssistantTextErrorResult | undefined => {
+  const state = getOrCreateState(requestId)
+  const error = state.errorResult
+  state.errorResult = undefined
   return error
 }
 
-export const pushChunk = (chunk: string): void => {
-  if (waiters.length > 0) {
-    const resolve = waiters.shift()
+export const pushChunk = (chunk: string, requestId: string = defaultRequestId): void => {
+  const state = getOrCreateState(requestId)
+  if (state.waiters.length > 0) {
+    const resolve = state.waiters.shift()
     resolve?.(chunk)
     return
   }
-  queue.push(chunk)
+  state.queue.push(chunk)
 }
 
-export const finish = (): void => {
-  finished = true
-  if (waiters.length === 0) {
+export const finish = (requestId: string = defaultRequestId): void => {
+  const state = getOrCreateState(requestId)
+  state.finished = true
+  if (state.waiters.length === 0) {
     return
   }
-  const activeWaiters = waiters
-  waiters = []
+  const activeWaiters = [...state.waiters]
+  state.waiters.length = 0
   for (const resolve of activeWaiters) {
     resolve(undefined)
   }
 }
 
-export const readNextChunk = async (): Promise<string | undefined> => {
-  if (queue.length > 0) {
-    return queue.shift()
+export const readNextChunk = async (requestId: string = defaultRequestId): Promise<string | undefined> => {
+  const state = getOrCreateState(requestId)
+  if (state.queue.length > 0) {
+    return state.queue.shift()
   }
-  if (finished) {
+  if (state.finished) {
     return undefined
   }
   const { promise, resolve } = Promise.withResolvers<string | undefined>()
-  waiters.push(resolve)
+  state.waiters.push(resolve)
   return promise
 }

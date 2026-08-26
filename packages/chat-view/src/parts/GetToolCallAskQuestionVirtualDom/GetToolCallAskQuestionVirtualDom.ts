@@ -4,6 +4,24 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 import { parseAskQuestionArguments } from '../ParseAskQuestionArguments/ParseAskQuestionArguments.ts'
 
+const chatToolCallQuestionTextNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatToolCallQuestionText,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
+const chatToolCallQuestionOptionNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatToolCallQuestionOption,
+  type: VirtualDomElements.Span,
+}
+
 export const getToolCallAskQuestionVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const parsed = parseAskQuestionArguments(toolCall.arguments)
   const statusLabel = getToolCallStatusLabel(toolCall)
@@ -16,16 +34,8 @@ export const getToolCallAskQuestionVirtualDom = (toolCall: ChatToolCall): readon
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 2,
-      className: ClassNames.ChatToolCallQuestionText,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    chatToolCallQuestionTextNode,
+    toolCallNameNode,
     text(`ask_question`),
     text(`: ${questionLabel}${statusLabel}`),
     {
@@ -33,13 +43,6 @@ export const getToolCallAskQuestionVirtualDom = (toolCall: ChatToolCall): readon
       className: ClassNames.ChatToolCallQuestionOptions,
       type: VirtualDomElements.Div,
     },
-    ...answers.flatMap((answer) => [
-      {
-        childCount: 1,
-        className: ClassNames.ChatToolCallQuestionOption,
-        type: VirtualDomElements.Span,
-      },
-      text(answer.trim() ? answer : '(empty answer)'),
-    ]),
+    ...answers.flatMap((answer) => [chatToolCallQuestionOptionNode, text(answer.trim() ? answer : '(empty answer)')]),
   ]
 }

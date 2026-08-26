@@ -3,6 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-edge.syntax-highlighting-js-comments'
 
 export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -22,6 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   await expect(codeBlocks).toHaveCount(1)
   await expect(jsComments).toHaveCount(2)
-  await expect(jsComments.nth(0)).toHaveText('/* heading */')
-  await expect(jsComments.nth(1)).toHaveText('// value')
+  const jsComment0 = jsComments.nth(0)
+  await expect(jsComment0).toHaveText('/* heading */')
+  const jsComment1 = jsComments.nth(1)
+  await expect(jsComment1).toHaveText('// value')
 }

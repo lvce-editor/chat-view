@@ -9,7 +9,28 @@ test('getChatMessageOpenAiContent should return plain text when no attachments e
     time: '10:00',
   })
 
-  expect(result).toBe('hello')
+  expect(result).toEqual([
+    {
+      text: 'hello',
+      type: 'input_text',
+    },
+  ])
+})
+
+test('getChatMessageOpenAiContent should return output_text for assistant messages', () => {
+  const result = getChatMessageOpenAiContent({
+    id: 'message-1',
+    role: 'assistant',
+    text: 'hello back',
+    time: '10:00',
+  })
+
+  expect(result).toEqual([
+    {
+      text: 'hello back',
+      type: 'output_text',
+    },
+  ])
 })
 
 test('getChatMessageOpenAiContent should include image and text file attachments', () => {

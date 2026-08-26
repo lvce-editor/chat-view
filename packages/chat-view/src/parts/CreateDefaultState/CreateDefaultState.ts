@@ -15,6 +15,7 @@ import { getDefaultModels } from '../GetDefaultModels/GetDefaultModels.ts'
 import { getDefaultSystemPrompt } from '../GetDefaultSystemPrompt/GetDefaultSystemPrompt.ts'
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
+import { defaultBackendUrl } from '../LoadBackendUrl/LoadBackendUrl.ts'
 import { estimateTextWidth } from '../MeasureTextWidth/MeasureTextWidth.ts'
 import { defaultReasoningEffort } from '../ReasoningEffort/ReasoningEffort.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
@@ -41,14 +42,15 @@ export const createDefaultState = (): ChatState => {
     authAccessToken: '',
     authEnabled: false,
     authErrorMessage: '',
-    authUseRedirect: false,
-    backendUrl: '',
+    authUseRedirect: true,
+    backendUrl: defaultBackendUrl,
     chatDebugLoggingEnabled: true,
     chatFocusContentMaxWidth: 700,
     chatHistoryEnabled: true,
     chatInputHistory: [],
     chatInputHistoryDraft: '',
     chatInputHistoryIndex: -1,
+    chatListExpanded: false,
     chatListScrollTop: 0,
     chatMessageFontFamily: 'system-ui',
     chatMessageFontSize,
@@ -84,6 +86,8 @@ export const createDefaultState = (): ChatState => {
     height: 0,
     hiddenPrimaryControls: [],
     initial: true,
+    inProgress: false,
+    inProgressMessage: 'In Progress',
     inputSource: 'script',
     lastNormalViewMode: 'list',
     lastSubmittedSessionId: '',
@@ -92,6 +96,7 @@ export const createDefaultState = (): ChatState => {
     listItemHeight: 54,
     maxComposerRows: 5,
     maxToolCalls: defaultMaxToolCalls,
+    messages: [],
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     mockAiResponseDelay: 0,
@@ -186,7 +191,7 @@ export const createDefaultState = (): ChatState => {
     useChatToolWorker: true,
     useMockApi: false,
     useModelWorker: false,
-    useOwnBackend: false,
+    useOwnBackend: true,
     userName: '',
     userState: 'loggedOut',
     userSubscriptionPlan: '',

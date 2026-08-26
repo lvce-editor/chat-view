@@ -1,6 +1,8 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatSession, ChatViewMode, ViewModel } from '../ViewModel/ViewModel.ts'
-import { getLoggedOutBackendAuthState, syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
-import { listChatSessions, saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { getLoggedOutBackendAuthState } from '../BackendAuth/BackendAuth.ts'
+import { getChatSession, listChatSessions, subscribeSessionUpdates } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { ensureBlankProject } from '../EnsureBlankProject/EnsureBlankProject.ts'
 import { getComposerAttachments } from '../GetComposerAttachments/GetComposerAttachments.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
@@ -19,16 +21,14 @@ import { getSavedReasoningEffort } from '../GetSavedReasoningEffort/GetSavedReas
 import { getSavedSelectedModelId } from '../GetSavedSelectedModelId/GetSavedSelectedModelId.ts'
 import { getSavedSelectedProjectId } from '../GetSavedSelectedProjectId/GetSavedSelectedProjectId.ts'
 import { getSavedSelectedSessionId } from '../GetSavedSelectedSessionId/GetSavedSelectedSessionId.ts'
-import { getSavedSessions } from '../GetSavedSessions/GetSavedSessions.ts'
 import { getSavedViewMode } from '../GetSavedViewMode/GetSavedViewMode.ts'
 import { getVisibleModels } from '../GetVisibleModels/GetVisibleModels.ts'
 import { getVisibleSessions } from '../GetVisibleSessions/GetVisibleSessions.ts'
 import { loadPreferences } from '../LoadPreferences/LoadPreferences.ts'
-import { loadSelectedSessionMessages } from '../LoadSelectedSessionMessages/LoadSelectedSessionMessages.ts'
+import { setState, setSubscribedSessionId } from '../ModelState/ModelState.ts'
 import { normalizeSessionsOnLoad } from '../NormalizeSessionsOnLoad/NormalizeSessionsOnLoad.ts'
 import { parseAndStoreMessagesContent } from '../ParsedMessageContent/ParsedMessageContent.ts'
 import { refreshGitBranchPickerVisibility } from '../RefreshGitBranchPickerVisibility/RefreshGitBranchPickerVisibility.ts'
-import { toSummarySession } from '../ToSummarySession/ToSummarySession.ts'
 
 export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
 
@@ -38,12 +38,17 @@ export interface LoadContentState extends ViewModel {
   readonly authUseRedirect: boolean
   readonly backendUrl: string
   readonly chatHistoryEnabled: boolean
+  readonly chatInputHistory: readonly string[]
+  readonly chatInputHistoryIndex: number
   readonly composerAttachmentsHeight: number
   readonly composerSelectionEnd: number
   readonly composerSelectionStart: number
   readonly emitStreamingFunctionCallEvents: boolean
+  readonly focus: string
+  readonly focused: boolean
   readonly initial: boolean
   readonly lastNormalViewMode: LastNormalViewMode
+  readonly lastSubmittedSessionId: string
   readonly modelPickerHeaderHeight: number
   readonly modelPickerHeight: number
   readonly modelPickerListScrollTop: number
@@ -53,7 +58,9 @@ export interface LoadContentState extends ViewModel {
   readonly projectSidebarResizing: boolean
   readonly projectSidebarWidth: number
   readonly streamingEnabled: boolean
+  readonly systemPrompt: string
   readonly toolEnablement: Record<string, boolean>
+  readonly uid: number
   readonly useAuthWorker: boolean
   readonly useChatCoordinatorWorker: boolean
   readonly useChatNetworkWorkerForRequests: boolean
@@ -99,23 +106,9 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     useOwnBackend,
     voiceDictationEnabled,
   } = await loadPreferences()
-  const authState =
-    authEnabled || useOwnBackend ? (backendUrl ? await syncBackendAuth(backendUrl) : getLoggedOutBackendAuthState()) : getLoggedOutBackendAuthState()
-  const legacySavedSessions = getSavedSessions(savedState)
+  const authState = getLoggedOutBackendAuthState()
   const storedSessions = await listChatSessions()
   let sessions: readonly ChatSession[] = storedSessions
-  if (sessions.length === 0 && legacySavedSessions && legacySavedSessions.length > 0) {
-    for (const session of legacySavedSessions) {
-      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
-    }
-    sessions = legacySavedSessions.map(toSummarySession)
-  }
-  if (sessions.length === 0 && state.sessions.length > 0) {
-    for (const session of state.sessions) {
-      await saveChatSession(session as Parameters<typeof saveChatSession>[0])
-    }
-    sessions = state.sessions.map(toSummarySession)
-  }
   const preferredSessionId = getSavedSelectedSessionId(savedState) || state.selectedSessionId
   const savedProjects = getSavedProjects(savedState)
   const baseProjects = savedProjects && savedProjects.length > 0 ? savedProjects : state.projects
@@ -136,13 +129,11 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
   const visibleModels = getVisibleModels(state.models, '')
   const visibleSessions = getVisibleSessions(sessions, selectedProjectId)
   const selectedSessionId = visibleSessions.some((session) => session.id === preferredSessionId) ? preferredSessionId : visibleSessions[0]?.id || ''
-  sessions = await loadSelectedSessionMessages(sessions, selectedSessionId)
+  const loadedSession = selectedSessionId ? await getChatSession(selectedSessionId) : undefined
   sessions = normalizeSessionsOnLoad(sessions)
   const composerAttachments = await getComposerAttachments(selectedSessionId)
-  let { parsedMessages } = state
-  for (const session of sessions) {
-    parsedMessages = await parseAndStoreMessagesContent(parsedMessages, session.messages)
-  }
+  const messages = loadedSession?.messages || []
+  const parsedMessages = await parseAndStoreMessagesContent(state.parsedMessages, messages)
   const preferredViewMode = savedViewMode || state.viewMode
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
@@ -169,6 +160,7 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     emitStreamingFunctionCallEvents,
     initial: false,
     lastNormalViewMode,
+    messages,
     messagesScrollTop,
     modelPickerHeight: getModelPickerHeight(state.modelPickerHeaderHeight, visibleModels.length),
     modelPickerListScrollTop: 0,
@@ -217,5 +209,11 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     visibleModels,
     voiceDictationEnabled,
   } as TState
-  return refreshGitBranchPickerVisibility(nextState)
+  const refreshedState = await refreshGitBranchPickerVisibility(nextState)
+  if (selectedSessionId) {
+    await subscribeSessionUpdates(state.uid, selectedSessionId)
+    setSubscribedSessionId(state.uid, selectedSessionId)
+  }
+  setState(state.uid, refreshedState)
+  return refreshedState
 }

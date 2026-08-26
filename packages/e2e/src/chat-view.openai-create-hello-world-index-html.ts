@@ -213,8 +213,10 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(2)
-  await expect(messages.nth(0)).toHaveText('create a hello world index html file')
-  await expect(messages.nth(1)).toHaveText('Created index.html with Hello World.')
+  const message0 = messages.nth(0)
+  await expect(message0).toHaveText('create a hello world index html file')
+  const message1 = messages.nth(1)
+  await expect(message1).toHaveText('Created index.html with Hello World.')
 
   const indexHtmlPath = `${tmpDir}/index.html`
   const actualContent = await FileSystem.readFile(indexHtmlPath)

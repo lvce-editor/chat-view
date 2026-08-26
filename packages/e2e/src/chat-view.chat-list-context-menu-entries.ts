@@ -1,7 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.chat-list-context-menu-entries'
-// export const skip = 1
 
 export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace }) => {
   // arrange
@@ -21,6 +20,7 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
 
   // act
   await Chat.handleChatListContextMenu(0, 70)
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   // assert
   await expect(outlinedItem).toHaveCount(1)

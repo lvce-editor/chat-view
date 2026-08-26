@@ -1,5 +1,5 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
-import { saveChatSession } from '../ChatSessionStorage/ChatSessionStorage.ts'
+import { saveChatSessionPreservingMessages } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import { getSelectedSession } from '../GetSelectedSession/GetSelectedSession.ts'
 import { getWorkspaceUri } from '../GetWorkspaceUri/GetWorkspaceUri.ts'
 import { switchGitBranch } from '../SwitchGitBranch/SwitchGitBranch.ts'
@@ -38,11 +38,12 @@ export const handleGitBranchChange = async (state: ChatState, branchName: string
       return {
         ...session,
         branchName,
+        messages: [],
       }
     })
     const updatedSelectedSession = updatedSessions.find((session) => session.id === state.selectedSessionId)
     if (updatedSelectedSession) {
-      await saveChatSession(updatedSelectedSession)
+      await saveChatSessionPreservingMessages(updatedSelectedSession, state.messages)
     }
     return {
       ...state,

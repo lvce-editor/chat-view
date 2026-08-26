@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import { openApiRequestFailedMessage, openApiRequestFailedOfflineMessage } from '../ChatStrings/ChatStrings.ts'
 import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.ts'
@@ -9,7 +11,7 @@ const isOffline = (): boolean => {
   if (!globalThis.navigator) {
     return false
   }
-  return globalThis.navigator.onLine === false
+  return !globalThis.navigator.onLine
 }
 
 export const isImageNotSupportedError = (

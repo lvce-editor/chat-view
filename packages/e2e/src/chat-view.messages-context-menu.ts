@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.messages-context-menu'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -15,6 +13,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toBeVisible()
 
   await Command.execute('Chat.handleMessagesContextMenu', 0, 0, 0)
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   const cutMenuItem = Locator('.MenuItem').nth(0)
   await expect(cutMenuItem).toBeVisible()

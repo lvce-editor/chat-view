@@ -47,6 +47,8 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly inProgressMessage: string
+  readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
@@ -89,6 +91,21 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly voiceDictationEnabled?: boolean
 }
 
+const chatFocusMainAreaNode: VirtualDomNode = {
+  childCount: 3,
+  className: ClassNames.ChatFocusMainArea,
+  type: VirtualDomElements.Div,
+}
+
+const projectSidebarSashNode: VirtualDomNode = {
+  'aria-orientation': 'vertical',
+  childCount: 0,
+  className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
+  onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
+  role: AriaRoles.Separator,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatModeChatFocusVirtualDom = ({
   addContextButtonEnabled,
   agentMode,
@@ -112,6 +129,8 @@ export const getChatModeChatFocusVirtualDom = ({
   hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
+  inProgressMessage,
+  messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
@@ -156,10 +175,11 @@ export const getChatModeChatFocusVirtualDom = ({
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
   const selectedProjectName = projects.find((project) => project.id === selectedProjectId)?.name || ''
-  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
-  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
-  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
+  const selectedMessages: readonly ChatMessage[] = messages || selectedSession?.messages || []
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession, selectedMessages)
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession, selectedMessages) === 'in-progress' : false
+  const showImplementPlanButton =
+    agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession, selectedMessages) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = agentModePickerOpen
@@ -179,22 +199,11 @@ export const getChatModeChatFocusVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
-    {
-      'aria-orientation': 'vertical',
-      childCount: 0,
-      className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
-      onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
-      role: AriaRoles.Separator,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 3,
-      className: ClassNames.ChatFocusMainArea,
-      type: VirtualDomElements.Div,
-    },
+    projectSidebarSashNode,
+    chatFocusMainAreaNode,
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
-      messages,
+      selectedMessages,
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
@@ -205,6 +214,8 @@ export const getChatModeChatFocusVirtualDom = ({
       messagesScrollTop,
       useChatMathWorker,
       true,
+      false,
+      inProgressMessage,
     ),
     ...getChatSendAreaDom(
       composerValue,

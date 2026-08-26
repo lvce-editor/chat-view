@@ -14,6 +14,11 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
       params: ['handleClick', EventExpression.TargetName, 'event.target.dataset.id', EventExpression.ClientX, EventExpression.ClientY],
     },
     {
+      name: DomEventListenersFunctions.HandleClickSession,
+      params: ['handleClick', EventExpression.TargetName],
+      stopPropagation: true,
+    },
+    {
       name: DomEventListenersFunctions.HandleMouseOver,
       params: ['handleMouseOver', EventExpression.TargetName],
     },
@@ -40,6 +45,7 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     {
       name: DomEventListenersFunctions.HandleClickDelete,
       params: ['handleClickDelete', 'event.target.dataset.id'],
+      stopPropagation: true,
     },
     {
       name: DomEventListenersFunctions.HandleClickClose,
@@ -107,12 +113,12 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleDragEnter,
-      params: ['handleDragEnter', EventExpression.TargetName, EventExpression.DataTransferFiles2],
+      params: ['handleDragEnter', EventExpression.TargetName],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragOver,
-      params: ['handleDragOver', EventExpression.TargetName, EventExpression.DataTransferFiles2],
+      params: ['handleDragOver', EventExpression.TargetName],
       preventDefault: true,
     },
     {
@@ -122,17 +128,17 @@ export const renderEventListeners = (): readonly DomEventListener[] => {
     },
     {
       name: DomEventListenersFunctions.HandleDrop,
-      params: ['handleDropFiles', EventExpression.TargetName, EventExpression.DataTransferFiles2],
+      params: ['handleDropFiles', EventExpression.TargetName, EventExpression.DropId],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragEnterChatView,
-      params: ['handleDragEnter', 'composer-drop-target', EventExpression.DataTransferFiles2],
+      params: ['handleDragEnter', 'composer-drop-target'],
       preventDefault: true,
     },
     {
       name: DomEventListenersFunctions.HandleDragOverChatView,
-      params: ['handleDragOver', 'composer-drop-target', EventExpression.DataTransferFiles2],
+      params: ['handleDragOver', 'composer-drop-target'],
       preventDefault: true,
     },
     {

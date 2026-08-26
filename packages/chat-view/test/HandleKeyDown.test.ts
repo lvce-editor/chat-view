@@ -1,16 +1,13 @@
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as HandleKeyDown from '../src/parts/HandleKeyDown/HandleKeyDown.ts'
 import { registerMockChatMessageParsingRpc } from '../src/parts/TestHelpers/RegisterMockChatMessageParsingRpc.ts'
 import { registerMockChatStorageRpc } from '../src/parts/TestHelpers/RegisterMockChatStorageRpc.ts'
+import { registerMockQuickPickRpc } from '../src/parts/TestHelpers/RegisterMockQuickPickRpc.ts'
 
 let mockChatMessageParsingRpc: ReturnType<typeof registerMockChatMessageParsingRpc>
-
-const getChatRerenderInvocations = (invocations: readonly (readonly unknown[])[]): readonly (readonly unknown[])[] => {
-  return invocations.filter((invocation) => invocation[0] === 'Chat.rerender')
-}
 
 beforeEach(() => {
   mockChatMessageParsingRpc = registerMockChatMessageParsingRpc()
@@ -23,42 +20,32 @@ afterEach(() => {
 test('handleKeyDown should submit on Enter', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
   const state = { ...createDefaultState(), composerValue: 'hello', viewMode: 'detail' as const }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
-  expect(result.sessions[0].messages).toHaveLength(2)
-  expect(result.sessions[0].messages[0].text).toBe('hello')
-  expect(result.sessions[0].messages[1].role).toBe('assistant')
-  expect(result.composerValue).toBe('')
-  expect(result.focus).toBe('composer')
-  expect(result.focused).toBe(true)
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
+  expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should create a new session on Enter from list mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Chat.rerender': async () => {},
-  })
   const state = {
     ...createDefaultState(),
     composerValue: 'hello',
     lastNormalViewMode: 'detail' as const,
     viewMode: 'list' as const,
   }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
 
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
 
-  expect(result.sessions).toHaveLength(state.sessions.length + 1)
-  const newSession = result.sessions.at(-1)
-  expect(newSession?.id).toBe(result.selectedSessionId)
-  expect(result.selectedSessionId).not.toBe(state.selectedSessionId)
-  expect(newSession?.messages[0]?.text).toBe('hello')
-  expect(result.viewMode).toBe('detail')
-  expect(getChatRerenderInvocations(mockRpc.invocations)).toEqual([['Chat.rerender']])
+  expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should not submit on Shift+Enter', async () => {
@@ -72,23 +59,29 @@ test('handleKeyDown should not submit on Shift+Enter', async () => {
 test('handleKeyDown should rename when in rename mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Main.prompt': async (title: string) => {
-      expect(title).toBe('Renamed Chat')
-      return 'AI Renamed Chat'
+  using mockQuickPickRpc = registerMockQuickPickRpc({
+    'QuickPick.showQuickInput': async (options) => {
+      expect(options).toEqual({ initialValue: 'Renamed Chat', waitUntil: 'finished' })
+      return {
+        canceled: false,
+        inputValue: 'AI Renamed Chat',
+      }
     },
   })
   const state = { ...createDefaultState(), composerValue: 'Renamed Chat', renamingSessionId: 'session-1' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].title).toBe('AI Renamed Chat')
   expect(result.renamingSessionId).toBe('')
-  expect(mockRpc.invocations).toEqual([['Main.prompt', 'Renamed Chat']])
+  expect(mockQuickPickRpc.invocations).toEqual([['QuickPick.showQuickInput', { initialValue: 'Renamed Chat', waitUntil: 'finished' }]])
+  expect(mockChatStorageRpc.invocations).toEqual([
+    ['ChatStorage.setSession', { id: 'session-1', messages: [], projectId: 'project-1', status: 'idle', title: 'AI Renamed Chat' }],
+  ])
 })
 
 test('handleKeyDown should clear rename mode when rename value is blank', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  const state = { ...createDefaultState(), composerValue: '   ', renamingSessionId: 'session-1' }
+  const state = { ...createDefaultState(), composerValue: ' '.repeat(3), renamingSessionId: 'session-1' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.renamingSessionId).toBe('')
   expect(result.sessions[0].title).toBe('Chat 1')
@@ -97,23 +90,48 @@ test('handleKeyDown should clear rename mode when rename value is blank', async 
 test('handleKeyDown should keep existing title when prompted rename is blank', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  using mockRpc = RendererWorker.registerMockRpc({
-    'Main.prompt': async () => '   ',
+  using mockQuickPickRpc = registerMockQuickPickRpc({
+    'QuickPick.showQuickInput': async () => ({
+      canceled: false,
+      inputValue: ' '.repeat(3),
+    }),
   })
   const state = { ...createDefaultState(), composerValue: 'Renamed Chat', renamingSessionId: 'session-1' }
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.renamingSessionId).toBe('')
   expect(result.sessions[0].title).toBe('Chat 1')
-  expect(mockRpc.invocations).toEqual([['Main.prompt', 'Renamed Chat']])
+  expect(mockQuickPickRpc.invocations).toEqual([['QuickPick.showQuickInput', { initialValue: 'Renamed Chat', waitUntil: 'finished' }]])
+  expect(mockChatStorageRpc.invocations).toEqual([])
+})
+
+test('handleKeyDown should keep existing title when rename is canceled', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockQuickPickRpc = registerMockQuickPickRpc({
+    'QuickPick.showQuickInput': async () => ({
+      canceled: true,
+      inputValue: '',
+    }),
+  })
+  const state = { ...createDefaultState(), composerValue: 'Renamed Chat', renamingSessionId: 'session-1' }
+  const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
+  expect(result.renamingSessionId).toBe('')
+  expect(result.sessions[0].title).toBe('Chat 1')
+  expect(mockQuickPickRpc.invocations).toEqual([['QuickPick.showQuickInput', { initialValue: 'Renamed Chat', waitUntil: 'finished' }]])
+  expect(mockChatStorageRpc.invocations).toEqual([])
 })
 
 test('handleKeyDown should not submit blank message', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
-  const state = { ...createDefaultState(), composerValue: '   ' }
+  const state = { ...createDefaultState(), composerValue: ' '.repeat(3) }
+  using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
+    'ChatModel.handleSubmit': async () => state,
+  })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].messages).toHaveLength(0)
   expect(result).toBe(state)
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
 })
 
 test('handleKeyDown should ignore non-enter keys', async () => {

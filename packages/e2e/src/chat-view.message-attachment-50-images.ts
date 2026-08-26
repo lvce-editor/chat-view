@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
   await Chat.useMockApi()
-  await Command.execute('Chat.openMockSession', 'session-message-attachment-50-images', [])
+  await Chat.openMockSession('session-message-attachment-50-images', [])
   await Chat.handleModelChange('openapi/gpt-4o-mini')
   await Command.execute('Chat.handleInput', 'open-api-api-key', 'sk-e2e-openai-key')
   await Command.execute('Chat.handleClick', 'save-openapi-api-key')
@@ -40,6 +40,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(images).toHaveCount(50)
   await expect(images.first()).toHaveAttribute('alt', 'photo-1.svg')
   await expect(images.first()).toHaveAttribute('src', svgPreviewSrc)
-  await expect(images.nth(49)).toHaveAttribute('alt', 'photo-50.svg')
-  await expect(images.nth(49)).toHaveAttribute('src', svgPreviewSrc)
+  const image49 = images.nth(49)
+  await expect(image49).toHaveAttribute('alt', 'photo-50.svg')
+  await expect(image49).toHaveAttribute('src', svgPreviewSrc)
 }

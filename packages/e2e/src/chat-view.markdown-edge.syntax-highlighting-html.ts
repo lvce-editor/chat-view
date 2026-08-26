@@ -3,6 +3,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'chat-view.markdown-edge.syntax-highlighting-html'
 
 export const skip = 1
+
 export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -24,8 +25,10 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(messages).toHaveCount(2)
   await expect(codeBlocks).toHaveCount(1)
   await expect(htmlTags).toHaveCount(3)
-  await expect(htmlTags.nth(0)).toHaveText('<div')
-  await expect(htmlTags.nth(2)).toHaveText('</div>')
+  const htmlTag0 = htmlTags.nth(0)
+  await expect(htmlTag0).toHaveText('<div')
+  const htmlTag2 = htmlTags.nth(2)
+  await expect(htmlTag2).toHaveText('</div>')
   await expect(htmlAttributes).toHaveCount(1)
   await expect(htmlAttributes).toHaveText('class')
   await expect(htmlStrings).toHaveCount(1)

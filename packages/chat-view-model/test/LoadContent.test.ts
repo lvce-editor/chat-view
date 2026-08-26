@@ -1,10 +1,9 @@
 import { expect, test } from '@jest/globals'
 import { ChatMessageParsingWorker, ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession } from '../src/parts/ChatSession/ChatSession.ts'
-import type { LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 import { saveChatSession } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
-import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
-import * as MockBackendAuth from '../src/parts/MockBackendAuth/MockBackendAuth.ts'
+import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
+import { loadContent, type LoadContentState } from '../src/parts/LoadContent/LoadContent.ts'
 
 const createState = (): LoadContentState => {
   return {
@@ -18,6 +17,8 @@ const createState = (): LoadContentState => {
     authUseRedirect: false,
     backendUrl: '',
     chatHistoryEnabled: false,
+    chatInputHistory: [],
+    chatInputHistoryIndex: -1,
     chatListScrollTop: 0,
     composerAttachmentPreviewOverlayAttachmentId: '',
     composerAttachmentPreviewOverlayError: false,
@@ -33,6 +34,8 @@ const createState = (): LoadContentState => {
     composerSelectionStart: 0,
     composerValue: '',
     emitStreamingFunctionCallEvents: false,
+    focus: 'composer',
+    focused: false,
     gitBranches: [],
     gitBranchPickerErrorMessage: '',
     gitBranchPickerOpen: false,
@@ -41,8 +44,10 @@ const createState = (): LoadContentState => {
     hasSpaceForRunModePicker: true,
     initial: true,
     lastNormalViewMode: 'list',
+    lastSubmittedSessionId: '',
     listFocusedIndex: 0,
     listFocusOutline: false,
+    messages: [],
     messagesAutoScrollEnabled: true,
     messagesScrollTop: 0,
     modelPickerHeaderHeight: 30,
@@ -90,10 +95,12 @@ const createState = (): LoadContentState => {
     showModelUsageMultiplier: false,
     showRunMode: false,
     streamingEnabled: false,
+    systemPrompt: '',
     todoListToolEnabled: false,
     tokensMax: 0,
     tokensUsed: 0,
     toolEnablement: {},
+    uid: 1,
     usageOverviewEnabled: false,
     useAuthWorker: false,
     useChatCoordinatorWorker: false,
@@ -154,6 +161,7 @@ const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorker.regis
     'ChatStorage.setSession': (session: ChatSession) => {
       sessions.set(session.id, cloneSession(session))
     },
+    'ChatStorage.subscribeSessionUpdates': async () => {},
   })
 }
 
@@ -206,16 +214,6 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
   })
   expect(mockChatMessageParsingRpc).toBeDefined()
-  MockBackendAuth.setNextRefreshResponse({
-    delay: 0,
-    response: {
-      accessToken: 'access-token',
-      subscriptionPlan: 'pro',
-      usedTokens: 42,
-      userName: 'Simon',
-    },
-    type: 'success',
-  })
   await saveChatSession({ id: 'session-1', messages: [], title: 'Session 1' })
   await saveChatSession({
     id: 'session-2',
@@ -238,43 +236,152 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
     viewMode: 'detail' as const,
   }
 
-  try {
-    const result = await loadContent(state, savedState)
+  const result = await loadContent(state, savedState)
 
-    expect(result.selectedSessionId).toBe('session-2')
-    expect(result.selectedModelId).toBe('model-2')
-    expect(result.composerValue).toBe('saved composer')
-    expect(result.composerSelectionStart).toBe(2)
-    expect(result.composerSelectionEnd).toBe(4)
-    expect(result.sessions).toEqual([
+  expect(result.selectedSessionId).toBe('session-2')
+  expect(result.selectedModelId).toBe('model-2')
+  expect(result.composerValue).toBe('saved composer')
+  expect(result.composerSelectionStart).toBe(2)
+  expect(result.composerSelectionEnd).toBe(4)
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], title: 'Session 1' },
+    { id: 'session-2', lastActiveTime: '10:00', messages: [], title: 'Session 2' },
+  ])
+  expect(result.messages).toEqual([{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }])
+  expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
+  expect(result.visibleModels).toEqual([
+    { id: 'model-1', name: 'Model 1' },
+    { id: 'model-2', name: 'Model 2' },
+  ])
+  expect(result.composerAttachments).toEqual([
+    {
+      attachmentId: 'attachment-1',
+      displayType: 'text-file',
+      mimeType: 'text/plain',
+      name: 'readme.md',
+      size: 15,
+      textContent: 'hello from file',
+    },
+  ])
+  expect(result.initial).toBe(false)
+  expect(result.modelPickerHeight).toBe(86)
+  expect(result.composerAttachmentsHeight).toBe(34)
+  expect(result.projectExpandedIds).toEqual(['project-1'])
+  expect(result.showModelUsageMultiplier).toBe(true)
+  expect(result.showRunMode).toBe(true)
+  expect(result.userName).toBe('')
+  expect(result.userState).toBe('loggedOut')
+  expect(result.voiceDictationEnabled).toBe(true)
+  expect(mockChatStorageRpc.invocations).toContainEqual([
+    'ChatStorage.subscribeSessionUpdates',
+    { rpcId: rpcIdViewModel, sessionId: 'session-2', type: 'session', uid: 1 },
+  ])
+})
+
+test('loadContent parses normalized text from stored multi-part message content', async () => {
+  const state = createState()
+  using mockChatStorageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.getEvents': () => [],
+    'ChatStorage.getSession': (id: string) => {
+      if (id !== 'session-2') {
+        return undefined
+      }
+      return {
+        id: 'session-2',
+        messages: [
+          {
+            content: [
+              { text: 'Hello', type: 'output_text' },
+              { summary: 'thinking', type: 'reasoning' },
+              { text: ' world', type: 'output_text' },
+            ],
+            id: 'message-1',
+            role: 'assistant',
+            time: '10:00',
+          },
+        ],
+        title: 'Session 2',
+      }
+    },
+    'ChatStorage.listSessions': () => [
       { id: 'session-1', messages: [], title: 'Session 1' },
-      { id: 'session-2', lastActiveTime: '10:00', messages: [{ id: 'message-1', role: 'user', text: 'Hello', time: '10:00' }], title: 'Session 2' },
-    ])
-    expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello' }])
-    expect(result.visibleModels).toEqual([
-      { id: 'model-1', name: 'Model 1' },
-      { id: 'model-2', name: 'Model 2' },
-    ])
-    expect(result.composerAttachments).toEqual([
-      {
-        attachmentId: 'attachment-1',
-        displayType: 'text-file',
-        mimeType: 'text/plain',
-        name: 'readme.md',
-        size: 15,
-        textContent: 'hello from file',
-      },
-    ])
-    expect(result.initial).toBe(false)
-    expect(result.modelPickerHeight).toBe(86)
-    expect(result.composerAttachmentsHeight).toBe(34)
-    expect(result.projectExpandedIds).toEqual(['project-1'])
-    expect(result.showModelUsageMultiplier).toBe(true)
-    expect(result.showRunMode).toBe(true)
-    expect(result.userName).toBe('Simon')
-    expect(result.userState).toBe('loggedIn')
-    expect(result.voiceDictationEnabled).toBe(true)
-  } finally {
-    MockBackendAuth.clear()
-  }
+      { id: 'session-2', messages: [], title: 'Session 2' },
+    ],
+    'ChatStorage.subscribeSessionUpdates': async () => {},
+  })
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      switch (key) {
+        case 'chat.authEnabled':
+        case 'chat.authUseRedirect':
+        case 'chatView.aiSessionTitleGenerationEnabled':
+        case 'chatView.composerDropEnabled':
+        case 'chatView.emitStreamingFunctionCallEvents':
+        case 'chatView.passIncludeObfuscation':
+        case 'chatView.reasoningPickerEnabled':
+        case 'chatView.runModePickerEnabled':
+        case 'chatView.scrollDownButtonEnabled':
+        case 'chatView.searchEnabled':
+        case 'chatView.showChatListTime':
+        case 'chatView.streamingEnabled':
+        case 'chatView.todoListToolEnabled':
+        case 'chatView.useAuthWorker':
+        case 'chatView.useChatCoordinatorWorker':
+        case 'chatView.useChatMathWorker':
+        case 'chatView.useChatNetworkWorkerForRequests':
+        case 'chatView.useChatToolWorker':
+        case 'chatView.voiceDictationEnabled':
+          return true
+        case 'chat.backendUrl':
+          return 'https://example.com'
+        case 'chat.chatHistoryEnabled':
+          return true
+        case 'chat.toolEnablement':
+          return { grep: true }
+        case 'chat.useOwnBackend':
+          return false
+        case 'secrets.openApiKey':
+          return 'open-api-key'
+        case 'secrets.openRouterApiKey':
+          return 'open-router-key'
+        default:
+          return undefined
+      }
+    },
+  })
+  expect(mockRendererRpc).toBeDefined()
+  using mockChatMessageParsingRpc = ChatMessageParsingWorker.registerMockRpc({
+    'ChatMessageParsing.parseMessageContents': async (rawMessages: readonly string[]) => rawMessages.map(() => []),
+  })
+  expect(mockChatMessageParsingRpc).toBeDefined()
+
+  const result = await loadContent(state, {
+    selectedProjectId: 'project-1',
+    selectedSessionId: 'session-2',
+    viewMode: 'detail' as const,
+  })
+
+  expect(result.sessions).toEqual([
+    { id: 'session-1', messages: [], title: 'Session 1' },
+    {
+      id: 'session-2',
+      messages: [],
+      title: 'Session 2',
+    },
+  ])
+  expect(result.messages).toEqual([
+    {
+      content: [
+        { text: 'Hello', type: 'output_text' },
+        { summary: 'thinking', type: 'reasoning' },
+        { text: ' world', type: 'output_text' },
+      ],
+      id: 'message-1',
+      role: 'assistant',
+      text: 'Hello world',
+      time: '10:00',
+    },
+  ])
+  expect(result.parsedMessages).toEqual([{ id: 'message-1', parsedContent: [], text: 'Hello world' }])
 })

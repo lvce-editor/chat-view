@@ -7,6 +7,7 @@ export const MenuProjectAddButton = 2181
 export const MenuChatProjectList = 2182
 export const MenuChatAttachment = 2183
 export const MenuChatPrimaryControlsOverflow = 2184
+export const MenuChatMessages = 21_833
 
 export const getMenuEntryIds = (): readonly number[] => {
   return [
@@ -18,5 +19,6 @@ export const getMenuEntryIds = (): readonly number[] => {
     MenuChatProjectList,
     MenuChatAttachment,
     MenuChatPrimaryControlsOverflow,
+    MenuChatMessages,
   ]
 }

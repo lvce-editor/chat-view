@@ -40,6 +40,9 @@ export interface GetChatModeDetailVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly inProgress: boolean
+  readonly inProgressMessage: string
+  readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
   readonly modelPickerOpen?: boolean
@@ -97,6 +100,9 @@ export const getChatModeDetailVirtualDom = ({
   hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
+  inProgress,
+  inProgressMessage,
+  messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
   modelPickerOpen = false,
@@ -135,11 +141,12 @@ export const getChatModeDetailVirtualDom = ({
   voiceDictationEnabled = false,
 }: GetChatModeDetailVirtualDomOptions): readonly VirtualDomNode[] => {
   const selectedSession = sessions.find((session) => session.id === selectedSessionId)
-  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession) === 'in-progress' : false
+  const selectedMessages: readonly ChatMessage[] = messages || selectedSession?.messages || []
+  const isSelectedSessionInProgress = selectedSession ? getChatSessionStatus(selectedSession, selectedMessages) === 'in-progress' : false
   const selectedSessionTitle = selectedSession?.title || Strings.chatTitle()
-  const messages: readonly ChatMessage[] = selectedSession ? selectedSession.messages : []
-  const showCreatePullRequestButton = canCreatePullRequest(selectedSession)
-  const showImplementPlanButton = agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession) && !isSelectedSessionInProgress
+  const showCreatePullRequestButton = canCreatePullRequest(selectedSession, selectedMessages)
+  const showImplementPlanButton =
+    agentMode === 'plan' && !!getLatestExecutablePlanMessage(selectedSession, selectedMessages) && !isSelectedSessionInProgress
   const isDropOverlayVisible = composerDropEnabled && composerDropActive
   const isComposerAttachmentPreviewOverlayVisible = !!composerAttachmentPreviewOverlayAttachmentId
   const isAgentModePickerVisible = agentModePickerOpen
@@ -158,7 +165,7 @@ export const getChatModeDetailVirtualDom = ({
     },
     ...getChatHeaderDomDetailMode(selectedSessionTitle, authEnabled, userState, userName, authErrorMessage),
     ...getMessagesDom(
-      messages,
+      selectedMessages,
       parsedMessages,
       openRouterApiKeyInput,
       openApiApiKeyInput,
@@ -168,6 +175,9 @@ export const getChatModeDetailVirtualDom = ({
       openRouterApiKeyState,
       messagesScrollTop,
       useChatMathWorker,
+      false,
+      inProgress,
+      inProgressMessage,
     ),
     ...getChatSendAreaDom(
       composerValue,

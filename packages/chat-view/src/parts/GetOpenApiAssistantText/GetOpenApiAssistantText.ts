@@ -1,3 +1,5 @@
+/* cspell:ignore sonarjs */
+
 import type { ChatMessage } from '../ChatMessage/ChatMessage.ts'
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
 import type { GetOpenApiAssistantTextOptions } from '../GetOpenApiAssistantTextOptions/GetOpenApiAssistantTextOptions.ts'
@@ -12,6 +14,7 @@ import { defaultMaxToolCalls } from '../DefaultMaxToolCalls/DefaultMaxToolCalls.
 import { getChatMessageOpenAiContent } from '../GetChatMessageOpenAiContent/GetChatMessageOpenAiContent.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
 import { getGlobMatchCount } from '../GetGlobMatchCount/GetGlobMatchCount.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getOpenApiApiEndpoint } from '../GetOpenApiApiEndpoint/GetOpenApiApiEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
 
@@ -25,25 +28,21 @@ const getOpenAiTools = (tools: readonly unknown[]): readonly unknown[] => {
     if (!tool || typeof tool !== 'object') {
       return tool
     }
-    const type = Reflect.get(tool, 'type')
-    const toolFunction = Reflect.get(tool, 'function')
+    const type = getObjectProperty(tool, 'type')
+    const toolFunction = getObjectProperty(tool, 'function')
     if (type !== 'function' || !toolFunction || typeof toolFunction !== 'object') {
       return tool
     }
-    const name = Reflect.get(toolFunction, 'name')
-    const description = Reflect.get(toolFunction, 'description')
-    const parameters = Reflect.get(toolFunction, 'parameters')
+    const name = getObjectProperty(toolFunction, 'name')
+    const description = getObjectProperty(toolFunction, 'description')
+    const parameters = getObjectProperty(toolFunction, 'parameters')
     return {
-      ...(typeof description === 'string'
-        ? {
-            description,
-          }
-        : {}),
-      ...(typeof name === 'string'
-        ? {
-            name,
-          }
-        : {}),
+      ...(typeof description === 'string' && {
+        description,
+      }),
+      ...(typeof name === 'string' && {
+        name,
+      }),
       ...(parameters && typeof parameters === 'object'
         ? {
             parameters,
@@ -70,36 +69,27 @@ export const getOpenAiParams = (
   const openAiTools = getOpenAiTools(tools)
   return {
     input,
-    ...(systemPrompt
-      ? {
-          instructions: systemPrompt,
-        }
-      : {}),
+    ...(systemPrompt && {
+      instructions: systemPrompt,
+    }),
     model: modelId,
-    ...(stream
-      ? {
-          stream: true,
-          ...(includeObfuscation
-            ? {}
-            : {
-                stream_options: {
-                  include_obfuscation: false,
-                },
-              }),
-        }
-      : {}),
-    ...(previousResponseId
-      ? {
-          previous_response_id: previousResponseId,
-        }
-      : {}),
-    ...(reasoningEffort && supportsReasoningEffort
-      ? {
-          reasoning: {
-            effort: reasoningEffort,
-          },
-        }
-      : {}),
+    ...(stream && {
+      stream: true,
+      ...(!includeObfuscation && {
+        stream_options: {
+          include_obfuscation: false,
+        },
+      }),
+    }),
+    ...(previousResponseId && {
+      previous_response_id: previousResponseId,
+    }),
+    ...(reasoningEffort &&
+      supportsReasoningEffort && {
+        reasoning: {
+          effort: reasoningEffort,
+        },
+      }),
     max_tool_calls: maxToolCalls,
     tool_choice: 'auto',
     tools: webSearchEnabled ? [...openAiTools, { type: 'web_search' }] : openAiTools,
@@ -118,7 +108,7 @@ const getStreamChunkText = (content: unknown): string => {
       if (!part || typeof part !== 'object') {
         return ''
       }
-      const text = Reflect.get(part, 'text')
+      const text = getObjectProperty(part, 'text')
       return typeof text === 'string' ? text : ''
     })
     .join('')
@@ -126,7 +116,7 @@ const getStreamChunkText = (content: unknown): string => {
 
 const getShortToolErrorMessage = (error: string): string => {
   const trimmed = error.trim().replace(errorPrefixRegex, '')
-  const firstLine = trimmed.split('\n')[0]
+  const firstLine = trimmed.split('\n', 1)[0]
   if (firstLine.length <= 80) {
     return firstLine
   }
@@ -162,32 +152,28 @@ export const getToolCallExecutionStatus = (content: string): Pick<StreamingToolC
       status: 'error',
     }
   }
-  const rawError = Reflect.get(parsed, 'error')
+  const rawError = getObjectProperty(parsed, 'error')
   if (typeof rawError !== 'string' || !rawError.trim()) {
     return {
       status: 'success',
     }
   }
-  const rawStack = Reflect.get(parsed, 'errorStack') ?? Reflect.get(parsed, 'stack')
+  const rawStack = getObjectProperty(parsed, 'errorStack') ?? getObjectProperty(parsed, 'stack')
   const errorStack = typeof rawStack === 'string' && rawStack.trim() ? rawStack : undefined
   const errorMessage = getShortToolErrorMessage(rawError)
   if (notFoundErrorRegex.test(errorMessage)) {
     return {
       errorMessage,
-      ...(errorStack
-        ? {
-            errorStack,
-          }
-        : {}),
+      ...(errorStack && {
+        errorStack,
+      }),
       status: 'not-found',
     }
   }
   return {
-    ...(errorStack
-      ? {
-          errorStack,
-        }
-      : {}),
+    ...(errorStack && {
+      errorStack,
+    }),
     errorMessage,
     status: 'error',
   }
@@ -204,8 +190,8 @@ export const getToolCallResult = (name: string, content: string): string | undef
     if (!parsed || typeof parsed !== 'object') {
       return undefined
     }
-    const linesAdded = Reflect.get(parsed, 'addedLines') ?? Reflect.get(parsed, 'linesAdded')
-    const linesDeleted = Reflect.get(parsed, 'removedLines') ?? Reflect.get(parsed, 'linesDeleted')
+    const linesAdded = getObjectProperty(parsed, 'addedLines') ?? getObjectProperty(parsed, 'linesAdded')
+    const linesDeleted = getObjectProperty(parsed, 'removedLines') ?? getObjectProperty(parsed, 'linesDeleted')
     if (typeof linesAdded !== 'number' && typeof linesDeleted !== 'number') {
       return undefined
     }
@@ -226,7 +212,7 @@ export const getToolCallResult = (name: string, content: string): string | undef
   if (!parsed || typeof parsed !== 'object') {
     return undefined
   }
-  const workspaceUri = Reflect.get(parsed, 'workspaceUri')
+  const workspaceUri = getObjectProperty(parsed, 'workspaceUri')
   if (typeof workspaceUri !== 'string' || !workspaceUri) {
     return undefined
   }
@@ -238,12 +224,12 @@ const getResponseOutputText = (parsed: unknown): string => {
     return ''
   }
 
-  const outputText = Reflect.get(parsed, 'output_text')
+  const outputText = getObjectProperty(parsed, 'output_text')
   if (typeof outputText === 'string') {
     return outputText
   }
 
-  const output = Reflect.get(parsed, 'output')
+  const output = getObjectProperty(parsed, 'output')
   if (!Array.isArray(output)) {
     return ''
   }
@@ -253,11 +239,11 @@ const getResponseOutputText = (parsed: unknown): string => {
     if (!outputItem || typeof outputItem !== 'object') {
       continue
     }
-    const itemType = Reflect.get(outputItem, 'type')
+    const itemType = getObjectProperty(outputItem, 'type')
     if (itemType !== 'message') {
       continue
     }
-    const content = Reflect.get(outputItem, 'content')
+    const content = getObjectProperty(outputItem, 'content')
     if (!Array.isArray(content)) {
       continue
     }
@@ -265,8 +251,8 @@ const getResponseOutputText = (parsed: unknown): string => {
       if (!part || typeof part !== 'object') {
         continue
       }
-      const partType = Reflect.get(part, 'type')
-      const text = Reflect.get(part, 'text')
+      const partType = getObjectProperty(part, 'type')
+      const text = getObjectProperty(part, 'text')
       if ((partType === 'output_text' || partType === 'text') && typeof text === 'string') {
         chunks.push(text)
       }
@@ -279,7 +265,7 @@ const getResponseFunctionCalls = (parsed: unknown): readonly ResponseFunctionCal
   if (!parsed || typeof parsed !== 'object') {
     return []
   }
-  const output = Reflect.get(parsed, 'output')
+  const output = getObjectProperty(parsed, 'output')
   if (!Array.isArray(output)) {
     return []
   }
@@ -288,13 +274,13 @@ const getResponseFunctionCalls = (parsed: unknown): readonly ResponseFunctionCal
     if (!outputItem || typeof outputItem !== 'object') {
       continue
     }
-    const itemType = Reflect.get(outputItem, 'type')
+    const itemType = getObjectProperty(outputItem, 'type')
     if (itemType !== 'function_call') {
       continue
     }
-    const callId = Reflect.get(outputItem, 'call_id')
-    const name = Reflect.get(outputItem, 'name')
-    const rawArguments = Reflect.get(outputItem, 'arguments')
+    const callId = getObjectProperty(outputItem, 'call_id')
+    const name = getObjectProperty(outputItem, 'name')
+    const rawArguments = getObjectProperty(outputItem, 'arguments')
     if (typeof callId !== 'string' || typeof name !== 'string') {
       continue
     }
@@ -334,18 +320,18 @@ const updateToolCallAccumulator = (
     if (!item || typeof item !== 'object') {
       continue
     }
-    const index = Reflect.get(item, 'index')
+    const index = getObjectProperty(item, 'index')
     if (typeof index !== 'number') {
       continue
     }
     const current = nextAccumulator[index] || { arguments: '', name: '' }
-    const id = Reflect.get(item, 'id')
-    const toolFunction = Reflect.get(item, 'function')
+    const id = getObjectProperty(item, 'id')
+    const toolFunction = getObjectProperty(item, 'function')
     let { name } = current
     let args = current.arguments
     if (toolFunction && typeof toolFunction === 'object') {
-      const deltaName = Reflect.get(toolFunction, 'name')
-      const deltaArguments = Reflect.get(toolFunction, 'arguments')
+      const deltaName = getObjectProperty(toolFunction, 'name')
+      const deltaArguments = getObjectProperty(toolFunction, 'arguments')
       if (typeof deltaName === 'string' && deltaName) {
         name = deltaName
       }
@@ -411,14 +397,14 @@ const getStreamingToolCallKey = (value: unknown): string | undefined => {
   if (!value || typeof value !== 'object') {
     return undefined
   }
-  const outputIndex = Reflect.get(value, 'output_index')
+  const outputIndex = getObjectProperty(value, 'output_index')
   if (typeof outputIndex === 'number') {
     return String(outputIndex)
   }
   if (typeof outputIndex === 'string' && outputIndex) {
     return outputIndex
   }
-  const itemId = Reflect.get(value, 'item_id')
+  const itemId = getObjectProperty(value, 'item_id')
   if (typeof itemId === 'string' && itemId) {
     return itemId
   }
@@ -468,11 +454,11 @@ const parseOpenApiStream = async (
       return
     }
 
-    const eventType = Reflect.get(parsed, 'type')
+    const eventType = getObjectProperty(parsed, 'type')
     if (eventType === 'response.completed') {
-      const response = Reflect.get(parsed, 'response')
+      const response = getObjectProperty(parsed, 'response')
       if (response && typeof response === 'object') {
-        const parsedResponseId = Reflect.get(response, 'id')
+        const parsedResponseId = getObjectProperty(response, 'id')
         if (typeof parsedResponseId === 'string' && parsedResponseId) {
           responseId = parsedResponseId
         }
@@ -482,11 +468,11 @@ const parseOpenApiStream = async (
     }
 
     if (eventType === 'response.created' || eventType === 'response.in_progress') {
-      const response = Reflect.get(parsed, 'response')
+      const response = getObjectProperty(parsed, 'response')
       if (!response || typeof response !== 'object') {
         return
       }
-      const parsedResponseId = Reflect.get(response, 'id')
+      const parsedResponseId = getObjectProperty(response, 'id')
       if (typeof parsedResponseId === 'string' && parsedResponseId) {
         responseId = parsedResponseId
       }
@@ -494,7 +480,7 @@ const parseOpenApiStream = async (
     }
 
     if (eventType === 'response.output_text.delta') {
-      const delta = Reflect.get(parsed, 'delta')
+      const delta = getObjectProperty(parsed, 'delta')
       if (typeof delta !== 'string' || !delta) {
         return
       }
@@ -507,32 +493,28 @@ const parseOpenApiStream = async (
 
     if (eventType === 'response.output_item.added') {
       const toolCallKey = getStreamingToolCallKey(parsed)
-      const item = Reflect.get(parsed, 'item')
+      const item = getObjectProperty(parsed, 'item')
       if (!toolCallKey || !item || typeof item !== 'object') {
         return
       }
-      const itemType = Reflect.get(item, 'type')
+      const itemType = getObjectProperty(item, 'type')
       if (itemType !== 'function_call') {
         return
       }
-      const callId = Reflect.get(item, 'call_id')
-      const name = Reflect.get(item, 'name')
-      const rawArguments = Reflect.get(item, 'arguments')
-      const rawStatus = Reflect.get(item, 'status')
+      const callId = getObjectProperty(item, 'call_id')
+      const name = getObjectProperty(item, 'name')
+      const rawArguments = getObjectProperty(item, 'arguments')
+      const rawStatus = getObjectProperty(item, 'status')
       const status = getStreamingToolCallStatus(rawStatus)
       const next: StreamingToolCall = {
         arguments: typeof rawArguments === 'string' ? rawArguments : '',
-        ...(typeof callId === 'string'
-          ? {
-              id: callId,
-            }
-          : {}),
+        ...(typeof callId === 'string' && {
+          id: callId,
+        }),
         name: typeof name === 'string' ? name : '',
-        ...(status
-          ? {
-              status,
-            }
-          : {}),
+        ...(status && {
+          status,
+        }),
       }
       toolCallAccumulator = {
         ...toolCallAccumulator,
@@ -544,18 +526,18 @@ const parseOpenApiStream = async (
 
     if (eventType === 'response.output_item.done') {
       const toolCallKey = getStreamingToolCallKey(parsed)
-      const item = Reflect.get(parsed, 'item')
+      const item = getObjectProperty(parsed, 'item')
       if (!toolCallKey || !item || typeof item !== 'object') {
         return
       }
-      const itemType = Reflect.get(item, 'type')
+      const itemType = getObjectProperty(item, 'type')
       if (itemType !== 'function_call') {
         return
       }
-      const callId = Reflect.get(item, 'call_id')
-      const name = Reflect.get(item, 'name')
-      const rawArguments = Reflect.get(item, 'arguments')
-      const rawStatus = Reflect.get(item, 'status')
+      const callId = getObjectProperty(item, 'call_id')
+      const name = getObjectProperty(item, 'name')
+      const rawArguments = getObjectProperty(item, 'arguments')
+      const rawStatus = getObjectProperty(item, 'status')
       const status = getStreamingToolCallStatus(rawStatus)
       const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: '' }
       toolCallAccumulator = {
@@ -593,10 +575,10 @@ const parseOpenApiStream = async (
         return
       }
       const current = toolCallAccumulator[toolCallKey] || { arguments: '', name: '' }
-      const name = Reflect.get(parsed, 'name')
-      const callId = Reflect.get(parsed, 'call_id')
-      const delta = Reflect.get(parsed, 'delta')
-      const rawArguments = Reflect.get(parsed, 'arguments')
+      const name = getObjectProperty(parsed, 'name')
+      const callId = getObjectProperty(parsed, 'call_id')
+      const delta = getObjectProperty(parsed, 'delta')
+      const rawArguments = getObjectProperty(parsed, 'arguments')
       const next: StreamingToolCall = {
         arguments: typeof rawArguments === 'string' ? rawArguments : typeof delta === 'string' ? `${current.arguments}${delta}` : current.arguments,
         ...(typeof callId === 'string'
@@ -618,7 +600,7 @@ const parseOpenApiStream = async (
       return
     }
 
-    const choices = Reflect.get(parsed, 'choices')
+    const choices = getObjectProperty(parsed, 'choices')
     if (!Array.isArray(choices)) {
       return
     }
@@ -626,11 +608,11 @@ const parseOpenApiStream = async (
     if (!firstChoice || typeof firstChoice !== 'object') {
       return
     }
-    const delta = Reflect.get(firstChoice, 'delta')
+    const delta = getObjectProperty(firstChoice, 'delta')
     if (!delta || typeof delta !== 'object') {
       return
     }
-    const toolCalls = Reflect.get(delta, 'tool_calls')
+    const toolCalls = getObjectProperty(delta, 'tool_calls')
     const updatedToolCallResult = Array.isArray(toolCalls)
       ? updateToolCallAccumulator(toolCallAccumulator, toolCalls as readonly unknown[])
       : undefined
@@ -640,7 +622,7 @@ const parseOpenApiStream = async (
     if (updatedToolCallResult && onToolCallsChunk) {
       await onToolCallsChunk(updatedToolCallResult.toolCalls)
     }
-    const content = Reflect.get(delta, 'content')
+    const content = getObjectProperty(delta, 'content')
     const chunkText = getStreamChunkText(content)
     if (!chunkText) {
       return
@@ -705,11 +687,9 @@ const parseOpenApiStream = async (
   const responseFunctionCalls =
     completedResponseFunctionCalls.length > 0 ? completedResponseFunctionCalls : getResponseFunctionCallsFromStreamingAccumulator(toolCallAccumulator)
   return {
-    ...(responseId
-      ? {
-          responseId,
-        }
-      : {}),
+    ...(responseId && {
+      responseId,
+    }),
     responseFunctionCalls,
     text,
     type: 'success',
@@ -730,31 +710,25 @@ const getOpenApiErrorDetails = async (
     return {}
   }
 
-  const error = Reflect.get(parsed, 'error')
+  const error = getObjectProperty(parsed, 'error')
   if (!error || typeof error !== 'object') {
     return {}
   }
 
-  const errorCode = Reflect.get(error, 'code')
-  const errorMessage = Reflect.get(error, 'message')
-  const errorType = Reflect.get(error, 'type')
+  const errorCode = getObjectProperty(error, 'code')
+  const errorMessage = getObjectProperty(error, 'message')
+  const errorType = getObjectProperty(error, 'type')
 
   return {
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
   }
 }
 
@@ -772,31 +746,25 @@ const getOpenApiErrorDetailsFromResponseText = (
     return {}
   }
 
-  const error = Reflect.get(parsed, 'error')
+  const error = getObjectProperty(parsed, 'error')
   if (!error || typeof error !== 'object') {
     return {}
   }
 
-  const errorCode = Reflect.get(error, 'code')
-  const errorMessage = Reflect.get(error, 'message')
-  const errorType = Reflect.get(error, 'type')
+  const errorCode = getObjectProperty(error, 'code')
+  const errorMessage = getObjectProperty(error, 'message')
+  const errorType = getObjectProperty(error, 'type')
 
   return {
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
   }
 }
 
@@ -894,21 +862,15 @@ export const getOpenApiAssistantText = async (
               const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
               return {
                 details: 'http-error',
-                ...(errorCode
-                  ? {
-                      errorCode,
-                    }
-                  : {}),
-                ...(errorMessage
-                  ? {
-                      errorMessage,
-                    }
-                  : {}),
-                ...(errorType
-                  ? {
-                      errorType,
-                    }
-                  : {}),
+                ...(errorCode && {
+                  errorCode,
+                }),
+                ...(errorMessage && {
+                  errorMessage,
+                }),
+                ...(errorType && {
+                  errorType,
+                }),
                 statusCode: requestResult.statusCode,
                 type: 'error',
               }
@@ -939,21 +901,15 @@ export const getOpenApiAssistantText = async (
               const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
               return {
                 details: 'http-error',
-                ...(errorCode
-                  ? {
-                      errorCode,
-                    }
-                  : {}),
-                ...(errorMessage
-                  ? {
-                      errorMessage,
-                    }
-                  : {}),
-                ...(errorType
-                  ? {
-                      errorType,
-                    }
-                  : {}),
+                ...(errorCode && {
+                  errorCode,
+                }),
+                ...(errorMessage && {
+                  errorMessage,
+                }),
+                ...(errorType && {
+                  errorType,
+                }),
                 statusCode: response.status,
                 type: 'error',
               }
@@ -975,17 +931,13 @@ export const getOpenApiAssistantText = async (
           const content = await executeChatTool(toolCall.name, toolCall.arguments, {
             assetDir,
             platform,
-            ...(sessionId
-              ? {
-                  sessionId,
-                }
-              : {}),
+            ...(sessionId && {
+              sessionId,
+            }),
             toolCallId: toolCall.callId,
-            ...(toolEnablement
-              ? {
-                  toolEnablement,
-                }
-              : {}),
+            ...(toolEnablement && {
+              toolEnablement,
+            }),
             useChatToolWorker,
             workspaceUri,
           })
@@ -993,33 +945,23 @@ export const getOpenApiAssistantText = async (
           const toolCallResult = getToolCallResult(toolCall.name, content)
           executedToolCalls.push({
             arguments: toolCall.arguments,
-            ...(executionStatus.errorStack
-              ? {
-                  errorStack: executionStatus.errorStack,
-                }
-              : {}),
-            ...(executionStatus.errorMessage
-              ? {
-                  errorMessage: executionStatus.errorMessage,
-                }
-              : {}),
-            ...(executionStatus.errorStack
-              ? {
-                  errorStack: executionStatus.errorStack,
-                }
-              : {}),
+            ...(executionStatus.errorStack && {
+              errorStack: executionStatus.errorStack,
+            }),
+            ...(executionStatus.errorMessage && {
+              errorMessage: executionStatus.errorMessage,
+            }),
+            ...(executionStatus.errorStack && {
+              errorStack: executionStatus.errorStack,
+            }),
             id: toolCall.callId,
             name: toolCall.name,
-            ...(toolCallResult
-              ? {
-                  result: toolCallResult,
-                }
-              : {}),
-            ...(executionStatus.status
-              ? {
-                  status: executionStatus.status,
-                }
-              : {}),
+            ...(toolCallResult && {
+              result: toolCallResult,
+            }),
+            ...(executionStatus.status && {
+              status: executionStatus.status,
+            }),
           })
           openAiInput.push({
             call_id: toolCall.callId,
@@ -1065,21 +1007,15 @@ export const getOpenApiAssistantText = async (
         const { errorCode, errorMessage, errorType } = getOpenApiErrorDetailsFromResponseText(requestResult.response)
         return {
           details: 'http-error',
-          ...(errorCode
-            ? {
-                errorCode,
-              }
-            : {}),
-          ...(errorMessage
-            ? {
-                errorMessage,
-              }
-            : {}),
-          ...(errorType
-            ? {
-                errorType,
-              }
-            : {}),
+          ...(errorCode && {
+            errorCode,
+          }),
+          ...(errorMessage && {
+            errorMessage,
+          }),
+          ...(errorType && {
+            errorType,
+          }),
           statusCode: requestResult.statusCode,
           type: 'error',
         }
@@ -1108,21 +1044,15 @@ export const getOpenApiAssistantText = async (
         const { errorCode, errorMessage, errorType } = await getOpenApiErrorDetails(response)
         return {
           details: 'http-error',
-          ...(errorCode
-            ? {
-                errorCode,
-              }
-            : {}),
-          ...(errorMessage
-            ? {
-                errorMessage,
-              }
-            : {}),
-          ...(errorType
-            ? {
-                errorType,
-              }
-            : {}),
+          ...(errorCode && {
+            errorCode,
+          }),
+          ...(errorMessage && {
+            errorMessage,
+          }),
+          ...(errorType && {
+            errorType,
+          }),
           statusCode: response.status,
           type: 'error',
         }
@@ -1145,7 +1075,7 @@ export const getOpenApiAssistantText = async (
       }
     }
 
-    const parsedResponseId = Reflect.get(parsed, 'id')
+    const parsedResponseId = getObjectProperty(parsed, 'id')
     if (typeof parsedResponseId === 'string' && parsedResponseId) {
       previousResponseId = parsedResponseId
     }
@@ -1158,17 +1088,13 @@ export const getOpenApiAssistantText = async (
         const content = await executeChatTool(toolCall.name, toolCall.arguments, {
           assetDir,
           platform,
-          ...(sessionId
-            ? {
-                sessionId,
-              }
-            : {}),
+          ...(sessionId && {
+            sessionId,
+          }),
           toolCallId: toolCall.callId,
-          ...(toolEnablement
-            ? {
-                toolEnablement,
-              }
-            : {}),
+          ...(toolEnablement && {
+            toolEnablement,
+          }),
           useChatToolWorker,
           workspaceUri,
         })
@@ -1176,33 +1102,23 @@ export const getOpenApiAssistantText = async (
         const toolCallResult = getToolCallResult(toolCall.name, content)
         executedToolCalls.push({
           arguments: toolCall.arguments,
-          ...(executionStatus.errorStack
-            ? {
-                errorStack: executionStatus.errorStack,
-              }
-            : {}),
-          ...(executionStatus.errorMessage
-            ? {
-                errorMessage: executionStatus.errorMessage,
-              }
-            : {}),
-          ...(executionStatus.errorStack
-            ? {
-                errorStack: executionStatus.errorStack,
-              }
-            : {}),
+          ...(executionStatus.errorStack && {
+            errorStack: executionStatus.errorStack,
+          }),
+          ...(executionStatus.errorMessage && {
+            errorMessage: executionStatus.errorMessage,
+          }),
+          ...(executionStatus.errorStack && {
+            errorStack: executionStatus.errorStack,
+          }),
           id: toolCall.callId,
           name: toolCall.name,
-          ...(toolCallResult
-            ? {
-                result: toolCallResult,
-              }
-            : {}),
-          ...(executionStatus.status
-            ? {
-                status: executionStatus.status,
-              }
-            : {}),
+          ...(toolCallResult && {
+            result: toolCallResult,
+          }),
+          ...(executionStatus.status && {
+            status: executionStatus.status,
+          }),
         })
         openAiInput.push({
           call_id: toolCall.callId,
@@ -1224,7 +1140,7 @@ export const getOpenApiAssistantText = async (
       }
     }
 
-    const choices = Reflect.get(parsed, 'choices')
+    const choices = getObjectProperty(parsed, 'choices')
     if (Array.isArray(choices)) {
       const firstChoice = choices[0]
       if (!firstChoice || typeof firstChoice !== 'object') {
@@ -1233,14 +1149,14 @@ export const getOpenApiAssistantText = async (
           type: 'success',
         }
       }
-      const message = Reflect.get(firstChoice, 'message')
+      const message = getObjectProperty(firstChoice, 'message')
       if (!message || typeof message !== 'object') {
         return {
           text: '',
           type: 'success',
         }
       }
-      const toolCalls = Reflect.get(message, 'tool_calls')
+      const toolCalls = getObjectProperty(message, 'tool_calls')
       if (Array.isArray(toolCalls) && toolCalls.length > 0) {
         openAiInput.length = 0
         const executedToolCalls: StreamingToolCall[] = []
@@ -1248,23 +1164,21 @@ export const getOpenApiAssistantText = async (
           if (!toolCall || typeof toolCall !== 'object') {
             continue
           }
-          const id = Reflect.get(toolCall, 'id')
-          const toolFunction = Reflect.get(toolCall, 'function')
+          const id = getObjectProperty(toolCall, 'id')
+          const toolFunction = getObjectProperty(toolCall, 'function')
           if (typeof id !== 'string' || !toolFunction || typeof toolFunction !== 'object') {
             continue
           }
-          const name = Reflect.get(toolFunction, 'name')
-          const rawArguments = Reflect.get(toolFunction, 'arguments')
+          const name = getObjectProperty(toolFunction, 'name')
+          const rawArguments = getObjectProperty(toolFunction, 'arguments')
           const content =
             typeof name === 'string'
               ? await executeChatTool(name, rawArguments, {
                   assetDir,
                   platform,
-                  ...(sessionId
-                    ? {
-                        sessionId,
-                      }
-                    : {}),
+                  ...(sessionId && {
+                    sessionId,
+                  }),
                   toolCallId: id,
                   useChatToolWorker,
                   workspaceUri,
@@ -1275,33 +1189,23 @@ export const getOpenApiAssistantText = async (
             const toolCallResult = getToolCallResult(name, content)
             executedToolCalls.push({
               arguments: typeof rawArguments === 'string' ? rawArguments : '',
-              ...(executionStatus.errorStack
-                ? {
-                    errorStack: executionStatus.errorStack,
-                  }
-                : {}),
-              ...(executionStatus.errorMessage
-                ? {
-                    errorMessage: executionStatus.errorMessage,
-                  }
-                : {}),
-              ...(executionStatus.errorStack
-                ? {
-                    errorStack: executionStatus.errorStack,
-                  }
-                : {}),
+              ...(executionStatus.errorStack && {
+                errorStack: executionStatus.errorStack,
+              }),
+              ...(executionStatus.errorMessage && {
+                errorMessage: executionStatus.errorMessage,
+              }),
+              ...(executionStatus.errorStack && {
+                errorStack: executionStatus.errorStack,
+              }),
               id,
               name,
-              ...(toolCallResult
-                ? {
-                    result: toolCallResult,
-                  }
-                : {}),
-              ...(executionStatus.status
-                ? {
-                    status: executionStatus.status,
-                  }
-                : {}),
+              ...(toolCallResult && {
+                result: toolCallResult,
+              }),
+              ...(executionStatus.status && {
+                status: executionStatus.status,
+              }),
             })
           }
           openAiInput.push({
@@ -1315,7 +1219,7 @@ export const getOpenApiAssistantText = async (
         }
         continue
       }
-      const content = Reflect.get(message, 'content')
+      const content = getObjectProperty(message, 'content')
       return {
         text: getTextContent(content),
         type: 'success',

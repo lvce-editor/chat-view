@@ -100,8 +100,6 @@ All files                                                 |   81.22 |    62.02 |
   CreateChatPullRequest.ts                                |     100 |      100 |     100 |     100 |
  CreateDefaultState                                       |     100 |      100 |     100 |     100 |
   CreateDefaultState.ts                                   |     100 |      100 |     100 |     100 |
- CreateExtensionHostRpc                                   |     100 |      100 |     100 |     100 |
-  CreateExtensionHostRpc.ts                               |     100 |      100 |     100 |     100 |
  CreateSession                                            |     100 |    66.66 |     100 |     100 |
   CreateSession.ts                                        |     100 |    66.66 |     100 |     100 | 9-10
  CutInput                                                 |     100 |      100 |     100 |     100 |
@@ -148,12 +146,8 @@ All files                                                 |   81.22 |    62.02 |
   ExecuteChatTool.ts                                      |   86.13 |    77.77 |     100 |      86 | 23,28,38,42,53,57,61,65,69,85,96,103,136,150
  ExecuteSlashCommand                                      |      80 |       50 |     100 |      80 |
   ExecuteSlashCommand.ts                                  |      80 |       50 |     100 |      80 | 8
- ExtensionHost                                            |     100 |      100 |     100 |     100 |
-  ExtensionHostShared.ts                                  |     100 |      100 |     100 |     100 |
- ExtensionHostCommandType                                 |     100 |      100 |     100 |     100 |
-  ExtensionHostCommandType.ts                             |     100 |      100 |     100 |     100 |
- ExtensionHostManagement                                  |     100 |      100 |     100 |     100 |
-  ExtensionHostManagement.ts                              |     100 |      100 |     100 |     100 |
+ ExtensionManagement                                      |     100 |      100 |     100 |     100 |
+  ExtensionManagement.ts                                  |     100 |      100 |     100 |     100 |
  FocusInput                                               |     100 |      100 |     100 |     100 |
   FocusInput.ts                                           |     100 |      100 |     100 |     100 |
  GenerateSessionId                                        |     100 |      100 |     100 |     100 |
@@ -877,16 +871,23 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await expect(table).toHaveCount(1)
   await expect(headerCells).toHaveCount(6)
   await expect(bodyRows).toHaveCount(expectedRowCount)
-  await expect(headerCells.nth(0)).toHaveText('File')
-  await expect(headerCells.nth(1)).toHaveText('% Stmts')
-  await expect(headerCells.nth(5)).toHaveText('Uncovered Line #s')
-  await expect(bodyRows.nth(0)).toContainText('All files')
-  await expect(bodyRows.nth(0)).toContainText('81.22')
-  await expect(bodyRows.nth(1)).toContainText('AgentMode')
-  await expect(bodyRows.nth(2)).toContainText('AgentMode.ts')
-  await expect(bodyRows.nth(2)).toContainText('18')
+  const headerCell0 = headerCells.nth(0)
+  await expect(headerCell0).toHaveText('File')
+  const headerCell1 = headerCells.nth(1)
+  await expect(headerCell1).toHaveText('% Stmts')
+  const headerCell5 = headerCells.nth(5)
+  await expect(headerCell5).toHaveText('Uncovered Line #s')
+  const bodyRow0 = bodyRows.nth(0)
+  await expect(bodyRow0).toContainText('All files')
+  await expect(bodyRow0).toContainText('81.22')
+  const bodyRow1 = bodyRows.nth(1)
+  await expect(bodyRow1).toContainText('AgentMode')
+  const bodyRow2 = bodyRows.nth(2)
+  await expect(bodyRow2).toContainText('AgentMode.ts')
+  await expect(bodyRow2).toContainText('18')
   await expect(userMessage).toContainText('GetAiResponse.ts')
   await expect(userMessage).toContainText('54,58,64-71,75-82,87,93-144,192-193,232,258,305-359,437-438,573,594')
-  await expect(bodyRows.nth(expectedRowCount - 1)).toContainText('MockBackendSetHttpErrorResponse.ts')
+  const lastBodyRow = bodyRows.nth(expectedRowCount - 1)
+  await expect(lastBodyRow).toContainText('MockBackendSetHttpErrorResponse.ts')
   await expect(assistantMessage).toContainText('ok')
 }
