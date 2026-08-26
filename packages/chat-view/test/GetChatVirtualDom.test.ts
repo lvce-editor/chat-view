@@ -129,7 +129,7 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
   })
 
   const stopButton = result.find((node) => node.name === 'stop')
-  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`)
+  const stopIcon = result.find((node) => node.className === `${ClassNames.MaskIcon} ${ClassNames.MaskIconStopCircle}`)
 
   expect(stopButton).toMatchObject({
     'aria-label': 'stop',
@@ -140,7 +140,7 @@ test('getChatVirtualDom should render stop button for an in-progress session', (
     type: VirtualDomElements.Button,
   })
   expect(stopIcon).toMatchObject({
-    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconDebugPause}`,
+    className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconStopCircle}`,
     type: VirtualDomElements.Div,
   })
 })

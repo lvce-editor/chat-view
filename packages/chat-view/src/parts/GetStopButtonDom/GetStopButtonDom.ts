@@ -6,7 +6,7 @@ import * as InputName from '../InputName/InputName.ts'
 
 const stopIconNode: VirtualDomNode = {
   childCount: 0,
-  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDebugPause),
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconStopCircle),
   role: AriaRoles.None,
   type: VirtualDomElements.Div,
 }
