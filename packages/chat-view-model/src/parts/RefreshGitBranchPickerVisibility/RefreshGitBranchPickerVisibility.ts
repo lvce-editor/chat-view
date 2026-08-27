@@ -1,5 +1,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatSession, GitBranch, Project } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 interface BranchPickerState {
   readonly gitBranches: readonly GitBranch[]
@@ -104,8 +105,10 @@ const parseEntries = (value: unknown): readonly FileSystemEntry[] => {
     if (Array.isArray(entry) && typeof entry[0] === 'string' && typeof entry[1] === 'number') {
       return [{ name: entry[0], type: entry[1] }]
     }
-    if (entry && typeof entry === 'object' && typeof Reflect.get(entry, 'name') === 'string' && typeof Reflect.get(entry, 'type') === 'number') {
-      return [{ name: Reflect.get(entry, 'name'), type: Reflect.get(entry, 'type') }]
+    const name = getObjectProperty(entry, 'name')
+    const type = getObjectProperty(entry, 'type')
+    if (typeof name === 'string' && typeof type === 'number') {
+      return [{ name, type }]
     }
     return []
   })
@@ -154,7 +157,7 @@ const getGitDirUri = async (workspaceUri: string): Promise<string> => {
   if (!match) {
     return ''
   }
-  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).toString()
+  return new URL(match[1].trim(), workspaceUri.endsWith('/') ? workspaceUri : `${workspaceUri}/`).href
 }
 
 const FileTypeFile = 1
@@ -178,7 +181,7 @@ const collectBranchNames = async (workspaceUri: string, refsHeadsUri: string, pr
 const getGitBranches = async (workspaceUri: string): Promise<readonly GitBranch[]> => {
   const gitDirUri = await getGitDirUri(workspaceUri)
   if (!gitDirUri) {
-    throw new globalThis.Error('Git repository not found.')
+    throw new Error('Git repository not found.')
   }
   const branches = new Set<string>()
   let currentBranch = ''
@@ -200,7 +203,7 @@ const getGitBranches = async (workspaceUri: string): Promise<readonly GitBranch[
     // Repositories without local refs should still open.
   }
   if (branches.size === 0) {
-    throw new globalThis.Error('No local git branches found.')
+    throw new Error('No local git branches found.')
   }
   return [...branches]
     .toSorted((a, b) => a.localeCompare(b))

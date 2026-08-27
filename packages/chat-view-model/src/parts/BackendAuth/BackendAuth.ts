@@ -1,4 +1,5 @@
 import type { AuthUserState } from '../ViewModel/ViewModel.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { isObject } from '../IsObject/IsObject.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 
@@ -46,11 +47,11 @@ const parseBackendAuthResponse = (value: unknown): BackendAuthState => {
   if (!isObject(value)) {
     return getLoggedOutBackendAuthState('Backend returned an invalid authentication response.')
   }
-  const authAccessToken = getString(Reflect.get(value, 'accessToken'))
-  const authErrorMessage = getString(Reflect.get(value, 'error'))
-  const userName = getString(Reflect.get(value, 'userName'))
-  const userSubscriptionPlan = getString(Reflect.get(value, 'subscriptionPlan'))
-  const userUsedTokens = getNumber(Reflect.get(value, 'usedTokens'))
+  const authAccessToken = getString(getObjectProperty(value, 'accessToken'))
+  const authErrorMessage = getString(getObjectProperty(value, 'error'))
+  const userName = getString(getObjectProperty(value, 'userName'))
+  const userSubscriptionPlan = getString(getObjectProperty(value, 'subscriptionPlan'))
+  const userUsedTokens = getNumber(getObjectProperty(value, 'usedTokens'))
   return {
     authAccessToken,
     authErrorMessage,

@@ -1,5 +1,7 @@
 /* cspell:ignore sonarjs */
 
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 const isCompleteJson = (value: string): boolean => {
   const trimmed = value.trim()
   if (!trimmed) {
@@ -55,9 +57,9 @@ export const getReadFileTarget = (rawArguments: string): { readonly title: strin
   if (!parsed || typeof parsed !== 'object') {
     return undefined
   }
-  const uri = Reflect.get(parsed, 'uri')
-  const path = Reflect.get(parsed, 'path')
-  const baseUri = Reflect.get(parsed, 'baseUri')
+  const uri = getObjectProperty(parsed, 'uri')
+  const path = getObjectProperty(parsed, 'path')
+  const baseUri = getObjectProperty(parsed, 'baseUri')
   const uriValue = typeof uri === 'string' ? uri : ''
   const pathValue = typeof path === 'string' ? path : ''
   const baseUriValue = typeof baseUri === 'string' ? baseUri : ''

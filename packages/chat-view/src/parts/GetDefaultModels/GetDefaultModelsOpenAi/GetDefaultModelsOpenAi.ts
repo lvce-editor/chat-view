@@ -3,6 +3,8 @@ import type { ChatModel } from '../../ChatModel/ChatModel.ts'
 export const getDefaultModelsOpenAi = (): readonly ChatModel[] => {
   return [
     { id: 'openapi/codex-5.3', name: 'Codex 5.3', provider: 'openApi', supportsReasoningEffort: true, usageCost: 1 },
+    { id: 'openapi/gpt-5.5', name: 'GPT-5.5', provider: 'openApi', supportsReasoningEffort: true },
+    { id: 'openapi/gpt-5.4', name: 'GPT-5.4', provider: 'openApi', supportsReasoningEffort: true },
     { id: 'openapi/gpt-5.4-mini', name: 'GPT-5.4 Mini', provider: 'openApi', supportsReasoningEffort: true },
     { id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi', supportsReasoningEffort: true },
     { id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi', supportsImages: true, usageCost: 1 },

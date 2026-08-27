@@ -8,6 +8,30 @@ import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFil
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 import { parseWriteFileLineCounts } from '../ParseWriteFileLineCounts/ParseWriteFileLineCounts.ts'
 
+const fileIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.FileIcon,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
+const insertionNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.Insertion,
+  type: VirtualDomElements.Span,
+}
+
+const deletionNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.Deletion,
+  type: VirtualDomElements.Span,
+}
+
 const getFileNameClickableProps = (clickableUri: string): Record<string, unknown> => {
   if (!clickableUri) {
     return {}
@@ -29,40 +53,19 @@ export const getToolCallWriteFileVirtualDom = (toolCall: ChatToolCall): readonly
   const { linesAdded, linesDeleted } = parseWriteFileLineCounts(toolCall.result)
   const childCount = 3 + Number(showDiffStats) * 2 + Number(Boolean(statusLabel))
   const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
+  const diffStatsDom = showDiffStats ? ([insertionNode, text(` +${linesAdded}`), deletionNode, text(` -${linesDeleted}`)] as const) : []
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    fileIconNode,
+    toolCallNameNode,
     text('write_file '),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
-    ...(showDiffStats
-      ? ([
-          {
-            childCount: 1,
-            className: ClassNames.Insertion,
-            type: VirtualDomElements.Span,
-          },
-          text(` +${linesAdded}`),
-          {
-            childCount: 1,
-            className: ClassNames.Deletion,
-            type: VirtualDomElements.Span,
-          },
-          text(` -${linesDeleted}`),
-        ] as const)
-      : []),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...diffStatsDom,
+    ...statusDom,
   ]
 }

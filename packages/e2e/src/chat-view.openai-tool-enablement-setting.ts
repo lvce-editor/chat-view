@@ -64,5 +64,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const disabledRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const disabledTools = disabledRequests[0]?.payload.tools || []
-  assert(!disabledTools.some((tool) => tool.type === 'function' && tool.name === 'read_file'), 'read_file should be removed when disabled')
+  assert(
+    disabledTools.every((tool) => !(tool.type === 'function' && tool.name === 'read_file')),
+    'read_file should be removed when disabled',
+  )
 }

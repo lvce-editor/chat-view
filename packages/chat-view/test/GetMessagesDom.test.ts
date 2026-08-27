@@ -132,3 +132,35 @@ test('getMessagesDom should render plain text messages even when parsed message 
     }),
   )
 })
+
+test('getMessagesDom should render configured in progress text', () => {
+  const result = getMessagesDom(
+    [
+      {
+        id: 'message-1',
+        role: 'assistant',
+        text: 'working',
+        time: '10:01',
+      },
+    ],
+    [],
+    '',
+    '',
+    'idle',
+    'https://platform.openai.com/api-keys',
+    '^sk-.+',
+    'idle',
+    0,
+    false,
+    true,
+    true,
+    'Generating',
+  )
+
+  expect(result).toContainEqual(
+    expect.objectContaining({
+      text: ' Generating',
+      type: VirtualDomElements.Text,
+    }),
+  )
+})

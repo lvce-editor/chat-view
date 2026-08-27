@@ -15,7 +15,7 @@ export const getMissingOpenApiApiKeyDom = (
   const isInvalid = openApiApiKeyInput !== '' && !new RegExp(inputPattern).test(openApiApiKeyInput)
   return getMissingApiKeyDom({
     getApiKeyText: Strings.getOpenApiApiKey(),
-    ...(isInvalid ? { inputClassName: ClassNames.InputInvalid } : {}),
+    ...(isInvalid && { inputClassName: ClassNames.InputInvalid }),
     inputName: OpenApiApiKeyInput,
     inputPattern,
     inputRequired: false,

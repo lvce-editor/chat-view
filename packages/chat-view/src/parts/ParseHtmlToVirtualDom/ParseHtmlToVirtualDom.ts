@@ -72,11 +72,11 @@ const parseAttributes = (token: string): Record<string, string> => {
   const matches = withoutTag.matchAll(attributeRegex)
 
   for (const match of matches) {
-    const name = String(match[1] || '').toLowerCase()
+    const name = (match[1] || '').toLowerCase()
     if (!name || name.startsWith('on')) {
       continue
     }
-    const value = String(match[2] ?? match[3] ?? match[4] ?? '')
+    const value = match[2] ?? match[3] ?? match[4] ?? ''
     attributes[name] = decodeEntities(value)
   }
 
@@ -277,6 +277,10 @@ const normalizeUrl = (url: string): string => {
 
 const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unknown> => {
   const attributes: Record<string, unknown> = {}
+  if (node.tagName === 'a') {
+    attributes.rel = 'noopener noreferrer'
+    attributes.target = '_blank'
+  }
   const className = node.attributes.class || node.attributes.classname
   if (className) {
     attributes.className = className
@@ -305,10 +309,10 @@ const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unk
   if (node.attributes.src) {
     attributes.src = normalizeUrl(node.attributes.src)
   }
-  if (node.attributes.target) {
+  if (node.tagName !== 'a' && node.attributes.target) {
     attributes.target = node.attributes.target
   }
-  if (node.attributes.rel) {
+  if (node.tagName !== 'a' && node.attributes.rel) {
     attributes.rel = node.attributes.rel
   }
   if ('checked' in node.attributes) {

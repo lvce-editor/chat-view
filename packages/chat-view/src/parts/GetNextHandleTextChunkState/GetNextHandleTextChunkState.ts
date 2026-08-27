@@ -11,11 +11,9 @@ export const getNextHandleTextChunkState = (
   return {
     ...latestState,
     messages,
-    ...(latestState.messagesAutoScrollEnabled
-      ? {
-          messagesScrollTop: getNextAutoScrollTop(latestState.messagesScrollTop),
-        }
-      : {}),
+    ...(latestState.messagesAutoScrollEnabled && {
+      messagesScrollTop: getNextAutoScrollTop(latestState.messagesScrollTop),
+    }),
     parsedMessages,
     sessions,
   }

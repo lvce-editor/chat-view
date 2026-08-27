@@ -24,8 +24,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await ChatDebug.openTabPayload()
 
   // assert
-  const payload = Locator('.ChatDebugViewDetailsBottom .EditorRows')
-
   await Command.execute('ChatDebug.shouldHavePayload', {
     input: [
       {

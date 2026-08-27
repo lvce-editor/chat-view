@@ -1,4 +1,4 @@
-import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../ChatSession/ChatSession.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
@@ -9,6 +9,7 @@ import { getSessionClassName } from '../GetSessionClassName/GetSessionClassName.
 import { getSessionLastActiveTime } from '../GetSessionLastActiveTime/GetSessionLastActiveTime.ts'
 import { getSessionStatusClassName } from '../GetSessionStatusClassName/GetSessionStatusClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getSessionDom = (
   session: ChatSession,
@@ -17,9 +18,21 @@ export const getSessionDom = (
   showFocusOutline = false,
 ): readonly VirtualDomNode[] => {
   const sessionClassName = getSessionClassName(focused, showFocusOutline)
+  const sessionInputName = InputName.getSessionInputName(session.id)
   const sessionStatusClassName = getSessionStatusClassName(session)
   const lastActiveTime = getSessionLastActiveTime(session)
   const formattedLastActiveTime = lastActiveTime ? formatChatListTime(lastActiveTime) : 'n/a'
+  const lastActiveTimeDom = showChatListTime
+    ? [
+        {
+          childCount: 1,
+          className: ClassNames.ChatListItemTime,
+          name: sessionInputName,
+          type: VirtualDomElements.Div,
+        },
+        text(formattedLastActiveTime),
+      ]
+    : []
   return [
     {
       childCount: 3,
@@ -35,27 +48,22 @@ export const getSessionDom = (
     {
       childCount: 1,
       className: ClassNames.ChatListItemLabel,
-      name: InputName.getSessionInputName(session.id),
+      name: sessionInputName,
+      onClick: DomEventListenerFunctions.HandleClickSession,
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
+      role: AriaRoles.Button,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Div,
     },
     {
       childCount: 1,
       className: ClassNames.ChatListItemTitle,
+      name: sessionInputName,
       type: VirtualDomElements.Div,
     },
     text(session.title),
-    ...(showChatListTime
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatListItemTime,
-            type: VirtualDomElements.Div,
-          },
-          text(formattedLastActiveTime),
-        ]
-      : []),
+    ...lastActiveTimeDom,
     ...getChatListItemActionsDom(session),
   ]
 }

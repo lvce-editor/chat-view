@@ -6,15 +6,14 @@ import { getModelLabel } from '../GetModelLabel/GetModelLabel.ts'
 import { getUsageCostDom } from '../GetUsageCostDom/GetUsageCostDom.ts'
 import { getUsageCostLabel } from '../GetUsageCostLabel/GetUsageCostLabel.ts'
 
+const chatModelPickerItemLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerItemLabel,
+  type: VirtualDomElements.Span,
+}
+
 const getChatModelPickerItemLabelDom = (model: ChatModel): readonly VirtualDomNode[] => {
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatModelPickerItemLabel,
-      type: VirtualDomElements.Span,
-    },
-    text(getModelLabel(model)),
-  ]
+  return [chatModelPickerItemLabelNode, text(getModelLabel(model))]
 }
 
 export const getChatModelListItemVirtualDom = (

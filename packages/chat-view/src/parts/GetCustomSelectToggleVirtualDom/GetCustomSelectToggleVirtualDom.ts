@@ -20,10 +20,11 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Div,
     }
   }
+  const chevronDom = selectChevronEnabled ? [getChevronDom(open)] : []
 
   return [
     {
-      ...(ariaControls ? { 'aria-controls': ariaControls } : {}),
+      ...(ariaControls && { 'aria-controls': ariaControls }),
       'aria-expanded': open ? 'true' : 'false',
       'aria-haspopup': 'true',
       'aria-label': ariaLabel,
@@ -44,6 +45,6 @@ export const getCustomSelectToggleVirtualDom = (
       type: VirtualDomElements.Span,
     },
     text(label),
-    ...(selectChevronEnabled ? [getChevronDom(open)] : []),
+    ...chevronDom,
   ]
 }

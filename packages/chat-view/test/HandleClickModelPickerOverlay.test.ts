@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-disabled-tests */
 import { expect, test } from '@jest/globals'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'

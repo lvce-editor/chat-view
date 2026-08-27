@@ -4,9 +4,22 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getGlobMatchCount } from '../GetGlobMatchCount/GetGlobMatchCount.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getReadFileTarget } from '../GetReadFileTarget/GetReadFileTarget.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
+
+const fileIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.FileIcon,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
 
 const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
   if (toolCall.name !== 'glob') {
@@ -17,7 +30,7 @@ const getGlobPatternLabel = (toolCall: ChatToolCall): string => {
     if (!parsed || typeof parsed !== 'object') {
       return ''
     }
-    const pattern = Reflect.get(parsed, 'pattern')
+    const pattern = getObjectProperty(parsed, 'pattern')
     return typeof pattern === 'string' && pattern ? ` "${pattern}"` : ''
   } catch {
     return ''
@@ -51,26 +64,21 @@ export const getToolCallReadFileVirtualDom = (toolCall: ChatToolCall): readonly 
   }
   const childCount = 3 + Number(Boolean(globPatternLabel)) + Number(Boolean(globMatchLabel)) + Number(Boolean(statusLabel))
   const fileNameClickableProps = getFileNameClickableProps(target.clickableUri)
+  const globPatternDom = globPatternLabel ? [text(globPatternLabel)] : []
+  const globMatchDom = globMatchLabel ? [text(globMatchLabel)] : []
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    fileIconNode,
+    toolCallNameNode,
     text(toolNameLabel),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps, title: target.title }),
-    ...(globPatternLabel ? [text(globPatternLabel)] : []),
-    ...(globMatchLabel ? [text(globMatchLabel)] : []),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...globPatternDom,
+    ...globMatchDom,
+    ...statusDom,
   ]
 }

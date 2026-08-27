@@ -19,6 +19,12 @@ import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequests
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
+const chatAttachmentLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatAttachmentLabel,
+  type: VirtualDomElements.Span,
+}
+
 const getChatAttachmentLabel = (displayType: ComposerAttachmentDisplayType): string => {
   switch (displayType) {
     case 'file':
@@ -83,11 +89,7 @@ const getChatAttachmentsDom = (attachments: readonly NonNullable<ChatMessage['at
           type: VirtualDomElements.Div,
         },
         ...previewDom,
-        {
-          childCount: 1,
-          className: ClassNames.ChatAttachmentLabel,
-          type: VirtualDomElements.Span,
-        },
+        chatAttachmentLabelNode,
         {
           text: `${getChatAttachmentLabel(attachment.displayType)} · ${attachment.name}`,
           type: VirtualDomElements.Text,
@@ -142,6 +144,12 @@ export const getChatMessageDom = (
     isOpenApiApiKeyMissingMessage || isOpenRouterApiKeyMissingMessage || isOpenRouterRequestFailedMessage || isOpenRouterTooManyRequestsMessage
       ? messageDomChildCount + 1 + toolCallsChildCount + attachmentsChildCount
       : messageDomChildCount + toolCallsChildCount + attachmentsChildCount
+  const missingOpenApiApiKeyDom = isOpenApiApiKeyMissingMessage
+    ? getMissingOpenApiApiKeyDom(openApiApiKeyInput, openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern)
+    : []
+  const missingOpenRouterApiKeyDom = isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []
+  const openRouterRequestFailedDom = isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []
+  const openRouterTooManyRequestsDom = isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []
   return [
     {
       childCount: 1,
@@ -158,11 +166,9 @@ export const getChatMessageDom = (
     ...toolCallsDom,
     ...messageDom,
     ...attachmentsDom,
-    ...(isOpenApiApiKeyMissingMessage
-      ? getMissingOpenApiApiKeyDom(openApiApiKeyInput, openApiApiKeyState, openApiApiKeysSettingsUrl, openApiApiKeyInputPattern)
-      : []),
-    ...(isOpenRouterApiKeyMissingMessage ? getMissingOpenRouterApiKeyDom(openRouterApiKeyState) : []),
-    ...(isOpenRouterRequestFailedMessage ? getOpenRouterRequestFailedDom() : []),
-    ...(isOpenRouterTooManyRequestsMessage ? getOpenRouterTooManyRequestsDom() : []),
+    ...missingOpenApiApiKeyDom,
+    ...missingOpenRouterApiKeyDom,
+    ...openRouterRequestFailedDom,
+    ...openRouterTooManyRequestsDom,
   ]
 }

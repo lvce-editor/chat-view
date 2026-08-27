@@ -6,6 +6,7 @@ import { getChatListToggleDom } from '../GetChatListToggleDom/GetChatListToggleD
 import { getEmptyChatSessionsDom } from '../GetEmptyChatSessionsDom/GetEmptyChatSessionsDom.ts'
 import { getSessionDom } from '../GetSessionDom/GetSessionDom.ts'
 import * as InputName from '../InputName/InputName.ts'
+import * as TabIndex from '../TabIndex/TabIndex.ts'
 
 export const getChatListDom = (
   sessions: readonly ChatSession[],
@@ -22,24 +23,24 @@ export const getChatListDom = (
   const hasHiddenSessions = sessions.length > 3
   const leadingSessions = hasHiddenSessions ? sessions.slice(0, 3) : sessions
   const trailingSessions = hasHiddenSessions && chatListExpanded ? sessions.slice(3) : []
+  const toggleDom = hasHiddenSessions ? getChatListToggleDom(chatListExpanded, sessions.length - 3) : []
   const childCount = leadingSessions.length + trailingSessions.length + (hasHiddenSessions ? 1 : 0)
   return [
     {
       childCount,
       className: ClassNames.ChatList,
       name: InputName.ChatList,
-      onClick: DomEventListenerFunctions.HandleClickList,
       onContextMenu: DomEventListenerFunctions.HandleListContextMenu,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onScroll: DomEventListenerFunctions.HandleChatListScroll,
       scrollTop: chatListScrollTop,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Ul,
     },
     ...leadingSessions.flatMap((session, index) =>
       getSessionDom(session, index === listFocusedIndex, showChatListTime, listFocusOutline && index === listFocusedIndex),
     ),
-    ...(hasHiddenSessions ? getChatListToggleDom(chatListExpanded, sessions.length - 3) : []),
+    ...toggleDom,
     ...trailingSessions.flatMap((session, index) => {
       const actualIndex = index + 3
       return getSessionDom(session, actualIndex === listFocusedIndex, showChatListTime, listFocusOutline && actualIndex === listFocusedIndex)

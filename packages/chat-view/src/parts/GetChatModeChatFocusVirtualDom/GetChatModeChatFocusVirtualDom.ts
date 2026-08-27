@@ -47,6 +47,7 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly hasSpaceForAgentModePicker: boolean
   readonly hasSpaceForRunModePicker: boolean
   readonly hiddenPrimaryControls?: readonly ComposerPrimaryControl[]
+  readonly inProgressMessage: string
   readonly messages?: readonly ChatMessage[]
   readonly messagesAutoScrollEnabled: boolean
   readonly messagesScrollTop?: number
@@ -90,6 +91,21 @@ export interface GetChatModeChatFocusVirtualDomOptions {
   readonly voiceDictationEnabled?: boolean
 }
 
+const chatFocusMainAreaNode: VirtualDomNode = {
+  childCount: 3,
+  className: ClassNames.ChatFocusMainArea,
+  type: VirtualDomElements.Div,
+}
+
+const projectSidebarSashNode: VirtualDomNode = {
+  'aria-orientation': 'vertical',
+  childCount: 0,
+  className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
+  onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
+  role: AriaRoles.Separator,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatModeChatFocusVirtualDom = ({
   addContextButtonEnabled,
   agentMode,
@@ -113,6 +129,7 @@ export const getChatModeChatFocusVirtualDom = ({
   hasSpaceForAgentModePicker: _hasSpaceForAgentModePicker,
   hasSpaceForRunModePicker: _hasSpaceForRunModePicker,
   hiddenPrimaryControls = [],
+  inProgressMessage,
   messages,
   messagesAutoScrollEnabled,
   messagesScrollTop = 0,
@@ -182,19 +199,8 @@ export const getChatModeChatFocusVirtualDom = ({
       type: VirtualDomElements.Div,
     },
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
-    {
-      'aria-orientation': 'vertical',
-      childCount: 0,
-      className: mergeClassNames(ClassNames.Sash, ClassNames.SashVertical),
-      onPointerDown: DomEventListenerFunctions.HandlePointerDownProjectSidebarSash,
-      role: AriaRoles.Separator,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 3,
-      className: ClassNames.ChatFocusMainArea,
-      type: VirtualDomElements.Div,
-    },
+    projectSidebarSashNode,
+    chatFocusMainAreaNode,
     ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
     ...getMessagesDom(
       selectedMessages,
@@ -208,6 +214,8 @@ export const getChatModeChatFocusVirtualDom = ({
       messagesScrollTop,
       useChatMathWorker,
       true,
+      false,
+      inProgressMessage,
     ),
     ...getChatSendAreaDom(
       composerValue,

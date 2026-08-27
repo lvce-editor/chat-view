@@ -1,5 +1,6 @@
 import type { PrototypeState } from '../../PrototypeState/PrototypeState.ts'
+import { getObjectProperty } from '../../GetObjectProperty/GetObjectProperty.ts'
 
 export const useOwnBackendEnabled = (state: Readonly<PrototypeState>): boolean => {
-  return Reflect.get(state, 'useOwnBackend') === true
+  return getObjectProperty(state, 'useOwnBackend') === true
 }

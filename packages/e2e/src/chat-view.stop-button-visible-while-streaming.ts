@@ -22,7 +22,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Command.execute('Chat.setInProgress', true)
 
   const stopButton = Locator('.IconButton[name="stop"]')
-  const stopIcon = Locator('.IconButton[name="stop"] .MaskIconDebugPause')
+  const stopIcon = Locator('.IconButton[name="stop"] .MaskIconStopCircle')
 
   await expect(stopButton).toBeVisible()
   // await expect(stopButton).toHaveAttribute('aria-label', 'stop')

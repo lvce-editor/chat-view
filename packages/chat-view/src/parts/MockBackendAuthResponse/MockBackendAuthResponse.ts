@@ -34,7 +34,7 @@ export const mockBackendAuthResponse = (state: ChatState, payload: MockBackendAu
   if (payload.type === 'error') {
     setNextResponse({
       delay,
-      ...(payload.errorName ? { errorName: payload.errorName } : {}),
+      ...(payload.errorName && { errorName: payload.errorName }),
       message: payload.message || 'Backend authentication failed.',
       type: 'error',
     })

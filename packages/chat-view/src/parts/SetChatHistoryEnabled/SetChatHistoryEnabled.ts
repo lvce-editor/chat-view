@@ -4,13 +4,11 @@ export const setChatHistoryEnabled = (state: ChatState, chatHistoryEnabled: bool
   return {
     ...state,
     chatHistoryEnabled,
-    ...(chatHistoryEnabled
-      ? {}
-      : {
-          chatInputHistoryDraft: '',
-          chatInputHistoryIndex: -1,
-          composerSelectionEnd: 0,
-          composerSelectionStart: 0,
-        }),
+    ...(!chatHistoryEnabled && {
+      chatInputHistoryDraft: '',
+      chatInputHistoryIndex: -1,
+      composerSelectionEnd: 0,
+      composerSelectionStart: 0,
+    }),
   }
 }

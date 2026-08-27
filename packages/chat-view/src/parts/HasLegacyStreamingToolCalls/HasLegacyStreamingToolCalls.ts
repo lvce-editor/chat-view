@@ -1,8 +1,10 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 export const hasLegacyStreamingToolCalls = (parsed: unknown): boolean => {
   if (!parsed || typeof parsed !== 'object') {
     return false
   }
-  const choices = Reflect.get(parsed, 'choices')
+  const choices = getObjectProperty(parsed, 'choices')
   if (!Array.isArray(choices) || choices.length === 0) {
     return false
   }
@@ -10,10 +12,10 @@ export const hasLegacyStreamingToolCalls = (parsed: unknown): boolean => {
   if (!firstChoice || typeof firstChoice !== 'object') {
     return false
   }
-  const delta = Reflect.get(firstChoice, 'delta')
+  const delta = getObjectProperty(firstChoice, 'delta')
   if (!delta || typeof delta !== 'object') {
     return false
   }
-  const toolCalls = Reflect.get(delta, 'tool_calls')
+  const toolCalls = getObjectProperty(delta, 'tool_calls')
   return Array.isArray(toolCalls) && toolCalls.length > 0
 }

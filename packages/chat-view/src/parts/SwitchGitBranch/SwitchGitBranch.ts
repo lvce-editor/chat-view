@@ -1,5 +1,4 @@
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.ts'
 
 export const SwitchGitBranch = 'Chat.switchGitBranch'
 
@@ -10,19 +9,9 @@ export interface SwitchGitBranchOptions {
   readonly workspaceUri: string
 }
 
-export const switchGitBranch = async ({ assetDir, branchName, platform, workspaceUri }: SwitchGitBranchOptions): Promise<void> => {
-  await ExtensionHostShared.executeProvider({
-    assetDir,
-    event: `onCommand:${SwitchGitBranch}`,
-    method: CommandExecute,
-    noProviderFoundMessage: 'No git branch switch command found',
-    params: [
-      SwitchGitBranch,
-      {
-        branchName,
-        workspaceUri,
-      },
-    ],
-    platform,
+export const switchGitBranch = async ({ branchName, workspaceUri }: SwitchGitBranchOptions): Promise<void> => {
+  await ExtensionManagement.executeCommand(SwitchGitBranch, {
+    branchName,
+    workspaceUri,
   })
 }
