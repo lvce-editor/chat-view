@@ -16,6 +16,27 @@ const focusHeaderProjectStyle = 'overflow:hidden;text-overflow:ellipsis;white-sp
 
 const focusHeaderActionsStyle = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;'
 
+const chatFocusHeaderNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatFocusHeader,
+  style: focusHeaderStyle,
+  type: VirtualDomElements.Header,
+}
+
+const chatHeaderLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatHeaderLabel,
+  style: focusHeaderTitleStyle,
+  type: VirtualDomElements.H2,
+}
+
+const chatFocusProjectNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
+  style: focusHeaderProjectStyle,
+  type: VirtualDomElements.Span,
+}
+
 export const getChatHeaderDomFocusMode = (
   selectedSessionTitle: string,
   selectedProjectName: string,
@@ -56,37 +77,18 @@ export const getChatHeaderDomFocusMode = (
     },
   ] as const
   const hasProjectName = !!selectedProjectName
+  const projectNameDom = hasProjectName ? [chatFocusProjectNode, text(selectedProjectName)] : []
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatFocusHeader,
-      style: focusHeaderStyle,
-      type: VirtualDomElements.Header,
-    },
+    chatFocusHeaderNode,
     {
       childCount: hasProjectName ? 2 : 1,
       className: ClassNames.ChatName,
       style: focusHeaderMetaStyle,
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeaderLabel,
-      style: focusHeaderTitleStyle,
-      type: VirtualDomElements.H2,
-    },
+    chatHeaderLabelNode,
     text(selectedSessionTitle),
-    ...(hasProjectName
-      ? [
-          {
-            childCount: 1,
-            className: mergeClassNames(ClassNames.LabelDetail, ClassNames.ChatFocusProject),
-            style: focusHeaderProjectStyle,
-            type: VirtualDomElements.Span,
-          },
-          text(selectedProjectName),
-        ]
-      : []),
+    ...projectNameDom,
     {
       'aria-label': 'focus header actions',
       childCount: items.length,

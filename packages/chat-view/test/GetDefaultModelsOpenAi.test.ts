@@ -1,0 +1,17 @@
+import { expect, test } from '@jest/globals'
+import { getDefaultModelsOpenAi } from '../src/parts/GetDefaultModels/GetDefaultModelsOpenAi/GetDefaultModelsOpenAi.ts'
+
+test('getDefaultModelsOpenAi should include the supported OpenAI default models', () => {
+  const result = getDefaultModelsOpenAi()
+
+  expect(result).toEqual([
+    { id: 'openapi/codex-5.3', name: 'Codex 5.3', provider: 'openApi', supportsReasoningEffort: true, usageCost: 1 },
+    { id: 'openapi/gpt-5.5', name: 'GPT-5.5', provider: 'openApi', supportsReasoningEffort: true },
+    { id: 'openapi/gpt-5.4', name: 'GPT-5.4', provider: 'openApi', supportsReasoningEffort: true },
+    { id: 'openapi/gpt-5.4-mini', name: 'GPT-5.4 Mini', provider: 'openApi', supportsReasoningEffort: true },
+    { id: 'openapi/gpt-5-mini', name: 'GPT-5 Mini', provider: 'openApi', supportsReasoningEffort: true },
+    { id: 'openapi/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'openApi', supportsImages: true, usageCost: 1 },
+    { id: 'openapi/gpt-4o', name: 'GPT-4o', provider: 'openApi', supportsImages: true, usageCost: 3 },
+    { id: 'openapi/gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openApi', supportsImages: true, usageCost: 1 },
+  ])
+})

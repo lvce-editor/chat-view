@@ -9,6 +9,14 @@ import * as InputName from '../InputName/InputName.ts'
 const itemHeight = 28
 const messageHeight = 32
 
+const chatModelPickerContainerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatModelPickerContainer,
+  onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
 const getCurrentBranchLabel = (gitBranches: readonly GitBranch[], fallbackBranchName: string): string => {
   const currentBranch = gitBranches.find((branch) => branch.current)
   if (currentBranch) {
@@ -61,6 +69,25 @@ export const getGitBranchPickerVirtualDom = (
   const messageDom = getBranchPickerMessageDom(gitBranches, gitBranchPickerErrorMessage)
   const showMessage = messageDom.length > 0
   const popOverHeight = gitBranches.length * itemHeight + (showMessage ? messageHeight : 0)
+  const popOverDom = gitBranchPickerOpen
+    ? [
+        chatModelPickerContainerNode,
+        {
+          childCount: (showMessage ? 1 : 0) + 1,
+          className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
+          style: `height: ${popOverHeight}px;`,
+          type: VirtualDomElements.Div,
+        },
+        ...messageDom,
+        {
+          childCount: branchOptions.length / 4,
+          className: ClassNames.ChatModelPickerList,
+          role: AriaRoles.ListBox,
+          type: VirtualDomElements.Ul,
+        },
+        ...branchOptions,
+      ]
+    : []
   return [
     ...getCustomSelectPickerToggleVirtualDom(
       label,
@@ -72,29 +99,6 @@ export const getGitBranchPickerVirtualDom = (
       undefined,
       selectChevronEnabled,
     ),
-    ...(gitBranchPickerOpen
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ChatModelPickerContainer,
-            onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
-            type: VirtualDomElements.Div,
-          },
-          {
-            childCount: (showMessage ? 1 : 0) + 1,
-            className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
-            style: `height: ${popOverHeight}px;`,
-            type: VirtualDomElements.Div,
-          },
-          ...messageDom,
-          {
-            childCount: branchOptions.length / 4,
-            className: ClassNames.ChatModelPickerList,
-            role: AriaRoles.ListBox,
-            type: VirtualDomElements.Ul,
-          },
-          ...branchOptions,
-        ]
-      : []),
+    ...popOverDom,
   ]
 }

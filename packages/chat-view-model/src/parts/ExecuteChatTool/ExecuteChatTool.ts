@@ -2,19 +2,20 @@ import { RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ExecuteToolOptions } from '../Types/Types.ts'
 import { appendChatViewEvent } from '../ChatSessionStorage/ChatSessionStorage.ts'
 import * as ChatToolRequest from '../ChatToolRequest/ChatToolRequest.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { isPathTraversalAttempt } from '../IsPathTraversalAttempt/IsPathTraversalAttempt.ts'
 import { normalizeRelativePath } from '../NormalizeRelativePath/NormalizeRelativePath.ts'
 import { stringifyToolOutput } from '../StringifyToolOutput/StringifyToolOutput.ts'
 import { isToolEnabled } from '../ToolEnablement/ToolEnablement.ts'
 
 const hasWriteFileLineCounts = (value: object): boolean => {
-  const linesAdded = Reflect.get(value, 'linesAdded')
-  const linesDeleted = Reflect.get(value, 'linesDeleted')
+  const linesAdded = getObjectProperty(value, 'linesAdded')
+  const linesDeleted = getObjectProperty(value, 'linesDeleted')
   return typeof linesAdded === 'number' || typeof linesDeleted === 'number'
 }
 
 const hasToolError = (value: object): boolean => {
-  const error = Reflect.get(value, 'error')
+  const error = getObjectProperty(value, 'error')
   return typeof error === 'string' && error.trim().length > 0
 }
 
@@ -56,15 +57,15 @@ const parseWriteFileArguments = (rawArguments: unknown): { readonly content: str
   if (!parsed || typeof parsed !== 'object') {
     return undefined
   }
-  const content = Reflect.get(parsed, 'content')
+  const content = getObjectProperty(parsed, 'content')
   if (typeof content !== 'string') {
     return undefined
   }
-  const uri = Reflect.get(parsed, 'uri')
+  const uri = getObjectProperty(parsed, 'uri')
   if (typeof uri === 'string' && uri) {
     return { content, target: uri }
   }
-  const path = Reflect.get(parsed, 'path')
+  const path = getObjectProperty(parsed, 'path')
   if (typeof path !== 'string' || !path || isPathTraversalAttempt(path)) {
     return undefined
   }
@@ -152,11 +153,9 @@ export const executeChatTool = async (name: string, rawArguments: unknown, optio
   const executionOptions = {
     assetDir: options.assetDir,
     platform: options.platform,
-    ...(options.workspaceUri
-      ? {
-          workspaceUri: options.workspaceUri,
-        }
-      : {}),
+    ...(options.workspaceUri && {
+      workspaceUri: options.workspaceUri,
+    }),
   }
   const executionId = options.toolCallId || `${name}-${Date.now()}`
   const startedAt = new Date().toISOString()

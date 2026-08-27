@@ -20,7 +20,7 @@ export const getToolCallFileNameDom = (
     {
       childCount: 1,
       className: ClassNames.ChatToolCallReadFileLink,
-      ...(resolvedTitle === undefined ? {} : { title: resolvedTitle }),
+      ...(resolvedTitle !== undefined && { title: resolvedTitle }),
       ...clickableProps,
       type: VirtualDomElements.Span,
     },

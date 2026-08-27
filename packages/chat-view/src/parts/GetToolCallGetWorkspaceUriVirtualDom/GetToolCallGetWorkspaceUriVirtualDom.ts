@@ -6,6 +6,18 @@ import { getFileNameFromUri } from '../GetFileNameFromUri/GetFileNameFromUri.ts'
 import { getToolCallFileNameDom } from '../GetToolCallFileNameDom/GetToolCallFileNameDom.ts'
 import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallStatusLabel.ts'
 
+const fileIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: ClassNames.FileIcon,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
 export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (!toolCall.result) {
     return []
@@ -16,24 +28,17 @@ export const getToolCallGetWorkspaceUriVirtualDom = (toolCall: ChatToolCall): re
     'data-uri': toolCall.result,
     onClick: DomEventListenerFunctions.HandleClickFileName,
   }
+  const statusDom = statusLabel ? [text(statusLabel)] : []
   return [
     {
       childCount: statusLabel ? 4 : 3,
       className: ClassNames.ChatOrderedListItem,
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 0,
-      className: ClassNames.FileIcon,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    fileIconNode,
+    toolCallNameNode,
     text('get_workspace_uri '),
     ...getToolCallFileNameDom(fileName, { clickableProps: fileNameClickableProps }),
-    ...(statusLabel ? [text(statusLabel)] : []),
+    ...statusDom,
   ]
 }

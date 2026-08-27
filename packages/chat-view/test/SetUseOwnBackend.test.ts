@@ -6,8 +6,8 @@ import * as SetUseOwnBackend from '../src/parts/SetUseOwnBackend/SetUseOwnBacken
 test('createDefaultState enables useOwnBackend by default', () => {
   const state = CreateDefaultState.createDefaultState()
   expect(state.useOwnBackend).toBe(true)
+  expect(state.backendUrl).toBe('https://lvce-editor.dev')
 })
-
 test('setUseOwnBackend should update state and persist by default', async () => {
   using mockRpc = RendererWorker.registerMockRpc({
     'Preferences.update': async () => {},

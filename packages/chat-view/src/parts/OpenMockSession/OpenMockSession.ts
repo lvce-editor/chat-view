@@ -19,26 +19,18 @@ const applySessionOptions = (session: ChatSession, options: OpenMockSessionOptio
   }
   return {
     ...session,
-    ...(options.branchName
-      ? {
-          branchName: options.branchName,
-        }
-      : {}),
-    ...(options.lastActiveTime
-      ? {
-          lastActiveTime: options.lastActiveTime,
-        }
-      : {}),
-    ...(options.projectId
-      ? {
-          projectId: options.projectId,
-        }
-      : {}),
-    ...(options.workspaceUri
-      ? {
-          workspaceUri: options.workspaceUri,
-        }
-      : {}),
+    ...(options.branchName && {
+      branchName: options.branchName,
+    }),
+    ...(options.lastActiveTime && {
+      lastActiveTime: options.lastActiveTime,
+    }),
+    ...(options.projectId && {
+      projectId: options.projectId,
+    }),
+    ...(options.workspaceUri && {
+      workspaceUri: options.workspaceUri,
+    }),
   }
 }
 

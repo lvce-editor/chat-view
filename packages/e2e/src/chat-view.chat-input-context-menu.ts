@@ -12,6 +12,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
 
   // act
   await Command.execute('Chat.handleChatInputContextMenu', 0, 0)
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   // assert
   const renameMenuItem = Locator('.MenuItem').nth(0)

@@ -14,7 +14,7 @@ export const test: Test = async ({ Chat, Command, expect, FileSystem, Locator, W
   await Chat.openModelPicker()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
-  await expect(items).toHaveCount(19)
+  await expect(items).toHaveCount(21)
 
   const searchInput = Locator('.ChatModelPicker [name="model-picker-search"]')
   await expect(searchInput).toBeVisible()

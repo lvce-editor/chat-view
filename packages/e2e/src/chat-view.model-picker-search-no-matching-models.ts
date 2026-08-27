@@ -8,7 +8,7 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.openModelPicker()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
-  await expect(items).toHaveCount(19)
+  await expect(items).toHaveCount(21)
 
   // act
   await Command.execute(`Chat.handleInput`, 'model-picker-search', 'not-found-query')

@@ -24,6 +24,21 @@ test('loadPreferences enables useOwnBackend by default', async () => {
 
   const result = await loadPreferences()
   expect(result.useOwnBackend).toBe(true)
+  expect(result.backendUrl).toBe('https://lvce-editor.dev')
+})
+
+test('loadPreferences keeps explicit backendUrl preference', async () => {
+  using _ = RendererWorker.registerMockRpc({
+    'Preferences.get': async (key: string) => {
+      if (key === 'chat.backendUrl') {
+        return 'https://example.com'
+      }
+      return undefined
+    },
+  })
+
+  const result = await loadPreferences()
+  expect(result.backendUrl).toBe('https://example.com')
 })
 
 test('loadPreferences keeps explicit useOwnBackend disablement', async () => {

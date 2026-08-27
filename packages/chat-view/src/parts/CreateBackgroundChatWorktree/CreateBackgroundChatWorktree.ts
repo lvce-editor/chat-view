@@ -1,8 +1,7 @@
 /* cspell:words worktree */
 
 import { CreateBackgroundWorktree } from '../BackgroundChatCommandIds/BackgroundChatCommandIds.ts'
-import * as ExtensionHostShared from '../ExtensionHost/ExtensionHostShared.ts'
-import { CommandExecute } from '../ExtensionHostCommandType/ExtensionHostCommandType.ts'
+import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.ts'
 
 export interface CreateBackgroundChatWorktreeOptions {
   readonly assetDir: string
@@ -18,25 +17,13 @@ export interface BackgroundChatWorktree {
 }
 
 export const createBackgroundChatWorktree = async ({
-  assetDir,
-  platform,
   projectUri,
   sessionId,
   title,
 }: CreateBackgroundChatWorktreeOptions): Promise<BackgroundChatWorktree> => {
-  return ExtensionHostShared.executeProvider({
-    assetDir,
-    event: `onCommand:${CreateBackgroundWorktree}`,
-    method: CommandExecute,
-    noProviderFoundMessage: 'No background worktree command found',
-    params: [
-      CreateBackgroundWorktree,
-      {
-        projectUri,
-        sessionId,
-        title,
-      },
-    ],
-    platform,
+  return ExtensionManagement.executeCommand(CreateBackgroundWorktree, {
+    projectUri,
+    sessionId,
+    title,
   }) as Promise<BackgroundChatWorktree>
 }

@@ -13,7 +13,7 @@ export const test: Test = async ({ Chat, expect, Locator }) => {
   const selectedItem = Locator('.ChatModelPicker .ChatModelPickerItem[data-id="test"]')
 
   await expect(pickerList).toHaveAttribute('role', 'listbox')
-  await expect(items).toHaveCount(19)
-  await expect(optionItems).toHaveCount(19)
+  await expect(items).toHaveCount(21)
+  await expect(optionItems).toHaveCount(21)
   await expect(selectedItem).toHaveAttribute('role', 'option')
 }

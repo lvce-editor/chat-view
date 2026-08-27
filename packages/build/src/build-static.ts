@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url'
 import { bundleJs } from './bundleJs.ts'
 import { root } from './root.ts'
 
-const sharedProcessPath = join(root, 'packages', 'server', 'node_modules', '@lvce-editor', 'shared-process', 'index.js')
+const sharedProcessPath = join(root, 'node_modules', '@lvce-editor', 'shared-process', 'index.js')
 
 const sharedProcessUrl = pathToFileURL(sharedProcessPath).toString()
 

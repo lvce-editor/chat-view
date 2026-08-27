@@ -4,6 +4,13 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getSendButtonClassName } from '../GetSendButtonClassName/GetSendButtonClassName.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const submitIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowUp),
+  role: AriaRoles.None,
+  type: VirtualDomElements.Div,
+}
+
 export const getSubmitButtonDom = (isSendDisabled: boolean): readonly VirtualDomNode[] => {
   const sendButtonClassName = getSendButtonClassName(isSendDisabled)
   return [
@@ -16,11 +23,6 @@ export const getSubmitButtonDom = (isSendDisabled: boolean): readonly VirtualDom
       title: Strings.sendMessage(),
       type: VirtualDomElements.Button,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArrowUp),
-      role: AriaRoles.None,
-      type: VirtualDomElements.Div,
-    },
+    submitIconNode,
   ]
 }

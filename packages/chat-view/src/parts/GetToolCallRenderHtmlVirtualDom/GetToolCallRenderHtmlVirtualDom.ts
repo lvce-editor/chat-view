@@ -5,6 +5,30 @@ import { getToolCallStatusLabel } from '../GetToolCallStatusLabel/GetToolCallSta
 import { parseHtmlToVirtualDomWithRootCount } from '../ParseHtmlToVirtualDom/ParseHtmlToVirtualDom.ts'
 import { parseRenderHtmlArguments } from '../ParseRenderHtmlArguments/ParseRenderHtmlArguments.ts'
 
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
+const chatToolCallRenderHtmlLabelNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatToolCallRenderHtmlLabel,
+  type: VirtualDomElements.Div,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
+const chatToolCallRenderHtmlContentNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatToolCallRenderHtmlContent,
+  type: VirtualDomElements.Div,
+}
+
 export const getToolCallRenderHtmlVirtualDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   const parsed = parseRenderHtmlArguments(toolCall.arguments)
   if (!parsed) {
@@ -17,28 +41,12 @@ export const getToolCallRenderHtmlVirtualDom = (toolCall: ChatToolCall): readonl
   const { rootChildCount } = parsedHtml
 
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatOrderedListItem,
-      type: VirtualDomElements.Li,
-    },
-    {
-      childCount: 2,
-      className: ClassNames.ChatToolCallRenderHtmlLabel,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    chatOrderedListItemNode,
+    chatToolCallRenderHtmlLabelNode,
+    toolCallNameNode,
     text(toolCall.name),
     text(suffix),
-    {
-      childCount: 1,
-      className: ClassNames.ChatToolCallRenderHtmlContent,
-      type: VirtualDomElements.Div,
-    },
+    chatToolCallRenderHtmlContentNode,
     {
       childCount: rootChildCount,
       className: ClassNames.ChatToolCallRenderHtmlBody,

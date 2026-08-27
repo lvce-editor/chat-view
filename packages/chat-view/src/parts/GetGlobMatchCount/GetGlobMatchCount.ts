@@ -1,9 +1,11 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 const getNumericCount = (parsed: object): number | undefined => {
-  const count = Reflect.get(parsed, 'count')
+  const count = getObjectProperty(parsed, 'count')
   if (typeof count === 'number' && Number.isFinite(count)) {
     return count
   }
-  const matchCount = Reflect.get(parsed, 'matchCount')
+  const matchCount = getObjectProperty(parsed, 'matchCount')
   if (typeof matchCount === 'number' && Number.isFinite(matchCount)) {
     return matchCount
   }
@@ -11,15 +13,15 @@ const getNumericCount = (parsed: object): number | undefined => {
 }
 
 const getArrayCount = (parsed: object): number | undefined => {
-  const matches = Reflect.get(parsed, 'matches')
+  const matches = getObjectProperty(parsed, 'matches')
   if (Array.isArray(matches)) {
     return matches.length
   }
-  const files = Reflect.get(parsed, 'files')
+  const files = getObjectProperty(parsed, 'files')
   if (Array.isArray(files)) {
     return files.length
   }
-  const results = Reflect.get(parsed, 'results')
+  const results = getObjectProperty(parsed, 'results')
   if (Array.isArray(results)) {
     return results.length
   }

@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.two-messages-and-open-debug-payload'
 
-export const skip = 1
-
 export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem, Locator, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -26,8 +24,6 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
   await ChatDebug.openTabPayload()
 
   // assert
-  const payload = Locator('.ChatDebugViewDetailsBottom .EditorRows')
-
   await Command.execute('ChatDebug.shouldHavePayload', {
     input: [
       {
@@ -48,7 +44,7 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
         content: [
           {
             text: 'Mock AI response: I received "hello from e2e".',
-            type: 'input_text',
+            type: 'output_text',
           },
         ],
         role: 'assistant',
@@ -56,7 +52,4 @@ export const test: Test = async ({ Chat, ChatDebug, Command, expect, FileSystem,
       { content: [{ text: 'second message', type: 'input_text' }], role: 'user' },
     ],
   })
-  // TODO verify items are visible
-  // const rows = Locator('.TableBody .TableRow')
-  // await expect(rows).toHaveCount(4)
 }
