@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatStorageWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatStorageWorker, DragAndDropWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import type { ChatViewEvent } from '../src/parts/ChatViewEvent/ChatViewEvent.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
@@ -88,6 +88,46 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-1' })],
     ['ChatStorage.getEvents', 'session-1'],
   ])
+})
+
+test('handleDropFiles resolves an opt-in drop session through drag-and-drop-worker', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerDropActive: true,
+    selectedSessionId: 'session-drop-id',
+  }
+  const file = createFile('notes.txt', 'text/plain', 'hello')
+  const fileHandle = createFileHandle(file)
+  using _storageRpc = ChatStorageWorker.registerMockRpc({
+    'ChatStorage.appendEvent'() {},
+  })
+  using dragRpc = DragAndDropWorker.registerMockRpc({
+    'DragAndDrop.getDroppedFileHandlesByDropId'() {
+      return [fileHandle]
+    },
+  })
+
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 31)
+
+  expect(newState.composerAttachments).toHaveLength(1)
+  expect(newState.composerAttachments[0].name).toBe('notes.txt')
+  expect(dragRpc.invocations).toEqual([['DragAndDrop.getDroppedFileHandlesByDropId', 31]])
+})
+
+test('handleDropFiles discards an unused opt-in drop session', async () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    composerDropActive: true,
+    selectedSessionId: '',
+  }
+  using dragRpc = DragAndDropWorker.registerMockRpc({
+    'DragAndDrop.discardDrop'() {},
+  })
+
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 32)
+
+  expect(newState.composerDropActive).toBe(false)
+  expect(dragRpc.invocations).toEqual([['DragAndDrop.discardDrop', 32]])
 })
 
 test('handleDropFiles is no-op when no session is selected', async () => {

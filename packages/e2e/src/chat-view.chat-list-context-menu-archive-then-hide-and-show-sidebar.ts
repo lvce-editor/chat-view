@@ -19,6 +19,7 @@ export const test: Test = async ({ Chat, Command, ContextMenu, expect, FileSyste
   await Chat.handleClickBack()
   const chatListItems = Locator('.ChatList .ChatListItem')
   await Chat.handleChatListContextMenu(0, 70)
+  await new Promise((resolve) => setTimeout(resolve, 500))
   const archiveMenuItem = Locator('.MenuItem').nth(1)
   await expect(archiveMenuItem).toBeVisible()
   await expect(archiveMenuItem).toHaveText('Archive')

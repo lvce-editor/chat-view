@@ -1,10 +1,23 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { ChatSession } from '../../ChatSession/ChatSession.ts'
 import type { Project } from '../../Project/Project.ts'
 import * as ClassNames from '../../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../../InputName/InputName.ts'
+import * as TabIndex from '../../TabIndex/TabIndex.ts'
 import { getProjectSessionDom } from '../GetProjectSessionDom/GetProjectSessionDom.ts'
+
+const projectListItemActionsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ProjectListItemActions,
+  type: VirtualDomElements.Div,
+}
+
+const projectListFolderIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
+  type: VirtualDomElements.Div,
+}
 
 export const getProjectGroupDom = (
   project: Project,
@@ -18,6 +31,7 @@ export const getProjectGroupDom = (
     ClassNames.ProjectListItem,
     project.id === selectedProjectId ? ClassNames.ProjectListItemSelected : ClassNames.Empty,
   )
+  const sessionDom = expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []
   return [
     {
       childCount: 1 + (expanded ? sessions.length : 0),
@@ -35,7 +49,8 @@ export const getProjectGroupDom = (
       name: InputName.getProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
       onContextMenu: DomEventListenerFunctions.HandleProjectListContextMenu,
-      tabIndex: 0,
+      role: AriaRoles.Button,
+      tabIndex: TabIndex.Focusable,
       type: VirtualDomElements.Div,
     },
     {
@@ -47,27 +62,19 @@ export const getProjectGroupDom = (
       ),
       type: VirtualDomElements.Div,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
-      type: VirtualDomElements.Div,
-    },
+    projectListFolderIconNode,
     text(project.name),
-    {
-      childCount: 1,
-      className: ClassNames.ProjectListItemActions,
-      type: VirtualDomElements.Div,
-    },
+    projectListItemActionsNode,
     {
       childCount: 1,
       className: ClassNames.ProjectListItemAddChatButton,
       name: InputName.getCreateSessionInProjectInputName(project.id),
       onClick: DomEventListenerFunctions.HandleClick,
-      tabIndex: 0,
+      tabIndex: TabIndex.Focusable,
       title: 'New chat in this project',
       type: VirtualDomElements.Button,
     },
     text('+'),
-    ...(expanded ? sessions.flatMap((session) => getProjectSessionDom(session, selectedSessionId)) : []),
+    ...sessionDom,
   ]
 }

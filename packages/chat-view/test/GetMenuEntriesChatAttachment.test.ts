@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-disabled-tests */
 import { expect, test } from '@jest/globals'
 import * as GetMenuEntriesChatAttachment from '../src/parts/GetMenuEntriesChatAttachment/GetMenuEntriesChatAttachment.ts'
 

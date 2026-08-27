@@ -2,6 +2,7 @@ import { terminate } from '@lvce-editor/viewlet-registry'
 import { applyViewModelState } from '../ApplyViewModelState/ApplyViewModelState.ts'
 import * as ChatInputHistoryDown from '../ChatInputHistoryDown/ChatInputHistoryDown.ts'
 import * as ChatInputHistoryUp from '../ChatInputHistoryUp/ChatInputHistoryUp.ts'
+import * as ChatListAccept from '../ChatListAccept/ChatListAccept.ts'
 import * as ChatListFocusFirst from '../ChatListFocusFirst/ChatListFocusFirst.ts'
 import * as ChatListFocusLast from '../ChatListFocusLast/ChatListFocusLast.ts'
 import * as ChatListFocusNext from '../ChatListFocusNext/ChatListFocusNext.ts'
@@ -57,6 +58,7 @@ import * as HandleErrorComposerAttachmentPreviewOverlay from '../HandleErrorComp
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleInputFocus from '../HandleInputFocus/HandleInputFocus.ts'
 import * as HandleKeyDown from '../HandleKeyDown/HandleKeyDown.ts'
+import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import * as HandleMessagesContextMenu from '../HandleMessagesContextMenu/HandleMessagesContextMenu.ts'
 import * as HandleMissingApiKeySubmit from '../HandleMissingApiKeySubmit/HandleMissingApiKeySubmit.ts'
 import * as HandleModelChange from '../HandleModelChange/HandleModelChange.ts'
@@ -86,6 +88,7 @@ import * as MockOpenApiRequestGetAll from '../MockOpenApiRequestGetAll/MockOpenA
 import * as MockOpenApiRequestReset from '../MockOpenApiRequestReset/MockOpenApiRequestReset.ts'
 import * as MockOpenApiSetHttpErrorResponse from '../MockOpenApiSetHttpErrorResponse/MockOpenApiSetHttpErrorResponse.ts'
 import * as MockOpenApiSetRequestFailedResponse from '../MockOpenApiSetRequestFailedResponse/MockOpenApiSetRequestFailedResponse.ts'
+import * as MockOpenApiSetResponse from '../MockOpenApiSetResponse/MockOpenApiSetResponse.ts'
 import * as MockOpenApiStreamFinish from '../MockOpenApiStreamFinish/MockOpenApiStreamFinish.ts'
 import * as MockOpenApiStreamPushChunk from '../MockOpenApiStreamPushChunk/MockOpenApiStreamPushChunk.ts'
 import * as MockOpenApiStreamReset from '../MockOpenApiStreamReset/MockOpenApiStreamReset.ts'
@@ -140,10 +143,14 @@ import * as ShowComposerAttachmentPreviewOverlay from '../ShowComposerAttachment
 import { getCommandIds, wrapCommand, wrapGetter } from '../StatusBarStates/StatusBarStates.ts'
 import * as UseMockApi from '../UseMockApi/UseMockApi.ts'
 
+const handleDirectMessagePort = (port: MessagePort, setAsRendererProcess = true): Promise<void> =>
+  handleMessagePort(port, commandMap, setAsRendererProcess)
+
 export const commandMap = {
   'Chat.applyViewModelState': wrapCommand(applyViewModelState),
   'Chat.chatInputHistoryDown': wrapCommand(ChatInputHistoryDown.chatInputHistoryDown),
   'Chat.chatInputHistoryUp': wrapCommand(ChatInputHistoryUp.chatInputHistoryUp),
+  'Chat.chatListAccept': wrapCommand(ChatListAccept.chatListAccept),
   'Chat.chatListFocusFirst': wrapCommand(ChatListFocusFirst.chatListFocusFirst),
   'Chat.chatListFocusLast': wrapCommand(ChatListFocusLast.chatListFocusLast),
   'Chat.chatListFocusNext': wrapCommand(ChatListFocusNext.chatListFocusNext),
@@ -206,6 +213,7 @@ export const commandMap = {
   'Chat.handleInputCopy': wrapCommand(CopyInput.copyInput),
   'Chat.handleInputFocus': wrapCommand(HandleInputFocus.handleInputFocus),
   'Chat.handleKeyDown': wrapCommand(HandleKeyDown.handleKeyDown),
+  'Chat.handleMessagePort': handleDirectMessagePort,
   'Chat.handleMessagesContextMenu': wrapCommand(HandleMessagesContextMenu.handleMessagesContextMenu),
   'Chat.handleMessagesScroll': wrapCommand(HandleScroll.handleMessagesScroll),
   'Chat.handleMissingOpenAiApiKeyFormSubmit': wrapCommand(HandleMissingApiKeySubmit.handleMissingOpenAiApiKeyFormSubmit),
@@ -238,6 +246,7 @@ export const commandMap = {
   'Chat.mockOpenApiRequestReset': wrapCommand(MockOpenApiRequestReset.mockOpenApiRequestReset),
   'Chat.mockOpenApiSetHttpErrorResponse': wrapCommand(MockOpenApiSetHttpErrorResponse.mockOpenApiSetHttpErrorResponse),
   'Chat.mockOpenApiSetRequestFailedResponse': wrapCommand(MockOpenApiSetRequestFailedResponse.mockOpenApiSetRequestFailedResponse),
+  'Chat.mockOpenApiSetResponse': wrapCommand(MockOpenApiSetResponse.mockOpenApiSetResponse),
   'Chat.mockOpenApiStreamFinish': wrapCommand(MockOpenApiStreamFinish.mockOpenApiStreamFinish),
   'Chat.mockOpenApiStreamPushChunk': wrapCommand(MockOpenApiStreamPushChunk.mockOpenApiStreamPushChunk),
   'Chat.mockOpenApiStreamReset': wrapCommand(MockOpenApiStreamReset.mockOpenApiStreamReset),

@@ -4,6 +4,25 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getBackButtonVirtualDom } from '../GetBackButtonVirtualDom/GetBackButtonVirtualDom.ts'
 import { getChatHeaderActionsDom } from '../GetChatHeaderActionsDom/GetChatHeaderActionsDom.ts'
 
+const chatHeaderNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatHeader,
+  onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
+  type: VirtualDomElements.Header,
+}
+
+const chatNameNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatName,
+  type: VirtualDomElements.Div,
+}
+
+const chatHeaderLabelNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatHeaderLabel,
+  type: VirtualDomElements.H2,
+}
+
 export const getChatHeaderDomDetailMode = (
   selectedSessionTitle: string,
   _authEnabled = false,
@@ -12,23 +31,10 @@ export const getChatHeaderDomDetailMode = (
   _authErrorMessage = '',
 ): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatHeader,
-      onContextMenu: DomEventListenerFunctions.HandleChatHeaderContextMenu,
-      type: VirtualDomElements.Header,
-    },
-    {
-      childCount: 2,
-      className: ClassNames.ChatName,
-      type: VirtualDomElements.Div,
-    },
+    chatHeaderNode,
+    chatNameNode,
     ...getBackButtonVirtualDom(),
-    {
-      childCount: 1,
-      className: ClassNames.ChatHeaderLabel,
-      type: VirtualDomElements.H2,
-    },
+    chatHeaderLabelNode,
     text(selectedSessionTitle),
     ...getChatHeaderActionsDom('detail'),
   ]

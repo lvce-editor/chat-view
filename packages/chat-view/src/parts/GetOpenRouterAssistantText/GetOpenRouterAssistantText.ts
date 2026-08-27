@@ -6,6 +6,7 @@ import { defaultAgentMode, type AgentMode } from '../AgentMode/AgentMode.ts'
 import { makeApiRequest } from '../ChatNetworkRequest/ChatNetworkRequest.ts'
 import { executeChatTool, getBasicChatTools } from '../ChatTools/ChatTools.ts'
 import { getClientRequestIdHeader } from '../GetClientRequestIdHeader/GetClientRequestIdHeader.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getOpenRouterApiEndpoint } from '../GetOpenRouterApiEndpoint/GetOpenRouterApiEndpoint.ts'
 import { getOpenRouterKeyEndpoint } from '../GetOpenRouterKeyEndpoint/GetOpenRouterKeyEndpoint.ts'
 import { getTextContent } from '../GetTextContent/GetTextContent.ts'
@@ -43,17 +44,17 @@ const getOpenRouterRaw429Message = async (response: Response): Promise<string | 
     return undefined
   }
 
-  const error = Reflect.get(parsed, 'error')
+  const error = getObjectProperty(parsed, 'error')
   if (!error || typeof error !== 'object') {
     return undefined
   }
 
-  const metadata = Reflect.get(error, 'metadata')
+  const metadata = getObjectProperty(error, 'metadata')
   if (!metadata || typeof metadata !== 'object') {
     return undefined
   }
 
-  const raw = Reflect.get(metadata, 'raw')
+  const raw = getObjectProperty(metadata, 'raw')
   if (typeof raw !== 'string' || !raw) {
     return undefined
   }
@@ -73,17 +74,17 @@ const getOpenRouterRaw429MessageFromText = (responseText: string): string | unde
     return undefined
   }
 
-  const error = Reflect.get(parsed, 'error')
+  const error = getObjectProperty(parsed, 'error')
   if (!error || typeof error !== 'object') {
     return undefined
   }
 
-  const metadata = Reflect.get(error, 'metadata')
+  const metadata = getObjectProperty(error, 'metadata')
   if (!metadata || typeof metadata !== 'object') {
     return undefined
   }
 
-  const raw = Reflect.get(metadata, 'raw')
+  const raw = getObjectProperty(metadata, 'raw')
   if (typeof raw !== 'string' || !raw) {
     return undefined
   }
@@ -118,7 +119,6 @@ const getOpenRouterLimitInfo = async (
           Authorization: `Bearer ${openRouterApiKey}`,
           ...getClientRequestIdHeader(),
         },
-        method: 'GET',
       })
     } catch {
       return undefined
@@ -139,36 +139,28 @@ const getOpenRouterLimitInfo = async (
     return undefined
   }
 
-  const data = Reflect.get(parsed, 'data')
+  const data = getObjectProperty(parsed, 'data')
   if (!data || typeof data !== 'object') {
     return undefined
   }
 
-  const limitRemaining = Reflect.get(data, 'limit_remaining')
-  const limitReset = Reflect.get(data, 'limit_reset')
-  const usage = Reflect.get(data, 'usage')
-  const usageDaily = Reflect.get(data, 'usage_daily')
+  const limitRemaining = getObjectProperty(data, 'limit_remaining')
+  const limitReset = getObjectProperty(data, 'limit_reset')
+  const usage = getObjectProperty(data, 'usage')
+  const usageDaily = getObjectProperty(data, 'usage_daily')
   const normalizedLimitInfo = {
-    ...(typeof limitRemaining === 'number' || limitRemaining === null
-      ? {
-          limitRemaining,
-        }
-      : {}),
-    ...(typeof limitReset === 'string' || limitReset === null
-      ? {
-          limitReset,
-        }
-      : {}),
-    ...(typeof usage === 'number'
-      ? {
-          usage,
-        }
-      : {}),
-    ...(typeof usageDaily === 'number'
-      ? {
-          usageDaily,
-        }
-      : {}),
+    ...((typeof limitRemaining === 'number' || limitRemaining === null) && {
+      limitRemaining,
+    }),
+    ...((typeof limitReset === 'string' || limitReset === null) && {
+      limitReset,
+    }),
+    ...(typeof usage === 'number' && {
+      usage,
+    }),
+    ...(typeof usageDaily === 'number' && {
+      usageDaily,
+    }),
   }
 
   const hasLimitInfo =
@@ -242,23 +234,17 @@ export const getOpenRouterAssistantText = async (
           const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
           return {
             details: 'too-many-requests',
-            ...(limitInfo || retryAfter
-              ? {
-                  limitInfo: {
-                    ...limitInfo,
-                    ...(retryAfter
-                      ? {
-                          retryAfter,
-                        }
-                      : {}),
-                  },
-                }
-              : {}),
-            ...(rawMessage
-              ? {
-                  rawMessage,
-                }
-              : {}),
+            ...((limitInfo || retryAfter) && {
+              limitInfo: {
+                ...limitInfo,
+                ...(retryAfter && {
+                  retryAfter,
+                }),
+              },
+            }),
+            ...(rawMessage && {
+              rawMessage,
+            }),
             statusCode: 429,
             type: 'error',
           }
@@ -301,23 +287,17 @@ export const getOpenRouterAssistantText = async (
           const limitInfo = await getOpenRouterLimitInfo(openRouterApiKey, openRouterApiBaseUrl, useChatNetworkWorkerForRequests)
           return {
             details: 'too-many-requests',
-            ...(limitInfo || retryAfter
-              ? {
-                  limitInfo: {
-                    ...limitInfo,
-                    ...(retryAfter
-                      ? {
-                          retryAfter,
-                        }
-                      : {}),
-                  },
-                }
-              : {}),
-            ...(rawMessage
-              ? {
-                  rawMessage,
-                }
-              : {}),
+            ...((limitInfo || retryAfter) && {
+              limitInfo: {
+                ...limitInfo,
+                ...(retryAfter && {
+                  retryAfter,
+                }),
+              },
+            }),
+            ...(rawMessage && {
+              rawMessage,
+            }),
             statusCode: 429,
             type: 'error',
           }
@@ -345,7 +325,7 @@ export const getOpenRouterAssistantText = async (
         type: 'success',
       }
     }
-    const choices = Reflect.get(parsed, 'choices')
+    const choices = getObjectProperty(parsed, 'choices')
     if (!Array.isArray(choices)) {
       return {
         text: '',
@@ -359,7 +339,7 @@ export const getOpenRouterAssistantText = async (
         type: 'success',
       }
     }
-    const message = Reflect.get(firstChoice, 'message')
+    const message = getObjectProperty(firstChoice, 'message')
     if (!message || typeof message !== 'object') {
       return {
         text: '',
@@ -367,36 +347,32 @@ export const getOpenRouterAssistantText = async (
       }
     }
 
-    const toolCalls = Reflect.get(message, 'tool_calls')
+    const toolCalls = getObjectProperty(message, 'tool_calls')
     if (Array.isArray(toolCalls) && toolCalls.length > 0) {
       completionMessages.push(message)
       for (const toolCall of toolCalls) {
         if (!toolCall || typeof toolCall !== 'object') {
           continue
         }
-        const id = Reflect.get(toolCall, 'id')
-        const toolFunction = Reflect.get(toolCall, 'function')
+        const id = getObjectProperty(toolCall, 'id')
+        const toolFunction = getObjectProperty(toolCall, 'function')
         if (typeof id !== 'string' || !toolFunction || typeof toolFunction !== 'object') {
           continue
         }
-        const name = Reflect.get(toolFunction, 'name')
-        const rawArguments = Reflect.get(toolFunction, 'arguments')
+        const name = getObjectProperty(toolFunction, 'name')
+        const rawArguments = getObjectProperty(toolFunction, 'arguments')
         const content =
           typeof name === 'string'
             ? await executeChatTool(name, rawArguments, {
                 assetDir,
                 platform,
-                ...(sessionId
-                  ? {
-                      sessionId,
-                    }
-                  : {}),
+                ...(sessionId && {
+                  sessionId,
+                }),
                 toolCallId: id,
-                ...(toolEnablement
-                  ? {
-                      toolEnablement,
-                    }
-                  : {}),
+                ...(toolEnablement && {
+                  toolEnablement,
+                }),
                 useChatToolWorker,
                 workspaceUri,
               })
@@ -410,7 +386,7 @@ export const getOpenRouterAssistantText = async (
       continue
     }
 
-    const content = Reflect.get(message, 'content')
+    const content = getObjectProperty(message, 'content')
     return {
       text: getTextContent(content),
       type: 'success',

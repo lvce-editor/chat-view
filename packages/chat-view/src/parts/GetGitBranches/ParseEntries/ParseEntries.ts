@@ -1,3 +1,5 @@
+import { getObjectProperty } from '../../GetObjectProperty/GetObjectProperty.ts'
+
 export interface FileSystemEntry {
   readonly name: string
   readonly type: number
@@ -17,10 +19,12 @@ export const parseEntries = (value: unknown): readonly FileSystemEntry[] => {
           type: entry[1],
         }
       }
-      if (entry && typeof entry === 'object' && typeof Reflect.get(entry, 'name') === 'string' && typeof Reflect.get(entry, 'type') === 'number') {
+      const name = getObjectProperty(entry, 'name')
+      const type = getObjectProperty(entry, 'type')
+      if (typeof name === 'string' && typeof type === 'number') {
         return {
-          name: Reflect.get(entry, 'name'),
-          type: Reflect.get(entry, 'type'),
+          name,
+          type,
         }
       }
       return undefined

@@ -37,7 +37,10 @@ export const test: Test = async ({ Chat, Command }) => {
 
   const initialRequests = (await Chat.mockOpenApiRequestGetAll()) as readonly MockOpenApiRequest[]
   const initialTools = initialRequests[0]?.payload.tools || []
-  assert(!initialTools.some((tool) => tool.type === 'function' && tool.name === 'ask_question'), 'ask_question should be disabled by default')
+  assert(
+    initialTools.every((tool) => !(tool.type === 'function' && tool.name === 'ask_question')),
+    'ask_question should be disabled by default',
+  )
 
   await Command.execute('Chat.setQuestionToolEnabled', true)
   await Chat.mockOpenApiRequestReset()

@@ -1,6 +1,6 @@
 // cspell:ignore openrouter worktrees
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
-import { AuthWorker, ChatViewModelWorker, ExtensionHost, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatViewModelWorker, ExtensionManagementWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
@@ -107,6 +107,9 @@ test('handleClick should select a session', async () => {
 test('handleClick should switch from normal mode to chat-focus mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.enterSideBarFocusMode': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     viewMode: 'detail',
@@ -114,11 +117,33 @@ test('handleClick should switch from normal mode to chat-focus mode', async () =
   const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
   expect(result.viewMode).toBe('chat-focus')
   expect(result.lastNormalViewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.enterSideBarFocusMode', 'secondary']])
+})
+
+test('handleClick should switch to chat-focus mode when the host does not support side bar focus mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.enterSideBarFocusMode': async () => {
+      throw new Error('module Layout not found')
+    },
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    viewMode: 'detail',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('chat-focus')
+  expect(result.lastNormalViewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.enterSideBarFocusMode', 'secondary']])
 })
 
 test('handleClick should switch from chat-focus mode back to remembered normal mode', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.leaveSideBarFocusMode': async () => {},
+  })
   const state: ChatState = {
     ...createDefaultState(),
     lastNormalViewMode: 'detail',
@@ -126,6 +151,25 @@ test('handleClick should switch from chat-focus mode back to remembered normal m
   }
   const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
   expect(result.viewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.leaveSideBarFocusMode']])
+})
+
+test('handleClick should leave chat-focus mode when the host does not support side bar focus mode', async () => {
+  using mockChatStorageRpc = registerMockChatStorageRpc()
+  expect(mockChatStorageRpc).toBeDefined()
+  using mockRendererRpc = RendererWorker.registerMockRpc({
+    'Layout.leaveSideBarFocusMode': async () => {
+      throw new Error('Command not found Layout.leaveSideBarFocusMode')
+    },
+  })
+  const state: ChatState = {
+    ...createDefaultState(),
+    lastNormalViewMode: 'detail',
+    viewMode: 'chat-focus',
+  }
+  const result = await HandleClick.handleClick(state, 'toggle-chat-focus')
+  expect(result.viewMode).toBe('detail')
+  expect(mockRendererRpc.invocations).toEqual([['Layout.leaveSideBarFocusMode']])
 })
 
 test('handleClick should toggle search field visibility on', async () => {
@@ -360,7 +404,6 @@ test('handleClick should select model from model picker item and close picker', 
   expect(result.visibleModels).toBe(result.models)
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClick should select model from delegated model picker list click using y coordinate', async () => {
   const state: ChatState = {
     ...createDefaultState(),
@@ -433,7 +476,7 @@ test('handleClick should open backend login page and sync backend auth state', a
     if (originalLocation) {
       Object.defineProperty(globalThis, 'location', originalLocation)
     } else {
-      Reflect.deleteProperty(globalThis, 'location')
+      delete (globalThis as Record<string, unknown>).location
     }
   }
 })
@@ -881,11 +924,10 @@ test('handleClick should create pull request for completed background session', 
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockRendererRpc = RendererWorker.registerMockRpc({
-    'ExtensionHostManagement.activateByEvent': async () => {},
     'Main.openUri': async () => {},
   })
-  using mockExtensionHostRpc = ExtensionHost.registerMockRpc({
-    'ExtensionHostCommand.executeCommand': async (id: string, payload: any) => {
+  using mockExtensionManagementRpc = ExtensionManagementWorker.registerMockRpc({
+    'Extensions.executeCommand': async (id: string, payload: any) => {
       expect(id).toBe('Chat.createPullRequest')
       expect(payload).toEqual({
         branchName: 'chat/session-1',
@@ -916,14 +958,10 @@ test('handleClick should create pull request for completed background session', 
   }
   const result = await HandleClick.handleClick(state, 'create-pull-request')
   expect(result.sessions[0].pullRequestUrl).toBe('https://github.com/lvce-editor/chat-view/pull/123')
-  expect(mockRendererRpc.invocations).toEqual([
-    ['ExtensionHostManagement.activateByEvent', 'onCommand:Chat.createPullRequest', '', 0],
-    ['Main.openUri', 'https://github.com/lvce-editor/chat-view/pull/123'],
-  ])
-  expect(mockExtensionHostRpc.invocations).toHaveLength(1)
+  expect(mockRendererRpc.invocations).toEqual([['Main.openUri', 'https://github.com/lvce-editor/chat-view/pull/123']])
+  expect(mockExtensionManagementRpc.invocations).toHaveLength(1)
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should open detail for session index from y coordinate', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
@@ -944,7 +982,6 @@ test.skip('handleClickList should open detail for session index from y coordinat
   expect(result.viewMode).toBe('detail')
 })
 
-// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleClickList should keep state when click index has no session', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()

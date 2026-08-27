@@ -1,3 +1,5 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 export interface RenameTarget {
   readonly clickableUri: string
   readonly title: string
@@ -18,8 +20,8 @@ export const getRenameTargets = (rawArguments: string): RenameTargets | undefine
   if (!parsed || typeof parsed !== 'object') {
     return undefined
   }
-  const oldUri = Reflect.get(parsed, 'oldUri')
-  const newUri = Reflect.get(parsed, 'newUri')
+  const oldUri = getObjectProperty(parsed, 'oldUri')
+  const newUri = getObjectProperty(parsed, 'newUri')
   if (typeof oldUri !== 'string' || !oldUri || typeof newUri !== 'string' || !newUri) {
     return undefined
   }

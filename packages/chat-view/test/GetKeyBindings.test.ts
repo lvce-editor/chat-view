@@ -26,6 +26,11 @@ test('getKeyBindings should include chat list navigation keybindings', () => {
     key: KeyCode.End,
     when: WhenExpression.FocusChatList,
   })
+  expect(result).toContainEqual({
+    command: 'Chat.chatListAccept',
+    key: KeyCode.Enter,
+    when: WhenExpression.FocusChatList,
+  })
 })
 
 test('getKeyBindings should include chat input history navigation keybindings', () => {
