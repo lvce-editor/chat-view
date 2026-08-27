@@ -63,35 +63,25 @@ export const normalizeStoredChatMessage = (value: unknown, options: Readonly<Nor
   const inProgress = typeof value.inProgress === 'boolean' ? value.inProgress : undefined
   const toolCalls = Array.isArray(value.toolCalls) ? value.toolCalls : undefined
   return {
-    ...(agentMode
-      ? {
-          agentMode,
-        }
-      : {}),
-    ...(attachments
-      ? {
-          attachments,
-        }
-      : {}),
-    ...(content
-      ? {
-          content,
-        }
-      : {}),
+    ...(agentMode && {
+      agentMode,
+    }),
+    ...(attachments && {
+      attachments,
+    }),
+    ...(content && {
+      content,
+    }),
     id,
-    ...(inProgress === undefined
-      ? {}
-      : {
-          inProgress,
-        }),
+    ...(inProgress !== undefined && {
+      inProgress,
+    }),
     role,
     text,
     time,
-    ...(toolCalls
-      ? {
-          toolCalls,
-        }
-      : {}),
+    ...(toolCalls && {
+      toolCalls,
+    }),
   }
 }
 

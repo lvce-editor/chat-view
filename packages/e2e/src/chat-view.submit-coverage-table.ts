@@ -100,8 +100,6 @@ All files                                                 |   81.22 |    62.02 |
   CreateChatPullRequest.ts                                |     100 |      100 |     100 |     100 |
  CreateDefaultState                                       |     100 |      100 |     100 |     100 |
   CreateDefaultState.ts                                   |     100 |      100 |     100 |     100 |
- CreateExtensionHostRpc                                   |     100 |      100 |     100 |     100 |
-  CreateExtensionHostRpc.ts                               |     100 |      100 |     100 |     100 |
  CreateSession                                            |     100 |    66.66 |     100 |     100 |
   CreateSession.ts                                        |     100 |    66.66 |     100 |     100 | 9-10
  CutInput                                                 |     100 |      100 |     100 |     100 |
@@ -148,12 +146,8 @@ All files                                                 |   81.22 |    62.02 |
   ExecuteChatTool.ts                                      |   86.13 |    77.77 |     100 |      86 | 23,28,38,42,53,57,61,65,69,85,96,103,136,150
  ExecuteSlashCommand                                      |      80 |       50 |     100 |      80 |
   ExecuteSlashCommand.ts                                  |      80 |       50 |     100 |      80 | 8
- ExtensionHost                                            |     100 |      100 |     100 |     100 |
-  ExtensionHostShared.ts                                  |     100 |      100 |     100 |     100 |
- ExtensionHostCommandType                                 |     100 |      100 |     100 |     100 |
-  ExtensionHostCommandType.ts                             |     100 |      100 |     100 |     100 |
- ExtensionHostManagement                                  |     100 |      100 |     100 |     100 |
-  ExtensionHostManagement.ts                              |     100 |      100 |     100 |     100 |
+ ExtensionManagement                                      |     100 |      100 |     100 |     100 |
+  ExtensionManagement.ts                                  |     100 |      100 |     100 |     100 |
  FocusInput                                               |     100 |      100 |     100 |     100 |
   FocusInput.ts                                           |     100 |      100 |     100 |     100 |
  GenerateSessionId                                        |     100 |      100 |     100 |     100 |

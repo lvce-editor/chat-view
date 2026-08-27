@@ -2,20 +2,18 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.model-picker-search-no-matching-models'
 
-export const skip = 1
-
-export const test: Test = async ({ Chat, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openModelPicker()
 
   const items = Locator('.ChatModelPicker .ChatModelPickerItem')
-  await expect(items).toHaveCount(19)
+  await expect(items).toHaveCount(21)
 
-  const searchInput = Locator('.ChatModelPicker [name="model-picker-search"]')
-  await searchInput.type('not-found-query')
+  // act
+  await Command.execute(`Chat.handleInput`, 'model-picker-search', 'not-found-query')
 
-  await expect(items).toHaveCount(1)
-  const item0 = items.nth(0)
-  await expect(item0).toContainText('No matching models have been found.')
+  // assert
+  const message = Locator('.Message')
+  await expect(message).toHaveText('No matching models have been found.')
 }

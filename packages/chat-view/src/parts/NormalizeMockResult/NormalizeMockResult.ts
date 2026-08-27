@@ -2,6 +2,7 @@ import type {
   GetOpenRouterAssistantTextErrorResult,
   GetOpenRouterAssistantTextSuccessResult,
 } from '../GetOpenRouterAssistantText/GetOpenRouterAssistantText.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { normalizeLimitInfo } from '../NormalizeLimitInfo/NormalizeLimitInfo.ts'
 
 const requestFailedResult: GetOpenRouterAssistantTextErrorResult = {
@@ -17,26 +18,20 @@ const getSuccessResult = (text: string): GetOpenRouterAssistantTextSuccessResult
 }
 
 const getErrorResult = (value: object, details: GetOpenRouterAssistantTextErrorResult['details']): GetOpenRouterAssistantTextErrorResult => {
-  const rawMessage = Reflect.get(value, 'rawMessage')
-  const statusCode = Reflect.get(value, 'statusCode')
-  const limitInfo = normalizeLimitInfo(Reflect.get(value, 'limitInfo'))
+  const rawMessage = getObjectProperty(value, 'rawMessage')
+  const statusCode = getObjectProperty(value, 'statusCode')
+  const limitInfo = normalizeLimitInfo(getObjectProperty(value, 'limitInfo'))
   return {
     details,
-    ...(limitInfo
-      ? {
-          limitInfo,
-        }
-      : {}),
-    ...(typeof rawMessage === 'string'
-      ? {
-          rawMessage,
-        }
-      : {}),
-    ...(typeof statusCode === 'number'
-      ? {
-          statusCode,
-        }
-      : {}),
+    ...(limitInfo && {
+      limitInfo,
+    }),
+    ...(typeof rawMessage === 'string' && {
+      rawMessage,
+    }),
+    ...(typeof statusCode === 'number' && {
+      statusCode,
+    }),
     type: 'error',
   }
 }
@@ -48,21 +43,21 @@ export const normalizeMockResult = (value: unknown): GetOpenRouterAssistantTextS
   if (!value || typeof value !== 'object') {
     return requestFailedResult
   }
-  const type = Reflect.get(value, 'type')
+  const type = getObjectProperty(value, 'type')
   if (type === 'success') {
-    const text = Reflect.get(value, 'text')
+    const text = getObjectProperty(value, 'text')
     if (typeof text === 'string') {
       return getSuccessResult(text)
     }
     return requestFailedResult
   }
   if (type === 'error') {
-    const details = Reflect.get(value, 'details')
+    const details = getObjectProperty(value, 'details')
     if (details === 'request-failed' || details === 'too-many-requests' || details === 'http-error') {
       return getErrorResult(value, details)
     }
   }
-  const text = Reflect.get(value, 'text')
+  const text = getObjectProperty(value, 'text')
   if (typeof text === 'string') {
     return getSuccessResult(text)
   }

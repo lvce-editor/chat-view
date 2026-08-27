@@ -1,4 +1,5 @@
 import type { GetOpenApiAssistantTextErrorResult } from '../GetOpenApiAssistantTextErrorResult/GetOpenApiAssistantTextErrorResult.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 type MockStreamState = {
   readonly queue: string[]
@@ -56,28 +57,22 @@ export const startRequest = (): string => {
 }
 
 export const setHttpErrorResponse = (statusCode: number, body: unknown, requestId: string = defaultRequestId): void => {
-  const rawError = body && typeof body === 'object' ? Reflect.get(body, 'error') : undefined
-  const errorCode = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'code') : undefined
-  const errorMessage = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'message') : undefined
-  const errorType = rawError && typeof rawError === 'object' ? Reflect.get(rawError, 'type') : undefined
+  const rawError = getObjectProperty(body, 'error')
+  const errorCode = getObjectProperty(rawError, 'code')
+  const errorMessage = getObjectProperty(rawError, 'message')
+  const errorType = getObjectProperty(rawError, 'type')
   const state = getOrCreateState(requestId)
   state.errorResult = {
     details: 'http-error',
-    ...(typeof errorCode === 'string'
-      ? {
-          errorCode,
-        }
-      : {}),
-    ...(typeof errorMessage === 'string'
-      ? {
-          errorMessage,
-        }
-      : {}),
-    ...(typeof errorType === 'string'
-      ? {
-          errorType,
-        }
-      : {}),
+    ...(typeof errorCode === 'string' && {
+      errorCode,
+    }),
+    ...(typeof errorMessage === 'string' && {
+      errorMessage,
+    }),
+    ...(typeof errorType === 'string' && {
+      errorType,
+    }),
     statusCode,
     type: 'error',
   }
@@ -87,11 +82,9 @@ export const setRequestFailedResponse = (isOffline: boolean = false, requestId: 
   const state = getOrCreateState(requestId)
   state.errorResult = {
     details: 'request-failed',
-    ...(isOffline
-      ? {
-          isOffline: true,
-        }
-      : {}),
+    ...(isOffline && {
+      isOffline: true,
+    }),
     type: 'error',
   }
 }

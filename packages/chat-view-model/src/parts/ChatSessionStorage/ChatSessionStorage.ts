@@ -15,34 +15,24 @@ export const listChatSessions = async (): Promise<readonly ChatSession[]> => {
   return sessions.map((session) => {
     const lastActiveTime = getSessionLastActiveTime(session)
     const summary: ChatSession = {
-      ...(session.branchName
-        ? {
-            branchName: session.branchName,
-          }
-        : {}),
+      ...(session.branchName && {
+        branchName: session.branchName,
+      }),
       id: session.id,
-      ...(lastActiveTime
-        ? {
-            lastActiveTime,
-          }
-        : {}),
+      ...(lastActiveTime && {
+        lastActiveTime,
+      }),
       messages: [],
-      ...(session.pullRequestUrl
-        ? {
-            pullRequestUrl: session.pullRequestUrl,
-          }
-        : {}),
-      ...(session.status
-        ? {
-            status: session.status,
-          }
-        : {}),
+      ...(session.pullRequestUrl && {
+        pullRequestUrl: session.pullRequestUrl,
+      }),
+      ...(session.status && {
+        status: session.status,
+      }),
       title: session.title,
-      ...(session.workspaceUri
-        ? {
-            workspaceUri: session.workspaceUri,
-          }
-        : {}),
+      ...(session.workspaceUri && {
+        workspaceUri: session.workspaceUri,
+      }),
     }
     if (!session.projectId) {
       return summary
@@ -61,34 +51,24 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
   }
   const lastActiveTime = getSessionLastActiveTime(session)
   const resultBase: ChatSession = {
-    ...(session.branchName
-      ? {
-          branchName: session.branchName,
-        }
-      : {}),
+    ...(session.branchName && {
+      branchName: session.branchName,
+    }),
     id: session.id,
-    ...(lastActiveTime
-      ? {
-          lastActiveTime,
-        }
-      : {}),
+    ...(lastActiveTime && {
+      lastActiveTime,
+    }),
     messages: normalizeStoredChatMessages(session.messages),
-    ...(session.pullRequestUrl
-      ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
-      : {}),
-    ...(session.status
-      ? {
-          status: session.status,
-        }
-      : {}),
+    ...(session.pullRequestUrl && {
+      pullRequestUrl: session.pullRequestUrl,
+    }),
+    ...(session.status && {
+      status: session.status,
+    }),
     title: session.title,
-    ...(session.workspaceUri
-      ? {
-          workspaceUri: session.workspaceUri,
-        }
-      : {}),
+    ...(session.workspaceUri && {
+      workspaceUri: session.workspaceUri,
+    }),
   }
   const result = session.projectId
     ? {
@@ -102,34 +82,24 @@ export const getChatSession = async (id: string): Promise<ChatSession | undefine
 export const saveChatSession = async (session: ChatSession): Promise<void> => {
   const lastActiveTime = getSessionLastActiveTime(session)
   const value: ChatSession = {
-    ...(session.branchName
-      ? {
-          branchName: session.branchName,
-        }
-      : {}),
+    ...(session.branchName && {
+      branchName: session.branchName,
+    }),
     id: session.id,
-    ...(lastActiveTime
-      ? {
-          lastActiveTime,
-        }
-      : {}),
+    ...(lastActiveTime && {
+      lastActiveTime,
+    }),
     messages: [...session.messages],
-    ...(session.pullRequestUrl
-      ? {
-          pullRequestUrl: session.pullRequestUrl,
-        }
-      : {}),
-    ...(session.status
-      ? {
-          status: session.status,
-        }
-      : {}),
+    ...(session.pullRequestUrl && {
+      pullRequestUrl: session.pullRequestUrl,
+    }),
+    ...(session.status && {
+      status: session.status,
+    }),
     title: session.title,
-    ...(session.workspaceUri
-      ? {
-          workspaceUri: session.workspaceUri,
-        }
-      : {}),
+    ...(session.workspaceUri && {
+      workspaceUri: session.workspaceUri,
+    }),
   }
   const sessionValue = session.projectId
     ? {

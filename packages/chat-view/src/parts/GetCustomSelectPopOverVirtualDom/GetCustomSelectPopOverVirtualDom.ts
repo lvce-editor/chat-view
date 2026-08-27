@@ -16,6 +16,7 @@ export const getCustomSelectPopOverVirtualDom = (
       childCount: 1,
       className: mergeClassNames(ClassNames.ChatModelPickerContainer, containerClassName),
       onClick: DomEventListenerFunctions.HandleClickCustomSelectOverlay,
+      role: AriaRoles.None,
       type: VirtualDomElements.Div,
     },
     useInlineHeight

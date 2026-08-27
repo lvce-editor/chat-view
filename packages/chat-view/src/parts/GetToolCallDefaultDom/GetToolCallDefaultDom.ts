@@ -1,9 +1,28 @@
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
 import type { ChatToolCall } from '../ChatMessage/ChatMessage.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 import { getToolCallLabel } from '../GetToolCallLabel/GetToolCallLabel.ts'
 
 const RE_TOOL_NAME_PREFIX = /^([^ :]+)/
+
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
+const toolCallNameNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallName,
+  type: VirtualDomElements.Span,
+}
+
+const toolCallDetailsNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ToolCallDetails,
+  type: VirtualDomElements.Span,
+}
 
 const getGrepSearchPreviewText = (result: string): string => {
   if (!result.trim()) {
@@ -14,7 +33,7 @@ const getGrepSearchPreviewText = (result: string): string => {
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
       return typeof parsed === 'string' ? parsed : JSON.stringify(parsed)
     }
-    const nestedResult = Reflect.get(parsed, 'result')
+    const nestedResult = getObjectProperty(parsed, 'result')
     if (nestedResult === undefined) {
       return JSON.stringify(parsed)
     }
@@ -37,7 +56,7 @@ const getHoverTitle = (toolCall: ChatToolCall): string | undefined => {
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
       return toolCall.arguments
     }
-    const nestedArguments = Reflect.get(parsed, 'arguments')
+    const nestedArguments = getObjectProperty(parsed, 'arguments')
     if (nestedArguments === undefined) {
       return toolCall.arguments
     }
@@ -52,14 +71,7 @@ const getHoverTitle = (toolCall: ChatToolCall): string | undefined => {
 
 export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualDomNode[] => {
   if (toolCall.name === 'grep_search' && toolCall.result) {
-    return [
-      {
-        childCount: 1,
-        className: ClassNames.ChatOrderedListItem,
-        type: VirtualDomElements.Li,
-      },
-      text(getGrepSearchPreviewText(toolCall.result)),
-    ]
+    return [chatOrderedListItemNode, text(getGrepSearchPreviewText(toolCall.result))]
   }
 
   const label = getToolCallLabel(toolCall)
@@ -68,28 +80,16 @@ export const getToolCallDefaultDom = (toolCall: ChatToolCall): readonly VirtualD
   const suffix = label.slice(toolNamePrefix.length)
   const hasSuffix = suffix.length > 0
   const hoverTitle = hasSuffix ? getHoverTitle(toolCall) : undefined
+  const suffixDom = hasSuffix ? [toolCallDetailsNode, text(suffix)] : []
   return [
     {
       childCount: hasSuffix ? 2 : 1,
       className: ClassNames.ChatOrderedListItem,
-      ...(hoverTitle ? { title: hoverTitle } : {}),
+      ...(hoverTitle && { title: hoverTitle }),
       type: VirtualDomElements.Li,
     },
-    {
-      childCount: 1,
-      className: ClassNames.ToolCallName,
-      type: VirtualDomElements.Span,
-    },
+    toolCallNameNode,
     text(toolNamePrefix),
-    ...(hasSuffix
-      ? [
-          {
-            childCount: 1,
-            className: ClassNames.ToolCallDetails,
-            type: VirtualDomElements.Span,
-          },
-          text(suffix),
-        ]
-      : []),
+    ...suffixDom,
   ]
 }

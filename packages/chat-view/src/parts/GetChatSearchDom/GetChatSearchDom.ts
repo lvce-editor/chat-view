@@ -4,16 +4,18 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const searchFieldContainerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.SearchFieldContainer,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatSearchDom = (hasSearchField: boolean, searchValue: string): readonly VirtualDomNode[] => {
   if (!hasSearchField) {
     return []
   }
   return [
-    {
-      childCount: 1,
-      className: ClassNames.SearchFieldContainer,
-      type: VirtualDomElements.Div,
-    },
+    searchFieldContainerNode,
     {
       childCount: 0,
       className: ClassNames.InputBox,

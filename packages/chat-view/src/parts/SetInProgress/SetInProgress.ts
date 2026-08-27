@@ -37,6 +37,7 @@ export const setInProgress = async (state: ChatState, inProgress: boolean): Prom
 
   return {
     ...state,
+    inProgress: true,
     messages,
     sessions: state.sessions.map((session) => {
       if (session.id !== selectedSession.id) {

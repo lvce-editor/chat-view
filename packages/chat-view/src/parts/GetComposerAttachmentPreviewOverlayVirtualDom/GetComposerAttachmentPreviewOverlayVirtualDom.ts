@@ -5,14 +5,27 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const chatComposerAttachmentPreviewOverlayNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatComposerAttachmentPreviewOverlay,
+  name: InputName.ComposerAttachmentPreviewOverlay,
+  onMouseOut: DomEventListenerFunctions.HandleMouseOut,
+  onMouseOver: DomEventListenerFunctions.HandleMouseOver,
+  onPointerOut: DomEventListenerFunctions.HandleMouseOut,
+  onPointerOver: DomEventListenerFunctions.HandleMouseOver,
+  type: VirtualDomElements.Div,
+}
+
+const imageCouldNotBeLoadedNode: VirtualDomNode = {
+  childCount: 1,
+  className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
+  name: InputName.ComposerAttachmentPreviewOverlay,
+  type: VirtualDomElements.Div,
+}
+
 const getImageCouldNotBeLoadedDom = (): readonly VirtualDomNode[] => {
   return [
-    {
-      childCount: 1,
-      className: mergeClassNames(ClassNames.ChatComposerAttachmentPreviewOverlayError, ClassNames.ImageErrorMessage),
-      name: InputName.ComposerAttachmentPreviewOverlay,
-      type: VirtualDomElements.Div,
-    },
+    imageCouldNotBeLoadedNode,
     {
       text: Strings.imageCouldNotBeLoaded(),
       type: VirtualDomElements.Text,
@@ -32,29 +45,18 @@ export const getComposerAttachmentPreviewOverlayVirtualDom = (
   if (!attachment || attachment.displayType !== 'image' || !attachment.previewSrc) {
     return []
   }
-  return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatComposerAttachmentPreviewOverlay,
-      name: InputName.ComposerAttachmentPreviewOverlay,
-      onMouseOut: DomEventListenerFunctions.HandleMouseOut,
-      onMouseOver: DomEventListenerFunctions.HandleMouseOver,
-      onPointerOut: DomEventListenerFunctions.HandleMouseOut,
-      onPointerOver: DomEventListenerFunctions.HandleMouseOver,
-      type: VirtualDomElements.Div,
-    },
-    ...(hasError
-      ? getImageCouldNotBeLoadedDom()
-      : [
-          {
-            alt: `Large image preview for ${attachment.name}`,
-            childCount: 0,
-            className: ClassNames.ChatComposerAttachmentPreviewOverlayImage,
-            name: InputName.ComposerAttachmentPreviewOverlay,
-            onError: DomEventListenerFunctions.HandleErrorComposerAttachmentPreviewOverlay,
-            src: attachment.previewSrc,
-            type: VirtualDomElements.Img,
-          },
-        ]),
-  ]
+  const contentDom = hasError
+    ? getImageCouldNotBeLoadedDom()
+    : [
+        {
+          alt: `Large image preview for ${attachment.name}`,
+          childCount: 0,
+          className: ClassNames.ChatComposerAttachmentPreviewOverlayImage,
+          name: InputName.ComposerAttachmentPreviewOverlay,
+          onError: DomEventListenerFunctions.HandleErrorComposerAttachmentPreviewOverlay,
+          src: attachment.previewSrc,
+          type: VirtualDomElements.Img,
+        },
+      ]
+  return [chatComposerAttachmentPreviewOverlayNode, ...contentDom]
 }

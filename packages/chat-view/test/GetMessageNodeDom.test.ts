@@ -93,6 +93,8 @@ test('getMessageNodeDom should render markdown file links with data-uri and read
     'data-uri': 'file:///workspace/src/index.ts',
     href: '#',
     onClick: DomEventListenerFunctions.HandleClickReadFile,
+    rel: 'noopener noreferrer',
+    target: '_blank',
     title: 'file:///workspace/src/index.ts',
     type: VirtualDomElements.A,
   })
@@ -120,6 +122,8 @@ test('getMessageNodeDom should render markdown vscode file links with data-uri a
     'data-uri': 'vscode-references:///workspace/src/main.ts',
     href: '#',
     onClick: DomEventListenerFunctions.HandleClickReadFile,
+    rel: 'noopener noreferrer',
+    target: '_blank',
     title: 'vscode-references:///workspace/src/main.ts',
     type: VirtualDomElements.A,
   })
@@ -147,6 +151,8 @@ test('getMessageNodeDom should render workspace file links as read-file anchors'
     'data-uri': 'file:///workspace/src/index.ts',
     href: '#',
     onClick: DomEventListenerFunctions.HandleClickReadFile,
+    rel: 'noopener noreferrer',
+    target: '_blank',
     title: 'file:///workspace/src/index.ts',
     type: VirtualDomElements.A,
   })

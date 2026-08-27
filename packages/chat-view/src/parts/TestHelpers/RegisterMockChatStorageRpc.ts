@@ -6,11 +6,9 @@ import type { ChatViewEvent } from '../ChatViewEvent/ChatViewEvent.ts'
 const cloneMessage = (message: ChatMessage): ChatMessage => {
   return {
     ...message,
-    ...(message.toolCalls
-      ? {
-          toolCalls: [...message.toolCalls],
-        }
-      : {}),
+    ...(message.toolCalls && {
+      toolCalls: [...message.toolCalls],
+    }),
   }
 }
 
@@ -115,11 +113,9 @@ export const registerMockChatStorageRpc = (): ReturnType<typeof ChatStorageWorke
             sessionId: session.id,
             text: message.text,
             time: message.time,
-            ...(message.toolCalls
-              ? {
-                  toolCalls: message.toolCalls,
-                }
-              : {}),
+            ...(message.toolCalls && {
+              toolCalls: message.toolCalls,
+            }),
             timestamp: now(),
             type: 'chat-message-updated',
           })

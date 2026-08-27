@@ -1,3 +1,5 @@
+import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
+
 export const getTextContent = (content: unknown): string => {
   if (typeof content === 'string') {
     return content
@@ -10,8 +12,8 @@ export const getTextContent = (content: unknown): string => {
     if (!part || typeof part !== 'object') {
       continue
     }
-    const maybeType = Reflect.get(part, 'type')
-    const maybeText = Reflect.get(part, 'text')
+    const maybeType = getObjectProperty(part, 'type')
+    const maybeText = getObjectProperty(part, 'text')
     if (maybeType === 'text' && typeof maybeText === 'string') {
       textParts.push(maybeText)
     }

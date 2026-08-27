@@ -70,6 +70,8 @@ export interface ChatState {
   readonly height: number
   readonly hiddenPrimaryControls: readonly ComposerPrimaryControl[]
   readonly initial: boolean
+  readonly inProgress: boolean
+  readonly inProgressMessage: string
   readonly inputSource: 'user' | 'script'
   readonly lastNormalViewMode: 'list' | 'detail'
   readonly lastSubmittedSessionId: string

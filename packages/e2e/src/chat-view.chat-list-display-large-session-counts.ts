@@ -8,11 +8,6 @@ const getTitle = (index: number): string => {
   return `Chat ${index + 1}`
 }
 
-const getRepresentativeIndices = (count: number): readonly number[] => {
-  const middleIndex = Math.floor(count / 2) - 1
-  return [0, middleIndex, count - 1]
-}
-
 export const skip = 1
 
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {

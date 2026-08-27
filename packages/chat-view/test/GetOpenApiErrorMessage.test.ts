@@ -141,7 +141,7 @@ test('getOpenApiErrorMessage should format HTTP errors with only trimmed message
 test('getOpenApiErrorMessage should return default request failed message for HTTP errors with blank message', () => {
   const result = getOpenApiErrorMessage(
     createHttpError({
-      errorMessage: '   ',
+      errorMessage: ' '.repeat(3),
     }),
   )
 
@@ -179,7 +179,7 @@ test('getOpenApiErrorMessage should return offline message when navigator report
     if (hasNavigator && originalDescriptor) {
       Object.defineProperty(globalThis, 'navigator', originalDescriptor)
     } else {
-      Reflect.deleteProperty(globalThis, 'navigator')
+      delete (globalThis as Record<string, unknown>).navigator
     }
   }
 })
@@ -204,7 +204,7 @@ test('getOpenApiErrorMessage should return generic request failed message when n
     if (hasNavigator && originalDescriptor) {
       Object.defineProperty(globalThis, 'navigator', originalDescriptor)
     } else {
-      Reflect.deleteProperty(globalThis, 'navigator')
+      delete (globalThis as Record<string, unknown>).navigator
     }
   }
 })
@@ -212,7 +212,7 @@ test('getOpenApiErrorMessage should return generic request failed message when n
 test('getOpenApiErrorMessage should return generic request failed message when navigator is unavailable', () => {
   const hasNavigator = Object.hasOwn(globalThis, 'navigator')
   const originalDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator')
-  Reflect.deleteProperty(globalThis, 'navigator')
+  delete (globalThis as Record<string, unknown>).navigator
   try {
     const result = getOpenApiErrorMessage({
       details: 'request-failed',
@@ -224,7 +224,7 @@ test('getOpenApiErrorMessage should return generic request failed message when n
     if (hasNavigator && originalDescriptor) {
       Object.defineProperty(globalThis, 'navigator', originalDescriptor)
     } else {
-      Reflect.deleteProperty(globalThis, 'navigator')
+      delete (globalThis as Record<string, unknown>).navigator
     }
   }
 })

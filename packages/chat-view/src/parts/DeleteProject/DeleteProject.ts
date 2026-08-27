@@ -60,7 +60,7 @@ export const deleteProject = async (state: ChatState, projectId: string): Promis
   )
 
   const selectedProjectId =
-    !state.selectedProjectId || state.selectedProjectId === projectId || !projects.some((candidate) => candidate.id === state.selectedProjectId)
+    !state.selectedProjectId || state.selectedProjectId === projectId || projects.every((candidate) => candidate.id !== state.selectedProjectId)
       ? blankProjectId
       : state.selectedProjectId
   const projectExpandedIds = state.projectExpandedIds.filter(

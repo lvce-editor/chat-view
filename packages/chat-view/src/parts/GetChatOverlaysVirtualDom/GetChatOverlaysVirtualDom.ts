@@ -52,22 +52,26 @@ export const getChatOverlaysVirtualDom = ({
   if (!overlayChildCount) {
     return []
   }
+  const dropOverlayDom = dropOverlayVisible ? getDropOverlayVirtualDom() : []
+  const agentModePickerDom = agentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []
+  const modelPickerDom = modelPickerVisible
+    ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue, showModelUsageMultiplier)
+    : []
+  const runModePickerDom = runModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []
   return [
     {
       childCount: overlayChildCount,
       className: ClassNames.ChatOverlays,
       type: VirtualDomElements.Div,
     },
-    ...(dropOverlayVisible ? getDropOverlayVirtualDom() : []),
+    ...dropOverlayDom,
     ...getComposerAttachmentPreviewOverlayVirtualDom(
       composerAttachments,
       composerAttachmentPreviewOverlayAttachmentId,
       composerAttachmentPreviewOverlayError,
     ),
-    ...(agentModePickerVisible ? getAgentModePickerPopOverVirtualDom(agentMode) : []),
-    ...(modelPickerVisible
-      ? getChatModelPickerPopOverVirtualDom(visibleModels, selectedModelId, modelPickerSearchValue, showModelUsageMultiplier)
-      : []),
-    ...(runModePickerVisible ? getRunModePickerPopOverVirtualDom(runMode) : []),
+    ...agentModePickerDom,
+    ...modelPickerDom,
+    ...runModePickerDom,
   ]
 }

@@ -11,7 +11,7 @@ const isOffline = (): boolean => {
   if (!globalThis.navigator) {
     return false
   }
-  return globalThis.navigator.onLine === false
+  return !globalThis.navigator.onLine
 }
 
 export const isImageNotSupportedError = (

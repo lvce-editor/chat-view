@@ -4,6 +4,12 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const dictationIconNode: VirtualDomNode = {
+  childCount: 0,
+  className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconMic),
+  type: VirtualDomElements.Div,
+}
+
 export const getDictationButtonDom = (): readonly VirtualDomNode[] => {
   return [
     {
@@ -14,10 +20,6 @@ export const getDictationButtonDom = (): readonly VirtualDomNode[] => {
       title: Strings.startVoiceDictation(),
       type: VirtualDomElements.Button,
     },
-    {
-      childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconMic),
-      type: VirtualDomElements.Div,
-    },
+    dictationIconNode,
   ]
 }

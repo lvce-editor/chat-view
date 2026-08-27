@@ -3,22 +3,26 @@ import type { TodoListItem } from '../TodoListItem/TodoListItem.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getTodoItemClassName } from '../GetTodoItemClassName/GetTodoItemClassName.ts'
 
+const chatTodoListNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatTodoList,
+  type: VirtualDomElements.Div,
+}
+
+const chatTodoListHeaderNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatTodoListHeader,
+  type: VirtualDomElements.Div,
+}
+
 export const getTodoListDom = (hasTodoList: boolean, todoListItems: readonly TodoListItem[]): readonly VirtualDomNode[] => {
   if (!hasTodoList) {
     return []
   }
   const todoHeaderText = `Todos (${todoListItems.filter((item) => item.status === 'completed').length}/${todoListItems.length})`
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatTodoList,
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatTodoListHeader,
-      type: VirtualDomElements.Div,
-    },
+    chatTodoListNode,
+    chatTodoListHeaderNode,
     {
       ...text(todoHeaderText),
     },

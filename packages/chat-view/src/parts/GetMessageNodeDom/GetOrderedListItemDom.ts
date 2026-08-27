@@ -5,6 +5,18 @@ import { getInlineNodeDom } from '../GetInlineNodeDom/GetInlineNodeDom.ts'
 
 const leadingPunctuationRegex = /^([:;,.!?]+)([\s\S]*)$/
 
+const chatOrderedListItemNode: VirtualDomNode = {
+  childCount: 2,
+  className: ClassNames.ChatOrderedListItem,
+  type: VirtualDomElements.Li,
+}
+
+const chatOrderedListMarkerNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatOrderedListMarker,
+  type: VirtualDomElements.Span,
+}
+
 const splitLeadingPunctuation = (
   children: readonly MessageInlineNode[],
 ): {
@@ -82,16 +94,8 @@ export const getOrderedListItemDom = (
           ...prefixChildren.flatMap((child) => getInlineNodeDom(child, useChatMathWorker)),
         ]
   return [
-    {
-      childCount: 2,
-      className: ClassNames.ChatOrderedListItem,
-      type: VirtualDomElements.Li,
-    },
-    {
-      childCount: 1,
-      className: ClassNames.ChatOrderedListMarker,
-      type: VirtualDomElements.Span,
-    },
+    chatOrderedListItemNode,
+    chatOrderedListMarkerNode,
     text(marker),
     {
       childCount: (prefixDom.length === 0 ? 0 : 1) + remainingChildren.length + (hasNestedList ? 1 : 0),

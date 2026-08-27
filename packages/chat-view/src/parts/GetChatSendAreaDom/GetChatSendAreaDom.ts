@@ -27,6 +27,20 @@ import { getUsageOverviewDom } from '../GetUsageOverviewDom/GetUsageOverviewDom.
 import { getComposerAttachmentsDom } from './GetComposerAttachmentsDom/GetComposerAttachmentsDom.ts'
 import { getComposerTextAreaDom } from './GetComposerTextAreaDom/GetComposerTextAreaDom.ts'
 
+const chatSendAreaNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatSendArea,
+  onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
+  onSubmit: DomEventListenerFunctions.HandleSubmit,
+  type: VirtualDomElements.Form,
+}
+
+const chatSendAreaContentTopNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.ChatSendAreaContentTop,
+  type: VirtualDomElements.Div,
+}
+
 export const getChatSendAreaDom = (
   composerValue: string,
   composerAttachments: readonly ComposerAttachment[],
@@ -87,15 +101,25 @@ export const getChatSendAreaDom = (
     (primaryControlsOverflowButtonVisible && hiddenPrimaryControls.length > 0 ? 1 : 0)
   const hasTodoList = todoListToolEnabled && todoListItems.length > 0
   const hasComposerAttachments = composerAttachments.length > 0
+  const agentModePickerDom = showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []
+  const modelPickerDom = showModelPicker ? getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled) : []
+  const reasoningEffortPickerDom = showReasoningEffortPicker
+    ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled)
+    : []
+  const responsiveRunModePickerDom = showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []
+  const primaryControlsOverflowButtonDom =
+    primaryControlsOverflowButtonVisible && hiddenPrimaryControls.length > 0 ? getPrimaryControlsOverflowButtonDom() : []
+  const usageOverviewDom = usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []
+  const addContextButtonDom = addContextButtonEnabled ? getAddContextButtonDom() : []
+  const createPullRequestButtonDom = showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []
+  const implementPlanButtonDom = showImplementPlanButton ? getImplementPlanButtonDom() : []
+  const gitBranchPickerDom = showGitBranchPicker
+    ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, selectChevronEnabled)
+    : []
+  const scrollDownButtonDom = showScrollDownButton ? getScrollDownButtonDom() : []
 
   return [
-    {
-      childCount: 1,
-      className: ClassNames.ChatSendArea,
-      onContextMenu: DomEventListenerFunctions.HandleContextMenuChatSendAreaBottom,
-      onSubmit: DomEventListenerFunctions.HandleSubmit,
-      type: VirtualDomElements.Form,
-    },
+    chatSendAreaNode,
     {
       childCount: 2 + (hasTodoList ? 1 : 0) + (hasComposerAttachments ? 1 : 0),
       className: ClassNames.ChatSendAreaContent,
@@ -103,11 +127,7 @@ export const getChatSendAreaDom = (
     },
     ...getTodoListDom(hasTodoList, todoListItems),
     ...getComposerAttachmentsDom(composerAttachments),
-    {
-      childCount: 1,
-      className: ClassNames.ChatSendAreaContentTop,
-      type: VirtualDomElements.Div,
-    },
+    chatSendAreaContentTopNode,
     getComposerTextAreaDom(),
     {
       childCount: bottomControlsCount,
@@ -121,19 +141,17 @@ export const getChatSendAreaDom = (
       role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
-    ...(showAgentModePicker ? getAgentModePickerVirtualDom(agentMode, agentModePickerOpen, selectChevronEnabled) : []),
-    ...(showModelPicker ? getChatModelPickerToggleVirtualDom(models, selectedModelId, modelPickerOpen, selectChevronEnabled) : []),
-    ...(showReasoningEffortPicker ? getReasoningEffortPickerVirtualDom(reasoningEffort, reasoningEffortPickerOpen, selectChevronEnabled) : []),
-    ...(showResponsiveRunModePicker ? getRunModePickerVirtualDom(runMode, runModePickerOpen, selectChevronEnabled) : []),
-    ...(primaryControlsOverflowButtonVisible && hiddenPrimaryControls.length > 0 ? getPrimaryControlsOverflowButtonDom() : []),
-    ...(usageOverviewEnabled ? getUsageOverviewDom(tokensUsed, tokensMax) : []),
-    ...(addContextButtonEnabled ? getAddContextButtonDom() : []),
-    ...(showCreatePullRequestButton ? getCreatePullRequestButtonDom() : []),
-    ...(showImplementPlanButton ? getImplementPlanButtonDom() : []),
-    ...(showGitBranchPicker
-      ? getGitBranchPickerVirtualDom(gitBranches, gitBranchPickerOpen, gitBranchPickerErrorMessage, fallbackBranchName, selectChevronEnabled)
-      : []),
-    ...(showScrollDownButton ? getScrollDownButtonDom() : []),
+    ...agentModePickerDom,
+    ...modelPickerDom,
+    ...reasoningEffortPickerDom,
+    ...responsiveRunModePickerDom,
+    ...primaryControlsOverflowButtonDom,
+    ...usageOverviewDom,
+    ...addContextButtonDom,
+    ...createPullRequestButtonDom,
+    ...implementPlanButtonDom,
+    ...gitBranchPickerDom,
+    ...scrollDownButtonDom,
     ...getSendButtonDom(isSendDisabled, voiceDictationEnabled, isSessionInProgress),
   ]
 }

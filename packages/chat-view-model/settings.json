@@ -1,0 +1,194 @@
+[
+  {
+    "category": "chat",
+    "description": "Generate titles for AI chat sessions",
+    "heading": "AI Session Title Generation",
+    "id": "chatView.aiSessionTitleGenerationEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Enable authentication in chat",
+    "heading": "Authentication",
+    "id": "chat.authEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Use a redirect when authenticating chat",
+    "heading": "Authentication Redirect",
+    "id": "chat.authUseRedirect",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "The URL of the chat backend",
+    "heading": "Backend URL",
+    "id": "chat.backendUrl",
+    "type": 2,
+    "value": "https://lvce-editor.dev"
+  },
+  {
+    "category": "chat",
+    "description": "Save chat history",
+    "heading": "Chat History",
+    "id": "chat.chatHistoryEnabled",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Allow files to be dropped into the chat composer",
+    "heading": "Composer Drop",
+    "id": "chatView.composerDropEnabled",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Emit streaming function call events",
+    "heading": "Streaming Function Calls",
+    "id": "chatView.emitStreamingFunctionCallEvents",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Pass include obfuscation information to the chat backend",
+    "heading": "Include Obfuscation",
+    "id": "chatView.passIncludeObfuscation",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Show the reasoning picker",
+    "heading": "Reasoning Picker",
+    "id": "chatView.reasoningPickerEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Show the run mode picker",
+    "heading": "Run Mode Picker",
+    "id": "chatView.runModePickerEnabled",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Show a button for scrolling to the newest message",
+    "heading": "Scroll Down Button",
+    "id": "chatView.scrollDownButtonEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Enable chat search",
+    "heading": "Search",
+    "id": "chatView.searchEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Show timestamps in the chat list",
+    "heading": "Chat List Time",
+    "id": "chatView.showChatListTime",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Show the model usage multiplier",
+    "heading": "Model Usage Multiplier",
+    "id": "chatView.showModelUsageMultiplier",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Stream chat responses",
+    "heading": "Streaming",
+    "id": "chatView.streamingEnabled",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Enable the todo list tool",
+    "heading": "Todo List Tool",
+    "id": "chatView.todoListToolEnabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Configure which chat tools are enabled",
+    "heading": "Tool Enablement",
+    "id": "chat.toolEnablement",
+    "type": 4,
+    "value": {}
+  },
+  {
+    "category": "chat",
+    "description": "Use the authentication worker",
+    "heading": "Authentication Worker",
+    "id": "chatView.useAuthWorker",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Use the chat coordinator worker",
+    "heading": "Chat Coordinator Worker",
+    "id": "chatView.useChatCoordinatorWorker",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Use the chat math worker",
+    "heading": "Chat Math Worker",
+    "id": "chatView.useChatMathWorker",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Use the chat network worker for requests",
+    "heading": "Chat Network Worker",
+    "id": "chatView.useChatNetworkWorkerForRequests",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "chat",
+    "description": "Use the chat tool worker",
+    "heading": "Chat Tool Worker",
+    "id": "chatView.useChatToolWorker",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Use a separately configured chat backend",
+    "heading": "Use Own Backend",
+    "id": "chat.useOwnBackend",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "chat",
+    "description": "Enable voice dictation",
+    "heading": "Voice Dictation",
+    "id": "chatView.voiceDictationEnabled",
+    "type": 3,
+    "value": false
+  }
+]
