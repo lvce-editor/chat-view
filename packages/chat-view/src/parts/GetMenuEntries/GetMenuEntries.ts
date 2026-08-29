@@ -20,23 +20,17 @@ import {
 export const getMenuEntries = (menuId: number, props: ContextMenuProps): readonly MenuEntry[] => {
   switch (props.menuId) {
     case MenuChatAttachment:
-      return getMenuEntriesChatAttachment(props.attachmentId, props.previewSrc)
+      return getMenuEntriesChatAttachment(props)
     case MenuChatHeader:
       return getMenuEntriesChatHeader()
     case MenuChatInput:
       return getMenuEntriesChatInput()
     case MenuChatList:
-      return getMenuEntriesChatList(props.sessionId)
+      return getMenuEntriesChatList(props)
     case MenuChatPrimaryControlsOverflow:
-      return getMenuEntriesPrimaryControlsOverflow(
-        props.hiddenPrimaryControls,
-        props.agentModeLabel,
-        props.modelLabel,
-        props.reasoningEffortLabel,
-        props.runModeLabel,
-      )
+      return getMenuEntriesPrimaryControlsOverflow(props)
     case MenuChatProjectList:
-      return getMenuEntriesChatProjectList(props.projectId, props.canRemoveProject)
+      return getMenuEntriesChatProjectList(props)
     case MenuProjectAddButton:
       return getMenuEntriesProjectAddButton()
     default:
