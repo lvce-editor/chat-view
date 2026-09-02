@@ -11,7 +11,7 @@ const filenames = [
   'multi-image-fourth-upload-with-extra-details-about-dimensions-and-source-asset-version-2026-03-27.svg',
 ] as const
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-file-drop-multiple-images-lengthy-filenames', [])
@@ -24,7 +24,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', files)
+  const dropId = await DragAndDrop.createDropSession(files.map((file) => ({ file, kind: 'file' as const, type: file.type })))
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
 
   await expect(attachment).toHaveCount(files.length)
   await expect(preview).toHaveCount(files.length)

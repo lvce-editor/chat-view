@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatStorageWorker, DragAndDropWorker, RendererWorker } from '@lvce-editor/rpc-registry'
+import { ChatStorageWorker, DragAndDropWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
 import type { ChatViewEvent } from '../src/parts/ChatViewEvent/ChatViewEvent.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
@@ -14,22 +14,6 @@ const createFile = (name: string, type: string, content: string): File => {
   return Object.assign(blob, { name }) as File
 }
 
-const createFileHandle = (file: File): FileSystemFileHandle => {
-  const fileHandle: FileSystemFileHandle = {
-    createSyncAccessHandle: async (): Promise<FileSystemSyncAccessHandle> => {
-      throw new Error('Not implemented in test')
-    },
-    createWritable: async (): Promise<FileSystemWritableFileStream> => {
-      throw new Error('Not implemented in test')
-    },
-    getFile: async (): Promise<File> => file,
-    isSameEntry: async (other: FileSystemHandle): Promise<boolean> => other.name === file.name && other.kind === 'file',
-    kind: 'file',
-    name: file.name,
-  }
-  return fileHandle
-}
-
 test('handleDropFiles stores dropped files as attachment events', async () => {
   const state: ChatState = {
     ...createDefaultState(),
@@ -37,8 +21,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     selectedSessionId: 'session-1',
   }
   const files = [createFile('photo.svg', 'image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>')]
-  const fileHandleIds = [1]
-  const fileHandles = [createFileHandle(files[0])]
+  const dropId = 1
   const storedEvents: ChatViewEvent[] = []
   using mockRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.appendEvent'(event: ChatViewEvent) {
@@ -49,14 +32,13 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
       return storedEvents.filter((event) => event.sessionId === sessionId)
     },
   })
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
-      expect(ids).toEqual(fileHandleIds)
-      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
+  using dragRpc = DragAndDropWorker.registerMockRpc({
+    'DragAndDrop.getDroppedFilesByDropId'() {
+      return files
     },
   })
 
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, dropId)
 
   expect(newState.composerDropActive).toBe(false)
   expect(newState.composerAttachments).toEqual([
@@ -83,7 +65,7 @@ test('handleDropFiles stores dropped files as attachment events', async () => {
     throw new TypeError('Expected chat-attachment-added event')
   }
   expect(events[0].blob).toBeInstanceOf(Blob)
-  expect(mockRendererRpc.invocations).toEqual([['FileSystemHandle.getFileHandles', fileHandleIds]])
+  expect(dragRpc.invocations).toEqual([['DragAndDrop.getDroppedFilesByDropId', dropId]])
   expect(mockRpc.invocations).toEqual([
     ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-1' })],
     ['ChatStorage.getEvents', 'session-1'],
@@ -97,13 +79,12 @@ test('handleDropFiles resolves an opt-in drop session through drag-and-drop-work
     selectedSessionId: 'session-drop-id',
   }
   const file = createFile('notes.txt', 'text/plain', 'hello')
-  const fileHandle = createFileHandle(file)
   using _storageRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.appendEvent'() {},
   })
   using dragRpc = DragAndDropWorker.registerMockRpc({
-    'DragAndDrop.getDroppedFileHandlesByDropId'() {
-      return [fileHandle]
+    'DragAndDrop.getDroppedFilesByDropId'() {
+      return [file]
     },
   })
 
@@ -111,23 +92,7 @@ test('handleDropFiles resolves an opt-in drop session through drag-and-drop-work
 
   expect(newState.composerAttachments).toHaveLength(1)
   expect(newState.composerAttachments[0].name).toBe('notes.txt')
-  expect(dragRpc.invocations).toEqual([['DragAndDrop.getDroppedFileHandlesByDropId', 31]])
-})
-
-test('handleDropFiles discards an unused opt-in drop session', async () => {
-  const state: ChatState = {
-    ...createDefaultState(),
-    composerDropActive: true,
-    selectedSessionId: '',
-  }
-  using dragRpc = DragAndDropWorker.registerMockRpc({
-    'DragAndDrop.discardDrop'() {},
-  })
-
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 32)
-
-  expect(newState.composerDropActive).toBe(false)
-  expect(dragRpc.invocations).toEqual([['DragAndDrop.discardDrop', 32]])
+  expect(dragRpc.invocations).toEqual([['DragAndDrop.getDroppedFilesByDropId', 31]])
 })
 
 test('handleDropFiles is no-op when no session is selected', async () => {
@@ -137,29 +102,15 @@ test('handleDropFiles is no-op when no session is selected', async () => {
     selectedSessionId: '',
   }
 
-  const files = [createFile('note.txt', 'text/plain', 'hello')]
-  const fileHandleIds = [7]
-  const fileHandles = [createFileHandle(files[0])]
-  using mockRpc = ChatStorageWorker.registerMockRpc({
-    'ChatStorage.getEvents'() {
-      return []
-    },
+  using dragRpc = DragAndDropWorker.registerMockRpc({
+    'DragAndDrop.discardDrop'() {},
   })
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
-      expect(ids).toEqual(fileHandleIds)
-      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
-    },
-  })
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
+  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 7)
 
   expect(newState.composerDropActive).toBe(false)
   expect(newState.composerAttachments).toHaveLength(0)
   expect(newState.composerAttachmentsHeight).toBe(0)
-  const events = await getChatViewEvents()
-  expect(events).toHaveLength(0)
-  expect(mockRendererRpc.invocations).toEqual([['FileSystemHandle.getFileHandles', fileHandleIds]])
-  expect(mockRpc.invocations).toEqual([['ChatStorage.getEvents', undefined]])
+  expect(dragRpc.invocations).toEqual([['DragAndDrop.discardDrop', 7]])
 })
 
 test('handleDropFiles keeps duplicate images when the same image is dropped twice', async () => {
@@ -168,8 +119,6 @@ test('handleDropFiles keeps duplicate images when the same image is dropped twic
     selectedSessionId: 'session-duplicate-image',
   }
   const file = createFile('photo.svg', 'image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>')
-  const fileHandleIds = [1]
-  const fileHandles = [createFileHandle(file)]
   const storedEvents: ChatViewEvent[] = []
   using mockRpc = ChatStorageWorker.registerMockRpc({
     'ChatStorage.appendEvent'(event: ChatViewEvent) {
@@ -180,15 +129,14 @@ test('handleDropFiles keeps duplicate images when the same image is dropped twic
       return storedEvents.filter((event) => event.sessionId === sessionId)
     },
   })
-  using mockRendererRpc = RendererWorker.registerMockRpc({
-    'FileSystemHandle.getFileHandles'(ids: readonly number[]) {
-      expect(ids).toEqual(fileHandleIds)
-      return fileHandles.map((fileHandle) => ({ value: fileHandle }))
+  using dragRpc = DragAndDropWorker.registerMockRpc({
+    'DragAndDrop.getDroppedFilesByDropId'() {
+      return [file]
     },
   })
 
-  const firstState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, fileHandleIds)
-  const secondState = await HandleDropFiles.handleDropFiles(firstState, InputName.ComposerDropTarget, fileHandleIds)
+  const firstState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 1)
+  const secondState = await HandleDropFiles.handleDropFiles(firstState, InputName.ComposerDropTarget, 2)
 
   expect(secondState.composerAttachments).toHaveLength(2)
   expect(secondState.composerAttachments).toEqual([
@@ -232,8 +180,8 @@ test('handleDropFiles keeps duplicate images when the same image is dropped twic
     ['ChatStorage.appendEvent', expect.objectContaining({ name: 'photo.svg', sessionId: 'session-duplicate-image' })],
     ['ChatStorage.getEvents', 'session-duplicate-image'],
   ])
-  expect(mockRendererRpc.invocations).toEqual([
-    ['FileSystemHandle.getFileHandles', fileHandleIds],
-    ['FileSystemHandle.getFileHandles', fileHandleIds],
+  expect(dragRpc.invocations).toEqual([
+    ['DragAndDrop.getDroppedFilesByDropId', 1],
+    ['DragAndDrop.getDroppedFilesByDropId', 2],
   ])
 })

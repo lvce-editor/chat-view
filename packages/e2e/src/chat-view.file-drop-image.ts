@@ -5,7 +5,7 @@ export const name = 'chat-view.file-drop-image'
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 const svgPreviewSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg=='
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-file-drop-image', [])
@@ -21,7 +21,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile, textFile])
+  const dropId = await DragAndDrop.createDropSession([
+    { file: imageFile, kind: 'file', type: imageFile.type },
+    { file: textFile, kind: 'file', type: textFile.type },
+  ])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(2)

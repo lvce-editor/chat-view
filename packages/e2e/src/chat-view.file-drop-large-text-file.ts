@@ -11,7 +11,7 @@ const createLargeTextFile = (): File => {
   return new File(chunks, 'large-notes.txt', { type: 'text/plain' })
 }
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-file-drop-large-text-file', [])
@@ -23,7 +23,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  const dropId = await DragAndDrop.createDropSession([{ file, kind: 'file', type: file.type }])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1)

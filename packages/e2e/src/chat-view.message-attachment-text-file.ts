@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.message-attachment-text-file'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -18,7 +18,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const file = new File(['hello from text file'], 'notes.txt', { type: 'text/plain' })
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  const dropId = await DragAndDrop.createDropSession([{ file, kind: 'file', type: file.type }])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await Chat.handleInput('Please review this text file')
   await Chat.handleSubmit()
 

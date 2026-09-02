@@ -5,7 +5,7 @@ export const name = 'chat-view.message-attachment-image'
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 const svgPreviewSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiPjwvc3ZnPg=='
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -21,7 +21,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const file = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [file])
+  const dropId = await DragAndDrop.createDropSession([{ file, kind: 'file', type: file.type }])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await Chat.handleInput('Please review this image')
   await Chat.handleSubmit()
 

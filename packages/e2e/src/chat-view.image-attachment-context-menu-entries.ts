@@ -4,7 +4,7 @@ export const name = 'chat-view.image-attachment-context-menu-entries'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-image-attachment-context-menu-entries', [])
@@ -14,7 +14,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const openMenuItem = Locator('.MenuItem').nth(0)
   const removeMenuItem = Locator('.MenuItem').nth(1)
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
+  const dropId = await DragAndDrop.createDropSession([{ file: imageFile, kind: 'file', type: imageFile.type }])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await expect(preview).toBeVisible()
 
   await Command.execute('Chat.handleContextMenuChatImageAttachment', '', 0, 0)
