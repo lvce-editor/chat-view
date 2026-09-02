@@ -64,10 +64,11 @@ export const handleDropFiles = async (state: ChatState, name: string, dropId: nu
       }),
     })
   }
+  const composerAttachments = [...nextState.composerAttachments, ...nextAttachments]
   return {
     ...nextState,
-    composerAttachments: [...nextState.composerAttachments, ...nextAttachments],
-    composerAttachmentsHeight: getComposerAttachmentsHeight([...nextState.composerAttachments, ...nextAttachments], width),
+    composerAttachments,
+    composerAttachmentsHeight: getComposerAttachmentsHeight(composerAttachments, width),
     nextAttachmentId: nextAttachmentId + nextAttachments.length,
   }
 }

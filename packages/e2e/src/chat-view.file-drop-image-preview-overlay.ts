@@ -7,7 +7,7 @@ const svgPreviewSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy5
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-file-drop-image-preview-overlay', [])
@@ -19,7 +19,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile])
+  const dropId = await DragAndDrop.createDropSession([{ file: imageFile, kind: 'file', type: imageFile.type }])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await Command.execute('Chat.showComposerAttachmentPreviewOverlay', 'attachment-1')
 
   await expect(overlay).toBeVisible()

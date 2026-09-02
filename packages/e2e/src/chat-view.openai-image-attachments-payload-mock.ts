@@ -4,7 +4,7 @@ export const name = 'chat-view.openai-image-attachments-payload-mock'
 
 const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -21,7 +21,11 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
   const textFile = new File(['hello from text file'], 'notes.txt', { type: 'text/plain' })
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', [imageFile, textFile])
+  const dropId = await DragAndDrop.createDropSession([
+    { file: imageFile, kind: 'file', type: imageFile.type },
+    { file: textFile, kind: 'file', type: textFile.type },
+  ])
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await Chat.handleInput('Please review the attachments')
   await Chat.handleSubmit()
 

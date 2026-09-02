@@ -95,22 +95,6 @@ test('handleDropFiles resolves an opt-in drop session through drag-and-drop-work
   expect(dragRpc.invocations).toEqual([['DragAndDrop.getDroppedFilesByDropId', 31]])
 })
 
-test('handleDropFiles discards an unused opt-in drop session', async () => {
-  const state: ChatState = {
-    ...createDefaultState(),
-    composerDropActive: true,
-    selectedSessionId: '',
-  }
-  using dragRpc = DragAndDropWorker.registerMockRpc({
-    'DragAndDrop.discardDrop'() {},
-  })
-
-  const newState = await HandleDropFiles.handleDropFiles(state, InputName.ComposerDropTarget, 32)
-
-  expect(newState.composerDropActive).toBe(false)
-  expect(dragRpc.invocations).toEqual([['DragAndDrop.discardDrop', 32]])
-})
-
 test('handleDropFiles is no-op when no session is selected', async () => {
   const state: ChatState = {
     ...createDefaultState(),

@@ -9,7 +9,7 @@ const createImageFiles = (count: number): readonly File[] => {
   return Array.from({ length: count }, (_, index) => new File([svgContent], `photo-${index + 1}.svg`, { type: 'image/svg+xml' }))
 }
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.setStreamingEnabled(true)
@@ -25,7 +25,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   const files = createImageFiles(50)
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', files)
+  const dropId = await DragAndDrop.createDropSession(files.map((file) => ({ file, kind: 'file' as const, type: file.type })))
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
   await Chat.handleInput('Please review these images')
   await Chat.handleSubmit()
 

@@ -10,7 +10,7 @@ const createImageFiles = (count: number): readonly File[] => {
 
 export const skip = 1
 
-export const test: Test = async ({ Chat, Command, expect, Locator }) => {
+export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
   await Chat.openMockSession('session-file-drop-1000-images', [])
@@ -22,7 +22,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
 
   await expect(composer).toBeVisible()
 
-  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', files)
+  const dropId = await DragAndDrop.createDropSession(files.map((file) => ({ file, kind: 'file' as const, type: file.type })))
+  await Command.execute('Chat.handleDropFiles', 'composer-drop-target', dropId)
 
   await expect(attachments).toBeVisible()
   await expect(attachment).toHaveCount(1000)
