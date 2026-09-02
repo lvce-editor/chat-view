@@ -6,23 +6,16 @@ import { getComposerAttachmentDisplayType } from '../GetComposerAttachmentDispla
 import { getComposerAttachmentPreviewSrc } from '../GetComposerAttachmentPreviewSrc/GetComposerAttachmentPreviewSrc.ts'
 import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/GetComposerAttachmentsHeight.ts'
 import { getComposerAttachmentTextContent } from '../GetComposerAttachmentTextContent/GetComposerAttachmentTextContent.ts'
-import { getDroppedFiles } from '../GetDroppedFiles/GetDroppedFiles.ts'
 import * as InputName from '../InputName/InputName.ts'
 
-export const handleDropFiles = async (state: ChatState, name: string, dropIdOrFileHandles: number | readonly number[] = []): Promise<ChatState> => {
-  const isDropSession = typeof dropIdOrFileHandles === 'number'
-  const legacyDroppedFileHandles = isDropSession ? undefined : await getDroppedFiles(dropIdOrFileHandles)
+export const handleDropFiles = async (state: ChatState, name: string, dropId: number): Promise<ChatState> => {
   const { composerDropActive, composerDropEnabled, nextAttachmentId, selectedSessionId, width } = state
   if (name !== InputName.ComposerDropTarget) {
-    if (isDropSession) {
-      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
-    }
+    await DragAndDropWorker.discardDrop(dropId)
     return state
   }
   if (!composerDropEnabled) {
-    if (isDropSession) {
-      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
-    }
+    await DragAndDropWorker.discardDrop(dropId)
     return {
       ...state,
       composerDropActive: false,
@@ -34,16 +27,13 @@ export const handleDropFiles = async (state: ChatState, name: string, dropIdOrFi
         composerDropActive: false,
       }
     : state
-  if (!selectedSessionId || (!isDropSession && dropIdOrFileHandles.length === 0)) {
-    if (isDropSession) {
-      await DragAndDropWorker.discardDrop(dropIdOrFileHandles)
-    }
+  if (!selectedSessionId) {
+    await DragAndDropWorker.discardDrop(dropId)
     return nextState
   }
-  const droppedFileHandles = legacyDroppedFileHandles || (await getDroppedFiles(dropIdOrFileHandles))
+  const droppedFiles = await DragAndDropWorker.getDroppedFilesByDropId(dropId)
   const nextAttachments: ComposerAttachment[] = []
-  for (const droppedFileHandle of droppedFileHandles) {
-    const file = await droppedFileHandle.getFile()
+  for (const file of droppedFiles) {
     const attachmentId = `attachment-${nextAttachmentId + nextAttachments.length}`
     const displayType = await getComposerAttachmentDisplayType(file, file.name, file.type)
     const [previewSrc, textContent] = await Promise.all([
