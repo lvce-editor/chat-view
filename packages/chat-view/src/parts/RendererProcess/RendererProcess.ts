@@ -7,6 +7,8 @@ export const isConnected = (): boolean => {
   return connected
 }
 export const invoke = (method: string, ...params: readonly unknown[]): Promise<any> => RendererProcessRegistry.invoke(method, ...params)
+export const invokeAndTransfer = (method: string, ...params: readonly unknown[]): Promise<any> =>
+  RendererProcessRegistry.invokeAndTransfer(method, ...params)
 export const set = (rpc: Rpc): void => {
   RendererProcessRegistry.set(rpc)
   state.connected = true
