@@ -101,7 +101,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   try {
     await ChatCoordinatorWorker.invoke('ChatCoordinator.handleSubmit', {
       attachments: getComposerAttachments(state),
-      authAccessToken: getAuthAccessToken(state),
+      authAccessToken: getAuthAccessToken(effectiveState),
       backendUrl: getBackendUrl(state),
       id: crypto.randomUUID(),
       maxToolCalls: defaultMaxToolCalls,
