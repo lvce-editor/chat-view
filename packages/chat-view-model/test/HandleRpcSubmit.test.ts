@@ -70,7 +70,8 @@ const createState = (overrides: Readonly<Partial<PrototypeState>> = {}): Prototy
   }
 }
 
-test('handleRpcSubmit syncs backend auth for authenticated backend requests', async () => {
+test.each(['', 'existing-token'])('handleRpcSubmit submits refreshed backend auth instead of %s', async (authAccessToken) => {
+  const uid = authAccessToken ? 103 : 102
   using mockStorageRpc = registerMockChatStorageRpc()
   using mockToolRpc = registerMockChatToolRpc()
   using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({
@@ -91,13 +92,13 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
   try {
     await handleRpcSubmit(
       createState({
-        authAccessToken: 'existing-token',
-        uid: 102,
-        useOwnBackend: false,
+        authAccessToken,
+        uid,
+        useOwnBackend: true,
       }),
     )
 
-    const currentState = getState(102) as PrototypeState | undefined
+    const currentState = getState(uid) as PrototypeState | undefined
     expect(currentState?.authAccessToken).toBe('refreshed-token')
     expect(currentState?.userState).toBe('loggedIn')
     expect(mockStorageRpc.invocations).toContainEqual([
@@ -106,12 +107,13 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
         rpcId: rpcIdViewModel,
         sessionId: 'session-1',
         type: 'session',
-        uid: 102,
+        uid,
       },
     ])
     expect(mockCoordinatorRpc.invocations).toContainEqual([
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({
+        authAccessToken: 'refreshed-token',
         backendUrl: 'https://backend.example.com',
         maxToolCalls: 100,
         text: 'hello backend',
@@ -141,7 +143,7 @@ test('handleRpcSubmit syncs backend auth for authenticated backend requests', as
             type: 'function',
           },
         ],
-        useOwnBackend: false,
+        useOwnBackend: true,
       }),
     ])
     expect(mockToolRpc.invocations).toEqual([['ChatTool.getTools']])
