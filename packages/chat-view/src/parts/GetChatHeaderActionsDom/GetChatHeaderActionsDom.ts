@@ -6,11 +6,18 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const layoutIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconLayoutPanelLeft)
+const searchIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSearch)
+const debugIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDebugPause)
+const addIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd)
+const settingsIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSettingsGear)
+const closeIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconClose)
+
 export const getChatHeaderActionsDom = (viewMode: ChatViewMode, searchEnabled = false): readonly VirtualDomNode[] => {
   const toggleTitle = viewMode === 'chat-focus' ? Strings.normalChatMode() : Strings.chatFocusMode()
   const items = [
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconLayoutPanelLeft),
+      icon: layoutIconClassName,
       name: InputName.ToggleChatFocus,
       onClick: DomEventListenerFunctions.HandleClick,
       title: toggleTitle,
@@ -18,7 +25,7 @@ export const getChatHeaderActionsDom = (viewMode: ChatViewMode, searchEnabled = 
     ...(searchEnabled
       ? [
           {
-            icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSearch),
+            icon: searchIconClassName,
             name: InputName.ToggleSearch,
             onClick: DomEventListenerFunctions.HandleClick,
             title: Strings.search(),
@@ -26,25 +33,25 @@ export const getChatHeaderActionsDom = (viewMode: ChatViewMode, searchEnabled = 
         ]
       : []),
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDebugPause),
+      icon: debugIconClassName,
       name: InputName.SessionDebug,
       onClick: DomEventListenerFunctions.HandleClickSessionDebug,
       title: Strings.debug(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd),
+      icon: addIconClassName,
       name: InputName.CreateSession,
       onClick: DomEventListenerFunctions.HandleClickNew,
       title: Strings.newChat(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconSettingsGear),
+      icon: settingsIconClassName,
       name: InputName.Settings,
       onClick: DomEventListenerFunctions.HandleClickSettings,
       title: Strings.settings(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconClose),
+      icon: closeIconClassName,
       name: InputName.CloseChat,
       onClick: DomEventListenerFunctions.HandleClickClose,
       title: Strings.closeChat(),

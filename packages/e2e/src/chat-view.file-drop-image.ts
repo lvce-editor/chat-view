@@ -16,6 +16,8 @@ export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }
   const imageAttachment = attachment.nth(0)
   const textAttachment = attachment.nth(1)
   const previews = Locator('.ChatComposerAttachmentPreview')
+  const imagePreview = imageAttachment.locator('.ChatComposerAttachmentPreview')
+  const textPreview = textAttachment.locator('.ChatComposerAttachmentPreview')
   const imageFile = new File([svgContent], 'photo.svg', { type: 'image/svg+xml' })
   const textFile = new File(['hello from text file'], 'notes.txt', { type: 'text/plain' })
 
@@ -32,7 +34,7 @@ export const test: Test = async ({ Chat, Command, DragAndDrop, expect, Locator }
   await expect(imageAttachment).toHaveText('xImage · photo.svg')
   await expect(textAttachment).toHaveText('xText file · notes.txt')
   await expect(previews).toHaveCount(1)
-  await expect(imageAttachment.locator('.ChatComposerAttachmentPreview')).toHaveCount(1)
-  await expect(imageAttachment.locator('.ChatComposerAttachmentPreview')).toHaveAttribute('src', svgPreviewSrc)
-  await expect(textAttachment.locator('.ChatComposerAttachmentPreview')).toHaveCount(0)
+  await expect(imagePreview).toHaveCount(1)
+  await expect(imagePreview).toHaveAttribute('src', svgPreviewSrc)
+  await expect(textPreview).toHaveCount(0)
 }

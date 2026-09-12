@@ -15,6 +15,8 @@ import { getChatHeaderListModeDom } from '../GetChatHeaderDomListMode/GetChatHea
 import { getChatListDom } from '../GetChatListDom/GetChatListDom.ts'
 import { getChatOverlaysVirtualDom } from '../GetChatOverlaysVirtualDom/GetChatOverlaysVirtualDom.ts'
 
+const viewClassName = mergeClassNames(ClassNames.Viewlet, ClassNames.Chat)
+
 export interface GetChatModeListVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
   readonly agentMode: AgentMode
@@ -136,7 +138,7 @@ export const getChatModeListVirtualDom = ({
   return [
     {
       childCount: chatRootChildCount,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
+      className: viewClassName,
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,

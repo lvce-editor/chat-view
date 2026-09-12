@@ -24,6 +24,8 @@ import { getLatestExecutablePlanMessage } from '../GetLatestExecutablePlanMessag
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 import { getProjectListDom } from '../GetProjectListDom/GetProjectListDom.ts'
 
+const viewClassName = mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus)
+
 export interface GetChatModeChatFocusVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
   readonly agentMode: AgentMode
@@ -191,7 +193,7 @@ export const getChatModeChatFocusVirtualDom = ({
   return [
     {
       childCount: chatRootChildCount + 1,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat, ClassNames.ChatFocus),
+      className: viewClassName,
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       onPointerMove: DomEventListenerFunctions.HandlePointerMoveProjectSidebarSash,

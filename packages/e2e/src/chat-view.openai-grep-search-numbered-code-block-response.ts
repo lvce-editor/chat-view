@@ -69,7 +69,8 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(message0).toHaveText('use your grep tool to search for "hello"')
 
   const toolCallMessage = messages.nth(1)
-  await expect(toolCallMessage.locator('.ChatOrderedListItem')).toHaveCount(1)
+  const toolCallItems = toolCallMessage.locator('.ChatOrderedListItem')
+  await expect(toolCallItems).toHaveCount(1)
   await expect(toolCallMessage).toContainText('grep_search')
   await expect(toolCallMessage).toContainText('"query":"hello"')
 

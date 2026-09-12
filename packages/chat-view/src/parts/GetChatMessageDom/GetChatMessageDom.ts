@@ -19,6 +19,8 @@ import { getOpenRouterTooManyRequestsDom } from '../GetOpenRouterTooManyRequests
 import { getToolCallsDom } from '../GetToolCallsDom/GetToolCallsDom.ts'
 import { getTopLevelNodeCount } from '../GetTopLevelNodeCount/GetTopLevelNodeCount.ts'
 
+const imageContentClassName = mergeClassNames(ClassNames.ChatMessageContent, ClassNames.ChatImageMessageContent)
+
 const chatAttachmentLabelNode: VirtualDomNode = {
   childCount: 1,
   className: ClassNames.ChatAttachmentLabel,
@@ -158,9 +160,7 @@ export const getChatMessageDom = (
     },
     {
       childCount: extraChildCount,
-      className: isStandaloneImageMessage
-        ? mergeClassNames(ClassNames.ChatMessageContent, ClassNames.ChatImageMessageContent)
-        : ClassNames.ChatMessageContent,
+      className: isStandaloneImageMessage ? imageContentClassName : ClassNames.ChatMessageContent,
       type: VirtualDomElements.Div,
     },
     ...toolCallsDom,

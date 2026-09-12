@@ -4,11 +4,13 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const buttonClassName = mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary)
+
 export const getScrollDownButtonDom = (): readonly VirtualDomNode[] => {
   return [
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      className: buttonClassName,
       inputType: 'button',
       name: InputName.ScrollDown,
       onClick: DomEventListenerFunctions.HandleClick,

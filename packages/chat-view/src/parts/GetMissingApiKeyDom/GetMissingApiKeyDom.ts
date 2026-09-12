@@ -4,6 +4,9 @@ import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 
+const primaryButtonClassName = mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary)
+const secondaryButtonClassName = mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary)
+
 const actionsNode: VirtualDomNode = {
   childCount: 2,
   className: ClassNames.Actions,
@@ -25,7 +28,7 @@ const getMissingApiActionsDom = ({
     actionsNode,
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary),
+      className: primaryButtonClassName,
       disabled: saveButtonDisabled,
       inputType: 'submit',
       name: saveButtonName,
@@ -34,7 +37,7 @@ const getMissingApiActionsDom = ({
     text(saveButtonText),
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      className: secondaryButtonClassName,
       href: openSettingsUrl,
       name: openSettingsButtonName,
       rel: 'noopener noreferrer',
