@@ -1,7 +1,6 @@
 import { defineConfig } from 'eslint/config'
 import * as config from '@lvce-editor/eslint-config'
 import * as tsconfig from '@lvce-editor/eslint-plugin-tsconfig'
-import * as regex from '@lvce-editor/eslint-plugin-regex'
 
 const sonarLintOverrideFiles = [
   'packages/chat-view-model/src/parts/HandleSubmit/HandleSubmit.ts',
@@ -33,7 +32,7 @@ export default defineConfig([
   ...config.recommendedVirtualDom,
   ...config.recommendedActions,
   ...tsconfig.default,
-  ...regex.default,
+  ...config.recommendedRegex,
   {
     rules: {
       '@typescript-eslint/no-unnecessary-type-assertion': 'off',
