@@ -66,8 +66,8 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   await expect(message1).toContainText('rename_file')
   await expect(message1).toContainText('renamed.txt')
 
-  // allow a short moment for the tool execution to complete
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  const sendButton = Locator('.ChatSendArea button[name="send"]')
+  await expect(sendButton).toBeVisible()
 
   // verify the original file still exists (since actual tool execution isn't implemented yet)
   const originalContent = await FileSystem.readFile(`${tmpDir}/original.txt`)

@@ -5,6 +5,12 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getHeaderActionVirtualDom } from '../GetHeaderActionVirtualDom/GetHeaderActionVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const addIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd)
+const folderIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder)
+const commitIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconGitCommit)
+const terminalIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconTerminal)
+const diffIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDiff)
+
 const focusHeaderStyle =
   'align-items:center;border-bottom:1px solid var(--vscode-panel-border, transparent);display:flex;gap:12px;justify-content:space-between;padding:8px 12px;'
 
@@ -46,31 +52,31 @@ export const getChatHeaderDomFocusMode = (
 ): readonly VirtualDomNode[] => {
   const items = [
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconAdd),
+      icon: addIconClassName,
       name: InputName.FocusAddAction,
       onClick: DomEventListenerFunctions.HandleClick,
       title: Strings.addAction(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconFolder),
+      icon: folderIconClassName,
       name: InputName.FocusOpenInVsCode,
       onClick: DomEventListenerFunctions.HandleClick,
       title: Strings.openInVsCode(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconGitCommit),
+      icon: commitIconClassName,
       name: InputName.FocusCommit,
       onClick: DomEventListenerFunctions.HandleClick,
       title: Strings.commit(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconTerminal),
+      icon: terminalIconClassName,
       name: InputName.FocusOpenTerminal,
       onClick: DomEventListenerFunctions.HandleClick,
       title: Strings.openTerminal(),
     },
     {
-      icon: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconDiff),
+      icon: diffIconClassName,
       name: InputName.FocusShowDiff,
       onClick: DomEventListenerFunctions.HandleClick,
       title: Strings.showDiff(),

@@ -70,7 +70,8 @@ export const test: Test = async ({ Chat, expect, FileSystem, Locator, Workspace 
   const message1 = messages.nth(1)
   await expect(message1).toContainText('write_file notes.txt +0 -0')
 
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  const sendButton = Locator('.ChatSendArea button[name="send"]')
+  await expect(sendButton).toBeVisible()
 
   const newContent = await FileSystem.readFile(`${tmpDir}/notes.txt`)
   if (newContent !== initialContent) {

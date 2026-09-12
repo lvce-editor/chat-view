@@ -1,6 +1,7 @@
 import { cp, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { patchWaitingAssertions } from './patchWaitingAssertions.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -80,7 +81,7 @@ const handleDragAndDropMessagePort = async port => {
 }
 
 const rendererProcessContent = await readFile(rendererProcessMainPath, 'utf-8')
-const patchedRendererProcessContent = patchDropSessionCommand(rendererProcessContent)
+const patchedRendererProcessContent = patchWaitingAssertions(patchDropSessionCommand(rendererProcessContent))
 if (patchedRendererProcessContent !== rendererProcessContent) {
   await writeFile(rendererProcessMainPath, patchedRendererProcessContent)
 }

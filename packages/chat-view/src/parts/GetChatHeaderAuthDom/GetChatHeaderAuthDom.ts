@@ -5,6 +5,8 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const buttonClassName = mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary)
+
 const chatAuthErrorNode: VirtualDomNode = {
   childCount: 1,
   className: ClassNames.ChatAuthError,
@@ -68,7 +70,7 @@ export const getChatHeaderAuthDom = (
     ...authNameDom,
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.Button, ClassNames.ButtonSecondary),
+      className: buttonClassName,
       disabled: isPending,
       inputType: 'button',
       name: buttonName,

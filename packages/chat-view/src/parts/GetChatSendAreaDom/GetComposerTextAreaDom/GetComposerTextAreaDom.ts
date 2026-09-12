@@ -4,10 +4,12 @@ import * as ClassNames from '../../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as InputName from '../../InputName/InputName.ts'
 
+const textAreaClassName = mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox)
+
 export const getComposerTextAreaDom = (): VirtualDomNode => {
   return {
     childCount: 0,
-    className: mergeClassNames(ClassNames.MultiLineInputBox, ClassNames.ChatInputBox),
+    className: textAreaClassName,
     name: InputName.Composer,
     onContextMenu: DomEventListenerFunctions.HandleChatInputContextMenu,
     onFocus: DomEventListenerFunctions.HandleFocus,

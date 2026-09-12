@@ -21,6 +21,8 @@ import { getChatSessionStatus } from '../GetChatSessionStatus/GetChatSessionStat
 import { getLatestExecutablePlanMessage } from '../GetLatestExecutablePlanMessage/GetLatestExecutablePlanMessage.ts'
 import { getMessagesDom } from '../GetMessagesDom/GetMessagesDom.ts'
 
+const viewClassName = mergeClassNames(ClassNames.Viewlet, ClassNames.Chat)
+
 export interface GetChatModeDetailVirtualDomOptions {
   readonly addContextButtonEnabled: boolean
   readonly agentMode: AgentMode
@@ -158,7 +160,7 @@ export const getChatModeDetailVirtualDom = ({
   return [
     {
       childCount: chatRootChildCount,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.Chat),
+      className: viewClassName,
       onDragEnter: DomEventListenerFunctions.HandleDragEnterChatView,
       onDragOver: DomEventListenerFunctions.HandleDragOverChatView,
       type: VirtualDomElements.Div,

@@ -6,6 +6,9 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as InputName from '../InputName/InputName.ts'
 import * as TabIndex from '../TabIndex/TabIndex.ts'
 
+const archiveButtonClassName = mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton)
+const archiveIconClassName = mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive)
+
 const chatActionsNode: VirtualDomNode = {
   childCount: 1,
   className: ClassNames.ChatActions,
@@ -18,7 +21,7 @@ export const getChatListItemActionsDom = (session: ChatSession): readonly Virtua
     chatActionsNode,
     {
       childCount: 1,
-      className: mergeClassNames(ClassNames.IconButton, ClassNames.SessionArchiveButton),
+      className: archiveButtonClassName,
       'data-id': session.id,
       name: InputName.SessionDelete,
       onClick: DomEventListenerFunctions.HandleClickDelete,
@@ -28,7 +31,7 @@ export const getChatListItemActionsDom = (session: ChatSession): readonly Virtua
     },
     {
       childCount: 0,
-      className: mergeClassNames(ClassNames.MaskIcon, ClassNames.MaskIconArchive),
+      className: archiveIconClassName,
       'data-id': session.id,
       type: VirtualDomElements.Div,
     },

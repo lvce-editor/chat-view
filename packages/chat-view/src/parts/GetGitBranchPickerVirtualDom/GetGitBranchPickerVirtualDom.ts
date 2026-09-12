@@ -6,6 +6,8 @@ import { getCustomSelectOptionVirtualDom } from '../GetCustomSelectOptionVirtual
 import { getCustomSelectPickerToggleVirtualDom } from '../GetCustomSelectPickerToggleVirtualDom/GetCustomSelectPickerToggleVirtualDom.ts'
 import * as InputName from '../InputName/InputName.ts'
 
+const pickerClassName = mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker)
+
 const itemHeight = 28
 const messageHeight = 32
 
@@ -74,7 +76,7 @@ export const getGitBranchPickerVirtualDom = (
         chatModelPickerContainerNode,
         {
           childCount: (showMessage ? 1 : 0) + 1,
-          className: mergeClassNames(ClassNames.ChatModelPicker, ClassNames.CustomSelectPopOver, ClassNames.ChatGitBranchPicker),
+          className: pickerClassName,
           style: `height: ${popOverHeight}px;`,
           type: VirtualDomElements.Div,
         },
