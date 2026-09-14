@@ -1,7 +1,10 @@
 import type { PrototypeState } from '../../PrototypeState/PrototypeState.ts'
-import { getObjectProperty } from '../../GetObjectProperty/GetObjectProperty.ts'
+import * as AuthAccessToken from '../../AuthAccessToken/AuthAccessToken.ts'
 
 export const getAuthAccessToken = (state: Readonly<PrototypeState>): string => {
-  const authAccessToken = getObjectProperty(state, 'authAccessToken')
-  return typeof authAccessToken === 'string' ? authAccessToken : ''
+  return AuthAccessToken.get(state.uid)
+}
+
+export const setAuthAccessToken = (uid: number, authAccessToken: string): void => {
+  AuthAccessToken.set(uid, authAccessToken)
 }

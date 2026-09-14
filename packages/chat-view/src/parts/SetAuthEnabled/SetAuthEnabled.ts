@@ -1,9 +1,12 @@
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.ts'
 
 export const setAuthEnabled = (state: ChatState, authEnabled: boolean): ChatState => {
+  if (!authEnabled) {
+    AuthAccessToken.clear(state.uid)
+  }
   return {
     ...state,
-    authAccessToken: authEnabled ? state.authAccessToken : '',
     authEnabled,
     authErrorMessage: authEnabled ? state.authErrorMessage : '',
     userName: authEnabled ? state.userName : '',

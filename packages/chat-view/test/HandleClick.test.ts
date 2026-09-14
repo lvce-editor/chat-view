@@ -2,8 +2,10 @@
 import { afterEach, beforeEach, expect, test } from '@jest/globals'
 import { AuthWorker, ChatViewModelWorker, ExtensionManagementWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../src/parts/ChatState/ChatState.ts'
+import * as AuthAccessToken from '../src/parts/AuthAccessToken/AuthAccessToken.ts'
 import { getChatViewEvents } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import * as GetAuthState from '../src/parts/GetAuthState/GetAuthState.ts'
 import { getNextAutoScrollTop } from '../src/parts/GetNextAutoScrollTop/GetNextAutoScrollTop.ts'
 import * as HandleClick from '../src/parts/HandleClick/HandleClick.ts'
 import * as InputName from '../src/parts/InputName/InputName.ts'
@@ -458,7 +460,7 @@ test('handleClick should open backend login page and sync backend auth state', a
       useAuthWorker: false,
     }
     const result = await HandleClick.handleClick(state, 'login')
-    expect(result.authAccessToken).toBe('backend-token-1')
+    expect(GetAuthState.getAuthState(result)).toMatchObject({ authAccessToken: 'backend-token-1' })
     expect(result.userName).toBe('test')
     expect(result.userState).toBe('loggedIn')
     expect(result.userSubscriptionPlan).toBe('pro')
@@ -508,7 +510,6 @@ test('handleClick should login via auth worker when enabled', async () => {
   const result = await HandleClick.handleClick(state, 'login')
 
   expect(result).toMatchObject({
-    authAccessToken: 'worker-token-1',
     authErrorMessage: '',
     userName: 'worker-user',
     userState: 'loggedIn',
@@ -544,7 +545,6 @@ test('handleClick should logout and clear backend auth state', async () => {
   }
   const state: ChatState = {
     ...createDefaultState(),
-    authAccessToken: 'backend-token-1',
     authEnabled: true,
     backendUrl: 'https://backend.example.com',
     useAuthWorker: false,
@@ -553,9 +553,10 @@ test('handleClick should logout and clear backend auth state', async () => {
     userSubscriptionPlan: 'pro',
     userUsedTokens: 321,
   }
+  AuthAccessToken.set(state.uid, 'backend-token-1')
   try {
     const result = await HandleClick.handleClick(state, 'logout')
-    expect(result.authAccessToken).toBe('')
+    expect(GetAuthState.getAuthState(result)).toMatchObject({ authAccessToken: '' })
     expect(result.userName).toBe('')
     expect(result.userState).toBe('loggedOut')
     expect(result.userSubscriptionPlan).toBe('')
@@ -585,7 +586,6 @@ test('handleClick should logout via auth worker when enabled', async () => {
   })
   const state: ChatState = {
     ...createDefaultState(),
-    authAccessToken: 'worker-token-1',
     authEnabled: true,
     backendUrl: 'https://backend.example.com',
     useAuthWorker: true,
@@ -598,7 +598,6 @@ test('handleClick should logout via auth worker when enabled', async () => {
   const result = await HandleClick.handleClick(state, 'logout')
 
   expect(result).toMatchObject({
-    authAccessToken: '',
     userName: '',
     userState: 'loggedOut',
     userSubscriptionPlan: '',
@@ -654,7 +653,7 @@ test('handleClick should use localhost oauth redirect on electron backend login'
       useAuthWorker: false,
     }
     const result = await HandleClick.handleClick(state, 'login')
-    expect(result.authAccessToken).toBe('backend-token-electron')
+    expect(GetAuthState.getAuthState(result)).toMatchObject({ authAccessToken: 'backend-token-electron' })
     expect(result.userName).toBe('electron-user')
     expect(result.userState).toBe('loggedIn')
     expect(result.userSubscriptionPlan).toBe('pro')
@@ -695,6 +694,7 @@ test('handleClick should submit message when clicking send', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
+    uid: 101,
     viewMode: 'detail',
   }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
@@ -702,7 +702,7 @@ test('handleClick should submit message when clicking send', async () => {
   })
   const result = await HandleClick.handleClick(state, 'send')
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleClickSend should submit message', async () => {
@@ -711,6 +711,7 @@ test('handleClickSend should submit message', async () => {
   const state: ChatState = {
     ...createDefaultState(),
     composerValue: 'hello',
+    uid: 102,
     viewMode: 'detail',
   }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
@@ -718,7 +719,7 @@ test('handleClickSend should submit message', async () => {
   })
   const result = await HandleClick.handleClickSend(state)
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleClickSend should create a new session from list mode', async () => {
@@ -728,6 +729,7 @@ test('handleClickSend should create a new session from list mode', async () => {
     ...createDefaultState(),
     composerValue: 'hello',
     lastNormalViewMode: 'detail',
+    uid: 103,
     viewMode: 'list',
   }
   using mockSubmitRpc = ChatViewModelWorker.registerMockRpc({
@@ -737,7 +739,7 @@ test('handleClickSend should create a new session from list mode', async () => {
   const result = await HandleClick.handleClickSend(state)
 
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleClick should stop the selected in-progress session', async () => {

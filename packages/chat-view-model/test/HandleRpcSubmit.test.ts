@@ -45,7 +45,6 @@ const registerMockChatToolRpc = (): ReturnType<typeof ChatToolWorker.registerMoc
 
 const createState = (overrides: Readonly<Partial<PrototypeState>> = {}): PrototypeState => {
   return {
-    authAccessToken: '',
     backendUrl: 'https://backend.example.com',
     chatInputHistory: [],
     chatInputHistoryIndex: -1,
@@ -92,14 +91,14 @@ test.each(['', 'existing-token'])('handleRpcSubmit submits refreshed backend aut
   try {
     await handleRpcSubmit(
       createState({
-        authAccessToken,
         uid,
         useOwnBackend: true,
       }),
+      authAccessToken,
     )
 
     const currentState = getState(uid) as PrototypeState | undefined
-    expect(currentState?.authAccessToken).toBe('refreshed-token')
+    expect(currentState).not.toHaveProperty('authAccessToken')
     expect(currentState?.userState).toBe('loggedIn')
     expect(mockStorageRpc.invocations).toContainEqual([
       'ChatStorage.subscribeSessionUpdates',
@@ -166,14 +165,13 @@ test('handleRpcSubmit does not sync backend auth without own-backend or auth tok
   try {
     await handleRpcSubmit(
       createState({
-        authAccessToken: '',
         uid: 103,
         useOwnBackend: false,
       }),
     )
 
     const currentState = getState(103) as PrototypeState | undefined
-    expect(currentState?.authAccessToken).toBe('')
+    expect(currentState).not.toHaveProperty('authAccessToken')
     expect(mockCoordinatorRpc.invocations).toContainEqual([
       'ChatCoordinator.handleSubmit',
       expect.objectContaining({

@@ -22,7 +22,6 @@ export interface ChatState {
   readonly agentModePickerOpen: boolean
   readonly aiSessionTitleGenerationEnabled: boolean
   readonly assetDir: string
-  readonly authAccessToken: string
   readonly authEnabled: boolean
   readonly authErrorMessage: string
   readonly authUseRedirect: boolean

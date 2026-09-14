@@ -1,6 +1,7 @@
 import { PlatformType } from '@lvce-editor/constants'
 import { AuthWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.ts'
 import { getBackendLoginRequest, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
@@ -20,14 +21,23 @@ const isLoginResponse = (value: unknown): value is LoginResponse => {
 const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState => {
   const { userName, userSubscriptionPlan, userUsedTokens } = state
   const accessToken = typeof response.accessToken === 'string' ? response.accessToken : ''
+  AuthAccessToken.set(state.uid, accessToken)
   return {
     ...state,
-    authAccessToken: accessToken,
     authErrorMessage: '',
     userName: typeof response.userName === 'string' ? response.userName : userName,
     userState: accessToken ? 'loggedIn' : 'loggedOut',
     userSubscriptionPlan: typeof response.subscriptionPlan === 'string' ? response.subscriptionPlan : userSubscriptionPlan,
     userUsedTokens: typeof response.usedTokens === 'number' ? response.usedTokens : userUsedTokens,
+  }
+}
+
+const mergeAuthState = (state: ChatState, authState: { readonly authAccessToken?: string }): ChatState => {
+  const { authAccessToken, ...safeAuthState } = authState
+  AuthAccessToken.set(state.uid, typeof authAccessToken === 'string' ? authAccessToken : '')
+  return {
+    ...state,
+    ...safeAuthState,
   }
 }
 
@@ -56,10 +66,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
         platform,
         uid,
       })
-      return {
-        ...signingInState,
-        ...authState,
-      }
+      return mergeAuthState(signingInState, authState)
     }
     if (uid) {
       await RendererWorker.invoke('Chat.rerender')
@@ -67,6 +74,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
     if (MockBackendAuth.hasPendingMockLoginResponse()) {
       const response = await MockBackendAuth.consumeNextLoginResponse()
       if (!isLoginResponse(response)) {
+        AuthAccessToken.clear(uid)
         return {
           ...signingInState,
           authErrorMessage: 'Backend returned an invalid login response.',
@@ -74,6 +82,7 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
         }
       }
       if (typeof response.error === 'string' && response.error) {
+        AuthAccessToken.clear(uid)
         return {
           ...signingInState,
           authErrorMessage: response.error,
@@ -86,15 +95,9 @@ export const handleClickLogin = async (state: ChatState): Promise<ChatState> => 
     await OpenerWorker.invoke('Open.openUrl', loginUrl, platform, authUseRedirect)
     const authState =
       platform === PlatformType.Electron ? await waitForElectronBackendLogin(backendUrl, uid, redirectUri) : await waitForBackendLogin(backendUrl)
-    return {
-      ...signingInState,
-      ...authState,
-    }
+    return mergeAuthState(signingInState, authState)
   } catch (error) {
     const errorMessage = error instanceof Error && error.message ? error.message : 'Backend authentication failed.'
-    return {
-      ...signingInState,
-      ...getLoggedOutBackendAuthState(errorMessage),
-    }
+    return mergeAuthState(signingInState, getLoggedOutBackendAuthState(errorMessage))
   }
 }

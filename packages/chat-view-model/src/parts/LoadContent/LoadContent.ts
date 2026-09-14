@@ -34,7 +34,6 @@ export type LastNormalViewMode = Extract<ChatViewMode, 'list' | 'detail'>
 
 export interface LoadContentState extends ViewModel {
   readonly aiSessionTitleGenerationEnabled: boolean
-  readonly authAccessToken: string
   readonly authUseRedirect: boolean
   readonly backendUrl: string
   readonly chatHistoryEnabled: boolean
@@ -143,7 +142,6 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     agentMode,
     agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled,
-    authAccessToken: authState.authAccessToken,
     authEnabled,
     authErrorMessage: authState.authErrorMessage,
     authUseRedirect,

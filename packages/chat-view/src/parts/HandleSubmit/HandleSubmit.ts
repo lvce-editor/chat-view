@@ -1,5 +1,6 @@
 import { ChatViewModelWorker } from '@lvce-editor/rpc-registry'
 import type { ChatState } from '../ChatState/ChatState.ts'
+import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.ts'
 import { getObjectProperty } from '../GetObjectProperty/GetObjectProperty.ts'
 
 const getErrorMessage = (error: unknown): string => {
@@ -24,7 +25,7 @@ const getErrorMessage = (error: unknown): string => {
 
 export const handleSubmit = async (state: ChatState): Promise<ChatState> => {
   try {
-    ;(await ChatViewModelWorker.invoke('ChatModel.handleSubmit', state)) as ChatState
+    ;(await ChatViewModelWorker.invoke('ChatModel.handleSubmit', state, AuthAccessToken.get(state.uid))) as ChatState
     return state
   } catch (error) {
     throw new Error(getErrorMessage(error), {

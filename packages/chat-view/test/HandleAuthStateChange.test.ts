@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
+import * as GetAuthState from '../src/parts/GetAuthState/GetAuthState.ts'
 import * as HandleAuthStateChange from '../src/parts/HandleAuthStateChange/HandleAuthStateChange.ts'
 
 test('handleAuthStateChange merges auth fields into chat state', () => {
@@ -15,11 +16,11 @@ test('handleAuthStateChange merges auth fields into chat state', () => {
   })
 
   expect(result).toMatchObject({
-    authAccessToken: 'access-token-1',
     authErrorMessage: '',
     userName: 'test-user',
     userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 42,
   })
+  expect(GetAuthState.getAuthState(result)).toMatchObject({ authAccessToken: 'access-token-1' })
 })
