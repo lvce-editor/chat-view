@@ -48,11 +48,11 @@ test('isEqual should return false when openrouter api key input changes', () => 
   expect(DiffItems.isEqual(state1, state2)).toBe(false)
 })
 
-test('isEqual should return false when auth access token changes', () => {
+test('isEqual ignores private auth access token changes', () => {
   const { sessions } = createDefaultState()
-  const state1: ChatState = { ...createDefaultState(), authAccessToken: '', sessions }
-  const state2: ChatState = { ...createDefaultState(), authAccessToken: 'access-token', sessions }
-  expect(DiffItems.isEqual(state1, state2)).toBe(false)
+  const state1: ChatState = { ...createDefaultState(), sessions }
+  const state2: ChatState = { ...createDefaultState(), sessions }
+  expect(DiffItems.isEqual(state1, state2)).toBe(true)
 })
 
 test('isEqual should return false when user subscription plan changes', () => {

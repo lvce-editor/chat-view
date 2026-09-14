@@ -39,7 +39,6 @@ export const createDefaultState = (): ChatState => {
     agentModePickerOpen: false,
     aiSessionTitleGenerationEnabled: false,
     assetDir: '',
-    authAccessToken: '',
     authEnabled: false,
     authErrorMessage: '',
     authUseRedirect: true,

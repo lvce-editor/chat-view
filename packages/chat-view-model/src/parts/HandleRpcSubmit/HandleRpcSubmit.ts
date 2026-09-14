@@ -6,7 +6,7 @@ import { setState } from '../ModelState/ModelState.ts'
 import { parseToolEnablement } from '../ToolEnablement/ToolEnablement.ts'
 import { createNewSession } from './CreateNewSession/CreateNewSession.ts'
 import { ensureSubscribed } from './EnsureSubscribed/EnsureSubscribed.ts'
-import { getAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
+import { getAuthAccessToken, setAuthAccessToken } from './GetAuthAccessToken/GetAuthAccessToken.ts'
 import { getBackendUrl } from './GetBackendUrl/GetBackendUrl.ts'
 import { getComposerAttachments } from './GetComposerAttachments/GetComposerAttachments.ts'
 import { getCoordinatorModelId } from './GetCoordinatorModelId/GetCoordinatorModelId.ts'
@@ -22,7 +22,7 @@ const getNewSessionTitle = (userText: string): string => {
   return userText.slice(0, 30)
 }
 
-export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<void> => {
+export const handleRpcSubmit = async (state: Readonly<PrototypeState>, authAccessToken = ''): Promise<void> => {
   const {
     agentMode = 'agent',
     chatInputHistory,
@@ -36,6 +36,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
     uid,
     viewMode,
   } = state
+  setAuthAccessToken(uid, authAccessToken)
   const effectiveAgentMode = agentMode === 'plan' ? 'plan' : 'agent'
   const effectiveToolEnablement = parseToolEnablement(toolEnablement)
   const userText = composerValue.trim()
@@ -83,10 +84,17 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>): Promise<
   const backendUrl = getBackendUrl(nextState)
   const shouldSyncBackendAuth = !!backendUrl && (useOwnBackendEnabled(nextState) || !!getAuthAccessToken(nextState))
   const authState = shouldSyncBackendAuth ? await syncBackendAuth(backendUrl) : undefined
+  if (authState) {
+    setAuthAccessToken(uid, authState.authAccessToken)
+  }
   const effectiveState = authState
     ? {
         ...nextState,
-        ...authState,
+        authErrorMessage: authState.authErrorMessage,
+        userName: authState.userName,
+        userState: authState.userState,
+        userSubscriptionPlan: authState.userSubscriptionPlan,
+        userUsedTokens: authState.userUsedTokens,
       }
     : nextState
 

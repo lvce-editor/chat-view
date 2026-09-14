@@ -26,7 +26,7 @@ test('handleKeyDown should submit on Enter', async () => {
   })
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleKeyDown should create a new session on Enter from list mode', async () => {
@@ -45,7 +45,7 @@ test('handleKeyDown should create a new session on Enter from list mode', async 
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
 
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleKeyDown should not submit on Shift+Enter', async () => {
@@ -131,7 +131,7 @@ test('handleKeyDown should not submit blank message', async () => {
   const result = await HandleKeyDown.handleKeyDown(state, 'Enter', false)
   expect(result.sessions[0].messages).toHaveLength(0)
   expect(result).toBe(state)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', state, '']])
 })
 
 test('handleKeyDown should ignore non-enter keys', async () => {

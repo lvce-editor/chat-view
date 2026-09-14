@@ -24,7 +24,6 @@ export const isEqual = (oldState: ChatState, newState: ChatState): boolean => {
     oldState.addContextButtonEnabled === newState.addContextButtonEnabled &&
     oldState.agentMode === newState.agentMode &&
     oldState.agentModePickerOpen === newState.agentModePickerOpen &&
-    oldState.authAccessToken === newState.authAccessToken &&
     oldState.authEnabled === newState.authEnabled &&
     oldState.authErrorMessage === newState.authErrorMessage &&
     isEqualComposerAttachments(oldState.composerAttachments, newState.composerAttachments) &&

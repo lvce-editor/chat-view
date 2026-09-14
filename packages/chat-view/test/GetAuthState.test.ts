@@ -1,11 +1,11 @@
 import { expect, test } from '@jest/globals'
+import * as AuthAccessToken from '../src/parts/AuthAccessToken/AuthAccessToken.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as GetAuthState from '../src/parts/GetAuthState/GetAuthState.ts'
 
 test('getAuthState should return auth-related fields from state', () => {
   const state = {
     ...createDefaultState(),
-    authAccessToken: 'access-token',
     authEnabled: true,
     authErrorMessage: 'failed',
     backendUrl: 'https://example.com',
@@ -14,6 +14,7 @@ test('getAuthState should return auth-related fields from state', () => {
     userSubscriptionPlan: 'pro',
     userUsedTokens: 123,
   }
+  AuthAccessToken.set(state.uid, 'access-token')
 
   const result = GetAuthState.getAuthState(state)
 

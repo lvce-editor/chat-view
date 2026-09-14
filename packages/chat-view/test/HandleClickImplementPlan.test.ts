@@ -65,7 +65,7 @@ test('handleClickImplementPlan should switch to agent mode and submit the saved 
 
   expect(result).toEqual(preparedState)
   expect(result.sessions[0].messages).toHaveLength(2)
-  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', preparedState]])
+  expect(mockSubmitRpc.invocations).toEqual([['ChatModel.handleSubmit', preparedState, '']])
 })
 
 test('handleClickImplementPlan should ignore sessions without an executable plan', async () => {

@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import * as AuthAccessToken from '../src/parts/AuthAccessToken/AuthAccessToken.ts'
 import { commandMap } from '../src/parts/CommandMap/CommandMap.ts'
 import { createDefaultState } from '../src/parts/CreateDefaultState/CreateDefaultState.ts'
 import * as StatusBarStates from '../src/parts/StatusBarStates/StatusBarStates.ts'
@@ -24,10 +25,10 @@ test('commandMap should expose getAuthState as a wrapped getter', async () => {
   const uid = 993
   const state = {
     ...createDefaultState(),
-    authAccessToken: 'access-token',
     authEnabled: true,
     authErrorMessage: 'failed',
     backendUrl: 'https://example.com',
+    uid,
     userName: 'test-user',
     userState: 'loggedIn' as const,
     userSubscriptionPlan: 'pro',
@@ -35,6 +36,7 @@ test('commandMap should expose getAuthState as a wrapped getter', async () => {
   }
 
   StatusBarStates.set(uid, state, state)
+  AuthAccessToken.set(uid, 'access-token')
 
   const result = await commandMap['Chat.getAuthState'](uid)
   expect(result).toEqual({
@@ -65,13 +67,13 @@ test('commandMap should expose handleAuthStateChange as a wrapped command', asyn
   })
   const result = StatusBarStates.get(uid)?.newState
   expect(result).toMatchObject({
-    authAccessToken: 'access-token-1',
     authErrorMessage: '',
     userName: 'test-user',
     userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 42,
   })
+  expect(await commandMap['Chat.getAuthState'](uid)).toMatchObject({ authAccessToken: 'access-token-1' })
 })
 
 test('commandMap should expose handleClickRename as a wrapped command', async () => {

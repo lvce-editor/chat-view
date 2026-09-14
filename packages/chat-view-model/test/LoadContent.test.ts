@@ -11,7 +11,6 @@ const createState = (): LoadContentState => {
     agentMode: 'agent',
     agentModePickerOpen: true,
     aiSessionTitleGenerationEnabled: false,
-    authAccessToken: '',
     authEnabled: false,
     authErrorMessage: '',
     authUseRedirect: false,
