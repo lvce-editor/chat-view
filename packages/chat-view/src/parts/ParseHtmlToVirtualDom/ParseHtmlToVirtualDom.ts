@@ -1,6 +1,7 @@
 /* cspell:ignore sonarjs */
 
 import { type VirtualDomNode, VirtualDomElements, text } from '@lvce-editor/virtual-dom-worker'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 
 interface HtmlTextNode {
   readonly type: 'text'
@@ -275,14 +276,16 @@ const normalizeUrl = (url: string): string => {
   return isHttpUrl(url) ? url : '#'
 }
 
-const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unknown> => {
+const getElementAttributes = (node: ReadonlyHtmlElementNode, addClassName: string): Record<string, unknown> => {
   const attributes: Record<string, unknown> = {}
   if (node.tagName === 'a') {
     attributes.rel = 'noopener noreferrer'
     attributes.target = '_blank'
   }
   const className = node.attributes.class || node.attributes.classname
-  if (className) {
+  if (addClassName) {
+    attributes.className = className ? `${addClassName} ${className}` : addClassName
+  } else if (className) {
     attributes.className = className
   }
   if (node.attributes.style) {
@@ -327,21 +330,26 @@ const getElementAttributes = (node: ReadonlyHtmlElementNode): Record<string, unk
   return attributes
 }
 
-const toVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] => {
+const toVirtualDomWithClassName = (node: ReadonlyHtmlNode, addClassName: string): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [text(node.value)]
   }
 
-  const children = node.children.flatMap(toVirtualDom)
+  const children = node.children.flatMap((child) => toVirtualDomWithClassName(child, addClassName))
   return [
     {
       childCount: node.children.length,
-      ...getElementAttributes(node),
+      ...getElementAttributes(node, addClassName),
       type: getElementType(node.tagName),
     },
     ...children,
   ]
 }
+
+const toVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] => toVirtualDomWithClassName(node, '')
+
+const toRenderHtmlVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] =>
+  toVirtualDomWithClassName(node, ClassNames.ChatToolCallRenderHtmlElement)
 
 export const parseHtmlToVirtualDom = (value: string): readonly VirtualDomNode[] => {
   return parseHtml(value).flatMap(toVirtualDom)
@@ -353,6 +361,6 @@ export const parseHtmlToVirtualDomWithRootCount = (
   const rootNodes = parseHtml(value)
   return {
     rootChildCount: rootNodes.length,
-    virtualDom: rootNodes.flatMap(toVirtualDom),
+    virtualDom: rootNodes.flatMap(toRenderHtmlVirtualDom),
   }
 }
