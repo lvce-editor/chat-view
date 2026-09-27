@@ -330,12 +330,12 @@ const getElementAttributes = (node: ReadonlyHtmlElementNode, addClassName: strin
   return attributes
 }
 
-const toVirtualDom = (node: ReadonlyHtmlNode, addClassName = ''): readonly VirtualDomNode[] => {
+const toVirtualDomWithClassName = (node: ReadonlyHtmlNode, addClassName: string): readonly VirtualDomNode[] => {
   if (node.type === 'text') {
     return [text(node.value)]
   }
 
-  const children = node.children.flatMap((child) => toVirtualDom(child, addClassName))
+  const children = node.children.flatMap((child) => toVirtualDomWithClassName(child, addClassName))
   return [
     {
       childCount: node.children.length,
@@ -346,8 +346,13 @@ const toVirtualDom = (node: ReadonlyHtmlNode, addClassName = ''): readonly Virtu
   ]
 }
 
+const toVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] => toVirtualDomWithClassName(node, '')
+
+const toRenderHtmlVirtualDom = (node: ReadonlyHtmlNode): readonly VirtualDomNode[] =>
+  toVirtualDomWithClassName(node, ClassNames.ChatToolCallRenderHtmlElement)
+
 export const parseHtmlToVirtualDom = (value: string): readonly VirtualDomNode[] => {
-  return parseHtml(value).flatMap((node) => toVirtualDom(node))
+  return parseHtml(value).flatMap(toVirtualDom)
 }
 
 export const parseHtmlToVirtualDomWithRootCount = (
@@ -356,6 +361,6 @@ export const parseHtmlToVirtualDomWithRootCount = (
   const rootNodes = parseHtml(value)
   return {
     rootChildCount: rootNodes.length,
-    virtualDom: rootNodes.flatMap((node) => toVirtualDom(node, ClassNames.ChatToolCallRenderHtmlElement)),
+    virtualDom: rootNodes.flatMap(toRenderHtmlVirtualDom),
   }
 }
