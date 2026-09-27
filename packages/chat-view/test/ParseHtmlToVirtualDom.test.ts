@@ -100,6 +100,16 @@ test('parseHtmlToVirtualDomWithRootCount should report root child count', () => 
   expect(result.virtualDom).toHaveLength(4)
 })
 
+test('parseHtmlToVirtualDomWithRootCount adds a direct styling class to elements and preserves their classes', () => {
+  const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDomWithRootCount('<div class="card"><p>Hello</p></div>')
+
+  expect(result.virtualDom).toEqual([
+    expect.objectContaining({ className: 'ChatToolCallRenderHtmlElement card' }),
+    expect.objectContaining({ className: 'ChatToolCallRenderHtmlElement' }),
+    expect.objectContaining({ text: 'Hello' }),
+  ])
+})
+
 test('parseHtmlToVirtualDom should map table elements to virtual dom table types', () => {
   const result = ParseHtmlToVirtualDom.parseHtmlToVirtualDom(
     '<table><thead><tr><th>H</th></tr></thead><tbody><tr><td>C</td></tr></tbody><tfoot><tr><td>F</td></tr></tfoot></table>',
