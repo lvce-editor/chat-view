@@ -27,6 +27,7 @@ import { handleGitBranchChange } from '../HandleGitBranchChange/HandleGitBranchC
 import { handleReasoningEffortChange } from '../HandleReasoningEffortChange/HandleReasoningEffortChange.ts'
 import { handleRemoveComposerAttachment } from '../HandleRemoveComposerAttachment/HandleRemoveComposerAttachment.ts'
 import * as InputName from '../InputName/InputName.ts'
+import { modelPickerBottomOffset } from '../ModelPickerBottomOffset/ModelPickerBottomOffset.ts'
 import { openAgentModePicker } from '../OpenAgentModePicker/OpenAgentModePicker.ts'
 import { OpenOpenApiApiKeySettings, OpenOpenApiApiKeyWebsite, SaveOpenApiApiKey } from '../OpenApiApiKeyNames/OpenApiApiKeyNames.ts'
 import { openReasoningEffortPicker } from '../OpenReasoningEffortPicker/OpenReasoningEffortPicker.ts'
@@ -114,13 +115,12 @@ export const handleClick = async (state: ChatState, name: string, id = '', event
     }
     case name === InputName.ModelPickerList: {
       const itemHeight = 28
-      const bottomOffset = 90
       const headerHeight = 40
       const index = getModelPickerClickIndex(
         state.y,
         state.height,
         eventY,
-        bottomOffset,
+        modelPickerBottomOffset,
         itemHeight,
         state.modelPickerHeight,
         headerHeight,
