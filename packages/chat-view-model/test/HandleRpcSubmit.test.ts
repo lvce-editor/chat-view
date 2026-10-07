@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ChatCoordinatorWorker, ChatStorageWorker, ChatToolWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatCoordinatorWorker, ChatStorageWorker, ChatToolWorker } from '@lvce-editor/rpc-registry'
 import type { PrototypeState } from '../src/parts/PrototypeState/PrototypeState.ts'
 import { rpcIdViewModel } from '../src/parts/ChatSessionStorage/ChatSessionStorage.ts'
 import { handleRpcSubmit } from '../src/parts/HandleRpcSubmit/HandleRpcSubmit.ts'
@@ -237,4 +237,27 @@ test('handleRpcSubmit filters disabled tools and plan mode tools before sending 
     ],
   ])
   expect(mockToolRpc.invocations).toEqual([['ChatTool.getTools']])
+})
+
+test('managed account requests use the selected auth-worker identity instead of the browser cookie', async () => {
+  using mockStorageRpc = registerMockChatStorageRpc()
+  using mockToolRpc = registerMockChatToolRpc()
+  using mockCoordinatorRpc = ChatCoordinatorWorker.registerMockRpc({ 'ChatCoordinator.handleSubmit': async () => {} })
+  using mockAuthRpc = AuthWorker.registerMockRpc({
+    'Auth.syncBackendAuth': async () => ({
+      authAccessToken: 'selected-account-token',
+      authErrorMessage: '',
+      userName: 'User A',
+      userState: 'loggedIn',
+      userSubscriptionPlan: 'free',
+      userUsedTokens: 0,
+    }),
+  })
+  await handleRpcSubmit(createState({ uid: 991, useAuthWorker: true, useOwnBackend: true }), 'previous-account-token')
+  expect(mockStorageRpc.invocations.length).toBeGreaterThan(0)
+  expect(mockToolRpc.invocations.length).toBeGreaterThan(0)
+  expect(mockAuthRpc.invocations).toEqual([['Auth.syncBackendAuth', 'https://backend.example.com']])
+  const submit = mockCoordinatorRpc.invocations.find((invocation) => invocation[0] === 'ChatCoordinator.handleSubmit')
+  expect(submit?.[1]).toEqual(expect.objectContaining({ authAccessToken: 'selected-account-token' }))
+  expect(getState(991)).toEqual(expect.objectContaining({ userName: 'User A' }))
 })

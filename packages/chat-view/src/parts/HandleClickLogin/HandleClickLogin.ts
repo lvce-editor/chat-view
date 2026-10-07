@@ -3,6 +3,7 @@ import { AuthWorker, OpenerWorker, RendererWorker } from '@lvce-editor/rpc-regis
 import type { ChatState } from '../ChatState/ChatState.ts'
 import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.ts'
 import { getBackendLoginRequest, getLoggedOutBackendAuthState, waitForBackendLogin, waitForElectronBackendLogin } from '../BackendAuth/BackendAuth.ts'
+import { handleAuthStateChange } from '../HandleAuthStateChange/HandleAuthStateChange.ts'
 import * as MockBackendAuth from '../MockBackendAuth/MockBackendAuth.ts'
 import { set } from '../StatusBarStates/StatusBarStates.ts'
 
@@ -33,12 +34,7 @@ const getLoggedInState = (state: ChatState, response: LoginResponse): ChatState 
 }
 
 const mergeAuthState = (state: ChatState, authState: { readonly authAccessToken?: string }): ChatState => {
-  const { authAccessToken, ...safeAuthState } = authState
-  AuthAccessToken.set(state.uid, typeof authAccessToken === 'string' ? authAccessToken : '')
-  return {
-    ...state,
-    ...safeAuthState,
-  }
+  return handleAuthStateChange(state, authState)
 }
 
 export const handleClickLogin = async (state: ChatState): Promise<ChatState> => {

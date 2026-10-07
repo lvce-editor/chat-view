@@ -1,4 +1,5 @@
-import { ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import { AuthWorker, ChatCoordinatorWorker } from '@lvce-editor/rpc-registry'
+import type { BackendAuthState } from '../BackendAuth/BackendAuth.ts'
 import type { PrototypeState } from '../PrototypeState/PrototypeState.ts'
 import { syncBackendAuth } from '../BackendAuth/BackendAuth.ts'
 import { getBasicChatTools } from '../GetBasicChatTools/GetBasicChatTools.ts'
@@ -20,6 +21,20 @@ const defaultMaxToolCalls = 100
 
 const getNewSessionTitle = (userText: string): string => {
   return userText.slice(0, 30)
+}
+
+const getSubmitAuthState = async (
+  state: Readonly<PrototypeState>,
+  backendUrl: string,
+  shouldSync: boolean,
+): Promise<BackendAuthState | undefined> => {
+  if (!shouldSync) {
+    return undefined
+  }
+  if (state.useAuthWorker === true) {
+    return AuthWorker.invoke('Auth.syncBackendAuth', backendUrl)
+  }
+  return syncBackendAuth(backendUrl)
 }
 
 export const handleRpcSubmit = async (state: Readonly<PrototypeState>, authAccessToken = ''): Promise<void> => {
@@ -83,7 +98,7 @@ export const handleRpcSubmit = async (state: Readonly<PrototypeState>, authAcces
 
   const backendUrl = getBackendUrl(nextState)
   const shouldSyncBackendAuth = !!backendUrl && (useOwnBackendEnabled(nextState) || !!getAuthAccessToken(nextState))
-  const authState = shouldSyncBackendAuth ? await syncBackendAuth(backendUrl) : undefined
+  const authState = await getSubmitAuthState(nextState, backendUrl, shouldSyncBackendAuth)
   if (authState) {
     setAuthAccessToken(uid, authState.authAccessToken)
   }
