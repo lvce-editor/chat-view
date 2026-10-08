@@ -582,7 +582,14 @@ test('handleClick should logout via auth worker when enabled', async () => {
   using mockChatStorageRpc = registerMockChatStorageRpc()
   expect(mockChatStorageRpc).toBeDefined()
   using mockAuthRpc = AuthWorker.registerMockRpc({
-    'Auth.logout': async () => undefined,
+    'Auth.logout': async () => ({
+      authAccessToken: '',
+      authErrorMessage: '',
+      userName: '',
+      userState: 'loggedOut',
+      userSubscriptionPlan: '',
+      userUsedTokens: 0,
+    }),
   })
   const state: ChatState = {
     ...createDefaultState(),

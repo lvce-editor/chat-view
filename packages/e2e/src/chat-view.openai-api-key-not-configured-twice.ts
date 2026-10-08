@@ -10,13 +10,14 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.handleModelChange('openapi/gpt-4.1-mini')
 
   // act
+  const messages = Locator('.ChatMessages .Message')
   await Chat.handleInput('first message')
   await Chat.handleSubmit()
+  await expect(messages).toHaveCount(2)
   await Chat.handleInput('second message')
   await Chat.handleSubmit()
 
   // assert
-  const messages = Locator('.ChatMessages .Message')
   await expect(messages).toHaveCount(4)
   const message1 = messages.nth(1)
   await expect(message1).toContainText('OpenAI API key is not configured')
