@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as GetMenuEntriesChatProjectList from '../src/parts/GetMenuEntriesChatProjectList/GetMenuEntriesChatProjectList.ts'
 
 test('getMenuEntriesChatProjectList should include project actions when a project id is provided', () => {
-  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList('project-1')
+  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList({ projectId: 'project-1' })
   expect(entries).toHaveLength(3)
   expect(entries[0]).toMatchObject({
     args: ['create-session-in-project:project-1'],
@@ -36,7 +36,7 @@ test('getMenuEntriesChatProjectList should expose add project when no project ro
 })
 
 test('getMenuEntriesChatProjectList should omit remove project when removal is disabled', () => {
-  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList('project-1', false)
+  const entries = GetMenuEntriesChatProjectList.getMenuEntriesChatProjectList({ canRemoveProject: false, projectId: 'project-1' })
   expect(entries).toHaveLength(2)
   expect(entries.map((entry) => entry.id)).toEqual(['newChat', 'addProject'])
 })
