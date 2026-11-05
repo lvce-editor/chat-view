@@ -28,6 +28,7 @@ export const saveState = (state: ChatState): SavedState => {
   return {
     agentMode,
     chatListScrollTop,
+    composerFocused: state.focus === 'composer' && state.focused,
     composerSelectionEnd,
     composerSelectionStart,
     composerValue,

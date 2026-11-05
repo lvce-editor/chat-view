@@ -42,4 +42,23 @@ test('saveState should persist global state without session payloads', () => {
   expect(result.projectSidebarWidth).toBe(280)
   expect(result.lastNormalViewMode).toBe('list')
   expect(result.maxToolCalls).toBe(100)
+  expect(result.composerFocused).toBe(false)
+})
+
+test('saveState should persist composer focus ownership', () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    focus: 'composer',
+    focused: true,
+  }
+  expect(SaveState.saveState(state).composerFocused).toBe(true)
+})
+
+test('saveState should not persist composer focus when another chat control owns focus', () => {
+  const state: ChatState = {
+    ...createDefaultState(),
+    focus: 'send-button',
+    focused: true,
+  }
+  expect(SaveState.saveState(state).composerFocused).toBe(false)
 })
