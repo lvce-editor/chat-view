@@ -221,6 +221,7 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   })
   const savedState = {
     chatListScrollTop: 12,
+    composerFocused: true,
     composerSelectionEnd: 4,
     composerSelectionStart: 2,
     composerValue: 'saved composer',
@@ -240,6 +241,8 @@ test('loadContent copies orchestration logic into chat-view-model', async () => 
   expect(result.selectedSessionId).toBe('session-2')
   expect(result.selectedModelId).toBe('model-2')
   expect(result.composerValue).toBe('saved composer')
+  expect(result.focus).toBe('composer')
+  expect(result.focused).toBe(true)
   expect(result.composerSelectionStart).toBe(2)
   expect(result.composerSelectionEnd).toBe(4)
   expect(result.sessions).toEqual([

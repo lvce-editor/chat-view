@@ -4,6 +4,7 @@ import type { ChatSession, ChatViewMode, Project, ReasoningEffort } from '../Vie
 export interface SavedState {
   readonly agentMode?: AgentMode
   readonly chatListScrollTop?: number
+  readonly composerFocused?: boolean
   readonly composerSelectionEnd?: number
   readonly composerSelectionStart?: number
   readonly composerValue?: string

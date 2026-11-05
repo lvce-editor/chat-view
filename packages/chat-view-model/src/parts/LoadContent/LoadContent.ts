@@ -9,6 +9,7 @@ import { getComposerAttachmentsHeight } from '../GetComposerAttachmentsHeight/Ge
 import { getModelPickerHeight } from '../GetModelPickerHeight/GetModelPickerHeight.ts'
 import { getSavedAgentMode } from '../GetSavedAgentMode/GetSavedAgentMode.ts'
 import { getSavedChatListScrollTop } from '../GetSavedChatListScrollTop/GetSavedChatListScrollTop.ts'
+import { getSavedComposerFocused } from '../GetSavedComposerFocused/GetSavedComposerFocused.ts'
 import { getSavedComposerSelection } from '../GetSavedComposerSelection/GetSavedComposerSelection.ts'
 import { getSavedComposerValue } from '../GetSavedComposerValue/GetSavedComposerValue.ts'
 import { getSavedLastNormalViewMode } from '../GetSavedLastNormalViewMode/GetSavedLastNormalViewMode.ts'
@@ -74,6 +75,7 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
   const savedSelectedModelId = getSavedSelectedModelId(savedState)
   const savedViewMode = getSavedViewMode(savedState)
   const savedComposerValue = getSavedComposerValue(savedState)
+  const composerFocused = getSavedComposerFocused(savedState)
   const composerValue = savedComposerValue ?? state.composerValue
   const savedComposerSelection = getSavedComposerSelection(savedState, composerValue)
   const [composerSelectionStart, composerSelectionEnd] = savedComposerSelection ?? [state.composerSelectionStart, state.composerSelectionEnd]
@@ -137,6 +139,7 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
   const savedLastNormalViewMode = getSavedLastNormalViewMode(savedState)
   const lastNormalViewMode = savedLastNormalViewMode || (preferredViewMode === 'detail' ? 'detail' : state.lastNormalViewMode)
   const viewMode = sessions.length === 0 || !selectedSessionId ? 'list' : preferredViewMode
+  const restoreComposerFocus = composerFocused && selectedSessionId !== '' && viewMode !== 'list'
   const nextState = {
     ...state,
     agentMode,
@@ -156,6 +159,8 @@ export const loadContent = async <TState extends LoadContentState>(state: TState
     composerSelectionStart,
     composerValue,
     emitStreamingFunctionCallEvents,
+    focus: restoreComposerFocus ? 'composer' : state.focus,
+    focused: restoreComposerFocus || state.focused,
     initial: false,
     lastNormalViewMode,
     messages,
