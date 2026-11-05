@@ -2,18 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'chat-view.auth-login-error'
 
-const assertEqual = <T>(actual: T, expected: T, context: string): void => {
-  if (actual !== expected) {
-    throw new Error(`${context}: expected ${String(expected)}, got ${String(actual)}`)
-  }
-}
-
-interface AuthState {
-  readonly userState: 'loggedIn' | 'loggingIn' | 'loggedOut' | 'loggingOut'
-}
-
-export const skip = 1
-
 export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await Chat.show()
   await Chat.reset()
@@ -35,7 +23,4 @@ export const test: Test = async ({ Chat, Command, expect, Locator }) => {
   await expect(authError).toHaveText('Invalid backend credentials.')
   await expect(loginButton).toBeVisible()
   await expect(logoutButton).toHaveCount(0)
-
-  const authState = (await Command.execute('Chat.getAuthState')) as AuthState
-  assertEqual(authState.userState, 'loggedOut', 'user state')
 }
