@@ -1,4 +1,4 @@
-import { type VirtualDomNode, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { type VirtualDomNode, AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { AuthUserState } from '../AuthUserState/AuthUserState.ts'
 import * as Strings from '../ChatStrings/ChatStrings.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -10,10 +10,14 @@ const buttonClassName = mergeClassNames(ClassNames.Button, ClassNames.ButtonSeco
 const chatAuthErrorNode: VirtualDomNode = {
   childCount: 1,
   className: ClassNames.ChatAuthError,
+  role: AriaRoles.Alert,
   type: VirtualDomElements.Span,
 }
 
 const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): string => {
+  if (userState === 'loggingIn') {
+    return Strings.loggingInToBackend()
+  }
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
   }
@@ -21,6 +25,9 @@ const getButtonLabel = (userState: AuthUserState, isAuthenticated: boolean): str
 }
 
 const getButtonTitle = (userState: AuthUserState, isAuthenticated: boolean): string => {
+  if (userState === 'loggingIn') {
+    return Strings.loggingInToBackend()
+  }
   if (userState === 'loggingOut') {
     return Strings.loggingOutFromBackend()
   }
@@ -47,7 +54,7 @@ export const getChatHeaderAuthDom = (
   const buttonName = isAuthenticated ? InputName.Logout : InputName.Login
   const buttonLabel = getButtonLabel(userState, isAuthenticated)
   const buttonTitle = getButtonTitle(userState, isAuthenticated)
-  const isPending = userState === 'loggingOut'
+  const isPending = userState === 'loggingIn' || userState === 'loggingOut'
   const displayName = userName || Strings.signedIn()
   const hasAuthError = !!authErrorMessage
   const authNameDom = isAuthenticated

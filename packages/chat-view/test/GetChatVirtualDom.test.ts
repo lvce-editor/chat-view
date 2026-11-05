@@ -1578,35 +1578,52 @@ test('getChatVirtualDOm should render context menu outline class for focused cha
   expect(focusedItems).toHaveLength(1)
 })
 
-test('getChatVirtualDOm should not render login button in header when auth is enabled and signed out', () => {
+test('getChatVirtualDOm should render login button in header when auth is enabled and signed out', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggedOut',
   })
   const loginButton = result.find((node) => node.title === 'Login to backend')
-  expect(loginButton).toBeUndefined()
+  expect(loginButton).toBeDefined()
 })
 
-test('getChatVirtualDOm should not render login button while signing in', () => {
+test('getChatVirtualDOm should disable login button while signing in', () => {
   const result = renderChatView({
     authEnabled: true,
     userState: 'loggingIn',
   })
   const loginButton = result.find((node) => node.name === 'login')
-  expect(loginButton).toBeUndefined()
+  expect(loginButton).toMatchObject({ disabled: true })
+  expect(result.some((node) => node.text === 'Logging in to backend')).toBe(true)
 })
 
-test('getChatVirtualDOm should not render auth error label in header when login fails', () => {
+test('getChatVirtualDOm should render auth error label and login action when login fails', () => {
   const result = renderChatView({
     authEnabled: true,
     authErrorMessage: 'Invalid backend credentials.',
     userState: 'loggedOut',
   })
   const authError = result.find((node) => node.className === 'ChatAuthError')
-  expect(authError).toBeUndefined()
+  expect(authError).toMatchObject({ role: 'alert' })
+  expect(result.some((node) => node.text === 'Invalid backend credentials.')).toBe(true)
+  expect(result.find((node) => node.name === 'login')).toBeDefined()
 })
 
-test('getChatVirtualDOm should not render user name and logout button in header when logged in', () => {
+test.each(['list', 'detail'] as const)('getChatVirtualDOm should render auth error in %s mode', (viewMode) => {
+  const result = renderChatView({
+    authEnabled: true,
+    authErrorMessage: 'Sign in could not be completed. Please try again.',
+    selectedSessionId: viewMode === 'detail' ? 'session-1' : '',
+    sessions: [{ id: 'session-1', messages: [], title: 'Chat 1' }],
+    userState: 'loggedOut',
+    viewMode,
+  })
+  expect(result.find((node) => node.className === 'ChatAuthError')).toMatchObject({ role: 'alert' })
+  expect(result.some((node) => node.text === 'Sign in could not be completed. Please try again.')).toBe(true)
+  expect(result.find((node) => node.name === 'login')).toBeDefined()
+})
+
+test('getChatVirtualDOm should render user name and logout button in header when logged in', () => {
   const result = renderChatView({
     authEnabled: true,
     userName: 'test-user',
@@ -1614,8 +1631,8 @@ test('getChatVirtualDOm should not render user name and logout button in header 
   })
   const userNameLabel = result.find((node) => node.text === 'test-user')
   const logoutButton = result.find((node) => node.name === 'logout')
-  expect(userNameLabel).toBeUndefined()
-  expect(logoutButton).toBeUndefined()
+  expect(userNameLabel).toBeDefined()
+  expect(logoutButton).toBeDefined()
 })
 
 test('getChatVirtualDOm should hide session list in detail mode', () => {

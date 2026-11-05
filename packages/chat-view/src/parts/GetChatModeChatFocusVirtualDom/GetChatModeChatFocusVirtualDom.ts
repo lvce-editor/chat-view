@@ -203,7 +203,7 @@ export const getChatModeChatFocusVirtualDom = ({
     ...getProjectListDom(projects, sessions, projectExpandedIds, selectedProjectId, selectedSessionId, projectListScrollTop, true),
     projectSidebarSashNode,
     chatFocusMainAreaNode,
-    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName),
+    ...getChatHeaderDomFocusMode(selectedSessionTitle, selectedProjectName, authEnabled, userState, userName, authErrorMessage),
     ...getMessagesDom(
       selectedMessages,
       parsedMessages,
