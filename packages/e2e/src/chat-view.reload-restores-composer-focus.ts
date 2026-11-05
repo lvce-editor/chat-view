@@ -5,9 +5,9 @@ export const name = 'chat-view.reload-restores-composer-focus'
 export const test: Test = async ({ Chat, expect, KeyBoard, Locator }) => {
   await Chat.show()
   await Chat.reset()
+  await Chat.handleClickNew()
 
   const composer = Locator('.ChatInputBox[name="composer"]')
-  await composer.click()
   await expect(composer).toBeFocused()
 
   await KeyBoard.press('ControlOrMeta+R')
